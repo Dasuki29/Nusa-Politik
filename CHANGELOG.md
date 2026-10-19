@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v8.7 (2026-10-19)
+
+Kesan bunyi (SoundManager). Bahagian tema visual menunggu kelulusan mockup.
+
+### Baharu
+
+- **`js/sfx.js` (SoundManager):** bunyi dijana oleh Web Audio, tiada fail audio. Ketukan tukul Pengerusi (keputusan mesyuarat, usul, undi Dewan/DUN), sorakan perwakilan (menang pemilihan jawatan atau PRU) dan denyar kamera (setiap soalan sidang media). Dicetus automatik daripada log simpanan profil; sidang media memanggil terus.
+- **Kawalan:** butang 🔔/🔕 dan kelantangan dalam bar muzik sedia ada (kelihatan apabila bar dibuka dengan ⋯).
+- Andaian: tetapan SFX ({ on, vol }) disimpan di peranti (`myPolitik_sfx`), sama seperti muzik latar, bukan dalam simpanan watak (`settings`), supaya kekal apabila menukar watak.
+- 3 ujian SFX baharu (AudioContext tiruan) dan semakan pelayar.
+
 ## v8.6 (2026-10-19)
 
 Modul baharu: Sistem Pencapaian & Trofi, serta dua langkah tutorial baharu.

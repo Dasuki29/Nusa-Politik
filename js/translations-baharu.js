@@ -2086,7 +2086,11 @@
   ["Dilantik Menteri Penuh atau Perdana Menteri.", "Appointed a full Minister or Prime Minister."],
   ["· Ketua Sayap Pusat / Menteri, selepas 3 tahun berkhidmat · {n}/{m} bulan", "· Central Wing Chief / Minister, after 3 years of service · {n}/{m} months"],
   ["{n}/{m} bulan", "{n}/{m} months"],
-  ["Buka tab ini untuk memuatkan peta...", "Open this tab to load the map..."]
+  ["Buka tab ini untuk memuatkan peta...", "Open this tab to load the map..."],
+  /* SFX v8.7 */
+  ["Matikan kesan bunyi", "Turn off sound effects"],
+  ["Hidupkan kesan bunyi", "Turn on sound effects"],
+  ["Kelantangan kesan bunyi", "Sound effects volume"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
