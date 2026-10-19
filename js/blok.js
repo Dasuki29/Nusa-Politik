@@ -11,7 +11,7 @@
      1. meter(p)            -> Meter Pengaruh Blok (0-100) dan saiz blok (anggaran undi).
      2. calonRisik(p)       -> calon Ketua Bahagian + tawaran maksimum masing-masing.
      3. runding(id, tuntutan) -> terima / terima sebahagian (balas) / tolak. Kos 1 AP.
-     4. selesaikanPerlumbaan() -> dipanggil apabila Mesyuarat Bahagian ditutup (election.js):
+     4. selesaikanPerlumbaan() -> dipanggil apabila Mesyuarat Perwakilan Bahagian ditutup (election.js):
         blok mengalih undi kepada calon yang disokong; pemenang direkod.
      5. prosesTahunBaharu() -> janji kuota ditunaikan atau dimungkiri pada tahun berikutnya
         (penetapan calon); meter naik atau turun.
@@ -229,7 +229,7 @@
      ------------------------------------------------------------------------ */
   /**
    * Simulasi pemilihan Ketua Bahagian. Blok sayap anda (anggaran undi) beralih kepada calon yang disokong.
-   * opts: { rng }. Dipanggil sekali setahun apabila Mesyuarat Bahagian ditutup. Pulang { ok, ... } atau null jika tidak berkenaan.
+   * opts: { rng }. Dipanggil sekali setahun apabila Mesyuarat Perwakilan Bahagian ditutup. Pulang { ok, ... } atau null jika tidak berkenaan.
    */
   function selesaikanPerlumbaan(opts) {
     opts = opts || {};

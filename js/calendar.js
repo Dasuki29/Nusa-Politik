@@ -63,9 +63,9 @@
       { kod: 'akar_umbi', mula: 1, tamat: 3, tajuk: 'Awal Tahun', ringkas: 'Khidmat Akar Umbi & Pendaftaran Ahli',
         fokus: ['Ziarah dan gotong-royong', 'Bina pengaruh dan sokongan akar umbi', 'Kumpul isu tempatan'] },
       { kod: 'cawangan', mula: 4, tamat: 6, tajuk: 'Musim Cawangan', ringkas: 'Musim Mesyuarat & Pemilihan Cawangan (Cawangan & Sayap)',
-        fokus: ['Mesyuarat Cawangan dan usul lokaliti', 'Mesyuarat Sayap (bulan 5-6) sebelum Bahagian', 'Pemilihan jawatan Cawangan dan Sayap Cawangan', 'Pemilihan Perwakilan ke Bahagian'] },
+        fokus: ['Persidangan Tahunan Cawangan dan usul lokaliti', 'Mesyuarat Sayap (bulan 5-6) sebelum Bahagian', 'Pemilihan jawatan Cawangan dan Sayap Cawangan', 'Pemilihan Perwakilan ke Bahagian'] },
       { kod: 'bahagian', mula: 7, tamat: 7, tajuk: 'Musim Bahagian', ringkas: 'Musim Mesyuarat & Pemilihan Bahagian (Bahagian & Sayap)',
-        fokus: ['Mesyuarat Bahagian', 'Pemilihan jawatan Bahagian dan Sayap Bahagian', 'Pemilihan Perwakilan ke PAU'] },
+        fokus: ['Mesyuarat Perwakilan Bahagian', 'Pemilihan jawatan Bahagian dan Sayap Bahagian', 'Pemilihan Perwakilan ke PAU'] },
       { kod: 'pau', mula: 8, tamat: 8, tajuk: 'Perhimpunan Agung', ringkas: 'Perhimpunan Agung UMNO (PAU) & Pemilihan Pusat',
         fokus: ['Perhimpunan Agung UMNO', 'Pemilihan Presiden, Timbalan Presiden, 3 Naib Presiden, MKT dan Ketua Sayap (tahun pemilihan)'] },
       { kod: 'pasca_pau', mula: 9, tamat: 12, tajuk: 'Akhir Tahun', ringkas: 'Pasca-PAU & Khidmat Masyarakat',
@@ -74,10 +74,10 @@
 
     /* Tetingkap setiap mesyuarat / pengundian. 'pusat' dalam election.js dipetakan kepada 'pau'. */
     TETINGKAP: {
-      sayap_cawangan: { mula: 4, tamat: 6, nama: 'Mesyuarat Sayap Cawangan' },     // v6.1: laluan sayap sahaja; mesti selesai sebelum mesyuarat utama
-      cawangan: { mula: 4, tamat: 6, nama: 'Mesyuarat Cawangan' },
-      sayap_bahagian: { mula: 7, tamat: 7, nama: 'Mesyuarat Sayap Bahagian' },
-      bahagian: { mula: 7, tamat: 7, nama: 'Mesyuarat Bahagian' },
+      sayap_cawangan: { mula: 4, tamat: 6, nama: 'Persidangan Tahunan Sayap Cawangan' },     // v6.1: laluan sayap sahaja; mesti selesai sebelum mesyuarat utama
+      cawangan: { mula: 4, tamat: 6, nama: 'Persidangan Tahunan Cawangan' },
+      sayap_bahagian: { mula: 7, tamat: 7, nama: 'Mesyuarat Perwakilan Sayap Bahagian' },
+      bahagian: { mula: 7, tamat: 7, nama: 'Mesyuarat Perwakilan Bahagian' },
       sayap_pau: { mula: 8, tamat: 8, nama: 'Perhimpunan Sayap (Pra-PAU)' },
       pau:      { mula: 8, tamat: 8, nama: 'Perhimpunan Agung UMNO (PAU)' }
     }

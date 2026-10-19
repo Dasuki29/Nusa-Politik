@@ -723,7 +723,7 @@
         var sk = r.sokongan;
         h += '<div class="banner banner--gold" style="margin-top:10px"><strong>Sokongan diikat: ' + esc(sk.nama) + '</strong>' +
           (sk.mata ? 'Janji kuota ' + (sk.parlimen ? sk.parlimen + ' Parlimen' : '') + (sk.parlimen && sk.dun ? ' + ' : '') + (sk.dun ? sk.dun + ' DUN' : '') + ' (kemungkinan ditunaikan ' + sk.kemungkinan + '%). ' : 'Tanpa syarat. ') +
-          'Undi dikira apabila Mesyuarat Bahagian ditutup.</div>';
+          'Undi dikira apabila Mesyuarat Perwakilan Bahagian ditutup.</div>';
       } else {
         h += '<p class="note" style="margin-top:10px">Calon datang merisik anda. Setiap pusingan rundingan memakan ' + r.apKos + ' AP. Tuntutan terlalu tinggi akan ditolak. Jika anda tidak berikat dengan sesiapa, blok undi mengikut kehendak sendiri.</p>';
       }
@@ -906,8 +906,8 @@
   var TAJUK_PERINGKAT = {
     cawangan: ['Pemilihan Cawangan', 'Bulan 4-6 · Ketua, Naib Ketua dan AJK Cawangan, serta Perwakilan ke Bahagian (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
     bahagian: ['Pemilihan Bahagian', 'Bulan 7 · Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian, serta Perwakilan ke PAU (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
-    sayap_cawangan: ['Pemilihan Sayap Cawangan', 'Bulan 4-6 · Ketua, Naib Ketua dan AJK Sayap Cawangan (tahun pemilihan) dan wakil sayap ke Mesyuarat Sayap Bahagian (laluan sayap sahaja)'],
-    sayap_bahagian: ['Pemilihan Sayap Bahagian', 'Bulan 7 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan), G10 (10 wakil) ke Mesyuarat Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat'],
+    sayap_cawangan: ['Pemilihan Sayap Cawangan', 'Bulan 4-6 · Ketua, Naib Ketua dan AJK Sayap Cawangan (tahun pemilihan) dan wakil sayap ke Mesyuarat Perwakilan Sayap Bahagian (laluan sayap sahaja)'],
+    sayap_bahagian: ['Pemilihan Sayap Bahagian', 'Bulan 7 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan), G10 (10 wakil) ke Mesyuarat Perwakilan Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat'],
     sayap_pau: ['Pemilihan Sayap Pusat', 'Bulan 8 · Ketua, Naib Ketua dan AJK Sayap Pusat, dipilih dalam Perhimpunan Sayap (Pra-PAU), laluan sayap sahaja'],
     pusat: ['Pemilihan Pusat (PAU)', 'Bulan 8 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT']
   };
@@ -981,7 +981,7 @@
       return '<div class="item"><div class="item__head"><div class="item__title">' + esc(nama) + '</div><span class="status-chip ' + (st.layak ? 'is-open' : 'is-lock') + '">' + (st.layak ? 'Layak' : 'Belum layak') + '</span></div>' +
         '<p class="item__desc">' + esc(st.layak ? st.sumber + (st.lencana ? ' · status: ' + st.lencana : '') + (jarak ? ' · ' + jarak : '') : st.sebab) + '</p></div>';
     }
-    h += '<section class="card perw"><h2 class="card__title" style="margin:0">Kelayakan Perwakilan</h2>' + kadPerw('Mesyuarat Bahagian', sp.bahagian) + kadPerw('Perhimpunan Agung (PAU)', sp.pau) + '</section>';
+    h += '<section class="card perw"><h2 class="card__title" style="margin:0">Kelayakan Perwakilan</h2>' + kadPerw('Mesyuarat Perwakilan Bahagian', sp.bahagian) + kadPerw('Perhimpunan Agung (PAU)', sp.pau) + '</section>';
     k.peringkat.forEach(function (lv) {
       var cs = STATUS_MES[lv.status] || [lv.status, ''];
       h += '<section class="card"><div class="item__head"><div><h2 class="card__title" style="margin:0">' + esc(lv.nama) + '</h2><p class="item__desc">' + esc(lv.jenisUsul) + (lv.tetingkap ? ' · ' + esc(lv.tetingkap.label) : '') + '</p></div>' +

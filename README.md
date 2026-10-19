@@ -44,7 +44,7 @@ Modul utama dalam `js/`:
 | `calendar.js` | Takwim bulanan, AP dan elaun, susutan kesetiaan |
 | `jawatan.js` | Senarai jawatan dan syarat kelayakan |
 | `election.js` | Pemilihan, kempen, kuota perwakilan |
-| `meeting.js` | Mesyuarat Cawangan dan Bahagian |
+| `meeting.js` | Persidangan Tahunan Cawangan dan Bahagian |
 | `etika.js` | Tataetika, siasatan dan hukuman disiplin |
 | `events.js` | Peristiwa rawak |
 | `watak.js` | Gaya Kepimpinan dan kad Laluan Karier Sebenar |
