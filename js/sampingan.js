@@ -33,7 +33,7 @@
   var CONFIG = {
     AP: 2, HAD_MODAL: 20000, MATANG: 3,                                   // bulan sebelum pulangan bermula
     JENIS: {
-      syarikat: { nama: 'Syarikat Kecil (perniagaan)', ikon: '🏪', hasil: 0.06, ketidaktentuan: 0.4, peluangRugi: 0.08, konflik: 1.5, konflikKerajaan: 2.5,
+      syarikat: { nama: 'Syarikat Kecil (perniagaan)', ikon: '🏪', hasil: 0.035, ketidaktentuan: 0.4, peluangRugi: 0.08, konflik: 1.5, konflikKerajaan: 2.5,
                   huraian: 'Dana masuk setiap bulan selepas modal matang. Risiko Integriti jika memegang jawatan kerajaan.',
                   peringkat: { asas: { nama: 'Modal Asas', modal: 5000 }, sederhana: { nama: 'Modal Sederhana', modal: 15000 } } },
       ngo:      { nama: 'NGO Komuniti', ikon: '🤝', hasil: 0.015, ketidaktentuan: 0, peluangRugi: 0, komuniti: 4, akarUmbi: 1,
@@ -97,7 +97,7 @@
     if (!p || p.tamat || !aktif(p)) { return { peristiwa: ev }; }
     var d = getSampingan(p);
     if (!d.pelaburan.length && d.konflik <= CONFIG.KONFLIK.awal && d.komuniti <= CONFIG.KOMUNITI.awal) { return { peristiwa: ev }; }
-    var r = rng(o, p), now = idx(p), kes = { myr: 0 }, patch = null, kerajaan = pegangKerajaan(p), kc = CONFIG.KONFLIK, ngoAda = false, untung = 0, rugiMsg = '';
+    var r = rng(o, p), now = idx(p), kes = { myr: 0 }, patch = null, kerajaan = pegangKerajaan(p), kc = CONFIG.KONFLIK, ngoAda = false, akarUmbi = 0, untung = 0, rugiMsg = '';
     d.pelaburan.forEach(function (x) {
       var j = CONFIG.JENIS[x.jenis], matang = now - x.idx >= CONFIG.MATANG;
       if (x.jenis === 'syarikat') {
@@ -107,10 +107,10 @@
           else { untung += x.modal * j.hasil * (1 - j.ketidaktentuan / 2 + r() * j.ketidaktentuan); }
         }
       } else if (matang) { untung += x.modal * j.hasil; }
-      if (x.jenis === 'ngo') { ngoAda = true; d.komuniti = clamp(d.komuniti + j.komuniti * (x.modal / 2000) * 0.5, 0, 100); }
+      if (x.jenis === 'ngo') { ngoAda = true; akarUmbi += j.akarUmbi * (x.modal / 2000) * 0.5; d.komuniti = clamp(d.komuniti + j.komuniti * (x.modal / 2000) * 0.5, 0, 100); }
     });
     untung = Math.round(untung); kes.myr += untung; d.pendapatan = untung;
-    if (ngoAda) { kes.kesetiaan = { akarUmbi: CONFIG.JENIS.ngo.akarUmbi }; var E = ET(); if (E) { var e = E.getEtika(p); e.modal = clamp(e.modal + 1, 0, E.CONFIG.KEMASAN_MODAL_MAKS); patch = { etika: e }; } if (d.komuniti >= CONFIG.KOMUNITI.tinggi) { kes.reputasi = CONFIG.KOMUNITI.bonusReputasi; } }
+    if (ngoAda) { akarUmbi = clamp(Math.round(akarUmbi), 1, 2); kes.kesetiaan = { akarUmbi: akarUmbi }; var E = ET(); if (E) { var e = E.getEtika(p); e.modal = clamp(e.modal + 1, 0, E.CONFIG.KEMASAN_MODAL_MAKS); patch = { etika: e }; } if (d.komuniti >= CONFIG.KOMUNITI.tinggi) { kes.reputasi = CONFIG.KOMUNITI.bonusReputasi; } }
     d.konflik = clamp(d.konflik - CONFIG.KONFLIK.susut, 0, 100); d.komuniti = clamp(d.komuniti - CONFIG.KOMUNITI.susut, 0, 100);
     if (rugiMsg) { ev.push({ jenis: 'sampingan', mesej: rugiMsg }); }
     var I = IG();
