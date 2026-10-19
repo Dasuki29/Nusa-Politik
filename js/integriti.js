@@ -41,7 +41,7 @@
     TENTANG: { skor: -12, whip: -25 },
     TEGURAN: { skor: 10, whip: 10, ajk: 5, reputasi: 3 },
     INGKAR: { skor: -10, whip: -15, asas: 0.30, peluangPecat: 0.4, stress: 6, akarUmbi: -3 },
-    AUDIT_KOS: { EXCO_NEGERI: 8000, TIMBALAN_MENTERI: 12000, MENTERI_PENUH: 15000, TIMBALAN_PM: 20000, PERDANA_MENTERI: 25000 },
+    AUDIT_KOS: { EXCO_NEGERI: 8000, MENTERI_BESAR: 10000, TIMBALAN_MENTERI: 12000, MENTERI_PENUH: 15000, TIMBALAN_PM: 20000, PERDANA_MENTERI: 25000 },
     KERJASAMA: { risiko: -35, skor: 12, rating: 4, temuanRisiko: 85, temuanPeluang: 0.25, temuanSkor: -4, temuanRating: -6 },
     PEMBERSIHAN: { risiko: -50, skor: 6, cdf: 0.5, pop: -3, rombak: 8 },
     TIDAK_JAWAB: { risiko: 10, skor: -10, rating: -8 },
