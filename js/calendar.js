@@ -343,6 +343,8 @@
     if (MDA && MDA.prosesBulan) { peristiwa = peristiwa.concat(MDA.prosesBulan().peristiwa || []); }
     var SMP = muat('MyPolitikSampingan', 'sampingan.js');                                       // v7.64: Aktiviti Sampingan (syarikat / NGO)
     if (SMP && SMP.prosesBulan) { peristiwa = peristiwa.concat(SMP.prosesBulan().peristiwa || []); }
+    var INC = muat('MyPolitikIncumbent', 'incumbent.js');                                        // v8.9: meter Atas Pagar reput ke arah 30%
+    if (INC && INC.prosesBulan) { peristiwa = peristiwa.concat(INC.prosesBulan().peristiwa || []); }
     var KRP = muat('MyPolitikKrisisPeta', 'krisis-peta.js');                                     // v8.8: krisis tempatan berlokasi di peta
     if (KRP && KRP.prosesBulan) { peristiwa = peristiwa.concat(KRP.prosesBulan().peristiwa || []); }
     var DWN = muat('MyPolitikDewan', 'dewan.js');                                               // v7.55: Dewan Rakyat (undi tidak percaya, soalan lisan)

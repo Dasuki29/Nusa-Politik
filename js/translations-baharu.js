@@ -2124,12 +2124,12 @@
   ["Modul krisis tidak tersedia.", "The crisis module is not available."],
   ["AP tidak mencukupi (perlu {a}).", "Not enough AP ({a} needed)."],
   ["Wang tidak mencukupi (perlu MYR {a}).", "Not enough funds (MYR {a} needed)."],
-  ["-{a} AP, +{b} Sokongan Akar Umbi, Stress {c}, +{d} sokongan kawasan", "-{a} AP, +{b} Grassroots Support, Stress {c}, +{d} area support"],
-  ["-MYR {a}, +{b} Sokongan Akar Umbi, +{c} sokongan kawasan", "-MYR {a}, +{b} Grassroots Support, +{c} area support"],
+  ["-{a} AP, +{b} Sokongan Akar Umbi, Stress {c}, +{d} sokongan kawasan, +{e} Atas Pagar", "-{a} AP, +{b} Grassroots Support, Stress {c}, +{d} area support, +{e} Fence-sitters"],
+  ["-MYR {a}, +{b} Sokongan Akar Umbi, +{c} sokongan kawasan, +{d} Atas Pagar", "-MYR {a}, +{b} Grassroots Support, +{c} area support, +{d} Fence-sitters"],
   ["Tiada kos, {a} Sokongan Akar Umbi, {b} sokongan kawasan", "No cost, {a} Grassroots Support, {b} area support"],
   ["{a} di {b} diselesaikan: {c}.", "{a} at {b} resolved: {c}."],
   ["{a} di {b} diabaikan: {c}.", "{a} at {b} ignored: {c}."],
-  ["{a} di {b} dibiarkan terlalu lama. Penduduk kecewa ({c} Sokongan Akar Umbi).", "{a} at {b} was left too long. Residents are disappointed ({c} Grassroots Support)."],
+  ["{a} di {b} dibiarkan terlalu lama. Penduduk kecewa ({c} Sokongan Akar Umbi, {d} Atas Pagar).", "{a} at {b} was left too long. Residents are disappointed ({c} Grassroots Support, {d} Fence-sitters)."],
   ["{a} di {b}. Buka tab Peta dan tekan ikon ⚠️ untuk menyelesaikannya.", "{a} at {b}. Open the Map tab and tap the ⚠️ icon to resolve it."],
   ["Krisis Tempatan", "Local Crisis"],
   ["Krisis Tempatan Terabai", "Local Crisis Ignored"],
@@ -2178,7 +2178,14 @@
   ["+{a} IP, +{b} sokongan kawasan", "+{a} IP, +{b} area support"],
   ["+{a} IP, +{b} sokongan kawasan · peruntukan besar menjolok mata (risiko rombakan)", "+{a} IP, +{b} area support · a large allocation draws attention (reshuffle risk)"],
   ["Sokongan kawasan +{a}.", "Area support +{a}."],
-  ["Lobi dan Ziarah dilakukan pada peringkat cawangan atau bahagian. Pilih cawangan dalam DUN ini.", "Lobbying and Field Visits are done at branch or division level. Pick a branch inside this DUN."]
+  ["Lobi dan Ziarah dilakukan pada peringkat cawangan atau bahagian. Pilih cawangan dalam DUN ini.", "Lobbying and Field Visits are done at branch or division level. Pick a branch inside this DUN."],
+  ["Sokongan Atas Pagar · Memusuhi", "Fence-sitter Support · Hostile"],
+  ["Sokongan Atas Pagar · Goyah", "Fence-sitter Support · Wavering"],
+  ["Sokongan Atas Pagar · Condong sokong", "Fence-sitter Support · Leaning supportive"],
+  ["Kopi O dengan Golongan Atas Pagar", "Kopi O with the Fence-sitters"],
+  ["Bertemu empat mata dengan mereka yang belum memihak, di kedai kopi, tanpa agenda rasmi.", "Meet face to face with those who have not picked a side, at a coffee shop, with no official agenda."],
+  ["Dengar Aduan Terbuka", "Hold an Open Complaints Session"],
+  ["Membuka sesi dialog untuk mendengar rungutan ahli dan penduduk secara terus. Meletihkan tetapi membina kepercayaan.", "Open a dialogue to hear members' and residents' grievances directly. Tiring, but it builds trust."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

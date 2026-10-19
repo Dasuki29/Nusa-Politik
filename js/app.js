@@ -628,7 +628,8 @@
     var h = '';
     Object.keys(S.KESETIAAN_LABEL).forEach(function (k) {
       var v = p.kesetiaan[k];
-      h += bar('Sokongan ' + S.KESETIAAN_LABEL[k], v, k === 'akarUmbi' && v < 40);
+      var INCz = W.MyPolitikIncumbent, zon = k === 'penentang' && INCz && INCz.zonAtasPagar ? INCz.zonAtasPagar(v) : null;      // v8.9: zon Atas Pagar
+      h += bar('Sokongan ' + S.KESETIAAN_LABEL[k] + (zon ? ' · ' + (zon === 'musuh' ? 'Memusuhi' : zon === 'sokong' ? 'Condong sokong' : 'Goyah') : ''), v, (k === 'akarUmbi' && v < 40) || zon === 'musuh');
     });
     h += bar('Reputasi Parti', p.reputasi, false);
     $('s-kesetiaan').innerHTML = h;
