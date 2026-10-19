@@ -255,7 +255,7 @@
         id: 'sabotaj_akar_umbi', kategori: 'politik', krisis: true, ikon: '🕵️', tajuk: 'Sabotaj dalam Cawangan',
         syarat: function (p) { return ((Number(p.stress) || 0) >= 65 || (p.stress >= 50 && p.jawatan === 'Presiden')) && p.jawatan !== 'Ahli Biasa'; },
         berat: function (p) { return 3 + ((Number(p.stress) || 0) - 60) / 4 + 2 * (bilJ(p) - 1); },
-        huraian: 'Sekumpulan ahli yang marah menyebarkan khabar angin bahawa anda sudah letih dan tidak layak. Mereka menghalang usaha anda di mesyuarat cawangan {cawangan}.',
+        huraian: 'Sekumpulan ahli yang marah menyebarkan khabar angin bahawa anda sudah letih dan tidak layak. Mereka menghalang usaha anda di persidangan tahunan cawangan {cawangan}.',
         pilihan: [
           { id: 'a', label: 'Letak jawatan paling membebankan dengan terhormat', huraian: 'Serangan terhenti. Stress -30.', lepasJawatan: true, stres: { stress: -30, kesihatan: 2 }, kesan: { reputasi: 1 }, mesej: 'Anda berundur dengan maruah. Serangan politik terhadap anda reda.' },
           { id: 'b', label: 'Bendung dengan jamuan & pujukan (Dana)', huraian: 'Kos tinggi tetapi menenangkan keadaan. Stress +4.', kesan: { myr: -600, kesetiaan: { akarUmbi: 4, ajk: 3 } }, stres: { stress: 4 }, mesej: 'Pujukan anda berjaya meredakan sebahagian ahli, tetapi anda semakin letih.' },
@@ -482,7 +482,7 @@
         syarat: function (p) { return ketuaSayap(p, 'puteri'); }, berat: 4,
         huraian: 'Ahli Puteri menuduh Bahagian mengabaikan kuota calon perempuan muda. Sebahagian mengancam memboikot jentera pilihan raya jika tuntutan itu tidak dipenuhi.',
         pilihan: [
-          { id: 'a', label: 'Bawa tuntutan ke mesyuarat Bahagian (AP)', huraian: 'Bergantung pada sambutan Bahagian. Stress +3.', kesan: { ap: -2 }, stres: { stress: 3 }, hasil: [
+          { id: 'a', label: 'Bawa tuntutan ke mesyuarat perwakilan Bahagian (AP)', huraian: 'Bergantung pada sambutan Bahagian. Stress +3.', kesan: { ap: -2 }, stres: { stress: 3 }, hasil: [
               { peluang: 0.55, kesan: { ip: 10, reputasi: 3, kesetiaan: { akarUmbi: 4, perwakilan: 3 } }, mesej: 'Bahagian bersetuju mengkaji kuota. Puteri melihat anda sebagai pejuang mereka.' },
               { peluang: 0.45, kesan: { ip: -4, kesetiaan: { ajk: -3 } }, mesej: 'Tuntutan itu ditolak buat sementara. Suasana tegang di Bahagian.' } ] },
           { id: 'b', label: 'Pujuk ahli supaya bersabar', huraian: 'Tiada kos. Stress +2.', kesan: { ip: -3, kesetiaan: { akarUmbi: -5 } }, stres: { stress: 2 }, mesej: 'Sebahagian ahli menerima, tetapi ramai merasakan suara mereka diperkecilkan.' },

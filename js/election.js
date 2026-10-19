@@ -60,8 +60,8 @@
     KITARAN_TAHUN: 3,
     // v3.7: kuota perwakilan mengikut Perlembagaan
     KUOTA_CAWANGAN: { ahliPerWakil: 50, maks: 5, min: 1 },    // Fasal 14.4.4: 1 wakil / 50 ahli, maks 5 seorang Cawangan
-    KUOTA_SAYAP_CAWANGAN: { ahliPerWakil: 10, maks: 3, min: 1 },    // v6.3: 1 wakil setiap 10 ahli sayap, maksimum 3 (wakil sayap Cawangan ke Mesyuarat Sayap Bahagian)
-    SAYAP_G10: 10,                                                  // v6.2: 10 wakil sayap Bahagian ke Mesyuarat Bahagian (G10)
+    KUOTA_SAYAP_CAWANGAN: { ahliPerWakil: 10, maks: 3, min: 1 },    // v6.3: 1 wakil setiap 10 ahli sayap, maksimum 3 (wakil sayap Cawangan ke Mesyuarat Perwakilan Sayap Bahagian)
+    SAYAP_G10: 10,                                                  // v6.2: 10 wakil sayap Bahagian ke Mesyuarat Perwakilan Bahagian (G10)
     SAYAP_G2: 2,                                                    // v6.2: 2 wakil sayap Bahagian ke Perhimpunan Sayap Pusat (G2)
     KUOTA_BAHAGIAN: { ahliPerWakil: 500, maks: 7, min: 1 },   // Fasal 8.4.3: 1 wakil / 500 ahli, maks 7 seorang Bahagian
     ANGGARAN_CAWANGAN_PER_BAHAGIAN: 25,  // anggaran bilangan Cawangan dalam satu Bahagian (jika tiada data sebenar)
@@ -239,7 +239,7 @@
     }
 
     // 1. Perwakilan tahunan
-    var g10Sah = !!p.perwakilan && p.perwakilan.g10 === p.tahun;                      // v6.2: wakil G10 hadir Mesyuarat Bahagian
+    var g10Sah = !!p.perwakilan && p.perwakilan.g10 === p.tahun;                      // v6.2: wakil G10 hadir Mesyuarat Perwakilan Bahagian
     var pc = J.perwakilanSah(p, 'cawangan'), exBhg = J.exOfficio(p, 'bahagian'), exPau = J.exOfficio(p, 'pau');
     tambah({
       kod: 'perwakilan_cawangan', jenis: 'perwakilan', jawatan: 'Perwakilan Cawangan ke Bahagian', peringkat: 'cawangan', kumpulan: 'perwakilan', sayap: null,
@@ -260,18 +260,18 @@
     if (sy) {
       var NS = J.NAMA_SAYAP[sy], pw2 = p.perwakilan || {}, swSah = pw2.sayapCawangan === p.tahun, ketuaSy = J.pegang(p, 'sayap_cawangan_' + sy);   // Ketua sayap Cawangan hadir automatik
       tambah({
-        kod: 'perwakilan_sayap_cawangan', jenis: 'perwakilan', jawatan: 'Wakil ' + NS + ' Cawangan ke Mesyuarat ' + NS + ' Bahagian', peringkat: 'sayap_cawangan', kumpulan: 'perwakilan', sayap: sy,
+        kod: 'perwakilan_sayap_cawangan', jenis: 'perwakilan', jawatan: 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian', peringkat: 'sayap_cawangan', kumpulan: 'perwakilan', sayap: sy,
         kerusi: kuotaSayapCawangan(p), kesukaran: 0,
         terbuka: !exBhg.sah && !ketuaSy,
-        sebab: ketuaSy ? 'Anda hadir Mesyuarat ' + NS + ' Bahagian secara automatik sebagai Ketua ' + NS + ' Cawangan.' : (exBhg.sah ? 'Anda hadir Mesyuarat ' + NS + ' Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
+        sebab: ketuaSy ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai Ketua ' + NS + ' Cawangan.' : (exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
       });
       var ketuaSyB = J.pegang(p, 'sayap_bahagian_' + sy);                       // Ketua sayap Bahagian hadir Perhimpunan Sayap Pusat automatik
       var layakB = swSah || exBhg.sah || ketuaSy;
       tambah({
-        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G10 ' + NS + ': 10 wakil ke Mesyuarat Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
+        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G10 ' + NS + ': 10 wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
         kerusi: CONFIG.SAYAP_G10, kesukaran: 0,
         terbuka: layakB && !exBhg.sah,
-        sebab: exBhg.sah ? 'Anda hadir Mesyuarat Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
+        sebab: exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });
       tambah({
         kod: 'perwakilan_sayap_g2', jenis: 'perwakilan', jawatan: 'G2 ' + NS + ': 2 wakil ke Perhimpunan ' + NS + ' Pusat', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,

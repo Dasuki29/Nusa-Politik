@@ -135,7 +135,7 @@
   function exOfficio(p, aras) {
     var senarai = getJawatan(p);
     if (aras === 'bahagian') {
-      var h = senarai.filter(function (j) { return j.peringkat === 'bahagian' || j.peringkat === 'pusat' || j.kod === 'ketua_cawangan'; })[0];   // v7.51: Ketua Cawangan hadir Mesyuarat Bahagian secara ex-officio
+      var h = senarai.filter(function (j) { return j.peringkat === 'bahagian' || j.peringkat === 'pusat' || j.kod === 'ketua_cawangan'; })[0];   // v7.51: Ketua Cawangan hadir Mesyuarat Perwakilan Bahagian secara ex-officio
       return h ? { sah: true, sumber: h.jawatan } : { sah: false };
     }
     var h2 = senarai.filter(function (j) { return j.peringkat === 'pusat' || j.kod === 'ketua_bahagian' || (j.kod === 'lama' && /Ketua Bahagian/.test(j.jawatan)); })[0];
