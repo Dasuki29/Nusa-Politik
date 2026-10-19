@@ -378,6 +378,8 @@
     if (ipX) { patch.ip = Math.max(0, (Number(p.ip) || 0) + ipX); }
     var res = simpan(k, kes, { patch: patch, log: { tindakan: 'acara_kabinet', nama: d.tajuk + ': ' + c.label, peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    var rIg = (c.id === 'pintas' ? 12 : 0) + (c.etika && c.etika.risiko > 0 ? Math.round(c.etika.risiko * 1.5) : 0);
+    if (rIg > 0 && root.MyPolitikIntegriti) { root.MyPolitikIntegriti.tambahRisiko(rIg, c.label); }     // v7.58: jalan pintas menaikkan governanceRisk
     if (x.stress) { var s = ST(); if (s && s.laras) { s.laras({ stress: x.stress }); } }
     return { ok: true, mesej: mesej, rating: x.rating || 0, tekanan: x.tekanan || 0, pop: x.pop || 0, rombak: x.rombak || 0, jaya: jaya };
   }
@@ -402,6 +404,7 @@
     }
     var res = simpan(k, kes, { patch: { ip: Math.max(0, (Number(p.ip) || 0) + pil.ip) }, log: { tindakan: 'cdf_salur', nama: 'Peruntukan CDF RM ' + pil.jumlah + ' ke kawasan: +' + pil.ip + ' IP', peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    if (pil.besar && root.MyPolitikIntegriti) { root.MyPolitikIntegriti.tambahRisiko(5, 'peruntukan CDF besar tanpa tatacara ketat'); }          // v7.58
     return { ok: true, mesej: mesej, ip: pil.ip, jumlah: pil.jumlah };
   }
 
