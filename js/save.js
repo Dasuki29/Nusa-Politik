@@ -75,8 +75,11 @@
   function avatarSah(k) { return SENARAI_AVATAR.indexOf(k) >= 0; }
 
   /** Lengkapkan medan yang tiada (profil lama daripada versi 1) dan hadkan nilai. */
+  var KERJAYA_SAH = ['korporat', 'peguam', 'peniaga'];      // v8.12: kod latar belakang profesional (butiran di js/kerjaya.js)
+
   function normalisasi(p) {
     if (!sah(p)) { return p; }
+    if (KERJAYA_SAH.indexOf(p.careerBackground) < 0) { p.careerBackground = 'korporat'; }          // v8.12: simpanan lama diberi Profesional / Korporat
     if (!avatarSah(p.avatar)) { p.avatar = avatarSah(p.demografik && p.demografik.kategoriKod) ? p.demografik.kategoriKod : 'pemuda'; }
     if (SY && !SY.sah(p.sayap)) { p.sayap = SY.kod(p); }          // v5.9: laluan sayap (simpanan lama mengikut avatar/kategori)
     p.versi = VERSI;
@@ -165,6 +168,7 @@
         kumpulan: c.kumpulan ? { pemuda: c.kumpulan.pemuda, puteri: c.kumpulan.puteri, wanita: c.kumpulan.wanita, induk: c.kumpulan.induk, langsung: !!c.kumpulan.langsung } : null     // v6.3
       },
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
+      careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
       sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,

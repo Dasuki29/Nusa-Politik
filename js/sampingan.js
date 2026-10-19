@@ -24,6 +24,7 @@
   }
   function S() { return modul('MyPolitikSave', 'save.js'); }
   function KB() { return modul('MyPolitikKabinet', 'kabinet.js'); }
+  function KJ() { return modul('MyPolitikKerjaya', 'kerjaya.js'); }      // v8.12: Peniaga / Kontraktor + jawatan kerajaan
   function ET() { return modul('MyPolitikEtika', 'etika.js'); }
   function IG() { return modul('MyPolitikIntegriti', 'integriti.js'); }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
@@ -95,8 +96,9 @@
   function prosesBulan(o) {
     var ev = [], p = S() && S().loadPlayer();
     if (!p || p.tamat || !aktif(p)) { return { peristiwa: ev }; }
-    var d = getSampingan(p);
-    if (!d.pelaburan.length && d.konflik <= CONFIG.KONFLIK.awal && d.komuniti <= CONFIG.KOMUNITI.awal) { return { peristiwa: ev }; }
+    var d = getSampingan(p), kjKonflik = KJ() && KJ().konflikBulanan ? KJ().konflikBulanan(p) : 0;
+    if (!d.pelaburan.length && !kjKonflik && d.konflik <= CONFIG.KONFLIK.awal && d.komuniti <= CONFIG.KOMUNITI.awal) { return { peristiwa: ev }; }
+    if (kjKonflik) { d.konflik = clamp(d.konflik + kjKonflik, 0, 100); }                     // v8.12: kontrak perniagaan semasa memegang jawatan kerajaan
     var r = rng(o, p), now = idx(p), kes = { myr: 0 }, patch = null, kerajaan = pegangKerajaan(p), kc = CONFIG.KONFLIK, ngoAda = false, akarUmbi = 0, untung = 0, rugiMsg = '';
     d.pelaburan.forEach(function (x) {
       var j = CONFIG.JENIS[x.jenis], matang = now - x.idx >= CONFIG.MATANG;
@@ -118,7 +120,7 @@
       d.konflik = kc.selepasKes; rekod(d, p, 'Konflik kepentingan dibangkitkan');
       if (I) { I.ubahSkor(kc.kesanSkor, 'Konflik kepentingan (syarikat sampingan)'); if (kerajaan && I.tambahRisiko) { I.tambahRisiko(kc.kesanRisiko, 'syarikat sampingan berurusan dengan pihak berkaitan'); } }
       kes.reputasi = (kes.reputasi || 0) + kc.kesanReputasi;
-      ev.push({ jenis: 'sampingan', mesej: 'Syarikat sampingan anda dipersoalkan kerana konflik kepentingan (Integriti Parti ' + kc.kesanSkor + ', Reputasi ' + kc.kesanReputasi + ').' });
+      ev.push({ jenis: 'sampingan', mesej: (d.pelaburan.length ? 'Syarikat sampingan anda' : 'Kontrak perniagaan anda') + ' dipersoalkan kerana konflik kepentingan (Integriti Parti ' + kc.kesanSkor + ', Reputasi ' + kc.kesanReputasi + ').' });
     }
     if (untung > 0 && !rugiMsg) { ev.push({ jenis: 'sampingan', mesej: 'Pendapatan sampingan bulan ini: +RM ' + untung.toLocaleString('ms-MY') + '.' }); }
     simpan(d, kes, { patch: patch });

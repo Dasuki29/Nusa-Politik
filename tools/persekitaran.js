@@ -20,7 +20,7 @@ const path = require('path');
 const JS = path.join(__dirname, '..', 'js');
 
 /* Susunan sama seperti dashboard.html, tanpa modul yang bergantung pada DOM (app, pru-ui, dewan-ui, lagu, pwa, menu, slotpanel, tema, map). */
-const SUSUNAN = ['data', 'sayap', 'blok', 'misi', 'save', 'pencapaian', 'sfx', 'krisis-peta', 'infra', 'calendar', 'avatar', 'ordinaryMember', 'incumbent', 'jawatan', 'etika',
+const SUSUNAN = ['data', 'sayap', 'blok', 'misi', 'save', 'pencapaian', 'sfx', 'krisis-peta', 'kerjaya', 'infra', 'calendar', 'avatar', 'ordinaryMember', 'incumbent', 'jawatan', 'etika',
   'election', 'rival', 'negeri', 'meeting', 'EventDatabase', 'events', 'geo', 'slot', 'latihan', 'tutorial', 'watak', 'perlembagaan',
   'organisasi', 'stress', 'hayat', 'pru', 'kabinet-data', 'kabinet', 'prk', 'ElectionEngine', 'CabinetEngine', 'WingEngine', 'dewan', 'dun', 'paparan'];
 
@@ -77,7 +77,7 @@ function daftar(o) {
   const dem = D.tentukanDemografi(jantina, umur);
   const prof = S.buildPlayerProfile({
     nama: o.nama || 'Pemain Ujian', demografik: dem, cawangan: caw, avatar: dem.kod, sayap: o.sayap || 'utama',
-    difficultyLevel: o.kesukaran || 'NORMAL', tahunAhli: o.tahunAhli === undefined ? 5 : o.tahunAhli
+    difficultyLevel: o.kesukaran || 'NORMAL', careerBackground: o.careerBackground, tahunAhli: o.tahunAhli === undefined ? 5 : o.tahunAhli
   });
   const r = S.savePlayer(prof);
   if (!r.ok) { throw new Error('Pendaftaran gagal: ' + r.ralat); }

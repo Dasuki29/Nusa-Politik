@@ -2187,7 +2187,31 @@
   ["Dengar Aduan Terbuka", "Hold an Open Complaints Session"],
   ["Membuka sesi dialog untuk mendengar rungutan ahli dan penduduk secara terus. Meletihkan tetapi membina kepercayaan.", "Open a dialogue to hear members' and residents' grievances directly. Tiring, but it builds trust."],
   ["Anda melabur RM {a} daripada Dana RM {b} (baki di tangan RM {c}). Wang kempen yang tidak terpakai dipulangkan selepas pilihan raya.", "You are investing RM {a} out of your RM {b} funds (RM {c} left in hand). Unused campaign money is returned after the election."],
-  ["Sila pilih jumlah peruntukan kempen. Peruntukan lebih besar menguatkan kempen; wang yang tidak terpakai dipulangkan.", "Please choose the campaign allocation. A bigger allocation strengthens the campaign; unused money is returned."]
+  ["Sila pilih jumlah peruntukan kempen. Peruntukan lebih besar menguatkan kempen; wang yang tidak terpakai dipulangkan.", "Please choose the campaign allocation. A bigger allocation strengthens the campaign; unused money is returned."],
+  ["Pendapatan bulanan", "Monthly income"],
+  ["Setiap bulan baharu: AP bertambah {x} (baki dibawa, had {y}) dan pendapatan bulanan (kerjaya, tolak kos operasi jawatan) ditambah ke dana.", "Each new month: AP increases by {x} (balance carried over, cap {y}) and monthly income (career, minus post operating costs) is added to funds."],
+  ["Pendapatan kerjaya ({a}) +RM {b}", "Career income ({a}) +RM {b}"],
+  ["Pendapatan kerjaya ({a}, 50%) +RM {b}", "Career income ({a}, 50%) +RM {b}"],
+  ["Pendapatan kerjaya ({a}, dihentikan) +RM {b}", "Career income ({a}, stopped) +RM {b}"],
+  ["Profesional / Korporat", "Professional / Corporate"],
+  ["Peniaga / Kontraktor", "Businessperson / Contractor"],
+  ["Pengamal Undang-undang", "Legal Practitioner"],
+  ["Kos operasi jawatan cawangan -RM {a}", "Branch post operating cost -RM {a}"],
+  ["Kos operasi jawatan bahagian -RM {a}", "Division post operating cost -RM {a}"],
+  ["Kos operasi jawatan pusat -RM {a}", "Headquarters post operating cost -RM {a}"],
+  ["Elaun ADUN +RM {a}", "ADUN allowance +RM {a}"],
+  ["Elaun Ahli Parlimen +RM {a}", "Member of Parliament allowance +RM {a}"],
+  ["Latar belakang profesional", "Professional background"],
+  ["Pilih latar belakang profesional", "Choose a professional background"],
+  ["💼 Profesional / Korporat", "💼 Professional / Corporate"],
+  ["⚖️ Pengamal Undang-undang", "⚖️ Legal Practitioner"],
+  ["🏗️ Peniaga / Kontraktor", "🏗️ Businessperson / Contractor"],
+  ["Gaji tetap RM 900 sebulan. Stabil, tiada risiko konflik kepentingan.", "Fixed salary of RM 900 a month. Stable, with no conflict-of-interest risk."],
+  ["Pendapatan RM 850 sebulan. Dihentikan apabila anda menjadi Menteri.", "Income of RM 850 a month. Stops when you become a Minister."],
+  ["Pendapatan RM 750 sebulan. Kontrak kerajaan menaikkan risiko konflik kepentingan jika anda memegang jawatan kerajaan.", "Income of RM 750 a month. Government contracts raise conflict-of-interest risk if you hold a government post."],
+  ["Tiada elaun parti. Jawatan parti menanggung kos operasi bulanan; pendapatan rasmi hanya sebagai ADUN, Ahli Parlimen, EXCO atau Menteri. Latar belakang dikunci selepas anda mendaftar.", "There is no party allowance. Party posts carry a monthly operating cost; official income comes only as an ADUN, Member of Parliament, EXCO member or Minister. Your background is locked once you register."],
+  ["Kontrak perniagaan anda dipersoalkan kerana konflik kepentingan (Integriti Parti {a}, Reputasi {b}).", "Your business contracts are questioned over a conflict of interest (Party Integrity {a}, Reputation {b})."],
+  ["Setiap bulan baharu: AP bertambah {x} (baki dibawa, had {y}) dan pendapatan bulanan (kerjaya, tolak kos operasi jawatan) ditambah ke dana. Bonus +{z}% IP dan sokongan bagi tindakan sehingga bulan 3.", "Each new month: AP increases by {x} (balance carried over, cap {y}) and monthly income (career, minus post operating costs) is added to funds. +{z}% IP and support bonus on actions until month 3."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

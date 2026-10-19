@@ -349,7 +349,7 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -609,7 +609,7 @@
       return '<li class="f-' + kelas + (j.semasa ? ' is-semasa' : '') + (j.lepas ? ' is-lepas' : '') + '"' + (j.semasa ? ' aria-current="date"' : '') +
         ' title="' + esc(j.nama + (j.acara.length ? ': ' + j.acara.join(', ') : '')) + '"><b>' + j.bulan + '</b>' + esc(j.pendek) + '</li>';
     }).join('');
-    $('t-info').textContent = 'Setiap bulan baharu: AP bertambah ' + K.CONFIG.AP_BULANAN + ' (baki dibawa, had ' + K.CONFIG.AP_MAKS + ') dan elaun bulanan ditambah ke dana.' +
+    $('t-info').textContent = 'Setiap bulan baharu: AP bertambah ' + K.CONFIG.AP_BULANAN + ' (baki dibawa, had ' + K.CONFIG.AP_MAKS + ') dan pendapatan bulanan (kerjaya, tolak kos operasi jawatan) ditambah ke dana.' +
       (tk.bonusAkarUmbi ? ' Bonus +' + Math.round(tk.bonusAkarUmbi * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3.' : '');
     btn.disabled = false;
     btn.innerHTML = tk.tahunBaharuSeterusnya
@@ -1299,8 +1299,8 @@
       isi: '<div class="kv"><span>Bulan</span><b>' + pv.dari.bulan + '/' + pv.dari.tahun + ' &rarr; ' + pv.ke.bulan + '/' + pv.ke.tahun + '</b></div>' +
         '<div class="kv"><span>Fasa takwim</span><b>' + esc(pv.fasaBaharu.ringkas) + '</b></div>' +
         '<div class="kv"><span>AP (terkumpul, had ' + K.CONFIG.AP_MAKS + ')</span><b>' + p0.ap + ' &rarr; ' + rg.apBaharu + '</b></div>' +
-        '<div class="kv"><span>Elaun bulanan</span><b>+RM ' + fmt(rg.myr) + '</b></div>' +
-        (rg.butiran.length > 1 ? '<p style="margin:6px 0 0;font-size:.8rem">' + rg.butiran.map(function (b) { return esc(b.nama) + ' RM ' + fmt(b.jumlah); }).join(' + ') + '</p>' : '') +
+        '<div class="kv"><span>Pendapatan bulanan</span><b>' + (rg.myr < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(rg.myr)) + '</b></div>' +
+        (rg.butiran.length > 1 ? '<ul style="margin:6px 0 0;padding-left:18px;font-size:.8rem">' + rg.butiran.map(function (b) { return '<li>' + esc(b.nama) + ' ' + (b.jumlah < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(b.jumlah)) + '</li>'; }).join('') + '</ul>' : '') +
         (pv.tahunBaharu ? '<p style="margin-top:12px">Tahun bertukar dan kitaran pemilihan 3 tahun dikemas kini.</p>' : '') +
         (pv.amaran.length ? '<ul style="margin-top:12px">' + pv.amaran.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
         '<p style="margin-top:12px">Anda tidak boleh kembali ke bulan sebelumnya.</p>',

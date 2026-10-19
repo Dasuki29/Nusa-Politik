@@ -51,8 +51,7 @@
     BULAN_NAMA: ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'],
     AP_BULANAN: 5,                       // AP bertambah sebanyak ini setiap bulan (v7.23: baki dibawa)
     AP_MAKS: 15,                         // had AP terkumpul (3 bulan); ubah di sini untuk laras keseimbangan
-    DANA_ASAS: 150,                      // elaun bulanan semua pemain (MYR); v7.9: dikurangkan (dahulu 450)
-    DANA_JAWATAN: { cawangan: 200, bahagian: 500, pusat: 1200 },   // tambahan bagi pemegang jawatan
+    PERINGKAT_PARTI: ['cawangan', 'bahagian', 'pusat'],   // v8.12: elaun asas dan elaun jawatan parti DIHAPUSKAN; lihat js/kerjaya.js (pendapatan kerjaya, kos operasi, elaun rasmi YB)
     // v3.8: sokongan susut setiap bulan jika tidak dijaga. Pemegang jawatan menanggung susutan Akar Umbi tambahan.
     SUSUT_BULANAN: { akarUmbi: 3, ajk: 2, perwakilan: 3 },       // ketuaCawangan tidak disusutkan: pemegang jawatan tiada tindakan untuk memulihkannya
     SUSUT_PEMEGANG_JAWATAN: 2,           // tambahan susutan Akar Umbi bagi pemegang jawatan
@@ -131,19 +130,22 @@
     var out = [];
     (Array.isArray(p && p.jawatanList) ? p.jawatanList : []).forEach(function (j) {
       var k = j.peringkat === 'pusat' ? 'pusat' : j.peringkat;
-      if (CONFIG.DANA_JAWATAN[k] && out.indexOf(k) < 0) { out.push(k); }
+      if (CONFIG.PERINGKAT_PARTI.indexOf(k) >= 0 && out.indexOf(k) < 0) { out.push(k); }
     });
     if (!out.length && p) { var per = peringkatJawatan(p.jawatan); if (per) { out.push(per); } }
     return out;
   }
 
-  /** Elaun bulanan: { jumlah, butiran:[{nama, jumlah}] }. Setiap peringkat yang dipegang menambah elaun. */
+  /**
+   * Pendapatan bulanan: { jumlah, butiran:[{nama, jumlah}] }.
+   * v8.12: tiada lagi elaun parti. Pendapatan kerjaya + elaun ADUN/MP, tolak kos operasi jawatan parti (js/kerjaya.js).
+   * Jumlah dihadkan supaya dana tidak jatuh bawah 0.
+   */
   function pendapatanBulanan(profil) {
-    var p = profil || S.loadPlayer(), butiran = [{ nama: 'Elaun asas', jumlah: CONFIG.DANA_ASAS }];
-    peringkatDipegang(p).forEach(function (per) {
-      butiran.push({ nama: 'Elaun jawatan ' + per.charAt(0).toUpperCase() + per.slice(1), jumlah: CONFIG.DANA_JAWATAN[per] });
-    });
-    return { jumlah: butiran.reduce(function (a, b) { return a + b.jumlah; }, 0), butiran: butiran };
+    var p = profil || S.loadPlayer(), KJ = muat('MyPolitikKerjaya', 'kerjaya.js');
+    var d = KJ && KJ.pendapatan ? KJ.pendapatan(p) : { jumlah: 0, butiran: [] };
+    var jumlah = Math.max(d.jumlah, -(Number(p && p.myr) || 0));
+    return { jumlah: jumlah, butiran: d.butiran };
   }
 
   /** Perubahan AP dan MYR pada permulaan bulan baharu. */
@@ -300,10 +302,10 @@
       peristiwa = peristiwa.concat(r.peristiwa || []);
       var JW0 = muat('MyPolitikJawatan', 'jawatan.js');                                      // v6.8: jawatan yang tidak dipertahankan luput SEBELUM elaun dikira
       if (JW0 && JW0.kemaskiniPenggal) { peristiwa = peristiwa.concat(JW0.kemaskiniPenggal().peristiwa || []); rg = regenerasi(S.loadPlayer()); }
-      r = S.applyEffects({ ap: rg.ap, myr: rg.myr, kesetiaan: rg.kesetiaan }, { kiraTindakan: false, log: { tindakan: 'regenerasi', nama: 'Elaun bulan ' + bulan + ' ' + tahun, peringkat: 'bulan' } });
+      r = S.applyEffects({ ap: rg.ap, myr: rg.myr, kesetiaan: rg.kesetiaan }, { kiraTindakan: false, tanpaKesukaran: true, log: { tindakan: 'regenerasi', nama: 'Pendapatan bulan ' + bulan + ' ' + tahun, peringkat: 'bulan' } });
     } else {
       r = S.applyEffects({ ap: rg.ap, myr: rg.myr, kesetiaan: rg.kesetiaan }, {
-        kiraTindakan: false, patch: tahunBaharu ? { bulan: bulan, tahun: tahun } : { bulan: bulan },
+        kiraTindakan: false, tanpaKesukaran: true, patch: tahunBaharu ? { bulan: bulan, tahun: tahun } : { bulan: bulan },
         log: { tindakan: 'bulan_baharu', nama: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun, peringkat: 'bulan' }
       });
     }
