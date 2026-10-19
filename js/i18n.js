@@ -59,7 +59,7 @@
     }
     return true;
   }
-  function tepat(s) { var k = T.INDEKS[s]; return k !== undefined ? T.EN[k] : null; }
+  function tepat(s) { var k = T.INDEKS[s]; return k !== undefined ? T.EN[k] : T.padan(s, function (x) { var y = terjemah(x.trim()); return y === null ? x : y; }); }
   function peraturan(s) {
     var i, m, r;
     for (i = 0; i < T.PERATURAN.length; i++) {
@@ -90,6 +90,7 @@
   function terjemah(s) {
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();
+    T.NORMAL.forEach(function (n) { s = s.replace(n[0], n[1]); });
     if (/^(Wikipedia|mStar|Laman rasmi UMNO)\b/.test(s)) { return null; }          // tajuk sumber rujukan kekal
     if (cache.has(s)) { return cache.get(s); }
     var r = tepat(s), aw = null;
