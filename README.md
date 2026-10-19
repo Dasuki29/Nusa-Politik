@@ -4,6 +4,11 @@ Permainan simulasi politik berasaskan struktur parti UMNO. Pemain bermula sebaga
 
 > **Penafian:** Ini permainan simulasi, bukan laman rasmi parti. Nombor, kebarangkalian dan nama pesaing ialah rekaan permainan. Kad "Laluan Karier Sebenar" ialah ringkasan fakta awam bersumber dan tidak menilai mana-mana tokoh.
 
+## Bahasa dan simpanan
+
+- **BM / EN:** tukar bahasa dengan butang BM | EN di pengepala. Pilihan disimpan bersama watak.
+- **Pindah career:** Menu > Simpanan > Eksport/Import. Salin kod `NUSA1.` atau muat turun fail JSON, kemudian import di peranti lain. Tiada akaun diperlukan.
+
 ## Cara main
 
 1. Buka `index.html`, isi nama, jantina, umur, tahun menjadi ahli, pilih Cawangan dan watak.
