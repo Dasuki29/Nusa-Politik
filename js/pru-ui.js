@@ -188,16 +188,29 @@
       butang: []
     });
   }
+  /** v8.11: peruntukan kempen tidak lagi ditanda lalai (dahulu pilihan terkecil, mudah terlepas pandang). Satu pilihan sahaja = ditanda. */
+  function tandaDana(pil, i) { return pil.pilihan.length === 1 && i === 0 ? ' checked' : ''; }
+  function ringkasDana(p, n) {
+    return n ? 'Anda melabur RM ' + fmt(n) + ' daripada Dana RM ' + fmt(p.myr) + ' (baki di tangan RM ' + fmt(Math.max(0, p.myr - n)) + '). Wang kempen yang tidak terpakai dipulangkan selepas pilihan raya.'
+      : 'Sila pilih jumlah peruntukan kempen. Peruntukan lebih besar menguatkan kempen; wang yang tidak terpakai dipulangkan.';
+  }
+  function pasangRingkasDana(p, isiEl, semak) {
+    var el = isiEl.querySelector('#pru-ringkas-dana');
+    function kemas() { var d = isiEl.querySelector('input[name=dana]:checked'); if (el) { el.innerHTML = ringkasDana(p, d ? Number(d.value) : 0); } if (semak) { semak(); } }
+    isiEl.addEventListener('change', function (e) { if (e.target && e.target.name === 'dana') { kemas(); } });
+    kemas();
+  }
   async function modManifesto(p) {
     var a = PRU.getPRU(p).aktif, pil = PRU.peruntukanPilihan(p, a), prof = a.constituencyType;
     var isi = '<p>Pilih <b>tepat 3 janji</b> manifesto. Janji yang sesuai dengan kawasan ' + PRU.IKON_PROFIL[prof] + ' <b>' + esc(PRU.PROFIL[prof]) + '</b> memberi bonus sokongan lebih besar. Janji dinilai 12 bulan selepas anda menang.</p><div class="pru-pilih" id="pru-janji">' +
       PRU.JANJI.map(function (j) { return '<label><input type="checkbox" name="janji" value="' + j.id + '"><span><b>' + j.ikon + ' ' + esc(j.nama) + '</b><small>Bonus kawasan ini +' + (j.sesuai[prof] || 0) + ' · kos pelaksanaan RM ' + fmt(j.kosBulan) + '/bulan · risiko dimungkiri ' + Math.round(j.ingkar * 100) + '%</small></span></label>'; }).join('') + '</div>' +
       '<p><b>Peruntukan kempen</b> (diambil daripada Dana anda RM ' + fmt(p.myr) + '; baki dipulangkan):</p><div class="pru-pilih" id="pru-dana">' +
-      (pil.pilihan.length ? pil.pilihan.map(function (n, i) { return '<label><input type="radio" name="dana" value="' + n + '"' + (i === 0 ? ' checked' : '') + '><span><b>RM ' + fmt(n) + '</b>' + (pil.bawahMin ? '<small>Bawah minimum RM ' + fmt(pil.min) + ': sokongan awal -' + pil.penalti.sokongan + '%, jentera -' + pil.penalti.jentera + '%</small>' : '') + '</span></label>'; }).join('') : '<p class="pru-ng">Dana tidak mencukupi (minimum RM ' + fmt(pil.min) + ').</p>') + '</div>' +
+      (pil.pilihan.length ? pil.pilihan.map(function (n, i) { return '<label><input type="radio" name="dana" value="' + n + '"' + tandaDana(pil, i) + '><span><b>RM ' + fmt(n) + '</b>' + (pil.bawahMin ? '<small>Bawah minimum RM ' + fmt(pil.min) + ': sokongan awal -' + pil.penalti.sokongan + '%, jentera -' + pil.penalti.jentera + '%</small>' : '') + '</span></label>'; }).join('') : '<p class="pru-ng">Dana tidak mencukupi (minimum RM ' + fmt(pil.min) + ').</p>') + '</div><p class="note" id="pru-ringkas-dana" aria-live="polite"></p>' +
       (pil.bawahMin ? '<p class="note">Dana anda kurang daripada minimum. Anda boleh bertanding dengan semua dana yang ada (kempen lebih lemah), atau menarik diri. Bulan tidak boleh dimajukan semasa pilihan raya.</p>' : '');
     var pr = modal({ tajuk: 'Manifesto & Peruntukan Kempen', isi: isi, butang: [{ label: 'Tunda', nilai: false }, { label: 'Tarik Diri', nilai: 'tarik', kelas: 'btn--danger' }, { label: 'Mula Kempen 14 Hari', nilai: true, kelas: 'btn--gold', nonaktif: true }] });
     var kaki = W.document.getElementById('modal-kaki'), mula = kaki && kaki.querySelector('button:last-child'), isiEl = W.document.getElementById('modal-isi');
-    function semak() { if (mula) { mula.disabled = !(isiEl.querySelectorAll('input[name=janji]:checked').length === 3 && pil.pilihan.length); } }
+    function semak() { if (mula) { mula.disabled = !(isiEl.querySelectorAll('input[name=janji]:checked').length === 3 && pil.pilihan.length && isiEl.querySelector('input[name=dana]:checked')); } }
+    pasangRingkasDana(p, isiEl, semak);
     isiEl.addEventListener('change', function (e) {
       var terpilih = isiEl.querySelectorAll('input[name=janji]:checked');
       if (e.target.name === 'janji' && terpilih.length > 3) { e.target.checked = false; toast('Hanya 3 janji boleh dipilih.', 'ralat'); }
@@ -480,8 +493,10 @@
         } else if (a.fasa === 'calon') {
           var pil = r.peruntukan;
           var pr = modal({ tajuk: 'Peruntukan Kempen Kilat', isi: '<p>Kempen kilat <b>7 hari</b>: kos tinggi dan Stress naik pantas (+2 sehari selain kos tindakan). Dana anda: <b>RM ' + fmt(p.myr) + '</b>. Baki dipulangkan.</p><div class="pru-pilih" id="pru-dana">' +
-            pil.pilihan.map(function (n, i) { return '<label><input type="radio" name="dana" value="' + n + '"' + (i === 0 ? ' checked' : '') + '><span><b>RM ' + fmt(n) + '</b></span></label>'; }).join('') + '</div>',
-            butang: [{ label: 'Tunda', nilai: false }, { label: 'Mula Kempen 7 Hari', nilai: true, kelas: 'btn--gold' }] });
+            pil.pilihan.map(function (n, i) { return '<label><input type="radio" name="dana" value="' + n + '"' + tandaDana(pil, i) + '><span><b>RM ' + fmt(n) + '</b></span></label>'; }).join('') + '</div><p class="note" id="pru-ringkas-dana" aria-live="polite"></p>',
+            butang: [{ label: 'Tunda', nilai: false }, { label: 'Mula Kempen 7 Hari', nilai: true, kelas: 'btn--gold', nonaktif: true }] });
+          var kakiK = W.document.getElementById('modal-kaki'), mulaK = kakiK && kakiK.querySelector('button:last-child'), isiK = W.document.getElementById('modal-isi');
+          if (isiK) { pasangRingkasDana(p, isiK, function () { if (mulaK) { mulaK.disabled = !isiK.querySelector('input[name=dana]:checked'); } }); }
           var ya = await pr;
           if (!ya) { break; }
           var d = W.document.querySelector('#modal-isi input[name=dana]:checked');

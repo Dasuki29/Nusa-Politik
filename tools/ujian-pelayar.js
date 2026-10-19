@@ -172,6 +172,30 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     }
   }
 
+  /* v8.11: peruntukan kempen tiada pilihan lalai; butang mula kempen tidak aktif sehingga dipilih. */
+  await pg.evaluate(() => {
+    const S = window.MyPolitikSave, R = window.MyPolitikPRU, rng = () => 0.0001;
+    S.applyEffects({}, { kiraTindakan: false, patch: { ip: 400, myr: 50000, jawatan: 'AJK Cawangan', bulan: 6, jawatanList: [{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', kumpulan: 'utama', sayap: null, pangkat: 1, tahun: S.loadPlayer().tahun }] } });
+    R.isytihar('tamat_penggal', { rng }); R.pilihKerusi('DUN', { rng });
+    const a = R.getPRU(S.loadPlayer()).aktif; if (a && a.fasa === 'runding') { R.runding('abai', { rng }); }
+    window.__alir = window.NusaPRU_UI.alir(); window.__fasa = R.getPRU(S.loadPlayer()).aktif.fasa;
+  });
+  await pg.waitForTimeout(800); await imbas('modal manifesto');
+  const dm = await pg.evaluate(() => ({ fasa: window.__fasa, radio: document.querySelectorAll('#modal-isi input[name=dana]').length, dipilih: document.querySelectorAll('#modal-isi input[name=dana]:checked').length, ringkas: (document.getElementById('pru-ringkas-dana') || {}).innerText || '' }));
+  if (dm.fasa === 'manifesto') {
+    if (!dm.radio) { ralat.push('pilihan peruntukan tiada'); }
+    if (dm.dipilih !== 0) { ralat.push('peruntukan masih ditanda lalai: ' + dm.dipilih); }
+    if (!/Please choose the campaign allocation/.test(dm.ringkas)) { ralat.push('ringkasan dana EN salah: ' + dm.ringkas.slice(0, 100)); }
+    await pg.evaluate(() => { document.querySelectorAll('#modal-isi input[name=janji]').forEach((e, i) => { if (i < 3) { e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); } }); });
+    const mulaOff = await pg.evaluate(() => { const bt = document.querySelector('#modal-kaki button:last-child'); return bt && bt.disabled; });
+    if (!mulaOff) { ralat.push('butang mula kempen aktif walaupun peruntukan belum dipilih'); }
+    await pg.evaluate(() => { const r = document.querySelectorAll('#modal-isi input[name=dana]'); const e = r[r.length - 1]; e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); });
+    const mulaOn = await pg.evaluate(() => { const bt = document.querySelector('#modal-kaki button:last-child'); return bt && !bt.disabled; });
+    const rg = await pg.evaluate(() => (document.getElementById('pru-ringkas-dana') || {}).innerText || '');
+    if (!mulaOn) { ralat.push('butang mula kempen masih tidak aktif selepas peruntukan dipilih'); }
+    if (!/You are investing RM/.test(rg)) { ralat.push('ringkasan pelaburan EN salah: ' + rg.slice(0, 100)); }
+  } else { ralat.push('fasa bukan manifesto untuk ujian peruntukan: ' + dm.fasa); }
+
   await b.close(); pelayan.close();
   console.log('Ralat JavaScript: ' + ralat.length + (ralat.length ? '\n  - ' + ralat.slice(0, 5).join('\n  - ') : ''));
   console.log('Teks BM bocor dalam EN: ' + bocor.size + (bocor.size ? '\n  - ' + [...bocor].slice(0, 40).map((x) => x[1] + ': ' + x[0]).join('\n  - ') : ''));

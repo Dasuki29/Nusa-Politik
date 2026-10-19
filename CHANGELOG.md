@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v8.11 (2026-10-19)
+
+Peruntukan kempen tidak lagi ditanda lalai (maklum balas pemain: terlepas menetapkan bajet pilihan raya).
+
+### Diperbaiki
+
+- **Punca:** dalam skrin "Manifesto & Peruntukan Kempen" (PRU) dan "Peruntukan Kempen Kilat" (PRK), pilihan pertama (jumlah paling kecil: minimum RM 2,000 atau RM 5,000) sudah ditanda. Pemain yang memilih 3 janji lalu terus menekan "Mula Kempen" mendapat bajet minimum tanpa sedar.
+- **Pembetulan:** tiada pilihan lalai (kecuali hanya satu pilihan ada); butang "Mula Kempen" tidak aktif sehingga peruntukan dipilih; satu baris ringkasan menunjukkan "Anda melabur RM X daripada Dana RM Y (baki di tangan RM Z)".
+- Tutorial langkah Manifesto dikemas kini (BM dan EN).
+
+### Andaian (sila semak)
+
+- Saya memilih "tiada lalai" dan bukan "lalai jumlah terbesar", supaya pemain sentiasa membuat keputusan sedar dan dana tidak terkeluar tanpa sengaja.
+- Butang Undo belum dibuat (menunggu arahan).
+- Semakan pelayar baharu: tiada pilihan ditanda, butang mula tidak aktif sebelum dipilih, aktif selepas dipilih, ringkasan dalam EN.
+
 ## v8.10 (2026-10-19)
 
 Paparan IP sebenar pada setiap tindakan (maklum balas pemain: "+10 IP" tetapi dapat +1).

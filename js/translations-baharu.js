@@ -2185,7 +2185,9 @@
   ["Kopi O dengan Golongan Atas Pagar", "Kopi O with the Fence-sitters"],
   ["Bertemu empat mata dengan mereka yang belum memihak, di kedai kopi, tanpa agenda rasmi.", "Meet face to face with those who have not picked a side, at a coffee shop, with no official agenda."],
   ["Dengar Aduan Terbuka", "Hold an Open Complaints Session"],
-  ["Membuka sesi dialog untuk mendengar rungutan ahli dan penduduk secara terus. Meletihkan tetapi membina kepercayaan.", "Open a dialogue to hear members' and residents' grievances directly. Tiring, but it builds trust."]
+  ["Membuka sesi dialog untuk mendengar rungutan ahli dan penduduk secara terus. Meletihkan tetapi membina kepercayaan.", "Open a dialogue to hear members' and residents' grievances directly. Tiring, but it builds trust."],
+  ["Anda melabur RM {a} daripada Dana RM {b} (baki di tangan RM {c}). Wang kempen yang tidak terpakai dipulangkan selepas pilihan raya.", "You are investing RM {a} out of your RM {b} funds (RM {c} left in hand). Unused campaign money is returned after the election."],
+  ["Sila pilih jumlah peruntukan kempen. Peruntukan lebih besar menguatkan kempen; wang yang tidak terpakai dipulangkan.", "Please choose the campaign allocation. A bigger allocation strengthens the campaign; unused money is returned."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
