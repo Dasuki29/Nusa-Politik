@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.13 (2026-10-19)
+
+Sistem Harta, Cukai & Pengisytiharan Harta SPRM (modul baharu `js/harta.js`, `js/harta-ui.js`).
+
+### Baharu
+
+- **Tab 💰 Harta:** beli/jual aset. Hartanah (Rumah teres +2 IP, Wisma Pejabat +6 IP sebulan), Agensi Penerangan (-25% peluang krisis politik), Syarikat Media (-45%), Kenderaan mewah (Stress -2) dan Jet (Stress -5). Kos penyelenggaraan 0.5% sebulan; jual pada 80%.
+- **Cukai:** kurungan atas kekayaan bersih (tunai + aset): 0% hingga RM 50k, 1% hingga RM 200k, 2% hingga RM 500k, 3% selepas itu. Dikumpul 1/12 sebulan.
+- **Pengisytiharan Harta SPRM (wajib):** setiap 12 bulan atau apabila dilantik ke jawatan kerajaan. Bulan tidak boleh dimajukan sehingga dijawab. Telus: bayar cukai, Integriti Parti +15. Sembunyi Aset: cukai dielak, Risiko Audit +25 (dan risiko tadbir urus +15 bagi pemegang jawatan kerajaan); audit boleh mengenakan cukai dan denda 100%.
+- Tutorial BM/EN, terjemahan, 8 ujian unit baharu, ujian pelayar Harta.
+
+### Andaian
+- Pengisytiharan terpakai kepada semua pemain (cukai 0% di bawah RM 50k); IP pasif tertakluk kepada pulangan berkurangan IP; kebarangkalian audit = risiko/2 %; faktor media tidak bertindan (yang terbaik digunakan).
+
 ## v8.12 (2026-10-19)
 
 Rombakan Sistem Kewangan & Pendapatan: elaun parti dimansuhkan, kerjaya profesional diperkenalkan, pendapatan rasmi hanya untuk YB.

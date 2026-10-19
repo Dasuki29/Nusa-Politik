@@ -109,6 +109,8 @@
       .replace(/\{bahagian\}/g, p.bahagian || 'anda')
       .replace(/\{dun\}/g, p.dun || 'kawasan anda');
   }
+  /** v8.13: Agensi Penerangan / Syarikat Media (js/harta.js) mengurangkan peluang krisis politik bulanan. */
+  function faktorHarta(p) { var H = typeof globalThis !== 'undefined' ? globalThis.MyPolitikHarta : null; return H && H.faktorKrisis ? H.faktorKrisis(p) : 1; }
   function beratAcara(a, p) {
     if (a.syarat && !a.syarat(p)) { return 0; }
     var b = typeof a.berat === 'function' ? a.berat(p) : (a.berat == null ? 1 : a.berat);
@@ -161,7 +163,7 @@
     var a = null;
     var indeksBulan = p.tahun * 12 + p.bulan, adaJawatan = p.jawatan && p.jawatan !== 'Ahli Biasa';
     if (!opts.paksa && opts.pencetus !== 'aktiviti') {                 // v5.8: undian krisis bulanan (pemegang jawatan sahaja)
-      var layakKrisis = adaJawatan && (opts.krisis === true || (!opts.abaikanPeluang && indeksBulan - (d.krisisTerakhir || 0) >= CONFIG.KRISIS_JARAK_BULAN && rng() < CONFIG.PELUANG_KRISIS));
+      var layakKrisis = adaJawatan && (opts.krisis === true || (!opts.abaikanPeluang && indeksBulan - (d.krisisTerakhir || 0) >= CONFIG.KRISIS_JARAK_BULAN && rng() < CONFIG.PELUANG_KRISIS * faktorHarta(p)));
       if (layakKrisis) {
         var kolam = ACARA.filter(function (x) { return x.krisis && d.sejarah.slice(-CONFIG.ELAK_ULANG).indexOf(x.id) < 0 && beratAcara(x, p) > 0; });
         if (!kolam.length) { kolam = ACARA.filter(function (x) { return x.krisis && beratAcara(x, p) > 0; }); }

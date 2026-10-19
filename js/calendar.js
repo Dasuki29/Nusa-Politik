@@ -288,6 +288,7 @@
     var p = S && S.loadPlayer();
     if (!p) { return gagal('tiada_profil', 'Tiada profil pemain.'); }
     if (p.tamat) { return gagal('kerjaya_tamat', 'Kerjaya anda telah tamat. Mulakan permainan baharu.'); }     // v5.0
+    if (p.harta && p.harta.menunggu) { return gagal('harta_menunggu', 'Jawab Pengisytiharan Harta SPRM yang wajib dahulu (tab Harta).'); }   // v8.13
     if ((p.pru && p.pru.aktif) || (p.prk && p.prk.aktif)) { return gagal('pru_aktif', 'Pilihan raya sedang berlangsung. Selesaikan pencalonan, kempen dan keputusan dahulu.'); }     // v7.3
     var asal = snapshot(p), bulanLama = sah(p.bulan), tahunLama = p.tahun, peristiwa = [];
 
@@ -345,6 +346,8 @@
     if (MDA && MDA.prosesBulan) { peristiwa = peristiwa.concat(MDA.prosesBulan().peristiwa || []); }
     var SMP = muat('MyPolitikSampingan', 'sampingan.js');                                       // v7.64: Aktiviti Sampingan (syarikat / NGO)
     if (SMP && SMP.prosesBulan) { peristiwa = peristiwa.concat(SMP.prosesBulan().peristiwa || []); }
+    var HRT = muat('MyPolitikHarta', 'harta.js');                                               // v8.13: aset, cukai terkumpul, pengisytiharan harta SPRM
+    if (HRT && HRT.prosesBulan) { peristiwa = peristiwa.concat(HRT.prosesBulan().peristiwa || []); }
     var INC = muat('MyPolitikIncumbent', 'incumbent.js');                                        // v8.9: meter Atas Pagar reput ke arah 30%
     if (INC && INC.prosesBulan) { peristiwa = peristiwa.concat(INC.prosesBulan().peristiwa || []); }
     var KRP = muat('MyPolitikKrisisPeta', 'krisis-peta.js');                                     // v8.8: krisis tempatan berlokasi di peta
