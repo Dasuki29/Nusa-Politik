@@ -101,6 +101,13 @@ node tools/simulasi.js       # bot memainkan 12 kerjaya penuh (sehingga 40 tahun
 node tools/simulasi.js 30 600 1000   # 30 kerjaya, maksimum 600 bulan, benih rawak bermula 1000
 ```
 
+```
+node tools/ujian-bahasa.js       # ujian dwibahasa tanpa pelayar: kamus dan teks data permainan ada EN (-v untuk senarai penuh)
+node tools/ujian-pelayar.js      # asap pelayar dalam EN (perlu Playwright; dilangkau jika tiada). BULAN=12 untuk lebih lama
+```
+
+`tools/ujian-bahasa.js` gagal jika ada baris kamus tanpa EN, pemegang tempat `{x}` tidak sepadan, "Wing Wing", atau teks acara, latihan Amir, PRU, Kabinet dan Perlembagaan yang tiada terjemahan. `tools/ujian-pelayar.js` melaporkan ralat JavaScript dan teks BM yang bocor dalam mod EN. Nama misi dan tajuk sumber luar dikecualikan dengan sengaja.
+
 `tools/simulasi.js` melaporkan ralat JavaScript, **langgaran invarian** (contohnya nombor tidak sah, butang aktif yang gagal apabila ditekan, pemain tersekat atau cabaran jawatan yang tidak pernah selesai) dan **liputan** ciri yang sempat dimainkan. Kedua-dua alat keluar dengan kod 1 jika ada masalah, jadi sesuai dijalankan sebelum setiap kemas kini. `tools/persekitaran.js` ialah pemuat bersama yang menyediakan `localStorage` tiruan dan memuatkan modul `js/` mengikut susunan `dashboard.html`.
 
 ## Rujukan
