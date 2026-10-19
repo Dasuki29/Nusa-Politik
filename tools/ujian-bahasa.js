@@ -102,7 +102,24 @@ const EMAS = [
   ['Pemuda', 'Pemuda Wing'],
   ['Misi Bulanan Sayap Pemuda', 'Pemuda Wing Monthly Mission'],
   ['Tindakan Khas Sayap Wanita', 'Wanita Wing Special Action'],
-  ['Blok Undi Sayap Puteri Bahagian', 'Puteri Wing Division Vote Bloc']
+  ['Blok Undi Sayap Puteri Bahagian', 'Puteri Wing Division Vote Bloc'],
+  ['2 AP · MYR 1,500 · Wang tidak mencukupi (perlu MYR 1,500).', '2 AP · MYR 1,500 · Not enough funds (need MYR 1,500).'],
+  ['Lihat Bahagian di Pahang', 'View Divisions in Pahang'],
+  ['6,860 cawangan', '6,860 branches'],
+  ['Berdaftar', 'Registered'],
+  ['Anggar Peluang', 'Estimate Chances'],
+  ['Tarik Balik', 'Withdraw'],
+  ['Bawa Usul (-2 AP)', 'Bring Motion (-2 AP)'],
+  ['Bahas: Sokong (-1 AP)', 'Debate: Support (-1 AP)'],
+  ['Ringkasan Persidangan Tahunan Pemuda Cawangan 2026', 'Summary of Pemuda Wing Branch Annual Conference 2026'],
+  ['Status Usul (1 lulus, 2 ditolak, 3 anda sertai)', 'Motion Status (1 passed, 2 rejected, 3 you joined)'],
+  ['Kedudukan 1 daripada 7 calon (3 kerusi, 31 undi) · +7 IP', 'Rank 1 of 7 candidates (3 seats, 31 votes) · +7 IP'],
+  ['Menang: kedudukan 1 daripada 9 calon, 29 undi.', 'Won: rank 1 of 9 candidates, 29 votes.'],
+  ['Ringkasan: 1 lulus, 2 ditolak, 3 anda sertai. Menang perwakilan (kedudukan 1); Kalah perwakilan (kedudukan 4).', 'Summary: 1 passed, 2 rejected, 3 you joined. Won delegate seat (rank 1); Lost delegate seat (rank 4).'],
+  ['Atasi isu: Dewan serbaguna usang', 'Address the issue: Dilapidated multipurpose hall'],
+  ['Lantikan Pimpinan Negeri', 'State Leadership Appointment'],
+  ["Presiden Ali melantik Dato' Ahmad (Kuala Kangsar) sebagai Pengerusi Badan Perhubungan UMNO Perak. Anda tidak layak kerana bukan Ketua Bahagian.", "President Ali appoints Dato' Ahmad (Kuala Kangsar) as Chairman of the UMNO Perak Liaison Body. You are not eligible because you are not a Division Chief."],
+  ['Bulan 3 (Mac) 2026: AP +5 (had 15 dicapai), elaun +MYR 150. Sokongan susut jika tidak dijaga.', 'Month 3 (Mar) 2026: AP +5 (cap 15 reached), allowance +MYR 150. Support decays if neglected.']
 ];
 ujian('contoh emas: terjemahan tepat', () => {
   const r = [];

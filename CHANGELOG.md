@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v8.3 (2026-10-19)
+
+Pembetulan teks BM yang bocor dalam mod EN (laporan pemain melalui tangkapan skrin).
+
+### Pembetulan
+
+- **Tab Peta:** butang mod dan metrik, legenda, tooltip, panel butiran (Tahap, Ahli UMNO, Jumlah Perwakilan, Pemilih), "Lihat Bahagian di ...", bilangan cawangan dan mesej kos tindakan ("Wang tidak mencukupi (perlu MYR ...)").
+- **Persidangan Tahunan dan Pemilihan:** butang (Mulakan, Bawa Usul, Bahas, Anggar Peluang, Tarik Balik), chip status (Sedia, Berdaftar, Pertahan), ringkasan mesyuarat (status usul, keputusan pemilihan), tajuk pemilihan sayap, mesej keputusan, isu tempatan dan usul sayap.
+- **Modal Teruskan ke Bulan Seterusnya:** "Fasa takwim" dan "AP (terkumpul, had)".
+
+### Ujian
+
+- `tools/ujian-pelayar.js` kini membuka tab Peta (setiap mod, hover, klik, butang tindakan) dan mengesan nod teks yang sama dengan literal BM dalam kod sumber tetapi tiada terjemahan. Klik tab kini menggunakan klik DOM supaya tidak dihalang modal.
+- `tools/ujian-bahasa.js` menambah 15 contoh emas daripada laporan ini.
+
 ## v8.2 (2026-10-19)
 
 Dwibahasa Fasa 8 dan ujian automatik dwibahasa.
