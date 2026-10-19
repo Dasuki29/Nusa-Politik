@@ -1497,6 +1497,77 @@
     }, true);
     document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') { tutupMenu(); } });
   }
+  /* ----- v7.68: Pindah career (eksport/import kod atau fail JSON; tanpa akaun) ----- */
+  (function pindahCareer() {
+    var win = $('menu-win'); if (!win || !SLT || !SLT.eksport) { return; }
+    var data = null;
+    function sahaja(id) { return $(id); }
+    function semak(teks) {
+      var r = SLT.urai(teks), sm = sahaja('pindah-semak'), bi = sahaja('pindah-btn-import'), bg = win.querySelector('[data-pindah="ganti"]'), gl = sahaja('pindah-ganti');
+      data = r.ok ? r.data : null; if (gl) { gl.hidden = true; }
+      if (!String(teks || '').trim()) { sm.textContent = ''; bi.disabled = true; bg.disabled = true; return; }
+      if (!r.ok) { sm.textContent = '⚠️ ' + r.ralat; bi.disabled = true; bg.disabled = true; return; }
+      var k = r.ringkas, kosong = 0, a = SLT.aktif(), n = 0, i;
+      if (!SLT.ringkasan(a)) { n = a; } else { for (i = 1; i <= SLT.MAKS; i++) { if (!SLT.ringkasan(i)) { n = i; break; } } }
+      sm.textContent = '✔ ' + k.nama + ' · ' + k.jawatan + ' · ' + k.tahun + ' B' + k.bulan + (k.versi ? ' · versi simpanan ' + k.versi : '') + '. ' +
+        (n ? 'Akan dimuat ke Slot ' + n + ' (kosong). Watak sedia ada tidak diganti.' : 'Semua slot penuh. Pilih slot untuk diganti.');
+      bi.disabled = !n; bg.disabled = false;
+    }
+    function salinTeks(t) {
+      var nav = W.navigator;
+      if (nav && nav.clipboard && nav.clipboard.writeText) { return nav.clipboard.writeText(t); }
+      return new Promise(function (res, rej) {
+        try { var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); ok ? res() : rej(new Error('salin')); } catch (e) { rej(e); }
+      });
+    }
+    function eks() { var o = SLT.eksport(); if (!o) { toast('Tiada watak untuk dieksport.', 'ralat'); } return o; }
+    function mainSlot(n) {
+      var r = SLT.aktifkan(n); if (!r.ok) { toast(r.ralat || 'Gagal menukar watak.', 'ralat'); return; }
+      W.location.reload();
+    }
+    function selesai(r) {
+      if (!r.ok) { toast(r.ralat || 'Import gagal.', 'ralat'); return; }
+      toast('Watak dimuat ke Slot ' + r.slot + '.', 'ok'); mainSlot(r.slot);
+    }
+    function paparGanti() {
+      var gl = sahaja('pindah-ganti'); if (!gl || !data) { return; }
+      gl.innerHTML = SLT.senarai().map(function (x) {
+        var r = x.ringkas;
+        return '<div class="menu-baris"><div class="menu-baris__teks"><b>Slot ' + x.no + '</b><small>' + (r ? esc(r.nama) + ' · ' + esc(r.jawatan) + ' · ' + r.tahun + ' B' + r.bulan : '(kosong)') + '</small></div><button type="button" class="btn btn--ghost btn--sm" data-pindah-slot="' + x.no + '">' + (r ? 'Ganti' : 'Guna') + '</button></div>';
+      }).join('');
+      gl.hidden = false;
+    }
+    win.addEventListener('click', function (ev) {
+      var t = ev.target.closest ? ev.target.closest('[data-pindah],[data-pindah-slot]') : null; if (!t) { return; }
+      var j = t.getAttribute('data-pindah');
+      if (j === 'salin') { var o = eks(); if (o) { salinTeks(SLT.kod(o)).then(function () { toast('Kod simpanan disalin. Tampal di peranti lain.', 'ok'); }, function () { toast('Tidak dapat menyalin. Guna Muat Turun Fail.', 'ralat'); }); } return; }
+      if (j === 'fail') {
+        var o2 = eks(); if (!o2) { return; }
+        var nama = String(o2.player.nama || 'watak').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'watak';
+        var b = new W.Blob([SLT.teksFail(o2)], { type: 'application/json' }), u = W.URL.createObjectURL(b), a = document.createElement('a');
+        a.href = u; a.download = 'nusa-politik-' + nama + '-' + o2.player.tahun + 'B' + o2.player.bulan + '.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { W.URL.revokeObjectURL(u); }, 1000); toast('Fail simpanan dimuat turun.', 'ok'); return;
+      }
+      if (j === 'buka') { var bx = sahaja('pindah-import'); bx.hidden = !bx.hidden; if (!bx.hidden) { sahaja('pindah-teks').focus(); } return; }
+      if (j === 'pilih') { sahaja('pindah-fail').click(); return; }
+      if (j === 'import') { if (data) { selesai(SLT.pasangPantas(data)); } return; }
+      if (j === 'ganti') { paparGanti(); return; }
+      var sl = t.getAttribute('data-pindah-slot');
+      if (sl && data) {
+        var ada = SLT.ringkasan(parseInt(sl, 10));
+        if (ada && !W.confirm('Ganti watak ' + ada.nama + ' di Slot ' + sl + ' dengan ' + data.player.nama + '? Sandaran watak lama disimpan sekali sahaja.')) { return; }
+        selesai(SLT.pasang(parseInt(sl, 10), data));
+      }
+    });
+    var ta = sahaja('pindah-teks'), fi = sahaja('pindah-fail');
+    if (ta) { ta.addEventListener('input', function () { semak(ta.value); }); }
+    if (fi) {
+      fi.addEventListener('change', function () {
+        var f = fi.files && fi.files[0]; if (!f) { return; }
+        var rd = new W.FileReader(); rd.onload = function () { ta.value = String(rd.result || ''); semak(ta.value); }; rd.onerror = function () { toast('Gagal membaca fail.', 'ralat'); }; rd.readAsText(f); fi.value = '';
+      });
+    }
+  })();
   if ($('btn-struktur')) { $('btn-struktur').addEventListener('click', paparStruktur); }
   if ($('btn-bersara')) { $('btn-bersara').addEventListener('click', bersaraAwal); }
   $('btn-simpan').addEventListener('click', simpan);
