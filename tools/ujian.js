@@ -414,6 +414,73 @@ ujian('sfx: tiada AudioContext = diam, tiada ralat', () => {
   try { X.setOn(true); X.setVolume(0.5); sama(X.main('sorak'), false); } finally { if (asal) { g.AudioContext = asal; } }
 });
 
+/* ---------- Krisis tempatan di peta (v8.8) ---------- */
+function kpPemain(jawatan) {
+  P.daftar({});
+  if (jawatan !== false) { S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: [JW.ajk_cawangan] } }); }
+  return S.loadPlayer();
+}
+const rngTetap = (n) => () => n;
+function kpBulan(p, bulan, tahun) { S.applyEffects({}, { kiraTindakan: false, patch: { bulan, tahun: tahun || p.tahun } }); }
+
+ujian('krisis peta: hanya pemain berjawatan; satu proses setiap bulan; had serentak', () => {
+  const KP = g.MyPolitikKrisisPeta;
+  kpPemain(false);
+  sama(KP.prosesBulan({ rng: rngTetap(0) }).peristiwa.length, 0, 'ahli biasa tiada krisis');
+  let p = kpPemain(true);
+  const e1 = KP.prosesBulan({ rng: rngTetap(0) }).peristiwa;
+  sama(e1.length, 1); sama(e1[0].jenis, 'krisis_peta');
+  sama(KP.prosesBulan({ rng: rngTetap(0) }).peristiwa.length, 0, 'bulan sama tidak diproses dua kali');
+  sama(KP.senarai(S.loadPlayer())[0].cid, p.id, 'tanpa penyedia: cawangan pemain');
+  kpBulan(p, 2); KP.sediakanLokasi(() => [{ id: p.id, nama: 'A' }, { id: 'X/Y/Z', nama: 'Cawangan X' }]);
+  KP.prosesBulan({ rng: rngTetap(0) });
+  const ids = KP.senarai(S.loadPlayer()).map((k) => k.cid).sort();
+  sama(ids.length, 2); sama(ids[1], p.id === 'X/Y/Z' ? ids[1] : 'X/Y/Z', 'lokasi dari penyedia, tiada kembar');
+  kpBulan(p, 3); KP.prosesBulan({ rng: rngTetap(0) });
+  sama(KP.senarai(S.loadPlayer()).length, 2, 'maksimum 2 krisis aktif');
+  KP.sediakanLokasi(null);
+});
+ujian('krisis peta: selesai (turun/bantu/abai) mengubah AP, MYR, sokongan dan bonus kawasan', () => {
+  const KP = g.MyPolitikKrisisPeta;
+  let p = kpPemain(true); KP.prosesBulan({ rng: rngTetap(0) });
+  let k = KP.senarai(S.loadPlayer())[0];
+  const ap0 = S.loadPlayer().ap, au0 = S.loadPlayer().kesetiaan.akarUmbi;
+  let r = KP.selesai(k.id, 'turun'); betul(r.ok, r.ralat);
+  p = S.loadPlayer();
+  sama(p.ap, ap0 - KP.CONFIG.TURUN.ap); sama(p.kesetiaan.akarUmbi, au0 + KP.CONFIG.TURUN.akarUmbi);
+  sama(p.peta.bonus['C:' + k.cid], KP.CONFIG.TURUN.bonus); sama(KP.senarai(p).length, 0); sama(p.krisisPeta.selesai, 1);
+  sama(KP.selesai(k.id, 'turun').ok, false, 'krisis yang sudah selesai ditolak');
+  kpBulan(p, 2); KP.prosesBulan({ rng: rngTetap(0) }); k = KP.senarai(S.loadPlayer())[0];
+  const myrSebelum = S.loadPlayer().myr;
+  r = KP.selesai(k.id, 'bantu'); betul(r.ok, r.ralat);
+  sama(S.loadPlayer().myr, myrSebelum - S.kosSebenar(S.loadPlayer(), KP.CONFIG.BANTU.myr), 'kos bantuan ditolak');
+  kpBulan(p, 3); KP.prosesBulan({ rng: rngTetap(0) }); k = KP.senarai(S.loadPlayer())[0];
+  const bonusSebelum = S.loadPlayer().peta.bonus['C:' + k.cid] || 0;
+  r = KP.selesai(k.id, 'abai'); betul(r.ok, r.ralat);
+  sama(S.loadPlayer().peta.bonus['C:' + k.cid], bonusSebelum + KP.CONFIG.ABAI.bonus, 'abai menyusutkan bonus kawasan');
+  sama(S.loadPlayer().krisisPeta.terabai, 1);
+});
+ujian('krisis peta: pilihan berkos dilumpuhkan jika AP/MYR tidak cukup', () => {
+  const KP = g.MyPolitikKrisisPeta;
+  kpPemain(true); KP.prosesBulan({ rng: rngTetap(0) });
+  S.applyEffects({}, { kiraTindakan: false, patch: { ap: 0, myr: 0 } });
+  const p = S.loadPlayer(), k = KP.senarai(p)[0], o = KP.pilihan(p, k.id);
+  sama(o.map((x) => x.boleh).join(), 'false,false,true');
+  sama(KP.selesai(k.id, 'turun').ok, false);
+  betul(KP.selesai(k.id, 'abai').ok, 'abai sentiasa boleh');
+});
+ujian('krisis peta: dibiarkan 3 bulan = diabaikan automatik dengan penalti', () => {
+  const KP = g.MyPolitikKrisisPeta;
+  let p = kpPemain(true); KP.prosesBulan({ rng: rngTetap(0) });
+  const cid = KP.senarai(S.loadPlayer())[0].cid, au0 = S.loadPlayer().kesetiaan.akarUmbi;
+  kpBulan(p, 2); KP.prosesBulan({ rng: rngTetap(1) }); sama(KP.senarai(S.loadPlayer()).length, 1, 'bulan ke-2: masih aktif');
+  kpBulan(p, 3); KP.prosesBulan({ rng: rngTetap(1) }); sama(KP.senarai(S.loadPlayer()).length, 1, 'bulan ke-3: masih aktif');
+  kpBulan(p, 4); const e = KP.prosesBulan({ rng: rngTetap(1) }).peristiwa;
+  sama(KP.senarai(S.loadPlayer()).length, 0); betul(e.some((x) => x.jenis === 'krisis_peta_lewat'), 'notis lewat');
+  const q = S.loadPlayer();
+  sama(q.kesetiaan.akarUmbi, au0 + KP.CONFIG.LEWAT.akarUmbi); sama(q.peta.bonus['C:' + cid], KP.CONFIG.LEWAT.bonus); sama(q.krisisPeta.terabai, 1);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

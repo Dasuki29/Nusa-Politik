@@ -134,7 +134,23 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     await tutup();
     const t = pg.locator('[data-tab="' + tab + '"]').first();
     if (await t.count()) { await t.evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab ' + tab); }
-    if (tab === 'peta') { await jelajahPeta(); }
+    if (tab === 'peta') {
+      await jelajahPeta();
+      /* v8.8: krisis tempatan di peta (ikon berkedip, klik, selesai) + lapisan sentimen. */
+      await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { krisisPeta: { aktif: [{ id: 'kt1', jenis: 'banjir', cid: p.id, tempat: p.cawangan || 'Cawangan', tahun: p.tahun, bulan: p.bulan }], selesai: 0, terabai: 0, akhir: '' } } }); });
+      await pg.waitForSelector('.mpm-kanvas', { timeout: 25000 }).catch(() => {}); await pg.waitForTimeout(800); await imbas('peta krisis');
+      if (process.env.DBG) { console.log(JSON.stringify(await pg.evaluate(() => { const p = window.MyPolitikSave.loadPlayer(); return { kp: p.krisisPeta, sen: window.MyPolitikKrisisPeta.senarai(p).length, id: p.id, kv: document.querySelectorAll('.mpm-kanvas').length, host: (document.getElementById('peta-host')||{}).innerText.slice(0,200), pin: Array.from(document.querySelectorAll('.mpm-pin')).map((e) => e.style.left + ',' + e.style.top + ',' + e.style.display) }; })));}
+      const pin = await pg.locator('.mpm-pin').count(), strip = await pg.locator('.mpm-krisis-btn').count();
+      if (!strip) { ralat.push('bar krisis peta tiada'); }
+      if (!pin) { ralat.push('ikon krisis ⚠️ tiada di peta'); }
+      await pg.locator('.mpm-seg [data-v="sentimen"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(400); await imbas('lapisan sentimen');
+      await pg.locator('.mpm-krisis-btn').first().evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('modal krisis');
+      const mt = await pg.evaluate(() => (document.querySelector('.acara__pil') || {}).innerText || '');
+      if (!/Go to the ground|help the victims/i.test(mt)) { ralat.push('modal krisis EN salah: ' + mt.slice(0, 120)); }
+      await pg.locator('.acara__opsi[data-pilih="turun"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(600);
+      const sisa = await pg.evaluate(() => (window.MyPolitikSave.loadPlayer().krisisPeta || {}).aktif.length);
+      if (sisa !== 0) { ralat.push('krisis tidak selesai selepas klik: ' + sisa); }
+    }
   }
   const bulan = parseInt(process.env.BULAN || '6', 10);
   for (let i = 0; i < bulan; i++) {
