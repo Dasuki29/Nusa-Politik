@@ -1461,6 +1461,27 @@
   ["Dibuka bulan {a}-{b}", "Opens months {a}-{b}"],
   ["{n} bulan lagi", "{n} months left"],
   ["{x} dibuka pada bulan {a}. Sekarang bulan {n}. Anda layak hadir.", "{x} opens in month {a}. It is now month {n}. You are eligible to attend."],
-  ["{x} dibuka pada bulan {a}. Sekarang bulan {n}. Anda belum layak hadir.", "{x} opens in month {a}. It is now month {n}. You are not yet eligible to attend."]
+  ["{x} dibuka pada bulan {a}. Sekarang bulan {n}. Anda belum layak hadir.", "{x} opens in month {a}. It is now month {n}. You are not yet eligible to attend."],
+  /* Fasa 9: pilihan acara yang tertinggal (ditemui ujian-bahasa.js) */
+  ["Kutip derma (guna AP)", "Collect donations (uses AP)"],
+  ["Jumpa sendiri (AP)", "Meet them yourself (AP)"],
+  ["Abaikan.", "Ignore it."],
+  ["Jadi orang tengah (AP)", "Act as mediator (AP)"],
+  ["Turun membantu (AP)", "Go down to help (AP)"],
+  ["Jadi pengelola (AP)", "Become the organiser (AP)"],
+  ["Ikuti sesi percuma (AP)", "Attend the free session (AP)"],
+  ["Sertai sahaja (AP)", "Just join in (AP)"],
+  ["Turun padang membantu (AP)", "Go to the ground to help (AP)"],
+  ["Jelaskan secara peribadi (AP)", "Explain it in private (AP)"],
+  ["Ambil cuti rehat sebulan (AP)", "Take a month's rest leave (AP)"],
+  ["Selesaikan secara dalaman (AP)", "Settle it internally (AP)"],
+  ["Bantu tiga usahawan mengisi permohonan (AP)", "Help three entrepreneurs fill in their applications (AP)"],
+  ["Turun sendiri menenangkan belia (AP)", "Go in person to calm the youths (AP)"],
+  /* Fasa 9b: mesej bulan baharu, amaran pencabar, syarat hadir PAU (ditemui ujian-pelayar.js) */
+  ["Bulan {n} ({b}) {t}: AP +{a} (had {m} dicapai), elaun +MYR {r}. Sokongan susut jika tidak dijaga.", "Month {n} ({b}) {t}: AP +{a} (cap {m} reached), allowance +MYR {r}. Support decays if neglected."],
+  ["Bulan {n} ({b}) {t}: AP +{a} (had {m}), elaun +MYR {r}. Sokongan susut jika tidak dijaga.", "Month {n} ({b}) {t}: AP +{a} (cap {m}), allowance +MYR {r}. Support decays if neglected."],
+  ["{x} ({y}) kini mendahului anda. Jaga sokongan sebelum musim pemilihan.", "{x} ({y}) is now ahead of you. Keep your support up before the election season."],
+  ["Hanya Perwakilan Cawangan atau G10 sayap tahun {t} yang terpilih, Ketua Cawangan dan pemegang jawatan Bahagian/Pusat boleh hadir. Mandat tahun lepas sudah luput.", "Only Branch delegates or wing G10 members elected for {t}, Branch Chiefs and Division/Central office-bearers may attend. Last year's mandate has expired."],
+  ["Hanya Perwakilan Bahagian tahun {t} yang terpilih, Ketua Bahagian dan pemegang jawatan Pusat boleh hadir PAU.", "Only Division delegates elected for {t}, Division Chiefs and Central office-bearers may attend the PAU."]
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));
