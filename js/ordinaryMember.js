@@ -108,7 +108,7 @@
     var Et = etikaModul();
     if (Et) { var hak = Et.semakHak(p, 'tindakan'); if (!hak.boleh) { return { boleh: false, sebab: hak.sebab }; } }
     if (p.ap + (def.kesan.ap || 0) < 0) { return { boleh: false, sebab: 'AP tidak mencukupi (perlu ' + Math.abs(def.kesan.ap) + ').' }; }
-    if (p.myr + (def.kesan.myr || 0) < 0) { return { boleh: false, sebab: 'Wang tidak mencukupi.' }; }
+    if (def.kesan.myr < 0 && !S.cukupDana(p, -def.kesan.myr)) { return { boleh: false, sebab: S.ralatDana(p, -def.kesan.myr) }; }   // v8.0: kos selepas pengali kesukaran
     return { boleh: true, sebab: '' };
   }
 
@@ -133,12 +133,12 @@
   function senaraiTindakan(profil) {
     var p = profil || S.loadPlayer();
     return TINDAKAN.map(function (d) {
-      var s = semakBoleh(d, p);
+      var s = semakBoleh(d, p), kp = S.kesanPapar(p, d.kesan);                 // v8.0: kos dipaparkan ikut tahap kesukaran
       return {
         id: d.id, nama: d.nama, penerangan: d.penerangan,
-        kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, d.kesan.myr || 0)) },
+        kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, kp.myr || 0)) },
         kesan: salin(d.kesan),
-        ringkas: S.ringkasPerubahan({ ip: d.kesan.ip || 0, myr: d.kesan.myr || 0, ap: d.kesan.ap || 0, reputasi: d.kesan.reputasi || 0, kesetiaan: d.kesan.kesetiaan || {} })
+        ringkas: S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} })
           + (d.etika && d.etika.modal ? ', +' + d.etika.modal + ' Modal Sosial' : '')
           + (d.denganIsu ? ', isu tempatan' : ''),
         boleh: s.boleh, sebab: s.sebab
