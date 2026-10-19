@@ -481,7 +481,7 @@
 
   /** Paparkan peristiwa penting (jawatan, cabaran) sebagai modal, selebihnya toast. */
   async function urusPeristiwa(senarai) {
-    var penting = { lantikan_negeri: 'Lantikan Pimpinan Negeri', pru_isytihar: 'Pilihan Raya Diisytiharkan', prk_isytihar: 'Pilihan Raya Kecil (PRK)', kabinet_rombak: 'Rombakan Kabinet', janji_nilai: 'Penilaian Manifesto', disiplin: 'Tataetika & Disiplin', hukuman: 'Keputusan Lembaga Disiplin', jawatan_baharu: 'Jawatan Baharu', jawatan_hilang: 'Kehilangan Jawatan', cabaran_jawatan: 'Jawatan Anda Dicabar', cabaran_selesai: 'Keputusan Cabaran Jawatan',
+    var penting = { gelaran_kurniaan: 'Anugerah & Gelaran', lantikan_negeri: 'Lantikan Pimpinan Negeri', pru_isytihar: 'Pilihan Raya Diisytiharkan', prk_isytihar: 'Pilihan Raya Kecil (PRK)', kabinet_rombak: 'Rombakan Kabinet', janji_nilai: 'Penilaian Manifesto', disiplin: 'Tataetika & Disiplin', hukuman: 'Keputusan Lembaga Disiplin', jawatan_baharu: 'Jawatan Baharu', jawatan_hilang: 'Kehilangan Jawatan', cabaran_jawatan: 'Jawatan Anda Dicabar', cabaran_selesai: 'Keputusan Cabaran Jawatan',
                     kelayakan_dibuka: 'Kelayakan Dibuka', perwakilan_terpilih: 'Terpilih Sebagai Perwakilan',
                     pemilihan_dibuka: 'Tahun Pemilihan', tahun_pentadbiran: 'Tahun Pentadbiran',
                     kategori_bertukar: 'Kategori Keahlian Bertukar', fasa_bulan: 'Takwim Bulan Baharu', mesyuarat_ditutup_auto: 'Mesyuarat Ditutup Automatik', mesyuarat_terlepas: 'Mesyuarat Terlepas', pemilihan_auto: 'Pengundian Dijalankan', blok_janji_tunai: 'Janji Kuota Ditunaikan', transisi_rasmi: 'Upacara Graduasi Sayap', transisi_amaran: 'Notis Rasmi Transisi', undi_tp_amaran: 'Amaran Undi Tidak Percaya', undi_tp_kalah: 'Kalah Undi Tidak Percaya', undi_tp_menang: 'Selamat Undi Tidak Percaya', blok_janji_mungkir: 'Janji Kuota Dimungkiri', penggal_tamat: 'Penggal Jawatan Tamat' };
@@ -528,7 +528,7 @@
 
   /* ---------- Header & bar sumber ---------- */
   function renderHeader(p) {
-    $('p-nama').textContent = p.nama;
+    $('p-nama').textContent = (W.MyPolitikGelaran && W.MyPolitikGelaran.awalan ? W.MyPolitikGelaran.awalan(p) : '') + p.nama;                       // v7.64: Dato'/Tan Sri
     if (W.MyPolitikAvatar) { W.MyPolitikAvatar.pasang($('p-avatar'), p.avatar || (p.demografik && p.demografik.kategoriKod), { saiz: 84, jantina: p.demografik && p.demografik.jantina }); }   // v7.50: jantina untuk avatar Veteran
     else { $('p-avatar').textContent = inisial(p.nama); }
     var lp = $('p-perwakilan'), sp = M ? M.getStatusPerwakilan(p) : null;
@@ -759,7 +759,7 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -1105,7 +1105,7 @@
       if (pr.jawatanKerajaan.length || pr.kabinetSemasa) { baris.push(['Jawatan kerajaan', (pr.jawatanKerajaan.length ? pr.jawatanKerajaan : [pr.kabinetSemasa]).join('; ')]); }
     }
     l.setAttribute('role', 'dialog'); l.setAttribute('aria-modal', 'true'); l.setAttribute('aria-label', 'Rumusan Kerjaya');
-    l.innerHTML = '<div class="legasi__kepala"><p class="legasi__kecil">Rumusan Kerjaya \u00B7 ' + esc(t.tajuk) + '</p><h1>' + esc(p.nama) + '</h1><p class="legasi__gelaran">' + esc(gel[0].nama) + '</p></div>' +
+    l.innerHTML = '<div class="legasi__kepala"><p class="legasi__kecil">Rumusan Kerjaya \u00B7 ' + esc(t.tajuk) + '</p><h1>' + esc((W.MyPolitikGelaran && W.MyPolitikGelaran.awalan ? W.MyPolitikGelaran.awalan(p) : '') + p.nama) + '</h1><p class="legasi__gelaran">' + esc(gel[0].nama) + '</p></div>' +
       '<p class="legasi__mesej">' + esc(t.mesej) + '</p>' +
       '<h2 class="legasi__sub">Gelaran Politik</h2><ul class="legasi__gelar">' + gel.map(function (g) { return '<li><span aria-hidden="true">' + g.ikon + '</span><div><b>' + esc(g.nama) + '</b><small>' + esc(g.huraian) + '</small></div></li>'; }).join('') + '</ul>' +
       '<h2 class="legasi__sub">Statistik Kerjaya</h2><div class="legasi__jadual">' + baris.map(function (b) { return '<div class="kv"><span>' + esc(b[0]) + '</span><b>' + esc(b[1]) + '</b></div>'; }).join('') + '</div>' +
