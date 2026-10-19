@@ -161,6 +161,20 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     await pg.waitForTimeout(300); await imbas('bulan ' + (i + 1)); await tutup();
   }
 
+  /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
+  await tutup();
+  await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 300000 } }); window.MyPolitikHarta.beli('wisma'); });
+  await pg.locator('#tab-harta').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500); await imbas('tab harta');
+  const ht = await pg.evaluate(() => (document.getElementById('panel-harta') || {}).innerText || '');
+  if (!/asset catalogue/i.test(ht) || !/office building/i.test(ht)) { ralat.push('panel Harta EN salah: ' + ht.slice(0, 120)); }
+  if (/Katalog|Hartanah|Penyelenggaraan|Kekayaan/.test(ht)) { ralat.push('panel Harta bocor BM: ' + ht.slice(0, 160)); }
+  await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { harta: Object.assign({}, p.harta, { menunggu: { sebab: 'tahunan' } }) } }); window.NusaHarta_UI.isytihar(); });
+  await pg.waitForTimeout(600); await imbas('modal deklarasi');
+  const dk = await pg.evaluate(() => (document.querySelector('.acara__pil') || document.getElementById('modal-isi') || {}).innerText || '');
+  if (!/Transparent/.test(dk) || /Telus|Sembunyi|Pengisytiharan/.test(dk)) { ralat.push('modal deklarasi EN salah: ' + dk.slice(0, 160)); }
+  await pg.locator('.acara__opsi[data-pilih="telus"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(600);
+  if (await pg.evaluate(() => !!window.MyPolitikSave.loadPlayer().harta.menunggu)) { ralat.push('deklarasi masih menunggu selepas dijawab'); }
+
   /* Latihan Amir */
   const sah = await pg.evaluate(() => !!(window.MyPolitikLatihan && MyPolitikLatihan.LANGKAH));
   if (sah) {

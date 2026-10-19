@@ -317,6 +317,10 @@ for (let gi = 0; gi < N_GAMES; gi++) {
     if (R() < 0.05) { const e = ET.ringkasan(S.loadPlayer()); if (e.rayuan && e.rayuan.boleh) { cuba('ET.rayuPemecatan', () => ET.rayuPemecatan()); } }
     if (R() < 0.3) { cuba('ET.responsPendengaran', () => ET.responsPendengaran(pick(['pembelaan', 'akur']))); }
     urusPRU(); urusPRK();
+    { const HT = g.MyPolitikHarta;                                                 // v8.13: aset rawak + pengisytiharan harta SPRM wajib
+      if (R() < 0.08) { const a = pick(HT.ASET); cuba('HT.beli', () => HT.beli(a.id)); }
+      if (R() < 0.04) { const a = pick(HT.ASET); cuba('HT.jual', () => HT.jual(a.id)); }
+      if (HT.menunggu(S.loadPlayer())) { const jb = cuba('HT.isytihar', () => HT.isytihar(R() < 0.75 ? 'telus' : 'sembunyi')); if (jb && !jb.ok) { langgar('Pengisytiharan harta gagal: ' + jb.ralat); } } }
     const pv = cuba('K.pratonton', () => K.pratonton());
     const r = cuba('K.majuBulan', () => K.majuBulan());
     if (!r) { tersekat++; if (tersekat > 3) { sebabTamat = 'majuBulan melontar ralat berulang'; break; } continue; }
