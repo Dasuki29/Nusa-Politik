@@ -326,9 +326,22 @@
   /** true jika dana pemain cukup untuk kos asas `kos` selepas pengali kesukaran. */
   function cukupDana(p, kos) { return (Number(p && p.myr) || 0) >= kosSebenar(p, kos); }
   /** Salinan `kesan` dengan kos MYR (negatif) terlaras, untuk ringkasan pada butang. */
+  /** v3.8: tambahan IP selepas redaman (makin tinggi IP, makin kecil tambahannya; sekurang-kurangnya 1). */
+  function ipDikurangkan(p, ip) {
+    return Math.max(1, Math.round(ip * clamp(1 - (Number(p && p.ip) || 0) / REDAMAN_IP.k, REDAMAN_IP.lantai, 1)));
+  }
+  /** v8.10: IP yang benar-benar akan diterima pemain (redaman IP + kelebihan sayap), untuk paparan kesan tindakan. */
+  function ipSebenar(p, ip) {
+    ip = Number(ip) || 0;
+    if (ip <= 0) { return ip; }
+    var n = ipDikurangkan(p, ip);
+    if (SY && SY.sesuaikan) { n = SY.sesuaikan(p, { ip: n, myr: 0, reputasi: 0, kesetiaan: {} }).ip; }
+    return n;
+  }
   function kesanPapar(p, kesan) {
     var k = salin(kesan || {});
     if (k.myr < 0) { k.myr = -kosSebenar(p, -k.myr); }
+    if (k.ip > 0) { k.ipAsas = k.ip; k.ip = ipSebenar(p, k.ip); }      // v8.10: papar IP sebenar, bukan nilai asas
     return k;
   }
   function teksRM(n) { return 'RM ' + Math.round(Number(n) || 0).toLocaleString('ms-MY'); }
@@ -366,7 +379,7 @@
     }
 
     var tambahIp = kesan.ip || 0;
-    if (tambahIp > 0) { tambahIp = Math.max(1, Math.round(tambahIp * clamp(1 - p.ip / REDAMAN_IP.k, REDAMAN_IP.lantai, 1))); }   // v3.8
+    if (tambahIp > 0) { tambahIp = ipDikurangkan(p, tambahIp); }   // v3.8
     var tambahRep = kesan.reputasi || 0;
     if (SY) {                                                                       // v5.9: kelebihan sayap (Utama / Pemuda / Puteri / Wanita)
       var sy = SY.sesuaikan(p, { ip: tambahIp, myr: kesan.myr || 0, reputasi: tambahRep, kesetiaan: kes });
@@ -454,6 +467,7 @@
     kosSebenar: kosSebenar,
     cukupDana: cukupDana,
     kesanPapar: kesanPapar,
+    ipSebenar: ipSebenar,
     ralatDana: ralatDana,
     buildPlayerProfile: buildPlayerProfile,
     savePlayer: savePlayer,
