@@ -80,7 +80,7 @@
   /* ---------- Status ---------- */
   function peranKabinet(p) { var K = KB(); return K ? K.getKabinet(p) : { hasGovernmentRole: false, roleLevel: 'NONE' }; }
   function statusADUN(p) { var P = PRU(); return !!(P && p && P.pegang && P.pegang(p, 'ADUN')); }
-  function exco(p) { var k = peranKabinet(p); return !!(k.hasGovernmentRole && k.roleLevel === 'EXCO_NEGERI'); }
+  function exco(p) { var k = peranKabinet(p); return !!(k.hasGovernmentRole && (k.roleLevel === 'EXCO_NEGERI' || k.roleLevel === 'MENTERI_BESAR')); }
   /** Dewan DUN: ADUN atau EXCO Negeri. Jika turut Ahli Parlimen/Menteri, UI memberi butang tukar antara dua dewan. */
   function aktif(p) { return !!p && !p.tamat && (statusADUN(p) || exco(p)); }
   function bolehBentang(p) { return exco(p); }
