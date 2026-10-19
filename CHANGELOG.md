@@ -1,5 +1,24 @@
 # Catatan Perubahan
 
+## v8.8 (2026-10-19)
+
+Peta interaktif: panel kawasan yang lebih kaya, tiga lapisan peta dan krisis tempatan.
+
+### Baharu
+
+- **Panel kawasan:** klik kawasan untuk demografi (penduduk, Bumiputera, kesukaran), isu tempatan belum selesai, sokongan parti, krisis tempatan, serta butang **Turun Padang (Ziarah)** (nama baharu bagi Jelajah) dan **Salur Peruntukan Projek**.
+- **Lapisan peta:** 🗳️ Sentimen Undi (kubu/swing, diterbitkan daripada Kekuatan Parti), 🧩 Kawasan Sayap, ⭐ Kawasan Pemain.
+- **Krisis tempatan (`js/krisis-peta.js`):** ikon ⚠️ berkedip di peta, ditekan untuk Turun Padang, Bantu atau Abaikan. Bar "Krisis tempatan" di atas peta ialah laluan alternatif (papan kekunci/pembaca skrin).
+
+### Andaian (sila semak)
+
+- Kebarangkalian krisis baharu 22% sebulan, maksimum 2 aktif, hanya jika anda memegang jawatan. Dibiarkan 3 bulan = diabaikan sendiri (-4 Sokongan Akar Umbi, -6 sokongan kawasan). **Bulan Seterusnya tidak disekat.**
+- Turun Padang: -2 AP, Stress -2, +6 Akar Umbi, +6 sokongan kawasan, +1 IP. Bantu: RM 800 (ikut kesukaran), +10 Akar Umbi, +10 sokongan kawasan, +2 IP. Abai: -4 / -4.
+- Lapisan Sentimen mengikut nilai asas kawasan (tidak berubah dengan usaha anda). Lapisan Sayap hanya meliputi sayap anda sendiri.
+- Salur Peruntukan Projek guna semula CDF Kabinet (hanya jawatan kerajaan, kawasan sendiri); tambahan sokongan cawangan anda = min(8, ceil(IP/2)), minimum 2.
+- Keadaan krisis disimpan dalam `krisisPeta` (bukan `peta`) kerana `peta` hanya menyalin bonus dan kiraan.
+- 4 ujian logik krisis baharu, semakan pelayar (ikon, klik, selesai, EN) dan langkah tutorial `peta-krisis`.
+
 ## v8.7 (2026-10-19)
 
 Kesan bunyi (SoundManager). Bahagian tema visual menunggu kelulusan mockup.
