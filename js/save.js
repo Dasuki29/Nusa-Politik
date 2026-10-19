@@ -51,14 +51,17 @@
   function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
   function salin(o) { return JSON.parse(JSON.stringify(o)); }
 
+  var storanSah = null;                        // v8.0: ujian tulis dibuat sekali sahaja, bukan pada setiap bacaan
   function storan() {
     try {
       var s = typeof localStorage !== 'undefined' ? localStorage : null;
       if (!s) { return null; }
+      if (storanSah === s) { return s; }
       var ujian = '__mp_ujian__';
       s.setItem(ujian, '1'); s.removeItem(ujian);
+      storanSah = s;
       return s;
-    } catch (e) { return null; }
+    } catch (e) { storanSah = null; return null; }
   }
 
   function boleh() { return !!storan(); }
@@ -304,12 +307,42 @@
     try { s.removeItem(KEY); s.removeItem(KEY_BAK); return true; } catch (e) { return false; }
   }
 
+  /* ------------------------------------------------------------------------
+     v8.0: KOS SEBENAR. Perbelanjaan didarab pengali tahap kesukaran (rival.js) di dalam applyEffects.
+     Semua semakan "cukup dana" dan paparan kos pada butang mesti guna fungsi ini supaya butang yang
+     kelihatan aktif tidak gagal dengan ralat dana.
+     ------------------------------------------------------------------------ */
+  function pengaliBelanja(p) {
+    var RV = root.MyPolitikRival || null;
+    var m = RV && RV.pengali ? Number(RV.pengali(p, 'belanja')) : 1;
+    return isFinite(m) && m > 0 ? m : 1;
+  }
+  /** Kos perbelanjaan sebenar (RM, positif) bagi kos asas `kos`, sama seperti yang ditolak oleh applyEffects. */
+  function kosSebenar(p, kos) {
+    kos = Math.max(0, Number(kos) || 0);
+    return kos ? Math.round(kos * pengaliBelanja(p)) : 0;
+  }
+  /** true jika dana pemain cukup untuk kos asas `kos` selepas pengali kesukaran. */
+  function cukupDana(p, kos) { return (Number(p && p.myr) || 0) >= kosSebenar(p, kos); }
+  /** Salinan `kesan` dengan kos MYR (negatif) terlaras, untuk ringkasan pada butang. */
+  function kesanPapar(p, kesan) {
+    var k = salin(kesan || {});
+    if (k.myr < 0) { k.myr = -kosSebenar(p, -k.myr); }
+    return k;
+  }
+  function teksRM(n) { return 'RM ' + Math.round(Number(n) || 0).toLocaleString('ms-MY'); }
+  /** Mesej ralat dana yang konsisten: "Wang (MYR) tidak mencukupi (perlu RM x, ada RM y)." */
+  function ralatDana(p, kos) { return 'Wang (MYR) tidak mencukupi (perlu ' + teksRM(kosSebenar(p, kos)) + ', ada ' + teksRM(p && p.myr) + ').'; }
+
   /**
    * Laluan tunggal untuk mengubah sumber pemain.
    * kesan: { ip, myr, ap, kesetiaan:{ketuaCawangan, ajk, akarUmbi, perwakilan, penentang}, isu:{...} }
    *        nilai ialah perubahan (boleh negatif). AP dan MYR tidak boleh jatuh bawah 0
    *        (tindakan ditolak). IP tidak jatuh bawah 0. Sokongan dihadkan 0 hingga 100.
-   * opts:  { log:{ tindakan, nama, ... }, patch:{ medan profil untuk digabung }, kiraTindakan:false }
+   * opts:  { log:{ tindakan, nama, ... }, patch:{ medan profil untuk digabung }, kiraTindakan:false,
+   *          tanpaKesukaran:true (kos tidak didarab pengali kesukaran),
+   *          pindahan:true (v8.0: MYR ialah pindahan dana, cth peruntukan atau baki kempen yang dipulangkan;
+   *                         tidak didarab pengali kesukaran dan tidak menerima bonus dana sayap) }
    * Pulangan: { ok, perubahan:{ip,myr,ap,kesetiaan}, sebelum, profil } atau { ok:false, kod, ralat }
    * Perubahan yang dipulangkan ialah nilai sebenar selepas had dikenakan.
    */
@@ -318,12 +351,11 @@
     var p = loadPlayer();
     if (!p) { return { ok: false, kod: 'tiada_profil', ralat: 'Tiada profil pemain. Daftar dahulu di halaman utama.' }; }
 
-    var RV = root.MyPolitikRival || null;                                                      // v7.28: perbelanjaan mengikut tahap kesukaran (hanya perbelanjaan, bukan pendapatan)
-    if (RV && kesan.myr < 0 && !opts.tanpaKesukaran) { kesan = salin(kesan); kesan.myr = -Math.round(-kesan.myr * RV.pengali(p, 'belanja')); }
+    if (kesan.myr < 0 && !opts.tanpaKesukaran && !opts.pindahan) { kesan = salin(kesan); kesan.myr = -kosSebenar(p, -kesan.myr); }   // v7.28: perbelanjaan mengikut tahap kesukaran (hanya perbelanjaan, bukan pendapatan)
     var sebelum = { ip: p.ip, myr: p.myr, ap: p.ap, reputasi: p.reputasi, kesetiaan: salin(p.kesetiaan) };
     var ap = p.ap + (kesan.ap || 0), myr = p.myr + (kesan.myr || 0);
     if (ap < 0) { return { ok: false, kod: 'ap', ralat: 'Mata Tindakan (AP) tidak mencukupi.' }; }
-    if (myr < 0) { return { ok: false, kod: 'myr', ralat: 'Wang (MYR) tidak mencukupi.' }; }
+    if (myr < 0) { return { ok: false, kod: 'myr', ralat: 'Wang (MYR) tidak mencukupi (perlu ' + teksRM(-(kesan.myr || 0)) + ', ada ' + teksRM(p.myr) + ').' }; }
 
     var kes = kesan.kesetiaan || {};
     for (var k in kes) {
@@ -337,7 +369,8 @@
     var tambahRep = kesan.reputasi || 0;
     if (SY) {                                                                       // v5.9: kelebihan sayap (Utama / Pemuda / Puteri / Wanita)
       var sy = SY.sesuaikan(p, { ip: tambahIp, myr: kesan.myr || 0, reputasi: tambahRep, kesetiaan: kes });
-      tambahIp = sy.ip; tambahRep = sy.reputasi; kes = sy.kesetiaan; myr = p.myr + sy.myr;
+      tambahIp = sy.ip; tambahRep = sy.reputasi; kes = sy.kesetiaan;
+      if (!opts.pindahan) { myr = p.myr + sy.myr; }                               // v8.0: pindahan dana tidak menerima bonus dana sayap
     }
     p.ap = ap; p.myr = myr;
     p.ip = Math.max(0, p.ip + tambahIp);
@@ -417,6 +450,10 @@
     KESETIAAN_LALAI: KESETIAAN_LALAI,
     KESETIAAN_LABEL: KESETIAAN_LABEL,
     boleh: boleh,
+    kosSebenar: kosSebenar,
+    cukupDana: cukupDana,
+    kesanPapar: kesanPapar,
+    ralatDana: ralatDana,
     buildPlayerProfile: buildPlayerProfile,
     savePlayer: savePlayer,
     loadPlayer: loadPlayer,

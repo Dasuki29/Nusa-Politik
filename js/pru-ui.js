@@ -106,7 +106,7 @@
     if (j.dinilai) { return h + '<p class="note">' + esc(j.hasil && j.hasil.ringkas ? j.hasil.ringkas.join(' · ') : '') + '</p></section>'; }
     h += '<p class="note">Dinilai dalam <b>' + j.baki + ' bulan</b>. Belanjakan Dana untuk memajukan janji; pentadbir kerajaan juga menyumbang kemajuan bulanan. Kemajuan ≥ 60% dianggap ditunai.</p>';
     j.senarai.forEach(function (x) {
-      h += bar(x.ikon + ' ' + x.nama, x.kemajuan, x.kemajuan < 30) + '<div style="margin:-2px 0 8px"><button type="button" class="btn btn--sm" data-pru="janji" data-id="' + esc(x.id) + '"' + (x.kemajuan >= 100 ? ' disabled' : '') + '>Majukan (−RM ' + fmt(x.kos * 2) + ', +34%)</button></div>';
+      h += bar(x.ikon + ' ' + x.nama, x.kemajuan, x.kemajuan < 30) + '<div style="margin:-2px 0 8px"><button type="button" class="btn btn--sm" data-pru="janji" data-id="' + esc(x.id) + '"' + (x.kemajuan >= 100 ? ' disabled' : '') + '>Majukan (−RM ' + fmt(x.kosMaju || x.kos * 2) + ', +34%)</button></div>';
     });
     return h + '</section>';
   }
@@ -181,7 +181,7 @@
       tajuk: 'Rundingan Kerusi & Gabungan',
       isi: '<p class="acara__ikon" aria-hidden="true">🤝</p><p>Kerusi <b>' + esc(a.kerusi.nama) + '</b> turut dituntut oleh rakan gabungan. Jika rundingan gagal, undi terbahagi tiga (3-penjuru) dan kemenangan lebih sukar.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Hubungan gabungan: <b>' + PRU.getPRU(p).hubunganGabungan + '</b>/100</p><ul class="acara__pil">' +
         opsi('berdepan', 'Runding berdepan', 'Kos IP ' + rk.berdepan.ip + ' · Berjaya ± ' + Math.round(rk.berdepan.jaya * 100) + '% → 1-lawan-1; gagal → 3-penjuru', p.ip >= rk.berdepan.ip) +
-        (a.candidateType === 'PARLIMEN' && !a.kerusi2 ? opsi('ganti', 'Tawar kerusi DUN sebagai ganti', 'Kos IP ' + rk.ganti.ip + ' · Berjaya ± ' + Math.round(rk.ganti.jaya * 100) + '% · anda melepaskan kerusi Parlimen ini', p.ip >= rk.ganti.ip) : '') +
+        (a.candidateType === 'PARLIMEN' && !a.kerusi2 && p.dun ? opsi('ganti', 'Tawar kerusi DUN sebagai ganti', 'Kos IP ' + rk.ganti.ip + ' · Berjaya ± ' + Math.round(rk.ganti.jaya * 100) + '% · anda melepaskan kerusi Parlimen ini', p.ip >= rk.ganti.ip) : '') +
         opsi('abai', 'Bertanding juga (abaikan rakan)', 'Pasti 3-penjuru · hubungan gabungan −15 · Reputasi −3', true) + '</ul>',
       butang: []
     });

@@ -12,9 +12,10 @@
    Tambah fasal lain dengan menokok satu objek ke dalam FASAL.
    ========================================================================== */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) { module.exports = factory(root); }
-  else { root.MyPolitikPerlembagaan = factory(root); }
-})(typeof window !== 'undefined' ? window : this, function (W) {
+  var api = factory(root);                                     // v8.0: sentiasa didaftar secara global (pelayar & Node), seperti modul lain
+  if (typeof module === 'object' && module.exports) { module.exports = api; }
+  root.MyPolitikPerlembagaan = api;
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : this), function (W) {
   'use strict';
 
   var SUMBER = 'Perlembagaan UMNO 2025';

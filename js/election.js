@@ -78,6 +78,7 @@
     MENANG_IP_PERINGKAT: { cawangan: 20, bahagian: 30, pusat: 50, sayap_cawangan: 20, sayap_bahagian: 30, sayap_pau: 50 },   // jawatan
     KALAH_IP_PERINGKAT: { cawangan: -5, bahagian: -8, pusat: -10, sayap_cawangan: -5, sayap_bahagian: -8, sayap_pau: -10 },
     BONUS_SAYAP: 8,                      // kekuatan tambahan dalam pertandingan sayap sendiri
+    BONUS_PENCABAR: { amaran: 5, kritikal: 8 },   // v8.0: kekuatan tambahan calon yang mencabar jawatan anda (ikut tahap amaran)
     ANGGARAN_ULANGAN: 300,               // bilangan larian simulasi pengundian
     // Berat kekuatan calon (jumlah setiap peringkat = 1)
     BERAT: {
@@ -224,6 +225,10 @@
       e.keputusan = st.keputusan[e.kod] || null;
       e.selesai = !!e.keputusan;
       if (e.terbuka && e.selesai) { e.terbuka = false; e.sebab = 'Pertandingan ini sudah selesai.'; }
+      if (e.terbuka && !e.didaftar && e.jenis === 'jawatan') {                    // v8.0: satu pencalonan bagi setiap peringkat & kumpulan (butang tidak lagi kelihatan terbuka)
+        var lainK = pendaftaranSekumpulan(st, e);
+        if (lainK.length) { e.terbuka = false; e.sebab = 'Anda sudah mendaftar bertanding ' + st.daftar[lainK[0]].jawatan + ' di peringkat ini. Tarik balik pencalonan itu dahulu untuk menukar.'; }
+      }
       var w = tetingkapPeringkat(p, e.peringkat);
       e.tetingkap = w;                                         // { mula, tamat, label, status } atau null
       e.bolehUndi = !!(w ? w.status === 'dibuka' : true) && e.didaftar && !e.selesai;
@@ -467,8 +472,20 @@
     var calon = janaPesaing(p, d.kod, bil - 1, aras);
     var gR = typeof globalThis !== 'undefined' ? globalThis : null, RVL = gR && gR.MyPolitikRival, bp = RVL && RVL.bonusPesaing ? RVL.bonusPesaing(p, peringkat, d.jenis) : null;      // v7.28: pencabar utama menguatkan calon lawan terkuat
     if (bp && calon.length) { var kuat = calon[0]; calon.forEach(function (c) { if (c.kekuatan > kuat.kekuatan) { kuat = c; } }); kuat.kekuatan = clamp(kuat.kekuatan + bp.bonus, 8, 99); kuat.nama = bp.nama; }
+    var cb = cabaranUntuk(p, d);                                                 // v8.0: pencabar jawatan (incumbent.js) bertanding menentang anda
+    if (cb && calon.length) {
+      var sasar = calon.filter(function (c) { return !bp || c.nama !== bp.nama; }).sort(function (a, b) { return b.kekuatan - a.kekuatan; })[0] || calon[0];
+      sasar.kekuatan = clamp(sasar.kekuatan + (cb.tahap === 'kritikal' ? CONFIG.BONUS_PENCABAR.kritikal : CONFIG.BONUS_PENCABAR.amaran), 8, 99); sasar.nama = cb.penentang.nama; sasar.pencabar = true;
+    }
     calon.push({ nama: p.nama, pemain: true, kekuatan: kekuatanPemain(p, st, peringkat, d) });
     return { calon: calon, kerusi: kerusi, pemilih: bilPemilih(p, peringkat, opts) };
+  }
+
+  /** v8.0: cabaran aktif terhadap jawatan yang sedang dipertandingkan (null jika tiada). */
+  function cabaranUntuk(p, d) {
+    var c = p && p.cabaran && p.cabaran.status === 'aktif' ? p.cabaran : null;
+    if (!c || !d || d.jenis === 'perwakilan') { return null; }
+    return (c.kod ? c.kod === d.kod : c.jawatanDicabar === d.jawatan) ? c : null;
   }
 
   /** Anggaran peluang menang dengan banyak larian simulasi (tiada kesan pada profil). */
@@ -565,20 +582,20 @@
     var kali = st.kempen.aktiviti[def.id] || 0;
     if (def.maksKali && kali >= def.maksKali) { return { boleh: false, sebab: 'Had ' + def.maksKali + ' kali bagi kitaran ini telah dicapai.' }; }
     if (p.ap + (def.kesan.ap || 0) < 0) { return { boleh: false, sebab: 'AP tidak mencukupi (perlu ' + Math.abs(def.kesan.ap) + ').' }; }
-    if (p.myr + (def.kesan.myr || 0) < 0) { return { boleh: false, sebab: 'Wang tidak mencukupi (perlu MYR ' + Math.abs(def.kesan.myr).toLocaleString('ms-MY') + ').' }; }
+    if (def.kesan.myr < 0 && !S.cukupDana(p, -def.kesan.myr)) { return { boleh: false, sebab: S.ralatDana(p, -def.kesan.myr) }; }   // v8.0: kos selepas pengali kesukaran
     return { boleh: true, sebab: '' };
   }
 
   function senaraiKempen(profil) {
     var p = profil || S.loadPlayer(), st = p ? getKeadaanPemilihan(p) : null;
     return KEMPEN.map(function (d) {
-      var s = semakKempen(d, p, st || { kempen: { aktiviti: {} } });
+      var s = semakKempen(d, p, st || { kempen: { aktiviti: {} } }), kp = S.kesanPapar(p, d.kesan);   // v8.0: kos dipaparkan ikut tahap kesukaran
       return {
         id: d.id, nama: d.nama, penerangan: d.penerangan, perluKod: !!d.perluKod,
         tahap: d.etika ? d.etika.tahap : 'neutral', modalSosial: d.etika ? d.etika.modal || 0 : 0,
         peluangLapor: d.etika && d.etika.risiko && p && etika() ? Math.round(etika().peluangLapor(etika().getEtika(p), d.etika)) : 0,
-        kos: { ap: Math.abs(d.kesan.ap || 0), myr: Math.abs(d.kesan.myr || 0) },
-        ringkas: S.ringkasPerubahan({ ip: d.kesan.ip || 0, myr: d.kesan.myr || 0, ap: d.kesan.ap || 0, reputasi: d.kesan.reputasi || 0, kesetiaan: d.kesan.kesetiaan || {} }) + (d.mata ? ', +' + d.mata + ' mata kempen' : ''),
+        kos: { ap: Math.abs(d.kesan.ap || 0), myr: Math.abs(kp.myr || 0) },
+        ringkas: S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} }) + (d.mata ? ', +' + d.mata + ' mata kempen' : ''),
         kali: st ? (st.kempen.aktiviti[d.id] || 0) : 0, maksKali: d.maksKali,
         boleh: s.boleh, sebab: s.sebab
       };
@@ -677,6 +694,13 @@
       if (def) { var pt = J.terapkan(p, def, menang); Object.keys(pt).forEach(function (k) { patch[k] = pt[k]; }); }
       if (menang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Tahniah. ' + (pegangSebelum ? 'Anda kekal sebagai ' : 'Anda dipilih sebagai ') + d.jawatan + '.' }); }
       else if (pegangSebelum) { peristiwa.push({ jenis: 'jawatan_hilang', mesej: 'Anda kalah mempertahankan ' + d.jawatan + ' dan kehilangan jawatan itu.' }); }
+      var cb = cabaranUntuk(p, d);                                               // v8.0: keputusan pemilihan menamatkan cabaran jawatan
+      if (cb) {
+        patch.cabaran = Object.assign({}, cb, { status: menang ? 'ditangkis' : 'diterima', tamat: new Date().toISOString() });
+        patch.amaranAktif = false;
+        peristiwa.push({ jenis: 'cabaran_selesai', mesej: menang ? 'Cabaran ' + cb.penentang.nama + ' ditangkis. Ahli memilih anda untuk kekal sebagai ' + d.jawatan + '.'
+          : cb.penentang.nama + ' berjaya merampas jawatan ' + d.jawatan + ' daripada anda.' });
+      }
     }
 
     var ip = jenis === 'jawatan' ? (menang ? CONFIG.MENANG_IP_PERINGKAT[d.peringkat] : CONFIG.KALAH_IP_PERINGKAT[d.peringkat])

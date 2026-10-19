@@ -203,6 +203,9 @@
     return bp;
   }
 
+  /** v8.0: kos MYR sebenar (pengali tahap kesukaran). */
+  function kos(p, n) { var s = S(); return s && s.kosSebenar ? s.kosSebenar(p, n) : n; }
+  function ralatDana(p, n) { var s = S(); return s && s.ralatDana ? s.ralatDana(p, n) : 'Wang (MYR) tidak mencukupi.'; }
   function patchBP(bp) { var o = {}; o[ctx.kunci] = bp; return o; }
   function simpan(bp, kesan, log, patchLain) {
     if (log && log.nama) { log = JSON.parse(JSON.stringify(log)); log.nama = tr(log.nama); }
@@ -348,10 +351,14 @@
     var b = Number(p.bulan) || 1, bp = p[ctx.kunci] || {};
     if (b < CONFIG.BULAN_LOBI_MULA || b > CONFIG.BULAN_LOBI_TAMAT || bp.lobiTahun === p.tahun) { return null; }
     var W0 = ctx.sayap ? WN() : '', tajuk = ctx.sayap ? 'Anda Ketua ' + W0 + ' Bahagian ' + (p.bahagian || '') : 'Anda Ketua Bahagian ' + (p.bahagian || '');
-    var teks = ctx.sayap ? 'Keputusan pemilihan sayap Bahagian telah selesai. Sebagai Ketua ' + W0 + ' Bahagian, anda layak dilantik <b>Ketua ' + W0 + ' Negeri ' + namaNegeri(p) + '</b>. Ketua ' + W0 + ' akan membuat lantikan selepas Perhimpunan Sayap (bulan 9).'
-      : 'Keputusan pemilihan Bahagian telah selesai. Sebagai Ketua Bahagian, anda layak dilantik <b>Pengerusi Badan Perhubungan UMNO ' + namaNegeri(p) + '</b>. Presiden akan membuat lantikan selepas PAU (bulan 9).';
+    var nn = esc(namaNegeri(p));                                    // v8.0: nama negeri daripada data luar dilepaskan sebelum dimasukkan ke HTML
+    var teks = ctx.sayap ? 'Keputusan pemilihan sayap Bahagian telah selesai. Sebagai Ketua ' + W0 + ' Bahagian, anda layak dilantik <b>Ketua ' + W0 + ' Negeri ' + nn + '</b>. Ketua ' + W0 + ' akan membuat lantikan selepas Perhimpunan Sayap (bulan 9).'
+      : 'Keputusan pemilihan Bahagian telah selesai. Sebagai Ketua Bahagian, anda layak dilantik <b>Pengerusi Badan Perhubungan UMNO ' + nn + '</b>. Presiden akan membuat lantikan selepas PAU (bulan 9).';
     return { jenis: 'lobi', tajuk: tajuk, teks: teks, negeri: namaNegeri(p), dekat: bp.dekat === undefined ? 15 : bp.dekat, presiden: namaPresiden(p), bahagian: p.bahagian || '',
-      pilihan: Object.keys(LOBI).map(function (k) { return { id: k, label: LOBI[k].label, huraian: LOBI[k].huraian }; }) };
+      pilihan: Object.keys(LOBI).map(function (k) {
+        var L = LOBI[k], sebab = (Number(p.ap) || 0) < L.ap ? 'AP tidak mencukupi (perlu ' + L.ap + ').' : (L.myr && (Number(p.myr) || 0) < kos(p, L.myr) ? ralatDana(p, L.myr) : '');   // v8.0: tanda pilihan yang tidak mampu
+        return { id: k, label: L.label, huraian: L.myr ? L.huraian.replace(/RM[\d,]+/, 'RM' + kos(p, L.myr).toLocaleString('ms-MY')) : L.huraian, boleh: !sebab, sebab: sebab };
+      }) };
   }
 
   var DIALOG = {
@@ -374,7 +381,7 @@
     }
     var d = LOBI[jenis]; if (!d) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
     if ((Number(p.ap) || 0) < d.ap) { return { ok: false, ralat: 'Mata Tindakan (AP) tidak mencukupi.' }; }
-    if ((Number(p.myr) || 0) < d.myr) { return { ok: false, ralat: 'Wang (MYR) tidak mencukupi.' }; }
+    if (d.myr && (Number(p.myr) || 0) < kos(p, d.myr)) { return { ok: false, ralat: ralatDana(p, d.myr) }; }   // v8.0: kos ikut tahap kesukaran
     var rng = opts.rng || s.rngBerbenih(String(p.id) + ctx.kunci + '|lobi|' + p.tahun + '|' + jenis), kesan = { ap: -d.ap, myr: -d.myr }, patch = {}, nota = '', babak = [];
     var nama = p.nama || 'Anda', baris = DIALOG[jenis][Math.floor(rng() * DIALOG[jenis].length)].replace('{nama}', nama);
     bp.dekat = clamp(bp.dekat + d.dekat, 0, 100); bp.lobiTahun = p.tahun;
@@ -418,7 +425,7 @@
     if (bp.guna[id] === tempoh) { return { ok: false, ralat: d.label + ' sudah dilakukan ' + (d.had === 'bulan' ? 'bulan ini' : 'tahun ini') + '.' }; }
     var kesan = { ap: -d.ap, myr: -d.myr, ip: d.kesan.ip, reputasi: d.kesan.reputasi, kesetiaan: d.kesan.kesetiaan };
     if ((Number(p.ap) || 0) < d.ap) { return { ok: false, ralat: 'Mata Tindakan (AP) tidak mencukupi.' }; }
-    if ((Number(p.myr) || 0) < d.myr) { return { ok: false, ralat: 'Wang (MYR) tidak mencukupi.' }; }
+    if (d.myr && (Number(p.myr) || 0) < kos(p, d.myr)) { return { ok: false, ralat: ralatDana(p, d.myr) }; }   // v8.0: kos ikut tahap kesukaran
     bp.guna[id] = tempoh;
     var r = simpan(bp, kesan, { tindakan: 'tindakan_negeri', nama: d.label, peringkat: 'negeri' });
     return r.ok ? { ok: true, mesej: d.mesej } : { ok: false, ralat: r.ralat };
@@ -520,14 +527,14 @@
       h += '<div class="kv"><span>Kedekatan dengan Presiden</span><b>' + bp.dekat + '%</b></div><div class="rv-m"><i class="a" style="width:' + bp.dekat + '%"></i><i class="b" style="width:' + (100 - bp.dekat) + '%"></i></div>';
       h += '<div class="kv"><span>Kedudukan anda</span><b>#' + st.kedudukan + ' / ' + st.jumlah + ' Ketua Bahagian (skor ' + st.skor + ')</b></div>';
       if (tawaranLobi(p)) { h += '<button type="button" class="btn btn--gold" data-act="lobi-presiden" data-b="' + ctx.id + '">Lobi Presiden</button> '; }
-      h += '<button type="button" class="btn btn--gold" data-act="dekati-presiden" data-b="' + ctx.id + '">Dekati Presiden (' + CONFIG.KOS_AP + ' AP, RM ' + CONFIG.KOS_MYR.toLocaleString('ms-MY') + ')</button>';
+      h += '<button type="button" class="btn btn--gold" data-act="dekati-presiden" data-b="' + ctx.id + '">Dekati Presiden (' + CONFIG.KOS_AP + ' AP, RM ' + kos(p, CONFIG.KOS_MYR).toLocaleString('ms-MY') + ')</button>';
     } else if (!st.sayaPresiden) { h += '<p class="note">Anda belum layak dilantik: hanya <b>Ketua Bahagian</b> negeri ini layak menjadi Pengerusi.</p>'; }
     var m = menunggu(p);
     if (m) { h += '<button type="button" class="btn btn--gold" data-act="urus-negeri" data-b="' + ctx.id + '" style="margin-top:.5rem">' + (m.jenis === 'pilih_pengerusi' ? 'Lantik Pengerusi' : m.jenis === 'pilih_negeri_lain' ? 'Lantik Pengerusi Negeri Lain (' + m.baki + ')' : 'Lantik AJK (' + esc(m.jawatan) + ')') + '</button>'; }
     if (st.sayaPengerusi) {
       h += '<p class="note" style="margin-top:.6rem"><b>Kuasa Pengerusi</b> (ex-officio MKT; +' + CONFIG.BONUS_IP + ' IP dan +' + CONFIG.BONUS_AJK + ' sokongan AJK sebulan)</p><div class="pp-negeri__tindak">' + Object.keys(TINDAKAN).map(function (k) {
         var d = TINDAKAN[k], guna = bp.guna[k] === (d.had === 'bulan' ? p.tahun + '-' + p.bulan : String(p.tahun));
-        return '<button type="button" class="btn btn--ghost" data-act="negeri-tindak" data-b="' + ctx.id + '" data-id="' + k + '"' + (guna ? ' disabled' : '') + '>' + esc(d.label) + '<small> ' + d.ap + ' AP' + (d.myr ? ', RM ' + d.myr.toLocaleString('ms-MY') : '') + (d.had === 'bulan' ? ' &middot; sebulan' : ' &middot; setahun') + '</small></button>'; }).join(' ') + '</div>';
+        return '<button type="button" class="btn btn--ghost" data-act="negeri-tindak" data-b="' + ctx.id + '" data-id="' + k + '"' + (guna ? ' disabled' : '') + '>' + esc(d.label) + '<small> ' + d.ap + ' AP' + (d.myr ? ', RM ' + kos(p, d.myr).toLocaleString('ms-MY') : '') + (d.had === 'bulan' ? ' &middot; sebulan' : ' &middot; setahun') + '</small></button>'; }).join(' ') + '</div>';
     }
     return tr(h + '</div>');
   }

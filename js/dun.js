@@ -21,6 +21,7 @@
     return null;
   }
   function S() { return modul('MyPolitikSave', 'save.js'); }
+  function cukup(p, n) { var s = S(); return s && s.cukupDana ? s.cukupDana(p, n) : (Number(p.myr) || 0) >= n; }   // v8.0: kos ikut tahap kesukaran
   function KB() { return modul('MyPolitikKabinet', 'kabinet.js'); }
   function PRU() { return modul('MyPolitikPRU', 'pru.js'); }
   function ST() { return modul('MyPolitikStres', 'stress.js'); }
@@ -141,7 +142,7 @@
     return { undi: u, ambang: k.ambang, kebarangkalian: kebarangkalian(u, k.ambang), baki: Math.max(0, CONFIG.LOBI_MAKS - u.lobi), tindakan: Object.keys(LOBI).map(function (id) {
       var t = LOBI[id], sebab = '';
       if (u.lobi >= CONFIG.LOBI_MAKS) { sebab = 'Had lobi dicapai.'; } else if ((Number(p.ap) || 0) < CONFIG.AP_LOBI) { sebab = 'AP tidak mencukupi.'; }
-      else if (t.myr && (Number(p.myr) || 0) < t.myr) { sebab = 'Dana tidak mencukupi.'; } else if (t.ip && (Number(p.ip) || 0) < t.ip) { sebab = 'IP tidak mencukupi.'; }
+      else if (t.myr && !cukup(p, t.myr)) { sebab = 'Dana tidak mencukupi.'; } else if (t.ip && (Number(p.ip) || 0) < t.ip) { sebab = 'IP tidak mencukupi.'; }
       return { id: t.id, nama: t.nama, huraian: t.huraian, boleh: !sebab, sebab: sebab };
     }) };
   }
@@ -209,7 +210,7 @@
     return { tp: t, ambang: k.ambang, hariMaks: CONFIG.TP.HARI, kestabilan: kestabilan(p), rating: rating(p), hubungan: hub, tindakan: ['pujuk', 'janji', 'rayu', 'tunggu', 'bubar'].map(function (id) {
       var a = TP_TINDAK[id], sebab = '';
       if (id !== 'tunggu' && id !== 'bubar' && (Number(p.ap) || 0) < CONFIG.AP_LOBI) { sebab = 'AP tidak mencukupi.'; }
-      else if (a.myr && (Number(p.myr) || 0) < a.myr) { sebab = 'Dana tidak mencukupi.'; } else if (a.ip && (Number(p.ip) || 0) < a.ip) { sebab = 'IP tidak mencukupi.'; }
+      else if (a.myr && !cukup(p, a.myr)) { sebab = 'Dana tidak mencukupi.'; } else if (a.ip && (Number(p.ip) || 0) < a.ip) { sebab = 'IP tidak mencukupi.'; }
       return { id: id, nama: a.nama, huraian: a.huraian, boleh: !sebab, sebab: sebab };
     }) };
   }

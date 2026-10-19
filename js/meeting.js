@@ -266,6 +266,8 @@
     if (s && s.status === 'selesai') { return { status: 'selesai', sebab: '' }; }
     if (s && s.status === 'sedang') { return { status: 'sedang', sebab: '' }; }
     var w = tetingkap(p, peringkat);
+    var EtH = typeof globalThis !== 'undefined' ? globalThis.MyPolitikEtika : null;   // v8.0: hak keahlian (gantung/pecat) disemak dahulu, sama seperti mulaMesyuarat()
+    if (EtH) { var hk = EtH.semakHak(p, 'perwakilan'); if (!hk.boleh) { return { status: 'tidak_layak', sebab: hk.sebab }; } }
     var h = bolehHadir(p, peringkat);
     if (!h.ok) { return { status: 'tidak_layak', sebab: h.sebab }; }          // kelayakan disemak dahulu supaya sebab sebenar dipaparkan
     if (w && w.status === 'belum_tiba') {
