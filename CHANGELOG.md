@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v8.10 (2026-10-19)
+
+Paparan IP sebenar pada setiap tindakan (maklum balas pemain: "+10 IP" tetapi dapat +1).
+
+### Diperbaiki
+
+- **Punca:** tambahan IP diredam mengikut IP semasa (gandaan 1 - IP/300, lantai 0.10, sekurang-kurangnya +1), tetapi penerangan tindakan memaparkan nilai asas. Contoh: +10 menjadi +5 pada IP 150 dan +1 pada IP 270 ke atas.
+- **Pembetulan:** `MyPolitikSave.kesanPapar` kini memaparkan IP sebenar (redaman IP + kelebihan sayap) dengan fungsi `ipSebenar` yang sama dengan yang dipakai `applyEffects`. Semua modul yang memaparkan kesan tindakan (Ahli Biasa, Pemegang Jawatan, Misi, Sayap, Peristiwa, Kabinet, Pilihan Raya) terkesan serentak. Nilai asas tersedia sebagai `ipAsas`.
+- **Tutorial:** langkah baharu `ip-sebenar` menerangkan redaman IP.
+
+### Andaian (sila semak)
+
+- Angka tidak termasuk bonus Musim Akar Umbi (bulan 1 hingga 3) yang dikenakan oleh tindakan jawatan semasa dijalankan, jadi pada bulan itu IP sebenar boleh lebih tinggi sedikit daripada angka dipaparkan. Ini dinyatakan dalam tutorial.
+- Hanya nilai IP positif dilaraskan; kehilangan IP dipaparkan seperti biasa.
+- 1 ujian baharu menyemak paparan sama dengan IP yang diterima pada IP 0, 60, 150, 240, 270 dan 400.
+
 ## v8.9 (2026-10-19)
 
 Meter Sokongan Atas Pagar kini boleh dinaikkan dan mempengaruhi risiko dicabar.

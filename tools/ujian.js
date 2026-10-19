@@ -518,6 +518,21 @@ ujian('atas pagar: krisis peta menaikkan / menurunkan meter', () => {
   sama(S.loadPlayer().kesetiaan.penentang, n1 + KP.CONFIG.LEWAT.penentang, 'lewat menurunkan');
 });
 
+/* ---------- Paparan IP sebenar (v8.10) ---------- */
+ujian('ip sebenar: paparan kesan tindakan sama dengan IP yang benar-benar diterima', () => {
+  P.daftar({});
+  for (const ip of [0, 60, 150, 240, 270, 400]) {
+    S.applyEffects({}, { kiraTindakan: false, patch: { ip } });
+    const p = S.loadPlayer(), jangka = S.ipSebenar(p, 10), papar = S.kesanPapar(p, { ip: 10, ap: -1 });
+    sama(papar.ip, jangka, 'kesanPapar IP pada ' + ip); sama(papar.ipAsas, 10, 'nilai asas dikekalkan');
+    const r = S.applyEffects({ ip: 10 }, { kiraTindakan: false });
+    sama(r.perubahan.ip, jangka, 'IP diterima pada ' + ip);
+  }
+  S.applyEffects({}, { kiraTindakan: false, patch: { ip: 150 } }); sama(S.ipSebenar(S.loadPlayer(), 10), 5);
+  S.applyEffects({}, { kiraTindakan: false, patch: { ip: 400 } }); sama(S.ipSebenar(S.loadPlayer(), 10), 1);
+  sama(S.ipSebenar(S.loadPlayer(), -5), -5, 'kehilangan IP tidak diredam'); sama(S.kesanPapar(S.loadPlayer(), { ip: -5 }).ipAsas, undefined);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
