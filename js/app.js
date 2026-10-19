@@ -759,7 +759,7 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -1320,6 +1320,7 @@
     //                                            // v7.34: Presiden/Pengerusi membuat lantikan
     if (W.NusaPRU_UI && W.NusaPRU_UI.selepasBulan) { await W.NusaPRU_UI.selepasBulan(r.peristiwa); }     // v7.3: PRU/PRN & Kabinet
     if (W.NusaIntegriti_UI && W.NusaIntegriti_UI.selepasBulan) { await W.NusaIntegriti_UI.selepasBulan(r.peristiwa); }     // v7.58: Whip & Audit SPRM
+    if (W.NusaMedia_UI && W.NusaMedia_UI.selepasBulan) { await W.NusaMedia_UI.selepasBulan(r.peristiwa); }     // v7.59: sidang media rawak
     if (W.NusaDewan_UI && W.NusaDewan_UI.selepasBulan) { await W.NusaDewan_UI.selepasBulan(r.peristiwa); }     // v7.55: undi tidak percaya & soalan lisan
     if (EV) { await tunjukAcara(EV.janaAcara({ pencetus: 'bulan' })); }       // acara rawak pergantian bulan
   }
