@@ -92,6 +92,14 @@
     simpan(d, {}); return d.risiko;
   }
 
+  /** Ubah Integriti Parti (dipanggil modul lain, mis. Media Digital). Pulang skor baharu. */
+  function ubahSkor(n, sebab) {
+    var p = S().loadPlayer(); if (!p) { return null; }
+    var d = getIntegriti(p); d.skor = clamp(Math.round(d.skor + n), 0, 100);
+    if (sebab) { rekod(d, p, 'skor', (n >= 0 ? '+' : '') + Math.round(n) + ' Integriti Parti: ' + sebab); }
+    simpan(d, {}); return d.skor;
+  }
+
   /* ---------- Whip & Disiplin ---------- */
   function whipSemasa(p) {
     var d = getIntegriti(p), w = d.whipAcara; if (!w) { return null; }
@@ -239,7 +247,7 @@
 
   return {
     CONFIG: CONFIG, DASAR: DASAR, setRng: function (f) { rngLalai = f || null; },
-    getIntegriti: getIntegriti, aktif: aktif, bebas: bebas, tambahRisiko: tambahRisiko, labelRisiko: labelRisiko,
+    getIntegriti: getIntegriti, aktif: aktif, bebas: bebas, tambahRisiko: tambahRisiko, ubahSkor: ubahSkor, labelRisiko: labelRisiko,
     whipSemasa: whipSemasa, jawabWhip: jawabWhip, amaranSemasa: amaranSemasa, jawabAmaran: jawabAmaran, peluangHukuman: peluangHukuman,
     auditSemasa: auditSemasa, jawabAudit: jawabAudit, prosesBulan: prosesBulan, ringkasan: ringkasan
   };
