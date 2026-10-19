@@ -1554,9 +1554,10 @@
       if (j === 'ganti') { paparGanti(); return; }
       var sl = t.getAttribute('data-pindah-slot');
       if (sl && data) {
-        var ada = SLT.ringkasan(parseInt(sl, 10));
-        if (ada && !W.confirm('Ganti watak ' + ada.nama + ' di Slot ' + sl + ' dengan ' + data.player.nama + '? Sandaran watak lama disimpan sekali sahaja.')) { return; }
-        selesai(SLT.pasang(parseInt(sl, 10), data));
+        var no = parseInt(sl, 10), ada = SLT.ringkasan(no), baru = data.player.nama;
+        if (!ada) { selesai(SLT.pasang(no, data)); return; }
+        modal({ tajuk: 'Ganti watak?', isi: '<p>' + esc('Ganti watak ' + ada.nama + ' di Slot ' + no + ' dengan ' + baru + '? Sandaran watak lama disimpan sekali sahaja.') + '</p>',
+          butang: [{ label: 'Batal', nilai: false }, { label: 'Ganti', nilai: true, kelas: 'btn--gold' }] }).then(function (v) { if (v === true) { selesai(SLT.pasang(no, data)); } });
       }
     });
     var ta = sahaja('pindah-teks'), fi = sahaja('pindah-fail');

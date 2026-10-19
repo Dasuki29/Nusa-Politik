@@ -38,6 +38,9 @@
   ["Fail simpanan dimuat turun.", "Save file downloaded."],
   ["Watak dimuat ke Slot {x}.", "Character loaded into Slot {x}."],
   ["Import gagal.", "Import failed."],
-  ["Gagal membaca fail.", "Failed to read the file."]
+  ["Gagal membaca fail.", "Failed to read the file."],
+  ["Ganti watak?", "Replace character?"],
+  ["Ganti watak {a} di Slot {b} dengan {c}? Sandaran watak lama disimpan sekali sahaja.", "Replace character {a} in Slot {b} with {c}? A backup of the old character is kept once only."],
+  ["Batal", "Cancel"]
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));
