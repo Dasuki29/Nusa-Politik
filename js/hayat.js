@@ -12,9 +12,10 @@
    Nombor di sini ialah angka permainan, bukan statistik perubatan sebenar.
    ========================================================================== */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) { module.exports = factory(root); }
-  else { root.MyPolitikHayat = factory(root); }
-})(typeof window !== 'undefined' ? window : this, function (root) {
+  var api = factory(root);                                     // v8.0: sentiasa didaftar secara global (pelayar & Node), seperti modul lain
+  if (typeof module === 'object' && module.exports) { module.exports = api; }
+  root.MyPolitikHayat = api;
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : this), function (root) {
   'use strict';
 
   var CONFIG = {

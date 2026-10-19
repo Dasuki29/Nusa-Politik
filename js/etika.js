@@ -326,6 +326,12 @@
     if (berubah || (patch && patch.etika)) {
       var r = S.applyEffects(kesan, { kiraTindakan: false, patch: patch || { etika: e }, log: peristiwa.length ? { tindakan: 'disiplin', nama: peristiwa[0].mesej.slice(0, 80), peringkat: 'disiplin' } : undefined });
       if (!r.ok) { return { peristiwa: peristiwa, berubah: false, ralat: r.ralat }; }
+      if (patch && patch.etika && patch.etika.status === 'dipecat') {             // v8.0: ahli yang dipecat tidak lagi dikekalkan dalam kerajaan
+        var g0 = typeof globalThis !== 'undefined' ? globalThis : null, KBm = g0 && g0.MyPolitikKabinet;
+        if (!KBm) { try { KBm = typeof require === 'function' ? require('./kabinet.js') : null; } catch (x) { KBm = null; } }
+        var lk = KBm && KBm.lucutJawatan ? KBm.lucutJawatan('Selepas pemecatan anda daripada parti, kerajaan menggugurkan anda daripada jawatan kerajaan.') : null;
+        if (lk) { peristiwa.push(lk); }
+      }
     }
     return { peristiwa: peristiwa, berubah: berubah };
   }

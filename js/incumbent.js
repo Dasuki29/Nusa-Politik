@@ -34,6 +34,7 @@
     JAWATAN_BIASA: 'Ahli Biasa',
     AMBANG_AMARAN: 40,             // Sokongan Akar Umbi di bawah nilai ini mencetuskan amaran
     AMBANG_KRITIKAL: 25,           // di bawah nilai ini amaran menjadi kritikal
+    AMBANG_PULIH: 55,              // v8.0: pencabar berundur jika Sokongan Akar Umbi pulih ke nilai ini
     KEBARANGKALIAN_ASAS: 0.25,     // peluang kejadian rawak pada 39%
     KEBARANGKALIAN_MAKS: 0.75,     // peluang pada 0%
     COOLDOWN_TINDAKAN: 3           // bilangan tindakan minimum antara dua cabaran
@@ -101,7 +102,7 @@
     if (EtG) { var hakG = EtG.semakHak(p, 'tugas_jawatan'); if (!hakG.boleh) { return { boleh: false, sebab: hakG.sebab }; } }
     if (!adalahPemegangJawatan(p)) { return { boleh: false, sebab: 'Tindakan ini untuk pemegang jawatan. Anda masih Ahli Biasa.' }; }
     if (p.ap + (def.kesan.ap || 0) < 0) { return { boleh: false, sebab: 'AP tidak mencukupi (perlu ' + Math.abs(def.kesan.ap) + ').' }; }
-    if (p.myr + (def.kesan.myr || 0) < 0) { return { boleh: false, sebab: 'Wang tidak mencukupi (perlu MYR ' + Math.abs(def.kesan.myr).toLocaleString('ms-MY') + ').' }; }
+    if (def.kesan.myr < 0 && !S.cukupDana(p, -def.kesan.myr)) { return { boleh: false, sebab: S.ralatDana(p, -def.kesan.myr) }; }   // v8.0: kos selepas pengali kesukaran
     return { boleh: true, sebab: '' };
   }
 
@@ -113,12 +114,12 @@
   function senaraiTindakan(profil) {
     var p = profil || S.loadPlayer();
     return TINDAKAN.map(function (d) {
-      var s = semakBoleh(d, p);
+      var s = semakBoleh(d, p), kp = S.kesanPapar(p, d.kesan);                 // v8.0: kos dipaparkan ikut tahap kesukaran
       return {
         id: d.id, nama: d.nama, penerangan: d.penerangan,
-        kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, d.kesan.myr || 0)) },
+        kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, kp.myr || 0)) },
         kesan: salin(d.kesan),
-        ringkas: S.ringkasPerubahan({ ip: d.kesan.ip || 0, myr: d.kesan.myr || 0, ap: d.kesan.ap || 0, kesetiaan: d.kesan.kesetiaan || {} }),
+        ringkas: S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, kesetiaan: kp.kesetiaan || {} }),
         boleh: s.boleh, sebab: s.sebab
       };
     });
@@ -149,6 +150,7 @@
 
     var amaran = semakAmaranKesetiaan({ rng: opts.rng });
     var peristiwa = [];
+    if (amaran.cabaranTamat) { peristiwa.push(amaran.cabaranTamat); }
     if (amaran.cabaranBaru) { peristiwa.push({ jenis: 'cabaran_jawatan', cabaran: amaran.cabaranBaru, mesej: amaran.cabaranBaru.mesej }); }
 
     return {
@@ -197,6 +199,7 @@
    *   { ok, amaran:false, akarUmbi }                       jika sokongan sihat
    *   { ok, amaran:true, tahap:'amaran'|'kritikal', akarUmbi, ambang, mesej, kebarangkalian,
    *     cabaranBaru:{...}|null, cabaranAktif:{...}|null }  jika di bawah 40%
+   *   cabaranTamat:{ jenis, mesej }|null  (v8.0) jika cabaran aktif tamat kerana jawatan tiada lagi atau sokongan pulih
    * Amaran berstatus dan cabaran baharu disimpan dalam localStorage.
    */
   function semakAmaranKesetiaan(opts) {
@@ -204,11 +207,13 @@
     var p = opts.profil || S.loadPlayer();
     if (!p) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
     if (!adalahPemegangJawatan(p)) { return { ok: true, amaran: false, sebab: 'bukan_pemegang_jawatan' }; }
+    var tamatC = opts.profil ? null : semakTamatCabaran(p);                  // v8.0: cabaran boleh tamat sebelum semakan baharu
+    if (tamatC) { p = S.loadPlayer() || p; }
 
     var k = p.kesetiaan.akarUmbi, ambang = CONFIG.AMBANG_AMARAN;
     if (k >= ambang) {
       if (p.amaranAktif) { S.updatePlayer({ amaranAktif: false }); }
-      return { ok: true, amaran: false, akarUmbi: k, ambang: ambang };
+      return { ok: true, amaran: false, akarUmbi: k, ambang: ambang, cabaranTamat: tamatC };
     }
 
     var tahap = k < CONFIG.AMBANG_KRITIKAL ? 'kritikal' : 'amaran';
@@ -219,7 +224,7 @@
     var hasil = {
       ok: true, amaran: true, tahap: tahap, akarUmbi: k, ambang: ambang, kebarangkalian: kemungkinan,
       mesej: 'Sokongan Akar Umbi tinggal ' + k + '% (di bawah ' + ambang + '%). Penentang mula bergerak dan jawatan ' + p.jawatan + ' anda berisiko dicabar.',
-      cabaranBaru: null, cabaranAktif: aktif
+      cabaranBaru: null, cabaranAktif: aktif, cabaranTamat: tamatC
     };
 
     if (!aktif && (opts.paksa || (!sejuk && rng() < kemungkinan))) {
@@ -229,7 +234,7 @@
         jenis: 'cabaran_jawatan',
         tajuk: 'Jawatan anda dicabar',
         penentang: lawan,
-        jawatanDicabar: p.jawatan,
+        jawatanDicabar: p.jawatan, kod: kodJawatan(p, p.jawatan),
         peringkat: peringkatJawatan(p.jawatan),
         akarUmbi: k, tahap: tahap,
         mesej: lawan.nama + ', ' + lawan.peranan + ', mengumpul sokongan untuk mencabar jawatan ' + p.jawatan + ' anda.',
@@ -248,6 +253,31 @@
   }
 
   function getCabaranAktif() { return cabaranAktif(S.loadPlayer()); }
+
+  /** v8.0: kod katalog bagi nama jawatan yang dipegang (untuk memadankan cabaran dengan pertandingan). */
+  function kodJawatan(p, nama) {
+    var Jw = typeof globalThis !== 'undefined' ? globalThis.MyPolitikJawatan : null;
+    var j = Jw && Jw.getJawatan ? Jw.getJawatan(p).filter(function (x) { return x.jawatan === nama; })[0] : null;
+    return j && j.kod && j.kod !== 'lama' ? j.kod : null;
+  }
+
+  /**
+   * v8.0: tamatkan cabaran aktif jika jawatan yang dicabar tidak lagi dipegang, atau Sokongan Akar Umbi
+   * sudah pulih ke CONFIG.AMBANG_PULIH. Pulang { jenis:'cabaran_selesai', mesej } atau null.
+   * (Cabaran yang dipertahankan dalam pemilihan diselesaikan oleh election.js.)
+   */
+  function semakTamatCabaran(p) {
+    var c = cabaranAktif(p);
+    if (!c) { return null; }
+    var Jw = typeof globalThis !== 'undefined' ? globalThis.MyPolitikJawatan : null;
+    var masih = !Jw || !Jw.getJawatan || Jw.getJawatan(p).some(function (j) { return c.kod ? j.kod === c.kod : j.jawatan === c.jawatanDicabar; });
+    var k = Number(p.kesetiaan && p.kesetiaan.akarUmbi) || 0, nama = c.penentang && c.penentang.nama ? c.penentang.nama : 'Penentang', mesej = null;
+    if (!masih) { mesej = 'Cabaran ' + nama + ' terhadap jawatan ' + c.jawatanDicabar + ' tamat kerana anda tidak lagi memegang jawatan itu.'; }
+    else if (k >= CONFIG.AMBANG_PULIH) { mesej = nama + ' menarik diri daripada mencabar jawatan ' + c.jawatanDicabar + ' kerana Sokongan Akar Umbi anda pulih (' + k + '%).'; }
+    if (!mesej) { return null; }
+    var r = selesaikanCabaran('tamat');
+    return r && r.ok ? { jenis: 'cabaran_selesai', mesej: mesej } : null;
+  }
 
   /**
    * Tutup cabaran aktif. keputusan: 'ditangkis' | 'diterima' | 'tamat'.
@@ -276,6 +306,7 @@
     jalankanTindakan: jalankanTindakan,
     kebarangkalianCabaran: kebarangkalianCabaran,
     semakAmaranKesetiaan: semakAmaranKesetiaan,
+    semakTamatCabaran: semakTamatCabaran,
     getCabaranAktif: getCabaranAktif,
     selesaikanCabaran: selesaikanCabaran
   };

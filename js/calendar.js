@@ -353,7 +353,7 @@
       fasa: getFasa(bulan), regenerasi: rg,
       perubahan: { ip: akhir.ip - asal.ip, myr: akhir.myr - asal.myr, ap: akhir.ap - asal.ap, reputasi: akhir.reputasi - asal.reputasi },
       peristiwa: peristiwa,
-      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + CONFIG.AP_BULANAN + ' (had ' + CONFIG.AP_MAKS + '), elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',
+      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + Math.max(0, akhir.ap - asal.ap) + (akhir.ap >= CONFIG.AP_MAKS ? ' (had ' + CONFIG.AP_MAKS + ' dicapai)' : ' (had ' + CONFIG.AP_MAKS + ')') + ', elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',   // v8.0: tambahan AP sebenar
       profil: akhir
     };
   }
