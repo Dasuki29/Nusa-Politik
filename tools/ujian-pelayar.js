@@ -117,7 +117,15 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
       }
     }
   };
-  for (const tab of ['tindakan', 'mesyuarat', 'pemilihan', 'pilihanraya', 'dewan', 'peta']) {
+  /* Pencapaian: cetus trofi Negarawan Utama melalui simpanan sebenar, semak toast dan panel dalam EN. */
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { kabinet: { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' } } }); });
+  await pg.waitForTimeout(500);
+  const toastPC = await pg.evaluate(() => Array.prototype.map.call(document.querySelectorAll('.toast'), (t) => t.textContent).join(' | '));
+  if (toastPC.indexOf('Achievement Unlocked: Foremost Statesman!') < 0) { ralat.push('toast pencapaian tiada/salah: ' + toastPC.slice(0, 120)); }
+  await pg.locator('[data-tab="pencapaian"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab pencapaian');
+  const panelPC = await pg.evaluate(() => document.getElementById('panel-pencapaian').innerText);
+  if (!/1 \/ 5 unlocked/.test(panelPC) || !/Foremost Statesman/.test(panelPC) || !/Progress|Unlocked/.test(panelPC)) { ralat.push('panel pencapaian EN tidak betul: ' + panelPC.replace(/\s+/g, ' ').slice(0, 160)); }
+  for (const tab of ['tindakan', 'mesyuarat', 'pemilihan', 'pilihanraya', 'dewan', 'pencapaian', 'peta']) {
     await tutup();
     const t = pg.locator('[data-tab="' + tab + '"]').first();
     if (await t.count()) { await t.evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab ' + tab); }

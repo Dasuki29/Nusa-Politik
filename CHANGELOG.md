@@ -1,5 +1,27 @@
 # Catatan Perubahan
 
+## v8.6 (2026-10-19)
+
+Modul baharu: Sistem Pencapaian & Trofi, serta dua langkah tutorial baharu.
+
+### Baharu
+
+- **Tab 🏆 Pencapaian** (`js/pencapaian.js`, `js/pencapaian-ui.js`): 5 trofi, bar kemajuan, lencana "Baharu" dan toast "Pencapaian Dibuka: ...!". Dibuka secara automatik apabila profil disimpan. Mod Latihan Amir tidak melayakkan trofi.
+- **Tutorial:** langkah "Meter Stress" dan "Matlamat Politikus" (Cawangan → Bahagian → Calon PRU → MP/ADUN/EXCO → Menteri), BM dan EN. Tutorial interaktif dan butang Skip sedia ada dikekalkan.
+
+### Andaian syarat trofi (sila semak)
+
+- **Akar Umbi Teguh:** menang pemilihan Ketua Cawangan tanpa pernah kalah mana-mana pemilihan jawatan sebelum itu. Kekalahan pemilihan perwakilan tidak dikira.
+- **Ikon Sayap:** memegang jawatan Ketua sayap Bahagian terkumpul 72 bulan (2 penggal x 3 tahun).
+- **Wira PRU (Giant Killer):** menang kerusi PRU di kawasan berprofil Bandar atau Campuran.
+- **Bapa Reformasi:** pemegang kerusi wakil rakyat dengan Integriti Parti melebihi 90 pada setiap semakan bulanan selama 60 bulan berturut-turut dalam mandat yang sama. Skor 90 atau kurang menetapkan semula pembilang.
+- **Negarawan Utama:** jawatan kerajaan Menteri Penuh, Timbalan Perdana Menteri atau Perdana Menteri.
+- Trofi disimpan berasingan (`myPolitik_pencapaian`), kekal merentas watak dan tidak dipadam oleh Reset Permainan. Pembilang kemajuan dikunci mengikut id watak.
+
+### Ujian
+
+- 7 ujian pencapaian baharu dalam `tools/ujian.js`; ujian pelayar mencetus trofi, memeriksa toast dan panel dalam EN; dua kebocoran BM lama ditutup (teks pemuat peta, baris Dato').
+
 ## v8.5 (2026-10-19)
 
 - Modal acara krisis: tajuk "KRISIS:", label "Krisis Politik · …" dan tajuk keputusan kini diterjemah dalam mod EN.

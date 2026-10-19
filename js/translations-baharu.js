@@ -2060,7 +2060,33 @@
   ["Krisis: {x} — Keputusan", "Crisis: {x} — Outcome"],
   ["Krisis: {x}", "Crisis: {x}"],
   ["Krisis Politik · Keputusan anda akan membawa akibat", "Political Crisis · Your decision will have consequences"],
-  ["Krisis Politik", "Political Crisis"]
+  ["Krisis Politik", "Political Crisis"],
+  /* Pencapaian v8.6 */
+  ["Pencapaian", "Achievements"],
+  ["🏆 Pencapaian", "🏆 Achievements"],
+  ["Pencapaian baharu", "New achievement"],
+  ["{n} / {m} dibuka", "{n} / {m} unlocked"],
+  ["Simulasi: tidak mewakili UMNO sebenar.", "Simulation: does not represent the real UMNO."],
+  ["Baharu", "New"],
+  ["Dibuka · {x}", "Unlocked · {x}"],
+  ["Kemajuan: {x}", "Progress: {x}"],
+  ["{n} / {m} bulan", "{n} / {m} months"],
+  ["{n} / {m} bulan berturut-turut", "{n} / {m} consecutive months"],
+  ["Kalah pemilihan jawatan: {n} (syarat gagal untuk watak ini)", "Post elections lost: {n} (condition failed for this character)"],
+  ["Pencapaian Dibuka: {x}!", "Achievement Unlocked: {x}!"],
+  ["Akar Umbi Teguh", "Steadfast Grassroots"],
+  ["Menang jawatan Ketua Cawangan tanpa kekalahan pemilihan.", "Win the post of Branch Chief without ever losing a post election."],
+  ["Ikon Sayap", "Wing Icon"],
+  ["Pimpin sayap di peringkat Bahagian selama 2 penggal.", "Lead a wing at Division level for 2 terms."],
+  ["Wira PRU (Giant Killer)", "GE Hero (Giant Killer)"],
+  ["Menang kerusi di kawasan Bandar/Campuran yang mencabar.", "Win a seat in a challenging Urban/Mixed area."],
+  ["Bapa Reformasi", "Father of Reform (Ironclad Integrity)"],
+  ["Skor integriti melebihi 90 sepanjang satu penggal Parlimen.", "Keep the integrity score above 90 throughout one Parliament term."],
+  ["Negarawan Utama", "Foremost Statesman"],
+  ["Dilantik Menteri Penuh atau Perdana Menteri.", "Appointed a full Minister or Prime Minister."],
+  ["· Ketua Sayap Pusat / Menteri, selepas 3 tahun berkhidmat · {n}/{m} bulan", "· Central Wing Chief / Minister, after 3 years of service · {n}/{m} months"],
+  ["{n}/{m} bulan", "{n}/{m} months"],
+  ["Buka tab ini untuk memuatkan peta...", "Open this tab to load the map..."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
