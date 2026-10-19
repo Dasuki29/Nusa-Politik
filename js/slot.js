@@ -86,5 +86,64 @@
     return { ok: true };
   }
 
-  return { MAKS: MAKS, nombor: sahNo, kunci: kunciSlot, aktif: aktif, senarai: senarai, ringkasan: ringkasan, slotKosong: slotKosong, aktifkan: aktifkan, padam: padam };
+  /* ------------------------------------------------------------------
+     v7.68: Pindah career antara peranti (tanpa akaun, tanpa pelayan).
+     Eksport watak slot AKTIF sebagai kod 'NUSA1.<base64>' atau fail JSON; import ke slot kosong (atau ganti slot dipilih).
+     Format: { format:'nusa-politik-save', v:1, masa, player, events, tutorial }. Data tidak keluar dari pelayar kecuali disalin pengguna.
+     ------------------------------------------------------------------ */
+  var FORMAT = 'nusa-politik-save', AWALAN = 'NUSA1.', DATA_JENIS = ['player', 'events', 'tutorial'], SANDAR_IMPORT = 'myPolitik_import_sandar';
+
+  function b64enc(t) { return root.btoa(unescape(encodeURIComponent(t))); }
+  function b64dec(t) { return decodeURIComponent(escape(root.atob(t))); }
+
+  /** Objek eksport bagi slot aktif, atau null jika tiada watak. */
+  function eksport() {
+    var o = { format: FORMAT, v: 1, masa: new Date().toISOString() };
+    DATA_JENIS.forEach(function (j) { var r = baca(KANON[j]); try { o[j] = r ? JSON.parse(r) : null; } catch (e) { o[j] = null; } });
+    if (!o.player || typeof o.player !== 'object' || !o.player.nama) { return null; }
+    return o;
+  }
+  function kod(o) { return AWALAN + b64enc(JSON.stringify(o)); }
+  function teksFail(o) { return JSON.stringify(o); }
+
+  /** Urai kod NUSA1 atau teks JSON. Pulang { ok, data, ringkas } atau { ok:false, ralat }. */
+  function urai(teks) {
+    var t = String(teks == null ? '' : teks).replace(/^\uFEFF/, '').trim(), o = null;
+    if (!t) { return { ok: false, ralat: 'Tiada kod atau fail.' }; }
+    try { o = t.indexOf(AWALAN) === 0 ? JSON.parse(b64dec(t.slice(AWALAN.length).replace(/\s+/g, ''))) : JSON.parse(t); } catch (e) { return { ok: false, ralat: 'Kod simpanan tidak sah atau rosak.' }; }
+    if (!o || typeof o !== 'object' || o.format !== FORMAT) { return { ok: false, ralat: 'Ini bukan fail simpanan Nusa Politik.' }; }
+    if (!(parseInt(o.v, 10) >= 1) || parseInt(o.v, 10) > 1) { return { ok: false, ralat: 'Versi simpanan tidak disokong. Kemas kini permainan dahulu.' }; }
+    var p = o.player;
+    if (!p || typeof p !== 'object' || typeof p.nama !== 'string' || !p.nama) { return { ok: false, ralat: 'Data watak tiada atau rosak.' }; }
+    var d = {};
+    DATA_JENIS.forEach(function (j) { d[j] = (o[j] && typeof o[j] === 'object') ? o[j] : null; });
+    var dm = p.demografik || {};
+    return { ok: true, data: { format: FORMAT, v: 1, masa: o.masa || '', player: d.player, events: d.events, tutorial: d.tutorial },
+      ringkas: { nama: p.nama, jawatan: p.jawatan || 'Ahli Biasa', cawangan: p.cawangan || '', tahun: p.tahun || 2026, bulan: p.bulan || 1, versi: p.versi || '', umur: dm.umur || null } };
+  }
+
+  /** Pasang data ke slot n. Jika slot berisi, sandaran watak lama disimpan dahulu. Pulang { ok, slot, ganti } atau { ok:false, ralat }. */
+  function pasang(n, data) {
+    n = sahNo(n); if (!n) { return { ok: false, ralat: 'Nombor slot tidak sah.' }; }
+    if (!data || !data.player) { return { ok: false, ralat: 'Data tiada.' }; }
+    var s = S(); if (!s) { return { ok: false, ralat: 'Pelayar menyekat storan setempat.' }; }
+    var ganti = !!ringkasan(n), aktifIni = n === aktif();
+    try {
+      if (ganti) { var lama = {}; DATA_JENIS.forEach(function (j) { lama[j] = baca(aktifIni ? KANON[j] : kunciSlot(n, j)); }); s.setItem(SANDAR_IMPORT, JSON.stringify({ slot: n, masa: new Date().toISOString(), data: lama })); }
+      DATA_JENIS.forEach(function (j) { tulis(aktifIni ? KANON[j] : kunciSlot(n, j), data[j] ? JSON.stringify(data[j]) : null); });
+      if (aktifIni) { tulis(KANON.player_bak, null); } else { tulis(kunciSlot(n, 'player_bak'), null); }
+    } catch (e) { return { ok: false, ralat: 'Gagal menyimpan (storan penuh atau disekat).' }; }
+    return { ok: true, slot: n, ganti: ganti };
+  }
+
+  /** Import ke slot kosong pertama (tidak menggantikan watak). Pulang { ok, slot } atau { ok:false, penuh:true }. */
+  function pasangPantas(data) {
+    var n = 0, a = aktif();
+    if (!ringkasan(a)) { n = a; } else { for (var i = 1; i <= MAKS; i++) { if (!ringkasan(i)) { n = i; break; } } }
+    if (!n) { return { ok: false, penuh: true, ralat: 'Semua slot penuh. Pilih slot untuk diganti.' }; }
+    return pasang(n, data);
+  }
+
+  return { MAKS: MAKS, nombor: sahNo, kunci: kunciSlot, aktif: aktif, senarai: senarai, ringkasan: ringkasan, slotKosong: slotKosong, aktifkan: aktifkan, padam: padam,
+    eksport: eksport, kod: kod, teksFail: teksFail, urai: urai, pasang: pasang, pasangPantas: pasangPantas, AWALAN: AWALAN };
 });

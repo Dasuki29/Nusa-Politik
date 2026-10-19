@@ -358,6 +358,25 @@
         <h3 class="menu-sub">Simpanan Permainan</h3>
         <div id="menu-slot" class="menu-slot"></div>
         <p id="menu-simpan" class="note" style="margin:6px 0 0"></p>
+        <h3 class="menu-sub">Pindah Career ke Peranti Lain</h3>
+        <p class="note" style="margin:0 0 8px">Simpanan hanya wujud dalam pelayar ini. Eksport watak, kemudian import di fon atau laptop lain. Tiada akaun diperlukan.</p>
+        <div class="menu-grid" id="pindah-eksport">
+          <button type="button" class="btn btn--gold" data-pindah="salin">📋 Salin Kod Simpanan</button>
+          <button type="button" class="btn btn--ghost" data-pindah="fail">⬇️ Muat Turun Fail</button>
+          <button type="button" class="btn btn--ghost" data-pindah="buka" style="grid-column:1/-1">⬆️ Import Simpanan…</button>
+        </div>
+        <p class="note" style="margin:0 0 6px">Kod mengandungi seluruh career anda. Jangan kongsi dengan orang yang tidak dipercayai.</p>
+        <div id="pindah-import" hidden>
+          <textarea id="pindah-teks" rows="3" style="width:100%;border-radius:10px;padding:8px;font:12px monospace" placeholder="NUSA1.eyJ2IjoxLC..." aria-label="Kod simpanan"></textarea>
+          <p class="note" id="pindah-semak" style="margin:8px 0" aria-live="polite"></p>
+          <div class="menu-grid">
+            <button type="button" class="btn btn--gold" id="pindah-btn-import" data-pindah="import" style="grid-column:1/-1" disabled>⬆️ Import &amp; Main</button>
+            <button type="button" class="btn btn--ghost" data-pindah="ganti" disabled>Ganti slot lain…</button>
+            <button type="button" class="btn btn--ghost" data-pindah="pilih">📁 Pilih Fail…</button>
+          </div>
+          <div id="pindah-ganti" class="menu-slot" hidden></div>
+          <input type="file" id="pindah-fail" accept=".json,application/json,text/plain" hidden>
+        </div>
         <div class="menu-kaki"><button type="button" class="btn btn--primary" id="btn-menu-utama">🏠 Menu Utama</button></div>
       </div>
     </div>
@@ -398,6 +417,7 @@
   <script src="js/translations-ui.js"></script>
   <script src="js/translations-baharu.js"></script>
   <script src="js/translations-perlembagaan.js"></script>
+  <script src="js/translations-pindah.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/infra.js"></script>
   <script src="js/calendar.js"></script>
