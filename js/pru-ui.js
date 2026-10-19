@@ -114,7 +114,9 @@
     if (!KB) { return ''; }
     var k = KB.ringkasan(p), h = '';
     if (k.lobi && !k.hasGovernmentRole) {
-      return '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button></section>';
+      var mb = k.mb && k.mb.boleh ? k.mb : null;
+      var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
+      return bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button></section>';
     }
     if (!k.hasGovernmentRole) { return ''; }
     h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
@@ -353,7 +355,7 @@
     var buka = a.keputusan.kabinetBuka;
     PRU.tutupKeputusan(); segarkan();
     if (PRU.nasionalTertunggak(S.loadPlayer())) { await nasional(); }
-    else if (buka) { await lobi(); }
+    else if (buka) { var mbk = KB && KB.maklumatMB ? KB.maklumatMB(S.loadPlayer()) : null; if (mbk && mbk.boleh) { await menteriBesar(); } else { await lobi(); } }
   }
   async function selesai() {
     var r = PRU.selesaikan();
@@ -394,6 +396,27 @@
       if (r.dilantik || r.tutup) { break; }
     }
     segarkan();
+  }
+  /** v7.63: Menteri Besar / Ketua Menteri (majoriti sendiri = terus; gabungan = rundingan). */
+  async function menteriBesar() {
+    if (!KB || !KB.maklumatMB) { return; }
+    var p = S.loadPlayer(), m = KB.maklumatMB(p);
+    if (!m.boleh) { toast(m.sebab || 'Tidak tersedia.', 'ralat'); return; }
+    var isi = m.sendiri
+      ? '<p>Parti anda menang <b>' + m.parti + '</b> daripada ' + m.jumlah + ' kerusi DUN (majoriti ' + m.ambang + '). Anda boleh mengangkat sumpah sebagai <b>' + esc(m.label) + '</b>.</p>'
+      : !m.jumlah ? '<p>Rakan gabungan turut menuntut jawatan itu. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan EXCO Kanan.</p>'
+      : '<p>Parti anda <b>' + m.parti + '</b> kerusi + rakan gabungan <b>' + m.rakan + '</b> = <b>' + m.gabungan + '</b> daripada ' + m.jumlah + ' (majoriti ' + m.ambang + '). Bahagian kerusi parti dalam gabungan: <b>' + m.kongsi + '%</b>. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan EXCO Kanan.</p>';
+    var id = await modal({ tajuk: '👔 ' + esc(m.label) + ' ' + esc(m.negeri),
+      isi: isi + '<ul class="acara__pil">' +
+        opsi('TUNTUT', m.sendiri ? '👔 Angkat sumpah ' + esc(m.label) : '👔 Tuntut ' + esc(m.label), '2 AP · elaun +RM 6,000 &amp; +18 IP sebulan · Stress lebih berat', (Number(p.ap) || 0) >= 2) +
+        (m.sendiri ? '' : opsi('KANAN', '🤝 Terima EXCO Kanan', 'Selamat, tanpa menuntut. Elaun EXCO.', true)) +
+        opsi('LAIN', 'Lobi portfolio biasa', 'Tidak menuntut jawatan tertinggi; pilih portfolio EXCO seperti biasa.', true) + '</ul>', butang: [] });
+    if (!id) { return; }
+    if (id === 'LAIN') { await lobi(); return; }
+    var r = id === 'TUNTUT' ? KB.tuntutMB() : KB.terimaExcoKanan();
+    if (!r.ok) { toast(r.ralat, 'ralat'); return; }
+    segarkan();
+    await modal({ tajuk: r.dilantik === false ? 'Tuntutan Ditolak' : '👔 Dilantik!', isi: '<p>' + esc(r.mesej) + '</p>' });
   }
   async function acara() {
     if (!KB) { return; }
@@ -520,7 +543,7 @@
     if (!t || t.disabled) { return; }
     var a = t.getAttribute('data-pru');
     if (a === 'buka') { alir(); } else if (a === 'tindak') { tindak(t.getAttribute('data-id')); } else if (a === 'kejutan') { sibuk = true; kejutan().then(function () { sibuk = false; segarkan(); }, function () { sibuk = false; }); }
-    else if (a === 'selesai') { selesai(); } else if (a === 'nasional') { nasional(); } else if (a === 'keputusan') { keputusan(); } else if (a === 'lobi') { lobi(); } else if (a === 'acara') { acara(); } else if (a === 'tarik') { tarikDiriPRU(); } else if (a === 'prk-tarik') { tarikDiriPRK(); } else if (a === 'prk-buka') { alirPRK(); } else if (a === 'prk-tindak') { tindakPRK(t.getAttribute('data-id')); } else if (a === 'prk-selesai') { selesaiPRK(); } else if (a === 'prk-keputusan') { keputusanPRK(); } else if (a === 'cdf') { salurCDF(t.getAttribute('data-jumlah')); } else if (a === 'janji') { majuJanji(t.getAttribute('data-id')); }
+    else if (a === 'selesai') { selesai(); } else if (a === 'nasional') { nasional(); } else if (a === 'keputusan') { keputusan(); } else if (a === 'lobi') { lobi(); } else if (a === 'mb') { menteriBesar(); } else if (a === 'acara') { acara(); } else if (a === 'tarik') { tarikDiriPRU(); } else if (a === 'prk-tarik') { tarikDiriPRK(); } else if (a === 'prk-buka') { alirPRK(); } else if (a === 'prk-tindak') { tindakPRK(t.getAttribute('data-id')); } else if (a === 'prk-selesai') { selesaiPRK(); } else if (a === 'prk-keputusan') { keputusanPRK(); } else if (a === 'cdf') { salurCDF(t.getAttribute('data-jumlah')); } else if (a === 'janji') { majuJanji(t.getAttribute('data-id')); }
   });
 
   W.NusaPRU_UI = {  nasional: nasional, musim: musim, kad: kad, lencana: lencana, selepasBulan: selepasBulan, alir: alir, kejutan: kejutan, keputusan: keputusan, lobi: lobi, acara: acara, selesai: selesai };
