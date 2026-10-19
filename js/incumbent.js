@@ -37,7 +37,13 @@
     AMBANG_PULIH: 55,              // v8.0: pencabar berundur jika Sokongan Akar Umbi pulih ke nilai ini
     KEBARANGKALIAN_ASAS: 0.25,     // peluang kejadian rawak pada 39%
     KEBARANGKALIAN_MAKS: 0.75,     // peluang pada 0%
-    COOLDOWN_TINDAKAN: 3           // bilangan tindakan minimum antara dua cabaran
+    COOLDOWN_TINDAKAN: 3,          // bilangan tindakan minimum antara dua cabaran
+    /* v8.9: meter Sokongan Atas Pagar (kesetiaan.penentang) */
+    ATAS_PAGAR_LALAI: 30,          // nilai asas; meter reput ke arah nilai ini
+    ATAS_PAGAR_MUSUH: 20,          // di bawah nilai ini = Memusuhi
+    ATAS_PAGAR_SOKONG: 50,         // pada atau di atas nilai ini = Condong sokong
+    ATAS_PAGAR_LARAS: 0.10,        // +/- pada peluang dicabar (mata peratus / 100)
+    ATAS_PAGAR_REPUT: 2            // mata sebulan ke arah nilai asas
   };
 
   /* ------------------------------------------------------------------------
@@ -65,6 +71,17 @@
       id: 'kenyataan_media', nama: 'Terbit Kenyataan Media',
       penerangan: 'Menerbitkan kenyataan untuk menaikkan nama, dengan risiko menjauhkan penentang.',
       kesan: { ip: 15, ap: -1, kesetiaan: { penentang: -10 } }
+    },
+    {
+      id: 'kopi_o', nama: 'Kopi O dengan Golongan Atas Pagar',
+      penerangan: 'Bertemu empat mata dengan mereka yang belum memihak, di kedai kopi, tanpa agenda rasmi.',
+      kesan: { myr: -300, ap: -1, kesetiaan: { penentang: 8 } }
+    },
+    {
+      id: 'aduan_terbuka', nama: 'Dengar Aduan Terbuka',
+      penerangan: 'Membuka sesi dialog untuk mendengar rungutan ahli dan penduduk secara terus. Meletihkan tetapi membina kepercayaan.',
+      kesan: { ap: -1, kesetiaan: { penentang: 6, akarUmbi: 2 } },
+      stres: { stress: 2, kesihatan: 0 }
     },
     {
       id: 'rehat_keluarga', nama: 'Rehat & Masa Keluarga',
@@ -155,7 +172,7 @@
 
     return {
       ok: true,
-      mesej: def.nama + ': ' + S.ringkasPerubahan(r.perubahan) + '.' + (def.stres ? ' Stress ' + def.stres.stress + ', Kesihatan +' + def.stres.kesihatan + '.' : ''),
+      mesej: def.nama + ': ' + S.ringkasPerubahan(r.perubahan) + '.' + (def.stres ? ' Stress ' + (def.stres.stress > 0 ? '+' : '') + def.stres.stress + (def.stres.kesihatan ? ', Kesihatan +' + def.stres.kesihatan : '') + '.' : ''),
       perubahan: r.perubahan,
       profil: S.loadPlayer() || r.profil,
       amaran: amaran,
@@ -184,10 +201,31 @@
   }
 
   /** Peluang kejadian rawak: naik linear daripada KEBARANGKALIAN_ASAS (pada ambang) kepada MAKS (pada 0%). */
-  function kebarangkalianCabaran(akarUmbi) {
+  function kebarangkalianCabaran(akarUmbi, atasPagar) {
     var a = CONFIG.AMBANG_AMARAN;
     var nisbah = Math.max(0, Math.min(1, (a - akarUmbi) / a));
-    return CONFIG.KEBARANGKALIAN_ASAS + nisbah * (CONFIG.KEBARANGKALIAN_MAKS - CONFIG.KEBARANGKALIAN_ASAS);
+    var asas = CONFIG.KEBARANGKALIAN_ASAS + nisbah * (CONFIG.KEBARANGKALIAN_MAKS - CONFIG.KEBARANGKALIAN_ASAS);
+    var z = atasPagar === undefined || atasPagar === null ? null : zonAtasPagar(atasPagar);
+    var laras = z === 'musuh' ? CONFIG.ATAS_PAGAR_LARAS : z === 'sokong' ? -CONFIG.ATAS_PAGAR_LARAS : 0;      // v8.9
+    return Math.max(0.05, Math.min(0.85, asas + laras));
+  }
+
+  /** v8.9: zon meter Sokongan Atas Pagar: 'musuh' (<20) | 'goyah' | 'sokong' (>=50). */
+  function zonAtasPagar(n) {
+    n = Number(n) || 0;
+    return n < CONFIG.ATAS_PAGAR_MUSUH ? 'musuh' : n >= CONFIG.ATAS_PAGAR_SOKONG ? 'sokong' : 'goyah';
+  }
+
+  /** v8.9: setiap bulan meter Atas Pagar reput ke arah nilai asas (sekali sebulan). Pulang { peristiwa: [] }. */
+  function prosesBulan() {
+    var p = S.loadPlayer(); if (!p || p.tamat || !p.kesetiaan) { return { peristiwa: [] }; }
+    var kunci = p.tahun + '-' + p.bulan;
+    if (p.atasPagarAkhir === kunci) { return { peristiwa: [] }; }
+    var n = Number(p.kesetiaan.penentang), a = CONFIG.ATAS_PAGAR_LALAI, d = CONFIG.ATAS_PAGAR_REPUT;
+    if (!isFinite(n)) { n = a; }
+    var langkah = n > a ? -Math.min(d, n - a) : n < a ? Math.min(d, a - n) : 0;
+    S.applyEffects(langkah ? { kesetiaan: { penentang: langkah } } : {}, { kiraTindakan: false, patch: { atasPagarAkhir: kunci } });
+    return { peristiwa: [] };
   }
 
   function cabaranAktif(p) { return p && p.cabaran && p.cabaran.status === 'aktif' ? p.cabaran : null; }
@@ -217,7 +255,7 @@
     }
 
     var tahap = k < CONFIG.AMBANG_KRITIKAL ? 'kritikal' : 'amaran';
-    var kemungkinan = kebarangkalianCabaran(k);
+    var kemungkinan = kebarangkalianCabaran(k, p.kesetiaan.penentang);
     var aktif = cabaranAktif(p);
     var sejuk = (p.bilTindakan - (typeof p.cabaranTerakhirTindakan === 'number' ? p.cabaranTerakhirTindakan : -1e9)) < CONFIG.COOLDOWN_TINDAKAN;
     var rng = opts.rng || Math.random;
@@ -305,6 +343,8 @@
     senaraiTindakan: senaraiTindakan,
     jalankanTindakan: jalankanTindakan,
     kebarangkalianCabaran: kebarangkalianCabaran,
+    zonAtasPagar: zonAtasPagar,
+    prosesBulan: prosesBulan,
     semakAmaranKesetiaan: semakAmaranKesetiaan,
     semakTamatCabaran: semakTamatCabaran,
     getCabaranAktif: getCabaranAktif,

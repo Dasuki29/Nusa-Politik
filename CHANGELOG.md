@@ -1,5 +1,23 @@
 # Catatan Perubahan
 
+## v8.9 (2026-10-19)
+
+Meter Sokongan Atas Pagar kini boleh dinaikkan dan mempengaruhi risiko dicabar.
+
+### Baharu
+
+- **Tindakan:** ☕ Kopi O dengan Golongan Atas Pagar (-1 AP, -MYR 300, +8) dan 🎤 Dengar Aduan Terbuka (-1 AP, Stress +2, Atas Pagar +6, Akar Umbi +2).
+- **Krisis di peta:** Turun Padang +4, Bantu +3, dibiarkan 3 bulan -3 (Abaikan tidak mengubah meter).
+- **Zon pada sidebar:** Memusuhi (di bawah 20), Goyah, Condong sokong (50 ke atas).
+- **Kesan:** apabila Sokongan Akar Umbi di bawah 40%, Atas Pagar rendah menambah 10 mata peratus pada peluang dicabar, Atas Pagar tinggi menolak 10 (had 5% hingga 85%).
+- **Reput:** 2 mata sebulan ke arah 30 (`MyPolitikIncumbent.prosesBulan`, dipanggil oleh `calendar.js`).
+
+### Andaian (sila semak)
+
+- Terbit Kenyataan Media kekal -10 (tidak dipecah kepada bersih/berbaur politik seperti dicadangkan awal; boleh ditambah kemudian).
+- Tindakan Kopi O dan Aduan Terbuka tertakluk kepada bonus Musim Akar Umbi (bulan 1 hingga 3) seperti tindakan jawatan lain, jadi kesannya lebih besar di bulan itu.
+- 4 ujian baharu (zon, tindakan, reput, krisis), semakan pelayar EN dan langkah tutorial `atas-pagar`.
+
 ## v8.8 (2026-10-19)
 
 Peta interaktif: panel kawasan yang lebih kaya, tiga lapisan peta dan krisis tempatan.

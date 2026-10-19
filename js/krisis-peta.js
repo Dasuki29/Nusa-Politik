@@ -41,10 +41,10 @@
 
   var CONFIG = {
     PELUANG: 0.22, MAKS_AKTIF: 2, LEWAT_BULAN: 3, HAD_BONUS: 30,
-    LEWAT: { akarUmbi: -4, bonus: -6 },
-    TURUN: { ap: 2, stress: -2, akarUmbi: 6, bonus: 6, ip: 1 },
-    BANTU: { myr: 800, akarUmbi: 10, bonus: 10, ip: 2 },
-    ABAI: { akarUmbi: -4, bonus: -4 }
+    LEWAT: { akarUmbi: -4, bonus: -6, penentang: -3 },
+    TURUN: { ap: 2, stress: -2, akarUmbi: 6, bonus: 6, ip: 1, penentang: 4 },
+    BANTU: { myr: 800, akarUmbi: 10, bonus: 10, ip: 2, penentang: 3 },
+    ABAI: { akarUmbi: -4, bonus: -4, penentang: 0 }
   };
 
   /* Setiap jenis: cerita dan label tiga pilihan (kesan sama; teks berbeza supaya terasa berlainan). */
@@ -84,10 +84,10 @@
     var Sv = S(), myr = function (n) { return Sv && Sv.kosSebenar ? Sv.kosSebenar(p, n) : n; };
     var t = CONFIG.TURUN, b = CONFIG.BANTU, a = CONFIG.ABAI, bMyr = myr(b.myr);
     var senaraiP = [
-      { id: 'turun', label: '🚶 ' + j.turun, ap: t.ap, myr: 0, stress: t.stress, akarUmbi: t.akarUmbi, bonus: t.bonus, ip: t.ip,
-        ringkas: '-' + t.ap + ' AP, +' + t.akarUmbi + ' Sokongan Akar Umbi, Stress ' + t.stress + ', +' + t.bonus + ' sokongan kawasan' },
-      { id: 'bantu', label: '💸 ' + j.bantu, ap: 0, myr: bMyr, stress: 0, akarUmbi: b.akarUmbi, bonus: b.bonus, ip: b.ip,
-        ringkas: '-MYR ' + bMyr + ', +' + b.akarUmbi + ' Sokongan Akar Umbi, +' + b.bonus + ' sokongan kawasan' },
+      { id: 'turun', label: '🚶 ' + j.turun, ap: t.ap, myr: 0, stress: t.stress, akarUmbi: t.akarUmbi, bonus: t.bonus, ip: t.ip, penentang: t.penentang,
+        ringkas: '-' + t.ap + ' AP, +' + t.akarUmbi + ' Sokongan Akar Umbi, Stress ' + t.stress + ', +' + t.bonus + ' sokongan kawasan, +' + t.penentang + ' Atas Pagar' },
+      { id: 'bantu', label: '💸 ' + j.bantu, ap: 0, myr: bMyr, stress: 0, akarUmbi: b.akarUmbi, bonus: b.bonus, ip: b.ip, penentang: b.penentang,
+        ringkas: '-MYR ' + bMyr + ', +' + b.akarUmbi + ' Sokongan Akar Umbi, +' + b.bonus + ' sokongan kawasan, +' + b.penentang + ' Atas Pagar' },
       { id: 'abai', label: '🙈 Abaikan', ap: 0, myr: 0, stress: 0, akarUmbi: a.akarUmbi, bonus: a.bonus, ip: 0,
         ringkas: 'Tiada kos, ' + a.akarUmbi + ' Sokongan Akar Umbi, ' + a.bonus + ' sokongan kawasan' }
     ];
@@ -122,7 +122,7 @@
     var j = jenisDari(k.jenis);
     state.aktif = state.aktif.filter(function (x) { return x.id !== id; });
     if (pilihId === 'abai') { state.terabai += 1; } else { state.selesai += 1; }
-    var kesan = { ip: o.ip || 0, kesetiaan: { akarUmbi: o.akarUmbi } };
+    var kesan = { ip: o.ip || 0, kesetiaan: { akarUmbi: o.akarUmbi, penentang: o.penentang || 0 } };
     if (o.ap) { kesan.ap = -o.ap; }
     if (o.myr) { kesan.myr = -o.myr; }
     var r = simpanState(p, state, kesan, { tindakan: 'krisis_peta', nama: (pilihId === 'abai' ? 'Mengabaikan ' : 'Menyelesaikan ') + j.nama + ' di ' + k.tempat, peringkat: 'ahli' }, o.bonus, k.cid);
@@ -137,13 +137,13 @@
     if (!p || p.tamat || !(p.jawatanList || []).length) { return { peristiwa: ev }; }
     var state = ambil(p), kunciBulan = p.tahun + '-' + p.bulan, kini = (Number(p.tahun) || 0) * 12 + (Number(p.bulan) || 0);
     if (state.akhir === kunciBulan) { return { peristiwa: ev }; }
-    var rng = o.rng || Sv.rngBerbenih(String(p.id) + '|krisispeta|' + kunciBulan), kesan = { kesetiaan: { akarUmbi: 0 } }, delta = {};
+    var rng = o.rng || Sv.rngBerbenih(String(p.id) + '|krisispeta|' + kunciBulan), kesan = { kesetiaan: { akarUmbi: 0, penentang: 0 } }, delta = {};
     /* 1. krisis yang dibiarkan terlalu lama dianggap diabaikan */
     var kekal = [];
     state.aktif.forEach(function (k) {
       if (kini - ((Number(k.tahun) || 0) * 12 + (Number(k.bulan) || 0)) >= CONFIG.LEWAT_BULAN) {
-        kesan.kesetiaan.akarUmbi += CONFIG.LEWAT.akarUmbi; delta[k.cid] = (delta[k.cid] || 0) + CONFIG.LEWAT.bonus; state.terabai += 1;
-        ev.push({ jenis: 'krisis_peta_lewat', mesej: (jenisDari(k.jenis) || {}).nama + ' di ' + k.tempat + ' dibiarkan terlalu lama. Penduduk kecewa (' + CONFIG.LEWAT.akarUmbi + ' Sokongan Akar Umbi).' });
+        kesan.kesetiaan.akarUmbi += CONFIG.LEWAT.akarUmbi; kesan.kesetiaan.penentang += CONFIG.LEWAT.penentang; delta[k.cid] = (delta[k.cid] || 0) + CONFIG.LEWAT.bonus; state.terabai += 1;
+        ev.push({ jenis: 'krisis_peta_lewat', mesej: (jenisDari(k.jenis) || {}).nama + ' di ' + k.tempat + ' dibiarkan terlalu lama. Penduduk kecewa (' + CONFIG.LEWAT.akarUmbi + ' Sokongan Akar Umbi, ' + CONFIG.LEWAT.penentang + ' Atas Pagar).' });
       } else { kekal.push(k); }
     });
     state.aktif = kekal;
@@ -161,7 +161,7 @@
     }
     state.akhir = kunciBulan;
     var tukar = Object.keys(delta);
-    var r = Sv.applyEffects(kesan.kesetiaan.akarUmbi ? { kesetiaan: kesan.kesetiaan } : {}, { kiraTindakan: false, patch: { krisisPeta: state } });
+    var r = Sv.applyEffects(kesan.kesetiaan.akarUmbi || kesan.kesetiaan.penentang ? { kesetiaan: kesan.kesetiaan } : {}, { kiraTindakan: false, patch: { krisisPeta: state } });
     if (r.ok && tukar.length) {
       var p2 = Sv.loadPlayer(), peta = p2.peta && typeof p2.peta === 'object' ? JSON.parse(JSON.stringify(p2.peta)) : {};
       peta.bonus = peta.bonus || {};
