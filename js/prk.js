@@ -71,7 +71,7 @@
     opts = opts || {};
     var patch = { prk: prk };
     if (opts.patch) { for (var f in opts.patch) { patch[f] = opts.patch[f]; } }
-    return S().applyEffects(kesan || {}, { kiraTindakan: false, patch: patch, log: opts.log });
+    return S().applyEffects(kesan || {}, { kiraTindakan: false, patch: patch, log: opts.log, pindahan: !!opts.pindahan });
   }
   function laras(d) { var s = ST(); return s && s.laras ? s.laras(d) : null; }
 
@@ -187,7 +187,7 @@
     a.campaignFunds = dana; a.jentera = clamp(60 + Math.round(akar * 0.25), 40, 85);
     a.hari = 0; a.hariBaki = CONFIG.HARI; a.fasa = 'kempen';
     a.log = [{ hari: 0, teks: 'Kempen kilat 7 hari bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '. Sentimen nasional ' + (a.sentimenSemasa > 0 ? '+' : '') + a.sentimenSemasa + '.' }];
-    var res = simpan(prk, { myr: -dana }, { log: { tindakan: 'prk_kempen', nama: 'Kempen kilat PRK (RM ' + dana + ')', peringkat: 'ahli' } });
+    var res = simpan(prk, { myr: -dana }, { pindahan: true, log: { tindakan: 'prk_kempen', nama: 'Kempen kilat PRK (RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     return { ok: true, mesej: 'Kempen kilat 7 hari bermula.' };
   }
@@ -275,7 +275,7 @@
     var rek = { jenis: a.jenis, kerusi: a.nama, hasil: k.menang ? 'menang' : 'kalah', anda: k.anda, majoriti: k.majoriti, pertahan: a.pertahan, tahun: p.tahun, bulan: p.bulan };
     prk.sejarah = (prk.sejarah || []).concat([rek]).slice(-10);
     k.rekod = rek; a.fasa = 'keputusan'; a.keputusan = k; a.campaignFunds = 0;
-    var res = S().applyEffects(kes, { kiraTindakan: false, patch: Object.assign({ prk: prk, pru: pru }, patch), log: { tindakan: 'prk_keputusan', nama: (k.menang ? 'MENANG PRK ' : 'KALAH PRK ') + a.nama, peringkat: 'ahli' } });
+    var res = S().applyEffects(kes, { kiraTindakan: false, pindahan: true, patch: Object.assign({ prk: prk, pru: pru }, patch), log: { tindakan: 'prk_keputusan', nama: (k.menang ? 'MENANG PRK ' : 'KALAH PRK ') + a.nama, peringkat: 'ahli' } });   // v8.0: baki dana kempen dipulangkan tanpa bonus sayap
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     laras({ stress: k.menang ? CONFIG.MENANG.stress : CONFIG.KALAH.stress });
     if (kab && kab.getKabinet && kb && kb.hasGovernmentRole) {                       // kestabilan jawatan kerajaan

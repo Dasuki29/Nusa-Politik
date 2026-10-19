@@ -184,7 +184,7 @@
     opts = opts || {};
     var patch = { pru: pru };
     if (opts.patch) { for (var f in opts.patch) { patch[f] = opts.patch[f]; } }
-    return S().applyEffects(kesan || {}, { kiraTindakan: false, patch: patch, log: opts.log });
+    return S().applyEffects(kesan || {}, { kiraTindakan: false, patch: patch, log: opts.log, pindahan: !!opts.pindahan });
   }
   function laras(d) { var s = ST(); if (s && s.laras) { return s.laras(d); } return null; }
 
@@ -413,7 +413,7 @@
       a.kejutanHari[hr] = KEJUTAN[Math.floor(r() * KEJUTAN.length)].id;
     }
     a.log = [{ hari: 0, teks: 'Kempen bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '; manifesto: ' + ids.map(function (x) { return janjiId(x).nama; }).join(', ') + '.' }];
-    var res = simpanPRU(pru, { myr: -dana }, { log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });
+    var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     return { ok: true, mesej: 'Kempen 14 hari bermula.' };
   }
@@ -649,7 +649,7 @@
     k.siasatMsg = siasatMsg; k.kabinetBuka = kabinetBuka;
     a.fasa = 'keputusan'; a.keputusan = k; a.campaignFunds = 0; a.finalDigunakan = a.finalDigunakan || {};
     var menangP = k.menang && !g1.petisyen;
-    var res = simpanPRU(pru, kes, { patch: { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
+    var res = simpanPRU(pru, kes, { pindahan: true, patch: { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (!k.menang) { laras({ stress: CONFIG.KALAH.stress }); }
     if (kabinetBuka) { var Kb = modul('MyPolitikKabinet', 'kabinet.js'); if (Kb && Kb.bukaLobi) { Kb.bukaLobi(lobiJenis); } }
@@ -729,7 +729,8 @@
     var pru = getPRU(p), m = pru.manifesto;
     if (!m) { return null; }
     var baki = Math.max(0, CONFIG.BULAN_NILAI_JANJI - (idx(p) - m.sejakIdx));
-    return { baki: baki, dinilai: !!m.dinilai, senarai: m.ids.map(function (id) { var j = janjiId(id); return { id: id, ikon: j.ikon, nama: j.nama, kos: j.kosBulan, kemajuan: m.kemajuan[id] || 0 }; }), hasil: m.hasil || null };
+    var Sv = S();
+    return { baki: baki, dinilai: !!m.dinilai, senarai: m.ids.map(function (id) { var j = janjiId(id); return { id: id, ikon: j.ikon, nama: j.nama, kos: j.kosBulan, kosMaju: Sv && Sv.kosSebenar ? Sv.kosSebenar(p, j.kosBulan * 2) : j.kosBulan * 2, kemajuan: m.kemajuan[id] || 0 }; }), hasil: m.hasil || null };
   }
   function majukanJanji(id, o) {
     var p = S().loadPlayer(), pru = getPRU(p), m = pru.manifesto, j = janjiId(id);

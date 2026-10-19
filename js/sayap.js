@@ -153,11 +153,11 @@
     var S = modul('MyPolitikSave', 'save.js'), p = profil || (S && S.loadPlayer());
     var d = p ? tindakanUntuk(p) : null;
     if (!d) { return []; }
-    var st = semakTindakanSayap(d, p);
+    var st = semakTindakanSayap(d, p), kp = S && S.kesanPapar ? S.kesanPapar(p, d.kesan) : d.kesan;   // v8.0: kos dipaparkan ikut tahap kesukaran
     return [{
       id: d.id, nama: d.nama, ikon: d.ikon, penerangan: d.penerangan,
-      kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, d.kesan.myr || 0)) },
-      ringkas: (S ? S.ringkasPerubahan({ ip: d.kesan.ip || 0, myr: d.kesan.myr || 0, ap: d.kesan.ap || 0, reputasi: d.kesan.reputasi || 0, kesetiaan: d.kesan.kesetiaan || {} }) : '') +
+      kos: { ap: Math.abs(Math.min(0, d.kesan.ap || 0)), myr: Math.abs(Math.min(0, kp.myr || 0)) },
+      ringkas: (S ? S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} }) : '') +
         (d.stres ? ', Stress ' + (d.stres.stress > 0 ? '+' : '') + d.stres.stress : '') + (d.khas === 'ahli_kuota' ? ', ahli baharu dan +1 kerusi perwakilan' : d.khas === 'perisai' ? ', sokongan dilindungi 2 bulan' : ''),
       boleh: st.boleh, sebab: st.sebab
     }];
@@ -169,7 +169,8 @@
     var u = p.tindakanSayap;
     if (u && u.tahun === p.tahun && u.bulan === p.bulan) { return { boleh: false, sebab: 'Sudah digunakan bulan ini. Cuba lagi bulan depan.' }; }
     if (p.ap + (d.kesan.ap || 0) < 0) { return { boleh: false, sebab: 'AP tidak mencukupi (perlu ' + Math.abs(d.kesan.ap) + ').' }; }
-    if (p.myr + (d.kesan.myr || 0) < 0) { return { boleh: false, sebab: 'Wang tidak mencukupi (perlu ' + Math.abs(d.kesan.myr) + ').' }; }
+    var Sv = modul('MyPolitikSave', 'save.js');
+    if (d.kesan.myr < 0 && Sv && Sv.cukupDana && !Sv.cukupDana(p, -d.kesan.myr)) { return { boleh: false, sebab: Sv.ralatDana(p, -d.kesan.myr) }; }   // v8.0: kos selepas pengali kesukaran
     return { boleh: true, sebab: '' };
   }
 

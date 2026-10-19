@@ -481,7 +481,7 @@
 
   /** Paparkan peristiwa penting (jawatan, cabaran) sebagai modal, selebihnya toast. */
   async function urusPeristiwa(senarai) {
-    var penting = { lantikan_negeri: 'Lantikan Pimpinan Negeri', pru_isytihar: 'Pilihan Raya Diisytiharkan', prk_isytihar: 'Pilihan Raya Kecil (PRK)', kabinet_rombak: 'Rombakan Kabinet', janji_nilai: 'Penilaian Manifesto', disiplin: 'Tataetika & Disiplin', hukuman: 'Keputusan Lembaga Disiplin', jawatan_baharu: 'Jawatan Baharu', jawatan_hilang: 'Kehilangan Jawatan', cabaran_jawatan: 'Jawatan Anda Dicabar',
+    var penting = { lantikan_negeri: 'Lantikan Pimpinan Negeri', pru_isytihar: 'Pilihan Raya Diisytiharkan', prk_isytihar: 'Pilihan Raya Kecil (PRK)', kabinet_rombak: 'Rombakan Kabinet', janji_nilai: 'Penilaian Manifesto', disiplin: 'Tataetika & Disiplin', hukuman: 'Keputusan Lembaga Disiplin', jawatan_baharu: 'Jawatan Baharu', jawatan_hilang: 'Kehilangan Jawatan', cabaran_jawatan: 'Jawatan Anda Dicabar', cabaran_selesai: 'Keputusan Cabaran Jawatan',
                     kelayakan_dibuka: 'Kelayakan Dibuka', perwakilan_terpilih: 'Terpilih Sebagai Perwakilan',
                     pemilihan_dibuka: 'Tahun Pemilihan', tahun_pentadbiran: 'Tahun Pentadbiran',
                     kategori_bertukar: 'Kategori Keahlian Bertukar', fasa_bulan: 'Takwim Bulan Baharu', mesyuarat_ditutup_auto: 'Mesyuarat Ditutup Automatik', mesyuarat_terlepas: 'Mesyuarat Terlepas', pemilihan_auto: 'Pengundian Dijalankan', blok_janji_tunai: 'Janji Kuota Ditunaikan', transisi_rasmi: 'Upacara Graduasi Sayap', transisi_amaran: 'Notis Rasmi Transisi', undi_tp_amaran: 'Amaran Undi Tidak Percaya', undi_tp_kalah: 'Kalah Undi Tidak Percaya', undi_tp_menang: 'Selamat Undi Tidak Percaya', blok_janji_mungkir: 'Janji Kuota Dimungkiri', penggal_tamat: 'Penggal Jawatan Tamat' };
@@ -767,7 +767,7 @@
       var c = I.getCabaranAktif();
       if (c) {
         h += '<div class="banner banner--warn" role="alert"><strong>Jawatan anda dicabar</strong>' + esc((c.penentang && c.penentang.nama ? c.penentang.nama + ': ' : '') + (c.mesej || 'Seorang penentang mencabar jawatan anda.')) +
-          ' Pulihkan Sokongan Akar Umbi sebelum pemilihan berikutnya.</div>';
+          ' Pencabar akan bertanding menentang anda apabila ' + esc(c.jawatanDicabar || 'jawatan ini') + ' dipertahankan (kekuatan lawan +' + (c.tahap === 'kritikal' ? 8 : 5) + '). Pulihkan Sokongan Akar Umbi ke ' + ((I.CONFIG && I.CONFIG.AMBANG_PULIH) || 55) + '% supaya pencabar berundur.</div>';
       } else if (p.kesetiaan.akarUmbi < 40) {
         h += '<div class="banner banner--warn" role="alert"><strong>Amaran kesetiaan</strong>Sokongan Akar Umbi tinggal ' + p.kesetiaan.akarUmbi + '%. Di bawah 40%, penentang boleh mencabar jawatan anda.</div>';
       }
@@ -884,8 +884,9 @@
   }
 
   function barisPertandingan(e) {
-    var a = state.anggaran[e.kod], kep = e.keputusan, h = '';
-    h += '<div class="item"><div class="item__head"><div><div class="item__title">' + esc(e.jawatan) + (e.pertahan ? ' <span class="badge badge--gold">Pertahan</span>' : '') + (e.kumpulan === 'sayap' ? ' <span class="badge">Sayap</span>' : '') + '</div>' +
+    var a = state.anggaran[e.kod], kep = e.keputusan, h = '', cb = state.cabaran;
+    var dicabar = !!(cb && e.jenis === 'jawatan' && !e.selesai && (cb.kod ? cb.kod === e.kod : cb.jawatanDicabar === e.jawatan));   // v8.0
+    h += '<div class="item"><div class="item__head"><div><div class="item__title">' + esc(e.jawatan) + (e.pertahan ? ' <span class="badge badge--gold">Pertahan</span>' : '') + (dicabar ? ' <span class="badge badge--red" title="Pencabar menguatkan calon lawan">Dicabar: ' + esc(cb.penentang && cb.penentang.nama) + '</span>' : '') + (e.kumpulan === 'sayap' ? ' <span class="badge">Sayap</span>' : '') + '</div>' +
       '<p class="item__desc">' + fmt(e.kerusi) + ' kerusi' + (e.ipPerlu && !e.pertahan ? ' · perlu ' + e.ipPerlu + ' IP' : '') + (e.tetingkap ? ' · pengundian ' + esc(e.tetingkap.label.toLowerCase()) : '') + (e.sebab && !e.terbuka ? ' · ' + esc(e.sebab) : '') + '</p></div>' + chipPertandingan(e) + '</div>';
     if (kep) {
       h += '<p class="result ' + (kep.menang ? 'is-good' : 'is-bad') + '">' + (kep.menang ? 'Menang' : 'Kalah') + ': kedudukan ' + kep.kedudukan + ' daripada ' + kep.jumlahCalon + ' calon, ' + fmt(kep.undi) + ' undi.</p>';
@@ -915,6 +916,7 @@
   function panelPemilihan(p) {
     if (!E) { return '<div class="card"><p class="empty">Modul pemilihan tidak dimuatkan.</p></div>'; }
     var st = E.getStatusModul(p), f = st.fokus, h = '';
+    state.cabaran = I && I.getCabaranAktif ? I.getCabaranAktif() : null;          // v8.0: untuk lencana "Dicabar" pada pertandingan
     h += '<div class="banner ' + (f.fasa === 'pemilihan' ? 'banner--gold' : '') + '"><strong>' + esc(p.tahun + ': ' + f.tajuk + (K ? ' · Bulan ' + p.bulan : '')) + '</strong>' + esc(f.fokus.join(' · ')) +
       (f.fasa === 'pemilihan' ? '' : '. Pertandingan jawatan seterusnya pada ' + f.pemilihanBerikutnya + '.') + '</div>';
     h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '') + kadEtika(p) + kadJawatan(p) + kadWatak(p) + kadLaluan();
@@ -1171,7 +1173,7 @@
     if (a === null || a === undefined) { return; }                                // ditutup: tawaran kekal sehingga bulan 8
     var jenis = 'tidak';
     if (a === 'lobi') {
-      var senarai = of.pilihan.map(function (c) { return '<li><button type="button" class="acara__opsi" data-pilih="' + esc(c.id) + '"><b>' + esc(c.label) + '</b><br><small>' + esc(c.huraian) + '</small></button></li>'; }).join('');
+      var senarai = of.pilihan.map(function (c) { var off = c.boleh === false; return '<li><button type="button" class="acara__opsi' + (off ? ' is-off' : '') + '" data-pilih="' + esc(c.id) + '"' + (off ? ' disabled' : '') + '><b>' + esc(c.label) + '</b><br><small>' + esc(c.huraian) + '</small>' + (off ? '<small>' + esc(c.sebab) + '</small>' : '') + '</button></li>'; }).join('');   // v8.0: pilihan tidak mampu dinyahaktifkan
       var v = await modal({ tajuk: NG.tr('Melobi Presiden') + ' ' + esc(of.presiden), isi: '<p>' + NG.tr('Bagaimana anda mahu mendekati Presiden?') + '</p><ul class="acara__senarai" style="list-style:none;padding:0;margin:.4rem 0">' + senarai + '</ul>', butang: [{ label: 'Batal', nilai: null }] });
       if (v === null || v === undefined) { return; }
       jenis = v;
@@ -1311,6 +1313,7 @@
     var pBaru = S.loadPlayer();
     if (I && pemegang(pBaru)) {                                    // semakan sokongan bulanan
       var a = I.semakAmaranKesetiaan();
+      if (a && a.cabaranTamat) { r.peristiwa = (r.peristiwa || []).concat([a.cabaranTamat]); }                    // v8.0
       if (a && a.amaran && a.cabaranBaru) { r.peristiwa = (r.peristiwa || []).concat([{ jenis: 'cabaran_jawatan', mesej: a.cabaranBaru.mesej }]); }
       else if (a && a.amaran) { toast(a.mesej, 'ralat'); }
     }
