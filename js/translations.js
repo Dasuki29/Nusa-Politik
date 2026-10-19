@@ -271,6 +271,13 @@
   /* Perkataan yang kekal (nama, singkatan, istilah dipelihara); tidak dikira sebagai baki BM. */
   var KEKAL = ['IP', 'AP', 'MYR', 'MKT', 'PAU', 'PRU', 'PRN', 'DUN', 'UMNO', 'AJK', 'G10', 'G2', 'Stress', 'Pemuda', 'Wanita', 'Puteri', 'Induk', 'Utama', 'Fasal', 'Perkara', 'Nusa', 'Politik'];
 
+  /* Pra-normalisasi: nama mesyuarat lama -> nama baharu (Perlembagaan UMNO), supaya kamus bergantung pada satu ejaan. */
+  var NORMAL = [
+    [/Mesyuarat Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Mesyuarat Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'],
+    [/Mesyuarat (Pemuda|Wanita|Puteri) Cawangan/g, 'Persidangan Tahunan $1 Cawangan'], [/Mesyuarat (Pemuda|Wanita|Puteri) Bahagian/g, 'Mesyuarat Perwakilan $1 Bahagian'],
+    [/Mesyuarat Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Mesyuarat Bahagian/g, 'Mesyuarat Perwakilan Bahagian']
+  ];
+
   var MINGGU = { Januari: 'January', Februari: 'February', Mac: 'March', April: 'April', Mei: 'May', Jun: 'June', Julai: 'July', Ogos: 'August', September: 'September', Oktober: 'October', November: 'November', Disember: 'December' };
 
   /* Bentuk dinamik (nama dijana kod): [regex, fungsi(match, tr)] -> teks EN atau null. */
@@ -316,16 +323,42 @@
     [/^Sumber:$/, function () { return 'Source:'; }]
   ];
 
-  function bina() {
-    var BM = {}, EN = {}, indeks = {};
-    BARIS.forEach(function (b, i) {
-      var k = b[2] || ('ui' + i);
-      BM[k] = b[0]; EN[k] = b[1];
-      if (indeks[b[0]] === undefined) { indeks[b[0]] = k; }
-    });
-    return { BM: BM, EN: EN, indeks: indeks };
+  /* Kamus hidup: BM/EN (kunci), INDEKS (BM -> kunci), TEMPLAT (ayat berpemegang tempat {nama}). Fail tambahan memanggil tambah(). */
+  var BM = {}, EN = {}, INDEKS = {}, TEMPLAT = [], TAMBAH_ISTILAH = [], bil = 0;
+  function esk(s) { return s.replace(/[.*+?^$()|[\]\\\/]/g, '\\$&'); }
+  function tambahBaris(b) {
+    var k = b[2] || ('ui' + (bil++));
+    if (b[0].indexOf('{') >= 0 && /\{\w+\}/.test(b[0])) {
+      var bhg = b[0].split(/\{(\w+)\}/), nama = [], re = '', i;
+      for (i = 0; i < bhg.length; i++) { if (i % 2) { nama.push(bhg[i]); re += '([\\s\\S]+?)'; } else { re += esk(bhg[i]); } }
+      TEMPLAT.push({ re: new RegExp('^' + re + '$'), nama: nama, en: b[1], awal: bhg[0].slice(0, 6), panjang: b[0].length });
+      return;
+    }
+    BM[k] = b[0]; EN[k] = b[1];
+    if (INDEKS[b[0]] === undefined) { INDEKS[b[0]] = k; }
   }
-  var K = bina();
+  function urutTemplat() { TEMPLAT.sort(function (x, y) { return y.panjang - x.panjang; }); }
+  /** Daftar baris tambahan [[BM, EN, kunci?], ...] dan istilah [[BM, EN], ...]. Panggil sebelum js/i18n.js dimuat. */
+  function tambah(baris, istilah) {
+    (baris || []).forEach(tambahBaris); urutTemplat();
+    (istilah || []).forEach(function (r) { ISTILAH.push(r); });
+  }
+  /** Padan ayat berpemegang tempat. tr(x) menterjemah nilai yang ditangkap (pulang x jika tiada). Pulang EN atau null. */
+  function padan(s, tr) {
+    var i, t, m, en;
+    for (i = 0; i < TEMPLAT.length; i++) {
+      t = TEMPLAT[i];
+      if (t.awal && s.slice(0, t.awal.length) !== t.awal) { continue; }
+      m = t.re.exec(s);
+      if (m) {
+        en = t.en;
+        t.nama.forEach(function (n, k) { en = en.split('{' + n + '}').join(tr ? tr(m[k + 1]) : m[k + 1]); });
+        return en;
+      }
+    }
+    return null;
+  }
+  BARIS.forEach(tambahBaris); urutTemplat();
 
-  return { BM: K.BM, EN: K.EN, INDEKS: K.indeks, ISTILAH: ISTILAH, KEKAL: KEKAL, PERATURAN: PERATURAN, MINGGU: MINGGU };
+  return { BM: BM, EN: EN, INDEKS: INDEKS, TEMPLAT: TEMPLAT, ISTILAH: ISTILAH, KEKAL: KEKAL, PERATURAN: PERATURAN, MINGGU: MINGGU, NORMAL: NORMAL, tambah: tambah, padan: padan };
 });

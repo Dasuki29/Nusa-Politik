@@ -66,6 +66,10 @@
      PEMBANTU DOM
      ------------------------------------------------------------------------ */
   function doc() { return root.document || null; }
+  /* v7.62: Tutorial/Codex dwibahasa. Hanya aktif apabila bahasa EN dan js/tutorial-en.js dimuat; selain itu teks BM asal. */
+  function modEN() { var I = root.MyPolitikI18n, E = root.MyPolitikTutorialEN; return (I && I.getLanguage && I.getLanguage() === 'EN' && E) ? E : null; }
+  function tj(s) { var E = modEN(); return E ? E.judul(s) : s; }
+  function th(h) { var E = modEN(); return E ? E.html(h) : h; }
   function esc(t) {
     return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
   }
@@ -238,9 +242,9 @@
       var titik = senarai.map(function (_, i) { return '<i class="' + (i <= idx ? 'is-on' : '') + '"></i>'; }).join('');
       var interaktif = !!(s.klik && t && nampak(t));
       kad.innerHTML = '<div class="tut-titik" aria-hidden="true">' + titik + '</div>' +
-        '<h2>' + esc(s.tajuk) + '</h2><p>' + s.isi + '</p>' +
-        (s.petua ? '<p class="tut-petua">💡 ' + esc(s.petua) + '</p>' : '') +
-        (interaktif ? '<p class="tut-tunggu">' + esc(s.tunggu || 'Tekan elemen yang disorot untuk meneruskan.') + '</p>' : '') +
+        '<h2>' + esc(tj(s.tajuk)) + '</h2>' + th('<p>' + s.isi + '</p>') +
+        (s.petua ? '<p class="tut-petua">💡 ' + esc(tj(s.petua)) + '</p>' : '') +
+        (interaktif ? '<p class="tut-tunggu">' + esc(tj(s.tunggu) || 'Tekan elemen yang disorot untuk meneruskan.') + '</p>' : '') +
         '<div class="tut-bar"><button type="button" class="tut-btn tut-btn--skip" data-tut="skip">Skip Tutorial</button><span class="tut-gap"></span>' +
         '<span style="font-size:.8rem;opacity:.7">' + (idx + 1) + '/' + senarai.length + '</span>' +
         (idx > 0 ? '<button type="button" class="tut-btn" data-tut="balik">Kembali</button>' : '') +
@@ -351,7 +355,7 @@
         '<h4>Krisis akar umbi</h4><p>Apabila Stress tinggi (60 ke atas) dan anda memegang jawatan, acara rawak boleh berlaku: ahli akar umbi berasa terpinggir, marah atau melancarkan sabotaj. Anda boleh <b>melepaskan jawatan paling membebankan</b> untuk menurunkan Stress, atau mengambil risiko <b>kejatuhan sokongan akar umbi</b> yang drastik. Pangkat jawatan yang dilepaskan masih dikira untuk tangga jawatan.</p><h4>Cemburu &amp; sabotaj (pertindihan jawatan)</h4><p>Jika anda memegang 2 jawatan atau lebih dan Stress hampir penuh (80 ke atas), pemimpin lain berasa terpinggir dan mencabar kedudukan anda. Jika anda memegang 3 jawatan (Cawangan, Bahagian dan Pusat) dengan Stress 70 ke atas, ahli menuduh kuasa dimonopoli dan menyabotaj. Memilih untuk bertahan boleh menyebabkan <b>salah satu jawatan dilucutkan</b> (jawatan berpangkat terendah) dan sokongan akar umbi jatuh.</p>' },
       { id: 'bahasa', tajuk: 'Bahasa: BM | EN', html:
         '<h3>Tukar Bahasa (BM | EN)</h3><p>Tekan butang <b>BM | EN</b> di pengepala (di halaman utama, butang itu di sudut kanan atas, di sebelah butang rupa) untuk menukar paparan antara Bahasa Melayu dan English tanpa memuat semula. Pilihan disimpan pada peranti anda dan dalam simpanan permainan, jadi ia kekal apabila anda kembali.</p>' +
-        '<h4>Istilah</h4><ul><li><b>Kekal:</b> Pemuda, Wanita, Puteri (EN: Pemuda Wing, Wanita Wing, Puteri Wing), Majlis Kerja Tertinggi (MKT), Perhimpunan Agung UMNO (PAU) dan Induk.</li><li><b>Diterjemah:</b> Bahagian = Division, Cawangan = Branch, Ketua Bahagian = Division Chief, Ketua Cawangan = Branch Chief. Persidangan Tahunan Cawangan = Branch Annual Conference; Mesyuarat Perwakilan Bahagian = Division Delegates Meeting.</li><li>IP = Influence Points (IP), AP = Action Points (AP), Dana = Funds (MYR), Akar Umbi = Grassroots, Reputasi = Reputation. Politik Wang = Money Politics, Tataetika = Code of Ethics.</li><li>Aktiviti tempatan kekal BM dengan glos EN, contoh Ziarah Kasih (Compassion Visit).</li></ul>' +
+        '<h4>Istilah</h4><ul><li><b>Kekal:</b> Pemuda, Wanita, Puteri (EN: Pemuda Wing, Wanita Wing, Puteri Wing), Majlis Kerja Tertinggi (MKT), Perhimpunan Agung UMNO (PAU) dan Induk.</li><li><b>Diterjemah:</b> Bahagian = Division, Cawangan = Branch, Ketua Bahagian = Division Chief, Ketua Cawangan = Branch Chief. Persidangan Tahunan Cawangan = Branch Annual Conference; Mesyuarat Perwakilan Bahagian = Division Delegates Meeting.</li><li>IP = Influence Points (IP), AP = Action Points (AP), Dana = Funds (MYR), Akar Umbi = Grassroots, Reputasi = Reputation. Politik Wang = Money Politics, Tataetika = Code of Ethics.</li><li>Aktiviti tempatan kekal BM dengan glos EN, contoh Ziarah Kasih (Compassion Visit).</li><li><b>Liputan:</b> antara muka, acara rawak, usul mesyuarat, kabinet, pemilihan, PRU dan tutorial ini. Teks yang belum diterjemah kekal dalam BM.</li></ul>' +
         '<div class="tut-kotak"><b>Anggapan:</b> terjemahan Fasa 1 meliputi antara muka dan istilah teras. Teks yang belum diterjemah (sebahagian acara, usul, dialog dan tutorial) kekal dalam Bahasa Melayu buat sementara.</div>' },
       { id: 'organisasi', tajuk: 'Struktur Organisasi & Mesyuarat Sayap', html:
         '<h3>Struktur Organisasi</h3><p>Setiap peringkat Induk disusun sebagai <b>Ketua</b>, <b>Naib Ketua</b> dan <b>AJK</b> (Bahagian ada <b>Timbalan Ketua</b> juga). Sayap tiada Timbalan: Ketua, Naib Ketua dan AJK. Semua jawatan ini dipertandingkan dalam tahun pemilihan, satu jawatan bagi setiap peringkat. Tekan butang <b>Struktur</b> di atas untuk melihat Induk dan setiap Sayap (Pemuda, Puteri, Wanita). Sayap meniru struktur Induk.</p>' +
@@ -467,15 +471,15 @@
     var k = kodeks, ada = k.topik.filter(function (t) { return t.id === id; })[0] || k.topik[0];
     k.semasa = ada.id;
     Array.prototype.forEach.call(k.nav.children, function (b) { b.classList.toggle('is-on', b.getAttribute('data-topik') === ada.id); b.setAttribute('aria-current', b.getAttribute('data-topik') === ada.id ? 'true' : 'false'); });
-    k.isi.innerHTML = ada.html; k.isi.scrollTop = 0;
+    k.isi.innerHTML = th(ada.html); k.isi.scrollTop = 0;
   }
 
   function cariTeks(q) {
     var k = kodeks; q = String(q || '').trim().toLowerCase();
     if (!q) { pilihTopik(k.semasa); return; }
-    var padan = k.topik.filter(function (t) { return teksBiasa(t.html).indexOf(q) >= 0 || t.tajuk.toLowerCase().indexOf(q) >= 0; });
+    var padan = k.topik.filter(function (t) { return teksBiasa(th(t.html)).indexOf(q) >= 0 || tj(t.tajuk).toLowerCase().indexOf(q) >= 0; });
     k.isi.innerHTML = padan.length
-      ? '<h3>Hasil carian "' + esc(q) + '"</h3>' + padan.map(function (t) { return '<p><button type="button" class="tut-btn" data-topik="' + t.id + '">' + esc(t.tajuk) + '</button></p>'; }).join('')
+      ? '<h3>Hasil carian "' + esc(q) + '"</h3>' + padan.map(function (t) { return '<p><button type="button" class="tut-btn" data-topik="' + t.id + '">' + esc(tj(t.tajuk)) + '</button></p>'; }).join('')
       : '<p class="tut-kosong">Tiada hasil untuk "' + esc(q) + '".</p>';
   }
 
@@ -492,7 +496,7 @@
     panel.appendChild(kepala); panel.appendChild(nav); panel.appendChild(isi); nod.appendChild(panel);
     d.body.appendChild(nod);
     kodeks = { nod: nod, nav: nav, isi: isi, cari: cari, topik: topikTopik(profilSemasa()), semasa: 'panduan', fokusAsal: null };
-    nav.innerHTML = kodeks.topik.map(function (t) { return '<button type="button" data-topik="' + t.id + '">' + esc(t.tajuk) + '</button>'; }).join('');
+    nav.innerHTML = kodeks.topik.map(function (t) { return '<button type="button" data-topik="' + t.id + '">' + esc(tj(t.tajuk)) + '</button>'; }).join('');
     tutup.addEventListener('click', tutupBantuan);
     nod.addEventListener('click', function (ev) {
       if (ev.target === nod) { tutupBantuan(); return; }
@@ -502,6 +506,10 @@
       if (ev.target.closest && ev.target.closest('[data-lat-mula]')) { var LT = root.MyPolitikLatihan; if (LT && LT.mula()) { root.location.assign('dashboard.html'); } else { tutupBantuan(); } }   // v7.13
     });
     cari.addEventListener('input', function () { cariTeks(cari.value); });
+    d.addEventListener('nusa:bahasa', function () {                      // v7.62: paparkan semula nav & topik dalam bahasa baharu
+      nav.innerHTML = kodeks.topik.map(function (t) { return '<button type="button" data-topik="' + t.id + '">' + esc(tj(t.tajuk)) + '</button>'; }).join('');
+      if (nod.classList.contains('is-open')) { if (cari.value) { cariTeks(cari.value); } else { pilihTopik(kodeks.semasa); } }
+    });
     d.addEventListener('keydown', function (ev) {
       if (!nod.classList.contains('is-open')) { return; }
       if (ev.key === 'Escape') { ev.preventDefault(); tutupBantuan(); }
