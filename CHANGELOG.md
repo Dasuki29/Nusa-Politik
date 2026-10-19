@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v8.5 (2026-10-19)
+
+- Modal acara krisis: tajuk "KRISIS:", label "Krisis Politik · …" dan tajuk keputusan kini diterjemah dalam mod EN.
+
 ## v8.4 (2026-10-19)
 
 Sambungan pembetulan teks BM yang bocor dalam mod EN, kali ini hasil imbasan simulasi (bot bermain kerjaya penuh).

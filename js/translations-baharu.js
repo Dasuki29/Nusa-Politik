@@ -2054,7 +2054,13 @@
   ["Ahli tempatan menyambut baik keputusan anda.", "Local members welcome your decision."],
   ["Pencabar reda dan ahli menghargai langkah itu.", "The challengers back off and members appreciate the move."],
   ["Anda tidak lagi memegang jawatan {x}.", "You no longer hold the post of {x}."],
-  ["Agihan Bakul Makanan: +1 IP, -MYR 450, -3 AP.", "Food Basket Distribution: +1 IP, -MYR 450, -3 AP."]
+  ["Agihan Bakul Makanan: +1 IP, -MYR 450, -3 AP.", "Food Basket Distribution: +1 IP, -MYR 450, -3 AP."],
+  /* Krisis */
+  ["KRISIS: {x}", "CRISIS: {x}"],
+  ["Krisis: {x} — Keputusan", "Crisis: {x} — Outcome"],
+  ["Krisis: {x}", "Crisis: {x}"],
+  ["Krisis Politik · Keputusan anda akan membawa akibat", "Political Crisis · Your decision will have consequences"],
+  ["Krisis Politik", "Political Crisis"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
