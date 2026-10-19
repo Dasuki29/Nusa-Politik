@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v8.4 (2026-10-19)
+
+Sambungan pembetulan teks BM yang bocor dalam mod EN, kali ini hasil imbasan simulasi (bot bermain kerjaya penuh).
+
+### Pembetulan
+
+- Mesej keputusan undian usul, isu tempatan, penutupan mesyuarat, pencalonan serentak, undi tidak percaya, hukuman Lembaga Disiplin dan kesan misi bulanan.
+- Enjin terjemahan: rentetan berbilang ayat kini diterjemah ayat demi ayat, dan ayat yang berakhir titik boleh dipadankan tanpa titik.
+- Ujian automatik: contoh emas baharu untuk keluarga mesej di atas.
+
 ## v8.3 (2026-10-19)
 
 Pembetulan teks BM yang bocor dalam mod EN (laporan pemain melalui tangkapan skrin).

@@ -86,6 +86,18 @@
     }
     return tukar ? out.join('') : null;
   }
+  /** Pisah rentetan berbilang ayat dan terjemah setiap ayat; null jika ada ayat yang tidak boleh diterjemah. */
+  function ayat(s) {
+    if (!/[.!?]\s+(?=[A-ZÀ-Ý"“(+−\-<0-9])/.test(s)) { return null; }
+    var bhg = s.replace(/([.!?])\s+(?=[A-ZÀ-Ý"“(+−\-<0-9])/g, '$1\u0001').split('\u0001'), out = [], i, t, tukar = 0;
+    for (i = 0; i < bhg.length; i++) {
+      t = terjemah(bhg[i]);
+      if (t !== null) { out.push(t); tukar += 1; }
+      else if (bersih(bhg[i], false)) { out.push(bhg[i]); }
+      else { return null; }
+    }
+    return tukar ? out.join(' ') : null;
+  }
   /** Terjemah satu rentetan BM (tanpa ruang hujung). Pulang EN atau null jika tiada terjemahan. */
   function terjemah(s) {
     if (!s) { return null; }
@@ -97,6 +109,8 @@
     if (r === null) { r = peraturan(s); }
     if (r === null) { r = gubah(s); }
     if (r === null) { r = bahagi(s); }
+    if (r === null) { r = ayat(s); }
+    if (r === null && /[^.]\.$/.test(s)) { var tp = terjemah(s.slice(0, -1)); if (tp !== null) { r = tp + '.'; } }
     if (r === null && (aw = s.match(/^([^A-Za-zÀ-ÿ0-9(+\-−]{1,6}\s*)(.+)$/u))) { var d = terjemah(aw[2]); if (d !== null) { r = aw[1] + d; } }   // awalan emoji / simbol
     if (cache.size > 6000) { cache.clear(); }
     cache.set(s, r);
