@@ -194,6 +194,8 @@
   var ui = { ov: null, kad: null, lubang: null, i: 0, tunggu: null, selesai: false, masaPoll: null, klikPasang: false };
 
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  /** Terjemah teks dialog bawaan pelayar (confirm) ke EN apabila bahasa EN dipilih. */
+  function tl(t) { try { var I = root.MyPolitikI18n; if (I && I.getLanguage && I.getLanguage() === 'EN') { var r = I.terjemah(t); if (r) { return r; } } } catch (e) { /* senyap */ } return t; }
   function suntikCSS() { var d = doc(); if (!d || d.getElementById('lat-css')) { return; } var s = d.createElement('style'); s.id = 'lat-css'; s.textContent = CSS; d.head.appendChild(s); }
   function simpanLangkah(i) { tulis(K_BANDERA, JSON.stringify({ aktif: true, langkah: i })); }
 
@@ -254,7 +256,7 @@
       var a = b.getAttribute('data-lat');
       if (a === 'seterus') { ke(ui.i + 1); }
       else if (a === 'balik') { ke(ui.i - 1); }
-      else if (a === 'keluar') { if (!root.confirm || root.confirm('Keluar daripada latihan? Simpanan anda sendiri akan dipulihkan.')) { keluar(); } }
+      else if (a === 'keluar') { if (!root.confirm || root.confirm(tl('Keluar daripada latihan? Simpanan anda sendiri akan dipulihkan.'))) { keluar(); } }
     });
     if (!ui.klikPasang) {
       ui.klikPasang = true;
