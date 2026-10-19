@@ -330,6 +330,15 @@
     return { peristiwa: peristiwa, berubah: berubah };
   }
 
+  /** v7.58: kenakan hukuman terus (cth. daripada modul Integriti/Disiplin Parti). jenis: 'amaran'|'digantung'|'dilarang'|'dipecat'. */
+  function hukum(jenis, perkara, fasal) {
+    var p = S.loadPlayer();
+    if (!p || !HUKUMAN_NAMA[jenis]) { return { ok: false }; }
+    var e = getEtika(p), k = kenakan(p, e, jenis, perkara, fasal);
+    var r = S.applyEffects(k.kesan, { kiraTindakan: false, patch: k.patch, log: { tindakan: 'disiplin', nama: (HUKUMAN_NAMA[jenis] + ': ' + perkara).slice(0, 80), peringkat: 'disiplin' } });
+    return { ok: !!(r && r.ok), jenis: jenis, mesej: mesejHukuman(jenis, perkara, fasal, e.hukuman) };
+  }
+
   /** Respons pendengaran (dipanggil daripada acara rawak). jenis: 'pembelaan' | 'akur' | 'mahkamah' */
   function responsPendengaran(jenis) {
     var p = S.loadPlayer(), e = getEtika(p);
@@ -389,7 +398,7 @@
     getEtika: getEtika, bulanKeahlian: bulanKeahlian, semakKeahlian: semakKeahlian, semakPenggal: semakPenggal,
     semakHak: semakHak, kuatkuasaGantung: kuatkuasaGantung, peluangLapor: peluangLapor, selepasAktiviti: selepasAktiviti,
     selepasTindakanBersih: selepasTindakanBersih, selepasAcara: selepasAcara,
-    prosesBulan: prosesBulan, responsPendengaran: responsPendengaran,
+    prosesBulan: prosesBulan, responsPendengaran: responsPendengaran, hukum: hukum,
     bolehRayu: bolehRayu, rayuPemecatan: rayuPemecatan, ringkasan: ringkasan, bonusUndi: bonusUndi, labelRisiko: labelRisiko
   };
 });

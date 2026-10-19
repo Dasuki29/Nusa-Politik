@@ -537,7 +537,8 @@
     var rg = ET ? ET.ringkasan(p) : null, gantung = !!(rg && rg.status === 'digantung');
     if (gantung) { l.textContent = 'Ahli (Digantung)'; l.className = 'badge-office badge-office--gantung'; if (lp) { lp.hidden = true; } }     // v4.6
     var pecat = !!(rg && rg.status === 'dipecat');                                       // v7.57: dipecat = bukan ahli (bukan 'Ahli Biasa')
-    if (pecat) { l.textContent = 'Dipecat (Bukan Ahli)'; l.className = 'badge-office badge-office--gantung'; if (lp) { lp.hidden = true; } }
+    var bebasP = pecat && W.MyPolitikPRU && W.MyPolitikPRU.semuaStatus && W.MyPolitikPRU.semuaStatus(p).length > 0;     // v7.58: wakil rakyat dipecat = Ahli Politik Bebas (kerusi kekal)
+    if (pecat) { l.textContent = bebasP ? 'Ahli Politik Bebas' : 'Dipecat (Bukan Ahli)'; l.className = 'badge-office badge-office--gantung'; if (lp) { lp.hidden = true; } }
     var kg = $('p-gantung');
     if (kg) {
       kg.hidden = !gantung;
@@ -758,7 +759,7 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -1318,6 +1319,7 @@
     if (W.MyPolitikNegeri) { await tawarkanLobi(W.MyPolitikNegeri); await tawarkanLobi(W.MyPolitikNegeri.sayap); await urusNegeri(W.MyPolitikNegeri); await urusNegeri(W.MyPolitikNegeri.sayap); }   // v7.34/36: lobi & lantikan (induk dan sayap)
     //                                            // v7.34: Presiden/Pengerusi membuat lantikan
     if (W.NusaPRU_UI && W.NusaPRU_UI.selepasBulan) { await W.NusaPRU_UI.selepasBulan(r.peristiwa); }     // v7.3: PRU/PRN & Kabinet
+    if (W.NusaIntegriti_UI && W.NusaIntegriti_UI.selepasBulan) { await W.NusaIntegriti_UI.selepasBulan(r.peristiwa); }     // v7.58: Whip & Audit SPRM
     if (W.NusaDewan_UI && W.NusaDewan_UI.selepasBulan) { await W.NusaDewan_UI.selepasBulan(r.peristiwa); }     // v7.55: undi tidak percaya & soalan lisan
     if (EV) { await tunjukAcara(EV.janaAcara({ pencetus: 'bulan' })); }       // acara rawak pergantian bulan
   }
