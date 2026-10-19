@@ -421,7 +421,7 @@
   }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-  var TABS = ['peta', 'tindakan', 'pemilihan', 'mesyuarat', 'dewan', 'pilihanraya'];
+  var TABS = ['peta', 'tindakan', 'pemilihan', 'mesyuarat', 'dewan', 'pencapaian', 'pilihanraya'];
   var state = {
     tab: 'peta', kodSimulasi: '', anggaran: {}, mesej: {},
     peta: { status: 'kosong', instance: null, data: null }, renderTerjadual: false
@@ -1046,7 +1046,7 @@
     var id = state.tab, el = $('panel-' + id);
     if (id === 'peta') { return; }
     var fk = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-fk') : null;
-    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : panelMesyuarat(p);
+    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : id === 'pencapaian' ? (W.NusaPencapaian_UI ? W.NusaPencapaian_UI.panel(p) : '') : panelMesyuarat(p);
     if (fk) { var f = el.querySelector('[data-fk="' + fk.replace(/"/g, '\\"') + '"]'); if (f && !f.disabled) { f.focus({ preventScroll: true }); } }
   }
 
@@ -1069,6 +1069,8 @@
     Array.prototype.forEach.call($('bottom-nav').querySelectorAll('button'), function (b) { b.classList.toggle('is-active', b.getAttribute('data-tab') === state.tab); });
     var tp = $('tab-pemilihan'); tp.innerHTML = '🗳️ Pemilihan &amp; Kempen' + (adalahTahunPemilihan(p.tahun) ? '<span class="dot" title="Tahun pemilihan"></span>' : '');
     var tm = $('tab-mesyuarat'), sedia = M && M.getKeadaanMesyuarat(p).peringkat.some(function (x) { return x.status === 'boleh_mula' || x.status === 'sedang'; });
+    var tc = $('tab-pencapaian'), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;                      // v8.6: lencana trofi baharu
+    tc.innerHTML = '🏆 Pencapaian' + (nb ? '<span class="dot" title="Pencapaian baharu"></span>' : '');
     tm.innerHTML = '📜 Mesyuarat &amp; Usul' + (sedia ? '<span class="dot" title="Mesyuarat tersedia"></span>' : '');
   }
 
@@ -1128,6 +1130,7 @@
     try { W.history.replaceState(null, '', '#' + t); } catch (e) { /* abaikan */ }
     render();
     if (t === 'peta') { muatPeta(); }
+    if (t === 'pencapaian' && W.NusaPencapaian_UI && W.NusaPencapaian_UI.bilBaru()) { W.NusaPencapaian_UI.tandaDilihat(); var tcc = $('tab-pencapaian'); if (tcc) { tcc.innerHTML = '🏆 Pencapaian'; } }   // v8.6
     if (fokus) { $('tab-' + t).focus(); }
   }
 

@@ -11,7 +11,7 @@ const P = require('./persekitaran');
 const g = P.muat();
 const S = g.MyPolitikSave, E = g.MyPolitikElection, M = g.MyPolitikMeeting, I = g.MyPolitikIncumbent, O = g.MyPolitikOrdinaryMember,
   K = g.MyPolitikCalendar, EV = g.MyPolitikEvents, ET = g.MyPolitikEtika, PRU = g.MyPolitikPRU, PRK = g.MyPolitikPRK, KB = g.MyPolitikKabinet,
-  NG = g.MyPolitikNegeri, SY = g.MyPolitikSayap, MIS = g.MyPolitikMisi;
+  PC = g.MyPolitikPencapaian, NG = g.MyPolitikNegeri, SY = g.MyPolitikSayap, MIS = g.MyPolitikMisi;
 
 const tapis = (process.argv[2] || '').toLowerCase();
 const hasil = [];
@@ -294,6 +294,75 @@ ujian('sayap: misi dan tindakan khas menunjukkan kos sebenar', () => {
 });
 
 /* ---------------------------------------------------------------- Ringkasan */
+/* ---------- Pencapaian (v8.6) ---------- */
+function pcPemain(tambah) {
+  return Object.assign({ id: 'uji1', nama: 'Uji', tahun: 2026, bulan: 1, log: [], jawatanList: [], pru: null, integriti: { skor: 70 }, kabinet: null }, tambah || {});
+}
+function pcLangkah(p, meta, st) { const h = PC.semak(p, meta, st); return h; }
+
+ujian('pencapaian: Akar Umbi Teguh hanya jika tiada kekalahan jawatan sebelum itu', () => {
+  const menang = { tindakan: 'pemilihan_ketua_cawangan' };
+  let p = pcPemain({ log: [{ tindakan: 'pemilihan_ketua_cawangan', nama: 'Menang Ketua Cawangan' }] });
+  betul(pcLangkah(p, menang, null).baru.indexOf('akar_umbi_teguh') >= 0, 'menang pertama patut membuka trofi');
+  let h = pcLangkah(pcPemain({ log: [{ tindakan: 'pemilihan_naib_ketua_cawangan', nama: 'Kalah Naib Ketua Cawangan' }] }), { tindakan: 'pemilihan_naib_ketua_cawangan' }, null);
+  h = pcLangkah(pcPemain({ log: [{ tindakan: 'pemilihan_ketua_cawangan', nama: 'Menang Ketua Cawangan' }] }), menang, h.st);
+  sama(h.baru.length, 0, 'selepas kalah, trofi tidak patut dibuka');
+  const hp = pcLangkah(pcPemain({ log: [{ tindakan: 'pemilihan_perwakilan_cawangan', nama: 'Kalah perwakilan' }] }), { tindakan: 'pemilihan_perwakilan_cawangan' }, null);
+  sama(pcLangkah(pcPemain({ log: [{ tindakan: 'pemilihan_ketua_cawangan', nama: 'Menang Ketua Cawangan' }] }), menang, hp.st).baru[0], 'akar_umbi_teguh', 'kekalahan perwakilan tidak dikira');
+});
+ujian('pencapaian: Ikon Sayap selepas 72 bulan memegang Ketua sayap Bahagian', () => {
+  let st = null, p;
+  for (let k = 0; k <= 72; k++) {
+    p = pcPemain({ tahun: 2026 + Math.floor(k / 12), bulan: (k % 12) + 1, jawatanList: [{ kod: 'sayap_bahagian_pemuda', kumpulan: 'sayap' }] });
+    const h = pcLangkah(p, null, st); st = h.st;
+    if (k < 72) { betul(h.baru.indexOf('ikon_sayap') < 0, 'terlalu awal pada bulan ' + k); } else { betul(h.baru.indexOf('ikon_sayap') >= 0, 'patut dibuka pada bulan 72'); }
+  }
+  sama(PC.kemajuan(p, st, 'ikon_sayap'), '72 / 72 bulan');
+});
+ujian('pencapaian: bulan yang sama tidak dikira dua kali', () => {
+  const p = pcPemain({ jawatanList: [{ kod: 'sayap_bahagian_wanita' }] });
+  let h = pcLangkah(p, null, null);
+  const p2 = pcPemain({ bulan: 2, jawatanList: [{ kod: 'sayap_bahagian_wanita' }] });
+  h = pcLangkah(p2, null, h.st); h = pcLangkah(p2, null, h.st); h = pcLangkah(p2, null, h.st);
+  sama(h.st.jejak.uji1.bulanSayap, 1);
+});
+ujian('pencapaian: Wira PRU hanya di kawasan Bandar/Campuran', () => {
+  const rekod = { hasil: 'menang' };
+  const mk = (profil) => pcPemain({ pru: { profil, sejarah: [rekod] } });
+  sama(pcLangkah(mk('URBAN'), { tindakan: 'pru_keputusan' }, null).baru[0], 'wira_pru');
+  sama(pcLangkah(mk('MIXED'), { tindakan: 'pru_keputusan' }, null).baru[0], 'wira_pru');
+  sama(pcLangkah(mk('RURAL'), { tindakan: 'pru_keputusan' }, null).baru.length, 0);
+  sama(pcLangkah(pcPemain({ pru: { profil: 'URBAN', sejarah: [{ hasil: 'kalah' }] } }), { tindakan: 'pru_keputusan' }, null).baru.length, 0, 'kalah tidak layak');
+});
+ujian('pencapaian: Bapa Reformasi perlu skor >90 selama 60 bulan berturut-turut dengan kerusi', () => {
+  const status = { jenis: 'MP', kerusi: 'P.1', sejakTahun: 2027, sejakBulan: 1 };
+  let st = null, buka = -1;
+  for (let k = 0; k < 100; k++) {
+    const skor = k === 30 ? 90 : 95;                                  // 90 tidak cukup: pembilang mula semula
+    const h = pcLangkah(pcPemain({ tahun: 2027 + Math.floor(k / 12), bulan: (k % 12) + 1, integriti: { skor }, pru: { status } }), null, st);
+    st = h.st; if (h.baru.indexOf('bapa_reformasi') >= 0 && buka < 0) { buka = k; }
+  }
+  sama(buka, 30 + 60, 'patut dibuka 60 bulan selepas pembilang dimulakan semula') ;
+});
+ujian('pencapaian: Negarawan Utama untuk Menteri Penuh, bukan Timbalan Menteri', () => {
+  const mk = (roleLevel) => pcPemain({ kabinet: { hasGovernmentRole: true, roleLevel } });
+  sama(pcLangkah(mk('MENTERI_PENUH'), null, null).baru[0], 'negarawan_utama');
+  sama(pcLangkah(mk('PERDANA_MENTERI'), null, null).baru[0], 'negarawan_utama');
+  sama(pcLangkah(mk('TIMBALAN_MENTERI'), null, null).baru.length, 0);
+  sama(pcLangkah(mk('EXCO_NEGERI'), null, null).baru.length, 0);
+});
+ujian('pencapaian: simpanan berasingan dan pemain latihan tidak melayakkan trofi', () => {
+  P.daftar({});
+  const st = PC.muat(); st.dibuka.wira_pru = { tahun: 2030, bulan: 5 }; PC.simpan(st);
+  betul(PC.muat().dibuka.wira_pru, 'trofi patut kekal dalam simpanan');
+  sama(PC.bilBaru(), 1); PC.tandaDilihat(); sama(PC.bilBaru(), 0);
+  g.MyPolitikLatihan.aktif = () => true;
+  const sebelum = JSON.stringify(PC.muat());
+  sama(PC.proses({ tindakan: 'pru_keputusan' }).length, 0);
+  sama(JSON.stringify(PC.muat()), sebelum, 'latihan tidak patut mengubah simpanan');
+  delete g.MyPolitikLatihan.aktif;
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

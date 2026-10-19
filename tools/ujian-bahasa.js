@@ -94,6 +94,7 @@ ujian('PRU: kejutan, tindakan dan janji ada EN', () => {
 });
 ujian('Kabinet: data portfolio ada EN', () => tiadaEN(kumpul(g.MyPolitikKabinetData, [])).map((s) => s.slice(0, 90)));
 ujian('Perlembagaan: teks ada EN', () => tiadaEN(kumpul(g.MyPolitikPerlembagaan, [])).map((s) => s.slice(0, 90)));
+ujian('Pencapaian: nama dan huraian ada EN', () => tiadaEN(kumpul(g.MyPolitikPencapaian.SENARAI, [])).map((s) => s.slice(0, 90)));
 
 /* ---- 3. Contoh emas ---- */
 const EMAS = [
@@ -115,6 +116,8 @@ const EMAS = [
   ['Status Usul (1 lulus, 2 ditolak, 3 anda sertai)', 'Motion Status (1 passed, 2 rejected, 3 you joined)'],
   ['Kedudukan 1 daripada 7 calon (3 kerusi, 31 undi) · +7 IP', 'Rank 1 of 7 candidates (3 seats, 31 votes) · +7 IP'],
   ['Menang: kedudukan 1 daripada 9 calon, 29 undi.', 'Won: rank 1 of 9 candidates, 29 votes.'],
+  ['Pencapaian Dibuka: Wira PRU (Giant Killer)!', 'Achievement Unlocked: GE Hero (Giant Killer)!'],
+  ['12 / 72 bulan', '12 / 72 months'],
   ['Mengundi (sokong): usul LULUS dengan 58 sokong dan 34 bantah.', 'Voting (support): motion PASSED with 58 for and 34 against.'],
   ['Isu tempatan diselesaikan: Longkang tersumbat (Akar Umbi +3).', 'Local issue resolved: Blocked drains (Grassroots +3).'],
   ['Persidangan Tahunan Cawangan 2026 ditutup', 'Branch Annual Conference 2026 closed'],
