@@ -341,12 +341,16 @@
     if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }
     var MDA = muat('MyPolitikMedia', 'media.js');                                                // v7.59: Jentera Media Digital (sidang media rawak, persepsi)
     if (MDA && MDA.prosesBulan) { peristiwa = peristiwa.concat(MDA.prosesBulan().peristiwa || []); }
+    var SMP = muat('MyPolitikSampingan', 'sampingan.js');                                       // v7.64: Aktiviti Sampingan (syarikat / NGO)
+    if (SMP && SMP.prosesBulan) { peristiwa = peristiwa.concat(SMP.prosesBulan().peristiwa || []); }
     var DWN = muat('MyPolitikDewan', 'dewan.js');                                               // v7.55: Dewan Rakyat (undi tidak percaya, soalan lisan)
     if (DWN && DWN.prosesBulan) { peristiwa = peristiwa.concat(DWN.prosesBulan().peristiwa || []); }
     var DUNS = muat('MyPolitikDUN', 'dun.js');                                                  // v7.56: sidang DUN (ADUN / EXCO)
     if (DUNS && DUNS.prosesBulan) { peristiwa = peristiwa.concat(DUNS.prosesBulan().peristiwa || []); }
     var PRU = muat('MyPolitikPRU', 'pru.js');                                                   // v7.3: pengisytiharan PRU/PRN & penilaian manifesto
     if (PRU && PRU.prosesBulan) { peristiwa = peristiwa.concat(PRU.prosesBulan().peristiwa || []); }
+    var GLN = muat('MyPolitikGelaran', 'gelaran.js');                                           // v7.64: Anugerah & Gelaran Kurniaan
+    if (GLN && GLN.prosesBulan) { peristiwa = peristiwa.concat(GLN.prosesBulan().peristiwa || []); }
     var PRK = muat('MyPolitikPRK', 'prk.js');                                                   // v7.6: sentimen nasional & PRK pertengahan penggal
     if (PRK && PRK.prosesBulan) { peristiwa = peristiwa.concat(PRK.prosesBulan().peristiwa || []); }
 
