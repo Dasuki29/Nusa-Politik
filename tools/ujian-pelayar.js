@@ -41,9 +41,23 @@ const pelayan = http.createServer((req, res) => {
   res.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/plain' }); res.end(fs.readFileSync(f));
 });
 
-const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|dalam|pada|atau|boleh|mesti|setiap|bulan|tahun|sebagai|daripada)\b/i;
+/* Kumpul literal rentetan BM daripada kod sumber: nod teks EN yang sama persis dengan literal itu dan tiada terjemahan = bocor. */
+function kumpulLiteral() {
+  const set = new Set(), re = /'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"/g;
+  fs.readdirSync(path.join(ROOT, 'js')).filter((f) => /\.js$/.test(f) && !/^(translations|i18n|tutorial|tutorial-en|data|watak|geo)/.test(f)).forEach((f) => {
+    const src = fs.readFileSync(path.join(ROOT, 'js', f), 'utf8');
+    let m; while ((m = re.exec(src))) {
+      const t = (m[1] || m[2] || '').replace(/\\'/g, "'").trim();
+      if (t.length >= 4 && t.length <= 120 && /^[A-ZÀ-Ý][A-Za-zÀ-ÿ'’ \-\/&.,:;!?()%+0-9]+$/.test(t) && /[a-z]{3}/.test(t)) { set.add(t); }
+    }
+  });
+  return [...set];
+}
+/* Nama khas yang sengaja kekal (negeri, istilah UMNO, jenama). */
+const NAMA_KHAS = /^(Perlis|Kedah|Kelantan|Terengganu|Pulau Pinang|Perak|Pahang|Selangor|Wilayah Persekutuan|Negeri Sembilan|Melaka|Johor|Sarawak|Sabah|Bumiputera|Pemuda|Wanita|Puteri|UMNO|PAU|MKT|Nusa Politik|Barisan Nasional|Dewan Rakyat|Dewan Negara|Bahasa Melayu|Hard|Easy|Normal)$/;
+const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|dalam|pada|atau|boleh|mesti|setiap|bulan|tahun|sebagai|daripada|kawasan|negeri|bahagian|cawangan|sokongan|pemilih|ahli|tahap|jumlah|perwakilan|kerusi|lihat|klik|anjur|tiada|mencukupi|perlu|baki|setahun|usaha|pilih|daerah|mengundi|penduduk|kesukaran|butiran|lobi|jelajah|dana|wang)\b/i;
 /* Kata/pola BM yang dibenarkan kekal (nama sendiri, istilah UMNO, sumber luar). */
-const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip)/;
+const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Negeri Sembilan|DUN Contoh)/;
 
 (async () => {
   await new Promise((r) => pelayan.listen(0, '127.0.0.1', r));
@@ -51,7 +65,7 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip)/;
   const b = await PW.chromium.launch(exe ? { executablePath: exe } : {});
   const pg = await b.newPage({ viewport: { width: 420, height: 900 } });
   pg.setDefaultTimeout(6000);
-  const ralat = [], bocor = new Set();
+  const ralat = [], bocor = new Map(), seen = new Set();
   pg.on('pageerror', (e) => ralat.push(e.message));
   await pg.route('**/*', (r) => { const u = new URL(r.request().url()); return u.hostname === '127.0.0.1' ? r.continue() : r.fulfill({ status: 204, body: '' }); });
   await pg.addInitScript((d) => { try { if (!localStorage.getItem('myPolitik_player')) { Object.keys(d).forEach((k) => localStorage.setItem(k, d[k])); } } catch (e) { /* abaikan */ } }, BEKAL);
@@ -61,17 +75,19 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip)/;
   await pg.addStyleTag({ content: '.tut-kad,.tut-blok,.tut-sorot,.tut-fab,#mpa-bar,.toast-stack{display:none!important}' });
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN'));
 
+  const LITERAL = kumpulLiteral();
   const imbas = async (etiket) => {
-    const r = await pg.evaluate((reSrc) => {
+    const r = await pg.evaluate(({ reSrc, lit, khas }) => {
+      const SET = new Set(lit), KH = new RegExp(khas);
       const re = new RegExp(reSrc, 'i'), w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), o = [];
       for (let n = w.nextNode(); n; n = w.nextNode()) {
         const t = n.nodeValue.replace(/\s+/g, ' ').trim(), el = n.parentElement;
         if (!t || t.length < 6 || !el || el.closest('[data-i18n-skip],script,style,noscript,.tut-kad')) { continue; }
-        if (re.test(t)) { o.push(t.slice(0, 120)); }
+        if (re.test(t) || (SET.has(t) && !KH.test(t) && window.MyPolitikI18n.terjemah(t) === null)) { o.push(t.slice(0, 120)); }
       }
       return o;
-    }, BM.source);
-    r.filter((t) => !BENAR.test(t)).forEach((t) => bocor.add(etiket + ': ' + t));
+    }, { reSrc: BM.source, lit: LITERAL, khas: NAMA_KHAS.source });
+    r.filter((t) => !BENAR.test(t) && !seen.has(t)).forEach((t) => { seen.add(t); bocor.set(t, etiket); });
   };
   const tutup = async () => {
     for (let k = 0; k < 6; k++) {
@@ -84,9 +100,28 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip)/;
     }
   };
 
+  /* Tab Peta: setiap mod, kemudian hover dan klik beberapa kawasan serta tekan butang tindakan. */
+  const jelajahPeta = async () => {
+    const mod = pg.locator('.mpm-tab'), n = await mod.count();
+    for (let m = 0; m < n; m++) {
+      await mod.nth(m).evaluate((e) => e.click()); await pg.waitForTimeout(900); await imbas('peta mod ' + m);
+      for (const sel of ['.mpm-poli', '.mpm-baris']) {
+        const l = pg.locator(sel), c = await l.count();
+        for (let k = 0; k < Math.min(c, 3); k++) {
+          const e = l.nth(k * Math.max(1, Math.floor(c / 3)));
+          await e.hover({ force: true }).catch(() => {}); await pg.waitForTimeout(120); await imbas('peta hover ' + m);
+          await e.click({ force: true }).catch(() => {}); await pg.waitForTimeout(350); await imbas('peta klik ' + m);
+          const bt = pg.locator('[data-act=tindakan]'), nb = await bt.count();
+          for (let q = 0; q < nb; q++) { await bt.nth(q).click({ force: true }).catch(() => {}); await pg.waitForTimeout(250); await imbas('peta aksi ' + m); }
+        }
+      }
+    }
+  };
   for (const tab of ['tindakan', 'mesyuarat', 'pemilihan', 'pilihanraya', 'dewan', 'peta']) {
+    await tutup();
     const t = pg.locator('[data-tab="' + tab + '"]').first();
-    if (await t.count()) { await t.click().catch(() => {}); await pg.waitForTimeout(300); await imbas('tab ' + tab); }
+    if (await t.count()) { await t.evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab ' + tab); }
+    if (tab === 'peta') { await jelajahPeta(); }
   }
   const bulan = parseInt(process.env.BULAN || '6', 10);
   for (let i = 0; i < bulan; i++) {
@@ -108,6 +143,6 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip)/;
 
   await b.close(); pelayan.close();
   console.log('Ralat JavaScript: ' + ralat.length + (ralat.length ? '\n  - ' + ralat.slice(0, 5).join('\n  - ') : ''));
-  console.log('Teks BM bocor dalam EN: ' + bocor.size + (bocor.size ? '\n  - ' + [...bocor].slice(0, 15).join('\n  - ') : ''));
+  console.log('Teks BM bocor dalam EN: ' + bocor.size + (bocor.size ? '\n  - ' + [...bocor].slice(0, 40).map((x) => x[1] + ': ' + x[0]).join('\n  - ') : ''));
   process.exit(ralat.length || bocor.size ? 1 : 0);
 })().catch((e) => { console.error(e); try { pelayan.close(); } catch (x) { /* abaikan */ } process.exit(1); });
