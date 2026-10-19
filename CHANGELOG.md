@@ -1,5 +1,28 @@
 # Catatan Perubahan
 
+## v8.12 (2026-10-19)
+
+Rombakan Sistem Kewangan & Pendapatan: elaun parti dimansuhkan, kerjaya profesional diperkenalkan, pendapatan rasmi hanya untuk YB.
+
+### Berubah
+
+- **Elaun parti dihapuskan:** elaun asas RM 150 dan elaun jawatan parti (Cawangan 200, Bahagian 500, Pusat 1,200) dibuang. `CONFIG.DANA_ASAS` dan `DANA_JAWATAN` diganti `PERINGKAT_PARTI`.
+- **Kerjaya (`careerBackground`, modul baharu `js/kerjaya.js`):** dipilih di skrin Permainan Baharu dan dikunci. Profesional/Korporat RM 900, Pengamal Undang-undang RM 850, Peniaga/Kontraktor RM 750 sebulan. Simpanan lama diberi Profesional/Korporat secara automatik (`normalisasi`).
+- **Kos operasi jawatan parti:** Cawangan RM 100, Bahagian RM 250, Pusat RM 600 sebulan (peringkat tertinggi yang dipegang sahaja).
+- **Pendapatan rasmi:** ADUN RM 1,000 dan Ahli Parlimen RM 1,800 sebulan. Elaun kabinet EXCO/Menteri (kabinet.js) kekal dan ditambah ke atasnya.
+- **Pendapatan kerjaya semasa berjawatan:** MP, ADUN dan EXCO Negeri 50%; Menteri Besar, Timbalan Menteri, Menteri, TPM dan PM 0%.
+- **Konflik kepentingan:** Peniaga/Kontraktor yang memegang jawatan kerajaan menambah +3 Risiko Konflik Kepentingan sebulan (susut asas 1) melalui `sampingan.js`; mesej: "Kontrak perniagaan anda dipersoalkan..." apabila tiada syarikat sampingan.
+- Paparan: pratonton "Bulan Seterusnya" kini "Pendapatan bulanan" dengan senarai item bertanda +/-.
+- Tutorial: langkah baharu `kerjaya`; baris "Terkumpul; pendapatan bulanan masuk".
+
+### Andaian (sila semak)
+
+- Semua angka ialah penyeimbang simulasi. Pendapatan bersih bulanan lebih tinggi daripada dahulu untuk Ahli Biasa (RM 900 berbanding RM 150) kerana tiada lagi elaun jawatan; kos operasi menggantikan elaun jawatan. Pantau keseimbangan.
+- Pendapatan bulanan tidak didarab pengali kesukaran (hanya perbelanjaan tindakan didarab), dan dihadkan supaya dana tidak jatuh bawah 0.
+- Timbalan Menteri dan Menteri Besar diperlakukan sebagai penuh masa (kerjaya 0%), bersama Menteri, TPM dan PM.
+- Pilihan raya: ujian `PRU: baki dana kempen dipulangkan...` pernah gagal sekali secara rawak semasa pembangunan dan lulus berulang kali selepas itu (tidak berkaitan; belum disiasat).
+- 5 ujian baharu, semakan pelayar (skrin Permainan Baharu) dan terjemahan EN.
+
 ## v8.11 (2026-10-19)
 
 Peruntukan kempen tidak lagi ditanda lalai (maklum balas pemain: terlepas menetapkan bajet pilihan raya).

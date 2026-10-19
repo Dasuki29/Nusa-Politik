@@ -4,12 +4,12 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v8.11';
+var VERSI = 'nusa-v8.12';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
   'js/tema.js', 'js/pwa.js', 'js/data.js', 'js/sayap.js', 'js/blok.js', 'js/misi.js', 'js/save.js', 'js/infra.js', 'js/calendar.js',
-  'js/avatar.js', 'js/audio.js', 'js/sfx.js', 'js/krisis-peta.js', 'js/ordinaryMember.js', 'js/incumbent.js', 'js/jawatan.js', 'js/etika.js', 'js/election.js',
+  'js/avatar.js', 'js/audio.js', 'js/sfx.js', 'js/krisis-peta.js', 'js/kerjaya.js', 'js/ordinaryMember.js', 'js/incumbent.js', 'js/jawatan.js', 'js/etika.js', 'js/election.js',
   'js/rival.js', 'js/negeri.js', 'js/meeting.js', 'js/EventDatabase.js', 'js/events.js', 'js/geo.js', 'js/map.js', 'js/slot.js',
   'js/slotpanel.js', 'js/menu.js', 'js/latihan.js', 'js/tutorial.js', 'js/lagu.js', 'js/watak.js', 'js/perlembagaan.js',
   'js/organisasi.js', 'js/stress.js', 'js/hayat.js', 'js/pru.js', 'js/kabinet-data.js', 'js/kabinet.js', 'js/prk.js',

@@ -196,6 +196,13 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     if (!/You are investing RM/.test(rg)) { ralat.push('ringkasan pelaburan EN salah: ' + rg.slice(0, 100)); }
   } else { ralat.push('fasa bukan manifesto untuk ujian peruntukan: ' + dm.fasa); }
 
+  /* v8.12: skrin Permainan Baharu ada pilihan latar belakang profesional (lalai Profesional / Korporat). */
+  const pgIdx = await b.newPage({ viewport: { width: 420, height: 900 } });
+  await pgIdx.route('**/*', (r) => { const u = new URL(r.request().url()); return u.hostname === '127.0.0.1' ? r.continue() : r.fulfill({ status: 204, body: '' }); });
+  await pgIdx.goto(base + '/index.html'); await pgIdx.waitForTimeout(800);
+  const idx = await pgIdx.evaluate(() => ({ n: document.querySelectorAll('input[name=kerjaya]').length, lalai: (document.querySelector('input[name=kerjaya]:checked') || {}).value }));
+  if (idx.n !== 3 || idx.lalai !== 'korporat') { ralat.push('pilihan kerjaya di Permainan Baharu tidak betul: ' + JSON.stringify(idx)); }
+  await pgIdx.close();
   await b.close(); pelayan.close();
   console.log('Ralat JavaScript: ' + ralat.length + (ralat.length ? '\n  - ' + ralat.slice(0, 5).join('\n  - ') : ''));
   console.log('Teks BM bocor dalam EN: ' + bocor.size + (bocor.size ? '\n  - ' + [...bocor].slice(0, 40).map((x) => x[1] + ': ' + x[0]).join('\n  - ') : ''));
