@@ -308,6 +308,7 @@
     if (!def || !def.kos[tahap]) { return { boleh: false, sebab: 'Tindakan tidak sah.' }; }
     var kos = def.kos[tahap];
     if (!profil) { return { boleh: false, sebab: 'Daftar pemain dahulu.', kos: kos }; }
+    if (S && S.kosSebenar) { kos = { ap: kos.ap, myr: S.kosSebenar(profil, kos.myr) }; }        // v8.0: kos dipaparkan dan disemak ikut tahap kesukaran
     var peta = salinPeta(profil), guna = peta.kiraan[jenis + ':' + KUNCI[tahap] + ':' + id] || 0;
     var baki = CONFIG.HAD_TINDAKAN_SETAHUN - guna;
     if (baki <= 0) { return { boleh: false, sebab: 'Had ' + CONFIG.HAD_TINDAKAN_SETAHUN + 'x setahun dicapai.', kos: kos, baki: 0 }; }

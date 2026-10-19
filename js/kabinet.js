@@ -200,10 +200,10 @@
     var k = getKabinet(p);
     if (!k.lobi) { return []; }
     return kolamPaparan(p, k.lobi.sumber).map(function (d) {
-      var sebab = [];
+      var sebab = [], kosMyr = S().kosSebenar ? S().kosSebenar(p, d.myr) : d.myr;     // v8.0: kos ikut tahap kesukaran
       if ((Number(p.ip) || 0) < d.ip) { sebab.push('IP tidak cukup (perlu ' + d.ip + ')'); }
-      if ((Number(p.myr) || 0) < d.myr) { sebab.push('Dana tidak cukup (perlu RM ' + d.myr.toLocaleString('ms-MY') + ')'); }
-      return { id: d.id, nama: d.nama, tahap: d.tahap, tahapNama: TAHAP[d.tahap].nama, ip: d.ip, myr: d.myr, peluang: Math.round(peluang(p, d) * 100),
+      if ((Number(p.myr) || 0) < kosMyr) { sebab.push('Dana tidak cukup (perlu RM ' + kosMyr.toLocaleString('ms-MY') + ')'); }
+      return { id: d.id, nama: d.nama, tahap: d.tahap, tahapNama: TAHAP[d.tahap].nama, ip: d.ip, myr: kosMyr, peluang: Math.round(peluang(p, d) * 100),
         elaun: TAHAP[d.tahap].elaun, risiko: d.risiko, boleh: !sebab.length, sebab: sebab.join('; ') };
     });
   }
@@ -292,6 +292,19 @@
     simpan(k, { reputasi: CONFIG.ROMBAK.reputasi }, { log: { tindakan: 'rombakan', nama: 'Rombakan kabinet: digugurkan daripada ' + nama, peringkat: 'ahli' } });
     return { jenis: 'kabinet_rombak', mesej: 'Rombakan kabinet! ' + sebab + ' Anda digugurkan daripada ' + nama + '. Elaun dihentikan dan Reputasi -5.' };
   }
+  /** v8.0: tamatkan jawatan kerajaan tanpa penalti tambahan (cth. dipecat daripada parti). Pulang { mesej } atau null. */
+  function lucutJawatan(sebab) {
+    var p = S() && S().loadPlayer();
+    if (!p) { return null; }
+    var k = getKabinet(p);
+    if (!k.hasGovernmentRole && !k.lobi) { return null; }
+    var adaJawatan = k.hasGovernmentRole, nama = k.portfolioName;
+    if (nama) { k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilucut' }]).slice(-10); }
+    k.hasGovernmentRole = false; k.roleLevel = 'NONE'; k.portfolioName = ''; k.portfolioId = ''; k.acara = null; k.lobi = null; k.bulanBerjawatan = 0; k.ratingRendah = 0; k.risikoRombak = 0; k.cdfBaki = 0; k.cdfBulan = 0;
+    simpan(k, {}, { log: { tindakan: 'kabinet_lucut', nama: adaJawatan ? 'Jawatan kerajaan dilucutkan' + (nama ? ': ' + nama : '') : 'Lobi portfolio ditutup', peringkat: 'ahli' } });
+    if (!adaJawatan) { return null; }                                          // hanya lobi terbuka: ditutup tanpa makluman
+    return { jenis: 'kabinet_rombak', mesej: (sebab || 'Jawatan kerajaan anda ditamatkan.') + (nama ? ' Anda tidak lagi memegang jawatan ' + nama + '.' : '') };
+  }
   function prosesBulan(o) {
     var p = S() && S().loadPlayer(), ev = [];
     if (!p || p.tamat) { return { peristiwa: ev }; }
@@ -333,18 +346,26 @@
     if (!k.hasGovernmentRole || !k.acara) { return null; }
     var d = acaraId(k.acara.id);
     if (!d) { return null; }
+    var Sv = S(), papar = function (k) { return k && Sv.kesanPapar ? Sv.kesanPapar(p, k) : (k || null); };     // v8.0: kos ikut tahap kesukaran
     return { id: d.id, ikon: d.ikon, tajuk: d.tajuk, huraian: d.huraian, pilihan: d.pilihan.map(function (c) {
-      return { id: c.id, label: c.label, kesan: c.kesan || null, rawak: c.rawak || null, boleh: !(c.kesan && c.kesan.myr && (Number(p.myr) || 0) + c.kesan.myr < 0), sebab: 'Dana tidak cukup.' };
+      var kos = kosMaksAcara(c), boleh = !kos || (Sv.cukupDana ? Sv.cukupDana(p, kos) : (Number(p.myr) || 0) >= kos);
+      return { id: c.id, label: c.label, kesan: papar(c.kesan), rawak: c.rawak ? { p: c.rawak.p, jaya: papar(c.rawak.jaya), gagal: papar(c.rawak.gagal) } : null, boleh: boleh, sebab: boleh ? '' : (Sv.ralatDana ? Sv.ralatDana(p, kos) : 'Dana tidak cukup.') };
     }) };
+  }
+  /** v8.0: kos MYR terbesar yang mungkin bagi satu pilihan acara (termasuk kedua-dua hasil rawak). */
+  function kosMaksAcara(c) {
+    var k = [c.kesan, c.rawak && c.rawak.jaya, c.rawak && c.rawak.gagal].reduce(function (m, x) { return x && x.myr < 0 ? Math.max(m, -x.myr) : m; }, 0);
+    return k;
   }
   function jawabAcara(pilihanId, o) {
     var p = S().loadPlayer(), k = getKabinet(p), r = rng(o);
     if (!k.hasGovernmentRole || !k.acara) { return { ok: false, ralat: 'Tiada isu menunggu.' }; }
     var d = acaraId(k.acara.id), c = d && d.pilihan.filter(function (x) { return x.id === pilihanId; })[0];
     if (!c) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
+    var kosMaks = kosMaksAcara(c);
+    if (kosMaks && S().cukupDana && !S().cukupDana(p, kosMaks)) { return { ok: false, ralat: S().ralatDana(p, kosMaks) }; }   // v8.0: semak sebelum lambungan rawak
     var kes = {}, patch = {}, mesej = c.label + '.', jaya = null, x;
     if (c.rawak) { jaya = r() < c.rawak.p; x = jaya ? c.rawak.jaya : c.rawak.gagal; mesej += jaya ? ' Berjaya!' : ' Gagal.'; } else { x = c.kesan || {}; }
-    if (x.myr && (Number(p.myr) || 0) + x.myr < 0) { return { ok: false, ralat: 'Dana tidak mencukupi.' }; }
     if (x.myr) { kes.myr = x.myr; }
     var ipX = x.ip || 0;
     if (x.rep) { kes.reputasi = x.rep; }
@@ -357,6 +378,8 @@
     if (ipX) { patch.ip = Math.max(0, (Number(p.ip) || 0) + ipX); }
     var res = simpan(k, kes, { patch: patch, log: { tindakan: 'acara_kabinet', nama: d.tajuk + ': ' + c.label, peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    var rIg = (c.id === 'pintas' ? 12 : 0) + (c.etika && c.etika.risiko > 0 ? Math.round(c.etika.risiko * 1.5) : 0);
+    if (rIg > 0 && root.MyPolitikIntegriti) { root.MyPolitikIntegriti.tambahRisiko(rIg, c.label); }     // v7.58: jalan pintas menaikkan governanceRisk
     if (x.stress) { var s = ST(); if (s && s.laras) { s.laras({ stress: x.stress }); } }
     return { ok: true, mesej: mesej, rating: x.rating || 0, tekanan: x.tekanan || 0, pop: x.pop || 0, rombak: x.rombak || 0, jaya: jaya };
   }
@@ -381,6 +404,7 @@
     }
     var res = simpan(k, kes, { patch: { ip: Math.max(0, (Number(p.ip) || 0) + pil.ip) }, log: { tindakan: 'cdf_salur', nama: 'Peruntukan CDF RM ' + pil.jumlah + ' ke kawasan: +' + pil.ip + ' IP', peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    if (pil.besar && root.MyPolitikIntegriti) { root.MyPolitikIntegriti.tambahRisiko(5, 'peruntukan CDF besar tanpa tatacara ketat'); }          // v7.58
     return { ok: true, mesej: mesej, ip: pil.ip, jumlah: pil.jumlah };
   }
 
@@ -397,6 +421,6 @@
     CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA,
     setRng: function (f) { rngLalai = f || Math.random; },
     getKabinet: getKabinet, lantikKanan: lantikKanan, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
-    laras: laras, tamatPenggal: tamatPenggal, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
+    laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
   };
 });

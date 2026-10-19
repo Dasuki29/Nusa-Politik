@@ -94,7 +94,7 @@
     var m = p.misi;
     if (m && m.terakhir === indeks(p)) { return { boleh: false, sebab: 'Misi bulan ini sudah dilaksanakan. Misi baharu bulan depan.' }; }
     if (p.ap + (d.kesan.ap || 0) < 0) { return { boleh: false, sebab: 'AP tidak mencukupi (perlu ' + Math.abs(d.kesan.ap) + ').' }; }
-    if (p.myr + (d.kesan.myr || 0) < 0) { return { boleh: false, sebab: 'Wang tidak mencukupi (perlu ' + Math.abs(d.kesan.myr) + ').' }; }
+    var Sv = S(); if (d.kesan.myr < 0 && Sv && Sv.cukupDana && !Sv.cukupDana(p, -d.kesan.myr)) { return { boleh: false, sebab: Sv.ralatDana(p, -d.kesan.myr) }; }   // v8.0: kos selepas pengali kesukaran
     return { boleh: true, sebab: '' };
   }
 
@@ -102,10 +102,10 @@
   function getMisi(profil) {
     var s = S(), p = profil || (s && s.loadPlayer()), d = p ? misiBulanIni(p) : null;
     if (!d) { return null; }
-    var st = semakMisi(d, p), m = keadaanMisi(p);
+    var st = semakMisi(d, p), m = keadaanMisi(p), kp = s.kesanPapar ? s.kesanPapar(p, d.kesan) : d.kesan;   // v8.0: kos dipaparkan ikut tahap kesukaran
     return {
       id: d.id, nama: d.nama, ikon: d.ikon, penerangan: d.penerangan, sayap: SY().kod(p),
-      ringkas: s.ringkasPerubahan({ ip: d.kesan.ip || 0, myr: d.kesan.myr || 0, ap: d.kesan.ap || 0, reputasi: d.kesan.reputasi || 0, kesetiaan: d.kesan.kesetiaan || {} }) +
+      ringkas: s.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} }) +
         (d.stres ? ', Stress ' + (d.stres.stress > 0 ? '+' : '') + d.stres.stress : '') + (d.khas ? ', ahli baharu dan +1 kerusi perwakilan' : '') + (d.risiko ? ' (risiko ' + Math.round(d.risiko.peluang * 100) + '%)' : ''),
       selesai: !!(p.misi && p.misi.terakhir === indeks(p)), rentetan: m.rentetan, sasaranRentetan: CONFIG.RENTETAN_BONUS,
       boleh: st.boleh, sebab: st.sebab

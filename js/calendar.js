@@ -337,6 +337,10 @@
 
     var KAB = muat('MyPolitikKabinet', 'kabinet.js');                                           // v7.4: elaun & acara pentadbiran bulanan
     if (KAB && KAB.prosesBulan) { peristiwa = peristiwa.concat(KAB.prosesBulan().peristiwa || []); }
+    var IGT = muat('MyPolitikIntegriti', 'integriti.js');                                       // v7.58: Whip, Disiplin Parti & Audit SPRM
+    if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }
+    var MDA = muat('MyPolitikMedia', 'media.js');                                                // v7.59: Jentera Media Digital (sidang media rawak, persepsi)
+    if (MDA && MDA.prosesBulan) { peristiwa = peristiwa.concat(MDA.prosesBulan().peristiwa || []); }
     var DWN = muat('MyPolitikDewan', 'dewan.js');                                               // v7.55: Dewan Rakyat (undi tidak percaya, soalan lisan)
     if (DWN && DWN.prosesBulan) { peristiwa = peristiwa.concat(DWN.prosesBulan().peristiwa || []); }
     var DUNS = muat('MyPolitikDUN', 'dun.js');                                                  // v7.56: sidang DUN (ADUN / EXCO)
@@ -353,7 +357,7 @@
       fasa: getFasa(bulan), regenerasi: rg,
       perubahan: { ip: akhir.ip - asal.ip, myr: akhir.myr - asal.myr, ap: akhir.ap - asal.ap, reputasi: akhir.reputasi - asal.reputasi },
       peristiwa: peristiwa,
-      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + CONFIG.AP_BULANAN + ' (had ' + CONFIG.AP_MAKS + '), elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',
+      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + Math.max(0, akhir.ap - asal.ap) + (akhir.ap >= CONFIG.AP_MAKS ? ' (had ' + CONFIG.AP_MAKS + ' dicapai)' : ' (had ' + CONFIG.AP_MAKS + ')') + ', elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',   // v8.0: tambahan AP sebenar
       profil: akhir
     };
   }

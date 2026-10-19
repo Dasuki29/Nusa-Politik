@@ -128,10 +128,11 @@
     var a = def(acara.id);
     if (!a) { return []; }
     return a.pilihan.map(function (c) {
-      var kos = kosPilihan(c.kesan || {}), boleh = true, sebab = '';
+      var kos = kosPilihan(c.kesan || {}), boleh = true, sebab = '', kp = S.kesanPapar ? S.kesanPapar(p, c.kesan || {}) : (c.kesan || {});   // v8.0: kos ikut tahap kesukaran
+      kos.myr = Math.abs(Math.min(0, kp.myr || 0));
       if (p.ap < kos.ap) { boleh = false; sebab = 'AP tidak mencukupi (perlu ' + kos.ap + ').'; }
-      else if (p.myr < kos.myr) { boleh = false; sebab = 'Dana tidak mencukupi (perlu RM ' + kos.myr + ').'; }
-      var ringkas = S.ringkasPerubahan({ ip: (c.kesan || {}).ip || 0, myr: (c.kesan || {}).myr || 0, ap: (c.kesan || {}).ap || 0, reputasi: (c.kesan || {}).reputasi || 0, kesetiaan: (c.kesan || {}).kesetiaan || {} });
+      else if (p.myr < kos.myr) { boleh = false; sebab = 'Dana tidak mencukupi (perlu RM ' + kos.myr.toLocaleString('ms-MY') + ').'; }
+      var ringkas = S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} });
       return { id: c.id, label: c.label, huraian: c.huraian || '', ringkas: ((ringkas || '') + (c.stres && c.stres.stress ? (ringkas ? ', ' : '') + 'Stress ' + (c.stres.stress > 0 ? '+' : '') + c.stres.stress : '') + ((c.lepasJawatan || c.lucut) ? (ringkas || (c.stres && c.stres.stress) ? ', ' : '') + (c.lucut ? 'Jawatan dilucutkan' : 'Lepas jawatan') : '')) || 'Tiada kos', berisiko: !!c.hasil, kos: kos, boleh: boleh, sebab: sebab };
     });
   }
@@ -189,7 +190,10 @@
     var inst = bina(a, p, 'ev' + d.bil + '-' + a.id);
     d.tertunggak = inst;
     d.sejarah.push(a.id); d.sejarah = d.sejarah.slice(-20);
-    if (opts.pencetus === 'aktiviti') { d.kiraBulan[kunciBulan] = (d.kiraBulan[kunciBulan] || 0) + 1; }
+    if (opts.pencetus === 'aktiviti') {
+      d.kiraBulan[kunciBulan] = (d.kiraBulan[kunciBulan] || 0) + 1;
+      Object.keys(d.kiraBulan).forEach(function (k) { var b = k.split('-'); if ((parseInt(b[0], 10) || 0) * 12 + (parseInt(b[1], 10) || 0) < indeksBulan - 2) { delete d.kiraBulan[k]; } });   // v8.0: simpan 3 bulan terakhir sahaja
+    }
     simpan(d);
     return papar(inst, p);
   }
