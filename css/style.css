@@ -1043,3 +1043,10 @@ body.menu-aktif { overflow: hidden; }
   background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b1a22' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E"); }
 .kertas__nota-kaki { margin: 0; font-size: .72rem; line-height: 1.5; color: #5a5545; }
 @media (prefers-reduced-motion: reduce) { .baris, .baris__kotak::before, .baris__kotak::after { transition: none; } .kertas { transform: none; } }
+
+/* v7.61: butang bahasa BM | EN */
+.lang-switch { white-space: nowrap; letter-spacing: .02em; }
+.lang-switch [data-lang] { opacity: .55; }
+.lang-switch [data-lang].is-on { opacity: 1; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.lang-switch__sep { opacity: .4; }
+.menu__bahasa { position: fixed; top: 12px; right: 64px; z-index: 60; }
