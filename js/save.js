@@ -81,6 +81,7 @@
     if (SY && !SY.sah(p.sayap)) { p.sayap = SY.kod(p); }          // v5.9: laluan sayap (simpanan lama mengikut avatar/kategori)
     p.versi = VERSI;
     if (!p.settings || typeof p.settings !== 'object') { p.settings = {}; }
+    if (['BM', 'EN'].indexOf(p.settings.currentLang) < 0) { p.settings.currentLang = 'BM'; }   // v7.61: bahasa paparan (BM | EN)
     if (['EASY', 'NORMAL', 'HARDCORE'].indexOf(p.settings.difficultyLevel) < 0) { p.settings.difficultyLevel = 'NORMAL'; }   // v7.28: simpanan lama = Biasa
     var bln = parseInt(p.bulan, 10);                 // Bulan 1 hingga 12 (sistem masa bulanan)
     p.bulan = isFinite(bln) ? Math.max(1, Math.min(12, bln)) : DEFAULTS.bulan;
@@ -163,7 +164,7 @@
         bawah40: c.bawah40, atas40: c.atas40,
         kumpulan: c.kumpulan ? { pemuda: c.kumpulan.pemuda, puteri: c.kumpulan.puteri, wanita: c.kumpulan.wanita, induk: c.kumpulan.induk, langsung: !!c.kumpulan.langsung } : null     // v6.3
       },
-      settings: { difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
+      settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
       sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
