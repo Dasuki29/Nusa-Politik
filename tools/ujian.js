@@ -363,6 +363,57 @@ ujian('pencapaian: simpanan berasingan dan pemain latihan tidak melayakkan trofi
   delete g.MyPolitikLatihan.aktif;
 });
 
+/* ---------- Kesan bunyi (v8.7) ---------- */
+function ACTiruan() {
+  const k = { sumber: 0, nada: 0, dicipta: 0 };
+  const param = () => ({ value: 0, setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} });
+  const nod = (lebih) => Object.assign({ connect() {}, start() {}, stop() {} }, lebih);
+  function AC() {
+    k.dicipta += 1;
+    this.sampleRate = 8000; this.currentTime = 0; this.state = 'running'; this.destination = {};
+    this.createBuffer = (c, n) => ({ getChannelData: () => new Float32Array(n) });
+    this.createBufferSource = () => { k.sumber += 1; return nod({ buffer: null }); };
+    this.createBiquadFilter = () => nod({ type: '', frequency: param(), Q: param() });
+    this.createGain = () => nod({ gain: param() });
+    this.createOscillator = () => { k.nada += 1; return nod({ type: '', frequency: param() }); };
+  }
+  return { AC, k };
+}
+ujian('sfx: pencetus ikut log simpanan (ketuk, sorak, tiada)', () => {
+  const X = g.MyPolitikSFX, p = (tindakan, nama) => ({ log: [{ tindakan, nama }] });
+  sama(X.bagiPencetus(p('tutup_mesyuarat', 'x'), { tindakan: 'tutup_mesyuarat' }), 'ketuk');
+  sama(X.bagiPencetus(p('usul_pembahas', 'x'), { tindakan: 'usul_pembahas' }), 'ketuk');
+  sama(X.bagiPencetus(p('dewan_undi', 'Lulus: x'), { tindakan: 'dewan_undi' }), 'ketuk');
+  sama(X.bagiPencetus(p('pemilihan_ketua_cawangan', 'Menang Ketua Cawangan'), { tindakan: 'pemilihan_ketua_cawangan' }), 'sorak');
+  sama(X.bagiPencetus(p('pemilihan_ketua_cawangan', 'Kalah Ketua Cawangan'), { tindakan: 'pemilihan_ketua_cawangan' }), null, 'kalah tiada sorakan');
+  sama(X.bagiPencetus(p('pru_keputusan', 'MENANG P.100'), { tindakan: 'pru_keputusan' }), 'sorak');
+  sama(X.bagiPencetus(p('pru_keputusan', 'KALAH P.100'), { tindakan: 'pru_keputusan' }), null);
+  sama(X.bagiPencetus(p('ziarah', 'x'), { tindakan: 'ziarah' }), null);
+  sama(X.bagiPencetus(null, null), null);
+});
+ujian('sfx: main() menjana bunyi, hormati senyap/kelantangan dan hadkan bunyi berganda', () => {
+  const X = g.MyPolitikSFX, { AC, k } = ACTiruan(), asal = g.AudioContext;
+  g.AudioContext = AC;
+  try {
+    g.localStorage.clear(); X._muat(); X.setOn(true); X.setVolume(0.5);
+    betul(X.main('ketuk'), 'ketuk patut dimainkan');
+    betul(k.dicipta === 1 && k.nada >= 2 && k.sumber >= 2, 'ketuk: 2 dentum + 2 retakan');
+    sama(X.main('ketuk'), false, 'bunyi sama dalam 350 ms patut ditahan');
+    betul(X.main('sorak') && X.main('flash'), 'sorak dan flash patut dimainkan');
+    sama(X.main('tiada'), false);
+    X.setOn(false); sama(X.main('flash'), false, 'senyap');
+    X.setOn(true); X.setVolume(0); sama(X.main('sorak'), false, 'kelantangan 0');
+    X.setVolume(0.7); X.setOn(false);
+    const simpan = JSON.parse(g.localStorage.getItem(X.KUNCI));
+    sama(simpan.on, false); sama(simpan.vol, 0.7);
+    X.setOn(true);
+  } finally { if (asal === undefined) { delete g.AudioContext; } else { g.AudioContext = asal; } }
+});
+ujian('sfx: tiada AudioContext = diam, tiada ralat', () => {
+  const X = g.MyPolitikSFX, asal = g.AudioContext; delete g.AudioContext; delete g.webkitAudioContext;
+  try { X.setOn(true); X.setVolume(0.5); sama(X.main('sorak'), false); } finally { if (asal) { g.AudioContext = asal; } }
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

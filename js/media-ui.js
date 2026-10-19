@@ -54,6 +54,7 @@
     for (;;) {
       var s = M.sidangSemasa(S.loadPlayer()); if (!s) { return; }
       var q = s.soalan;
+      if (W.MyPolitikSFX) { W.MyPolitikSFX.flash(); }                                  // v8.7: denyar kamera pada setiap soalan wartawan
       var id = await modal({ tajuk: s.ikon + ' ' + s.nama + ' (' + s.nombor + '/' + s.jumlah + ')',
         isi: '<p><b>Wartawan:</b> “' + esc(q.soal) + '”</p><p class="note" style="font-size:.8rem">Isu: ' + esc(q.isu) + ' · ' + (q.jenis === 'fakta' ? 'soalan teknikal/dasar' : 'soalan emosi/kontroversi') + '</p><ul class="acara__pil">' + s.pilihan.map(function (c) { return opsi(c.id, c.nama, c.huraian, true); }).join('') + '</ul>', butang: [] });
       if (!id) { toast('Sidang media masih menunggu anda.'); segarkan(); return; }

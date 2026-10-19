@@ -117,6 +117,11 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
       }
     }
   };
+  /* Kesan bunyi: kawalan ada dalam bar muzik, bunyi boleh dijana, label dalam EN. */
+  await pg.waitForTimeout(800);
+  const sfx = await pg.evaluate(() => ({ btn: !!document.getElementById('mpa-sfx'), label: (document.getElementById('mpa-sfx') || {}).title, ok: ['ketuk', 'sorak', 'flash'].map((n) => MyPolitikSFX.main(n)), ada: window.SoundManager === window.MyPolitikSFX }));
+  if (!sfx.btn || !sfx.ada || sfx.label !== 'Turn off sound effects') { ralat.push('kawalan SFX tiada/label salah: ' + JSON.stringify(sfx)); }
+  if (!sfx.ok[0] || !sfx.ok[2]) { ralat.push('SFX gagal dimainkan: ' + JSON.stringify(sfx.ok)); }
   /* Pencapaian: cetus trofi Negarawan Utama melalui simpanan sebenar, semak toast dan panel dalam EN. */
   await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { kabinet: { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' } } }); });
   await pg.waitForTimeout(500);
