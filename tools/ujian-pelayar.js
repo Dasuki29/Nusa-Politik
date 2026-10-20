@@ -175,6 +175,15 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pg.locator('.acara__opsi[data-pilih="telus"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(600);
   if (await pg.evaluate(() => !!window.MyPolitikSave.loadPlayer().harta.menunggu)) { ralat.push('deklarasi masih menunggu selepas dijawab'); }
 
+  /* v8.14: pratonton bulan menunjukkan elaun jawatan kerajaan dan nota kerjaya dihentikan (EN). */
+  await tutup();
+  await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign({}, window.MyPolitikKabinet.getKabinet(p), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }) } }); });
+  await pg.locator('#btn-tahun').click().catch(() => {}); await pg.waitForTimeout(500); await imbas('pratonton menteri');
+  const pv = await pg.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
+  if (!/Government post allowance/.test(pv) || !/Career income stops/.test(pv)) { ralat.push('pratonton menteri EN salah: ' + pv.slice(0, 200)); }
+  if (/Elaun jawatan|dihentikan/.test(pv)) { ralat.push('pratonton menteri bocor BM'); }
+  await tutup();
+
   /* Latihan Amir */
   const sah = await pg.evaluate(() => !!(window.MyPolitikLatihan && MyPolitikLatihan.LANGKAH));
   if (sah) {

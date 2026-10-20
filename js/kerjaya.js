@@ -40,7 +40,7 @@
   };
   var CONFIG = {
     LALAI: 'korporat',
-    KOS_OPERASI: { cawangan: 100, bahagian: 250, pusat: 600 },      // sebulan; peringkat tertinggi yang dipegang
+    KOS_OPERASI: { cawangan: 100, bahagian: 150, pusat: 300 },      // sebulan; peringkat tertinggi yang dipegang
     GAJI_RASMI: { ADUN: 1000, MP: 1800 },                           // elaun wakil rakyat sebulan (EXCO / Menteri: elaun kabinet di kabinet.js)
     FAKTOR_WAKIL: 0.5,                                              // MP, ADUN, EXCO Negeri
     TAHAP_PENUH_MASA: ['MENTERI_BESAR', 'TIMBALAN_MENTERI', 'MENTERI_PENUH', 'TIMBALAN_PM', 'PERDANA_MENTERI'],
@@ -80,9 +80,15 @@
     return { jumlah: butiran.reduce(function (a, b) { return a + b.jumlah; }, 0), butiran: butiran };
   }
 
+  /** v8.14: elaun jawatan kerajaan (kabinet.js) yang dibayar berasingan setiap bulan. Dipaparkan dalam pratonton; BUKAN sebahagian pendapatan() supaya tidak dikira dua kali. */
+  function elaunKabinet(p) {
+    var K = KB(), kb = K && K.getKabinet ? K.getKabinet(p) : null, t = kb && kb.hasGovernmentRole && K.TAHAP ? K.TAHAP[kb.roleLevel] : null;
+    return t ? { myr: t.elaun.myr, ip: t.elaun.ip, nama: t.nama } : null;
+  }
+
   function konflikBulanan(p) {
     return latarBelakang(p) === 'peniaga' && peranan(p).kerajaan ? CONFIG.KONFLIK_KONTRAKTOR : 0;
   }
 
-  return { KERJAYA: KERJAYA, CONFIG: CONFIG, latarBelakang: latarBelakang, faktorKerjaya: faktorKerjaya, pendapatan: pendapatan, konflikBulanan: konflikBulanan };
+  return { KERJAYA: KERJAYA, CONFIG: CONFIG, latarBelakang: latarBelakang, faktorKerjaya: faktorKerjaya, pendapatan: pendapatan, elaunKabinet: elaunKabinet, konflikBulanan: konflikBulanan };
 });

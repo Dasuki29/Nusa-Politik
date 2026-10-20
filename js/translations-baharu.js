@@ -2301,7 +2301,13 @@
   ["Aset: penyelenggaraan RM {b}", "Assets: maintenance RM {b}"],
   ["Pengisytiharan harta telus", "Transparent asset declaration"],
   ["Audit SPRM: aset disembunyikan", "MACC audit: hidden assets"],
-  ["aset disembunyikan semasa pengisytiharan harta", "assets hidden during the asset declaration"]
+  ["aset disembunyikan semasa pengisytiharan harta", "assets hidden during the asset declaration"],
+  ["Elaun jawatan kerajaan +RM {a}", "Government post allowance +RM {a}"],
+  ["Pendapatan kerjaya dihentikan kerana jawatan kerajaan sepenuh masa.", "Career income stops because of a full-time government post."],
+  ["Elaun jawatan kerajaan juga memberi +{n} IP sebulan.", "The government post allowance also gives +{n} IP a month."],
+  ["Anda membuka permainan dalam pelayar dalam-aplikasi. Simpanan mungkin hilang apabila ditutup. Buka di Chrome atau Safari, atau eksport sandaran di Menu.", "You opened the game in an in-app browser. Your save may be lost when it closes. Open it in Chrome or Safari, or export a backup from the Menu."],
+  ["Simpanan hanya dalam pelayar ini. Eksport sandaran di Menu, bahagian Pindah Career.", "Your save lives only in this browser. Export a backup from the Menu, under Move Career."],
+  ["Simpanan boleh hilang jika data pelayar dipadam, mod peribadi, atau pelayar dalam-aplikasi (Instagram, Threads). Eksport sandaran dengan kerap.", "Saves can be lost if browser data is cleared, in private mode, or in an in-app browser (Instagram, Threads). Export a backup regularly."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

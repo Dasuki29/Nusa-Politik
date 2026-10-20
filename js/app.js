@@ -1296,15 +1296,20 @@
     var pv = K.pratonton();
     if (!pv) { return; }
     var rg = pv.regenerasi, p0 = S.loadPlayer();
+    var KJ8 = W.MyPolitikKerjaya, ek8 = KJ8 && KJ8.elaunKabinet ? KJ8.elaunKabinet(p0) : null, butir8 = rg.butiran.slice(), jum8 = rg.myr;   // v8.14: elaun kabinet turut dipaparkan
+    if (ek8) { butir8.push({ nama: 'Elaun jawatan kerajaan', jumlah: ek8.myr }); jum8 += ek8.myr; }
+    var henti8 = KJ8 && KJ8.faktorKerjaya && KJ8.faktorKerjaya(p0) === 0;
     var kepala = pv.tahunBaharu ? 'Teruskan ke Bulan 1, ' + pv.ke.tahun + '?' : 'Teruskan ke Bulan ' + pv.ke.bulan + ' (' + K.namaBulan(pv.ke.bulan) + ')?';
     var ya = await modal({
       tajuk: kepala,
       isi: '<div class="kv"><span>Bulan</span><b>' + pv.dari.bulan + '/' + pv.dari.tahun + ' &rarr; ' + pv.ke.bulan + '/' + pv.ke.tahun + '</b></div>' +
         '<div class="kv"><span>Fasa takwim</span><b>' + esc(pv.fasaBaharu.ringkas) + '</b></div>' +
         '<div class="kv"><span>AP (terkumpul, had ' + K.CONFIG.AP_MAKS + ')</span><b>' + p0.ap + ' &rarr; ' + rg.apBaharu + '</b></div>' +
-        '<div class="kv"><span>Pendapatan bulanan</span><b>' + (rg.myr < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(rg.myr)) + '</b></div>' +
-        (rg.butiran.length > 1 ? '<ul style="margin:6px 0 0;padding-left:18px;font-size:.8rem">' + rg.butiran.map(function (b) { return '<li>' + esc(b.nama) + ' ' + (b.jumlah < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(b.jumlah)) + '</li>'; }).join('') + '</ul>' : '') +
+        '<div class="kv"><span>Pendapatan bulanan</span><b>' + (jum8 < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(jum8)) + '</b></div>' +
+        (butir8.length > 1 ? '<ul style="margin:6px 0 0;padding-left:18px;font-size:.8rem">' + butir8.map(function (b) { return '<li>' + esc(b.nama) + ' ' + (b.jumlah < 0 ? '-' : '+') + 'RM ' + fmt(Math.abs(b.jumlah)) + '</li>'; }).join('') + '</ul>' : '') +
         (pv.tahunBaharu ? '<p style="margin-top:12px">Tahun bertukar dan kitaran pemilihan 3 tahun dikemas kini.</p>' : '') +
+        (henti8 ? '<p class="note" style="margin:8px 0 0">Pendapatan kerjaya dihentikan kerana jawatan kerajaan sepenuh masa.</p>' : '') +
+        (ek8 ? '<p class="note" style="margin:4px 0 0">Elaun jawatan kerajaan juga memberi +' + ek8.ip + ' IP sebulan.</p>' : '') +
         (pv.amaran.length ? '<ul style="margin-top:12px">' + pv.amaran.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
         '<p style="margin-top:12px">Anda tidak boleh kembali ke bulan sebelumnya.</p>',
       butang: [{ label: 'Batal', nilai: false }, { label: 'Teruskan', nilai: true, kelas: 'btn--gold' }]
@@ -1529,7 +1534,7 @@
         try { var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); ok ? res() : rej(new Error('salin')); } catch (e) { rej(e); }
       });
     }
-    function eks() { var o = SLT.eksport(); if (!o) { toast('Tiada watak untuk dieksport.', 'ralat'); } return o; }
+    function eks() { var o = SLT.eksport(); if (!o) { toast('Tiada watak untuk dieksport.', 'ralat'); } else { try { localStorage.setItem('nusa_sandaran_ts', String(Date.now())); } catch (e) { /* abaikan */ } } return o; }   // v8.14: ingat masa sandaran terakhir
     function mainSlot(n) {
       var r = SLT.aktifkan(n); if (!r.ok) { toast(r.ralat || 'Gagal menukar watak.', 'ralat'); return; }
       W.location.reload();
@@ -1626,8 +1631,19 @@
       var mulaTut = function () { TUT.init({ profil: p }); };
       if (!(LAT && !TUT.sudahSelesai(p) && LAT.tawar({ profil: p, lepas: mulaTut }))) { mulaTut(); }
     }
+    peringatanSimpanan(p);                                           // v8.14: amaran pelayar dalam-aplikasi / sandaran
     if (W.NusaHarta_UI && W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p)) { W.NusaHarta_UI.isytihar(); }      // v8.13: pengisytiharan yang belum dijawab sebelum muat semula
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
+  }
+  /* v8.14: simpanan hanya dalam pelayar. Amaran sekali setiap sesi: pelayar dalam-aplikasi (Instagram, Threads dll.) atau tiada sandaran dalam 14 hari. */
+  function peringatanSimpanan(p) {
+    try {
+      if (!p || sessionStorage.getItem('nusa_ingat_simpan')) { return; }
+      var dalamApp = /Instagram|FBAN|FBAV|FB_IAB|Threads|Barcelona|TikTok|Snapchat|MicroMessenger|; wv\)/i.test(W.navigator.userAgent || '');
+      var ts = Number(localStorage.getItem('nusa_sandaran_ts')) || 0, lama = !ts || (Date.now() - ts) > 14 * 86400000;
+      if (dalamApp) { sessionStorage.setItem('nusa_ingat_simpan', '1'); toast('Anda membuka permainan dalam pelayar dalam-aplikasi. Simpanan mungkin hilang apabila ditutup. Buka di Chrome atau Safari, atau eksport sandaran di Menu.', 'ralat'); }
+      else if (lama && (Number(p.bulan) || 1) >= 3) { sessionStorage.setItem('nusa_ingat_simpan', '1'); toast('Simpanan hanya dalam pelayar ini. Eksport sandaran di Menu, bahagian Pindah Career.', 'ok'); }
+    } catch (e) { /* abaikan */ }
   }
   W.NusaUI = { modal: modal, toast: toast, render: render, esc: esc, fmt: fmt, lapor: urusPeristiwa, gotoTab: setTab };   // v7.3: dikongsi dengan js/pru-ui.js
   mula();

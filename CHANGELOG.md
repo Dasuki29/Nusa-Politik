@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v8.14 (2026-10-20)
+
+Pembetulan berdasarkan maklum balas pemain: pendapatan bulanan dan simpanan.
+
+### Berubah
+- **Pratonton Bulan Seterusnya** kini memasukkan elaun jawatan kerajaan (kabinet.js) dalam jumlah pendapatan bulanan, dengan nota "kerjaya dihentikan kerana jawatan kerajaan sepenuh masa" dan IP elaun. Sebelum ini Menteri + jawatan Pusat dipaparkan -RM 600 walaupun elaun menteri dibayar berasingan. Pengiraan dana sebenar tidak berubah (`KJ.elaunKabinet` hanya untuk paparan, tidak dikira dua kali).
+- **Kos operasi jawatan parti dilaras:** Cawangan RM 100 (kekal), Bahagian RM 250 jadi RM 150, Pusat RM 600 jadi RM 300.
+- **Sandaran simpanan:** amaran sekali setiap sesi jika dibuka dalam pelayar dalam-aplikasi (Instagram, Threads, dll.) atau tiada eksport sandaran dalam 14 hari (masa direkod apabila Salin Kod / Muat Turun digunakan); nota tambahan di Menu, Pindah Career.
+
+### Andaian
+- Angka kos operasi baharu ialah cadangan penyeimbang; pantau maklum balas pemain.
+- Pengesanan pelayar dalam-aplikasi berdasarkan User-Agent (tidak 100% tepat).
+
 ## v8.13 (2026-10-19)
 
 Sistem Harta, Cukai & Pengisytiharan Harta SPRM (modul baharu `js/harta.js`, `js/harta-ui.js`).
