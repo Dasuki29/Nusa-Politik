@@ -2426,7 +2426,31 @@
   ["Pilih syarikat", "Choose company"],
   ["Dipilih", "Selected"],
   ["Ahli Lembaga", "Board Member"],
-  ["Pengarah", "Director"]
+  ["Pengarah", "Director"],
+  ["📮 Keluhan Rakyat", "📮 Citizens' Complaints"],
+  ["🎪 Aktiviti Rakyat", "🎪 Community Activities"],
+  ["Tiada keluhan tertunggak.", "No outstanding complaints."],
+  ["Diabaikan automatik dalam {a} bulan", "Automatically ignored in {a} months"],
+  ["Selesaikan ({a})", "Resolve ({a})"],
+  ["Bawa sebagai usul", "Bring as a motion"],
+  ["Selesaikan: guna peruntukan dan {a} AP, +20 IP, +3 sokongan akar umbi. Usul: {b} AP, dicatat di papan Isu Tempatan untuk mesyuarat. Abaikan: sokongan akar umbi -2. Tidak dijawab 3 bulan: penalti lebih berat.", "Resolve: uses the allocation and {a} AP, +20 IP, +3 grassroots support. Motion: {b} AP, recorded on the Local Issues board for the meeting. Ignore: grassroots support -2. Unanswered for 3 months: a heavier penalty."],
+  ["Sekali sebulan, {a} AP, guna Peruntukan Kawasan.", "Once a month, {a} AP, uses the Constituency Allocation."],
+  ["Kos {a} peruntukan, +{b} IP, +{c} sokongan akar umbi, kurangkan keluhan baharu bulan depan", "Cost {a} allocation, +{b} IP, +{c} grassroots support, fewer new complaints next month"],
+  ["Kos {a} peruntukan, +{b} IP, kurangkan keluhan baharu bulan depan", "Cost {a} allocation, +{b} IP, fewer new complaints next month"],
+  ["Gotong-royong kampung", "Village gotong-royong"],
+  ["Program kesihatan percuma", "Free health programme"],
+  ["Jamuan / kenduri", "Feast / kenduri"],
+  ["Kelas tuisyen percuma", "Free tuition classes"],
+  ["Dialog bersama rakyat", "Dialogue with the people"],
+  ["Laksana", "Carry out"],
+  ["{a} diselesaikan: -{b} peruntukan, +{c} IP, +{d} sokongan akar umbi.", "{a} resolved: -{b} allocation, +{c} IP, +{d} grassroots support."],
+  ["{a} dicatat di papan Isu Tempatan dan akan dibawa sebagai usul di mesyuarat.", "{a} has been recorded on the Local Issues board and will be brought as a motion at the meeting."],
+  ["{a} diabaikan. Sokongan akar umbi {b}.", "{a} was ignored. Grassroots support {b}."],
+  ["{a}: -{b} peruntukan, +{c} IP.", "{a}: -{b} allocation, +{c} IP."],
+  ["Keluhan tidak ditemui.", "Complaint not found."],
+  ["Aktiviti rakyat sudah dibuat bulan ini.", "A community activity has already been held this month."],
+  ["{a} keluhan rakyat tidak dijawab 3 bulan dan diabaikan. Sokongan akar umbi {b}, Reputasi {c}.", "{a} citizens' complaints went unanswered for 3 months and were ignored. Grassroots support {b}, Reputation {c}."],
+  ["Rakyat membawa keluhan baharu. Semak kad Keluhan Rakyat di tab Tindakan.", "Citizens have brought new complaints. Check the Citizens' Complaints card in the Actions tab."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

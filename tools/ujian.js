@@ -815,22 +815,39 @@ ujian('kawasan: ADUN RM1,500, MP RM3,000, pembangkang x0.4, menteri +RM5,000; ti
   sama(KW.jumlahBulanan(kwPemain({ jenis: 'MP', kerusi: 'Y', kerajaan: false })).jumlah, 1200, 'pembangkang 40%');
   sama(KW.jumlahBulanan(kwPemain({ jenis: 'MP', kerusi: 'Y', kerajaan: true }, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' })).jumlah, 8000, 'MP + menteri');
 });
-ujian('kawasan: proses bulan menambah baki sekali sebulan; projek ditolak daripada baki, beri IP dan akar umbi, bukan Dana peribadi', () => {
+ujian('kawasan: proses bulan menambah baki sekali sebulan; keluhan dijana (1-2, maks 4); aktiviti sekali sebulan beri IP, bukan Dana peribadi', () => {
   const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
-  KW.prosesBulan(); KW.prosesBulan(); sama(KW.getKawasan(S.loadPlayer()).baki, 1500, 'sekali sebulan');
-  const a = S.loadPlayer(), r = KW.projek('jalan'); betul(r.ok, r.ralat);
-  const b = S.loadPlayer(); sama(KW.getKawasan(b).baki, 700); betul(b.ip > a.ip, 'IP naik: ' + a.ip + ' -> ' + b.ip); sama(b.myr, a.myr, 'Dana peribadi tidak berubah'); sama(b.ap, a.ap - 1);
-  sama(KW.projek('surau').ok, false, 'baki 700 < 1,000');
+  KW.prosesBulan({ rng: () => 0.1 }); KW.prosesBulan({ rng: () => 0.1 });
+  let k = KW.getKawasan(S.loadPlayer()); sama(k.baki, 1500, 'sekali sebulan'); sama(k.keluhan.length, 1, 'rng 0.1 = 1 keluhan');
+  const a = S.loadPlayer(), r = KW.aktiviti('gotong'); betul(r.ok, r.ralat);
+  const b = S.loadPlayer(); sama(KW.getKawasan(b).baki, 1100); betul(b.ip > a.ip, 'IP naik'); sama(b.myr, a.myr, 'Dana peribadi tidak berubah'); sama(b.ap, a.ap - 2);
+  sama(KW.aktiviti('kenduri').ok, false, 'sekali sebulan');
 });
-ujian('kawasan: baki hangus pada Januari; projek ditolak tanpa kerusi atau AP', () => {
+ujian('kawasan: keluhan diselesaikan dengan peruntukan, dibawa sebagai usul ke papan Isu Tempatan, atau diabaikan', () => {
   const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
-  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 12, kawasan: { baki: 4000, akhir: '', tahun: S.loadPlayer().tahun, sejarah: [] } } });
+  KW.prosesBulan({ rng: () => 0.1 }); let p = S.loadPlayer(), k = KW.getKawasan(p), id = k.keluhan[0].id, kod = k.keluhan[0].kod;
+  const kos = KW.KELUHAN.filter((x) => x.kod === kod)[0].kos, ap0 = p.ap, ip0 = p.ip;
+  let r = KW.selesaikan(id); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(KW.getKawasan(p).baki, 1500 - kos); sama(KW.getKawasan(p).keluhan.length, 0); betul(p.ip > ip0, 'IP naik'); sama(p.ap, ap0 - 1);
+  S.applyEffects({}, { kiraTindakan: false, patch: { kawasan: Object.assign({}, KW.getKawasan(p), { keluhan: [{ id: 'a1', kod: 'lampu_jalan', idx: 0 }, { id: 'a2', kod: 'dewan_usang', idx: 0 }] }) } });
+  const isu0 = (S.loadPlayer().isu || []).length; r = KW.usul('a1'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama((p.isu || []).length, isu0 + 1, 'dicatat di papan Isu Tempatan'); betul(p.isu.some((i) => i.kod === 'lampu_jalan' && !i.selesai), 'isu aktif'); sama(KW.getKawasan(p).keluhan.length, 1);
+  const ak = p.kesetiaan ? p.kesetiaan.akarUmbi : null; r = KW.abai('a2'); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(KW.getKawasan(p).keluhan.length, 0);
+  if (ak !== null) { betul(p.kesetiaan.akarUmbi < ak, 'akar umbi turun'); }
+  sama(KW.selesaikan('tiada').ok, false);
+});
+ujian('kawasan: keluhan luput 3 bulan dengan penalti; dialog kurangkan keluhan; baki hangus Januari; tiada kerusi tiada keluhan', () => {
+  const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
+  let p = S.loadPlayer(); const kini = p.tahun * 12 + p.bulan;
+  S.applyEffects({}, { kiraTindakan: false, patch: { kawasan: Object.assign({}, KW.getKawasan(p), { keluhan: [{ id: 'z1', kod: 'jalan_berlubang', idx: kini - 3 }], akhir: '', kurang: 1 }) } });
+  const rep0 = p.reputasi; const ev = KW.prosesBulan({ rng: () => 0.1 }).peristiwa;
+  p = S.loadPlayer(); betul(ev.some((e) => e.jenis === 'kawasan_luput'), 'luput'); betul(p.reputasi < rep0, 'reputasi turun');
+  sama(KW.getKawasan(p).keluhan.length, 0, 'luput dibuang; dialog (kurang 1) menghalang keluhan baharu pada rng 0.1'); sama(KW.getKawasan(p).kurang, 0);
+  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 12, kawasan: { baki: 4000, akhir: '', tahun: p.tahun, sejarah: [], keluhan: [] } } });
   S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 1, tahun: S.loadPlayer().tahun + 1 } });
-  KW.prosesBulan(); sama(KW.getKawasan(S.loadPlayer()).baki, 1500, 'baki lama hangus, hanya peruntukan baharu');
-  S.applyEffects({}, { kiraTindakan: false, patch: { ap: 0 } }); sama(KW.projek('banjir').ok, false, 'tiada AP');
-  kwPemain(null); sama(KW.projek('banjir').ok, false, 'tiada kerusi');
+  KW.prosesBulan({ rng: () => 0.99 }); sama(KW.getKawasan(S.loadPlayer()).baki, 1500, 'baki lama hangus');
+  S.applyEffects({}, { kiraTindakan: false, patch: { ap: 0 } }); sama(KW.aktiviti('gotong').ok, false, 'tiada AP');
+  kwPemain(null); sama(KW.aktiviti('gotong').ok, false, 'tiada kerusi'); sama(KW.ringkasan(S.loadPlayer()).aktif, false);
 });
-
 
 /* ---------- v8.19: Jawatan GLC ---------- */
 function glcPemain(o) {

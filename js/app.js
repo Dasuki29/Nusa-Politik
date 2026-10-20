@@ -1436,7 +1436,7 @@
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
     else if (act === 'glc-syarikat' || act === 'glc-kembali') { if (W.NusaGLC_UI) { W.NusaGLC_UI.pilih(act === 'glc-syarikat' ? t.getAttribute('data-id') : null); } render(); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
-    else if (act === 'kawasan-projek') { var kp = W.MyPolitikKawasan.projek(t.getAttribute('data-id')); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
+    else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
     else if (act === 'ke-tab') { setTab(t.getAttribute('data-v')); }
     else if (act === 'ulang-peta') { muatPeta(true); }
@@ -1644,7 +1644,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'kawasan-projek': 1 };
+  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

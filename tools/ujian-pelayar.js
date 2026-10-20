@@ -227,16 +227,20 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   /* v8.18: Peruntukan Kawasan (EN): kad dipaparkan, projek dilaksanakan, tiada BM bocor. */
   await pu.evaluate(() => {
     const S = window.MyPolitikSave, P = window.MyPolitikPRU, p = S.loadPlayer();
-    S.applyEffects({}, { kiraTindakan: false, patch: { ap: 10, pru: Object.assign({}, P.getPRU(p), { aktif: null, status: { jenis: 'ADUN', kerusi: 'Alor Setar', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }), kawasan: { baki: 2300, akhir: 'x', tahun: 2026, sejarah: [] } } });
+    S.applyEffects({}, { kiraTindakan: false, patch: { ap: 10, pru: Object.assign({}, P.getPRU(p), { aktif: null, status: { jenis: 'ADUN', kerusi: 'Alor Setar', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }), kawasan: { baki: 2300, akhir: 'x', tahun: 2026, sejarah: [], keluhan: [{ id: 'k1', kod: 'lampu_jalan', idx: 0 }, { id: 'k2', kod: 'dewan_usang', idx: 0 }], aktivitiAkhir: '', kurang: 0 } } });
     window.NusaUI.render(); window.NusaUI.gotoTab('tindakan');
   });
   await pu.waitForTimeout(500);
-  const kw = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Constituency Allocation/.test(x.innerText))[0]; return c ? c.innerText : ''; });
-  if (!/Allocation balance/.test(kw) || /Peruntukan|Laksana|Baki/.test(kw)) { ralat.push('kad Peruntukan Kawasan EN salah: ' + kw.slice(0, 200)); }
-  await pu.locator('[data-act="kawasan-projek"][data-id="banjir"]').first().evaluate((e) => e.click()).catch(() => {});
+  const kw = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).map((x) => x.textContent).join(' | '));
+  if (!/Allocation balance/.test(kw) || !/Citizens' Complaints/.test(kw) || !/Community Activities/.test(kw) || !/Resolve \(RM 500\)/.test(kw) || !/Bring as a motion/.test(kw) || !/Broken streetlights/.test(kw) || !/Free health programme/.test(kw) || /Keluhan Rakyat|Selesaikan|Bawa sebagai usul|Abaikan|Laksana|Aktiviti Rakyat|Baki peruntukan/.test(kw)) { ralat.push('kad Peruntukan/Keluhan/Aktiviti EN salah: ' + JSON.stringify(['Allocation balance', "Citizens' Complaints", 'Community Activities', 'Resolve (RM 500)', 'Bring as a motion', 'Broken streetlights', 'Free health programme'].filter((x) => kw.indexOf(x) < 0)) + ' BM: ' + (kw.match(/Keluhan Rakyat|Selesaikan|Bawa sebagai usul|Abaikan|Laksana|Aktiviti Rakyat|Baki peruntukan/g) || []).join(',')); }
+  await pu.locator('[data-act="kawasan-selesai"][data-id="k1"]').first().evaluate((e) => e.click()).catch(() => {});
   await pu.waitForTimeout(400);
-  const kb = await pu.evaluate(() => window.MyPolitikKawasan.getKawasan(window.MyPolitikSave.loadPlayer()).baki);
-  if (kb !== 1800) { ralat.push('projek kawasan tidak menolak baki: ' + kb); }
+  await pu.locator('[data-act="kawasan-usul"][data-id="k2"]').first().evaluate((e) => e.click()).catch(() => {});
+  await pu.waitForTimeout(400);
+  await pu.locator('[data-act="kawasan-aktiviti"][data-id="gotong"]').first().evaluate((e) => e.click()).catch(() => {});
+  await pu.waitForTimeout(400);
+  const kb = await pu.evaluate(() => { const p = window.MyPolitikSave.loadPlayer(), k = window.MyPolitikKawasan.getKawasan(p); return { baki: k.baki, n: k.keluhan.length, isu: (p.isu || []).some((i) => i.kod === 'dewan_usang') }; });
+  if (kb.baki !== 1400 || kb.n !== 0 || !kb.isu) { ralat.push('keluhan/aktiviti kawasan salah: ' + JSON.stringify(kb)); }
   /* v8.19: Jawatan GLC (EN): kad lobi, lobi berjaya, kad jawatan; tiada BM bocor. */
   await pu.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 40000, reputasi: 60 } }); window.MyPolitikGLC.bukaLobi('kerajaan'); window.NusaUI.render(); window.NusaUI.gotoTab('tindakan'); });
   await pu.waitForTimeout(500);

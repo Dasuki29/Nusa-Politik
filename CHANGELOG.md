@@ -1,5 +1,27 @@
 # Catatan Perubahan
 
+## v8.20 (2026-10-20)
+
+Keluhan Rakyat dan Aktiviti Rakyat (maklum balas pemain: lebih banyak aktiviti untuk rakyat dan keluhan rakyat dibawa sebagai usul), mengikut mockup yang diluluskan.
+
+### Baharu
+- **📮 Keluhan Rakyat** (ADUN dan Ahli Parlimen): 1 hingga 2 keluhan sebulan, maksimum 4 tertunggak, 6 jenis isu. Tiga pilihan:
+  - **Selesaikan** dengan Peruntukan Kawasan (RM 500 hingga RM 1,500, 1 AP): +20 IP, +3 sokongan akar umbi.
+  - **Bawa sebagai usul** (1 AP): dicatat di papan Isu Tempatan dan menjadi agenda Usul Lokaliti di mesyuarat; usul yang lulus menyelesaikan isu (sistem sedia ada).
+  - **Abaikan**: sokongan akar umbi -2.
+  - Tidak dijawab 3 bulan: diabaikan automatik (akar umbi -4, Reputasi -1 setiap keluhan).
+- **🎪 Aktiviti Rakyat** (sekali sebulan, 2 AP, guna Peruntukan Kawasan): gotong-royong (RM 400), program kesihatan (RM 700), kenduri (RM 600), tuisyen (RM 500), dialog bersama rakyat (RM 300; kurangkan keluhan baharu bulan depan sebanyak 1).
+
+### Berubah
+- 3 projek tetap v8.18 (jalan, banjir, surau) digantikan dengan sistem keluhan dan aktiviti.
+- Tutorial BM/EN, terjemahan, 3 ujian unit (menggantikan 2), ujian pelayar EN. Semua tindakan boleh di-undo.
+
+### Andaian
+- Semua angka ialah cadangan imbangan. Keluhan hanya untuk pemegang kerusi (ADUN/MP); Menteri tanpa kerusi tidak mendapat keluhan.
+- Abaikan keluhan membuangnya serta-merta dengan penalti kecil (-2); penalti berat hanya jika luput 3 bulan.
+- Tuisyen memberi akar umbi +4 (bukan "sokongan belia" seperti mockup, kerana tiada dalam sistem). Kenduri memberi kesetiaan Penentang +2 seperti mockup.
+- Papan Isu Tempatan bergantung pada mesyuarat Usul Lokaliti sedia ada; pemain tanpa jawatan parti mungkin tidak menghadirinya.
+
 ## v8.19 (2026-10-20)
 
 Jawatan GLC (undian survey pemain, pilihan 2), mengikut mockup yang diluluskan dengan ganjaran diturunkan selepas v8.18.
