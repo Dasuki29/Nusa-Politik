@@ -666,6 +666,53 @@ ujian('harta: Agensi / Syarikat Media mengurangkan peluang krisis politik (yang 
   betul(HT.beli('media').ok); sama(Math.round(HT.faktorKrisis(S.loadPlayer()) * 100), 55, 'tidak bertindih');
 });
 
+/* ---------- v8.15: Undo ---------- */
+function unPemain(patch) { P.daftar({}); S.applyEffects({}, { kiraTindakan: false, patch: Object.assign({ myr: 200000, ip: 100, ap: 5, bulan: 6 }, patch || {}) }); return S.loadPlayer(); }
+function unAksi(UN, label, fn) { UN.mula(label); fn(); return UN.tamat(); }
+ujian('undo: satu tindakan terakhir dibatalkan (IP, Dana, AP dipulihkan), baki 3 -> 2', () => {
+  const UN = g.MyPolitikUndo; unPemain();
+  betul(unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah')), 'gambar disimpan');
+  let k = UN.keadaan(S.loadPlayer()); betul(k.boleh, k.sebab); sama(k.label, 'Beli rumah'); sama(k.baki, 3);
+  sama(S.loadPlayer().myr, 160000);
+  const r = UN.undo(); betul(r.ok, r.ralat); const p = S.loadPlayer();
+  sama(p.myr, 200000, 'dana dipulihkan'); sama(!!(p.harta && p.harta.aset && p.harta.aset.rumah), false, 'aset dibatalkan');
+  k = UN.keadaan(p); sama(k.baki, 2); sama(k.boleh, false, 'tiada lagi untuk undo');
+});
+ujian('undo: tindakan gagal / tiada perubahan tidak menggunakan undo', () => {
+  const UN = g.MyPolitikUndo; unPemain({ myr: 100 });
+  sama(unAksi(UN, 'Beli jet', () => g.MyPolitikHarta.beli('jet')), false, 'dana tidak cukup');
+  sama(UN.keadaan(S.loadPlayer()).boleh, false);
+});
+ujian('undo: dikunci apabila keadaan berubah selepas tindakan (bulan / tindakan lain / acara)', () => {
+  const UN = g.MyPolitikUndo; unPemain();
+  unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah')); betul(UN.keadaan(S.loadPlayer()).boleh);
+  S.applyEffects({}, { kiraTindakan: false, patch: { ip: 150 } });
+  const k = UN.keadaan(S.loadPlayer()); sama(k.boleh, false); betul(/berubah/.test(k.sebab), k.sebab);
+  unPemain(); unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah'));
+  globalThis.localStorage.setItem('myPolitik_events', '{"x":1}');
+  sama(UN.keadaan(S.loadPlayer()).boleh, false, 'perubahan acara juga mengunci');
+});
+ujian('undo: keputusan rawak ditanda tidak boleh di-undo', () => {
+  const UN = g.MyPolitikUndo; unPemain();
+  sama(unAksi(UN, 'Tindakan rawak', () => { g.MyPolitikHarta.beli('rumah'); UN.rawak(); }), false);
+  sama(UN.keadaan(S.loadPlayer()).boleh, false);
+  unAksi(UN, 'Beli wisma', () => g.MyPolitikHarta.beli('wisma')); betul(UN.keadaan(S.loadPlayer()).boleh); UN.rawak(); sama(UN.keadaan(S.loadPlayer()).boleh, false, 'rawak() selepas tamat mengunci');
+});
+ujian('undo: had 3 setahun, ditetapkan semula tahun baharu; Hardcore dimatikan', () => {
+  const UN = g.MyPolitikUndo; unPemain();
+  for (let i = 0; i < 3; i++) { betul(unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah'))); betul(UN.undo().ok); }
+  unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah'));
+  let k = UN.keadaan(S.loadPlayer()); sama(k.boleh, false); sama(k.baki, 0); betul(/habis/.test(k.sebab), k.sebab);
+  S.applyEffects({}, { kiraTindakan: false, patch: { tahun: S.loadPlayer().tahun + 1 } });
+  sama(UN.keadaan(S.loadPlayer()).baki, 3, 'tahun baharu: baki 3 semula');
+  const p2 = unPemain(); S.applyEffects({}, { kiraTindakan: false, patch: { settings: Object.assign({}, p2.settings, { difficultyLevel: 'HARDCORE' }) } });
+  sama(UN.mula('x'), false, 'Hardcore: tiada gambar'); k = UN.keadaan(S.loadPlayer()); sama(k.boleh, false); betul(k.hardcore);
+});
+ujian('undo: watak lain tidak boleh menggunakan gambar watak terdahulu', () => {
+  const UN = g.MyPolitikUndo; unPemain(); unAksi(UN, 'Beli rumah', () => g.MyPolitikHarta.beli('rumah'));
+  P.daftar({}); sama(UN.keadaan(S.loadPlayer()).boleh, false, 'id berbeza');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

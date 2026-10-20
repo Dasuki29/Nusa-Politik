@@ -33,9 +33,17 @@
     if (m) { m.setAttribute('content', skema === 'gelap' ? '#15151B' : '#FFE45C'); }
     return skema;
   }
+  /** v8.15: togol satu ketukan Cerah/Gelap (jika mod Auto, skema semasa dibalikkan dan dikunci). Auto kekal dalam menu 🎨. */
+  function togol() { tetapkan(doc.documentElement.getAttribute('data-skema') === 'gelap' ? 'cerah' : 'gelap'); }
   function tetapkan(v) { mod = sah(v); simpan(mod); terap(); kemaskini(); return mod; }
 
   function kemaskini() {
+    var sk = doc.documentElement.getAttribute('data-skema'), tg = doc.querySelectorAll('[data-skema-btn]');
+    for (var q = 0; q < tg.length; q++) {
+      tg[q].textContent = sk === 'gelap' ? '☀️' : '🌙';
+      tg[q].setAttribute('title', sk === 'gelap' ? 'Tukar ke paparan cerah' : 'Tukar ke paparan gelap');
+      tg[q].setAttribute('aria-label', sk === 'gelap' ? 'Tukar ke paparan cerah' : 'Tukar ke paparan gelap');
+    }
     var t = cari(mod), bs = butang();
     for (var j = 0; j < bs.length; j++) {
       bs[j].innerHTML = t.ikon + '<span class="tema-teks"> ' + t.nama + '</span>';
@@ -51,7 +59,14 @@
 
   function butang() { return doc.querySelectorAll('#btn-tema, [data-tema-btn]'); }
 
+  function bindTogol() {
+    var tg = doc.querySelectorAll('[data-skema-btn]');
+    for (var i = 0; i < tg.length; i++) { tg[i].addEventListener('click', function (e) { e.stopPropagation(); togol(); }); }
+    kemaskini();
+  }
+
   function bina() {
+    bindTogol();
     var bs = butang();
     if (!bs.length || doc.getElementById('paparan-pop')) { return; }
     var p = doc.createElement('div');
@@ -82,7 +97,7 @@
     if (mq.addEventListener) { mq.addEventListener('change', ubah); } else if (mq.addListener) { mq.addListener(ubah); }
   } catch (e) { /* abaikan */ }
 
-  root.MyPolitikTema = { _mq: mq, MOD: MOD, tetapkan: tetapkan, semasa: function () { return mod; },
+  root.MyPolitikTema = { _mq: mq, MOD: MOD, tetapkan: tetapkan, togol: togol, semasa: function () { return mod; },
     skema: function () { return doc.documentElement.getAttribute('data-skema'); } };
 
   /* Lapisan keselamatan: sesetengah pelayar tidak menghantar acara 'change' dengan konsisten. */
