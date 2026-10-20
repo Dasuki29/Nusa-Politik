@@ -171,7 +171,8 @@
     return '<li><button type="button" class="acara__opsi' + (boleh ? '' : ' is-off') + '" data-pilih="' + esc(id) + '"' + (boleh ? '' : ' disabled') + '><b>' + tajuk + '</b><small>' + kecil + '</small></button></li>';
   }
   async function modPencalonan(p) {
-    var r = PRU.ringkasan(p), a = r.aktif, kl = r.kelayakan;
+    var r = PRU.ringkasan(p), a = r.aktif, kl = r.kelayakan, kl2 = PRU.kelayakan(p, true);
+    var bolehLain = ['DUN', 'PARLIMEN'].some(function (z) { return kl2[z].boleh && !a.ditolak[z]; });          // v8.17
     var sebabLawan = a.sebab === 'krisis' ? 'Krisis Pembubaran Dewan' : 'Tamat penggal 5 tahun';
     function baris(jenis, nama) {
       var k = kl[jenis], ditolak = a.ditolak[jenis];
@@ -182,9 +183,58 @@
       tajuk: 'Pengisytiharan Pilihan Raya',
       isi: '<p class="acara__ikon" aria-hidden="true">🗳️</p><p><b>' + sebabLawan + '.</b> Hari mengundi dalam 14 hari. Populariti parti: <b>' + a.partiPopulariti + '%</b>. Mohon dicalonkan bertanding:</p>' +
         '<ul class="acara__pil">' + baris('DUN', 'DUN') + baris('PARLIMEN', 'Parlimen') + (kl.DUN.boleh && kl.PARLIMEN.boleh && !a.ditolak.DUN && !a.ditolak.PARLIMEN ? opsi('KEDUA', '🏛️🏢 Kedua-dua: Parlimen + DUN (serentak)', 'Satu kempen 14 hari, dua keputusan. Tumpuan terbahagi: sokongan -3%, jentera -8. Peluang diluluskan: Parlimen ' + kl.PARLIMEN.peluang + '%, DUN ' + kl.DUN.peluang + '%. Menang kedua-dua = dua jawatan wakil rakyat.', true) : '') + opsi('NONE', 'Tidak bertanding', 'Fokus jawatan parti. Tiada risiko kehilangan IP.', true) + '</ul>' +
+        (bolehLain ? opsi('LAIN', '🗺️ Kerusi lain…', 'Bertanding di Parlimen atau DUN lain (calon dari luar). Peluang diluluskan lebih rendah, sokongan awal dan kos kempen terjejas; kerusi sukar memberi ganjaran IP lebih tinggi.', true) : '') +
         '<p style="font-size:.8rem">Keputusan pencalonan oleh Majlis Tertinggi bergantung IP, reputasi dan kedudukan parti.</p>',
       butang: []
     });
+  }
+  /** v8.17: pemilih kerusi lain (Parlimen / DUN, semua negeri kecuali Sarawak). Pulang { jenis, kerusi } atau null. */
+  async function modKerusiLain(p) {
+    var Geo = W.MyPolitikGeo, a = PRU.getPRU(p).aktif, kl2 = PRU.kelayakan(p, true);
+    if (!Geo || !Geo.muat) { toast('Data kerusi tidak tersedia.', 'ralat'); return null; }
+    toast('Memuatkan senarai kerusi…', 'ok');
+    try { await Geo.muat(['negeri', 'parlimen', 'dun']); } catch (e) { toast('Senarai kerusi tidak dapat dimuatkan. Semak sambungan internet.', 'ralat'); return null; }
+    function nm(x) { return String(x || '').toLowerCase().replace(/[^a-z]/g, ''); }
+    var negeri = Geo.getFitur('negeri').filter(function (n) { return nm(n.nama) !== 'sarawak'; }).sort(function (x, y) { return x.nama < y.nama ? -1 : 1; });   // UMNO tiada cawangan di Sarawak
+    var kunci = Geo.kunciDariCawangan ? Geo.kunciDariCawangan(p) : {}, ownNeg = kunci && kunci.negeri != null ? String(kunci.negeri) : '';
+    if (!ownNeg) { var jumpa = negeri.filter(function (n) { return nm(n.nama) === nm(p.negeri); })[0]; ownNeg = jumpa ? jumpa.id : ''; }
+    var disusun = { PARLIMEN: Geo.getFitur('parlimen'), DUN: Geo.getFitur('dun') };
+    var terpilih = null, jenisSemasa = kl2.PARLIMEN.boleh && !a.ditolak.PARLIMEN ? 'PARLIMEN' : 'DUN';
+    function radio(j, label) { var ok = kl2[j].boleh && !a.ditolak[j]; return '<label><input type="radio" name="kjenis" value="' + j + '"' + (j === jenisSemasa ? ' checked' : '') + (ok ? '' : ' disabled') + '><span><b>' + label + '</b>' + (ok ? '' : '<small>' + (a.ditolak[j] ? 'Permohonan sudah ditolak.' : esc(kl2[j].sebab.join('; '))) + '</small>') + '</span></label>'; }
+    var isi = '<p>Pilih kerusi untuk bertanding sebagai calon dari luar. Peluang diluluskan lebih rendah, sokongan awal dan kos kempen terjejas. Tahap kerusi ialah anggaran simulasi.</p>' +
+      '<div class="pru-pilih">' + radio('PARLIMEN', '🏢 Parlimen') + radio('DUN', '🏛️ DUN') + '</div>' +
+      '<label class="note" for="kl-negeri">Negeri</label><select id="kl-negeri" style="width:100%;margin:4px 0 8px">' + negeri.map(function (n) { return '<option value="' + esc(n.id) + '"' + (n.id === ownNeg ? ' selected' : '') + '>' + esc(n.nama) + '</option>'; }).join('') + '</select>' +
+      '<label class="note" for="kl-kerusi">Kerusi</label><select id="kl-kerusi" size="6" style="width:100%;margin:4px 0 8px"></select>' +
+      '<div class="note" id="kl-ringkas" aria-live="polite"></div>';
+    var pr = modal({ tajuk: '🗺️ Kerusi Lain', isi: isi, butang: [{ label: 'Kembali', nilai: false }, { label: 'Mohon Dicalonkan', nilai: true, kelas: 'btn--gold', nonaktif: true }] });
+    var isiEl = W.document.getElementById('modal-isi'), kaki = W.document.getElementById('modal-kaki'), mula = kaki && kaki.querySelector('button:last-child');
+    if (isiEl) {
+      var sNeg = isiEl.querySelector('#kl-negeri'), sKr = isiEl.querySelector('#kl-kerusi'), rg = isiEl.querySelector('#kl-ringkas');
+      var isiKerusi = function () {
+        var j = (isiEl.querySelector('input[name=kjenis]:checked') || {}).value || jenisSemasa, neg = sNeg.value;
+        var sendiriNama = nm(j === 'DUN' ? p.dun : p.bahagian);
+        var senarai = (disusun[j] || []).filter(function (f) { return String(f.negeri) === neg && !(neg === ownNeg && nm(f.nama) === sendiriNama); }).sort(function (x, y) { return x.nama < y.nama ? -1 : 1; });
+        sKr.innerHTML = senarai.map(function (f) { return '<option value="' + esc(f.id) + '">' + esc(f.nama) + '</option>'; }).join('');
+        if (senarai.length) { sKr.selectedIndex = 0; }
+        kemas();
+      };
+      var kemas = function () {
+        var j = (isiEl.querySelector('input[name=kjenis]:checked') || {}).value || jenisSemasa, opt = sKr.options[sKr.selectedIndex];
+        terpilih = null;
+        if (!opt) { rg.textContent = 'Tiada kerusi untuk pilihan ini.'; if (mula) { mula.disabled = true; } return; }
+        var kr = { nama: opt.text, kod: opt.value, negeri: (negeri.filter(function (n) { return n.id === sNeg.value; })[0] || {}).nama || '', negeriSama: sNeg.value === ownNeg, sendiri: false };
+        var pk = PRU.peluangKerusi(p, j, kr);
+        terpilih = { jenis: j, kerusi: kr, boleh: pk.boleh };
+        var tahapNota = pk.tahap === 'selamat' ? 'Kerusi selamat: sokongan awal +4.' : pk.tahap === 'marginal' ? 'Kerusi marginal: ganjaran IP lebih tinggi jika menang (+15%).' : 'Kerusi sukar: sokongan awal -5, ganjaran IP lebih tinggi jika menang (+30%).';
+        rg.innerHTML = '<div><b>' + esc(kr.nama) + '</b></div><div>' + (kr.negeriSama ? 'Negeri sama' : 'Negeri lain') + '</div><div>Peluang diluluskan ± ' + pk.peluang + '% (penalti -' + pk.penalti + ')</div><div>' + tahapNota + '</div><div>' +
+          (pk.pernahMenang ? 'Anda pernah menang kerusi ini: tiada penalti sokongan awal. Minimum peruntukan RM ' + fmt(pk.minPeruntukan) + '.' : 'Calon dari luar: sokongan awal -' + pk.sokongan + ', minimum peruntukan RM ' + fmt(pk.minPeruntukan) + ' (+20%).') + '</div>';
+        if (mula) { mula.disabled = !pk.boleh; }
+      };
+      isiEl.addEventListener('change', function (e) { if (e.target && (e.target.name === 'kjenis' || e.target.id === 'kl-negeri')) { isiKerusi(); } else if (e.target && e.target.id === 'kl-kerusi') { kemas(); } });
+      isiKerusi();
+    }
+    var ya = await pr;
+    return ya && terpilih && terpilih.boleh ? { jenis: terpilih.jenis, kerusi: terpilih.kerusi } : null;
   }
   async function modRunding(p) {
     var a = PRU.getPRU(p).aktif, rk = PRU.KOS_RUNDING;
@@ -192,7 +242,7 @@
       tajuk: 'Rundingan Kerusi & Gabungan',
       isi: '<p class="acara__ikon" aria-hidden="true">🤝</p><p>Kerusi <b>' + esc(a.kerusi.nama) + '</b> turut dituntut oleh rakan gabungan. Jika rundingan gagal, undi terbahagi tiga (3-penjuru) dan kemenangan lebih sukar.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Hubungan gabungan: <b>' + PRU.getPRU(p).hubunganGabungan + '</b>/100</p><ul class="acara__pil">' +
         opsi('berdepan', 'Runding berdepan', 'Kos IP ' + rk.berdepan.ip + ' · Berjaya ± ' + Math.round(rk.berdepan.jaya * 100) + '% → 1-lawan-1; gagal → 3-penjuru', p.ip >= rk.berdepan.ip) +
-        (a.candidateType === 'PARLIMEN' && !a.kerusi2 && p.dun ? opsi('ganti', 'Tawar kerusi DUN sebagai ganti', 'Kos IP ' + rk.ganti.ip + ' · Berjaya ± ' + Math.round(rk.ganti.jaya * 100) + '% · anda melepaskan kerusi Parlimen ini', p.ip >= rk.ganti.ip) : '') +
+        (a.candidateType === 'PARLIMEN' && !a.kerusi2 && p.dun && !a.calonImport ? opsi('ganti', 'Tawar kerusi DUN sebagai ganti', 'Kos IP ' + rk.ganti.ip + ' · Berjaya ± ' + Math.round(rk.ganti.jaya * 100) + '% · anda melepaskan kerusi Parlimen ini', p.ip >= rk.ganti.ip) : '') +
         opsi('abai', 'Bertanding juga (abaikan rakan)', 'Pasti 3-penjuru · hubungan gabungan −15 · Reputasi −3', true) + '</ul>',
       butang: []
     });
@@ -242,14 +292,16 @@
         var p = S.loadPlayer(), a = PRU.getPRU(p).aktif;
         if (!a || a.fasa === 'kempen' || a.fasa === 'keputusan') { break; }
         if (a.fasa === 'isytihar' || a.fasa === 'calon') {
-          var j = await modPencalonan(p);
+          var j = await modPencalonan(p), lk = null;
           if (!j) { break; }
+          if (j === 'LAIN') { lk = await modKerusiLain(p); if (!lk) { continue; } j = lk.jenis; }                 // v8.17: kerusi lain
           if (j === 'NONE') {
             var tb = PRU.tidakBertanding(); toast(tb.mesej || tb.ralat, tb.ok ? 'ok' : 'ralat'); segarkan(); if (tb.nasional) { await nasional(); } break;
           }
-          var r = PRU.pilihKerusi(j);
+          var r = PRU.pilihKerusi(j, lk ? { kerusi: lk.kerusi } : undefined);
           if (!r.ok) { toast(r.ralat, 'ralat'); continue; }
           toast(r.mesej, r.diluluskan ? 'ok' : 'ralat'); segarkan();
+          if (r.lain && r.diluluskan) { toast('Calon dari luar: sokongan awal lebih rendah dan kos kempen lebih tinggi.', 'ok'); }
           if (!r.diluluskan) {
             var p2 = S.loadPlayer(), k2 = PRU.kelayakan(p2), a2 = PRU.getPRU(p2).aktif;
             var masihBoleh = ['DUN', 'PARLIMEN'].some(function (z) { return !a2.ditolak[z] && k2[z].boleh; });

@@ -745,6 +745,58 @@ ujian('lobi: pilihan raya yang membentuk kerajaan membuka lobi baharu (3 percuba
   betul(r.keputusan && r.keputusan.kabinetBuka, 'rng kecil sepatutnya membentuk kerajaan'); const k = KB.getKabinet(S.loadPlayer()); betul(k.lobi, 'lobi dibuka'); sama(k.lobi.baki, 3);
 });
 
+/* ---------- v8.17: bertanding kerusi lain ---------- */
+const KR_SAMA = { nama: 'Arau', kod: 'P.003', negeri: 'Perlis', negeriSama: true };
+const KR_LAIN = { nama: 'Alor Setar', kod: 'P.006', negeri: 'Kedah', negeriSama: false };
+function krPemain(o) {
+  P.daftar(Object.assign({ kesukaran: 'NORMAL', sayap: 'utama' }, o || {}));
+  P.tetap({ ip: 700, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], myr: 20000, reputasi: 50 });
+  PRU.isytihar('tamat_penggal', { rng: sedikit });
+}
+ujian('kerusi lain: penalti peluang -15 (negeri sama) / -30 (negeri lain), kerusi sendiri tiada penalti', () => {
+  krPemain(); const p = S.loadPlayer();
+  const asas = PRU.kelayakan(p).PARLIMEN.peluang;
+  sama(PRU.peluangKerusi(p, 'PARLIMEN', Object.assign({}, KR_SAMA, { sendiri: true })).peluang, asas, 'sendiri');
+  sama(PRU.peluangKerusi(p, 'PARLIMEN', KR_SAMA).peluang, Math.max(5, asas - 15), 'negeri sama');
+  sama(PRU.peluangKerusi(p, 'PARLIMEN', KR_LAIN).peluang, Math.max(5, asas - 30), 'negeri lain');
+  betul(['selamat', 'marginal', 'sukar'].indexOf(PRU.peluangKerusi(p, 'PARLIMEN', KR_LAIN).tahap) >= 0, 'tahap kerusi');
+  sama(PRU.peluangKerusi(p, 'PARLIMEN', { kod: 'x' }).boleh, false, 'kerusi tidak sah');
+});
+ujian('kerusi lain: dicalonkan, kempen: sokongan awal -10, minimum peruntukan +20%, tahap kerusi dikira', () => {
+  krPemain(); let p = S.loadPlayer(), pru = PRU.getPRU(p), a = pru.aktif;
+  const r = PRU.pilihKerusi('PARLIMEN', { rng: sedikit, kerusi: KR_SAMA }); betul(r.ok && r.diluluskan && r.lain, r.ralat || r.mesej);
+  a = PRU.getPRU(S.loadPlayer()).aktif;
+  sama(a.kerusi.nama, 'Arau'); sama(a.kerusi.lain, true); betul(a.calonImport, 'calonImport'); sama(a.calonImport.sokongan, 10);
+  const th = PRU.KERUSI_LAIN.TAHAP[a.calonImport.tahap];
+  if (a.fasa === 'runding') { betul(PRU.runding('abai', { rng: sedikit }).ok); }
+  const kl = PRU.kelayakan(S.loadPlayer());
+  const pil = PRU.peruntukanPilihan ? PRU.peruntukanPilihan(S.loadPlayer(), PRU.getPRU(S.loadPlayer()).aktif) : null;
+  if (pil) { sama(pil.min, Math.round(kl.PARLIMEN.minPeruntukan * 1.2), 'minimum +20%'); }
+  const mk = PRU.mulaKempen(JANJI3(), 20000); betul(mk.ok, mk.ralat);
+  const vSendiri = (() => { krPemain(); betul(PRU.pilihKerusi('PARLIMEN', { rng: sedikit }).ok); const a2 = PRU.getPRU(S.loadPlayer()).aktif; if (a2.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); } betul(PRU.mulaKempen(JANJI3(), 20000).ok); return PRU.getPRU(S.loadPlayer()).aktif.voterSupport; })();
+  // bandingkan semula: kerusi lain pada pemain sama
+  krPemain(); PRU.pilihKerusi('PARLIMEN', { rng: sedikit, kerusi: KR_SAMA }); { const a3 = PRU.getPRU(S.loadPlayer()).aktif; if (a3.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); } }
+  betul(PRU.mulaKempen(JANJI3(), 20000).ok); const vLain = PRU.getPRU(S.loadPlayer()).aktif.voterSupport;
+  betul(vLain <= vSendiri - 10 + th.sokongan + 2 && vLain >= vSendiri - 10 + th.sokongan - 2, 'sokongan: sendiri ' + vSendiri + ', lain ' + vLain + ', tahap ' + th.sokongan);
+});
+ujian('kerusi lain: pernah menang kerusi itu = tiada penalti sokongan; tawaran ganti ditolak; DUN lain boleh untuk Wilayah Persekutuan', () => {
+  krPemain(); const p0 = S.loadPlayer(), pru0 = PRU.getPRU(p0);
+  S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, pru0, { sejarah: [{ jenis: 'PARLIMEN', kerusi: 'Arau', hasil: 'menang' }] }) } });
+  sama(PRU.peluangKerusi(S.loadPlayer(), 'PARLIMEN', KR_SAMA).sokongan, 0, 'pernah menang');
+  sama(PRU.peluangKerusi(S.loadPlayer(), 'PARLIMEN', KR_LAIN).sokongan, PRU.KERUSI_LAIN.SOKONGAN, 'kerusi lain belum pernah dimenangi');
+  krPemain(); betul(PRU.pilihKerusi('PARLIMEN', { rng: sedikit, kerusi: KR_SAMA }).ok);
+  const a = PRU.getPRU(S.loadPlayer()).aktif;
+  if (a.fasa === 'runding') { sama(PRU.runding('ganti', { rng: sedikit }).ok, false, 'ganti ditolak untuk calon import'); }
+  krPemain(); S.applyEffects({}, { kiraTindakan: false, patch: { dun: '' } });
+  betul(PRU.peluangKerusi(S.loadPlayer(), 'DUN', KR_LAIN).boleh, 'WP boleh bertanding DUN lain: ' + PRU.peluangKerusi(S.loadPlayer(), 'DUN', KR_LAIN).sebab.join('; '));
+});
+ujian('kerusi lain: ADUN negeri lain tidak boleh jadi Menteri Besar negeri asal', () => {
+  const KB = g.MyPolitikKabinet; krPemain(); betul(KB.bukaLobi('DUN').ok);
+  const pru = PRU.getPRU(S.loadPlayer());
+  S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, pru, { status: { jenis: 'ADUN', kerusi: 'X', kerajaan: true, lain: true, negeriSama: false } }) } });
+  const m = KB.maklumatMB(S.loadPlayer()); sama(m.boleh, false); betul(/bukan di negeri ini/.test(m.sebab), m.sebab);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

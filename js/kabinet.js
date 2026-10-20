@@ -256,6 +256,7 @@
     if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
     else if (String(p.negeri || '').toLowerCase() === 'sarawak') { sebab = 'UMNO tiada cawangan di Sarawak.'; }
     else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
+    else if (PR.getPRU && [PR.getPRU(p).status, PR.getPRU(p).statusKedua].some(function (x) { return x && x.jenis === 'ADUN' && x.lain && !x.negeriSama; })) { sebab = 'Kerusi DUN anda bukan di negeri ini.'; }   // v8.17: calon kerusi negeri lain
     else {
       var ada = false; try { var st = NG && NG.status ? NG.status(p) : null; ada = !!(st && st.bp && st.bp.pengerusi && st.bp.pengerusi.pemain); } catch (e) { ada = false; }
       if (!ada) { sebab = 'Anda mesti Pengerusi Badan Perhubungan Negeri.'; }

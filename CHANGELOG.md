@@ -1,5 +1,22 @@
 # Catatan Perubahan
 
+## v8.17 (2026-10-20)
+
+Bertanding kerusi Parlimen/DUN lain (calon dari luar), mengikut mockup yang diluluskan.
+
+### Baharu
+- **Kerusi Lain:** pilihan di fasa Calon untuk memohon kerusi di mana-mana Parlimen atau DUN (negeri lain dibenarkan, Sarawak dikecualikan).
+- **Kos calon luar:** peluang diluluskan -15 (negeri sama) / -30 (negeri lain); sokongan awal -10 (tiada jika pernah menang kerusi itu); minimum peruntukan kempen +20%.
+- **Tahap kerusi:** Selamat / Marginal / Sukar. Kerusi sukar memberi bonus IP lebih tinggi jika menang.
+- Calon dari luar tidak boleh ditukar ganti; MB hanya untuk DUN di negeri sendiri.
+- Tutorial BM/EN, terjemahan, 4 ujian unit, ujian pelayar EN.
+
+### Andaian
+- Tahap kerusi ialah anggaran simulasi (hash tetap), bukan data pilihan raya sebenar.
+- Semua angka ialah cadangan imbangan.
+- Penolakan menandakan jenis kerusi itu ditolak untuk penggal.
+- Di luar skop: kerusi ditinggalkan diberi kepada NPC, isu "calon dari luar", MB negeri lain, kerusi serentak KEDUA (kerusi sendiri sahaja).
+
 ## v8.16 (2026-10-20)
 
 Lobi portfolio kerajaan yang lebih mesra pemain (maklum balas: tetingkap lobi tidak muncul selepas "terpaksa lupakan").
