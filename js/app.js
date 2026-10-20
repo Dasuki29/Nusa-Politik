@@ -761,7 +761,7 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + (W.NusaKawasan_UI ? W.NusaKawasan_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -1434,6 +1434,7 @@
     else if (act === 'urus-negeri') { urusNegeri(nginst(t)).then(render); }
     else if (act === 'lobi-presiden') { tawarkanLobi(nginst(t)); }
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
+    else if (act === 'kawasan-projek') { var kp = W.MyPolitikKawasan.projek(t.getAttribute('data-id')); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
     else if (act === 'ke-tab') { setTab(t.getAttribute('data-v')); }
     else if (act === 'ulang-peta') { muatPeta(true); }
@@ -1641,7 +1642,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1 };
+  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'kawasan-projek': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

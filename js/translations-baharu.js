@@ -2358,7 +2358,27 @@
   ["Calon dari luar: sokongan awal lebih rendah dan kos kempen lebih tinggi.", "Outside candidate: lower starting support and higher campaign costs."],
   ["Tawaran ganti tidak tersedia bagi calon kerusi lain.", "The swap offer is not available to candidates for another seat."],
   ["Kerusi tidak sah.", "Invalid seat."],
-  ["Kerusi DUN anda bukan di negeri ini.", "Your State seat is not in this state."]
+  ["Kerusi DUN anda bukan di negeri ini.", "Your State seat is not in this state."],
+  ["🏛️ Peruntukan Kawasan", "🏛️ Constituency Allocation"],
+  ["Peruntukan sebulan", "Allocation per month"],
+  ["Baki peruntukan", "Allocation balance"],
+  ["Peruntukan Kawasan ADUN", "ADUN Constituency Allocation"],
+  ["Peruntukan Kawasan ADUN (pembangkang)", "ADUN Constituency Allocation (opposition)"],
+  ["Peruntukan Kawasan Ahli Parlimen", "MP Constituency Allocation"],
+  ["Peruntukan Kawasan Ahli Parlimen (pembangkang)", "MP Constituency Allocation (opposition)"],
+  ["Dana projek kementerian", "Ministry project fund"],
+  ["Baik pulih jalan kampung", "Repair village roads"],
+  ["Bantuan mangsa banjir", "Flood victim relief"],
+  ["Naik taraf surau / balai raya", "Upgrade surau / community hall"],
+  ["Kos {a} peruntukan, +{b} IP, +{c} sokongan akar umbi", "Cost {a} allocation, +{b} IP, +{c} grassroots support"],
+  ["Laksana ({a} AP)", "Carry out ({a} AP)"],
+  ["Baki peruntukan tidak mencukupi (perlu {a}).", "Allocation balance is not enough (needs {a})."],
+  ["AP tidak mencukupi.", "Not enough AP."],
+  ["Anda tidak mempunyai peruntukan kawasan.", "You have no constituency allocation."],
+  ["Projek tidak sah.", "Invalid project."],
+  ["Dana khas, berasingan daripada Dana peribadi dan tidak boleh digunakan untuk kempen atau aset. Baki hangus setiap Januari. Kerusi pembangkang menerima 40%. Simulasi permainan.", "Special fund, separate from personal Funds and cannot be used for campaigns or assets. Balance expires every January. Opposition seats receive 40%. Game simulation."],
+  ["{a}: -{b} peruntukan, +{c} IP, +{d} sokongan akar umbi.", "{a}: -{b} allocation, +{c} IP, +{d} grassroots support."],
+  ["Peruntukan Kawasan bulan ini: +{a} (baki {b}).", "Constituency Allocation this month: +{a} (balance {b})."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

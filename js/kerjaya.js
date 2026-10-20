@@ -41,7 +41,7 @@
   var CONFIG = {
     LALAI: 'korporat',
     KOS_OPERASI: { cawangan: 100, bahagian: 150, pusat: 300 },      // sebulan; peringkat tertinggi yang dipegang
-    GAJI_RASMI: { ADUN: 1000, MP: 1800 },                           // elaun wakil rakyat sebulan (EXCO / Menteri: elaun kabinet di kabinet.js)
+    GAJI_RASMI: { ADUN: 1500, MP: 2500 },                           // elaun wakil rakyat sebulan (EXCO / Menteri: elaun kabinet di kabinet.js)
     FAKTOR_WAKIL: 0.5,                                              // MP, ADUN, EXCO Negeri
     TAHAP_PENUH_MASA: ['MENTERI_BESAR', 'TIMBALAN_MENTERI', 'MENTERI_PENUH', 'TIMBALAN_PM', 'PERDANA_MENTERI'],
     KONFLIK_KONTRAKTOR: 3                                           // tambahan Risiko Konflik Kepentingan sebulan (susut asas 1 sebulan)

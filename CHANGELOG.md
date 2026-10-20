@@ -1,5 +1,23 @@
 # Catatan Perubahan
 
+## v8.18 (2026-10-20)
+
+Peruntukan Kawasan (maklum balas survey pemain: wakil rakyat dan menteri perlukan lebih peruntukan), mengikut mockup B yang diluluskan.
+
+### Baharu
+- **Peruntukan Kawasan:** dana khas bulanan: ADUN RM 1,500, Ahli Parlimen RM 3,000, Menteri/Timbalan Menteri/TPM/PM tambahan RM 5,000 untuk projek kementerian. Kerusi pembangkang menerima 40%.
+- **Projek kawasan** (kad di tab Tindakan, 1 AP): jalan kampung (RM 800), bantuan banjir (RM 500), surau (RM 1,000). Memberi IP dan sokongan akar umbi.
+- Dana ini berasingan daripada Dana peribadi: tidak boleh digunakan untuk kempen atau aset. Baki hangus setiap Januari.
+
+### Berubah
+- Elaun ADUN RM 1,000 kepada RM 1,500; Ahli Parlimen RM 1,800 kepada RM 2,500.
+- Tutorial BM/EN (langkah baharu dan angka elaun), terjemahan, 3 ujian unit, ujian pelayar EN. Projek kawasan boleh di-undo.
+
+### Andaian
+- Semua angka ialah cadangan imbangan, bukan peruntukan sebenar.
+- Kesan projek ialah IP dan sokongan akar umbi (bukan populariti kawasan PRU).
+- Elaun EXCO/MB tiada dana kawasan. Aktiviti rakyat lanjut dan usul/keluhan rakyat ialah kerja berasingan.
+
 ## v8.17 (2026-10-20)
 
 Bertanding kerusi Parlimen/DUN lain (calon dari luar), mengikut mockup yang diluluskan.

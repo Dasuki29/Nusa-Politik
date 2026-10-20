@@ -224,6 +224,19 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   const kr = await pu.evaluate(() => { const a = window.MyPolitikPRU.getPRU(window.MyPolitikSave.loadPlayer()).aktif; return a && a.kerusi ? { lain: !!a.kerusi.lain, ci: !!a.calonImport, nama: a.kerusi.nama } : null; });
   if (!kr || !kr.lain || !kr.ci) { ralat.push('calon kerusi lain tidak direkod: ' + JSON.stringify(kr)); }
   await pu.evaluate(() => { try { window.MyPolitikPRU.setRng(null); } catch (e) { /* abaikan */ } });
+  /* v8.18: Peruntukan Kawasan (EN): kad dipaparkan, projek dilaksanakan, tiada BM bocor. */
+  await pu.evaluate(() => {
+    const S = window.MyPolitikSave, P = window.MyPolitikPRU, p = S.loadPlayer();
+    S.applyEffects({}, { kiraTindakan: false, patch: { ap: 10, pru: Object.assign({}, P.getPRU(p), { aktif: null, status: { jenis: 'ADUN', kerusi: 'Alor Setar', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }), kawasan: { baki: 2300, akhir: 'x', tahun: 2026, sejarah: [] } } });
+    window.NusaUI.render(); window.NusaUI.gotoTab('tindakan');
+  });
+  await pu.waitForTimeout(500);
+  const kw = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Constituency Allocation/.test(x.innerText))[0]; return c ? c.innerText : ''; });
+  if (!/Allocation balance/.test(kw) || /Peruntukan|Laksana|Baki/.test(kw)) { ralat.push('kad Peruntukan Kawasan EN salah: ' + kw.slice(0, 200)); }
+  await pu.locator('[data-act="kawasan-projek"][data-id="banjir"]').first().evaluate((e) => e.click()).catch(() => {});
+  await pu.waitForTimeout(400);
+  const kb = await pu.evaluate(() => window.MyPolitikKawasan.getKawasan(window.MyPolitikSave.loadPlayer()).baki);
+  if (kb !== 1800) { ralat.push('projek kawasan tidak menolak baki: ' + kb); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */

@@ -348,6 +348,8 @@
     if (SMP && SMP.prosesBulan) { peristiwa = peristiwa.concat(SMP.prosesBulan().peristiwa || []); }
     var HRT = muat('MyPolitikHarta', 'harta.js');                                               // v8.13: aset, cukai terkumpul, pengisytiharan harta SPRM
     if (HRT && HRT.prosesBulan) { peristiwa = peristiwa.concat(HRT.prosesBulan().peristiwa || []); }
+    var KWS = muat('MyPolitikKawasan', 'kawasan.js');                                           // v8.18: Peruntukan Kawasan bulanan
+    if (KWS && KWS.prosesBulan) { peristiwa = peristiwa.concat(KWS.prosesBulan().peristiwa || []); }
     var INC = muat('MyPolitikIncumbent', 'incumbent.js');                                        // v8.9: meter Atas Pagar reput ke arah 30%
     if (INC && INC.prosesBulan) { peristiwa = peristiwa.concat(INC.prosesBulan().peristiwa || []); }
     var KRP = muat('MyPolitikKrisisPeta', 'krisis-peta.js');                                     // v8.8: krisis tempatan berlokasi di peta
