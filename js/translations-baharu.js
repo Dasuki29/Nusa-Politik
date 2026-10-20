@@ -2424,7 +2424,9 @@
   ["Lihat senarai jawatan ({a})", "View post list ({a})"],
   ["{a} jawatan, {b} dari IP {c}", "{a} posts, {b} from IP {c}"],
   ["Pilih syarikat", "Choose company"],
-  ["Dipilih", "Selected"]
+  ["Dipilih", "Selected"],
+  ["Ahli Lembaga", "Board Member"],
+  ["Pengarah", "Director"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

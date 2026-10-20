@@ -38,7 +38,7 @@
         var sy = GL.SYARIKAT.filter(function (s) { return s.id === pilih; })[0];
         h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏢 ' + esc(sy.nama) + '</h2>';
         r.senarai.filter(function (x) { return x.id.indexOf(pilih + '_') === 0; }).forEach(function (x) {
-          h += '<div style="margin:8px 0"><b>' + esc(x.nama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">Kos IP ' + x.ip + ' dan ' + esc(rm(x.myr)) + ', peluang ' + x.peluang + '%, ganjaran ' + esc(rm(x.gaji)) + ' dan +' + x.ipBulan + ' IP sebulan</div>' +
+          h += '<div style="margin:8px 0"><b>' + esc(x.tahapNama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">Kos IP ' + x.ip + ' dan ' + esc(rm(x.myr)) + ', peluang ' + x.peluang + '%, ganjaran ' + esc(rm(x.gaji)) + ' dan +' + x.ipBulan + ' IP sebulan</div>' +
             '<button type="button" class="btn btn--sm' + (x.boleh ? '' : ' is-off') + '" data-act="glc-lobi" data-id="' + esc(x.id) + '"' + (x.boleh ? '' : ' disabled title="' + esc(x.sebab) + '"') + '>Lobi</button></div>';
         });
         h += '<button type="button" class="btn btn--sm" data-act="glc-kembali">Kembali</button></section>';
