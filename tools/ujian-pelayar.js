@@ -195,6 +195,14 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
       if (myr1 !== myr0) { ralat.push('undo tidak memulihkan dana: ' + myr0 + ' -> ' + myr1); }
     }
   }
+  /* v8.16: tetingkap lobi (EN): amaran Dana tidak cukup, butang Tangguh dan lobi kekal terbuka. */
+  await pu.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { ip: 5000, myr: 0 } }); window.MyPolitikKabinet.bukaLobi('DUN'); setTimeout(() => window.NusaPRU_UI.lobi(), 0); });
+  await pu.waitForTimeout(700);
+  const lm = await pu.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
+  if (!/Insufficient funds/.test(lm) || !/Postpone/.test(lm)) { ralat.push('modal lobi EN salah: ' + lm.slice(0, 200)); }
+  if (/Dana tidak mencukupi|Tangguh|termurah/.test(lm)) { ralat.push('modal lobi bocor BM: ' + lm.slice(0, 160)); }
+  await pu.locator('.acara__opsi[data-pilih="TANGGUH"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(700);
+  if (!(await pu.evaluate(() => !!window.MyPolitikKabinet.getKabinet(window.MyPolitikSave.loadPlayer()).lobi))) { ralat.push('lobi tidak kekal terbuka selepas Tangguh'); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */

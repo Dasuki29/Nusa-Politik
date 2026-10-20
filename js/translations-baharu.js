@@ -2325,7 +2325,14 @@
   ["AP {a} dipulangkan", "AP {a} restored"],
   ["Baki undo tahun ini selepas ini: {n}.", "Undo balance this year after this: {n}."],
   ["Ya, undo", "Yes, undo"],
-  ["Tindakan \"{x}\" dibatalkan. Baki undo tahun ini: {n}.", "Action \"{x}\" undone. Undo balance this year: {n}."]
+  ["Tindakan \"{x}\" dibatalkan. Baki undo tahun ini: {n}.", "Action \"{x}\" undone. Undo balance this year: {n}."],
+  ["Tangguh", "Postpone"],
+  ["Lobi kekal terbuka sehingga pilihan raya akan datang. Buka semula dari tab Pemilihan bila sedia.", "The lobby stays open until the next election. Reopen it from the Elections tab when ready."],
+  ["Lobi ditangguh. Anda boleh membukanya semula dari tab Pemilihan.", "Lobbying postponed. You can reopen it from the Elections tab."],
+  ["Dana tidak mencukupi", "Insufficient funds"],
+  ["Portfolio termurah yang anda layak perlukan RM {a} (kurang RM {b}). Pilih Tangguh dan kembali bila Dana cukup.", "The cheapest portfolio you qualify for needs RM {a} (RM {b} short). Choose Postpone and return when you have enough funds."],
+  ["Peluang lobi penggal ini telah digunakan. Lobi dibuka semula selepas pilihan raya akan datang jika parti membentuk kerajaan.", "This term's lobbying chance has been used. The lobby reopens after the next election if the party forms the government."],
+  ["Tiada lobi penggal ini: parti anda tidak membentuk kerajaan pada pilihan raya terakhir. Lobi dibuka selepas pilihan raya akan datang jika parti membentuk kerajaan (peluang bergantung pada populariti parti).", "No lobby this term: your party did not form the government at the last election. The lobby opens after the next election if the party forms the government (the chance depends on party popularity)."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

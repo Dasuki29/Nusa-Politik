@@ -713,6 +713,38 @@ ujian('undo: watak lain tidak boleh menggunakan gambar watak terdahulu', () => {
   P.daftar({}); sama(UN.keadaan(S.loadPlayer()).boleh, false, 'id berbeza');
 });
 
+/* ---------- v8.16: Lobi tangguh ---------- */
+function lobiKempen(rngKeputusan, kuat) {
+  keManifesto({ kesukaran: 'NORMAL', sayap: 'utama', myr: 6000 });
+  betul(PRU.mulaKempen(JANJI3(), 6000).ok, 'kempen gagal');
+  if (kuat) { const p = S.loadPlayer(), pru = PRU.getPRU(p); pru.aktif.voterSupport = 100; pru.aktif.isThreeCorneredFight = false; pru.aktif.partiPopulariti = 75; S.applyEffects({}, { kiraTindakan: false, patch: { pru } }); }
+  for (let i = 0; i < 40; i++) {
+    const ck = PRU.keadaanKempen(S.loadPlayer());
+    if (!ck || ck.hariBaki <= 0 && !ck.kejutan) { break; }
+    if (ck.kejutan) { const c = ck.kejutan.pilihan.filter((x) => x.boleh)[0]; betul(PRU.jawabKejutan(c.id, { rng: sedikit }).ok, 'kejutan'); continue; }
+    betul(PRU.tindakanKempen('rehat').ok, 'rehat');
+  }
+  return PRU.selesaikan({ rng: rngKeputusan });
+}
+ujian('lobi: tangguh kekal terbuka (tiada pembersihan); lobi lapuk dibersihkan jika pilihan raya baharu tidak membuka kerajaan', () => {
+  const KB = g.MyPolitikKabinet;
+  P.daftar({}); betul(KB.bukaLobi('DUN').ok); sama(KB.getKabinet(S.loadPlayer()).lobi.baki, 3, 'lobi dibuka');
+  // tangguh = tiada tindakan: lobi kekal
+  sama(!!KB.getKabinet(S.loadPlayer()).lobi, true, 'tangguh: lobi kekal terbuka');
+  // pilihan raya baharu tanpa kerajaan (rng tinggi: kalah / bukan kerajaan) membersihkan lobi lapuk
+  keManifesto({ kesukaran: 'NORMAL', sayap: 'utama', myr: 6000 }); betul(KB.bukaLobi('DUN').ok, 'lobi lapuk dibuka');
+  const r = lobiKempen(() => 0.999); betul(r.ok, r.ralat);
+  const k = KB.getKabinet(S.loadPlayer());
+  betul(!(r.keputusan && r.keputusan.kabinetBuka), 'rng 0.999 sepatutnya tiada kerajaan'); sama(k.lobi, null, 'lobi lapuk dibersihkan');
+});
+ujian('lobi: pilihan raya yang membentuk kerajaan membuka lobi baharu (3 percubaan)', () => {
+  const KB = g.MyPolitikKabinet;
+  const benih = (x) => () => { x = (x + 0x6D2B79F5) | 0; let t = Math.imul(x ^ (x >>> 15), 1 | x); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  let r = null;
+  for (let i = 1; i <= 60 && !(r && r.keputusan && r.keputusan.kabinetBuka); i++) { r = lobiKempen(benih(i), true); betul(r.ok, r.ralat); }
+  betul(r.keputusan && r.keputusan.kabinetBuka, 'rng kecil sepatutnya membentuk kerajaan'); const k = KB.getKabinet(S.loadPlayer()); betul(k.lobi, 'lobi dibuka'); sama(k.lobi.baki, 3);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

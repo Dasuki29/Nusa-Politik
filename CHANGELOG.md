@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v8.16 (2026-10-20)
+
+Lobi portfolio kerajaan yang lebih mesra pemain (maklum balas: tetingkap lobi tidak muncul selepas "terpaksa lupakan").
+
+### Berubah
+- **Tangguh:** pilihan "Tidak melobi" diganti "Tangguh". Lobi kekal terbuka sehingga pilihan raya akan datang dan boleh dibuka semula dari kad di tab Pemilihan.
+- **Lobi lapuk:** jika pilihan raya baharu tidak membuka kerajaan (kalah atau parti pembangkang), lobi yang ditangguh ditutup supaya tidak terbawa ke penggal lain. Presiden (aliran rundingan nasional) tidak terjejas.
+- **Penerangan:** tab Pemilihan kini menerangkan sebab tiada lobi: "parti anda tidak membentuk kerajaan pada pilihan raya terakhir" atau "peluang lobi penggal ini telah digunakan".
+- **Amaran Dana:** tetingkap lobi menyatakan kekurangan Dana untuk portfolio termurah yang IP anda layak dan mencadangkan Tangguh.
+- Tutorial BM/EN, terjemahan, 2 ujian unit, ujian pelayar EN.
+
+### Andaian
+- Peluang parti membentuk kerajaan tidak diubah (rawak, 25% hingga 80% ikut populariti parti).
+- Lobi yang ditangguh hanya luput apabila keputusan pilihan raya seterusnya tidak membuka kerajaan; jika membuka, lobi baharu (3 percubaan) menggantikannya.
+
 ## v8.15 (2026-10-20)
 
 Butang Undo dan penambahbaikan tema gelap/cerah.
