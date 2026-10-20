@@ -1434,6 +1434,7 @@
     else if (act === 'urus-negeri') { urusNegeri(nginst(t)).then(render); }
     else if (act === 'lobi-presiden') { tawarkanLobi(nginst(t)); }
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
+    else if (act === 'glc-syarikat' || act === 'glc-kembali') { if (W.NusaGLC_UI) { W.NusaGLC_UI.pilih(act === 'glc-syarikat' ? t.getAttribute('data-id') : null); } render(); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'kawasan-projek') { var kp = W.MyPolitikKawasan.projek(t.getAttribute('data-id')); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }

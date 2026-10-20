@@ -5,6 +5,7 @@
 Jawatan GLC (undian survey pemain, pilihan 2), mengikut mockup yang diluluskan dengan ganjaran diturunkan selepas v8.18.
 
 ### Baharu
+- **Dua kad:** kad pertama memilih syarikat, kad kedua memaparkan tiga jawatan syarikat itu (butang Kembali). Baki percubaan dikongsi merentas syarikat; kesan setiap peringkat sama bagi semua syarikat (paparan sahaja).
 - **Lobi jawatan GLC:** dibuka selepas pilihan raya jika parti membentuk kerajaan (semua jawatan), atau tawaran lebih rendah (Ahli Lembaga / Pengarah) jika kalah. 9 jawatan rekaan: Pengerusi, Ahli Lembaga, Pengarah bagi tiga syarikat.
 - **Kos dan ganjaran:** Pengerusi IP 220 + RM 15,000 (RM 2,500 + 4 IP sebulan); Ahli Lembaga IP 120 + RM 8,000 (RM 1,500 + 3 IP); Pengarah IP 80 + RM 5,000 (RM 1,000 + 2 IP). Gagal: separuh kos hilang, 2 percubaan.
 - **Tempoh 36 bulan,** boleh diperbaharui dalam 6 bulan terakhir (separuh kos Dana).

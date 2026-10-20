@@ -157,5 +157,5 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, TAHAP: TAHAP, JAWATAN: JAWATAN, getGLC: getGLC, bukaLobi: bukaLobi, senarai: senarai, lobi: lobi, baharui: baharui, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  return { CONFIG: CONFIG, TAHAP: TAHAP, SYARIKAT: SYARIKAT, JAWATAN: JAWATAN, getGLC: getGLC, bukaLobi: bukaLobi, senarai: senarai, lobi: lobi, baharui: baharui, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });

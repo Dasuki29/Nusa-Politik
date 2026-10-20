@@ -2421,7 +2421,10 @@
   ["Pengerusi, Agensi Pembangunan Negeri", "Chairman, State Development Agency"],
   ["Ahli Lembaga, Agensi Pembangunan Negeri", "Board Member, State Development Agency"],
   ["Pengarah, Agensi Pembangunan Negeri", "Director, State Development Agency"],
-  ["Lihat senarai jawatan ({a})", "View post list ({a})"]
+  ["Lihat senarai jawatan ({a})", "View post list ({a})"],
+  ["{a} jawatan, {b} dari IP {c}", "{a} posts, {b} from IP {c}"],
+  ["Pilih syarikat", "Choose company"],
+  ["Dipilih", "Selected"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
