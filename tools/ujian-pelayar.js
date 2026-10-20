@@ -161,6 +161,42 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     await pg.waitForTimeout(300); await imbas('bulan ' + (i + 1)); await tutup();
   }
 
+  /* v8.15: togol tema satu ketukan dan butang Undo (EN), pada halaman baharu (Latihan Amir ditolak). */
+  const pu = await b.newPage({ viewport: { width: 420, height: 900 } }); pu.setDefaultTimeout(6000);
+  pu.on('pageerror', (e) => ralat.push('[undo] ' + e.message));
+  await pu.route('**/*', (r) => { const u = new URL(r.request().url()); return u.hostname === '127.0.0.1' ? r.continue() : r.fulfill({ status: 204, body: '' }); });
+  await pu.addInitScript((d) => { try { if (!localStorage.getItem('myPolitik_player')) { Object.keys(d).forEach((k) => localStorage.setItem(k, d[k])); } } catch (e) { /* abaikan */ } }, BEKAL);
+  await pu.goto(base + '/dashboard.html'); await pu.waitForSelector('#kandungan:not([hidden])');
+  await pu.locator('button:has-text("Continue playing"), button:has-text("Terus main"), button:has-text("Just play")').first().click().catch(() => {});
+  await pu.evaluate(() => { try { if (window.MyPolitikTutorial && MyPolitikTutorial.skip) { MyPolitikTutorial.skip(); } } catch (e) { /* abaikan */ } });
+  await pu.addStyleTag({ content: '.tut-kad,.tut-blok,.tut-sorot,.tut-fab,#mpa-bar,.toast-stack{display:none!important}' });
+  const sk0 = await pu.evaluate(() => document.documentElement.getAttribute('data-skema'));
+  await pu.locator('#btn-skema').evaluate((e) => e.click()); await pu.waitForTimeout(200);
+  const sk1 = await pu.evaluate(() => document.documentElement.getAttribute('data-skema'));
+  if (sk0 === sk1) { ralat.push('butang togol tema tidak menukar skema'); }
+    await pu.locator('#btn-skema').evaluate((e) => e.click()); await pu.waitForTimeout(200);
+  await pu.evaluate(() => { window.NusaUI.gotoTab('tindakan'); }); await pu.waitForTimeout(300);
+  const adaTind = await pu.locator('[data-act="tindakan"]:not([disabled])').count();
+  if (adaTind) {
+    const myr0 = await pu.evaluate(() => window.MyPolitikSave.loadPlayer().myr);
+    await pu.locator('[data-act="tindakan"]:not([disabled])').first().evaluate((e) => e.click()); await pu.waitForTimeout(700);
+    
+    const ub = await pu.evaluate(() => { const b = document.getElementById('btn-undo'); return b ? { d: b.disabled, h: b.hidden, t: b.textContent, ti: b.title } : null; });
+    if (!ub || ub.h) { ralat.push('butang undo tidak dipaparkan: ' + JSON.stringify(ub) + ' tind=' + adaTind); }
+    else if (ub.d) { /* tindakan rawak / acara dikunci: sah */ }
+    else {
+      await pu.locator('#btn-undo').evaluate((e) => e.click()); await pu.waitForTimeout(500);
+      const um = await pu.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
+      const uk = await pu.evaluate(() => (document.querySelector('.modal__title, #modal-tajuk') || {}).innerText || '');
+      if (/dipulangkan|Baki undo/.test(um + uk)) { ralat.push('modal undo bocor BM: ' + (uk + um).slice(0, 120)); }
+      await pu.locator('#modal-kaki button:last-child').evaluate((e) => e.click()); await pu.waitForTimeout(1500);
+      await pu.waitForSelector('#kandungan:not([hidden])').catch(() => {}); 
+      const myr1 = await pu.evaluate(() => window.MyPolitikSave.loadPlayer().myr);
+      if (myr1 !== myr0) { ralat.push('undo tidak memulihkan dana: ' + myr0 + ' -> ' + myr1); }
+    }
+  }
+  await pu.close();
+
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
   await tutup();
   await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 300000 } }); window.MyPolitikHarta.beli('wisma'); });

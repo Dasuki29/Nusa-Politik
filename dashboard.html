@@ -212,6 +212,7 @@
     </a>
     <div class="header-actions">
       <button type="button" class="btn btn--ghost btn--sm lang-switch" data-lang-switch id="btn-lang" aria-pressed="false" aria-label="Tukar bahasa / Switch language" title="Bahasa / Language"><span data-lang="BM" class="is-on">BM</span><span class="lang-switch__sep" aria-hidden="true"> | </span><span data-lang="EN">EN</span></button>
+      <button type="button" class="btn btn--ghost btn--sm" id="btn-skema" data-skema-btn title="Tukar ke paparan gelap" aria-label="Tukar ke paparan gelap">🌙</button>
       <button type="button" class="btn btn--ghost btn--sm" id="btn-menu" title="Menu: rupa, struktur, perlembagaan, simpanan &amp; tukar watak" aria-label="Menu" aria-haspopup="dialog">🏠<span class="plb-btn-teks"> Menu</span></button>
       <button type="button" class="btn btn--ghost btn--sm lagu-btn" id="btn-lagu" aria-expanded="false" aria-controls="kad-lagu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 18V5l11-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm11-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lagu</span></button>
       <button type="button" class="btn btn--ghost btn--sm" id="btn-bersara" title="Bersara awal dan lihat rumusan kerjaya">Bersara</button>
@@ -287,6 +288,7 @@
 
       <div class="dash-time">
         <div class="grow" id="t-info" aria-live="polite"></div>
+        <button type="button" class="btn btn--ghost" id="btn-undo" disabled hidden>↩️ Undo (3/3)</button>
         <button type="button" class="btn btn--gold" id="btn-tahun">Teruskan ke Bulan Seterusnya &rarr;</button>
       </div>
     </section>
@@ -462,6 +464,7 @@
   <script src="js/integriti.js"></script>
   <script src="js/krisis-peta.js"></script>
   <script src="js/kerjaya.js"></script>
+  <script src="js/undo.js"></script>
   <script src="js/harta.js"></script>
   <script src="js/pencapaian.js"></script>
   <script src="js/integriti-ui.js"></script>

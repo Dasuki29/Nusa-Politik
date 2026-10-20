@@ -498,6 +498,7 @@
     if (!r) { return; }
     if (!r.ok) { toast(r.ralat || 'Tindakan gagal.', 'ralat'); return; }
     if (!sendiri) { toast(r.mesej || 'Berjaya.', 'ok'); }
+    if (W.MyPolitikUndo && ((r.peristiwa && r.peristiwa.length) || r.dilapor || (r.kesan && r.kesan.isu))) { W.MyPolitikUndo.rawak(); }   // v8.15: keputusan rawak tidak boleh di-undo
     var amaran = r.amaran && r.amaran.amaran ? [{ jenis: 'amaran_kesetiaan', mesej: r.amaran.mesej }] : [];
     await urusPeristiwa((r.peristiwa || []).concat(amaran.filter(function (a) {
       return !(r.peristiwa || []).some(function (p) { return p.jenis === 'cabaran_jawatan'; });
@@ -1089,6 +1090,7 @@
     renderHeader(p); renderSisi(p); renderTabs(p); renderPanel(p);
     if (window.NusaPaparan) { window.NusaPaparan.render(p); }   // v7.26
     var bt = $('acara-tunggu'); if (bt) { bt.hidden = !(EV && EV.getTertunggak()); }
+    kemaskiniUndo();                                                    // v8.15
   }
   /** v5.0: Legacy Summary apabila kerjaya tamat (meninggal, bersara paksa atau had umur). */
   function paparLegasi(p) {
@@ -1419,6 +1421,7 @@
     var act = t.getAttribute('data-act');
     if (!act) { var tb = t.getAttribute('data-tab'); if (tb) { setTab(tb); } return; }
     var kod = t.getAttribute('data-kod'), lvl = t.getAttribute('data-lvl');
+    var UB = W.MyPolitikUndo, uMula = !!(UB && UNDO_ACT[act] && !(LAT && LAT.aktif()) && UB.mula((t.getAttribute('data-nama') || (t.querySelector && t.querySelector('.choice__title') || t).textContent || act).replace(/\s+/g, ' ').trim()));   // v8.15
     if (act === 'legasi-baharu') { try { W.sessionStorage.setItem('myPolitik_umurMula', '18'); } catch (e) { /* abaikan */ } S.clearPlayer(); if (EV) { EV.reset(); } if (TUT) { TUT.reset(); } W.location.assign(INDEX_URL + '#daftar'); return; }    // v5.0
     if (act === 'ringkasan') { tunjukRingkasan(M.getRingkasan(lvl)); return; }
     if (act === 'bulan') { lanjutBulan(); return; }
@@ -1462,6 +1465,7 @@
         butang: [{ label: 'Batal', nilai: false }, { label: 'Tutup Mesyuarat', nilai: true, kelas: 'btn--gold' }] })
         .then(function (ya) { if (ya) { tutupDanRingkas(lvl); } });
     }
+    if (uMula) { UB.tamat(); kemaskiniUndo(); }                       // v8.15: simpan gambar undo jika keadaan berubah
   });
 
   document.addEventListener('change', function (ev) {
@@ -1631,10 +1635,41 @@
       var mulaTut = function () { TUT.init({ profil: p }); };
       if (!(LAT && !TUT.sudahSelesai(p) && LAT.tawar({ profil: p, lepas: mulaTut }))) { mulaTut(); }
     }
+    try { var ut = W.sessionStorage.getItem('nusa_undo_toast'); if (ut) { W.sessionStorage.removeItem('nusa_undo_toast'); toast(ut, 'ok'); } } catch (e) { /* abaikan */ }   // v8.15
     peringatanSimpanan(p);                                           // v8.14: amaran pelayar dalam-aplikasi / sandaran
     if (W.NusaHarta_UI && W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p)) { W.NusaHarta_UI.isytihar(); }      // v8.13: pengisytiharan yang belum dijawab sebelum muat semula
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
+  /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
+  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1 };
+  function kemaskiniUndo() {
+    var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
+    var k = U.keadaan(S.loadPlayer());
+    b.hidden = !!((LAT && LAT.aktif()) || k.hardcore);
+    b.disabled = !k.boleh;
+    b.textContent = '↩️ Undo (' + k.baki + '/' + k.had + ')';
+    b.title = k.boleh ? 'Batalkan: ' + k.label : k.sebab;
+    b.setAttribute('aria-label', b.title);
+  }
+  async function butangUndo() {
+    var U = W.MyPolitikUndo, k = U && U.keadaan(S.loadPlayer());
+    if (!k || !k.boleh) { toast(k ? k.sebab : 'Undo tidak tersedia.', 'ralat'); return; }
+    var d = U.ringkasBeza() || { ip: 0, myr: 0, ap: 0 };
+    var baris = [];
+    if (d.ip) { baris.push('IP ' + (d.ip > 0 ? '-' : '+') + Math.abs(d.ip) + ' dipulangkan'); }
+    if (d.myr) { baris.push('Dana ' + (d.myr > 0 ? '-RM ' : '+RM ') + fmt(Math.abs(d.myr)) + ' dipulangkan'); }
+    if (d.ap) { baris.push('AP ' + (d.ap > 0 ? '-' : '+') + Math.abs(d.ap) + ' dipulangkan'); }
+    var ya = await modal({ tajuk: 'Batalkan "' + k.label + '"?',
+      isi: (baris.length ? '<ul>' + baris.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + '<p>Baki undo tahun ini selepas ini: ' + (k.baki - 1) + '.</p>',
+      butang: [{ label: 'Batal', nilai: false }, { label: 'Ya, undo', nilai: true, kelas: 'btn--gold' }] });
+    if (!ya) { return; }
+    var r = U.undo();
+    if (!r.ok) { toast(r.ralat, 'ralat'); kemaskiniUndo(); return; }
+    try { W.sessionStorage.setItem('nusa_undo_toast', r.mesej); } catch (e) { /* abaikan */ }
+    W.location.reload();                                              // muat semula supaya semua modul membaca keadaan yang dipulihkan
+  }
+  (function () { var b = $('btn-undo'); if (b) { b.addEventListener('click', butangUndo); } })();
+
   /* v8.14: simpanan hanya dalam pelayar. Amaran sekali setiap sesi: pelayar dalam-aplikasi (Instagram, Threads dll.) atau tiada sandaran dalam 14 hari. */
   function peringatanSimpanan(p) {
     try {

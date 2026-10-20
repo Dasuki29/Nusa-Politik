@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v8.15 (2026-10-20)
+
+Butang Undo dan penambahbaikan tema gelap/cerah.
+
+### Baharu
+- **Undo (`js/undo.js`):** butang ↩️ di sebelah Bulan Seterusnya membatalkan SATU tindakan terakhir (aktiviti, tindakan sayap/negeri, misi sayap, dekati Presiden, beli/jual aset) dan memulangkan IP, Dana, AP. Percuma, 3 kali setahun dalam permainan, dimatikan dalam mod Hardcore. Pengesahan memaparkan apa yang dipulangkan.
+- **Dikunci** apabila keadaan berubah selepas tindakan (Bulan Seterusnya, acara, PRU, audit/pengisytiharan SPRM, tindakan lain) dan untuk tindakan yang menghasilkan keputusan rawak (aduan disiplin, isu rawak, acara selepas aktiviti).
+- **Butang 🌙/☀️** di header untuk tukar gelap/cerah satu ketukan (Auto kekal dalam menu 🎨).
+- **Kontras:** kad status berjalur warna kiri, bar lebih tinggi bersempadan dengan corak serong dan nilai % di dalam bar (jika bar ada `aria-valuenow`), lencana jawatan segi empat bersempadan.
+
+### Andaian
+- Gambar undo ialah salinan mentah storan watak, acara dan pencapaian; halaman dimuat semula selepas undo.
+- Bar yang tiada `aria-valuenow` (contohnya Pengaruh ke jawatan seterusnya) tidak menunjukkan % di dalam bar; nilai tetap ada pada label.
+- Tindakan peta (`data-v`) dan kempen/PRU tidak boleh di-undo.
+
 ## v8.14 (2026-10-20)
 
 Pembetulan berdasarkan maklum balas pemain: pendapatan bulanan dan simpanan.

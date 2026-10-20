@@ -108,3 +108,32 @@ html[data-tema="poster"][data-skema="cerah"] .badge-sayap--puteri { background: 
 .paparan-pop { z-index: 210; }
 
 .menu__dalam { padding-top: 60px !important; }
+
+/* ==========================================================================
+   v8.15: Kontras kad status / bar / lencana (kedua-dua skema) + butang togol
+   ========================================================================== */
+#btn-skema { min-width: 40px; }
+/* Kad status: jalur warna kiri + sempadan tebal */
+html[data-tema="poster"] .stat { border: 2px solid var(--garis); border-left-width: 8px; border-radius: 6px; background: var(--bg-elev-1); }
+html[data-tema="poster"] .stat__label { font-weight: 700; color: var(--text-muted); }
+html[data-tema="poster"] .stat:has(.stat__value--gold) { border-left-color: #F2B705; }
+html[data-tema="poster"] .stat:has(.stat__value--red)  { border-left-color: var(--red); }
+html[data-tema="poster"][data-skema="gelap"] .stat { background: var(--bg-elev-2); }
+html[data-tema="poster"] .stat:has(.stat__value:not(.stat__value--gold):not(.stat__value--red)) { border-left-color: var(--success); }
+/* Bar: lebih tinggi, bersempadan, corak serong, nilai % di dalam bar (dari aria-valuenow) */
+html[data-tema="poster"] .progress, html[data-tema="poster"] .meter__track { height: 16px; border: 2px solid var(--garis); border-radius: 4px; background: var(--bg-elev-3); box-shadow: none; position: relative; overflow: hidden; }
+html[data-tema="poster"] .progress--sm { height: 16px; }
+html[data-tema="poster"] .progress--lg { height: 20px; }
+html[data-tema="poster"] .progress__bar { border-radius: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.28) 0 6px, transparent 6px 12px), linear-gradient(90deg, var(--bar-b), var(--bar-a)); }
+html[data-tema="poster"] .progress__bar::after { display: none; }
+html[data-tema="poster"] .progress[aria-valuenow]::after, html[data-tema="poster"] .meter__track[aria-valuenow]::after {
+  content: attr(aria-valuenow) "%"; position: absolute; inset: 0; display: grid; place-items: center; font-size: .68rem; font-weight: 900; line-height: 1;
+  color: #111; text-shadow: 0 0 3px #fff, 0 0 3px #fff; pointer-events: none; }
+html[data-tema="poster"][data-skema="gelap"] .progress[aria-valuenow]::after, html[data-tema="poster"][data-skema="gelap"] .meter__track[aria-valuenow]::after { color: #fff; text-shadow: 0 0 3px #000, 0 0 3px #000; }
+/* Lencana jawatan: segi empat bersempadan, teks kontras tinggi */
+html[data-tema="poster"] .badge-office { border: 2px solid var(--garis); border-radius: 6px; box-shadow: 2px 2px 0 var(--garis); font-weight: 800; }
+html[data-tema="poster"] .badge-office::before { border-radius: 3px; }
+html[data-tema="poster"] .badge-office--timbalan { --badge-fg: #111; }
+html[data-tema="poster"][data-skema="gelap"] .badge-office--ahli { --badge-c1: #E4E8F2; --badge-c2: #E4E8F2; --badge-fg: #111; }
+html[data-tema="poster"][data-skema="gelap"] .badge-office--mt { --badge-c1: #9A72F0; --badge-c2: #7A4DD8; }
+@media (prefers-reduced-motion: reduce) { html[data-tema="poster"] .progress__bar { transition: none; } }
