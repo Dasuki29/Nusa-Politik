@@ -110,6 +110,15 @@
     });
     return h + '</section>';
   }
+  /** v8.16: terangkan kenapa tiada tetingkap lobi (parti pembangkang penggal ini, atau peluang telah digunakan). */
+  function kadTiadaLobi(p) {
+    var pr = PRU.getPRU(p), st = [pr.status, pr.statusKedua].filter(function (x) { return x && x.kerajaan !== undefined; });
+    if (!st.length || pr.nasional) { return ''; }
+    var ada = st.some(function (x) { return x.kerajaan; });
+    return '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">' +
+      (ada ? 'Peluang lobi penggal ini telah digunakan. Lobi dibuka semula selepas pilihan raya akan datang jika parti membentuk kerajaan.'
+           : 'Tiada lobi penggal ini: parti anda tidak membentuk kerajaan pada pilihan raya terakhir. Lobi dibuka selepas pilihan raya akan datang jika parti membentuk kerajaan (peluang bergantung pada populariti parti).') + '</p></section>';
+  }
   function kadKabinet(p) {
     if (!KB) { return ''; }
     var k = KB.ringkasan(p), h = '';
@@ -118,7 +127,7 @@
       var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
       return bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button></section>';
     }
-    if (!k.hasGovernmentRole) { return ''; }
+    if (!k.hasGovernmentRole) { return kadTiadaLobi(p); }
     h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
     var arah = k.arah > 0 ? ' ▲ +' + k.arah : k.arah < 0 ? ' ▼ ' + k.arah : ' ▬';
     h += bar('KPI Portfolio · ' + k.kpiLabel + arah, k.governanceRating, k.governanceRating < 30) + bar('Tekanan politik', k.tekananPolitik, k.tekananPolitik >= 70) +
@@ -387,6 +396,13 @@
   }
 
   /* ---- Kabinet ---- */
+  /** v8.16: jika Dana tidak cukup untuk portfolio termurah yang IP anda layak, nyatakan kekurangan dan cadangkan tangguh. */
+  function amaranDanaLobi(p, k) {
+    var layak = (k.portfolio || []).filter(function (x) { return (Number(p.ip) || 0) >= x.ip; });
+    if (!layak.length || layak.some(function (x) { return (Number(p.myr) || 0) >= x.myr; })) { return ''; }
+    var min = layak.reduce(function (a, x) { return x.myr < a ? x.myr : a; }, layak[0].myr), kurang = min - (Number(p.myr) || 0);
+    return '<div class="banner banner--gold"><strong>Dana tidak mencukupi</strong>Portfolio termurah yang anda layak perlukan RM ' + fmt(min) + ' (kurang RM ' + fmt(kurang) + '). Pilih Tangguh dan kembali bila Dana cukup.</div>';
+  }
   async function lobi() {
     if (!KB) { return; }
     var guard = 0;
@@ -395,13 +411,14 @@
       if (!k.lobi) { break; }
       var id = await modal({
         tajuk: '🏛️ Lobi Portfolio Kerajaan',
-        isi: '<p>Parti membentuk kerajaan. Guna <b>IP</b> dan <b>Dana</b> untuk melobi satu portfolio. Lobi gagal = separuh kos hilang. Percubaan tinggal: <b>' + k.lobi.baki + '</b>.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Dana: <b>RM ' + fmt(p.myr) + '</b></p><ul class="acara__pil">' +
+        isi: '<p>Parti membentuk kerajaan. Guna <b>IP</b> dan <b>Dana</b> untuk melobi satu portfolio. Lobi gagal = separuh kos hilang. Percubaan tinggal: <b>' + k.lobi.baki + '</b>.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Dana: <b>RM ' + fmt(p.myr) + '</b></p>' + amaranDanaLobi(p, k) + '<ul class="acara__pil">' +
           (k.portfolio.length ? '' : '<li class="muted" style="list-style:none">Tiada portfolio dibuka pada IP anda sekarang (minimum 250 IP).</li>') + k.portfolio.map(function (x) { return opsi(x.id, esc(x.nama), esc(x.tahapNama) + ' · kos IP ' + x.ip + ' + RM ' + fmt(x.myr) + ' · peluang ± ' + x.peluang + '% · elaun +RM ' + fmt(x.elaun.myr) + ' &amp; +' + x.elaun.ip + ' IP/bulan' + (x.boleh ? '' : '<br>' + esc(x.sebab)), x.boleh); }).join('') +
-          opsi('LEPAS', 'Tidak melobi', 'Lepaskan peluang penggal ini.', true) + '</ul>',
+          opsi('TANGGUH', 'Tangguh', 'Lobi kekal terbuka sehingga pilihan raya akan datang. Buka semula dari tab Pemilihan bila sedia.', true) + '</ul>',
         butang: []
       });
       if (!id) { break; }
       if (id === 'LEPAS') { KB.lepaskanLobi(); break; }
+      if (id === 'TANGGUH') { toast('Lobi ditangguh. Anda boleh membukanya semula dari tab Pemilihan.', 'ok'); break; }   // v8.16: kekal terbuka
       var r = KB.lobiPortfolio(id);
       if (!r.ok) { toast(r.ralat, 'ralat'); continue; }
       segarkan();

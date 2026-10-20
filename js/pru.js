@@ -653,6 +653,10 @@
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (!k.menang) { laras({ stress: CONFIG.KALAH.stress }); }
     if (kabinetBuka) { var Kb = modul('MyPolitikKabinet', 'kabinet.js'); if (Kb && Kb.bukaLobi) { Kb.bukaLobi(lobiJenis); } }
+    else if (!k.nasional) {                                                    // v8.16: lobi yang ditangguh penggal lalu luput apabila pilihan raya baharu tidak membuka kerajaan
+      var Kb2 = modul('MyPolitikKabinet', 'kabinet.js');
+      if (Kb2 && Kb2.getKabinet && Kb2.lepaskanLobi && Kb2.getKabinet(S().loadPlayer()).lobi) { Kb2.lepaskanLobi(); }
+    }
     return { ok: true, keputusan: k };
   }
 
