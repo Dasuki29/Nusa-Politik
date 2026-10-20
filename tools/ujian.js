@@ -743,6 +743,7 @@ ujian('lobi: pilihan raya yang membentuk kerajaan membuka lobi baharu (3 percuba
   let r = null;
   for (let i = 1; i <= 60 && !(r && r.keputusan && r.keputusan.kabinetBuka); i++) { r = lobiKempen(benih(i), true); betul(r.ok, r.ralat); }
   betul(r.keputusan && r.keputusan.kabinetBuka, 'rng kecil sepatutnya membentuk kerajaan'); const k = KB.getKabinet(S.loadPlayer()); betul(k.lobi, 'lobi dibuka'); sama(k.lobi.baki, 3);
+  const gl = g.MyPolitikGLC.getGLC(S.loadPlayer()); betul(gl.lobi && gl.lobi.jenis === 'kerajaan', 'lobi GLC dibuka bersama kabinet'); sama(gl.lobi.baki, 2);
 });
 
 /* ---------- v8.17: bertanding kerusi lain ---------- */
@@ -830,6 +831,46 @@ ujian('kawasan: baki hangus pada Januari; projek ditolak tanpa kerusi atau AP', 
   kwPemain(null); sama(KW.projek('banjir').ok, false, 'tiada kerusi');
 });
 
+
+/* ---------- v8.19: Jawatan GLC ---------- */
+function glcPemain(o) {
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama' });
+  P.tetap(Object.assign({ ip: 700, myr: 40000, reputasi: 60 }, o || {}));
+  return g.MyPolitikGLC;
+}
+ujian('glc: lobi hanya selepas dibuka; kalah = tawaran lebih rendah (tiada Pengerusi); lobi lapuk ditutup', () => {
+  const GL = glcPemain(); sama(GL.lobi('spn_ahli').ok, false, 'lobi belum dibuka');
+  GL.bukaLobi('kerajaan'); sama(GL.senarai(S.loadPlayer()).length, 9);
+  GL.bukaLobi('kalah'); const s = GL.senarai(S.loadPlayer()); sama(s.length, 6); betul(!s.some((x) => /^Pengerusi/.test(x.nama)), 'tiada Pengerusi');
+  GL.bukaLobi(null); sama(GL.getGLC(S.loadPlayer()).lobi, null);
+});
+ujian('glc: lobi berjaya potong IP dan Dana, beri jawatan 36 bulan; gagal hilang separuh kos', () => {
+  const GL = glcPemain(); GL.bukaLobi('kerajaan'); const a = S.loadPlayer();
+  let r = GL.lobi('spn_ahli', { rng: () => 0.99 }); betul(r.ok && !r.dilantik, r.ralat);
+  let b = S.loadPlayer(); sama(a.myr - b.myr, 4000, 'separuh RM8,000'); sama(a.ip - b.ip, 60, 'separuh IP 120'); sama(GL.getGLC(b).lobi.baki, 1);
+  r = GL.lobi('spn_ahli', { rng: () => 0 }); betul(r.ok && r.dilantik, r.ralat);
+  const j = GL.getGLC(S.loadPlayer()).jawatan; sama(j.tamat - j.mula, 36); sama(GL.getGLC(S.loadPlayer()).lobi, null);
+  sama(GL.lobi('apn_pengarah').ok, false, 'sudah ada jawatan');
+});
+ujian('glc: ganjaran bulanan, konflik +2, audit +1, sekali sebulan; tamat 36 bulan', () => {
+  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 });
+  const a = S.loadPlayer(); GL.prosesBulan({ rng: () => 0.99 }); GL.prosesBulan({ rng: () => 0.99 });
+  const b = S.loadPlayer(), gl = GL.getGLC(b); sama(b.myr - a.myr, 1000); sama(gl.konflik, 2); sama(gl.audit, 1);
+  S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { jawatan: Object.assign({}, gl.jawatan, { tamat: 0 }), akhir: '' }) } });
+  GL.prosesBulan({ rng: () => 0.99 }); sama(GL.getGLC(S.loadPlayer()).jawatan, null, 'tamat tempoh');
+});
+ujian('glc: tamat jika dilantik Menteri; pembaharuan hanya 6 bulan terakhir; pemecatan SPRM denda dan Integriti', () => {
+  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 });
+  sama(GL.baharui().ok, false, 'terlalu awal');
+  let p = S.loadPlayer(), gl = GL.getGLC(p); S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { audit: 80, konflik: 70 }) } });
+  const m0 = S.loadPlayer().myr; GL.prosesBulan({ rng: () => 0 }); p = S.loadPlayer();
+  sama(GL.getGLC(p).jawatan, null, 'dipecat'); sama(m0 - p.myr, 5000, 'denda');
+  GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 }); p = S.loadPlayer(); gl = GL.getGLC(p);
+  S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { jawatan: Object.assign({}, gl.jawatan, { tamat: gl.jawatan.mula + 5 }) }) } });
+  const t0 = GL.getGLC(S.loadPlayer()).jawatan.tamat; betul(GL.baharui().ok, 'boleh baharui'); sama(GL.getGLC(S.loadPlayer()).jawatan.tamat, t0 + 36);
+  S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign({}, KB.getKabinet(S.loadPlayer()), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }), glc: Object.assign({}, GL.getGLC(S.loadPlayer()), { akhir: '' }) } });
+  GL.prosesBulan({ rng: () => 0.99 }); sama(GL.getGLC(S.loadPlayer()).jawatan, null, 'tamat apabila Menteri');
+});
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });

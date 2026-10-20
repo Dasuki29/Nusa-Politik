@@ -1,5 +1,22 @@
 # Catatan Perubahan
 
+## v8.19 (2026-10-20)
+
+Jawatan GLC (undian survey pemain, pilihan 2), mengikut mockup yang diluluskan dengan ganjaran diturunkan selepas v8.18.
+
+### Baharu
+- **Lobi jawatan GLC:** dibuka selepas pilihan raya jika parti membentuk kerajaan (semua jawatan), atau tawaran lebih rendah (Ahli Lembaga / Pengarah) jika kalah. 9 jawatan rekaan: Pengerusi, Ahli Lembaga, Pengarah bagi tiga syarikat.
+- **Kos dan ganjaran:** Pengerusi IP 220 + RM 15,000 (RM 2,500 + 4 IP sebulan); Ahli Lembaga IP 120 + RM 8,000 (RM 1,500 + 3 IP); Pengarah IP 80 + RM 5,000 (RM 1,000 + 2 IP). Gagal: separuh kos hilang, 2 percubaan.
+- **Tempoh 36 bulan,** boleh diperbaharui dalam 6 bulan terakhir (separuh kos Dana).
+- **Risiko:** Konflik Kepentingan +2 dan Audit SPRM +1 sebulan. Risiko Audit tinggi atau Integriti Parti rendah boleh menyebabkan pemecatan (denda RM 5,000, Integriti -10, Reputasi -5).
+- Boleh bersama jawatan parti dan kerusi ADUN/MP; tamat jika dilantik Menteri atau EXCO.
+- Tutorial BM/EN, terjemahan, 4 ujian unit, ujian pelayar EN.
+
+### Andaian
+- Semua angka ialah cadangan imbangan; ganjaran diturunkan daripada mockup (Pengerusi 3,500 kepada 2,500).
+- Nama syarikat rekaan. Lobi dibuka selepas pilihan raya sahaja; menang sebagai pembangkang tiada lobi GLC.
+- Tidak termasuk: GLC dalam pengisytiharan harta tahunan, pendapatan GLC dalam pratonton pendapatan.
+
 ## v8.18 (2026-10-20)
 
 Peruntukan Kawasan (maklum balas survey pemain: wakil rakyat dan menteri perlukan lebih peruntukan), mengikut mockup B yang diluluskan.

@@ -237,6 +237,16 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pu.waitForTimeout(400);
   const kb = await pu.evaluate(() => window.MyPolitikKawasan.getKawasan(window.MyPolitikSave.loadPlayer()).baki);
   if (kb !== 1800) { ralat.push('projek kawasan tidak menolak baki: ' + kb); }
+  /* v8.19: Jawatan GLC (EN): kad lobi, lobi berjaya, kad jawatan; tiada BM bocor. */
+  await pu.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 40000, reputasi: 60 } }); window.MyPolitikGLC.bukaLobi('kerajaan'); window.NusaUI.render(); window.NusaUI.gotoTab('tindakan'); });
+  await pu.waitForTimeout(500);
+  const g1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /GLC Post/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  if (!/Chairman, Nusa Investment Company/.test(g1) || /Pengerusi|Lobi|Parti membentuk/.test(g1)) { ralat.push('kad GLC EN salah: ' + g1.slice(0, 240)); }
+  await pu.locator('[data-act="glc-lobi"][data-id="apn_pengarah"]').first().evaluate((e) => e.click()).catch(() => {});
+  await pu.waitForTimeout(500);
+  const g2 = await pu.evaluate(() => { const gl = window.MyPolitikGLC.getGLC(window.MyPolitikSave.loadPlayer()); const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /GLC Post/i.test(x.textContent))[0]; return { j: !!gl.jawatan, baki: gl.lobi && gl.lobi.baki, t: c ? c.textContent : '' }; });
+  if (!g2.j && g2.baki !== 1) { ralat.push('lobi GLC tidak menukar keadaan: ' + JSON.stringify(g2).slice(0, 200)); }
+  if (g2.j && (!/Conflict of Interest Risk/.test(g2.t) || /Risiko|Ganjaran|Baki/.test(g2.t))) { ralat.push('kad jawatan GLC EN salah: ' + g2.t.slice(0, 240)); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
