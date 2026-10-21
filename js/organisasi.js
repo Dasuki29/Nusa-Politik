@@ -47,7 +47,13 @@
 
   function benih(p) { return String((p && (p.benih || p.seed || p.cawanganId || p.cawangan)) || 'nusa') + '|org'; }
 
-  function nama(rng, jantina) { return D && D.janaNama ? D.janaNama(rng, jantina) : 'Pemimpin NPC'; }
+  function nama(rng, jantina, tahap) { return D && D.janaNama ? D.janaNama(rng, jantina, tahap) : 'Pemimpin NPC'; }
+  /** v8.24: tahap gelaran NPC: Pusat induk = Tan Sri; Ketua/Naib sayap Pusat = Dato'; Bahagian = sebahagian Dato'; AJK dan Cawangan tiada. */
+  function tahapGelaran(peringkat, sayap, slot) {
+    if (slot === 'ajk') { return null; }
+    if (peringkat === 'pusat') { return sayap ? 'dato' : 'tan'; }
+    return peringkat === 'bahagian' ? 'bahagian' : null;
+  }
 
   function pemegang(p, kod) {
     var senarai = (p && p.jawatanList) || [];
@@ -73,7 +79,7 @@
     var bil = (sayap ? CONFIG.AJK_SAYAP : CONFIG.AJK)[peringkat];
     function slot(kunci) {
       var kod = kodSlot(peringkat, sayap, kunci), ada = kod && pemegang(p, kod);
-      return { jawatan: t[kunci], nama: ada ? (p.nama || 'Anda') : nama(rng, jantinaSlot(sayap, rng)), pemain: !!ada };
+      return { jawatan: t[kunci], nama: ada ? (p.nama || 'Anda') : nama(rng, jantinaSlot(sayap, rng), tahapGelaran(peringkat, sayap, kunci)), pemain: !!ada };
     }
     var ketua = slot('ketua'), naib = slot('naib'), timbalan = t.timbalan ? slot('timbalan') : null;
     var kodAjk = kodSlot(peringkat, sayap, 'ajk'), pAjk = kodAjk && pemegang(p, kodAjk);
@@ -86,7 +92,7 @@
     if (!sayap && peringkat === 'pusat') {            // Naib Presiden (3) ialah jawatan tambahan Induk di Pusat
       for (var n = 1; n <= 3; n++) {
         var nm = pemegang(p, 'naib_presiden') && n === 1;
-        out.tambahan.push({ jawatan: 'Naib Presiden ' + n, nama: nm ? (p.nama || 'Anda') : nama(rng, 'L'), pemain: nm });
+        out.tambahan.push({ jawatan: 'Naib Presiden ' + n, nama: nm ? (p.nama || 'Anda') : nama(rng, 'L', 'tan'), pemain: nm });
       }
     }
     return out;

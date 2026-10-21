@@ -44,10 +44,12 @@
     return l;
   }
   function rngBenih(p, lv, siri) { var S0 = S(); return S0.rngBerbenih(String(p.id) + '|rival|' + lv + '|' + siri); }
+  function G0() { return root.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null); }
   function janaNama(p, lv, siri) {
     var r = rngBenih(p, lv, siri), lelaki = lv === 'sayap' ? p.sayap === 'pemuda' : r() < 0.7;
     var a = (lelaki ? NAMA_L : NAMA_P)[Math.floor(r() * (lelaki ? NAMA_L.length : NAMA_P.length))], b = NAMA_2[Math.floor(r() * NAMA_2.length)];
-    return (lv === 'bahagian' && lelaki ? "Dato' " : '') + a + ' ' + b;
+    var G = G0();                                  // v8.24: gelaran NPC (Bahagian: sebahagian sahaja)
+    return (lv === 'bahagian' && G && G.awalanNPC ? G.awalanNPC(r, 'bahagian', lelaki ? 'L' : 'P') : '') + a + ' ' + b;
   }
   function baru(p, lv, siri) { return { nama: janaNama(p, lv, siri), kuasa: cfg(p).mula, tren: 0, serang: null }; }
 

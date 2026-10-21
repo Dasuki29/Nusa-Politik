@@ -960,6 +960,26 @@ ujian('komuniti: Belia tamat selepas 40 tahun; jawatan bergaji tinggi tidak bers
   const s = K2.senarai(S.loadPlayer()); sama(s.filter((x) => x.id === 'sukan_nasional')[0].boleh, false);
   betul(/GLC/.test(s.filter((x) => x.id === 'sukan_nasional')[0].sebab) || true);
 });
+/* ---------- Gelaran NPC (v8.24) ---------- */
+ujian('gelaran NPC: Tan Sri/Dato\' ikut tahap; perempuan boleh Datin/Datin Paduka/Puan Sri; Bahagian sebahagian sahaja; Cawangan tiada', () => {
+  const G = g.MyPolitikGelaran, rng = g.MyPolitikData.createRng('uji-gelaran-npc'), kira = {};
+  const a = (t, j) => G.awalanNPC(rng, t, j);
+  for (let i = 0; i < 2000; i++) {
+    sama(a('tan', 'L'), 'Tan Sri ', 'lelaki Tan Sri'); sama(a('dato', 'L'), "Dato' ", 'lelaki Dato'); sama(a(null, 'P'), '', 'tiada tahap'); sama(a('cawangan', 'L'), '', 'cawangan tiada');
+    const p1 = a('tan', 'P'); betul(p1 === 'Tan Sri ' || p1 === 'Puan Sri ', 'tahap Tan: ' + p1);
+    const p2 = a('dato', 'P'); betul(["Dato' ", 'Datin ', 'Datin Paduka '].indexOf(p2) >= 0, 'tahap Dato: ' + p2); kira[p2] = (kira[p2] || 0) + 1; kira[p1] = (kira[p1] || 0) + 1;
+    const b = a('bahagian', 'L'); kira.bhg = (kira.bhg || 0) + (b === "Dato' " ? 1 : 0); betul(b === '' || b === "Dato' ", 'bahagian lelaki: ' + b);
+  }
+  ['Puan Sri ', 'Datin ', 'Datin Paduka ', "Dato' ", 'Tan Sri '].forEach((k) => betul(kira[k] > 100, 'jarang: ' + k + ' ' + kira[k]));
+  betul(kira.bhg > 600 && kira.bhg < 1000, 'Bahagian kira-kira 40%: ' + kira.bhg);
+  const r1 = g.MyPolitikData.createRng('x'), r2 = g.MyPolitikData.createRng('x'); sama(G.awalanNPC(r1, 'dato', 'P'), G.awalanNPC(r2, 'dato', 'P'), 'stabil dengan benih sama');
+});
+ujian('gelaran NPC: organisasi Pusat induk = Tan Sri/Puan Sri, AJK dan Cawangan tiada gelaran', () => {
+  P.daftar({}); const st = g.MyPolitikOrganisasi.getStruktur(S.loadPlayer()), pu = st.induk.pusat, cw = st.induk.cawangan;
+  const tan = (n) => /^(Tan Sri|Puan Sri) /.test(n);
+  betul(tan(pu.ketua.nama) && tan(pu.naib.nama), 'Presiden dan Timbalan: ' + pu.ketua.nama); betul(pu.tambahan.every((x) => tan(x.nama)), 'Naib Presiden');
+  betul(pu.ajk.every((x) => !/^(Tan Sri|Puan Sri|Dato|Datin)/.test(x.nama)), 'AJK Pusat tiada gelaran'); betul(!/^(Tan Sri|Puan Sri|Dato|Datin)/.test(cw.ketua.nama), 'Cawangan tiada gelaran');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

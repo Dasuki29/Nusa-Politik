@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.24 (2026-10-21)
+
+Nama dan gelaran NPC konsisten dengan sistem gelaran pemain (maklum balas pemain: calon negeri semua Dato', tetapi Presiden tiada gelaran).
+
+### Berubah
+- **Satu peraturan gelaran NPC** (`awalanNPC` dalam `gelaran.js`) dipakai oleh calon negeri, pesaing Bahagian, organisasi (Induk dan sayap) dan calon blok.
+- **Tahap:** Cawangan dan AJK tiada gelaran; Bahagian kira-kira 40% Dato'; Ketua/Naib Ketua sayap Pusat Dato'; Presiden, Timbalan Presiden dan Naib Presiden Tan Sri; tokoh negeri (Bekas Exco, Tokoh Parti) Dato'.
+- **Perempuan:** gelaran sendiri (Dato' / Tan Sri) atau gelaran isteri penerima: 35% Datin / Datin Paduka (60:40) bagi tahap Dato', Puan Sri bagi tahap Tan Sri.
+- Perempuan Bahagian kini boleh bergelar (dahulu tiada gelaran langsung).
+
+### Andaian
+- Peratus (40%, 35%, 40%) ialah penyeimbang simulasi. Gelaran ialah rekaan permainan.
+- Nama NPC yang sudah disimpan dalam simpanan lama (Pengerusi dan AJK negeri) kekal; senarai calon dijana semula daripada benih jadi berubah. Simpanan baharu terus guna peraturan baharu.
+
 ## v8.23 (2026-10-21)
 
 Lobi Jawatan Komuniti (maklum balas pemain), diasingkan daripada GLC.

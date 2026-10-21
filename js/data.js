@@ -696,12 +696,18 @@
   var NAMA_PEREMPUAN_2 = ['Aisyah', 'Huda', 'Ain', 'Atiqah', 'Batrisyia', 'Husna', 'Izzah', 'Nabilah', 'Nadia', 'Najwa',
     'Sofea', 'Syazwani', 'Zulaikha', 'Amalina', 'Farhana', 'Hanis', 'Dayana', 'Alia', 'Syafiqah', 'Suhana'];
 
-  function janaNama(rng, jantina) {
-    var bapa = pick(rng, NAMA_LELAKI);
+  function janaNama(rng, jantina, tahap) {
+    var bapa = pick(rng, NAMA_LELAKI), nama, awalan = '';
     if (jantina === 'L') {
-      return pick(rng, NAMA_LELAKI) + ' ' + pick(rng, NAMA_LELAKI_2) + ' bin ' + bapa;
+      nama = pick(rng, NAMA_LELAKI) + ' ' + pick(rng, NAMA_LELAKI_2) + ' bin ' + bapa;
+    } else {
+      nama = pick(rng, NAMA_PEREMPUAN) + ' ' + pick(rng, NAMA_PEREMPUAN_2) + ' binti ' + bapa;
     }
-    return pick(rng, NAMA_PEREMPUAN) + ' ' + pick(rng, NAMA_PEREMPUAN_2) + ' binti ' + bapa;
+    if (tahap) {                                                   // v8.24: gelaran NPC mengikut tahap (dato | tan | bahagian); tanpa tahap = tiada gelaran
+      var G = globalThis.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null);
+      if (G && G.awalanNPC) { awalan = G.awalanNPC(rng, tahap, jantina); }
+    }
+    return awalan + nama;
   }
 
   /**

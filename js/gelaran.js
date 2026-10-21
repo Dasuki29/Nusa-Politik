@@ -108,5 +108,17 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, getGelaran: getGelaran, awalan: awalan, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  /* ---------- Gelaran NPC (v8.24) ----------
+     Peraturan sama dengan pemain: pangkat 9+ / Menteri = Dato'; pangkat 10+ / TPM / PM = Tan Sri; Bahagian = sebahagian sahaja.
+     Perempuan: gelaran sendiri (Dato' / Tan Sri) atau gelaran isteri penerima (Datin, Datin Paduka, Puan Sri). */
+  var NPC = { BAHAGIAN: 0.4, ISTERI: 0.35, DATIN_PADUKA: 0.4 };
+  /** tahap: 'dato' | 'tan' | 'bahagian' | lain (tiada). jantina: 'L' | 'P'. Sentiasa menggunakan 3 nombor rng supaya urutan stabil. Pulang awalan + ruang atau ''. */
+  function awalanNPC(rng, tahap, jantina) {
+    var r1 = rng(), r2 = rng(), r3 = rng(), t = tahap === 'tan' ? 'tan' : tahap === 'dato' ? 'dato' : (tahap === 'bahagian' && r1 < NPC.BAHAGIAN ? 'dato' : null);
+    if (!t) { return ''; }
+    if (jantina === 'P' && r2 < NPC.ISTERI) { return t === 'tan' ? 'Puan Sri ' : (r3 < NPC.DATIN_PADUKA ? 'Datin Paduka ' : 'Datin '); }
+    return t === 'tan' ? 'Tan Sri ' : "Dato' ";
+  }
+
+  return { CONFIG: CONFIG, NPC: NPC, awalanNPC: awalanNPC, getGelaran: getGelaran, awalan: awalan, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });
