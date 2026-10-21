@@ -1300,6 +1300,9 @@
     var rg = pv.regenerasi, p0 = S.loadPlayer();
     var KJ8 = W.MyPolitikKerjaya, ek8 = KJ8 && KJ8.elaunKabinet ? KJ8.elaunKabinet(p0) : null, butir8 = rg.butiran.slice(), jum8 = rg.myr;   // v8.14: elaun kabinet turut dipaparkan
     if (ek8) { butir8.push({ nama: 'Elaun jawatan kerajaan', jumlah: ek8.myr }); jum8 += ek8.myr; }
+    var HT8 = W.MyPolitikHarta, ps8 = HT8 && HT8.ringkasan ? HT8.ringkasan(p0).pasif : null;   // v8.22: sewa hartanah & penyelenggaraan dalam pratonton
+    if (ps8 && ps8.sewa) { butir8.push({ nama: 'Sewa hartanah', jumlah: ps8.sewa }); jum8 += ps8.sewa; }
+    if (ps8 && ps8.kos) { butir8.push({ nama: 'Penyelenggaraan aset', jumlah: -ps8.kos }); jum8 -= ps8.kos; }
     var henti8 = KJ8 && KJ8.faktorKerjaya && KJ8.faktorKerjaya(p0) === 0;
     var kepala = pv.tahunBaharu ? 'Teruskan ke Bulan 1, ' + pv.ke.tahun + '?' : 'Teruskan ke Bulan ' + pv.ke.bulan + ' (' + K.namaBulan(pv.ke.bulan) + ')?';
     var ya = await modal({
@@ -1644,7 +1647,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

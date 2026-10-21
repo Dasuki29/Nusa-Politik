@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v8.22 (2026-10-21)
+
+Aset: sewa hartanah dan laluan naik taraf (maklum balas pemain).
+
+### Berubah
+- **Sewa:** hartanah memberi sewa 0.9% daripada harga sebulan, masuk Dana peribadi (Rumah teres RM360, Wisma Pejabat RM1,080). Sewa dikira dalam kekayaan bersih (kena cukai kurungan) dan dipaparkan dalam pratonton pendapatan bersama baris penyelenggaraan. Media dan kenderaan tidak berubah.
+- **Naik taraf:** Rumah teres (RM40,000) > Rumah banglo (RM100,000, sewa RM900, +4 IP) > Kompleks perniagaan (RM250,000, sewa RM2,250, +8 IP). Banglo dan kompleks hanya melalui naik taraf; bayar beza harga dan aset lama diganti (tiada jualan 80%). Boleh dibatalkan (Undo).
+- Wisma Pejabat kekal berasingan (di luar rantai naik taraf).
+
+### Andaian
+- Angka ialah penyeimbang simulasi. Tiada tempoh kosong rawak.
+- Pendapatan sewa bersih tidak menerima bonus dana sayap (diperlakukan sebagai pindahan, sama seperti penyelenggaraan).
+
 ## v8.21 (2026-10-21)
 
 Peta Wilayah Persekutuan dan akar umbi lebih kuat (maklum balas pemain: kawasan WP terlalu kecil untuk ditekan; undi akar umbi sering tidak membantu).
