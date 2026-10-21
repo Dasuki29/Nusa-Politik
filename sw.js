@@ -4,7 +4,7 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v8.18';
+var VERSI = 'nusa-v8.20';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
@@ -15,7 +15,7 @@ var ASAS = [
   'js/organisasi.js', 'js/stress.js', 'js/hayat.js', 'js/pru.js', 'js/kabinet-data.js', 'js/kabinet.js', 'js/prk.js',
   'js/ElectionEngine.js', 'js/CabinetEngine.js', 'js/WingEngine.js', 'js/pru-ui.js', 'js/dewan.js', 'js/dun.js', 'js/dewan-ui.js', 'js/pencapaian.js', 'js/pencapaian-ui.js',
   'js/paparan.js', 'js/app.js',
-  'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js',
+  'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js', 'js/glc.js', 'js/glc-ui.js',
   'assets/images/favicon.svg', 'assets/images/favicon-32.png', 'assets/images/favicon-192.png', 'assets/images/apple-touch-icon.png',
   'assets/images/icon-512.png', 'assets/images/icon-maskable-512.png', 'assets/images/logo.png', 'assets/images/logo-placeholder.svg',
   'assets/images/menara-dato-onn.jpg', 'assets/images/menara-dato-onn.svg',

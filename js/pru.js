@@ -701,6 +701,8 @@
       var Kb2 = modul('MyPolitikKabinet', 'kabinet.js');
       if (Kb2 && Kb2.getKabinet && Kb2.lepaskanLobi && Kb2.getKabinet(S().loadPlayer()).lobi) { Kb2.lepaskanLobi(); }
     }
+    var GLn = modul('MyPolitikGLC', 'glc.js');                                 // v8.19: lobi jawatan GLC (kerajaan terbentuk / kalah); selainnya tutup lobi lapuk
+    if (GLn && GLn.bukaLobi && !k.nasional) { GLn.bukaLobi(kabinetBuka ? 'kerajaan' : (!k.menang ? 'kalah' : null)); }
     return { ok: true, keputusan: k };
   }
 
