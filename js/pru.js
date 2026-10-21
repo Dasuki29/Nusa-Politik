@@ -436,10 +436,10 @@
     if (dana < pil.min && !(pil.bawahMin && dana === Math.round(Number(p.myr) || 0))) { return { ok: false, ralat: 'Peruntukan kempen minimum RM ' + pil.min.toLocaleString('ms-MY') + '.' }; }
     if (dana > p.myr) { return { ok: false, ralat: 'Dana tidak mencukupi.' }; }
     var r = rng(o), profil = a.constituencyType, mb = bonusManifesto(profil, ids);
-    var asas = 0.40 * a.partiPopulariti + 8 + Math.min(11, (Number(p.ip) || 0) / 80) + ((p.kesetiaan && p.kesetiaan.akarUmbi || 50) - 50) * 0.12 + ((Number(p.reputasi) || 50) - 50) * 0.05 + mb;
+    var asas = 0.40 * a.partiPopulariti + 8 + Math.min(11, (Number(p.ip) || 0) / 80) + ((p.kesetiaan && p.kesetiaan.akarUmbi || 50) - 50) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.05 + mb;
     a.manifestoChoice = ids.slice();
     a.voterSupport = clamp(bulat(asas * 0.8), 15, 70);
-    a.campaignFunds = dana; a.jentera = clamp(60 + bulat((Number(p.kesetiaan && p.kesetiaan.akarUmbi) || 50) * 0.25), 40, 85);
+    a.campaignFunds = dana; a.jentera = clamp(55 + bulat((Number(p.kesetiaan && p.kesetiaan.akarUmbi) || 50) * 0.35), 40, 85);
     if (pil.bawahMin) { a.voterSupport = clamp(a.voterSupport - pil.penalti.sokongan, 10, 70); a.jentera = clamp(a.jentera - pil.penalti.jentera, 25, 85); a.bajetRendah = true; }
     if (a.calonImport) {                                                       // v8.17: calon import: penalti awal (hilang jika pernah menang kerusi itu) dan tahap kerusi
       var ci = a.calonImport, th = CONFIG.KERUSI_LAIN.TAHAP[ci.tahap] || CONFIG.KERUSI_LAIN.TAHAP.marginal;

@@ -82,8 +82,8 @@
     ANGGARAN_ULANGAN: 300,               // bilangan larian simulasi pengundian
     // Berat kekuatan calon (jumlah setiap peringkat = 1)
     BERAT: {
-      cawangan: { ip: 0.30, akarUmbi: 0.25, ketuaCawangan: 0.15, ajk: 0.10, perwakilan: 0,    kempen: 0.20 },
-      bahagian: { ip: 0.30, akarUmbi: 0,    ketuaCawangan: 0.15, ajk: 0,    perwakilan: 0.35, kempen: 0.20 }
+      cawangan: { ip: 0.25, akarUmbi: 0.30, ketuaCawangan: 0.15, ajk: 0.10, perwakilan: 0,    kempen: 0.20 },      // v8.21: akarUmbi 0.25 kepada 0.30 (IP 0.30 kepada 0.25)
+      bahagian: { ip: 0.30, akarUmbi: 0.10, ketuaCawangan: 0.15, ajk: 0,    perwakilan: 0.25, kempen: 0.20 }      // v8.21: akarUmbi 0 kepada 0.10 (perwakilan 0.35 kepada 0.25)
     }
   };
 

@@ -889,6 +889,22 @@ ujian('glc: tamat jika dilantik Menteri; pembaharuan hanya 6 bulan terakhir; pem
   GL.prosesBulan({ rng: () => 0.99 }); sama(GL.getGLC(S.loadPlayer()).jawatan, null, 'tamat apabila Menteri');
 });
 
+/* ---------- v8.21: akar umbi lebih kuat ---------- */
+ujian('akar umbi: susut bulanan -2 (biasa) dan -3 bagi pemegang jawatan; berat pemilihan Cawangan 0.30 dan Bahagian 0.10 (jumlah 1)', () => {
+  const C = g.MyPolitikCalendar, E = g.MyPolitikElection;
+  sama(C.CONFIG.SUSUT_BULANAN.akarUmbi, 2); sama(C.CONFIG.SUSUT_PEMEGANG_JAWATAN, 1);
+  kjPemain('korporat'); sama(C.regenerasi(S.loadPlayer()).kesetiaan.akarUmbi, -2, 'ahli biasa');
+  kjPemain('korporat', [pegang('ajk_cawangan')]); sama(C.regenerasi(S.loadPlayer()).kesetiaan.akarUmbi, -3, 'pemegang jawatan');
+  const B = E.CONFIG.BERAT; sama(B.cawangan.akarUmbi, 0.30); sama(B.bahagian.akarUmbi, 0.10);
+  ['cawangan', 'bahagian'].forEach((k) => { const j = Object.keys(B[k]).reduce((t, x) => t + B[k][x], 0); betul(Math.abs(j - 1) < 1e-9, 'berat ' + k + ' berjumlah ' + j); });
+});
+ujian('akar umbi: PRU, akar umbi tinggi menaikkan sokongan pengundi dan jentera lebih daripada sebelum; akar umbi rendah menurunkan', () => {
+  const sokongan = (au) => { krPemain(); P.tetap({ kesetiaan: Object.assign({}, S.loadPlayer().kesetiaan, { akarUmbi: au }) }); betul(PRU.pilihKerusi('PARLIMEN', { rng: sedikit }).ok); const a2 = PRU.getPRU(S.loadPlayer()).aktif; if (a2.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); } betul(PRU.mulaKempen(JANJI3(), 20000, { rng: sedikit }).ok); const a3 = PRU.getPRU(S.loadPlayer()).aktif; return { v: a3.voterSupport, j: a3.jentera }; };
+  const t = sokongan(100), n = sokongan(50), r = sokongan(20);
+  betul(t.v - n.v >= 6, 'akar umbi 100 memberi sekurang-kurangnya +6 sokongan berbanding 50: ' + (t.v - n.v)); betul(n.v - r.v >= 4, 'akar umbi 20 menurunkan sokongan: ' + (n.v - r.v));
+  sama(n.j, 55 + Math.round(50 * 0.35), 'jentera pada 50'); betul(t.j > n.j && n.j > r.j, 'jentera ikut akar umbi');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

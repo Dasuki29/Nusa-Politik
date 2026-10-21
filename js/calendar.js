@@ -53,8 +53,8 @@
     AP_MAKS: 15,                         // had AP terkumpul (3 bulan); ubah di sini untuk laras keseimbangan
     PERINGKAT_PARTI: ['cawangan', 'bahagian', 'pusat'],   // v8.12: elaun asas dan elaun jawatan parti DIHAPUSKAN; lihat js/kerjaya.js (pendapatan kerjaya, kos operasi, elaun rasmi YB)
     // v3.8: sokongan susut setiap bulan jika tidak dijaga. Pemegang jawatan menanggung susutan Akar Umbi tambahan.
-    SUSUT_BULANAN: { akarUmbi: 3, ajk: 2, perwakilan: 3 },       // ketuaCawangan tidak disusutkan: pemegang jawatan tiada tindakan untuk memulihkannya
-    SUSUT_PEMEGANG_JAWATAN: 2,           // tambahan susutan Akar Umbi bagi pemegang jawatan
+    SUSUT_BULANAN: { akarUmbi: 2, ajk: 2, perwakilan: 3 },       // v8.21: akarUmbi 3 kepada 2       // ketuaCawangan tidak disusutkan: pemegang jawatan tiada tindakan untuk memulihkannya
+    SUSUT_PEMEGANG_JAWATAN: 1,           // v8.21: 2 kepada 1; tambahan susutan Akar Umbi bagi pemegang jawatan
     BONUS_AKAR_UMBI: 0.25,               // bulan 1-3: tambahan pada IP dan sokongan positif
 
     /* Fasa takwim (bulan mula-tamat, termasuk). */

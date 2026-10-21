@@ -570,7 +570,7 @@
 
     var inst = {
       el: el, opts: opts, model: null, profil: null, svg: {},
-      state: { mode: opts.mode || 'negeri', metrik: 'sokongan', negeriTapis: '', pdmNegeri: '', pdmBahagian: '', pdmPaparan: 'peta', dipilih: null, rantau: 'semua', dunDipilih: '', dunBhg: '' }
+      state: { mode: opts.mode || 'negeri', metrik: 'sokongan', negeriTapis: '', wp: '', pdmNegeri: '', pdmBahagian: '', pdmPaparan: 'peta', dipilih: null, rantau: 'semua', dunDipilih: '', dunBhg: '' }
     };
     el.classList.add('mpm');
     el.innerHTML =
@@ -849,6 +849,10 @@
         h += '<div class="mpm-seg" role="group" aria-label="Rantau">' + [['semua', 'Semua'], ['semenanjung', 'Semenanjung'], ['timur', 'Sabah &amp; Sarawak']].map(function (r) {
           return '<button data-act="rantau" data-v="' + r[0] + '" aria-pressed="' + (st.rantau === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
       }
+      if (geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && (!st.negeriTapis || st.negeriTapis === 'wp')))) {          // v8.21: pilih wilayah WP dengan butang besar (poligon KL, Putrajaya, Labuan terlalu kecil)
+        h += '<div class="mpm-seg" role="group" aria-label="Wilayah Persekutuan">' + [['semua', 'WP (semua)'], ['14', 'Kuala Lumpur'], ['16', 'Putrajaya'], ['15', 'Labuan']].map(function (r) {
+          return '<button data-act="wp" data-v="' + r[0] + '" aria-pressed="' + (st.mode === 'bahagian' && st.negeriTapis === 'wp' && (st.wp || 'semua') === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
+      }
       if (st.mode === 'bahagian') {
         h += '<label class="mpm-field">Negeri <select data-act="tapis">' + opsiNegeri(st.negeriTapis, true) + '</select></label>';
       } else if (st.mode === 'dun') {
@@ -1035,6 +1039,7 @@
         G.getFitur('parlimen').forEach(function (f) {
           var game = KOD_GEO_GAME[f.negeri];
           if (st.negeriTapis && game !== st.negeriTapis) { return; }
+          if (st.negeriTapis === 'wp' && st.wp && f.negeri !== st.wp) { return; }
           items.push({ f: f, tahap: 'bahagian', nod: IDX_B_NO[parseInt(f.id.replace(/\D/g, ''), 10)] || null });
         });
         fit = items.map(function (i) { return i.f; });
@@ -1199,7 +1204,7 @@
       var lap = susunLapisan(); lapSemasa = lap.items;
       var bb = bboxGabung(lap.fit), pad = Math.max(40, (bb[2] - bb[0]) * CONFIG.UNIT_PADDING);
       var vb = [bb[0] - pad, bb[1] - pad, bb[2] - bb[0] + pad * 2, bb[3] - bb[1] + pad * 2];
-      inst._kunciVb = [st.mode, st.negeriTapis, st.rantau, st.pdmBahagian, st.pdmNegeri, st.dunBhg].join('|');
+      inst._kunciVb = [st.mode, st.negeriTapis, st.wp, st.rantau, st.pdmBahagian, st.pdmNegeri, st.dunBhg].join('|');
       kv.innerHTML = binaSvg(lap, vb) +
         '<div class="mpm-zum"><button type="button" data-act="zum" data-v="masuk" aria-label="Zum masuk">+</button><button type="button" data-act="zum" data-v="keluar" aria-label="Zum keluar">&minus;</button><button type="button" data-act="zum" data-v="reset" aria-label="Set semula paparan">&#8962;</button></div>' +
         '<div class="mpm-tip" role="tooltip" hidden></div>';
@@ -1317,7 +1322,7 @@
         else if (d.tahap === 'negeri' && M.idxN[d.id]) { st.pdmNegeri = d.id; st.dunBhg = ''; }
         else if (d.tahap === 'dun' && M.idxD[d.id]) { st.pdmNegeri = M.idxD[d.id].bahagian.negeri.id; st.dunBhg = ''; }
       }
-      if (mode === 'bahagian' && d && d.tahap === 'negeri' && M.idxN[d.id] && M.idxN[d.id].bahagian.length) { st.negeriTapis = d.id; }
+      if (mode === 'bahagian' && d && d.tahap === 'negeri' && M.idxN[d.id] && M.idxN[d.id].bahagian.length) { st.negeriTapis = d.id; st.wp = ''; }
       if (!(d && ((mode === 'negeri' && d.tahap === 'negeri') || (mode === 'bahagian' && d.tahap === 'bahagian') || (mode === 'dun' && d.tahap === 'dun') || (mode === 'pdm' && d.tahap === 'cawangan')))) { st.dipilih = null; }
       st.mode = mode;
       ensurePdmDefault();
@@ -1367,13 +1372,14 @@
       else if (act === 'krisis') { urusKrisis(t.getAttribute('data-kid')); }
       else if (act === 'projek') { salurProjek(); }
       else if (act === 'paparan') { st.pdmPaparan = v; st.dunDipilih = ''; renderToolbar(); renderStage(); }
+      else if (act === 'wp') { st.mode = 'bahagian'; st.negeriTapis = 'wp'; st.wp = v === 'semua' ? '' : v; st.dipilih = null; inst._vb = null; ensurePdmDefault(); renderSemua(); }
       else if (act === 'rantau') { st.rantau = v; inst._vb = null; renderToolbar(); renderStage(); }
       else if (act === 'zum') { if (zumFn && zumFn[v]) { zumFn[v](); } }
       else if (act === 'drill') { setMode(st.dipilih && st.dipilih.tahap === 'negeri' ? 'bahagian' : 'pdm'); }
     });
     el.addEventListener('change', function (ev) {
       var t = ev.target, act = t.getAttribute && t.getAttribute('data-act');
-      if (act === 'tapis') { st.negeriTapis = t.value; st.dipilih = null; renderStage(); renderPanel(); }
+      if (act === 'tapis') { st.negeriTapis = t.value; st.wp = ''; st.dipilih = null; renderStage(); renderPanel(); }
       else if (act === 'dun-negeri') { st.pdmNegeri = t.value; st.pdmBahagian = ''; st.dunBhg = ''; ensurePdmDefault(); st.dipilih = null; inst._vb = null; renderToolbar(); renderStage(); renderPanel(); }
       else if (act === 'dun-bhg') { st.dunBhg = t.value; st.dipilih = null; inst._vb = null; renderToolbar(); renderStage(); renderPanel(); }
       else if (act === 'pdm-negeri') { st.pdmNegeri = t.value; st.pdmBahagian = ''; ensurePdmDefault(); st.dipilih = null; st.dunDipilih = ''; st.pdmPaparan = (st.pdmPaparan === 'svg' && !adaSvg(st.pdmBahagian)) ? paparanLalai() : st.pdmPaparan; renderToolbar(); renderStage(); renderPanel(); }

@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v8.21 (2026-10-21)
+
+Peta Wilayah Persekutuan dan akar umbi lebih kuat (maklum balas pemain: kawasan WP terlalu kecil untuk ditekan; undi akar umbi sering tidak membantu).
+
+### Berubah
+- **Peta WP:** butang besar "WP (semua) / Kuala Lumpur / Putrajaya / Labuan" pada bar Peta Negeri dan Peta Bahagian. Memilih satu wilayah menapis dan zum ke Bahagian wilayah itu. Susun atur 14 petak dan kod `wp` tidak berubah.
+- **Akar umbi, susut bulanan:** -3 kepada -2; tambahan bagi pemegang jawatan -2 kepada -1 (jumlah pemegang jawatan -5 kepada -3).
+- **Pemilihan Cawangan:** berat akar umbi 0.25 kepada 0.30 (IP 0.30 kepada 0.25).
+- **Pemilihan Bahagian:** berat akar umbi 0 kepada 0.10 (perwakilan 0.35 kepada 0.25).
+- **PRU:** setiap mata akar umbi di atas 50 menambah 0.25 asas peluang (dahulu 0.12); jentera kempen 55 + 35% akar umbi (dahulu 60 + 25%).
+- Jadual "Apa yang mempengaruhi undi" dalam tutorial dikemas kini. 2 ujian unit baharu, ujian pelayar EN.
+
+### Andaian
+- Semua angka ialah cadangan imbangan. Kesan dua hala: akar umbi rendah kini lebih berbahaya.
+- Panel WP tidak mengubah logik permainan; hanya paparan peta.
+
 ## v8.20 (2026-10-20)
 
 Keluhan Rakyat dan Aktiviti Rakyat (maklum balas pemain: lebih banyak aktiviti untuk rakyat dan keluhan rakyat dibawa sebagai usul), mengikut mockup yang diluluskan.
