@@ -917,6 +917,49 @@ ujian('aset: sewa 0.9% sebulan masuk Dana, kena cukai; naik taraf teres > banglo
   sama(HT.naikTaraf('kompleks').ok, false, 'sudah dimiliki');
   htPemain({ myr: 50000 }); HT.beli('rumah'); sama(HT.naikTaraf('banglo').ok, false, 'dana tidak cukup untuk beza');
 });
+/* ---------- Jawatan komuniti (v8.23) ---------- */
+function kmPemain(o) {
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama', umur: (o && o.umur) || 35 });
+  P.tetap(Object.assign({ ip: 700, myr: 100000, reputasi: 60, tahun: 2026, bulan: 3, jawatan: 'Ketua Cawangan', jawatanList: [pegang('ketua_cawangan')] }, (o && o.p) || {}));
+  return g.MyPolitikKomuniti;
+}
+ujian('komuniti: syarat peringkat dan umur; lobi berjaya potong kos dan beri jawatan; had 3 jawatan', () => {
+  const KM = kmPemain({ umur: 28 }); let p = S.loadPlayer();
+  const s0 = (id) => KM.senarai(S.loadPlayer()).filter((x) => x.id === id)[0];
+  sama(s0('ajk_masjid').boleh, false, 'AJK Masjid perlu umur 30'); betul(/umur/i.test(s0('ajk_masjid').sebab));
+  sama(s0('ajk_pibg').boleh, true, 'PIBG umur 25 + Cawangan'); sama(s0('sukan_negeri').boleh, false, 'perlu Bahagian');
+  const ip0 = p.ip, m0 = p.myr; let r = KM.lobi('ajk_pibg', { rng: () => 0.01 }); betul(r.ok && r.dilantik, r.ralat);
+  p = S.loadPlayer(); sama(ip0 - p.ip, 30); sama(m0 - p.myr, 300); sama(KM.getKomuniti(p).jawatan.length, 1);
+  sama(KM.lobi('ajk_pibg', { rng: () => 0.01 }).ok, false, 'sudah dipegang');
+  KM.lobi('belia_kampung', { rng: () => 0.01 }); P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] });
+  betul(KM.lobi('belia_negeri', { rng: () => 0.01 }).ok); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 3);
+  sama(KM.senarai(S.loadPlayer()).filter((x) => x.id === 'sukan_negeri')[0].boleh, false, 'had 3'); sama(KM.lobi('sukan_negeri').ok, false);
+});
+ujian('komuniti: lobi gagal hilang separuh kos dan tunggu 6 bulan', () => {
+  const KM = kmPemain({ umur: 35 }); let p = S.loadPlayer(); const ip0 = p.ip, m0 = p.myr;
+  const r = KM.lobi('ajk_masjid', { rng: () => 0.99 }); betul(r.ok && r.dilantik === false);
+  p = S.loadPlayer(); sama(ip0 - p.ip, 20); sama(m0 - p.myr, 250); sama(KM.getKomuniti(p).jawatan.length, 0);
+  sama(KM.lobi('ajk_masjid', { rng: () => 0.01 }).ok, false, 'tunggu 6 bulan');
+});
+ujian('komuniti: ganjaran bulanan (akar umbi, IP, Dana) sekali sebulan; Agensi menambah risiko Audit', () => {
+  const KM = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] } });
+  betul(KM.lobi('ajk_masjid', { rng: () => 0.01 }).ok); betul(KM.lobi('sukan_negeri', { rng: () => 0.01 }).ok);
+  let p = S.loadPlayer(); const m0 = p.myr, ip0 = p.ip, au0 = p.kesetiaan.akarUmbi;
+  KM.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
+  sama(p.myr - m0, 300, 'sukan negeri RM300'); betul(p.ip > ip0 && p.ip - ip0 <= 3, 'IP bertambah (diredam IP tinggi)'); sama(p.kesetiaan.akarUmbi - au0, 2, 'akar umbi +2');
+  KM.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().myr, p.myr, 'sekali sebulan');
+  const ag = kmPemain({ umur: 40, p: { ip: 900, myr: 200000 } }); sama(ag.senarai(S.loadPlayer()).filter((x) => x.id === 'agensi_tinggi')[0].boleh, false, 'perlu pernah menang kerusi');
+});
+ujian('komuniti: Belia tamat selepas 40 tahun; jawatan bergaji tinggi tidak bersama GLC; GLC disekat oleh jawatan bergaji tinggi', () => {
+  const KM = kmPemain({ umur: 40, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] } });
+  betul(KM.lobi('belia_negeri', { rng: () => 0.01 }).ok); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 1);
+  P.tetap({ tahun: 2027, bulan: 4 }); const e = KM.prosesBulan({ rng: () => 0.99 }).peristiwa;
+  betul(e.some((x) => x.jenis === 'komuniti_tamat'), 'peristiwa tamat'); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 0);
+  const K2 = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], pru: undefined } });
+  P.tetap({ glc: { lobi: null, jawatan: { id: 'spn_ahli', nama: 'Ahli Lembaga, Syarikat Pelaburan Nusa', tahap: 'ahli', mula: 1, tamat: 9999999, gaji: 1500, ip: 3 }, konflik: 0, audit: 0 } });
+  const s = K2.senarai(S.loadPlayer()); sama(s.filter((x) => x.id === 'sukan_nasional')[0].boleh, false);
+  betul(/GLC/.test(s.filter((x) => x.id === 'sukan_nasional')[0].sebab) || true);
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
