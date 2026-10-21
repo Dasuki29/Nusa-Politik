@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.25 (2026-10-21)
+
+Kemas kini tutorial (BM dan EN) selepas v8.17 hingga v8.24.
+
+### Dibetulkan (tidak lagi tepat)
+- Topik Mekanik Bulanan: Dana kini ikut pendapatan kerjaya, elaun, sewa dan ganjaran (bukan "RM 150 asas + peringkat"); susutan Akar Umbi -2 (pemegang jawatan -1 tambahan).
+- Langkah Undo: turut meliputi naik taraf aset, keluhan dan aktiviti rakyat.
+
+- Glos berganda dalam tutorial EN: "Ziarah Kasih (Compassion Visit) (Compassion Visit)" (glos sedia ada dikenakan dua kali) kini hanya sekali.
+
+### Ditambah
+- Topik panduan baharu **Aset, Peruntukan & Jawatan Luar Parti** (sewa dan naik taraf, Peruntukan Kawasan, GLC, Jawatan Komuniti).
+- Peta: butang WP (Kuala Lumpur / Putrajaya / Labuan); Kerjaya & Pendapatan: sumber sewa, GLC, komuniti; Gelaran: peraturan gelaran NPC (Dato', Tan Sri, Datin, Datin Paduka, Puan Sri); senarai tab Tindakan; 3 Soalan Lazim baharu.
+
 ## v8.24 (2026-10-21)
 
 Nama dan gelaran NPC konsisten dengan sistem gelaran pemain (maklum balas pemain: calon negeri semua Dato', tetapi Presiden tiada gelaran).
