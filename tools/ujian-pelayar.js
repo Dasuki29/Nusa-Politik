@@ -262,6 +262,18 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   const g2 = await pu.evaluate(() => { const gl = window.MyPolitikGLC.getGLC(window.MyPolitikSave.loadPlayer()); const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /GLC Post/i.test(x.textContent))[0]; return { j: !!gl.jawatan, baki: gl.lobi && gl.lobi.baki, t: c ? c.textContent : '' }; });
   if (!g2.j && g2.baki !== 1) { ralat.push('lobi GLC tidak menukar keadaan: ' + JSON.stringify(g2).slice(0, 200)); }
   if (g2.j && (!/Conflict of Interest Risk/.test(g2.t) || /Risiko|Ganjaran|Baki/.test(g2.t))) { ralat.push('kad jawatan GLC EN salah: ' + g2.t.slice(0, 240)); }
+  /* v8.23: Jawatan Komuniti (EN): dua kad, lobi, kad jawatan dipegang; tiada BM bocor. */
+  await pu.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 80000, reputasi: 60, glc: { lobi: null, jawatan: null, konflik: 0, audit: 0 }, demografik: Object.assign({}, p.demografik, { umur: 35 }), jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', sayap: null, pangkat: 7, tahun: 2026 }] } }); window.NusaKomuniti_UI.pilih(null); window.NusaUI.render(); window.NusaUI.gotoTab('tindakan'); });
+  await pu.waitForTimeout(500);
+  const k1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  if (!/Mosque & PTA/.test(k1) || !/Youth Associations/.test(k1) || !/High-Income Agency/.test(k1) || /Jawatan Komuniti|Masjid|Persatuan|Pilih jenis/.test(k1)) { ralat.push('kad komuniti EN salah: ' + k1.slice(0, 260)); }
+  await pu.locator('[data-act="kom-jenis"][data-id="sukan"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
+  const k2 = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).map((x) => x.textContent).join(' | '));
+  if (!/State Sports Association/.test(k2) || !/National Sports Association/.test(k2) || !/Need a Headquarters post or a Parliament seat/.test(k2) || /Persatuan Sukan|Perlu jawatan|Kos IP/.test(k2)) { ralat.push('kad jawatan komuniti EN salah: ' + k2.slice(-300)); }
+  await pu.evaluate(() => { window.MyPolitikKomuniti.lobi('sukan_negeri', { rng: () => 0 }); window.NusaUI.render(); });
+  await pu.waitForTimeout(400);
+  const k3 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts/i.test(x.textContent))[0]; return { n: window.MyPolitikKomuniti.getKomuniti(window.MyPolitikSave.loadPlayer()).jawatan.length, t: c ? c.textContent : '' }; });
+  if (k3.n !== 1 || !/Resign/.test(k3.t) || !/months left/.test(k3.t) || /Letak jawatan|baki|sebulan/.test(k3.t)) { ralat.push('kad komuniti dipegang EN salah: ' + JSON.stringify(k3).slice(0, 260)); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */

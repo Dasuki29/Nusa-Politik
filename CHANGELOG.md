@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v8.23 (2026-10-21)
+
+Lobi Jawatan Komuniti (maklum balas pemain), diasingkan daripada GLC.
+
+### Ditambah
+- **Kad "🧭 Jawatan Komuniti"** (tab Tindakan, dua kad seperti GLC): pilih jenis, kemudian jawatan. Jenis: Masjid & PIBG, Persatuan Sukan, Majlis PBT, Persatuan Belia, Agensi Berpendapatan Tinggi.
+- **Syarat:** peringkat jawatan parti (Cawangan/Bahagian/Pusat), umur (AJK Masjid 30+, PIBG 25+, Belia 18 hingga 40), parti dalam kerajaan (PBT), pernah menang kerusi dan IP 400+ (Agensi).
+- **Kos dan ganjaran:** kos IP + Dana; gagal = separuh kos hilang dan tunggu 6 bulan. Ganjaran bulanan (akar umbi, reputasi, IP, Dana). Maksimum 3 jawatan, tempoh 3 tahun, pembaharuan 6 bulan terakhir (separuh kos), boleh letak jawatan.
+- **Risiko:** Agensi (Konflik +3, Audit +3 sebulan) dan Sukan Kebangsaan boleh menyebabkan pemecatan SPRM dan denda. Belia tamat selepas umur 40.
+- **Bergaji tinggi** (Sukan Kebangsaan, PBT, Agensi) tidak boleh bersama Menteri/EXCO atau GLC (GLC turut menyekat lobi jika jawatan komuniti bergaji tinggi dipegang).
+- Tutorial BM/EN, terjemahan, 4 ujian unit, blok ujian pelayar EN.
+
+### Andaian
+- Had 3 jawatan tidak dikongsi dengan GLC. Angka ialah penyeimbang simulasi; nama ialah rekaan generik.
+- "Pernah menang kerusi" dikira daripada sejarah PRU/PRN atau kerusi semasa; "parti dalam kerajaan" dikira daripada status kerusi pemain.
+
 ## v8.22 (2026-10-21)
 
 Aset: sewa hartanah dan laluan naik taraf (maklum balas pemain).

@@ -761,7 +761,7 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + (W.NusaKawasan_UI ? W.NusaKawasan_UI.kad(p) : '') + (W.NusaGLC_UI ? W.NusaGLC_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + (W.NusaKawasan_UI ? W.NusaKawasan_UI.kad(p) : '') + (W.NusaGLC_UI ? W.NusaGLC_UI.kad(p) : '') + (W.NusaKomuniti_UI ? W.NusaKomuniti_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -1438,6 +1438,8 @@
     else if (act === 'lobi-presiden') { tawarkanLobi(nginst(t)); }
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
     else if (act === 'glc-syarikat' || act === 'glc-kembali') { if (W.NusaGLC_UI) { W.NusaGLC_UI.pilih(act === 'glc-syarikat' ? t.getAttribute('data-id') : null); } render(); }
+    else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
+    else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }

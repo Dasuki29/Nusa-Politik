@@ -88,6 +88,8 @@
     if (!g.lobi || g.lobi.baki <= 0) { return { ok: false, ralat: 'Lobi GLC tidak tersedia.' }; }
     if (g.jawatan) { return { ok: false, ralat: 'Anda sudah memegang jawatan GLC.' }; }
     if (kerajaan(p)) { return { ok: false, ralat: 'Jawatan Menteri atau EXCO tidak boleh bersama jawatan GLC.' }; }
+    var KMg = modul('MyPolitikKomuniti', 'komuniti.js');   // v8.23: jawatan komuniti bergaji tinggi tidak bersama GLC
+    if (KMg && KMg.getKomuniti(p).jawatan.some(function (j) { var d = KMg.JAWATAN.filter(function (x) { return x.id === j.id; })[0]; return d && d.gajiTinggi; })) { return { ok: false, ralat: 'Jawatan komuniti bergaji tinggi tidak boleh bersama jawatan GLC.' }; }
     var s = senarai(p).filter(function (x) { return x.id === id; })[0];
     if (!d || !s) { return { ok: false, ralat: 'Jawatan tidak tersedia.' }; }
     if (!s.boleh) { return { ok: false, ralat: s.sebab }; }

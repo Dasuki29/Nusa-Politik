@@ -350,6 +350,8 @@
     if (HRT && HRT.prosesBulan) { peristiwa = peristiwa.concat(HRT.prosesBulan().peristiwa || []); }
     var KWS = muat('MyPolitikKawasan', 'kawasan.js');                                           // v8.18: Peruntukan Kawasan bulanan
     if (KWS && KWS.prosesBulan) { peristiwa = peristiwa.concat(KWS.prosesBulan().peristiwa || []); }
+    var KOM = muat('MyPolitikKomuniti', 'komuniti.js');                                         // v8.23: ganjaran, risiko dan tamat jawatan komuniti
+    if (KOM && KOM.prosesBulan) { peristiwa = peristiwa.concat(KOM.prosesBulan().peristiwa || []); }
     var GLC = muat('MyPolitikGLC', 'glc.js');                                                   // v8.19: ganjaran, risiko dan tamat jawatan GLC
     if (GLC && GLC.prosesBulan) { peristiwa = peristiwa.concat(GLC.prosesBulan().peristiwa || []); }
     var INC = muat('MyPolitikIncumbent', 'incumbent.js');                                        // v8.9: meter Atas Pagar reput ke arah 30%
