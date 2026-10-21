@@ -137,7 +137,7 @@
     for (var i = 0; i < C.BIL_CALON; i++) {
       var lelaki = rng() < 0.8, kekuatan = clamp(Math.round(44 + rng() * 32), 40, 78);
       var maks = clamp(Math.round(1 + (80 - kekuatan) / 8 + (m.nilai - 50) / 50), C.MIN_MAKS_TAWARAN, C.MAKS_MATA);
-      out.push({ id: 'c' + (i + 1), nama: d.janaNama(rng, lelaki ? 'L' : 'P'), kekuatan: kekuatan, gaya: GAYA[Math.floor(rng() * GAYA.length)], maksMata: maks });
+      out.push({ id: 'c' + (i + 1), nama: d.janaNama(rng, lelaki ? 'L' : 'P', 'bahagian'), kekuatan: kekuatan, gaya: GAYA[Math.floor(rng() * GAYA.length)], maksMata: maks });
     }
     return out;
   }

@@ -149,16 +149,17 @@
     return Math.round(clamp(s, 0, 100) * 10) / 10;
   }
   function wanitaCtx() { return !!ctx.sayap && WN() !== 'Pemuda'; }                  // v7.41: Puteri/Wanita = nama perempuan
-  function janaNama(rng, wanita) {
-    var a = wanita ? NAMA_P[Math.floor(rng() * NAMA_P.length)] : NAMA_L[Math.floor(rng() * NAMA_L.length)];
-    return (wanita ? '' : "Dato' ") + a + ' ' + NAMA_2[Math.floor(rng() * NAMA_2.length)];
+  function janaNama(rng, wanita, tahap) {                                           // v8.24: gelaran mengikut tahap (dato | bahagian | tiada), lelaki dan perempuan
+    var a = wanita ? NAMA_P[Math.floor(rng() * NAMA_P.length)] : NAMA_L[Math.floor(rng() * NAMA_L.length)], b = NAMA_2[Math.floor(rng() * NAMA_2.length)];
+    var G = root.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null);
+    return (G && G.awalanNPC ? G.awalanNPC(rng, tahap, wanita ? 'P' : 'L') : '') + a + ' ' + b;
   }
 
   /** Senarai Ketua Bahagian dengan skor. musim = benih supaya NPC stabil. */
   function senaraiCalon(p, bp, musim) {
     var n = bilBahagian(p), rng = S().rngBerbenih(String(p.id) + ctx.kunci + '|negeriBP|' + musim), out = [], ada = layak(p), pemainDi = Math.floor(rng() * n);
     for (var i = 0; i < n; i++) {
-      var nama = janaNama(rng, wanitaCtx()), skor = 25 + rng() * 40;
+      var nama = janaNama(rng, wanitaCtx(), 'bahagian'), skor = 25 + rng() * 40;
       if (bp && bp.pengerusi && !bp.pengerusi.pemain && bp.pengerusi.id === 'b' + (i + 1)) { skor += CONFIG.BONUS_PENYANDANG; }
       if (ada && i === pemainDi) { out.push({ id: 'pemain', nama: p.nama || 'Anda', bahagian: p.bahagian || namaBhg(p, i, pemainDi), pemain: true, skor: skorPemain(p, bp) }); }
       else { out.push({ id: 'b' + (i + 1), nama: nama, bahagian: namaBhg(p, i, ada ? pemainDi : null), pemain: false, skor: Math.round(skor * 10) / 10 }); }
@@ -169,11 +170,11 @@
   /** Calon lantikan luar (bukan Ketua Bahagian). */
   function calonLuar(p, benih) {
     var rng = S().rngBerbenih(String(p.id) + ctx.kunci + '|luar|' + benih), out = [], sayap = ['Ketua Pemuda Negeri', 'Ketua Wanita Negeri', 'Ketua Puteri Negeri'];
-    if (ctx.sayap) { for (var q = 0; q < 3; q++) { out.push({ id: 'l-s' + q, nama: janaNama(rng, WN() !== 'Pemuda'), bahagian: 'Ketua Sayap Cawangan', kategori: 'sayap' }); } }
-    else { sayap.forEach(function (s, i) { out.push({ id: 'l-s' + i, nama: janaNama(rng, i > 0), bahagian: s, kategori: 'sayap' }); }); }
-    for (var t = 0; t < 3; t++) { out.push({ id: 'l-t' + t, nama: janaNama(rng, wanitaCtx() || t === 2), bahagian: ['ADUN', 'Bekas Exco', 'Tokoh Parti'][t], kategori: 'tokoh' }); }
+    if (ctx.sayap) { for (var q = 0; q < 3; q++) { out.push({ id: 'l-s' + q, nama: janaNama(rng, WN() !== 'Pemuda', null), bahagian: 'Ketua Sayap Cawangan', kategori: 'sayap' }); } }
+    else { sayap.forEach(function (s, i) { out.push({ id: 'l-s' + i, nama: janaNama(rng, i > 0, 'bahagian'), bahagian: s, kategori: 'sayap' }); }); }
+    for (var t = 0; t < 3; t++) { out.push({ id: 'l-t' + t, nama: janaNama(rng, wanitaCtx() || t === 2, t === 0 ? 'bahagian' : 'dato'), bahagian: ['ADUN', 'Bekas Exco', 'Tokoh Parti'][t], kategori: 'tokoh' }); }
     var kolam = kolamBhg(p, true);
-    for (var k = 0; k < 3; k++) { out.push({ id: 'l-n' + k, nama: janaNama(rng, wanitaCtx()), bahagian: 'Naib Ketua Bahagian ' + (kolam.length ? kolam[Math.floor(rng() * kolam.length)] : (k + 1)), kategori: 'naib' }); }
+    for (var k = 0; k < 3; k++) { out.push({ id: 'l-n' + k, nama: janaNama(rng, wanitaCtx(), 'bahagian'), bahagian: 'Naib Ketua Bahagian ' + (kolam.length ? kolam[Math.floor(rng() * kolam.length)] : (k + 1)), kategori: 'naib' }); }
     return out;
   }
 
@@ -197,7 +198,7 @@
       bp.ajk = ajkNpc(p, bp, c.id); bp.wajib = negeriKecil(p) ? wajibKB(p, bp, c.id) : [];
     }
     if (wanitaCtx() && !bp.namaP) {                                // v7.41: simpanan lama sayap perempuan menyimpan nama lelaki (Dato' ...): jana semula nama NPC secara tetap
-      var baiki = function (e) { if (e && !e.pemain && /^Dato' /.test(e.nama || '')) { e.nama = janaNama(S().rngBerbenih(String(p.id) + ctx.kunci + '|nmP|' + e.id), true); } };
+      var baiki = function (e) { if (e && !e.pemain && /^Dato' /.test(e.nama || '')) { e.nama = janaNama(S().rngBerbenih(String(p.id) + ctx.kunci + '|nmP|' + e.id), true, 'bahagian'); } };
       baiki(bp.pengerusi); (bp.ajk || []).forEach(baiki); (bp.wajib || []).forEach(baiki); bp.namaP = 1;
     }
     return bp;
@@ -259,7 +260,7 @@
   function calonNegeri(p, key, benih) {
     var n = BIL_BAHAGIAN[key], rng = S().rngBerbenih(String(p.id) + ctx.kunci + '|lain|' + key + '|' + benih), kolam = kolamBhg(p, true, KEY_NAMA[key]), out = [];
     for (var i = 0; i < n; i++) {
-      out.push({ id: 'l' + (i + 1), nama: janaNama(rng, wanitaCtx()), bahagian: kolam[i] || ('Bahagian ' + (i + 1)), skor: Math.round((25 + rng() * 40) * 10) / 10 });
+      out.push({ id: 'l' + (i + 1), nama: janaNama(rng, wanitaCtx(), 'bahagian'), bahagian: kolam[i] || ('Bahagian ' + (i + 1)), skor: Math.round((25 + rng() * 40) * 10) / 10 });
     }
     return out.sort(function (a, b) { return b.skor - a.skor; });
   }
