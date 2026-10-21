@@ -62,7 +62,14 @@
     KALAH: { ip: -100, reputasi: -2, stress: 6 },
     MENANG: { reputasi: 3 },
     BULAN_NILAI_JANJI: 12,
-    TERIMA_MIN: 0.2, TERIMA_MAKS: 0.95
+    TERIMA_MIN: 0.2, TERIMA_MAKS: 0.95,
+    /* v8.17: bertanding kerusi lain ("calon import"). ANDAIAN: semua angka ialah penyeimbang simulasi. Tahap kerusi ialah anggaran deterministik (bukan data keputusan sebenar). */
+    KERUSI_LAIN: {
+      PENALTI_SAMA: 15, PENALTI_LAIN: 30,                                  // mata peluang kelulusan MKT: negeri sama / negeri lain
+      SOKONGAN: 10,                                                        // sokongan pengundi awal; hilang jika pernah menang kerusi itu
+      KOS: 1.2,                                                            // minimum peruntukan kempen (jentera baharu)
+      TAHAP: { selamat: { nama: 'Selamat', sokongan: 4, bonus: 1 }, marginal: { nama: 'Marginal', sokongan: 0, bonus: 1.15 }, sukar: { nama: 'Sukar', sokongan: -5, bonus: 1.3 } }
+    }
   };
 
   /* ------------------------------------------------------------------------
@@ -210,12 +217,12 @@
       return (j.kumpulan === 'sayap' ? pg >= 5 : pg >= 7) || j.peringkat === 'pusat';
     });
   }
-  function kelayakan(p) {
+  function kelayakan(p, lain) {                                          // lain = kerusi lain (v8.17): tiada sekatan 'Wilayah Persekutuan tiada DUN'
     var ip = Number(p.ip) || 0, ada = (p.jawatanList || []).length > 0;
     function semak(jenis) {
       var c = CONFIG[jenis], sebab = [];
       if (ip < c.ipMin) { sebab.push('Perlu IP ' + c.ipMin + ' (anda ' + ip + ')'); }
-      if (jenis === 'DUN' && !p.dun) { sebab.push('Wilayah Persekutuan tiada DUN'); }
+      if (jenis === 'DUN' && !p.dun && !lain) { sebab.push('Wilayah Persekutuan tiada DUN'); }
       if (jenis === 'DUN' && !ada) { sebab.push('Perlu pegang jawatan Cawangan atau lebih'); }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
@@ -223,6 +230,28 @@
       return { boleh: sebab.length === 0, sebab: sebab, ipMin: c.ipMin, minPeruntukan: c.minPeruntukan, peluang: Math.round(peluang * 100) };
     }
     return { DUN: semak('DUN'), PARLIMEN: semak('PARLIMEN') };
+  }
+
+  /* ---- v8.17: kerusi lain ---- */
+  function tahapKerusi(kerusi) {
+    var h = hash(String(kerusi.kod || kerusi.nama) + '|tahap') % 10;
+    return h < 3 ? 'selamat' : h < 7 ? 'marginal' : 'sukar';
+  }
+  function normKerusi(k) {
+    if (!k || typeof k !== 'object' || !k.nama) { return null; }
+    return { nama: String(k.nama).slice(0, 80), kod: String(k.kod || ''), negeri: String(k.negeri || '').slice(0, 40), negeriSama: !!k.negeriSama, sendiri: !!k.sendiri };
+  }
+  function pernahMenang(pru, jenis, nama) {
+    return (pru.sejarah || []).some(function (x) { return x && x.jenis === jenis && x.kerusi === nama && x.hasil === 'menang'; });
+  }
+  /** Pratonton pencalonan di kerusi lain: { boleh, sebab[], peluang, penalti, tahap, tahapNama, sokongan, kos, pernahMenang }. */
+  function peluangKerusi(p, jenis, kerusi) {
+    var kr = normKerusi(kerusi);
+    if (!kr || (jenis !== 'DUN' && jenis !== 'PARLIMEN')) { return { boleh: false, sebab: ['Kerusi tidak sah.'], peluang: 0 }; }
+    var kl = kelayakan(p, true)[jenis], C = CONFIG.KERUSI_LAIN, pru = getPRU(p), t = tahapKerusi(kr);
+    var penalti = kr.sendiri ? 0 : (kr.negeriSama ? C.PENALTI_SAMA : C.PENALTI_LAIN), pm = pernahMenang(pru, jenis, kr.nama);
+    return { boleh: kl.boleh, sebab: kl.sebab, peluang: Math.max(5, kl.peluang - penalti), penalti: penalti, tahap: t, tahapNama: C.TAHAP[t].nama,
+      sokongan: kr.sendiri || pm ? 0 : C.SOKONGAN, kos: kr.sendiri ? 1 : C.KOS, pernahMenang: pm, minPeruntukan: Math.round(CONFIG[jenis].minPeruntukan * (kr.sendiri ? 1 : C.KOS)) };
   }
 
   function partiPopulariti(p, o) {
@@ -280,7 +309,9 @@
     if (jenis === 'KEDUA') { return pilihDua(p, pru, a, o); }                 // v7.55: bertanding Parlimen + DUN serentak
     if (jenis !== 'DUN' && jenis !== 'PARLIMEN') { return { ok: false, ralat: 'Jenis kerusi tidak sah.' }; }
     if (a.ditolak[jenis]) { return { ok: false, ralat: 'Permohonan ' + jenis + ' sudah ditolak.' }; }
-    var kl = kelayakan(p)[jenis];
+    var kr = o && o.kerusi ? normKerusi(o.kerusi) : null, lain = !!(kr && !kr.sendiri);
+    if (o && o.kerusi && !kr) { return { ok: false, ralat: 'Kerusi tidak sah.' }; }
+    var kl = lain ? peluangKerusi(p, jenis, kr) : kelayakan(p)[jenis];
     if (!kl.boleh) { return { ok: false, ralat: kl.sebab.join('; ') }; }
     var lulus = rng(o)() * 100 < kl.peluang;
     if (!lulus) {
@@ -292,10 +323,16 @@
     var kod = jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun) : ((p.kod && p.kod.parlimen) || p.bahagian);
     a.candidateType = jenis;
     a.kerusi = { jenis: jenis, nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: kod || '' };
+    a.calonImport = null;
+    if (lain) {                                                                // v8.17: kerusi lain (calon import)
+      a.kerusi = { jenis: jenis, nama: kr.nama, kod: kr.kod, lain: true, negeri: kr.negeri, negeriSama: kr.negeriSama };
+      a.calonImport = { tahap: kl.tahap, sokongan: kl.sokongan, negeriSama: kr.negeriSama };
+      a.constituencyType = profilKawasan({ bahagian: kr.nama, dun: kr.nama, negeri: kr.negeri }); a.lawan = lawanPool(a.constituencyType);
+    }
     a.perluRunding = jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15;
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan: ' + a.kerusi.nama + ' (' + jenis + ')', peringkat: 'ahli' } });
-    return { ok: true, diluluskan: true, perluRunding: a.perluRunding, mesej: 'Dicalonkan bertanding kerusi ' + a.kerusi.nama + ' (' + (jenis === 'DUN' ? 'DUN' : 'Parlimen') + ').' };
+    return { ok: true, diluluskan: true, perluRunding: a.perluRunding, lain: lain, mesej: 'Dicalonkan bertanding kerusi ' + a.kerusi.nama + ' (' + (jenis === 'DUN' ? 'DUN' : 'Parlimen') + ').' };
   }
 
   /** v7.55: mohon kedua-dua kerusi (Parlimen + DUN) untuk satu kempen serentak. Setiap permohonan dinilai berasingan. */
@@ -347,6 +384,7 @@
     if (!a || a.fasa !== 'runding' || !k) { return { ok: false, ralat: 'Rundingan tidak tersedia.' }; }
     if (opsi === 'ganti' && !p.dun) { return { ok: false, ralat: 'Wilayah Persekutuan tiada kerusi DUN.' }; }
     if (opsi === 'ganti' && a.kerusi2) { return { ok: false, ralat: 'Tidak boleh menukar kerusi semasa bertanding serentak.' }; }
+    if (opsi === 'ganti' && a.calonImport) { return { ok: false, ralat: 'Tawaran ganti tidak tersedia bagi calon kerusi lain.' }; }
     if (opsi === 'ganti' && a.candidateType !== 'PARLIMEN') { return { ok: false, ralat: 'Tawaran ganti hanya bagi kerusi Parlimen.' }; }
     if ((Number(p.ip) || 0) < k.ip) { return { ok: false, ralat: 'IP tidak mencukupi (perlu ' + k.ip + ').' }; }
     var r = rng(o), hub = pru.hubunganGabungan, bonus = (hub - 50) * 0.004, kes = { ip: -k.ip }, mesej = '';
@@ -379,7 +417,7 @@
     return ids.reduce(function (t, id) { var j = janjiId(id); return t + (j ? (j.sesuai[profil] || 0) : 0); }, 0);
   }
   function peruntukanPilihan(p, a) {
-    var min = CONFIG[a.candidateType].minPeruntukan, myr = Number(p.myr) || 0, senarai = [];
+    var min = Math.round(CONFIG[a.candidateType].minPeruntukan * (a.calonImport ? CONFIG.KERUSI_LAIN.KOS : 1)), myr = Number(p.myr) || 0, senarai = [];   // v8.17: calon import +20%
     if (myr < min) {                                            // v7.18: dana kurang daripada minimum: boleh bertanding dengan semua dana, tetapi kempen lemah (elak pemain tersekat)
       var s0 = 1 - myr / min;
       return { min: min, pilihan: [myr], bawahMin: true, penalti: { sokongan: Math.round(10 * s0), jentera: Math.round(15 * s0) } };
@@ -403,6 +441,10 @@
     a.voterSupport = clamp(bulat(asas * 0.8), 15, 70);
     a.campaignFunds = dana; a.jentera = clamp(60 + bulat((Number(p.kesetiaan && p.kesetiaan.akarUmbi) || 50) * 0.25), 40, 85);
     if (pil.bawahMin) { a.voterSupport = clamp(a.voterSupport - pil.penalti.sokongan, 10, 70); a.jentera = clamp(a.jentera - pil.penalti.jentera, 25, 85); a.bajetRendah = true; }
+    if (a.calonImport) {                                                       // v8.17: calon import: penalti awal (hilang jika pernah menang kerusi itu) dan tahap kerusi
+      var ci = a.calonImport, th = CONFIG.KERUSI_LAIN.TAHAP[ci.tahap] || CONFIG.KERUSI_LAIN.TAHAP.marginal;
+      a.voterSupport = clamp(a.voterSupport - ci.sokongan + th.sokongan, 10, 70);
+    }
     if (a.kerusi2) { a.voterSupport = clamp(a.voterSupport - 3, 10, 70); a.jentera = clamp(a.jentera - 8, 25, 85); }   // v7.55: tumpuan terbahagi dua kerusi
     a.hari = 0; a.campaignDaysLeft = CONFIG.HARI; a.fasa = 'kempen';
     var n = CONFIG.KEJUTAN_BILANGAN[0] + Math.floor(r() * (CONFIG.KEJUTAN_BILANGAN[1] - CONFIG.KEJUTAN_BILANGAN[0] + 1)), hariSedia = [], h;
@@ -602,6 +644,7 @@
       if (kk.menang) {
         var bonus = Math.min(300, c.bonusIp + Math.round(Math.min(80, kk.majoritiPct * 4)));
         bonus = jenis === 'DUN' ? clamp(bonus, 150, 250) : clamp(bonus, 220, 300);
+        if (a.calonImport && !sekunder) { bonus = Math.round(bonus * (CONFIG.KERUSI_LAIN.TAHAP[a.calonImport.tahap] || { bonus: 1 }).bonus); }   // v8.17: kerusi lebih sukar = ganjaran lebih tinggi
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
         g.kerajaan = r() < clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8); kk.kerajaan = g.kerajaan;
         if (!sekunder) {
@@ -635,6 +678,7 @@
     pru.status = null; pru.statusKedua = null;
     wins.forEach(function (w, n) {
       var st = { jenis: w.jenis === 'DUN' ? 'ADUN' : 'MP', kerusi: w.kerusi, sejakTahun: p.tahun, sejakBulan: p.bulan, kerajaan: w.kerajaan };
+      if (n === 0 && a.calonImport) { st.lain = true; st.negeriSama = !!a.calonImport.negeriSama; }                      // v8.17
       if (n === 0) { pru.status = st; } else { pru.statusKedua = st; }
       if (w.kerajaan && !kabinetBuka) { kabinetBuka = true; lobiJenis = w.jenis; }
     });
@@ -781,7 +825,7 @@
   return {
     CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KOS_RUNDING: KOS_RUNDING,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
+    getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
     mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan

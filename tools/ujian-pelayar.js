@@ -203,6 +203,27 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   if (/Dana tidak mencukupi|Tangguh|termurah/.test(lm)) { ralat.push('modal lobi bocor BM: ' + lm.slice(0, 160)); }
   await pu.locator('.acara__opsi[data-pilih="TANGGUH"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(700);
   if (!(await pu.evaluate(() => !!window.MyPolitikKabinet.getKabinet(window.MyPolitikSave.loadPlayer()).lobi))) { ralat.push('lobi tidak kekal terbuka selepas Tangguh'); }
+  /* v8.17: kerusi lain (EN): pemilih dimuatkan, ringkasan EN, dicalonkan sebagai calon dari luar. */
+  await pu.evaluate(() => {
+    const S = window.MyPolitikSave, P = window.MyPolitikPRU; P.setRng(() => 0);
+    S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 30000, jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', sayap: null, pangkat: 7, tahun: S.loadPlayer().tahun }] } });
+    P.isytihar('tamat_penggal', { rng: () => 0 });
+    setTimeout(() => window.NusaPRU_UI.alir(), 0);
+  });
+  await pu.waitForTimeout(800);
+  const pm = await pu.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
+  if (!/Other seats/.test(pm)) { ralat.push('pilihan Kerusi lain tiada/EN salah: ' + pm.slice(0, 160)); }
+  await pu.locator('.acara__opsi[data-pilih="LAIN"]').first().evaluate((e) => e.click()).catch(() => {});
+  await pu.waitForSelector('#kl-kerusi option', { timeout: 15000 }).catch(() => { ralat.push('senarai kerusi tidak dimuatkan'); });
+  await pu.waitForTimeout(400);
+  const kt = await pu.evaluate(() => ({ n: document.querySelectorAll('#kl-kerusi option').length, neg: document.querySelectorAll('#kl-negeri option').length, ringkas: (document.getElementById('kl-ringkas') || {}).innerText || '', sarawak: Array.from(document.querySelectorAll('#kl-negeri option')).some((o) => /sarawak/i.test(o.textContent)) }));
+  if (!kt.n || !kt.neg) { ralat.push('pemilih kerusi kosong: ' + JSON.stringify(kt)); }
+  if (kt.sarawak) { ralat.push('Sarawak sepatutnya tiada dalam senarai'); }
+  if (!/Approval chance/.test(kt.ringkas) || /Peluang diluluskan|Calon dari luar|negeri/.test(kt.ringkas)) { ralat.push('ringkasan kerusi EN salah: ' + kt.ringkas.slice(0, 200)); }
+  await pu.locator('#modal-kaki button:last-child').evaluate((e) => e.click()); await pu.waitForTimeout(900);
+  const kr = await pu.evaluate(() => { const a = window.MyPolitikPRU.getPRU(window.MyPolitikSave.loadPlayer()).aktif; return a && a.kerusi ? { lain: !!a.kerusi.lain, ci: !!a.calonImport, nama: a.kerusi.nama } : null; });
+  if (!kr || !kr.lain || !kr.ci) { ralat.push('calon kerusi lain tidak direkod: ' + JSON.stringify(kr)); }
+  await pu.evaluate(() => { try { window.MyPolitikPRU.setRng(null); } catch (e) { /* abaikan */ } });
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
