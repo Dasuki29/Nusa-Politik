@@ -563,11 +563,11 @@ ujian('kerjaya: pendapatan rasmi hanya untuk ADUN / MP; wakil rakyat 50% kerjaya
   const KJ = g.MyPolitikKerjaya;
   let p = kjPemain('korporat'); p.pru = { status: { jenis: 'ADUN' } };
   S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { status: { jenis: 'ADUN', kerusi: 'X', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }) } });
-  p = S.loadPlayer(); sama(KJ.faktorKerjaya(p), 0.5); sama(KJ.pendapatan(p).jumlah, 450 + 1000, 'ADUN: 50% + elaun 1,000');
+  p = S.loadPlayer(); sama(KJ.faktorKerjaya(p), 0.5); sama(KJ.pendapatan(p).jumlah, 450 + 1500, 'ADUN: 50% + elaun 1,500');
   S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { status: { jenis: 'MP', kerusi: 'Y', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }) } });
-  p = S.loadPlayer(); sama(KJ.pendapatan(p).jumlah, 450 + 1800, 'MP: 50% + elaun 1,800');
+  p = S.loadPlayer(); sama(KJ.pendapatan(p).jumlah, 450 + 2500, 'MP: 50% + elaun 2,500');
   S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign({}, KB.getKabinet(p), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }) } });
-  p = S.loadPlayer(); sama(KJ.faktorKerjaya(p), 0); sama(KJ.pendapatan(p).jumlah, 1800, 'Menteri: kerjaya 0%, elaun MP kekal (elaun menteri di kabinet.js)');
+  p = S.loadPlayer(); sama(KJ.faktorKerjaya(p), 0); sama(KJ.pendapatan(p).jumlah, 2500, 'Menteri: kerjaya 0%, elaun MP kekal (elaun menteri di kabinet.js)');
 });
 ujian('kerjaya: kos operasi dilaras (100/150/300) dan elaun kabinet dipaparkan berasingan (tidak dikira dua kali)', () => {
   const KJ = g.MyPolitikKerjaya, KB = g.MyPolitikKabinet;
@@ -796,6 +796,40 @@ ujian('kerusi lain: ADUN negeri lain tidak boleh jadi Menteri Besar negeri asal'
   S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, pru, { status: { jenis: 'ADUN', kerusi: 'X', kerajaan: true, lain: true, negeriSama: false } }) } });
   const m = KB.maklumatMB(S.loadPlayer()); sama(m.boleh, false); betul(/bukan di negeri ini/.test(m.sebab), m.sebab);
 });
+
+/* ---------- v8.18: Peruntukan Kawasan ---------- */
+function kwPemain(status, kab) {
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama' });
+  P.tetap({ ap: 20, myr: 1000 });
+  const p0 = S.loadPlayer(), patch = { pru: Object.assign({}, PRU.getPRU(p0), { status: status || null }) };
+  if (kab) { patch.kabinet = Object.assign({}, KB.getKabinet(p0), kab); }
+  S.applyEffects({}, { kiraTindakan: false, patch });
+  return S.loadPlayer();
+}
+ujian('kawasan: ADUN RM1,500, MP RM3,000, pembangkang x0.4, menteri +RM5,000; tiada kerusi = tiada peruntukan', () => {
+  const KW = g.MyPolitikKawasan;
+  sama(KW.jumlahBulanan(kwPemain(null)).jumlah, 0);
+  sama(KW.jumlahBulanan(kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true })).jumlah, 1500);
+  sama(KW.jumlahBulanan(kwPemain({ jenis: 'MP', kerusi: 'Y', kerajaan: true })).jumlah, 3000);
+  sama(KW.jumlahBulanan(kwPemain({ jenis: 'MP', kerusi: 'Y', kerajaan: false })).jumlah, 1200, 'pembangkang 40%');
+  sama(KW.jumlahBulanan(kwPemain({ jenis: 'MP', kerusi: 'Y', kerajaan: true }, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' })).jumlah, 8000, 'MP + menteri');
+});
+ujian('kawasan: proses bulan menambah baki sekali sebulan; projek ditolak daripada baki, beri IP dan akar umbi, bukan Dana peribadi', () => {
+  const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
+  KW.prosesBulan(); KW.prosesBulan(); sama(KW.getKawasan(S.loadPlayer()).baki, 1500, 'sekali sebulan');
+  const a = S.loadPlayer(), r = KW.projek('jalan'); betul(r.ok, r.ralat);
+  const b = S.loadPlayer(); sama(KW.getKawasan(b).baki, 700); betul(b.ip > a.ip, 'IP naik: ' + a.ip + ' -> ' + b.ip); sama(b.myr, a.myr, 'Dana peribadi tidak berubah'); sama(b.ap, a.ap - 1);
+  sama(KW.projek('surau').ok, false, 'baki 700 < 1,000');
+});
+ujian('kawasan: baki hangus pada Januari; projek ditolak tanpa kerusi atau AP', () => {
+  const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
+  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 12, kawasan: { baki: 4000, akhir: '', tahun: S.loadPlayer().tahun, sejarah: [] } } });
+  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 1, tahun: S.loadPlayer().tahun + 1 } });
+  KW.prosesBulan(); sama(KW.getKawasan(S.loadPlayer()).baki, 1500, 'baki lama hangus, hanya peruntukan baharu');
+  S.applyEffects({}, { kiraTindakan: false, patch: { ap: 0 } }); sama(KW.projek('banjir').ok, false, 'tiada AP');
+  kwPemain(null); sama(KW.projek('banjir').ok, false, 'tiada kerusi');
+});
+
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
