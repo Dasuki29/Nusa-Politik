@@ -8,6 +8,8 @@ Kemas kini tutorial (BM dan EN) selepas v8.17 hingga v8.24.
 - Topik Mekanik Bulanan: Dana kini ikut pendapatan kerjaya, elaun, sewa dan ganjaran (bukan "RM 150 asas + peringkat"); susutan Akar Umbi -2 (pemegang jawatan -1 tambahan).
 - Langkah Undo: turut meliputi naik taraf aset, keluhan dan aktiviti rakyat.
 
+- Glos berganda dalam tutorial EN: "Ziarah Kasih (Compassion Visit) (Compassion Visit)" (glos sedia ada dikenakan dua kali) kini hanya sekali.
+
 ### Ditambah
 - Topik panduan baharu **Aset, Peruntukan & Jawatan Luar Parti** (sewa dan naik taraf, Peruntukan Kawasan, GLC, Jawatan Komuniti).
 - Peta: butang WP (Kuala Lumpur / Putrajaya / Labuan); Kerjaya & Pendapatan: sumber sewa, GLC, komuniti; Gelaran: peraturan gelaran NPC (Dato', Tan Sri, Datin, Datin Paduka, Puan Sri); senarai tab Tindakan; 3 Soalan Lazim baharu.
