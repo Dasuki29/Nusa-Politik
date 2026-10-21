@@ -54,7 +54,7 @@ function kumpulLiteral() {
   return [...set];
 }
 /* Nama khas yang sengaja kekal (negeri, istilah UMNO, jenama). */
-const NAMA_KHAS = /^(Perlis|Kedah|Kelantan|Terengganu|Pulau Pinang|Perak|Pahang|Selangor|Wilayah Persekutuan|Negeri Sembilan|Melaka|Johor|Sarawak|Sabah|Bumiputera|Pemuda|Wanita|Puteri|UMNO|PAU|MKT|Nusa Politik|Barisan Nasional|Dewan Rakyat|Dewan Negara|Bahasa Melayu|Hard|Easy|Normal)$/;
+const NAMA_KHAS = /^(Kuala Lumpur|Putrajaya|Labuan|Perlis|Kedah|Kelantan|Terengganu|Pulau Pinang|Perak|Pahang|Selangor|Wilayah Persekutuan|Negeri Sembilan|Melaka|Johor|Sarawak|Sabah|Bumiputera|Pemuda|Wanita|Puteri|UMNO|PAU|MKT|Nusa Politik|Barisan Nasional|Dewan Rakyat|Dewan Negara|Bahasa Melayu|Hard|Easy|Normal)$/;
 const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|dalam|pada|atau|boleh|mesti|setiap|bulan|tahun|sebagai|daripada|kawasan|negeri|bahagian|cawangan|sokongan|pemilih|ahli|tahap|jumlah|perwakilan|kerusi|lihat|klik|anjur|tiada|mencukupi|perlu|baki|setahun|usaha|pilih|daerah|mengundi|penduduk|kesukaran|butiran|lobi|jelajah|dana|wang)\b/i;
 /* Kata/pola BM yang dibenarkan kekal (nama sendiri, istilah UMNO, sumber luar). */
 const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Negeri Sembilan|DUN Contoh)/;
@@ -138,6 +138,14 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     if (await t.count()) { await t.evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab ' + tab); }
     if (tab === 'peta') {
       await jelajahPeta();
+      /* v8.21: pilihan Wilayah Persekutuan (EN): butang besar, penapis ke satu wilayah. */
+      await pg.locator('.mpm-tab').first().evaluate((e) => e.click()); await pg.waitForTimeout(900);
+      const wpTeks = await pg.evaluate(() => Array.from(document.querySelectorAll('[data-act="wp"]')).map((e) => e.textContent.trim()).join('|'));
+      if (wpTeks !== 'WP (all)|Kuala Lumpur|Putrajaya|Labuan') { ralat.push('butang WP salah: ' + wpTeks); }
+      await pg.locator('[data-act="wp"][data-v="16"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(1500);
+      const nPoli = await pg.locator('.mpm-poli').count();
+      if (nPoli !== 1) { ralat.push('Putrajaya sepatutnya 1 kawasan, dapat ' + nPoli); }
+      await pg.selectOption('[data-act="tapis"]', '').catch(() => {}); await pg.locator('.mpm-tab').last().evaluate((e) => e.click()); await pg.waitForTimeout(900);      // pulihkan keadaan peta untuk ujian krisis
       /* v8.8: krisis tempatan di peta (ikon berkedip, klik, selesai) + lapisan sentimen. */
       await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { krisisPeta: { aktif: [{ id: 'kt1', jenis: 'banjir', cid: p.id, tempat: p.cawangan || 'Cawangan', tahun: p.tahun, bulan: p.bulan }], selesai: 0, terabai: 0, akhir: '' } } }); });
       await pg.waitForSelector('.mpm-kanvas', { timeout: 25000 }).catch(() => {}); await pg.waitForTimeout(800); await imbas('peta krisis');

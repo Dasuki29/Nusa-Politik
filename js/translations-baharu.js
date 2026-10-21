@@ -2450,7 +2450,9 @@
   ["Keluhan tidak ditemui.", "Complaint not found."],
   ["Aktiviti rakyat sudah dibuat bulan ini.", "A community activity has already been held this month."],
   ["{a} keluhan rakyat tidak dijawab 3 bulan dan diabaikan. Sokongan akar umbi {b}, Reputasi {c}.", "{a} citizens' complaints went unanswered for 3 months and were ignored. Grassroots support {b}, Reputation {c}."],
-  ["Rakyat membawa keluhan baharu. Semak kad Keluhan Rakyat di tab Tindakan.", "Citizens have brought new complaints. Check the Citizens' Complaints card in the Actions tab."]
+  ["Rakyat membawa keluhan baharu. Semak kad Keluhan Rakyat di tab Tindakan.", "Citizens have brought new complaints. Check the Citizens' Complaints card in the Actions tab."],
+  ["WP (semua)", "WP (all)"],
+  ["Wilayah Persekutuan", "Federal Territories"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
