@@ -37,6 +37,7 @@
       kv('Tunai', rm(r.tunai)) + kv('Nilai aset', rm(r.nilaiAset)) + kv('Kekayaan bersih', rm(r.bersih)) +
       kv('Kadar cukai (kurungan)', Math.round(r.kadar * 100) + '%') + kv('Cukai terkumpul', rm(r.cukaiTerkumpul + r.tertunggak)) +
       kv('Kesan pasif sebulan', (r.pasif.ip ? '+' + r.pasif.ip + ' IP' : '') + (r.pasif.ip && r.pasif.stress ? ', ' : '') + (r.pasif.stress ? 'Stress -' + r.pasif.stress : '') + (!r.pasif.ip && !r.pasif.stress ? 'tiada' : '')) +
+      kv('Sewa hartanah sebulan', rm(r.pasif.sewa)) +
       kv('Kos penyelenggaraan sebulan', rm(r.pasif.kos)) +
       kv('Peluang krisis politik', r.pasif.imej ? Math.round((1 - r.pasif.imej) * 100) + '% daripada asas' : '100% asas') +
       kv('Risiko Audit SPRM', r.risikoAudit + ' / 100') +
@@ -48,9 +49,10 @@
     }
     h += '</section><section class="card"><h3 class="card__title" style="margin:0 0 4px">Katalog aset</h3>';
     kat.forEach(function (a) {
-      h += '<div class="ht-aset' + (a.milik ? ' is-milik' : '') + '"><div><b>' + a.ikon + ' ' + esc(a.nama) + ' · ' + rm(a.harga) + '</b><small>' + esc(a.huraian) + '</small><small>Penyelenggaraan ' + rm(a.kos) + ' sebulan' + (a.milik ? ' · jual ' + rm(a.jual) : '') + '</small>' +
-        (!a.milik && a.sebab ? '<small>' + esc(a.sebab) + '</small>' : '') + '</div>' +
-        (a.milik ? '<button type="button" class="ht-btn ht-btn--jual" data-act="harta-jual" data-id="' + a.id + '">Jual</button>' : '<button type="button" class="ht-btn" data-act="harta-beli" data-id="' + a.id + '"' + (a.boleh ? '' : ' disabled') + '>Beli</button>') + '</div>';
+      if (a.naikDari && !a.milik && !a.naik) { return; }
+      h += '<div class="ht-aset' + (a.milik ? ' is-milik' : '') + '"><div><b>' + a.ikon + ' ' + esc(a.nama) + ' · ' + rm(a.harga) + '</b><small>' + esc(a.huraian) + '</small>' + (a.sewa ? '<small>Sewa ' + rm(a.sewa) + ' sebulan · bersih +' + rm(a.sewa - a.kos) + ' sebulan</small>' : '') + '<small>Penyelenggaraan ' + rm(a.kos) + ' sebulan' + (a.milik ? ' · jual ' + rm(a.jual) : '') + '</small>' +
+        (!a.milik && a.sebab ? '<small>' + esc(a.sebab) + '</small>' : '') + (a.naik ? '<small>Naik taraf: bayar beza ' + rm(a.beza) + ' (aset lama diganti).</small>' + (a.naikSebab ? '<small>' + esc(a.naikSebab) + '</small>' : '') : '') + '</div>' +
+        (a.milik ? '<button type="button" class="ht-btn ht-btn--jual" data-act="harta-jual" data-id="' + a.id + '">Jual</button>' : a.naik ? '<button type="button" class="ht-btn" data-act="harta-naik" data-id="' + a.id + '"' + (a.bolehNaik ? '' : ' disabled') + '>Naik taraf</button>' : '<button type="button" class="ht-btn" data-act="harta-beli" data-id="' + a.id + '"' + (a.boleh ? '' : ' disabled') + '>Beli</button>') + '</div>';
     });
     h += '</section><section class="card"><h3 class="card__title" style="margin:0 0 4px">Kurungan cukai (kekayaan bersih, tahunan)</h3><table class="ht-jadual"><tr><th>Kekayaan bersih</th><th class="r">Kadar marginal</th></tr>';
     H.KURUNGAN.forEach(function (k) {
@@ -89,6 +91,7 @@
     var id = el && el.getAttribute ? el.getAttribute('data-id') : null, u = U(), r;
     if (act === 'harta-beli') { r = H.beli(id); }
     else if (act === 'harta-jual') { r = H.jual(id); }
+    else if (act === 'harta-naik') { r = H.naikTaraf(id); }
     else if (act === 'harta-isytihar') { isytihar(); return; }
     if (r) { if (u) { u.toast(r.ok ? r.mesej : r.ralat, r.ok ? 'ok' : 'ralat'); if (u.render) { u.render(); } } }
   }

@@ -21,6 +21,8 @@
      cukaiTahunan(bersih)     cukai tahunan ikut kurungan
      ringkasan(p)             tunai, nilaiAset, bersih, kadar, cukaiTerkumpul, kesan pasif, risikoAudit, menunggu
      faktorKrisis(p)          pengganda peluang krisis politik (1 = tiada kesan)
+     naikTaraf(id)            bayar beza harga, aset lama diganti (rumah > banglo > kompleks)
+     sewaBulanan(p)           jumlah sewa hartanah sebulan
      beli(id) / jual(id)      pulang { ok, mesej } atau { ok:false, ralat }
      pilihanDeklarasi(p)      pilihan Telus / Sembunyi
      isytihar(pilihId, o)     jawab pengisytiharan yang menunggu
@@ -49,7 +51,9 @@
   function idx(p) { return (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1); }
 
   var ASET = [
-    { id: 'rumah',  jenis: 'hartanah', ikon: '🏠', nama: 'Hartanah: Rumah teres', harga: 40000,  ip: 2, huraian: 'Sewa dan nilai hartanah menyumbang +2 IP sebulan.' },
+    { id: 'rumah',  jenis: 'hartanah', ikon: '🏠', nama: 'Hartanah: Rumah teres', harga: 40000,  ip: 2, huraian: 'Disewakan kepada penyewa, +2 IP sebulan. Boleh dinaik taraf kepada Rumah banglo.' },
+    { id: 'banglo', jenis: 'hartanah', ikon: '🏡', nama: 'Hartanah: Rumah banglo', harga: 100000, ip: 4, naikDari: 'rumah', huraian: 'Hanya melalui naik taraf Rumah teres. +4 IP sebulan. Boleh dinaik taraf kepada Kompleks perniagaan.' },
+    { id: 'kompleks', jenis: 'hartanah', ikon: '🏬', nama: 'Hartanah: Kompleks perniagaan', harga: 250000, ip: 8, naikDari: 'banglo', huraian: 'Hanya melalui naik taraf Rumah banglo. +8 IP sebulan.' },
     { id: 'wisma',  jenis: 'hartanah', ikon: '🏢', nama: 'Hartanah: Wisma Pejabat', harga: 120000, ip: 6, huraian: 'Bangunan pejabat untuk gerak kerja anda, +6 IP sebulan.' },
     { id: 'agensi', jenis: 'media',    ikon: '📰', nama: 'Agensi Penerangan', harga: 30000,  imej: 0.25, huraian: 'Mengurangkan peluang krisis politik bulanan sebanyak 25%.' },
     { id: 'media',  jenis: 'media',    ikon: '📺', nama: 'Syarikat Media', harga: 90000,  imej: 0.45, huraian: 'Mengurangkan peluang krisis politik bulanan sebanyak 45%.' },
@@ -58,7 +62,7 @@
   ];
   var KURUNGAN = [{ dari: 0, hingga: 50000, kadar: 0 }, { dari: 50000, hingga: 200000, kadar: 0.01 }, { dari: 200000, hingga: 500000, kadar: 0.02 }, { dari: 500000, hingga: 1e15, kadar: 0.03 }];
   var CONFIG = {
-    JUAL: 0.8, PENYELENGGARAAN: 0.005, KITARAN: 12,
+    SEWA: 0.009, JUAL: 0.8, PENYELENGGARAAN: 0.005, KITARAN: 12,
     TELUS: { skor: 15, risikoAudit: -15 },
     SEMBUNYI: { risikoAudit: 25, risikoTadbir: 15 },
     AUDIT: { bahagi: 2, denda: 1, skor: -15, reputasi: -8, selepas: 10 }
@@ -87,11 +91,12 @@
     return Math.round(KURUNGAN.reduce(function (t, k) { return t + Math.max(0, Math.min(bersih, k.hingga) - k.dari) * k.kadar; }, 0));
   }
   function kadarMarginal(bersih) { var k = KURUNGAN.filter(function (x) { return bersih > x.dari && bersih <= x.hingga; })[0]; return k ? k.kadar : (bersih > KURUNGAN[0].hingga ? KURUNGAN[KURUNGAN.length - 1].kadar : 0); }
+  function sewaAset(a) { return a.jenis === 'hartanah' ? Math.round(a.harga * CONFIG.SEWA) : 0; }
   function kesanPasif(h) {
-    var o = { ip: 0, stress: 0, imej: 0, kos: 0 };
+    var o = { ip: 0, stress: 0, imej: 0, kos: 0, sewa: 0 };
     ASET.forEach(function (a) {
       if (!h.aset[a.id]) { return; }
-      o.ip += a.ip || 0; o.stress += a.stress || 0; o.imej = Math.max(o.imej, a.imej || 0); o.kos += Math.round(a.harga * CONFIG.PENYELENGGARAAN);
+      o.ip += a.ip || 0; o.stress += a.stress || 0; o.imej = Math.max(o.imej, a.imej || 0); o.kos += Math.round(a.harga * CONFIG.PENYELENGGARAAN); o.sewa += sewaAset(a);
     });
     return o;
   }
@@ -109,8 +114,12 @@
   function katalog(p) {
     var h = getHarta(p), tunai = Number(p && p.myr) || 0;
     return ASET.map(function (a) {
-      var milik = !!h.aset[a.id], boleh = !milik && tunai >= a.harga && !h.menunggu;
-      return Object.assign({}, a, { milik: milik, boleh: boleh, sebab: milik ? '' : h.menunggu ? 'Jawab Pengisytiharan Harta dahulu.' : tunai < a.harga ? 'Dana tidak mencukupi (perlu ' + rm(a.harga) + ').' : '',
+      var milik = !!h.aset[a.id], dari = a.naikDari ? cariAset(a.naikDari) : null, beza = dari ? a.harga - dari.harga : 0;
+      var boleh = !milik && !a.naikDari && tunai >= a.harga && !h.menunggu;
+      var naik = !!(dari && !milik && h.aset[dari.id]), bolehNaik = naik && tunai >= beza && !h.menunggu;
+      var seterusnya = ASET.filter(function (x) { return x.naikDari === a.id; })[0] || null;
+      return Object.assign({}, a, { milik: milik, boleh: boleh, sewa: sewaAset(a), naik: naik, bolehNaik: bolehNaik, beza: beza, naikSebab: naik && !bolehNaik ? (h.menunggu ? 'Jawab Pengisytiharan Harta dahulu.' : 'Dana tidak mencukupi (perlu ' + rm(beza) + ').') : '',
+        naikKe: seterusnya ? seterusnya.id : '', sebab: milik ? '' : h.menunggu ? 'Jawab Pengisytiharan Harta dahulu.' : tunai < a.harga ? 'Dana tidak mencukupi (perlu ' + rm(a.harga) + ').' : '',
         jual: Math.round(a.harga * CONFIG.JUAL), kos: Math.round(a.harga * CONFIG.PENYELENGGARAAN) });
     });
   }
@@ -121,10 +130,11 @@
     var a = cariAset(id), h = getHarta(p); if (!a) { return { ok: false, ralat: 'Aset tidak dikenali.' }; }
     if (h.menunggu) { return { ok: false, ralat: 'Jawab Pengisytiharan Harta SPRM dahulu.' }; }
     if (h.aset[id]) { return { ok: false, ralat: 'Anda sudah memiliki aset ini.' }; }
+    if (a.naikDari) { return { ok: false, ralat: 'Aset ini hanya boleh diperoleh melalui naik taraf.' }; }
     if ((Number(p.myr) || 0) < a.harga) { return { ok: false, ralat: 'Dana tidak mencukupi (perlu ' + rm(a.harga) + ').' }; }
     h.aset[id] = true; rekod(h, p, 'beli', 'Membeli ' + a.nama);
     var r = simpan(h, { myr: -a.harga }, { pindahan: true, log: { tindakan: 'harta_beli', nama: 'Membeli ' + a.nama, peringkat: 'ahli' } });
-    return r.ok ? { ok: true, mesej: 'Membeli ' + a.nama + ' (' + rm(a.harga) + '). Kos penyelenggaraan ' + rm(Math.round(a.harga * CONFIG.PENYELENGGARAAN)) + ' sebulan.' } : { ok: false, ralat: r.ralat };
+    return r.ok ? { ok: true, mesej: 'Membeli ' + a.nama + ' (' + rm(a.harga) + '). Kos penyelenggaraan ' + rm(Math.round(a.harga * CONFIG.PENYELENGGARAAN)) + ' sebulan' + (sewaAset(a) ? ', sewa ' + rm(sewaAset(a)) + ' sebulan.' : '.') } : { ok: false, ralat: r.ralat };
   }
   function jual(id) {
     var Sv = S(), p = Sv && Sv.loadPlayer(); if (!p) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
@@ -134,6 +144,20 @@
     delete h.aset[id]; rekod(h, p, 'jual', 'Menjual ' + a.nama);
     var r = simpan(h, { myr: hasil }, { pindahan: true, log: { tindakan: 'harta_jual', nama: 'Menjual ' + a.nama, peringkat: 'ahli' } });
     return r.ok ? { ok: true, mesej: 'Menjual ' + a.nama + ' pada ' + rm(hasil) + ' (80% harga beli).' } : { ok: false, ralat: r.ralat };
+  }
+
+  function naikTaraf(id) {
+    var Sv = S(), p = Sv && Sv.loadPlayer(); if (!p) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
+    var a = cariAset(id), h = getHarta(p); if (!a || !a.naikDari) { return { ok: false, ralat: 'Aset ini tiada naik taraf.' }; }
+    var dari = cariAset(a.naikDari);
+    if (h.menunggu) { return { ok: false, ralat: 'Jawab Pengisytiharan Harta SPRM dahulu.' }; }
+    if (h.aset[id]) { return { ok: false, ralat: 'Anda sudah memiliki aset ini.' }; }
+    if (!h.aset[dari.id]) { return { ok: false, ralat: 'Perlu memiliki ' + dari.nama + ' dahulu.' }; }
+    var beza = a.harga - dari.harga;
+    if ((Number(p.myr) || 0) < beza) { return { ok: false, ralat: 'Dana tidak mencukupi (perlu ' + rm(beza) + ').' }; }
+    delete h.aset[dari.id]; h.aset[id] = true; rekod(h, p, 'naik', 'Menaik taraf ' + dari.nama + ' kepada ' + a.nama);
+    var r = simpan(h, { myr: -beza }, { pindahan: true, log: { tindakan: 'harta_naik', nama: 'Menaik taraf kepada ' + a.nama, peringkat: 'ahli' } });
+    return r.ok ? { ok: true, mesej: 'Menaik taraf kepada ' + a.nama + ' (bayar beza ' + rm(beza) + '). Sewa ' + rm(sewaAset(a)) + ' sebulan.' } : { ok: false, ralat: r.ralat };
   }
 
   /* ---------- Pengisytiharan Harta SPRM ---------- */
@@ -183,16 +207,16 @@
     var ps = kesanPasif(h), kesan = {}, rng = o.rng || Sv.rngBerbenih(String(p.id) + '|harta|' + kunciBulan), kerajaan = pegangKerajaan(p);
     if (!h.terakhir) { h.terakhir = kini; }
     /* 1. kesan pasif aset */
-    var kos = Math.min(ps.kos, Math.max(0, Number(p.myr) || 0));
+    var kos = Math.min(ps.kos, Math.max(0, (Number(p.myr) || 0) + ps.sewa));
     if (ps.ip) { kesan.ip = ps.ip; }
-    if (kos) { kesan.myr = -kos; }
+    if (kos || ps.sewa) { kesan.myr = ps.sewa - kos; }
     /* 2. cukai terkumpul: 1/12 cukai tahunan atas kekayaan bersih (selepas penyelenggaraan) */
-    var bersih = (Number(p.myr) || 0) - kos + nilaiAset(h);
+    var bersih = (Number(p.myr) || 0) + ps.sewa - kos + nilaiAset(h);
     h.cukaiTerkumpul += Math.round(cukaiTahunan(bersih) / CONFIG.KITARAN);
     /* 3. audit SPRM bagi aset yang disembunyikan */
     var auditDenda = null, kesanAudit = null;
     if (h.cukaiElak > 0 && rng() < h.risikoAudit / CONFIG.AUDIT.bahagi / 100) {
-      var jumlahAudit = Math.round(h.cukaiElak * (1 + CONFIG.AUDIT.denda)), bayar = Math.min(Math.max(0, (Number(p.myr) || 0) - kos), jumlahAudit);
+      var jumlahAudit = Math.round(h.cukaiElak * (1 + CONFIG.AUDIT.denda)), bayar = Math.min(Math.max(0, (Number(p.myr) || 0) + ps.sewa - kos), jumlahAudit);
       auditDenda = jumlahAudit; kesan.myr = (kesan.myr || 0) - bayar; h.tertunggak += jumlahAudit - bayar; h.cukaiElak = 0; h.risikoAudit = CONFIG.AUDIT.selepas;
       kesan.reputasi = CONFIG.AUDIT.reputasi; kesanAudit = jumlahAudit;
       var m = 'Audit SPRM menemui aset yang disembunyikan! Cukai dan denda ' + rm(jumlahAudit) + ' (Integriti Parti ' + CONFIG.AUDIT.skor + ', Reputasi ' + CONFIG.AUDIT.reputasi + ').';
@@ -209,7 +233,7 @@
       }
     }
     h.kerajaanDilihat = kerajaan; h.akhir = kunciBulan;
-    var r = simpan(h, kesan, { tanpaKesukaran: true, log: kos || ps.ip ? { tindakan: 'harta_bulanan', nama: 'Aset: ' + (ps.ip ? '+' + ps.ip + ' IP, ' : '') + 'penyelenggaraan ' + rm(kos), peringkat: 'bulan' } : undefined });
+    var r = simpan(h, kesan, { tanpaKesukaran: true, pindahan: true, log: kos || ps.ip || ps.sewa ? { tindakan: 'harta_bulanan', nama: 'Aset: ' + (ps.ip ? '+' + ps.ip + ' IP, ' : '') + (ps.sewa ? 'sewa ' + rm(ps.sewa) + ', ' : '') + 'penyelenggaraan ' + rm(kos), peringkat: 'bulan' } : undefined });
     if (!r.ok) { return { peristiwa: [] }; }
     if (ps.stress && ST() && ST().laras) { ST().laras({ stress: -ps.stress }); }
     if (kesanAudit && IG() && IG().ubahSkor) { IG().ubahSkor(CONFIG.AUDIT.skor, 'Audit SPRM: aset disembunyikan'); }
@@ -217,5 +241,5 @@
   }
 
   return { ASET: ASET, CONFIG: CONFIG, KURUNGAN: KURUNGAN, getHarta: getHarta, katalog: katalog, cukaiTahunan: cukaiTahunan, ringkasan: ringkasan, faktorKrisis: faktorKrisis,
-    beli: beli, jual: jual, pilihanDeklarasi: pilihanDeklarasi, isytihar: isytihar, menunggu: menunggu, prosesBulan: prosesBulan };
+    beli: beli, jual: jual, naikTaraf: naikTaraf, sewaBulanan: function (p) { return kesanPasif(getHarta(p)).sewa; }, pilihanDeklarasi: pilihanDeklarasi, isytihar: isytihar, menunggu: menunggu, prosesBulan: prosesBulan };
 });

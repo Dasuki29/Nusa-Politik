@@ -278,6 +278,15 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pg.locator('.acara__opsi[data-pilih="telus"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(600);
   if (await pg.evaluate(() => !!window.MyPolitikSave.loadPlayer().harta.menunggu)) { ralat.push('deklarasi masih menunggu selepas dijawab'); }
 
+  /* v8.22: sewa hartanah dan naik taraf (EN). */
+  await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 400000 } }); window.MyPolitikHarta.beli('rumah'); window.NusaHarta_UI.render ? window.NusaHarta_UI.render() : 0; });
+  await pg.locator('#tab-harta').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500); await imbas('harta naik taraf');
+  const nt = await pg.evaluate(() => (document.getElementById('panel-harta') || {}).textContent || '');
+  if (!/Bungalow/.test(nt) || !/Upgrade/.test(nt) || !/Rent RM/.test(nt) || !/Property rent per month/.test(nt)) { ralat.push('panel naik taraf EN salah: ' + nt.slice(0, 160)); }
+  if (/Naik taraf|Sewa |banglo|Kompleks/.test(nt)) { ralat.push('panel naik taraf bocor BM'); }
+  await pg.locator('[data-act="harta-naik"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500);
+  if (await pg.evaluate(() => !window.MyPolitikHarta.getHarta(window.MyPolitikSave.loadPlayer()).aset.banglo)) { ralat.push('naik taraf banglo tidak berjaya'); }
+
   /* v8.14: pratonton bulan menunjukkan elaun jawatan kerajaan dan nota kerjaya dihentikan (EN). */
   await tutup();
   await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign({}, window.MyPolitikKabinet.getKabinet(p), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }) } }); });

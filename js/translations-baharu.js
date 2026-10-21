@@ -2452,7 +2452,26 @@
   ["{a} keluhan rakyat tidak dijawab 3 bulan dan diabaikan. Sokongan akar umbi {b}, Reputasi {c}.", "{a} citizens' complaints went unanswered for 3 months and were ignored. Grassroots support {b}, Reputation {c}."],
   ["Rakyat membawa keluhan baharu. Semak kad Keluhan Rakyat di tab Tindakan.", "Citizens have brought new complaints. Check the Citizens' Complaints card in the Actions tab."],
   ["WP (semua)", "WP (all)"],
-  ["Wilayah Persekutuan", "Federal Territories"]
+  ["Wilayah Persekutuan", "Federal Territories"],
+  ["Disewakan kepada penyewa, +2 IP sebulan. Boleh dinaik taraf kepada Rumah banglo.", "Rented to tenants, +2 IP a month. Can be upgraded to a Bungalow."],
+  ["Hartanah: Rumah banglo", "Property: Bungalow"],
+  ["🏡 Hartanah: Rumah banglo · RM {b}", "🏡 Property: Bungalow · RM {b}"],
+  ["Hanya melalui naik taraf Rumah teres. +4 IP sebulan. Boleh dinaik taraf kepada Kompleks perniagaan.", "Only through upgrading the Terrace house. +4 IP a month. Can be upgraded to a Commercial complex."],
+  ["Hartanah: Kompleks perniagaan", "Property: Commercial complex"],
+  ["🏬 Hartanah: Kompleks perniagaan · RM {b}", "🏬 Property: Commercial complex · RM {b}"],
+  ["Hanya melalui naik taraf Rumah banglo. +8 IP sebulan.", "Only through upgrading the Bungalow. +8 IP a month."],
+  ["Sewa RM {a} sebulan · bersih +RM {b} sebulan", "Rent RM {a} a month · net +RM {b} a month"],
+  ["Naik taraf: bayar beza RM {a} (aset lama diganti).", "Upgrade: pay the RM {a} difference (the old asset is replaced)."],
+  ["Naik taraf", "Upgrade"],
+  ["Sewa hartanah sebulan", "Property rent per month"],
+  ["Sewa hartanah", "Property rent"],
+  ["Penyelenggaraan aset", "Asset maintenance"],
+  ["Elaun jawatan kerajaan", "Government post allowance"],
+  ["Aset ini hanya boleh diperoleh melalui naik taraf.", "This asset can only be obtained by upgrading."],
+  ["Aset ini tiada naik taraf.", "This asset has no upgrade."],
+  ["Menaik taraf kepada {x} (bayar beza RM {a}). Sewa RM {b} sebulan.", "Upgraded to {x} (paid the RM {a} difference). Rent RM {b} a month."],
+  ["Membeli {x} (RM {a}). Kos penyelenggaraan RM {b} sebulan, sewa RM {c} sebulan.", "Bought {x} (RM {a}). Maintenance RM {b} a month, rent RM {c} a month."],
+  ["Menaik taraf kepada {x}", "Upgraded to {x}"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

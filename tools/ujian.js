@@ -618,8 +618,8 @@ ujian('harta: proses bulan memberi IP pasif, tolak penyelenggaraan 0.5%, kumpul 
   const m0 = S.loadPlayer().myr, ip0 = S.loadPlayer().ip, st0 = S.loadPlayer().stress;
   HT.prosesBulan({ rng: rngTetap(1) });
   const p = S.loadPlayer();
-  sama(p.myr, m0 - (200 + 125), 'penyelenggaraan 0.5% (200 + 125)'); sama(p.ip - ip0, 2, 'IP pasif'); sama(p.stress, st0 - 2, 'Stress -2');
-  const bersih = m0 - 325 + 65000; sama(HT.getHarta(p).cukaiTerkumpul, Math.round(HT.cukaiTahunan(bersih) / 12), 'cukai terkumpul 1/12');
+  sama(p.myr, m0 + 360 - (200 + 125), 'sewa 360 tolak penyelenggaraan 0.5% (200 + 125)'); sama(p.ip - ip0, 2, 'IP pasif'); sama(p.stress, st0 - 2, 'Stress -2');
+  const bersih = m0 + 360 - 325 + 65000; sama(HT.getHarta(p).cukaiTerkumpul, Math.round(HT.cukaiTahunan(bersih) / 12), 'cukai terkumpul 1/12');
   HT.prosesBulan({ rng: rngTetap(1) }); sama(S.loadPlayer().myr, p.myr, 'sekali sebulan');
 });
 ujian('harta: pengisytiharan dicetus selepas 12 bulan atau dilantik ke jawatan kerajaan; bulan disekat sehingga dijawab', () => {
@@ -905,6 +905,18 @@ ujian('akar umbi: PRU, akar umbi tinggi menaikkan sokongan pengundi dan jentera 
   sama(n.j, 55 + Math.round(50 * 0.35), 'jentera pada 50'); betul(t.j > n.j && n.j > r.j, 'jentera ikut akar umbi');
 });
 
+ujian('aset: sewa 0.9% sebulan masuk Dana, kena cukai; naik taraf teres > banglo > kompleks bayar beza dan ganti aset lama', () => {
+  const HT = g.MyPolitikHarta; htPemain({ myr: 500000 });
+  sama(HT.beli('banglo').ok, false, 'banglo tidak boleh dibeli terus'); sama(HT.naikTaraf('banglo').ok, false, 'perlu rumah dahulu');
+  betul(HT.beli('rumah').ok); betul(HT.beli('wisma').ok); sama(HT.sewaBulanan(S.loadPlayer()), 360 + 1080, 'sewa rumah + wisma');
+  let m0 = S.loadPlayer().myr; let r = HT.naikTaraf('banglo'); betul(r.ok, r.ralat);
+  let p = S.loadPlayer(); sama(m0 - p.myr, 60000, 'bayar beza 60,000'); sama(!!HT.getHarta(p).aset.rumah, false, 'rumah diganti'); betul(HT.getHarta(p).aset.banglo);
+  sama(HT.sewaBulanan(p), 900 + 1080); m0 = p.myr; const ip0 = p.ip; HT.prosesBulan({ rng: rngTetap(1) }); p = S.loadPlayer();
+  sama(p.myr - m0, 900 + 1080 - 500 - 600, 'sewa masuk, penyelenggaraan keluar'); sama(p.ip - ip0, 4 + 6, 'IP banglo 4 + wisma 6');
+  m0 = p.myr; r = HT.naikTaraf('kompleks'); betul(r.ok, r.ralat); sama(m0 - S.loadPlayer().myr, 150000, 'beza banglo > kompleks'); sama(HT.sewaBulanan(S.loadPlayer()), 2250 + 1080);
+  sama(HT.naikTaraf('kompleks').ok, false, 'sudah dimiliki');
+  htPemain({ myr: 50000 }); HT.beli('rumah'); sama(HT.naikTaraf('banglo').ok, false, 'dana tidak cukup untuk beza');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
