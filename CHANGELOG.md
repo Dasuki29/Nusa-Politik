@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v8.26 (2026-10-21)
+
+Pembetulan tutorial berdasarkan tangkapan skrin pemain.
+
+### Dibetulkan
+- **Latihan Bersama Amir (langkah 2):** tulis AP "tidak dibawa ke bulan depan", bercanggah dengan langkah 5 dan peraturan sebenar (baki dibawa sehingga had 15). Langkah 5 juga ditukar daripada "Elaun masuk" kepada "Pendapatan masuk" (tiada elaun parti sejak v8.12).
+- **Tur Badan Perhubungan Negeri:** kad tur terlalu panjang (kira-kira 2,000 aksara). Kini ringkas (4 ayat); butiran penuh dipindah ke topik panduan baharu **Badan Perhubungan Negeri** (dipecah kepada tajuk dan perenggan pendek), BM dan EN.
+
 ## v8.25 (2026-10-21)
 
 Kemas kini tutorial (BM dan EN) selepas v8.17 hingga v8.24.
