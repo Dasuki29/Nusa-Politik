@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v8.31 (2026-10-22)
+
+Tab Tindakan dikumpulkan (kira-kira 5,200px menjadi kira-kira 2,000px pada telefon).
+
+### Berubah
+- Tindakan Pemegang Jawatan, Misi dan Tindakan Khas Sayap sentiasa dibuka.
+- Tiga kumpulan boleh dilipat: **🏛️ Kawasan & Rakyat** (dibuka automatik jika ada keluhan, lencana bilangan keluhan), **💼 Jawatan & Aset Luar** (Komuniti, GLC, Sampingan, Anugerah) dan **📡 Media & Integriti**.
+- Keadaan lipat diingat dalam pelayar sahaja. Tutorial BM/EN dan terjemahan dikemas kini.
+
 ## v8.30 (2026-10-22)
 
 Susun semula tab supaya tidak terlalu panjang (audit kosmetik).
