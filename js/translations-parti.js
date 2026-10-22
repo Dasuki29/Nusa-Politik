@@ -171,6 +171,7 @@
   ["Tuntutan ditolak: UMNO bertanding {x} kerusi dalam GPS (hubungan gabungan {y}).", "Claim rejected: PBB contests {x} seats in GPS (coalition relations {y})."],
   ["Anda beralah: UMNO bertanding {x} kerusi dalam GPS (hubungan gabungan {y}).", "You conceded: PBB contests {x} seats in GPS (coalition relations {y})."],
   ["Anda menerima tawaran: UMNO bertanding {x} kerusi dalam GPS.", "You accepted the offer: PBB contests {x} seats in GPS."],
-  ["DUN anda di luar kuota UMNO dalam GPS (kuota {x} kerusi)", "Your state seat is outside PBB's GPS quota (quota {x} seats)"]
+  ["DUN anda di luar kuota UMNO dalam GPS (kuota {x} kerusi)", "Your state seat is outside PBB's GPS quota (quota {x} seats)"],
+  ["Pendapatan bulan {x} {y}", "Income for month {x} {y}"]
   ]);
 })();
