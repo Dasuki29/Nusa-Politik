@@ -41,6 +41,9 @@ Object.keys(dun).filter(no => dyk(dun[no]) >= DAYAK_PRS).sort((a, b) => dyk(dun[
 /* v10.1: SUPP (mod ringan). ANDAIAN: kawasan operasi SUPP = DUN dengan peratus Cina 25% ke atas; `rkSUPP` = kedudukan (1 = paling Cina). */
 const CINA_SUPP = 25;
 Object.keys(dun).filter(no => dun[no].e.cina >= CINA_SUPP).sort((a, c) => dun[c].e.cina - dun[a].e.cina || a - c).forEach((no, i) => { dun[no].rkSUPP = i + 1; });
+/* v10.2: PDP (mod ringan). ANDAIAN: kawasan operasi PDP = DUN campuran (kumpulan terbesar antara Melayu/Melanau, Cina, Dayak kurang 55%); `rkPDP` = kedudukan (1 = paling campuran). */
+const MAKS_PDP = 55, maksKaum = o => Math.max(o.e.melayu, o.e.cina, o.e.iban + o.e.bidayuh + o.e.orangUlu);
+Object.keys(dun).filter(no => maksKaum(dun[no]) < MAKS_PDP).sort((a, c) => maksKaum(dun[a]) - maksKaum(dun[c]) || a - c).forEach((no, i) => { dun[no].rkPDP = i + 1; });
 console.log('Parlimen:', Object.keys(pl).length);
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), JSON.stringify(dun));
 console.log('data/pbb-dun.json', Object.keys(dun).length, 'DUN');
@@ -54,3 +57,7 @@ console.log('data/prs-sarawak.csv', prsBaris.length - 1, 'cawangan');
 const suppBaris = [baris[0]].concat(baris.slice(1).filter(r => { const no = parseInt(String(r[0]).split('/')[1], 10); return dun[no] && dun[no].rkSUPP; }));
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'supp-sarawak.csv'), suppBaris.map(r => r.join(',')).join('\n') + '\n');
 console.log('data/supp-sarawak.csv', suppBaris.length - 1, 'cawangan');
+/* v10.2: CSV PDP: hanya cawangan dalam DUN kawasan operasi PDP. */
+const pdpBaris = [baris[0]].concat(baris.slice(1).filter(r => { const no = parseInt(String(r[0]).split('/')[1], 10); return dun[no] && dun[no].rkPDP; }));
+fs.writeFileSync(path.join(__dirname, '..', 'data', 'pdp-sarawak.csv'), pdpBaris.map(r => r.join(',')).join('\n') + '\n');
+console.log('data/pdp-sarawak.csv', pdpBaris.length - 1, 'cawangan');

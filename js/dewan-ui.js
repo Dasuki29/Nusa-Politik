@@ -7,7 +7,7 @@
 (function (W) {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
   var D0 = W.MyPolitikDewan, N = W.MyPolitikDUN, S = W.MyPolitikSave, D = D0;
   if (!D0 || !S) { return; }
   /** Pilih enjin: Dewan Rakyat (MP/Menteri) atau DUN (ADUN/EXCO); API kedua-duanya sama. */

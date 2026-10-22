@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v10.2 (2026-10-22)
+
+PDP (mod ringan) dengan ciri teras Imbangan Kaum Kawasan.
+
+### Baharu
+- **PDP:** boleh dipilih di skrin pendaftaran. Struktur, PRN/PRU, Pengaruh GPS, Lobi Majlis GPS dan rundingan kuota sama seperti PRS dan SUPP. Kuota asas 5 daripada 82 (jadual PRN 2021 daripada pengguna).
+- **Kawasan operasi PDP:** 15 DUN campuran (kumpulan terbesar antara Melayu/Melanau, Cina dan Dayak kurang 55%; 136 cawangan, `data/pdp-sarawak.csv`); `rkPDP` = kedudukan (1 = paling campuran).
+- **Imbangan Kaum Kawasan:** sokongan Melayu/Melanau, Dayak dan Cina (20 hingga 100, mula 50, menghampiri 50 sebanyak 1 sebulan). "Janji kepada" satu kumpulan (2 AP, RM 800): kumpulan itu +10, dua lagi -4. Kekuatan kerusi DUN: (purata sokongan diwajarkan saiz kumpulan dalam DUN - 50) / 8 mata; marginal atau sukar 1.5 kali. Meter Imbangan = 100 - (sokongan tertinggi - terendah).
+- Logo PDP daripada pengguna (`assets/images/logo-pdp.jpg`), tutorial BM/EN, terjemahan EN. Ujian: unit PDP, `PARTI=PDP node tools/ujian-prs.js`, `PARTI=PDP tools/simulasi.js`.
+
+### Andaian dan had
+- Kawasan operasi (kurang 55%) dan semua angka Imbangan Kaum ialah andaian permainan. Kumpulan Orang Ulu digabungkan dalam Dayak; India dan lain-lain tidak dikira.
+
+### Belum
+- PSB / pembangkang (v10.3).
+
 ## v10.1 (2026-10-22)
 
 SUPP (mod ringan) dengan ciri teras Sokongan Bandar.

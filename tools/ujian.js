@@ -1286,6 +1286,28 @@ ujian('SUPP v10.1: mod ringan (kuota 18, Sokongan Bandar menjejas kerusi, kelaya
   sama(SW.programBandar !== undefined, true);
 });
 
+
+ujian('PDP v10.2: mod ringan (kuota 5, Imbangan Kaum Kawasan menjejas kerusi)', () => {
+  const SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pdp-sarawak.csv'), 'utf8')));
+  const duns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  sama(SW.KUOTA_2021.PDP, 5); sama(Object.keys(duns).filter((k) => duns[k].rkPDP).length, 15, 'DUN campuran');
+  const dem = D.tentukanDemografi('Lelaki', 40), b = h.bahagian.find((x) => duns[parseInt(x.kod, 10)] && duns[parseInt(x.kod, 10)].rkPDP === 1);
+  betul(b, 'DUN PDP rk 1 dalam CSV');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PDP', nama: 'Uji', demografik: dem, cawangan: (b.dun ? b.dun[0].cawangan[0] : b.cawangan[0]), sayap: 'utama', avatar: 'biasa', dunInfo: duns[parseInt(b.kod, 10)] }));
+  let p = S.loadPlayer(); sama(p.parti, 'PDP'); betul(SW.ringan(p), 'ringan'); sama(SW.kuota(p), 5); betul(SW.dalamKuota(p), 'rk 1 dalam kuota');
+  let k = SW.sokonganKaum(p); sama(k.melayu, 50); sama(SW.purataKaum(p), 50); sama(SW.ofsetKaum(p), 0); sama(SW.imbanganKaum(p), 100);
+  P.tetap({ ap: 10, myr: 20000 }); const r = SW.janjiKaum('dayak'); betul(r.ok, r.ralat); p = S.loadPlayer(); k = SW.sokonganKaum(p);
+  sama(k.dayak, 60); sama(k.melayu, 46); sama(k.cina, 46); sama(p.ap, 8); sama(SW.imbanganKaum(p), 86);
+  const w = JSON.stringify(SW.ringkasRingan(p).kaumSaham); betul(SW.ringkasRingan(p).kaumSaham.dayak > 0, 'saham kaum ' + w);
+  const idx = (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1);
+  const dayakSaja = Object.assign({}, p, { sokonganKaum: { nilai: { melayu: 50, dayak: 100, cina: 50 }, idx } }), cinaSaja = Object.assign({}, p, { sokonganKaum: { nilai: { melayu: 50, dayak: 50, cina: 100 }, idx } });
+  const sd = SW.ringkasRingan(p).kaumSaham; betul((sd.dayak > sd.cina) === (SW.purataKaum(dayakSaja) > SW.purataKaum(cinaSaja)), 'purata diwajarkan saiz kumpulan');
+  const kemudian = Object.assign({}, dayakSaja, { tahun: (parseInt(p.tahun, 10) || 0) + 1 }); betul(SW.sokonganKaum(kemudian).dayak < 100, 'sokongan kaum menghampiri 50');
+  sama(SW.janjiKaum('x').ok, false, 'kumpulan tidak sah');
+  const prs = Object.assign({}, p, { parti: 'PRS' }); sama(SW.sokonganKaum(prs), null, 'PRS tiada Imbangan Kaum'); sama(SW.ofsetKaum(prs), 0);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

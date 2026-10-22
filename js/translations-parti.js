@@ -182,6 +182,20 @@
   ["Program Bandar", "Urban Programme"],
   ["Program Bandar dilaksanakan. Sokongan Bandar {x}/100 (-{y} AP, -RM {z}).", "Urban Programme carried out. Urban Support {x}/100 (-{y} AP, -RM {z})."],
   ["Hanya untuk pemain UMNO.", "Only for PBB players."],
-  ["Hanya untuk pemain SUPP.", "Only for SUPP players."]
+  ["Hanya untuk pemain SUPP.", "Only for SUPP players."],
+  ["UMNO (mod ringan): kawasan operasi ialah DUN campuran (tiada kumpulan terbesar melebihi 55%). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Imbangan Kaum Kawasan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode): the area of operation is mixed state seats (no largest group above 55%). No Premier, bloc balance or full Supreme Council. Core feature: Regional Ethnic Balance. Member numbers are game estimates. Simulation, not official party data."],
+  ["PDP (mod ringan): kawasan operasi ialah DUN campuran (tiada kumpulan terbesar melebihi 55%). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Imbangan Kaum Kawasan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode): the area of operation is mixed state seats (no largest group above 55%). No Premier, bloc balance or full Supreme Council. Core feature: Regional Ethnic Balance. Member numbers are game estimates. Simulation, not official party data."],
+  ["Imbangan Kaum Kawasan", "Regional Ethnic Balance"],
+  ["{x}/100", "{x}/100"],
+  ["Hanya untuk pemain PDP.", "Only for PDP players."],
+  ["Melayu/Melanau ({x}% pengundi)", "Malay/Melanau ({x}% of voters)"],
+  ["Janji kepada Melayu/Melanau (2 AP, RM 800)", "Pledge to Malay/Melanau (2 AP, RM 800)"],
+  ["Anda berjanji kepada Melayu/Melanau. Sokongan Melayu/Melanau {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Malay/Melanau. Malay/Melanau support {x}/100 (other groups -4, -2 AP, -RM 800)."],
+  ["Dayak ({x}% pengundi)", "Dayak ({x}% of voters)"],
+  ["Janji kepada Dayak (2 AP, RM 800)", "Pledge to Dayak (2 AP, RM 800)"],
+  ["Anda berjanji kepada Dayak. Sokongan Dayak {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Dayak. Dayak support {x}/100 (other groups -4, -2 AP, -RM 800)."],
+  ["Cina ({x}% pengundi)", "Chinese ({x}% of voters)"],
+  ["Janji kepada Cina (2 AP, RM 800)", "Pledge to Chinese (2 AP, RM 800)"],
+  ["Anda berjanji kepada Cina. Sokongan Cina {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Chinese. Chinese support {x}/100 (other groups -4, -2 AP, -RM 800)."]
   ]);
 })();

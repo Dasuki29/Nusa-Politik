@@ -7,7 +7,7 @@
 (function (W) {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
   var PD = W.MyPolitikPindah, D = W.MyPolitikData, S = W.MyPolitikSave;
   if (!PD) { return; }
   function U() { return W.NusaUI; }

@@ -1,0 +1,137 @@
+ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan,Bawah 40,Atas 40
+013/003/001/01,Sarawak,"Tanjong Datu","Tanjong Datu","Telok Melano",50,26,24,26,24
+013/003/001/02,Sarawak,"Tanjong Datu","Tanjong Datu","Pueh",124,63,61,59,65
+013/003/001/03,Sarawak,"Tanjong Datu","Tanjong Datu","Sebat",127,63,64,67,60
+013/003/001/04,Sarawak,"Tanjong Datu","Tanjong Datu","Sematan",253,129,124,132,121
+013/003/001/05,Sarawak,"Tanjong Datu","Tanjong Datu","Seling",196,97,99,86,110
+013/003/001/06,Sarawak,"Tanjong Datu","Tanjong Datu","Stunggang",223,113,110,101,122
+013/003/001/07,Sarawak,"Tanjong Datu","Tanjong Datu","Lundu",365,186,179,159,206
+013/003/001/08,Sarawak,"Tanjong Datu","Tanjong Datu","Perigi",50,27,23,22,28
+013/003/001/09,Sarawak,"Tanjong Datu","Tanjong Datu","Sekambal",116,59,57,56,60
+013/003/001/10,Sarawak,"Tanjong Datu","Tanjong Datu","Bajo",98,50,48,55,43
+013/003/001/11,Sarawak,"Tanjong Datu","Tanjong Datu","Kampung Sebemban",75,38,37,33,42
+013/003/001/12,Sarawak,"Tanjong Datu","Tanjong Datu","Temelan",76,39,37,32,44
+013/003/001/13,Sarawak,"Tanjong Datu","Tanjong Datu","Sampadi",140,69,71,70,70
+013/003/001/14,Sarawak,"Tanjong Datu","Tanjong Datu","Stoh",50,24,26,22,28
+013/003/001/15,Sarawak,"Tanjong Datu","Tanjong Datu","Rambungan",99,47,52,49,50
+013/013/001/01,Sarawak,"Batu Kitang","Batu Kitang","Arang",500,246,254,247,253
+013/013/001/02,Sarawak,"Batu Kitang","Batu Kitang","Pasar Maong",500,247,253,217,283
+013/013/001/03,Sarawak,"Batu Kitang","Batu Kitang","Haji Baki",500,250,250,252,248
+013/013/001/04,Sarawak,"Batu Kitang","Batu Kitang","Kitang",500,253,247,266,234
+013/013/001/05,Sarawak,"Batu Kitang","Batu Kitang","Lidah Tanah",154,77,77,76,78
+013/017/001/01,Sarawak,"Stakan","Stakan","Merdang",500,246,254,332,168
+013/017/001/02,Sarawak,"Stakan","Stakan","Quop",314,161,153,150,164
+013/017/001/03,Sarawak,"Stakan","Stakan","Sidanu",500,244,256,291,209
+013/017/001/04,Sarawak,"Stakan","Stakan","Pengkalan Kuap",239,121,118,137,102
+013/017/001/05,Sarawak,"Stakan","Stakan","Stakan",500,281,219,336,164
+013/032/001/01,Sarawak,"Simanggang","Simanggang","Sabu",83,38,45,34,49
+013/032/001/02,Sarawak,"Simanggang","Simanggang","Simanggang",500,252,248,265,235
+013/032/001/03,Sarawak,"Simanggang","Simanggang","Lamanak Seberang",473,234,239,238,235
+013/032/001/04,Sarawak,"Simanggang","Simanggang","Munggu Sabun",59,26,33,25,34
+013/032/001/05,Sarawak,"Simanggang","Simanggang","Sengat",166,83,83,69,97
+013/032/001/06,Sarawak,"Simanggang","Simanggang","Undup",260,126,134,104,156
+013/032/001/07,Sarawak,"Simanggang","Simanggang","Bayai",181,85,96,79,102
+013/046/001/01,Sarawak,"Meradong","Meradong","Narasit",123,67,56,66,57
+013/046/001/02,Sarawak,"Meradong","Meradong","Tulai",109,53,56,24,85
+013/046/001/03,Sarawak,"Meradong","Meradong","Kertong",221,109,112,96,125
+013/046/001/04,Sarawak,"Meradong","Meradong","Kelupu",443,216,227,242,201
+013/046/001/05,Sarawak,"Meradong","Meradong","Bandar",500,253,247,224,276
+013/046/001/06,Sarawak,"Meradong","Meradong","Meradong",92,46,46,42,50
+013/046/001/07,Sarawak,"Meradong","Meradong","Kemantan",110,57,53,27,83
+013/046/001/08,Sarawak,"Meradong","Meradong","Mador",229,115,114,109,120
+013/046/001/09,Sarawak,"Meradong","Meradong","Lemayong",480,236,244,226,254
+013/046/001/10,Sarawak,"Meradong","Meradong","Selemas",50,24,26,20,30
+013/046/001/11,Sarawak,"Meradong","Meradong","Selidap",149,78,71,62,87
+013/046/001/12,Sarawak,"Meradong","Meradong","Nyelong",401,204,197,180,221
+013/052/001/01,Sarawak,"Dudong","Dudong","Assan",475,233,242,217,258
+013/052/001/02,Sarawak,"Dudong","Dudong","Naman",235,121,114,108,127
+013/052/001/03,Sarawak,"Dudong","Dudong","Pak",401,199,202,171,230
+013/052/001/04,Sarawak,"Dudong","Dudong","Dudong",246,124,122,115,131
+013/052/001/05,Sarawak,"Dudong","Dudong","Salim",500,260,240,306,194
+013/052/001/06,Sarawak,"Dudong","Dudong","Lanang",264,132,132,63,201
+013/052/001/07,Sarawak,"Dudong","Dudong","Aik Dee",478,238,240,194,284
+013/052/001/08,Sarawak,"Dudong","Dudong","Menyan",400,218,182,225,175
+013/052/001/09,Sarawak,"Dudong","Dudong","Sibu Jaya",500,250,250,331,169
+013/052/001/10,Sarawak,"Dudong","Dudong","Lada",500,248,252,283,217
+013/052/001/11,Sarawak,"Dudong","Dudong","Usaha Jaya",131,64,67,63,68
+013/052/001/12,Sarawak,"Dudong","Dudong","Mantis",500,251,249,259,241
+013/053/001/01,Sarawak,"Bawang Assan","Bawang Assan","Rassau",500,245,255,239,261
+013/053/001/02,Sarawak,"Bawang Assan","Bawang Assan","Penasu",500,237,263,249,251
+013/053/001/03,Sarawak,"Bawang Assan","Bawang Assan","Bawang Assan",389,189,200,172,217
+013/053/001/04,Sarawak,"Bawang Assan","Bawang Assan","Kunyit",50,25,25,14,36
+013/053/001/05,Sarawak,"Bawang Assan","Bawang Assan","Ma'aw",133,68,65,48,85
+013/053/001/06,Sarawak,"Bawang Assan","Bawang Assan","Selalo",50,25,25,19,31
+013/053/001/07,Sarawak,"Bawang Assan","Bawang Assan","Dassan",158,80,78,51,107
+013/053/001/08,Sarawak,"Bawang Assan","Bawang Assan","Ensurai",50,27,23,15,35
+013/053/001/09,Sarawak,"Bawang Assan","Bawang Assan","Lan",91,47,44,30,61
+013/053/001/10,Sarawak,"Bawang Assan","Bawang Assan","Engkilo",328,169,159,130,198
+013/053/001/11,Sarawak,"Bawang Assan","Bawang Assan","Lower Island",204,98,106,10,194
+013/053/001/12,Sarawak,"Bawang Assan","Bawang Assan","Upper Island",188,88,100,7,181
+013/053/001/13,Sarawak,"Bawang Assan","Bawang Assan","Tanah Mas",50,27,23,7,43
+013/055/001/01,Sarawak,"Nangka","Nangka","Bandong",115,57,58,60,55
+013/055/001/02,Sarawak,"Nangka","Nangka","Bahagia Jaya",410,198,212,250,160
+013/055/001/03,Sarawak,"Nangka","Nangka","Datu Nyabor",200,91,109,59,141
+013/055/001/04,Sarawak,"Nangka","Nangka","Ilir Nangka",500,245,255,235,265
+013/055/001/05,Sarawak,"Nangka","Nangka","Teku",256,134,122,151,105
+013/055/001/06,Sarawak,"Nangka","Nangka","Seduan",500,250,250,325,175
+013/055/001/07,Sarawak,"Nangka","Nangka","Tanggi",417,245,172,274,143
+013/055/001/08,Sarawak,"Nangka","Nangka","Race Course",308,155,153,142,166
+013/057/001/01,Sarawak,"Tellian","Tellian","Baoh",83,43,40,34,49
+013/057/001/02,Sarawak,"Tellian","Tellian","Penat",74,37,37,40,34
+013/057/001/03,Sarawak,"Tellian","Tellian","Sebakong",91,46,45,41,50
+013/057/001/04,Sarawak,"Tellian","Tellian","Ulu Baoh",121,62,59,58,63
+013/057/001/05,Sarawak,"Tellian","Tellian","Dijih",99,49,50,51,48
+013/057/001/06,Sarawak,"Tellian","Tellian","Ulu Sikat",56,28,28,32,24
+013/057/001/07,Sarawak,"Tellian","Tellian","Nanga Sikat",77,41,36,34,43
+013/057/001/08,Sarawak,"Tellian","Tellian","Engkerbai",50,26,24,25,25
+013/057/001/09,Sarawak,"Tellian","Tellian","Petanak Mukah",273,137,136,156,117
+013/057/001/10,Sarawak,"Tellian","Tellian","Tellian",195,97,98,71,124
+013/057/001/11,Sarawak,"Tellian","Tellian","Judan",84,42,42,42,42
+013/057/001/12,Sarawak,"Tellian","Tellian","Kuala Lama",333,164,169,184,149
+013/057/001/13,Sarawak,"Tellian","Tellian","Tellian Laut",227,115,112,118,109
+013/057/001/14,Sarawak,"Tellian","Tellian","Mukah",167,92,75,72,95
+013/057/001/15,Sarawak,"Tellian","Tellian","Penakop Permai",89,42,47,42,47
+013/067/001/01,Sarawak,"Jepak","Jepak","Kuala Tatau",271,137,134,117,154
+013/067/001/02,Sarawak,"Jepak","Jepak","Sri Dagang",263,135,128,64,199
+013/067/001/03,Sarawak,"Jepak","Jepak","Jepak",500,255,245,265,235
+013/067/001/04,Sarawak,"Jepak","Jepak","Segan",338,169,169,194,144
+013/067/001/05,Sarawak,"Jepak","Jepak","Sungai Nyigu",467,234,233,248,219
+013/067/001/06,Sarawak,"Jepak","Jepak","RPR Sebiew",410,210,200,213,197
+013/071/001/01,Sarawak,"Bekenu","Bekenu","Batu Niah",252,134,118,110,142
+013/071/001/02,Sarawak,"Bekenu","Bekenu","Niah",433,217,216,215,218
+013/071/001/03,Sarawak,"Bekenu","Bekenu","Saeh",383,193,190,193,190
+013/071/001/04,Sarawak,"Bekenu","Bekenu","Kelulit",156,76,80,71,85
+013/071/001/05,Sarawak,"Bekenu","Bekenu","Tiris",189,97,92,89,100
+013/071/001/06,Sarawak,"Bekenu","Bekenu","Bungai",278,140,138,132,146
+013/071/001/07,Sarawak,"Bekenu","Bekenu","Bekanu",296,151,145,124,172
+013/071/001/08,Sarawak,"Bekenu","Bekenu","Bakas",461,261,200,190,271
+013/071/001/09,Sarawak,"Bekenu","Bekenu","Hulu Sibuti",50,24,26,18,32
+013/072/001/01,Sarawak,"Lambir","Lambir","Peninjau",473,247,226,214,259
+013/072/001/02,Sarawak,"Lambir","Lambir","Satap",374,192,182,193,181
+013/072/001/03,Sarawak,"Lambir","Lambir","Bakam",500,257,243,227,273
+013/072/001/04,Sarawak,"Lambir","Lambir","Lambir",500,265,235,229,271
+013/072/001/05,Sarawak,"Lambir","Lambir","Airport",500,248,252,308,192
+013/072/001/06,Sarawak,"Lambir","Lambir","Tukau",50,26,24,31,19
+013/072/001/07,Sarawak,"Lambir","Lambir","Ramd",81,57,24,60,21
+013/073/001/01,Sarawak,"Piasau","Piasau","Kubu",50,25,25,7,43
+013/073/001/02,Sarawak,"Piasau","Piasau","Bazaar",500,243,257,47,453
+013/073/001/03,Sarawak,"Piasau","Piasau","Merbau",299,137,162,60,239
+013/073/001/04,Sarawak,"Piasau","Piasau","Merpati",50,25,25,7,43
+013/073/001/05,Sarawak,"Piasau","Piasau","Permaisuri",374,191,183,132,242
+013/073/001/06,Sarawak,"Piasau","Piasau","Bintang",252,148,104,115,137
+013/073/001/07,Sarawak,"Piasau","Piasau","Lutong",500,248,252,206,294
+013/073/001/08,Sarawak,"Piasau","Piasau","Tanjong",306,140,166,130,176
+013/073/001/09,Sarawak,"Piasau","Piasau","Luak",500,251,249,297,203
+013/075/001/01,Sarawak,"Senadin","Senadin","Kuala Baram",500,248,252,312,188
+013/075/001/02,Sarawak,"Senadin","Senadin","Lopeng",500,252,248,246,254
+013/075/001/03,Sarawak,"Senadin","Senadin","Riam",500,256,244,200,300
+013/079/001/01,Sarawak,"Bukit Kota","Bukit Kota","Ranggau",54,27,27,25,29
+013/079/001/02,Sarawak,"Bukit Kota","Bukit Kota","Sebukang",500,253,247,316,184
+013/079/001/03,Sarawak,"Bukit Kota","Bukit Kota","Tabahan",330,180,150,152,178
+013/079/001/04,Sarawak,"Bukit Kota","Bukit Kota","Bangkita",264,135,129,102,162
+013/079/001/05,Sarawak,"Bukit Kota","Bukit Kota","Limbang",268,141,127,44,224
+013/079/001/06,Sarawak,"Bukit Kota","Bukit Kota","Poyan",347,174,173,167,180
+013/079/001/07,Sarawak,"Bukit Kota","Bukit Kota","Bukit Kota",234,113,121,105,129
+013/079/001/08,Sarawak,"Bukit Kota","Bukit Kota","Pendam",180,91,89,88,92
+013/079/001/09,Sarawak,"Bukit Kota","Bukit Kota","Telahak",271,135,136,144,127
+013/079/001/10,Sarawak,"Bukit Kota","Bukit Kota","Berawan",500,252,248,255,245

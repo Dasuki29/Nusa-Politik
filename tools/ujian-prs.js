@@ -13,7 +13,7 @@ const ROOT = path.join(__dirname, '..');
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.csv': 'text/csv', '.webmanifest': 'application/json' };
 const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.split('?')[0]), f = path.join(ROOT, u === '/' ? 'index.html' : u); if (!f.startsWith(ROOT) || !fs.existsSync(f) || !fs.statSync(f).isFile()) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/plain' }); r.end(fs.readFileSync(f)); });
 const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
-const PARTI = process.env.PARTI === 'SUPP' ? 'SUPP' : 'PRS', CFG = PARTI === 'SUPP' ? { n: 21, kuota: '18 \\/ 82', logo: 'logo-supp' } : { n: 35, kuota: '11 \\/ 82', logo: 'logo-prs' };
+const PARTI = ['SUPP', 'PDP'].indexOf(process.env.PARTI) >= 0 ? process.env.PARTI : 'PRS', CFG = PARTI === 'PDP' ? { n: 16, kuota: '5 \\/ 82', logo: 'logo-pdp' } : PARTI === 'SUPP' ? { n: 21, kuota: '18 \\/ 82', logo: 'logo-supp' } : { n: 35, kuota: '11 \\/ 82', logo: 'logo-prs' };
 (async () => {
   await new Promise((r) => srv.listen(0, r)); const base = 'http://127.0.0.1:' + srv.address().port;
   const br = await PW.chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
@@ -48,6 +48,7 @@ const PARTI = process.env.PARTI === 'SUPP' ? 'SUPP' : 'PRS', CFG = PARTI === 'SU
   await pg.click('[data-act="gps-lobi"]'); await pg.waitForTimeout(600);
   semak(/Pengaruh GPS\s*4\d|Pengaruh GPS\s*48/.test(await pg.textContent('#panel-profil')) || /48\/100/.test(await pg.textContent('#panel-profil')), 'Lobi Majlis GPS menaikkan Pengaruh GPS');
   if (PARTI === 'SUPP') { semak(/Sokongan Bandar\s*50\/100/.test(await pg.textContent('#panel-profil')), 'meter Sokongan Bandar 50/100'); await pg.click('[data-act="bandar-program"]'); await pg.waitForTimeout(600); semak(/56\/100/.test(await pg.textContent('#panel-profil')), 'Program Bandar menaikkan Sokongan Bandar kepada 56'); }
+  if (PARTI === 'PDP') { semak(/Imbangan Kaum Kawasan\s*100\/100/.test(await pg.textContent('#panel-profil')), 'Imbangan Kaum 100/100'); await pg.click('[data-act="kaum-janji"][data-kaum="dayak"]'); await pg.waitForTimeout(600); semak(/60\/100/.test(await pg.textContent('#panel-profil')) && /86\/100/.test(await pg.textContent('#panel-profil')), 'Janji kepada Dayak: 60/100, imbangan 86'); }
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(600);
   const en = await pg.textContent('#panel-profil'), tst = await pg.evaluate(() => (document.querySelector('.toast-stack') || { innerText: '' }).innerText);
   semak(/Influence in GPS/.test(en) && /state seat quota/i.test(en), 'EN: kad Pengaruh dalam GPS diterjemah');
