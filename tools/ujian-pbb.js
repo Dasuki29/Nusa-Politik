@@ -39,6 +39,12 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
   for (const t of ['tindakan', 'profil', 'pemilihan', 'mesyuarat']) { await pg.click('[data-tab="' + t + '"]'); await pg.waitForTimeout(400); }
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
+  for (const tb of ['tindakan', 'profil', 'pemilihan', 'mesyuarat']) {
+    const tk = await pg.textContent('#panel-' + tb);
+    semak(!/\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/.test(tk), 'istilah PBB: tiada MKT / PAU dalam tab ' + tb + (/\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/.test(tk) ? ' (' + (tk.match(/.{20}(\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi).{20}/) || [''])[0] + ')' : ''));
+  }
+  const semuaTeks = (await Promise.all(['tindakan', 'profil', 'pemilihan', 'mesyuarat'].map((tb) => pg.textContent('#panel-' + tb)))).join(' ');
+  semak(/\bMT\b|Majlis Tertinggi|Perhimpunan Agung PBB|\bPA\b/.test(semuaTeks), 'istilah PBB: Majlis Tertinggi (MT) / Perhimpunan Agung PBB (PA) muncul');
   semak(/Kerusi DUN Anda/.test(await pg.textContent('#panel-profil')) && /Lawan utama/.test(await pg.textContent('#panel-profil')), 'kad Kerusi DUN Anda dalam tab Profil');
   semak(/Kerusi Parlimen Anda/.test(await pg.textContent('#panel-profil')) && /Pilihan raya seterusnya/.test(await pg.textContent('#panel-profil')), 'kad Kerusi Parlimen Anda dalam tab Profil (v9.4)');
   const pem = await pg.textContent('#panel-profil');

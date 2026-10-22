@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v9.6 (2026-10-22)
+
+Penamaan badan parti PBB.
+
+### Baharu
+- **Majlis Tertinggi (MT) dan Perhimpunan Agung PBB (PA):** untuk pemain PBB, "Majlis Kerja Tertinggi (MKT)" dipaparkan sebagai "Majlis Tertinggi (MT)" dan "PAU" sebagai "PA" ("Perhimpunan Agung UMNO (PAU)" menjadi "Perhimpunan Agung PBB (PA)"), dalam semua paparan BM dan EN (jawatan, pemilihan, mesyuarat, perwakilan, tutorial). Nama "Majlis Tertinggi (MT)" dan "Perhimpunan Agung PBB" ialah nama badan yang disebut dalam laporan akhbar Sarawak tentang PBB; singkatan "PA" ialah label permainan. UMNO tidak berubah.
+- Pelaksanaan: lapisan penjenamaan `js/parti.js` (istilah ke / songsang) ditambah kepada penukaran UMNO ke PBB; `js/i18n.js` menterjemah semula teks yang telah dijenamakan dan mencuba teks asal jika songsangan istilah tiada dalam kamus (cth "Majlis Tertinggi" asli dalam mesej pencalonan). Tiada perubahan kepada data permainan.
+- Ujian bahasa baharu: semua baris kamus yang menyebut MKT / PAU diterjemah sama dalam mod PBB. Ujian PBB menyemak tiada "MKT" / "PAU" dalam tab Tindakan, Profil, Pemilihan dan Mesyuarat.
+
+### Andaian dan had
+- Struktur jawatan Pusat (Presiden, Timbalan Presiden, 3 Naib Presiden, ahli MT) kekal mengikut model umum permainan; bukan susunan rasmi PBB. "Konvensyen PBB" (perhimpunan tiga tahun) belum dinamakan berasingan.
+
+### Belum
+- Parti lain (PRS, SUPP, DAP dan lain-lain).
+
 ## v9.5 (2026-10-22)
 
 Pindah Cawangan PBB, label gabungan dan pembetulan terjemahan peristiwa disiplin.

@@ -150,6 +150,30 @@ ujian('disiplin: semua "perkara" etika diterjemah dalam mesej hukuman, panggilan
   return r;
 });
 
+ujian('PBB v9.6: istilah MKT -> Majlis Tertinggi (MT), PAU -> Perhimpunan Agung PBB (PA) boleh diterjemah balik ke EN', () => {
+  const PT = g.MyPolitikParti, r = [], simpan = g.sessionStorage.getItem('nusa_parti_pilihan');
+  g.sessionStorage.setItem('nusa_parti_pilihan', 'PBB');
+  try {
+    const sama2 = (a, b, n) => { if (a !== b) { r.push(n + ': ' + a + ' != ' + b); } };
+    sama2(PT.kini(), 'PBB', 'parti PBB');
+    sama2(PT.ke('Ahli MKT dan Perwakilan PAU'), 'Ahli MT dan Perwakilan PA', 'ke ringkas');
+    sama2(PT.ke('Majlis Kerja Tertinggi (MKT) dan Perhimpunan Agung UMNO (PAU)'), 'Majlis Tertinggi (MT) dan Perhimpunan Agung PBB (PA)', 'ke penuh');
+    sama2(PT.dari('Majlis Tertinggi (MT) dan Perhimpunan Agung PBB (PA)'), 'Majlis Kerja Tertinggi (MKT) dan Perhimpunan Agung UMNO (PAU)', 'dari penuh');
+    sama2(PT.ke('Pemilihan Pusat (PAU)'), 'Pemilihan Pusat (PA)', 'ke pemilihan');
+    sama2(PT.ke('Majlis Tertinggi memilih calon lain'), 'Majlis Tertinggi memilih calon lain', 'bare Majlis Tertinggi kekal');
+    /* pariti: setiap baris kamus yang menyebut MKT / PAU / Majlis Kerja Tertinggi diterjemah sama dalam mod PBB */
+    let n = 0;
+    baris.forEach((b) => {
+      if (!/\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/.test(b[0]) || /\{\w+\}/.test(b[0])) { return; }
+      n++; const k0 = T.INDEKS[b[0]], bm = PT.ke(b[0]), jangka = PT.ke(k0 !== undefined ? T.EN[k0] : b[1]), x = I.terjemah(bm);   // BM berulang: yang pertama dipakai
+      if (x !== jangka) { r.push('pariti: ' + bm + ' => ' + x + ' (jangka ' + jangka + ')'); }
+    });
+    if (n < 20) { r.push('terlalu sedikit baris diuji: ' + n); }
+    sama2(I.terjemah('Majlis Tertinggi memilih calon lain untuk PRK Uji.'), I.terjemah('Majlis Tertinggi memilih calon lain untuk PRK Uji.'), 'stabil');
+  } finally { if (simpan === null) { g.sessionStorage.removeItem('nusa_parti_pilihan'); } else { g.sessionStorage.setItem('nusa_parti_pilihan', simpan); } }
+  return r;
+});
+
 let gagal = 0;
 hasil.forEach((h) => {
   if (h.ok) { console.log('  ✓ ' + h.nama); return; }

@@ -102,7 +102,12 @@
   function terjemah(s) {
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();
-    var PT = W.MyPolitikParti; if (PT) { s = PT.dari(s); }                       // v8.32: teks dijenamakan (PBB) -> kunci kamus (UMNO)
+    var PT = W.MyPolitikParti, d = PT ? PT.dari(s) : s;                               // v8.32: teks dijenamakan (PBB) -> kunci kamus (UMNO)
+    var hasil = dalam(d); if (hasil === null && d !== s) { hasil = dalam(s); }          // v9.6: jika songsangan istilah gagal (cth "Majlis Tertinggi" asli), cuba teks asal
+    return hasil;
+  }
+  function dalam(s) {
+    var PT = W.MyPolitikParti;
     T.NORMAL.forEach(function (n) { s = s.replace(n[0], n[1]); });
     if (/^(Wikipedia|mStar|Laman rasmi UMNO)\b/.test(s)) { return null; }          // tajuk sumber rujukan kekal
     if (cache.has(s)) { var cr = cache.get(s); return cr !== null && PT ? PT.ke(cr) : cr; }

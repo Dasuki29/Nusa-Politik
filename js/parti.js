@@ -15,7 +15,10 @@
   var KUNCI_PILIHAN = 'nusa_parti_pilihan';
   var SENARAI = {
     UMNO: { kod: 'UMNO', nama: 'UMNO', penuh: 'Pertubuhan Kebangsaan Melayu Bersatu', logo: 'assets/images/logo.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: null, bahagianJenis: 'Parlimen' },
-    PBB:  { kod: 'PBB', nama: 'PBB', penuh: 'Parti Pesaka Bumiputera Bersatu', logo: 'assets/images/logo-pbb.png', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sarawak', data: 'data/pbb-sarawak.csv', bahagianJenis: 'DUN' }
+    PBB:  { kod: 'PBB', nama: 'PBB', penuh: 'Parti Pesaka Bumiputera Bersatu', logo: 'assets/images/logo-pbb.png', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sarawak', data: 'data/pbb-sarawak.csv', bahagianJenis: 'DUN',
+      /* v9.6: istilah badan parti. Bentuk BM -> PBB (ke) dan songsang (dari); songsang digunakan untuk carian kamus terjemahan. MKT -> Majlis Tertinggi (MT); PAU -> Perhimpunan Agung PBB (PA). */
+      istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Majlis Tertinggi (MT)'], [/Majlis Kerja Tertinggi/g, 'Majlis Tertinggi'], [/\bMKT\b/g, 'MT'], [/\bPAU\b/g, 'PA']],
+      istilahSongsang: [[/Majlis Tertinggi \(MT\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Majlis Tertinggi/g, 'Majlis Kerja Tertinggi'], [/\bMT\b/g, 'MKT'], [/\bPA\b/g, 'PAU']] }
   };
   var SENARAI_KOD = Object.keys(SENARAI);
 
@@ -34,20 +37,22 @@
 
   /* ---------- Penukaran teks ---------- */
   var RE_UMNO = /\bUMNO\b/g, PENUH_UMNO = /Pertubuhan Kebangsaan Melayu Bersatu/g;
+  function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    var i = info(k); return String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama);
+    var i = info(k); return terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
   }
   /** Songsang: teks yang sudah dijenamakan -> UMNO (untuk carian kamus terjemahan). */
   function dari(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    var i = info(k); return String(s).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
+    var i = info(k); return terap(String(s), i.istilahSongsang).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
   }
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
+  var RE_PERLU = /UMNO|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/;
   function nod(n) {
-    var v = n.nodeValue; if (!v || v.indexOf('UMNO') < 0 && v.indexOf('Pertubuhan Kebangsaan') < 0) { return; }
+    var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }
     var b = ke(v); if (b !== v) { n.nodeValue = b; }
   }
@@ -55,7 +60,7 @@
     for (var j = 0; j < ATTR.length; j++) {
       var a = ATTR[j]; if (!el.hasAttribute || !el.hasAttribute(a)) { continue; }
       if (a === 'content' && el.tagName !== 'META') { continue; }
-      var v = el.getAttribute(a); if (v && v.indexOf('UMNO') >= 0) { el.setAttribute(a, ke(v)); }
+      var v = el.getAttribute(a); if (v && RE_PERLU.test(v)) { el.setAttribute(a, ke(v)); }
     }
   }
   function imbas(akar) {
@@ -83,9 +88,9 @@
   function pulihUMNO() {
     var w = D.createTreeWalker(D.body, 4), n, v;
     while ((n = w.nextNode())) {
-      v = n.nodeValue; if (!v || (v.indexOf('PBB') < 0 && v.indexOf(SENARAI.PBB.penuh) < 0)) { continue; }
+      v = n.nodeValue; if (!v || (v.indexOf('PBB') < 0 && v.indexOf(SENARAI.PBB.penuh) < 0 && !/\bMT\b|\bPA\b/.test(v))) { continue; }
       if (n.parentElement && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentElement.tagName) || (n.parentElement.closest && n.parentElement.closest('[data-jenama-skip]')))) { continue; }
-      n.nodeValue = v.split(SENARAI.PBB.penuh).join(SENARAI.UMNO.penuh).replace(/\bPBB\b/g, 'UMNO');
+      n.nodeValue = terap(v, [[/Majlis Tertinggi \(MT\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/\bMT\b/g, 'MKT'], [/\bPA\b/g, 'PAU']]).split(SENARAI.PBB.penuh).join(SENARAI.UMNO.penuh).replace(/\bPBB\b/g, 'UMNO');
     }
     var im = D.querySelectorAll('img.logo-parti'); for (var i = 0; i < im.length; i++) { im[i].setAttribute('src', SENARAI.UMNO.logo); im[i].classList.remove('logo-parti'); }
     if (D.title) { D.title = D.title.replace(/\bPBB\b/g, 'UMNO'); }
