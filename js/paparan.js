@@ -16,7 +16,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   var CONFIG = { JUMLAH_PARLIMEN: 222, MAJORITI: 112, GABUNG_MS: 400, MAKS_TOAST: 3, MAKS_BIASA: 4, TOAST_MS: 4000, BEBAS_MAKS: 8, KUNCI_LIHAT: 'myPolitik_logLihat', KUNCI_SENYAP: 'myPolitik_notifSenyap' };
   var BULAN = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
@@ -294,6 +294,7 @@
   }
   /** v9.5: nama gabungan parti pemain (slot 'BN'): UMNO = Barisan Nasional; PBB = Gabungan Parti Sarawak (DUN) / Kerajaan Perpaduan (persekutuan). */
   function labelBN(p, dun) {
+    if (p && p.parti === 'PSB' && !dun) { return { nama: 'Parti Sarawak Bersatu', pendek: 'PSB' }; }   // v10.3: pembangkang di luar Kerajaan Perpaduan
     if (p && SW(p.parti)) { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
     return GABUNGAN.BN;
   }

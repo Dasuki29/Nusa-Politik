@@ -1,5 +1,25 @@
 # Catatan Perubahan
 
+## v10.3 (2026-10-22)
+
+PSB (mod ringan, pembangkang) dengan ciri teras Naratif Pembangkang.
+
+### Baharu
+- **PSB:** boleh dipilih di skrin pendaftaran sebagai parti **pembangkang** di luar GPS. Struktur, PRN/PRU dan sayap sama seperti parti mod ringan lain. Tiada kuota kerusi, Pengaruh GPS, Lobi Majlis GPS atau rundingan GPS.
+- **Kawasan operasi PSB:** 53 DUN dengan Melayu/Melanau kurang 40% (593 cawangan, `data/psb-sarawak.csv`).
+- **Tidak membentuk kerajaan:** walaupun menang kerusi, PSB tidak pernah membentuk kerajaan negeri atau persekutuan, jadi tiada Premier, Menteri atau lobi portfolio. Dewan Undangan Negeri Sarawak dipaparkan dengan GPS memerintah dan pemain di luar kerajaan.
+- **Lawan PSB:** parti GPS (SUPP, PRS, PDP; label simulasi mengikut komposisi DUN).
+- **Naratif Pembangkang** (40 hingga 100, mula 40, susut 1 sebulan hingga 40): Kempen Naratif (2 AP, RM 800) +7. Kesan kekuatan kerusi DUN: (Naratif - 40) / 8 mata; marginal atau sukar 1.5 kali.
+- Logo PSB daripada pengguna (`assets/images/logo-psb.png`), tutorial BM/EN, terjemahan EN. Ujian: unit PSB (termasuk menang DUN tanpa kerajaan/lobi), `PARTI=PSB node tools/ujian-prs.js`, `PARTI=PSB tools/simulasi.js`.
+
+### Andaian dan had
+- Kawasan operasi (Melayu/Melanau kurang 40%) dan angka Naratif ialah andaian permainan, bukan senarai kerusi PSB sebenar.
+- Keputusan pilihan raya PSB masih memaparkan baris "Rakan Gabungan" daripada enjin umum; belum dibuang untuk pembangkang.
+- Kerusi Parlimen PSB memaparkan label "Parti Sarawak Bersatu" untuk gabungan sendiri (di luar Kerajaan Perpaduan).
+
+### Belum
+- Parti kebangsaan di Sarawak (DAP, PKR, PAS) ditangguhkan; ciri teras tambahan dan acara kempen khusus parti.
+
 ## v10.2 (2026-10-22)
 
 PDP (mod ringan) dengan ciri teras Imbangan Kaum Kawasan.

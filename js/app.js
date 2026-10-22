@@ -15,7 +15,7 @@
 (function () {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
+  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
   if (!document.getElementById('reg-form')) { return; }      // halaman lain (dashboard.html): lihat pengawal dashboard di bawah
 
   var D = window.MyPolitikData, S = window.MyPolitikSave;
@@ -315,7 +315,7 @@
   }
 
   /* ---------- v8.32: PBB (Sarawak). Bahagian = DUN, Cawangan = DM; data tempatan data/pbb-sarawak.csv ---------- */
-  var HINT_PBB = null, HINT_SUPP = 'SUPP (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PDP = 'PDP (mod ringan): kawasan operasi ialah DUN campuran (tiada kumpulan terbesar melebihi 55%). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Imbangan Kaum Kawasan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
+  var HINT_PBB = null, HINT_SUPP = 'SUPP (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PDP = 'PDP (mod ringan): kawasan operasi ialah DUN campuran (tiada kumpulan terbesar melebihi 55%). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Imbangan Kaum Kawasan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PSB = 'PSB (mod ringan, pembangkang): kawasan operasi ialah DUN yang Melayu/Melanaunya kurang 40%. Parti di luar GPS: tiada Premier, Menteri, kuota atau rundingan GPS. Ciri teras: Naratif Pembangkang. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   function suaikanBorangParti() {
     if (HINT_PBB === null) { var h0 = $('h-parti'); HINT_PBB = h0 ? h0.textContent : ''; }
     var pbb = esSW(state.parti);
@@ -325,7 +325,7 @@
     if (tc) { tc.textContent = pbb ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb; }
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
-    if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : state.parti === 'SUPP' ? HINT_SUPP : state.parti === 'PDP' ? HINT_PDP : HINT_PBB; }
+    if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : state.parti === 'SUPP' ? HINT_SUPP : state.parti === 'PDP' ? HINT_PDP : state.parti === 'PSB' ? HINT_PSB : HINT_PBB; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
   }
   /** v9.0: cadangkan blok (Bumiputera/Pesaka) mengikut majoriti etnik DUN; pilihan manual dihormati. */
@@ -459,7 +459,7 @@
    ========================================================================== */
 (function () {
   'use strict';
-  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
+  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
   if (!document.getElementById('btn-tahun')) { return; }
 
   var W = window, S = W.MyPolitikSave, D = W.MyPolitikData, O = W.MyPolitikOrdinaryMember,
@@ -1090,6 +1090,12 @@
   /** v10.0: kad mod ringan (parti rakan GPS, cth PRS): Pengaruh GPS, kuota kerusi dan rundingan. */
   function kadRingan(p) {
     var SWm = W.MyPolitikSarawak, r = SWm && SWm.ringkasRingan ? SWm.ringkasRingan(p) : null; if (!r) { return ''; }
+    if (r.pembangkang) {
+      return '<section class="card"><h2 class="card__title" style="margin:0 0 4px">📢 Naratif Pembangkang</h2>' +
+        '<p class="note" style="font-size:.78rem">Mod ringan: ' + esc(p.parti) + ' ialah parti pembangkang di luar GPS. Tiada Premier, Menteri, kuota atau rundingan GPS; lawan anda ialah parti GPS.</p>' +
+        '<div class="kv"><span>Naratif Pembangkang</span><b>' + r.naratif + '/100 (kesan kerusi ' + (r.ofsetNaratif >= 0 ? '+' : '') + r.ofsetNaratif + ')</b></div>' +
+        '<button type="button" class="btn btn--sm btn--ghost" data-act="naratif-kempen" data-fk="naratif-kempen">Kempen Naratif (' + SWm.NARATIF.AP + ' AP, RM ' + SWm.NARATIF.MYR.toLocaleString('en') + ')</button></section>';
+    }
     var st = SWm.statusRundingRakan(p), R = SWm.RINGAN;
     var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🤝 Pengaruh dalam GPS</h2>' +
       '<p class="note" style="font-size:.78rem">Mod ringan: ' + esc(p.parti) + ' ialah parti rakan GPS. Tiada Premier atau imbangan blok; kerusi DUN anda bergantung pada kuota kerusi GPS.</p>' +
@@ -1661,6 +1667,7 @@
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
+    else if (act === 'naratif-kempen') { var nk = W.MyPolitikSarawak.kempenNaratif(); render(); toast(nk.ok ? nk.mesej : nk.ralat, nk.ok ? 'ok' : 'ralat'); }
     else if (act === 'kaum-janji') { var kj = W.MyPolitikSarawak.janjiKaum(t.getAttribute('data-kaum')); render(); toast(kj.ok ? kj.mesej : kj.ralat, kj.ok ? 'ok' : 'ralat'); }
     else if (act === 'bandar-program') { var bp = W.MyPolitikSarawak.programBandar(); render(); toast(bp.ok ? bp.mesej : bp.ralat, bp.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-lobi') { var gl = W.MyPolitikSarawak.lobiGPS(); render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? 'ok' : 'ralat'); }
@@ -1876,7 +1883,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'bandar-program': 1, 'kaum-janji': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'bandar-program': 1, 'kaum-janji': 1, 'naratif-kempen': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

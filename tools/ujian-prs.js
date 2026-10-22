@@ -13,7 +13,7 @@ const ROOT = path.join(__dirname, '..');
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.csv': 'text/csv', '.webmanifest': 'application/json' };
 const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.split('?')[0]), f = path.join(ROOT, u === '/' ? 'index.html' : u); if (!f.startsWith(ROOT) || !fs.existsSync(f) || !fs.statSync(f).isFile()) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/plain' }); r.end(fs.readFileSync(f)); });
 const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
-const PARTI = ['SUPP', 'PDP'].indexOf(process.env.PARTI) >= 0 ? process.env.PARTI : 'PRS', CFG = PARTI === 'PDP' ? { n: 16, kuota: '5 \\/ 82', logo: 'logo-pdp' } : PARTI === 'SUPP' ? { n: 21, kuota: '18 \\/ 82', logo: 'logo-supp' } : { n: 35, kuota: '11 \\/ 82', logo: 'logo-prs' };
+const PARTI = ['SUPP', 'PDP', 'PSB'].indexOf(process.env.PARTI) >= 0 ? process.env.PARTI : 'PRS', CFG = PARTI === 'PSB' ? { n: 54, kuota: null, logo: 'logo-psb' } : PARTI === 'PDP' ? { n: 16, kuota: '5 \\/ 82', logo: 'logo-pdp' } : PARTI === 'SUPP' ? { n: 21, kuota: '18 \\/ 82', logo: 'logo-supp' } : { n: 35, kuota: '11 \\/ 82', logo: 'logo-prs' };
 (async () => {
   await new Promise((r) => srv.listen(0, r)); const base = 'http://127.0.0.1:' + srv.address().port;
   const br = await PW.chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
@@ -42,17 +42,19 @@ const PARTI = ['SUPP', 'PDP'].indexOf(process.env.PARTI) >= 0 ? process.env.PART
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
   const pf = await pg.textContent('#panel-profil');
   semak(/Kerusi DUN Anda/.test(pf), 'kad Kerusi DUN Anda (PRS)');
-  semak(/Pengaruh dalam GPS/.test(pf) && new RegExp('Kuota kerusi DUN ' + PARTI).test(pf) && new RegExp(CFG.kuota.replace('\\\\','\\')).test(pf), 'kad Pengaruh dalam GPS: kuota 11 / 82');
+  if (PARTI === 'PSB') { semak(/Naratif Pembangkang/.test(pf) && !/Pengaruh dalam GPS|Kuota kerusi/.test(pf), 'PSB: kad Naratif Pembangkang, tiada kuota GPS'); }
+  else { semak(/Pengaruh dalam GPS/.test(pf) && new RegExp('Kuota kerusi DUN ' + PARTI).test(pf) && new RegExp(CFG.kuota.replace('\\\\','\\')).test(pf), 'kad Pengaruh dalam GPS: kuota'); }
   semak(!/Imbangan Bumiputera|Rundingan Kerusi GPS/.test(pf), 'tiada kad blok / runding Presiden PBB pada PRS');
   semak(/Pindah Cawangan/.test(pf), 'kad Pindah Cawangan');
-  await pg.click('[data-act="gps-lobi"]'); await pg.waitForTimeout(600);
-  semak(/Pengaruh GPS\s*4\d|Pengaruh GPS\s*48/.test(await pg.textContent('#panel-profil')) || /48\/100/.test(await pg.textContent('#panel-profil')), 'Lobi Majlis GPS menaikkan Pengaruh GPS');
+  if (PARTI === 'PSB') { semak(/Naratif Pembangkang\s*40\/100/.test(await pg.textContent('#panel-profil')), 'Naratif 40/100'); await pg.click('[data-act="naratif-kempen"]'); await pg.waitForTimeout(600); semak(/47\/100/.test(await pg.textContent('#panel-profil')), 'Kempen Naratif menaikkan kepada 47'); }
+  else { await pg.click('[data-act="gps-lobi"]'); await pg.waitForTimeout(600);
+  semak(/Pengaruh GPS\s*4\d|Pengaruh GPS\s*48/.test(await pg.textContent('#panel-profil')) || /48\/100/.test(await pg.textContent('#panel-profil')), 'Lobi Majlis GPS menaikkan Pengaruh GPS'); }
   if (PARTI === 'SUPP') { semak(/Sokongan Bandar\s*50\/100/.test(await pg.textContent('#panel-profil')), 'meter Sokongan Bandar 50/100'); await pg.click('[data-act="bandar-program"]'); await pg.waitForTimeout(600); semak(/56\/100/.test(await pg.textContent('#panel-profil')), 'Program Bandar menaikkan Sokongan Bandar kepada 56'); }
   if (PARTI === 'PDP') { semak(/Imbangan Kaum Kawasan\s*100\/100/.test(await pg.textContent('#panel-profil')), 'Imbangan Kaum 100/100'); await pg.click('[data-act="kaum-janji"][data-kaum="dayak"]'); await pg.waitForTimeout(600); semak(/60\/100/.test(await pg.textContent('#panel-profil')) && /86\/100/.test(await pg.textContent('#panel-profil')), 'Janji kepada Dayak: 60/100, imbangan 86'); }
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(600);
   const en = await pg.textContent('#panel-profil'), tst = await pg.evaluate(() => (document.querySelector('.toast-stack') || { innerText: '' }).innerText);
-  semak(/Influence in GPS/.test(en) && /state seat quota/i.test(en), 'EN: kad Pengaruh dalam GPS diterjemah');
-  semak(!/Pengaruh|kuota|rundingan|Lobi Majlis|ialah parti rakan|Tiada Premier|di luar|dalam kuota/i.test(en + ' ' + tst), 'EN: tiada teks BM bocor pada kad PRS (' + ((en + ' ' + tst).match(/.{15}(Pengaruh|kuota|rundingan|Lobi Majlis|ialah parti rakan|Tiada Premier|di luar|dalam kuota).{15}/i) || [''])[0] + ')');
+  semak(PARTI === 'PSB' ? /Opposition Narrative/.test(en) : (/Influence in GPS/.test(en) && /state seat quota/i.test(en)), 'EN: kad mod ringan diterjemah');
+  semak(!/Pengaruh|kuota|rundingan|Lobi Majlis|ialah parti rakan|Tiada Premier|di luar kuota|dalam kuota|Naratif/i.test(en + ' ' + tst), 'EN: tiada teks BM bocor pada kad PRS (' + ((en + ' ' + tst).match(/.{15}(Pengaruh|kuota|rundingan|Lobi Majlis|ialah parti rakan|Tiada Premier|di luar|dalam kuota).{15}/i) || [''])[0] + ')');
   semak(!/\bPBB\b/.test(en), 'EN: tiada perkataan PBB pada tab Profil PRS');
   await pg.evaluate(() => MyPolitikI18n.setLanguage('MS')).catch(() => {}); await pg.waitForTimeout(400);
   await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(4000);

@@ -188,6 +188,13 @@ ujian('PRS v10.0: teks kad Pengaruh GPS, rundingan dan mesej mempunyai terjemaha
   } finally { g.sessionStorage = asalSS; }
 });
 
+ujian('PSB v10.3: teks Naratif Pembangkang (pembangkang, mod ringan) mempunyai terjemahan EN', () => {
+  const asalSS = g.sessionStorage; g.sessionStorage = { getItem: () => 'PSB', setItem() {} };
+  try {
+    return ["Naratif Pembangkang", "📢 Naratif Pembangkang", "Kempen Naratif (2 AP, RM 800)", "Kempen Naratif dijalankan. Naratif Pembangkang 47/100 (-2 AP, -RM 800).", "Mod ringan: PSB ialah parti pembangkang di luar GPS. Tiada Premier, Menteri, kuota atau rundingan GPS; lawan anda ialah parti GPS.", "Parti pembangkang tidak membentuk kerajaan negeri.", "Hanya untuk pemain PSB."].filter((s) => I.terjemah(s) === null);
+  } finally { g.sessionStorage = asalSS; }
+});
+
 let gagal = 0;
 hasil.forEach((h) => {
   if (h.ok) { console.log('  ✓ ' + h.nama); return; }

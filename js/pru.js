@@ -28,7 +28,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   function modul(nama, fail) {
     if (root[nama]) { return root[nama]; }
@@ -681,6 +681,7 @@
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
         g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8)); kk.kerajaan = g.kerajaan;
+        if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
         if (!sekunder) {
           var siasat = a.siasatSprm || 0;
           if (siasat > 0 && r() < clamp(0.5 + 0.2 * (siasat - 1), 0.5, 0.9)) { g.petisyen = true; }

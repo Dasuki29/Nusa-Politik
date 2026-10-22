@@ -196,6 +196,17 @@
   ["Anda berjanji kepada Dayak. Sokongan Dayak {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Dayak. Dayak support {x}/100 (other groups -4, -2 AP, -RM 800)."],
   ["Cina ({x}% pengundi)", "Chinese ({x}% of voters)"],
   ["Janji kepada Cina (2 AP, RM 800)", "Pledge to Chinese (2 AP, RM 800)"],
-  ["Anda berjanji kepada Cina. Sokongan Cina {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Chinese. Chinese support {x}/100 (other groups -4, -2 AP, -RM 800)."]
+  ["Anda berjanji kepada Cina. Sokongan Cina {x}/100 (kumpulan lain -4, -2 AP, -RM 800).", "You pledged to Chinese. Chinese support {x}/100 (other groups -4, -2 AP, -RM 800)."],
+  ["(Sarawak, pembangkang, mod ringan)", "(Sarawak, opposition, light mode)"],
+  ["UMNO (mod ringan, pembangkang): kawasan operasi ialah DUN yang Melayu/Melanaunya kurang 40%. Parti di luar GPS: tiada Premier, Menteri, kuota atau rundingan GPS. Ciri teras: Naratif Pembangkang. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode, opposition): the area of operation is state seats that are less than 40% Malay/Melanau. A party outside GPS: no Premier, Minister, quota or GPS negotiation. Core feature: Opposition Narrative. Member numbers are game estimates. Simulation, not official party data."],
+  ["PSB (mod ringan, pembangkang): kawasan operasi ialah DUN yang Melayu/Melanaunya kurang 40%. Parti di luar GPS: tiada Premier, Menteri, kuota atau rundingan GPS. Ciri teras: Naratif Pembangkang. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode, opposition): the area of operation is state seats that are less than 40% Malay/Melanau. A party outside GPS: no Premier, Minister, quota or GPS negotiation. Core feature: Opposition Narrative. Member numbers are game estimates. Simulation, not official party data."],
+  ["📢 Naratif Pembangkang", "📢 Opposition Narrative"],
+  ["Naratif Pembangkang", "Opposition Narrative"],
+  ["Mod ringan: UMNO ialah parti pembangkang di luar GPS. Tiada Premier, Menteri, kuota atau rundingan GPS; lawan anda ialah parti GPS.", "Light mode: PBB is an opposition party outside GPS. There is no Premier, Minister, quota or GPS negotiation; your opponents are the GPS parties."],
+  ["Kempen Naratif (2 AP, RM 800)", "Narrative Campaign (2 AP, RM 800)"],
+  ["Kempen Naratif", "Narrative Campaign"],
+  ["Kempen Naratif dijalankan. Naratif Pembangkang {x}/100 (-2 AP, -RM 800).", "Narrative Campaign carried out. Opposition Narrative {x}/100 (-2 AP, -RM 800)."],
+  ["Hanya untuk pemain PSB.", "Only for PSB players."],
+  ["Parti pembangkang tidak membentuk kerajaan negeri.", "An opposition party does not form the state government."]
   ]);
 })();
