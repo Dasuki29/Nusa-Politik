@@ -1,5 +1,22 @@
 # Catatan Perubahan
 
+## v10.1 (2026-10-22)
+
+SUPP (mod ringan) dengan ciri teras Sokongan Bandar.
+
+### Baharu
+- **SUPP:** boleh dipilih di skrin pendaftaran. Struktur, PRN/PRU, Pengaruh GPS, Lobi Majlis GPS dan rundingan kuota sama seperti PRS (v10.0). Kuota asas 18 daripada 82 (jadual PRN 2021 daripada pengguna).
+- **Kawasan operasi SUPP:** 20 DUN dengan peratus Cina 25% ke atas (192 cawangan, `data/supp-sarawak.csv`); `rkSUPP` dalam `data/pbb-dun.json`. Kedudukan kuota digeneralisasi (`rk<PARTI>`).
+- **Sokongan Bandar** (30 hingga 100, mula 50, susut 1 sebulan): butang Program Bandar (2 AP, RM 1,000) menaikkan 6. Kesan kekuatan kerusi DUN: (Sokongan - 50) / 8 mata; kerusi marginal atau sukar 1.5 kali lebih sensitif. Dipaparkan pada kad Pengaruh dalam GPS.
+- Logo SUPP daripada pengguna (`assets/images/logo-supp.svg`), tutorial BM/EN, terjemahan EN. Ujian: unit SUPP, `PARTI=SUPP node tools/ujian-prs.js`, `PARTI=SUPP tools/simulasi.js`.
+
+### Andaian dan had
+- Kawasan operasi (Cina 25%+) dan semua angka Sokongan Bandar ialah andaian permainan, bukan senarai kerusi SUPP sebenar.
+- Isu bandar dalam acara kempen (dalam mockup) belum dibuat; kepekaan kerusi marginal dikenakan melalui Sokongan Bandar sahaja.
+
+### Belum
+- PDP (v10.2), PSB / pembangkang (v10.3).
+
 ## v10.0 (2026-10-22)
 
 Mod ringan untuk parti Sarawak lain: PRS dahulu (PBB kekal mod penuh).

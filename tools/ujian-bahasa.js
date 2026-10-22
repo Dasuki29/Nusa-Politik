@@ -183,7 +183,7 @@ ujian('PRS v10.0: teks kad Pengaruh GPS, rundingan dan mesej mempunyai terjemaha
       'Kos 3 AP, sekali setiap PRN. Angka ialah andaian permainan.', 'Rundingan kuota dibuka 12 bulan sebelum PRN (5 bulan lagi).', 'Anda melobi Majlis GPS. Pengaruh GPS 48/100 (-3 AP, -RM 1,500).',
       'Tuntutan berjaya: PRS bertanding 14 kerusi dalam GPS (hubungan gabungan -5).', 'Tuntutan ditolak: PRS bertanding 10 kerusi dalam GPS (hubungan gabungan -10).', 'Anda beralah: PRS bertanding 9 kerusi dalam GPS (hubungan gabungan +10).',
       'Anda menerima tawaran: PRS bertanding 11 kerusi dalam GPS.', 'DUN anda di luar kuota PRS dalam GPS (kuota 11 kerusi)', 'Parti rakan GPS tidak menuntut jawatan Premier.', 'Hanya untuk parti rakan GPS (mod ringan).',
-      'PRS tiada cawangan di luar Sarawak.', 'PRS bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'];
+      'PRS tiada cawangan di luar Sarawak.', 'Sokongan Bandar', '56/100 (kesan kerusi +1)', 'Program Bandar (2 AP, RM 1,000)', 'Program Bandar dilaksanakan. Sokongan Bandar 56/100 (-2 AP, -RM 1,000).', 'Hanya untuk pemain SUPP.', 'PRS bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'];
     return sampel.filter((s) => I.terjemah(s) === null);
   } finally { g.sessionStorage = asalSS; }
 });

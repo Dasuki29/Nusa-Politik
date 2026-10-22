@@ -1266,6 +1266,26 @@ ujian('PRS v10.0: mod ringan (kuota GPS 11, Pengaruh GPS, rundingan, kelayakan P
   p = S.loadPlayer(); sama(SW.ringan(p), false); sama(SW.kuota(p), null); betul(SW.dalamKuota(p), 'PBB tiada had kuota');
 });
 
+
+ujian('SUPP v10.1: mod ringan (kuota 18, Sokongan Bandar menjejas kerusi, kelayakan ikut kuota)', () => {
+  const SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'supp-sarawak.csv'), 'utf8')));
+  const duns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  sama(SW.KUOTA_2021.SUPP, 18); betul(Object.keys(duns).filter((k) => duns[k].rkSUPP).length >= 18, 'kawasan operasi SUPP >= kuota');
+  const dem = D.tentukanDemografi('Lelaki', 40), b = h.bahagian.find((x) => duns[parseInt(x.kod, 10)] && duns[parseInt(x.kod, 10)].rkSUPP === 1);
+  betul(b, 'DUN SUPP rk 1 dalam CSV');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'SUPP', nama: 'Uji', demografik: dem, cawangan: (b.dun ? b.dun[0].cawangan[0] : b.cawangan[0]), sayap: 'utama', avatar: 'biasa', dunInfo: duns[parseInt(b.kod, 10)] }));
+  let p = S.loadPlayer(); sama(p.parti, 'SUPP'); betul(SW.ringan(p), 'ringan'); sama(SW.kuota(p), 18); betul(SW.dalamKuota(p), 'rk 1 dalam kuota');
+  sama(SW.sokonganBandar(p), 50); sama(SW.ofsetBandar(p), 0); const o0 = SW.ofset(p);
+  P.tetap({ ap: 10, myr: 20000 }); let r = SW.programBandar(); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(SW.sokonganBandar(p), 56); sama(p.ap, 8);
+  betul(SW.ofset(p) >= o0, 'Sokongan Bandar > 50 tidak mengurangkan kekuatan kerusi'); sama(SW.ringkasRingan(p).bandar, 56);
+  const tinggi = Object.assign({}, p, { sokonganBandar: { nilai: 100, idx: (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1) } }), rendah = Object.assign({}, p, { sokonganBandar: { nilai: 30, idx: tinggi.sokonganBandar.idx } });
+  betul(SW.ofset(tinggi) > SW.ofset(rendah), 'Sokongan Bandar tinggi > rendah');
+  const kemudian = Object.assign({}, tinggi, { bulan: ((parseInt(p.bulan, 10) || 1) % 12) + 1, tahun: (parseInt(p.tahun, 10) || 0) + 1 }); betul(SW.sokonganBandar(kemudian) < 100, 'Sokongan Bandar susut');
+  const prs = Object.assign({}, p, { parti: 'PRS' }); sama(SW.sokonganBandar(prs), null, 'PRS tiada Sokongan Bandar'); sama(SW.ofsetBandar(prs), 0);
+  sama(SW.programBandar !== undefined, true);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

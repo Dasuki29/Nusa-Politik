@@ -18,7 +18,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function () {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
   var CONFIG = {
     TAHUN_PRN: 2027,
     CINA: { sukar: 50, marginal: 30 }, OFSET: { sukar: -12, marginal: -5, biasa: 0, selamat: 5 }, BUMI_SELAMAT: 85, BANDAR_CINA: 40
@@ -170,16 +170,41 @@
     var th = parseInt(p.tahun, 10) || 0, r = p.rundingGPS;
     return r && isFinite(Number(r.kerusi)) && th >= r.kitar - 1 && th < r.kitar + 5 ? Number(r.kerusi) : kuotaAsas(p);
   }
-  /** Adakah kerusi DUN pemain dalam kuota parti? (kedudukan rkPRS; tiada data = dibenarkan) */
+  /** Adakah kerusi DUN pemain dalam kuota parti? (kedudukan rk<PARTI>; tiada data = dibenarkan) */
   function dalamKuota(p) {
     if (!ringan(p)) { return true; }
-    var d = p.dunInfo, rk = d && Number(d.rkPRS); if (!rk) { return !d; }
+    var d = p.dunInfo, rk = d && Number(d['rk' + p.parti]); if (!rk) { return !d; }
     return rk <= kuota(p);
+  }
+
+  /* ---------- v10.1: SUPP: Sokongan Bandar ----------
+     Meter 30 hingga 100 (mula 50, susut 1 sebulan hingga 30). "Program Bandar" (2 AP, RM 1,000) +6.
+     Menjejaskan kekuatan kerusi DUN: ofset (Sokongan - 50) / 8 mata; kerusi marginal / sukar 1.5 kali lebih sensitif. ANDAIAN. */
+  var BANDAR = { MULA: 50, MIN: 30, AP: 2, MYR: 1000, TAMBAH: 6, PEMBAGI: 8, SENSITIF: 1.5 };
+  function adaBandar(p) { return !!(p && p.parti === 'SUPP'); }
+  function sokonganBandar(p) {
+    if (!adaBandar(p)) { return null; }
+    var x = p.sokonganBandar; if (!x || !isFinite(Number(x.nilai))) { return BANDAR.MULA; }
+    return Math.max(BANDAR.MIN, Math.min(100, Math.round(Number(x.nilai) - Math.max(0, idxBulan(p) - (Number(x.idx) || 0)))));
+  }
+  function ofsetBandar(p) {
+    if (!adaBandar(p)) { return 0; }
+    var m = maklumat(p), k = m && (m.tahap === 'marginal' || m.tahap === 'sukar') ? BANDAR.SENSITIF : 1;
+    return Math.round((sokonganBandar(p) - BANDAR.MULA) / BANDAR.PEMBAGI * k);
+  }
+  function programBandar() {
+    var Sv = typeof globalThis !== 'undefined' && globalThis.MyPolitikSave ? globalThis.MyPolitikSave : require('./save.js'), p = Sv.loadPlayer();
+    if (!adaBandar(p)) { return { ok: false, ralat: 'Hanya untuk pemain SUPP.' }; }
+    if ((Number(p.ap) || 0) < BANDAR.AP) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    if (Sv.cukupDana && !Sv.cukupDana(p, BANDAR.MYR)) { return { ok: false, ralat: Sv.ralatDana ? Sv.ralatDana(p, BANDAR.MYR) : 'Dana tidak mencukupi.' }; }
+    var baru = Math.min(100, sokonganBandar(p) + BANDAR.TAMBAH);
+    var r = Sv.applyEffects({ ap: -BANDAR.AP, myr: -BANDAR.MYR }, { kiraTindakan: false, patch: { sokonganBandar: { nilai: baru, idx: idxBulan(p) } }, log: { tindakan: 'program_bandar', nama: 'Program Bandar', peringkat: 'bulan' } });
+    return r && r.ok ? { ok: true, mesej: 'Program Bandar dilaksanakan. Sokongan Bandar ' + baru + '/100 (-' + BANDAR.AP + ' AP, -RM ' + BANDAR.MYR.toLocaleString('en') + ').' } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
   }
   function ringkasRingan(p) {
     if (!ringan(p)) { return null; }
-    var m = maklumat(p), rk = p.dunInfo && p.dunInfo.rkPRS || 0;
-    return { parti: p.parti, pengaruh: pengaruh(p), kuota: kuota(p), kuotaAsas: kuotaAsas(p), dalamKuota: dalamKuota(p), kedudukan: rk, jumlahGPS: KERAJAAN.JUMLAH, tahap: m ? m.tahapNama : '' };
+    var m = maklumat(p), rk = p.dunInfo && p.dunInfo['rk' + p.parti] || 0;
+    return { parti: p.parti, pengaruh: pengaruh(p), kuota: kuota(p), kuotaAsas: kuotaAsas(p), dalamKuota: dalamKuota(p), kedudukan: rk, jumlahGPS: KERAJAAN.JUMLAH, tahap: m ? m.tahapNama : '', bandar: sokonganBandar(p), ofsetBandar: ofsetBandar(p) };
   }
   function lobiGPS() {
     var Sv = typeof globalThis !== 'undefined' && globalThis.MyPolitikSave ? globalThis.MyPolitikSave : require('./save.js'), p = Sv.loadPlayer();
@@ -239,10 +264,10 @@
     var gps = kerajaan ? k.gabungan : Math.round(k.ambang * 0.8), opp = k.jumlah - gps, ph = Math.round(opp * 0.5);      // kerajaan false: GPS di bawah ambang (pembangkang)
     return { jumlah: k.jumlah, ambang: k.ambang, BN: gps, PH: ph, PN: 0, LAIN: opp - ph, kerajaanBN: !!kerajaan, tahun: p.tahun, bulan: p.bulan };
   }
-  function ofset(p) { var m = maklumat(p); return m ? m.ofset : 0; }
+  function ofset(p) { var m = maklumat(p); return m ? m.ofset + ofsetBandar(p) : 0; }
   return { CONFIG: CONFIG, TAHAP: TAHAP, jadual: jadual, maklumat: maklumat, ofset: ofset,
     BLOK: BLOK, BLOK_CFG: BLOK_CFG, sahBlok: sahBlok, blokLalai: blokLalai, blokPemain: blokPemain, giliran: giliran, sokongan: sokongan, ofsetJawatan: ofsetJawatan, ringkasBlok: ringkasBlok, dekati: dekati,
     KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan, RUNDING: RUNDING, statusRunding: statusRunding, runding: runding,
-    KUOTA_2021: KUOTA_2021, RINGAN: RINGAN, ringan: ringan, pengaruh: pengaruh, kuota: kuota, kuotaAsas: kuotaAsas, dalamKuota: dalamKuota, ringkasRingan: ringkasRingan, lobiGPS: lobiGPS, statusRundingRakan: statusRundingRakan, peluangTuntut: peluangTuntut, rundingRakan: rundingRakan,
+    BANDAR: BANDAR, sokonganBandar: sokonganBandar, ofsetBandar: ofsetBandar, programBandar: programBandar, KUOTA_2021: KUOTA_2021, RINGAN: RINGAN, ringan: ringan, pengaruh: pengaruh, kuota: kuota, kuotaAsas: kuotaAsas, dalamKuota: dalamKuota, ringkasRingan: ringkasRingan, lobiGPS: lobiGPS, statusRundingRakan: statusRundingRakan, peluangTuntut: peluangTuntut, rundingRakan: rundingRakan,
     MUSIM: MUSIM, maklumatParlimen: maklumatParlimen, ofsetParlimen: ofsetParlimen, jadualBerikut: jadualBerikut };
 });

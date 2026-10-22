@@ -23,7 +23,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function () {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function SW(k) { return k === 'PBB' || k === 'PRS'; }
+  function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
 
   var SENARAI = ['utama', 'pemuda', 'puteri', 'wanita'];
   var SAYAP = ['pemuda', 'puteri', 'wanita'];

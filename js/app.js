@@ -15,7 +15,7 @@
 (function () {
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
-  function esSW(k) { return k === 'PBB' || k === 'PRS'; }
+  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
   if (!document.getElementById('reg-form')) { return; }      // halaman lain (dashboard.html): lihat pengawal dashboard di bawah
 
   var D = window.MyPolitikData, S = window.MyPolitikSave;
@@ -315,7 +315,7 @@
   }
 
   /* ---------- v8.32: PBB (Sarawak). Bahagian = DUN, Cawangan = DM; data tempatan data/pbb-sarawak.csv ---------- */
-  var HINT_PBB = null, HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
+  var HINT_PBB = null, HINT_SUPP = 'SUPP (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   function suaikanBorangParti() {
     if (HINT_PBB === null) { var h0 = $('h-parti'); HINT_PBB = h0 ? h0.textContent : ''; }
     var pbb = esSW(state.parti);
@@ -325,7 +325,7 @@
     if (tc) { tc.textContent = pbb ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb; }
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
-    if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : HINT_PBB; }
+    if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : state.parti === 'SUPP' ? HINT_SUPP : HINT_PBB; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
   }
   /** v9.0: cadangkan blok (Bumiputera/Pesaka) mengikut majoriti etnik DUN; pilihan manual dihormati. */
@@ -459,7 +459,7 @@
    ========================================================================== */
 (function () {
   'use strict';
-  function esSW(k) { return k === 'PBB' || k === 'PRS'; }
+  function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP'; }
   if (!document.getElementById('btn-tahun')) { return; }
 
   var W = window, S = W.MyPolitikSave, D = W.MyPolitikData, O = W.MyPolitikOrdinaryMember,
@@ -1096,6 +1096,7 @@
       '<div class="kv"><span>Pengaruh GPS</span><b>' + r.pengaruh + '/100</b></div>' +
       '<div class="kv"><span>Kuota kerusi DUN ' + esc(p.parti) + '</span><b>' + r.kuota + ' / ' + r.jumlahGPS + ' (asas ' + r.kuotaAsas + ')</b></div>' +
       '<div class="kv"><span>Kerusi DUN anda</span><b>' + (r.dalamKuota ? '✅ dalam kuota' : '⛔ di luar kuota') + (r.kedudukan ? ' (kedudukan ' + r.kedudukan + ')' : '') + '</b></div>' +
+      (r.bandar !== null ? '<div class="kv"><span>Sokongan Bandar</span><b>' + r.bandar + '/100 (kesan kerusi ' + (r.ofsetBandar >= 0 ? '+' : '') + r.ofsetBandar + ')</b></div><button type="button" class="btn btn--sm btn--ghost" data-act="bandar-program" data-fk="bandar-program">Program Bandar (' + SWm.BANDAR.AP + ' AP, RM ' + SWm.BANDAR.MYR.toLocaleString('en') + ')</button> ' : '') +
       '<button type="button" class="btn btn--sm btn--ghost" data-act="gps-lobi" data-fk="gps-lobi">Lobi Majlis GPS (' + R.LOBI_AP + ' AP, RM ' + R.LOBI_MYR.toLocaleString('en') + ')</button> ';
     if (st && st.sudah) { h += '<div class="kv"><span>Keputusan rundingan</span><b>' + st.sudah.kerusi + ' kerusi</b></div>'; }
     else if (st && st.dalamTempoh) {
@@ -1658,6 +1659,7 @@
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
+    else if (act === 'bandar-program') { var bp = W.MyPolitikSarawak.programBandar(); render(); toast(bp.ok ? bp.mesej : bp.ralat, bp.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-lobi') { var gl = W.MyPolitikSarawak.lobiGPS(); render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-rakan') { var gk = W.MyPolitikSarawak.rundingRakan(t.getAttribute('data-pil')); render(); toast(gk.ok ? gk.mesej : gk.ralat, gk.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-runding') { var gr = W.MyPolitikSarawak.runding(t.getAttribute('data-pil')); render(); toast(gr.ok ? gr.mesej : gr.ralat, gr.ok ? 'ok' : 'ralat'); }
@@ -1871,7 +1873,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'bandar-program': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

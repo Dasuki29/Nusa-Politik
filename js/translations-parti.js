@@ -172,6 +172,16 @@
   ["Anda beralah: UMNO bertanding {x} kerusi dalam GPS (hubungan gabungan {y}).", "You conceded: PBB contests {x} seats in GPS (coalition relations {y})."],
   ["Anda menerima tawaran: UMNO bertanding {x} kerusi dalam GPS.", "You accepted the offer: PBB contests {x} seats in GPS."],
   ["DUN anda di luar kuota UMNO dalam GPS (kuota {x} kerusi)", "Your state seat is outside PBB's GPS quota (quota {x} seats)"],
-  ["Pendapatan bulan {x} {y}", "Income for month {x} {y}"]
+  ["Pendapatan bulan {x} {y}", "Income for month {x} {y}"],
+  ["(Sarawak, GPS, mod ringan)", "(Sarawak, GPS, light mode)"],
+  ["UMNO (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode): the area of operation is state seats that are 25% or more Chinese (urban and semi-urban). No Premier, bloc balance or full Supreme Council. Core feature: Urban Support. Member numbers are game estimates. Simulation, not official party data."],
+  ["SUPP (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "PBB (light mode): the area of operation is state seats that are 25% or more Chinese (urban and semi-urban). No Premier, bloc balance or full Supreme Council. Core feature: Urban Support. Member numbers are game estimates. Simulation, not official party data."],
+  ["Sokongan Bandar", "Urban Support"],
+  ["{x}/100 (kesan kerusi {y})", "{x}/100 (seat effect {y})"],
+  ["Program Bandar ({x} AP, RM {y})", "Urban Programme ({x} AP, RM {y})"],
+  ["Program Bandar", "Urban Programme"],
+  ["Program Bandar dilaksanakan. Sokongan Bandar {x}/100 (-{y} AP, -RM {z}).", "Urban Programme carried out. Urban Support {x}/100 (-{y} AP, -RM {z})."],
+  ["Hanya untuk pemain UMNO.", "Only for PBB players."],
+  ["Hanya untuk pemain SUPP.", "Only for SUPP players."]
   ]);
 })();
