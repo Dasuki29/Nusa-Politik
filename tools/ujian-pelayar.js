@@ -127,12 +127,14 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pg.waitForTimeout(500);
   const toastPC = await pg.evaluate(() => Array.prototype.map.call(document.querySelectorAll('.toast'), (t) => t.textContent).join(' | '));
   if (toastPC.indexOf('Achievement Unlocked: Foremost Statesman!') < 0) { ralat.push('toast pencapaian tiada/salah: ' + toastPC.slice(0, 120)); }
-  await pg.locator('[data-tab="pencapaian"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab pencapaian');
-  const panelPC = await pg.evaluate(() => document.getElementById('panel-pencapaian').innerText);
+  await pg.locator('[data-tab="profil"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-pencapaian"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (pencapaian)');
+  const panelPC = await pg.evaluate(() => document.getElementById('panel-profil').innerText);
+  const lp = await pg.evaluate(() => { window.NusaUI.render(); const d = document.querySelector('details[data-lipat="pf-pencapaian"]'), k = Object.keys(localStorage).filter((x) => /^nusa_lipat_/.test(x))[0]; return { buka: !!(d && d.open), simpan: !!(k && /pf-pencapaian/.test(localStorage.getItem(k) || '')), sumLipat: document.querySelectorAll('#panel-profil details.lipat').length }; });
+  if (!lp.buka || !lp.simpan || lp.sumLipat < 5) { ralat.push('bahagian boleh lipat Profil: keadaan tidak disimpan/dikekalkan: ' + JSON.stringify(lp)); }
   if (!/1 \/ 5 unlocked/.test(panelPC) || !/Foremost Statesman/.test(panelPC) || !/Progress|Unlocked/.test(panelPC)) { ralat.push('panel pencapaian EN tidak betul: ' + panelPC.replace(/\s+/g, ' ').slice(0, 160)); }
   const sisi = await pg.evaluate(() => (document.getElementById('s-kesetiaan') || {}).innerText || '');
   if (!/Fence-sitter Support/i.test(sisi) || !/Wavering|Hostile|Leaning supportive/.test(sisi)) { ralat.push('meter Atas Pagar EN tiada/salah: ' + sisi.replace(/\s+/g, ' ').slice(0, 160)); }
-  for (const tab of ['tindakan', 'mesyuarat', 'pemilihan', 'pilihanraya', 'dewan', 'pencapaian', 'peta']) {
+  for (const tab of ['tindakan', 'mesyuarat', 'pemilihan', 'pilihanraya', 'dewan', 'profil', 'peta']) {
     await tutup();
     const t = pg.locator('[data-tab="' + tab + '"]').first();
     if (await t.count()) { await t.evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('tab ' + tab); }
@@ -286,8 +288,8 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   }
   /* v8.28: Pindah Cawangan (EN): kad syarat, modal pemilih kawasan, kad selepas pindah; tiada BM bocor. */
   await pu.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 80000, ap: 10, keahlian: { sejakTahun: 2015, sejakBulan: 1 }, pru: Object.assign({}, window.MyPolitikPRU.getPRU(p), { status: null, statusKedua: null }), kabinet: Object.assign({}, window.MyPolitikKabinet.getKabinet(p), { hasGovernmentRole: false }) } }); window.NusaUI.render(); });
-  await pu.locator('[data-tab="pemilihan"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(500);
-  const pd1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Branch Transfer/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  await pu.locator('[data-tab="profil"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(500);
+  const pd1 = await pu.evaluate(() => { const c = document.querySelector('details[data-lipat="pf-pindah"]'); return c ? c.textContent : ''; });
   if (!/Branch Transfer/.test(pd1) || !/Once per term/.test(pd1) || !/Transfer Branch/.test(pd1) || /Pindah Cawangan|Sekali setiap|Tiada hukuman|Ahli sekurang/.test(pd1)) { ralat.push('kad pindah cawangan EN salah: ' + pd1.slice(0, 300)); }
   await pu.locator('[data-act="pindah-mula"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(1500);
   const pd2 = await pu.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
@@ -295,15 +297,15 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pu.evaluate(() => { const t = document.getElementById('modal-tutup'); if (t) { t.click(); } }); await pu.waitForTimeout(300);
   await pu.evaluate(() => { const D = window.MyPolitikData, h = D.getFallbackData(), n = h.negeri[h.negeri.length - 1], b = n.bahagian[n.bahagian.length - 1], d = b.dun[b.dun.length - 1], c = d.cawangan[d.cawangan.length - 1]; window.MyPolitikPindah.pindah(Object.assign({}, c, { negeri: n.nama, bahagianNama: b.nama, dunNama: d.nama })); window.NusaUI.render(); });
   await pu.waitForTimeout(500);
-  const pd3 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Branch Transfer/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  const pd3 = await pu.evaluate(() => { const c = document.querySelector('details[data-lipat="pf-pindah"]'); return c ? c.textContent : ''; });
   if (!/Waiting period before contesting/.test(pd3) || !/Transfer history/.test(pd3) || /Tempoh menunggu|Sejarah pindahan/.test(pd3)) { ralat.push('kad pindah cawangan selepas pindah EN salah: ' + pd3.slice(0, 300)); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
   await tutup();
   await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 300000 } }); window.MyPolitikHarta.beli('wisma'); });
-  await pg.locator('#tab-harta').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500); await imbas('tab harta');
-  const ht = await pg.evaluate(() => (document.getElementById('panel-harta') || {}).innerText || '');
+  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (harta)');
+  const ht = await pg.evaluate(() => (document.getElementById('panel-profil') || {}).innerText || '');
   if (!/asset catalogue/i.test(ht) || !/office building/i.test(ht)) { ralat.push('panel Harta EN salah: ' + ht.slice(0, 120)); }
   if (/Katalog|Hartanah|Penyelenggaraan|Kekayaan/.test(ht)) { ralat.push('panel Harta bocor BM: ' + ht.slice(0, 160)); }
   await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { harta: Object.assign({}, p.harta, { menunggu: { sebab: 'tahunan' } }) } }); window.NusaHarta_UI.isytihar(); });
@@ -315,8 +317,8 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
 
   /* v8.22: sewa hartanah dan naik taraf (EN). */
   await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 400000 } }); window.MyPolitikHarta.beli('rumah'); window.NusaHarta_UI.render ? window.NusaHarta_UI.render() : 0; });
-  await pg.locator('#tab-harta').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500); await imbas('harta naik taraf');
-  const nt = await pg.evaluate(() => (document.getElementById('panel-harta') || {}).textContent || '');
+  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('harta naik taraf');
+  const nt = await pg.evaluate(() => (document.getElementById('panel-profil') || {}).textContent || '');
   if (!/Bungalow/.test(nt) || !/Upgrade/.test(nt) || !/Rent RM/.test(nt) || !/Property rent per month/.test(nt)) { ralat.push('panel naik taraf EN salah: ' + nt.slice(0, 160)); }
   if (/Naik taraf|Sewa |banglo|Kompleks/.test(nt)) { ralat.push('panel naik taraf bocor BM'); }
   await pg.locator('[data-act="harta-naik"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(500);

@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v8.30 (2026-10-22)
+
+Susun semula tab supaya tidak terlalu panjang (audit kosmetik).
+
+### Berubah
+- **Header dipadatkan:** bar sumber 3 lajur, Status Tahun disembunyikan, butang Bersara/Reset jadi ikon di telefon, petunjuk warna takwim boleh dilipat.
+- **Tab 👤 Profil baharu:** Pencapaian dan Harta digabung ke sini bersama Jawatan, Tataetika, Pindah Cawangan, Gaya dan Laluan. Tab Pencapaian dan Harta dibuang (pautan lama dialih ke Profil).
+- **Pemilihan:** hanya peringkat aktif/didaftar dibuka; yang lain dilipat.
+- **Mesyuarat:** hanya mesyuarat boleh mula/sedang berlangsung dipapar; selebihnya dalam "Jadual tahunan" (dilipat).
+- Bahagian boleh dilipat; keadaan diingat dalam pelayar sahaja (setiap pemain). Tutorial BM/EN, terjemahan dan ujian pelayar dikemas kini.
+
 ## v8.29 (2026-10-22)
 
 Nama jawatan komuniti, pilihan sukan dan sektor GLC (maklum balas pemain).

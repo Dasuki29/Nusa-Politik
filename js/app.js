@@ -421,7 +421,8 @@
   }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-  var TABS = ['peta', 'tindakan', 'pemilihan', 'mesyuarat', 'dewan', 'pencapaian', 'harta', 'pilihanraya'];
+  var TABS = ['peta', 'tindakan', 'profil', 'pemilihan', 'mesyuarat', 'dewan', 'pilihanraya'];
+  var TAB_LAMA = { pencapaian: 'profil', harta: 'profil' };                           // v8.30: tab lama digabung ke Profil
   var state = {
     tab: 'peta', kodSimulasi: '', anggaran: {}, mesej: {},
     peta: { status: 'kosong', instance: null, data: null }, renderTerjadual: false
@@ -794,7 +795,7 @@
         '<div class="progress"><div class="progress__bar" style="width:' + peratus + '%"></div></div></div>' +
         '<div style="margin-top:12px">' + k.senarai.map(function (e) {
           return '<div class="kv"><span>' + esc(e.jawatan) + '</span><b>' + (e.terbuka ? 'Terbuka' : 'Terkunci') + '</b></div>'; }).join('') + '</div>' +
-        '<div style="margin-top:12px"><button type="button" class="btn btn--primary btn--sm" data-act="ke-tab" data-v="pemilihan">Ke Pemilihan &amp; Kempen</button></div></section>';
+        '<div style="margin-top:12px"><button type="button" class="btn btn--primary btn--sm" data-act="ke-tab" data-v="pemilihan">Ke Pemilihan</button></div></section>';
     }
     return h;
   }
@@ -916,13 +917,55 @@
     pusat: ['Pemilihan Pusat (PAU)', 'Bulan 8 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT']
   };
 
+  /* ---------- v8.30: bahagian boleh dilipat (keadaan disimpan dalam pelayar, ikut pemain) ---------- */
+  function kunciLipat() { var p = S && S.loadPlayer(); return 'nusa_lipat_' + (p && p.id ? p.id : 'x'); }
+  function bacaLipat() {
+    var k = kunciLipat();
+    if (state.lipatKunci !== k) { state.lipatKunci = k; state.lipat = {}; try { state.lipat = JSON.parse(W.localStorage.getItem(k) || '{}') || {}; } catch (e) { state.lipat = {}; } }
+    return state.lipat;
+  }
+  function simpanLipat(id, buka) {
+    bacaLipat()[id] = !!buka;
+    try { W.localStorage.setItem(state.lipatKunci, JSON.stringify(state.lipat)); } catch (e) { /* abaikan */ }
+  }
+  /** Bahagian boleh lipat. tajuk = HTML ringkas (sudah di-escape). o: { buka: lalai, lencana: teks }. Keadaan pilihan pemain mengatasi lalai. */
+  function lipat(id, tajuk, isi, o) {
+    o = o || {}; if (!isi) { return ''; }
+    var st = bacaLipat(), buka = Object.prototype.hasOwnProperty.call(st, id) ? !!st[id] : !!o.buka;
+    return '<details class="lipat" data-lipat="' + esc(id) + '"' + (buka ? ' open' : '') + '><summary><span class="lipat__t">' + tajuk + '</span>' +
+      (o.lencana ? '<span class="badge badge--gold lipat__l">' + esc(o.lencana) + '</span>' : '') + '</summary><div class="lipat__isi">' + isi + '</div></details>';
+  }
+  /** Bungkus satu kad sedia ada: tajuk diambil daripada h2 kad (atau o.tajuk), h2 dibuang supaya tidak berganda. */
+  function lipatKad(id, html, o) {
+    if (!html) { return ''; }
+    o = o || {};
+    var m = /<h2 class="card__title"[^>]*>([\s\S]*?)<\/h2>/.exec(html), n = (html.match(/<h2 class="card__title"/g) || []).length;
+    var tajuk = o.tajuk ? esc(o.tajuk) : (m ? m[1] : '');
+    if (m && n === 1 && !o.tajuk) { html = html.replace(m[0], ''); }
+    return lipat(id, tajuk, html, o);
+  }
+  document.addEventListener('toggle', function (ev) {
+    var d = ev.target; if (!d || !d.classList || !d.classList.contains('lipat')) { return; }
+    var id = d.getAttribute('data-lipat'); simpanLipat(id, d.open);
+    if (id === 'pf-pencapaian' && d.open && W.NusaPencapaian_UI && W.NusaPencapaian_UI.bilBaru()) { W.NusaPencapaian_UI.tandaDilihat(); var tp = $('tab-profil'); if (tp) { renderTabs(S.loadPlayer()); } }
+  }, true);
+
+  /** v8.30: tab Profil: kad identiti dan keahlian (dahulu dalam Pemilihan), Pencapaian dan Harta. */
+  function panelProfil(p) {
+    var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
+      (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
+      (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
+  }
+
   function panelPemilihan(p) {
     if (!E) { return '<div class="card"><p class="empty">Modul pemilihan tidak dimuatkan.</p></div>'; }
     var st = E.getStatusModul(p), f = st.fokus, h = '';
     state.cabaran = I && I.getCabaranAktif ? I.getCabaranAktif() : null;          // v8.0: untuk lencana "Dicabar" pada pertandingan
     h += '<div class="banner ' + (f.fasa === 'pemilihan' ? 'banner--gold' : '') + '"><strong>' + esc(p.tahun + ': ' + f.tajuk + (K ? ' · Bulan ' + p.bulan : '')) + '</strong>' + esc(f.fokus.join(' · ')) +
       (f.fasa === 'pemilihan' ? '' : '. Pertandingan jawatan seterusnya pada ' + f.pemilihanBerikutnya + '.') + '</div>';
-    h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '') + kadEtika(p) + (W.NusaPindah_UI ? W.NusaPindah_UI.kad(p) : '') + kadJawatan(p) + kadWatak(p) + kadLaluan();
+    h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '');
     if (f.fasa !== 'pemilihan') {
       h += '<div class="banner"><strong>Pertandingan jawatan ditutup</strong>Tahun pentadbiran: hanya pemilihan perwakilan tahunan yang dibuka. Pertandingan jawatan dan kempen dibuka semula pada tahun ' + f.pemilihanBerikutnya + '.</div>';
     }
@@ -933,29 +976,32 @@
     ['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'sayap_pau', 'pusat'].forEach(function (lv) {
       var baris = st.pertandingan.filter(function (e) { return e.peringkat === lv; });
       if (!baris.length) { return; }
-      h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + TAJUK_PERINGKAT[lv][0] + '</h2><p class="note">' + TAJUK_PERINGKAT[lv][1] + '. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</p>';
-      baris.forEach(function (e) { h += barisPertandingan(e); });
-      h += '</section>';
+      var cLv = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + TAJUK_PERINGKAT[lv][0] + '</h2><p class="note">' + TAJUK_PERINGKAT[lv][1] + '. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</p>';
+      baris.forEach(function (e) { cLv += barisPertandingan(e); });
+      cLv += '</section>';
+      var aktifLv = baris.some(function (e) { return !e.selesai && (e.didaftar || (e.tetingkap && e.tetingkap.status === 'dibuka')); });   // v8.30: hanya peringkat aktif dibuka
+      h += lipatKad('pm-' + lv, cLv, { buka: aktifLv, lencana: baris.some(function (e) { return e.didaftar && !e.selesai; }) ? 'Didaftar' : '' });
     });
 
-    h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">Kempen Pemilihan</h2><p class="note">Mata kempen terkumpul: <b>' + fmt(st.mataKempen) + '</b>. Kempen meningkatkan kekuatan anda dalam pengundian.</p>';
+    var cKm = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">Kempen Pemilihan</h2><p class="note">Mata kempen terkumpul: <b>' + fmt(st.mataKempen) + '</b>. Kempen meningkatkan kekuatan anda dalam pengundian.</p>';
     if (daftar.length) {
-      h += '<label class="note" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">Untuk simulasi pengundian: <select data-act="pilih-kod" class="item" style="padding:.3rem .6rem">' +
+      cKm += '<label class="note" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">Untuk simulasi pengundian: <select data-act="pilih-kod" class="item" style="padding:.3rem .6rem">' +
         daftar.map(function (e) { return '<option value="' + esc(e.kod) + '"' + (e.kod === state.kodSimulasi ? ' selected' : '') + '>' + esc(e.jawatan) + '</option>'; }).join('') + '</select></label>';
     }
-    h += '<div class="choice-list">';
+    cKm += '<div class="choice-list">';
     st.kempen.forEach(function (k) {
       var boleh = k.boleh && (!k.perluKod || !!state.kodSimulasi);
       var sebab = !k.boleh ? k.sebab : (k.perluKod && !state.kodSimulasi ? 'Daftar bertanding dahulu.' : '');
       var tag = k.tahap === 'bersih' ? '<span class="badge badge--bersih">Bersih · +' + k.modalSosial + ' Modal Sosial</span>'
         : k.tahap === 'kotor' ? '<span class="badge badge--kotor">Risiko disiplin ~' + k.peluangLapor + '%</span>'
         : k.tahap === 'kelabu' ? '<span class="badge badge--kelabu">Zon kelabu ~' + k.peluangLapor + '%</span>' : '';
-      h += '<button type="button" class="choice choice--' + esc(k.tahap || 'neutral') + '" data-act="kempen" data-id="' + esc(k.id) + '" data-fk="k:' + esc(k.id) + '"' + (boleh ? '' : ' disabled') + '>' +
+      cKm += '<button type="button" class="choice choice--' + esc(k.tahap || 'neutral') + '" data-act="kempen" data-id="' + esc(k.id) + '" data-fk="k:' + esc(k.id) + '"' + (boleh ? '' : ' disabled') + '>' +
         '<span class="choice__title">' + esc(k.nama) + ' ' + tag + '</span><span class="choice__desc">' + esc(k.penerangan) + '</span>' +
         '<span class="choice__fx">' + fx(k.ringkas) + (k.maksKali ? '<span class="badge">' + k.kali + '/' + k.maksKali + ' kali</span>' : '') + '</span>' +
         (sebab ? '<span class="choice__desc" style="color:var(--danger)">' + esc(sebab) + '</span>' : '') + '</button>';
     });
-    h += '</div>' + (state.mesej.kempen ? '<p class="result" style="margin-top:12px">' + state.mesej.kempen + '</p>' : '') + '</section>';
+    cKm += '</div>' + (state.mesej.kempen ? '<p class="result" style="margin-top:12px">' + state.mesej.kempen + '</p>' : '') + '</section>';
+    h += lipatKad('pm-kempen', cKm, { buka: daftar.length > 0 });
     return h;
   }
 
@@ -986,40 +1032,46 @@
       return '<div class="item"><div class="item__head"><div class="item__title">' + esc(nama) + '</div><span class="status-chip ' + (st.layak ? 'is-open' : 'is-lock') + '">' + (st.layak ? 'Layak' : 'Belum layak') + '</span></div>' +
         '<p class="item__desc">' + esc(st.layak ? st.sumber + (st.lencana ? ' · status: ' + st.lencana : '') + (jarak ? ' · ' + jarak : '') : st.sebab) + '</p></div>';
     }
-    h += '<section class="card perw"><h2 class="card__title" style="margin:0">Kelayakan Perwakilan</h2>' + kadPerw('Mesyuarat Perwakilan Bahagian', sp.bahagian) + kadPerw('Perhimpunan Agung (PAU)', sp.pau) + '</section>';
+    var aktifMes = k.peringkat.some(function (lv) { return lv.status === 'boleh_mula' || lv.status === 'sedang'; });                  // v8.30: hanya mesyuarat aktif dibuka
+    var cPerw = '<section class="card perw"><h2 class="card__title" style="margin:0">Kelayakan Perwakilan</h2>' + kadPerw('Mesyuarat Perwakilan Bahagian', sp.bahagian) + kadPerw('Perhimpunan Agung (PAU)', sp.pau) + '</section>';
+    h += lipatKad('mes-perw', cPerw, { buka: aktifMes });
+    var hLain = '';
     k.peringkat.forEach(function (lv) {
       var cs = STATUS_MES[lv.status] || [lv.status, ''];
-      h += '<section class="card"><div class="item__head"><div><h2 class="card__title" style="margin:0">' + esc(lv.nama) + '</h2><p class="item__desc">' + esc(lv.jenisUsul) + (lv.tetingkap ? ' · ' + esc(lv.tetingkap.label) : '') + '</p></div>' +
+      var hk = '<section class="card"><div class="item__head"><div><h2 class="card__title" style="margin:0">' + esc(lv.nama) + '</h2><p class="item__desc">' + esc(lv.jenisUsul) + (lv.tetingkap ? ' · ' + esc(lv.tetingkap.label) : '') + '</p></div>' +
         '<span class="status-chip ' + cs[1] + '">' + cs[0] + '</span></div>';
-      if (lv.status === 'terkunci' || lv.status === 'tidak_layak' || lv.status === 'belum_tiba' || lv.status === 'terlepas') { h += '<p class="note" style="margin-top:12px">' + esc(lv.sebab) + '</p>'; }
+      if (lv.status === 'terkunci' || lv.status === 'tidak_layak' || lv.status === 'belum_tiba' || lv.status === 'terlepas') { hk += '<p class="note" style="margin-top:12px">' + esc(lv.sebab) + '</p>'; }
       if (lv.status === 'boleh_mula') {
-        h += '<div style="margin-top:12px"><button type="button" class="btn btn--primary" data-act="mula" data-lvl="' + lv.kod + '" data-fk="mula:' + lv.kod + '">Mulakan ' + esc(lv.nama) + '</button></div>';
+        hk += '<div style="margin-top:12px"><button type="button" class="btn btn--primary" data-act="mula" data-lvl="' + lv.kod + '" data-fk="mula:' + lv.kod + '">Mulakan ' + esc(lv.nama) + '</button></div>';
       }
       if (lv.status === 'sedang' || lv.status === 'selesai') {
         (lv.agenda || []).forEach(function (u) {
-          h += '<div class="item" style="margin-top:12px"><div class="item__head"><div class="item__title">' + esc(u.tajuk) + (u.sumber === 'sayap' ? ' <span class="badge badge--gold">Usul Sayap</span>' : '') + '</div>' +
+          hk += '<div class="item" style="margin-top:12px"><div class="item__head"><div class="item__title">' + esc(u.tajuk) + (u.sumber === 'sayap' ? ' <span class="badge badge--gold">Usul Sayap</span>' : '') + '</div>' +
             '<span class="status-chip' + (u.status === 'selesai' ? ' is-done' : '') + '">' + (u.jenis === 'pemilihan' ? 'Pemilihan' : u.jenis === 'ucapan_dasar' ? 'Ucapan Dasar' : u.status === 'selesai' ? 'Diputuskan' : 'Terbuka') + '</span></div>' +
             '<p class="item__desc">' + esc(u.penerangan || '') + '</p>';
-          if (u.jenis === 'pemilihan') { h += '<p class="item__desc">Keputusan pemilihan dikira apabila mesyuarat ditutup. Pastikan anda sudah mendaftar bertanding di tab Pemilihan &amp; Kempen.</p>'; }
+          if (u.jenis === 'pemilihan') { hk += '<p class="item__desc">Keputusan pemilihan dikira apabila mesyuarat ditutup. Pastikan anda sudah mendaftar bertanding di tab Pemilihan.</p>'; }
           else if (u.status === 'selesai' && u.keputusan) {
             var kp = u.keputusan, pil = u.pilihan;
-            h += '<p class="result ' + (kp.padan ? 'is-good' : pil ? 'is-bad' : '') + '">' + (kp.lulus ? 'LULUS' : 'DITOLAK') + ': ' + fmt(kp.undiSokong) + ' sokong, ' + fmt(kp.undiBantah) + ' bantah' +
+            hk += '<p class="result ' + (kp.padan ? 'is-good' : pil ? 'is-bad' : '') + '">' + (kp.lulus ? 'LULUS' : 'DITOLAK') + ': ' + fmt(kp.undiSokong) + ' sokong, ' + fmt(kp.undiBantah) + ' bantah' +
               (pil ? ' · anda: ' + esc(pil.peranan) + ' (' + esc(pil.pendirian) + '): ' + (kp.ip >= 0 ? '+' : '') + kp.ip + ' IP, ' + (kp.reputasi >= 0 ? '+' : '') + kp.reputasi + ' Reputasi' : ' · tiada penyertaan') + '</p>';
-          } else if (lv.status === 'sedang') { h += butangPeranan(lv.kod, u, p.ap); }
-          h += '</div>';
+          } else if (lv.status === 'sedang') { hk += butangPeranan(lv.kod, u, p.ap); }
+          hk += '</div>';
         });
         if (lv.status === 'sedang') {
-          h += '<div style="margin-top:12px"><button type="button" class="btn btn--gold" data-act="tutup" data-lvl="' + lv.kod + '" data-fk="tutup:' + lv.kod + '">Tutup Mesyuarat</button></div>';
+          hk += '<div style="margin-top:12px"><button type="button" class="btn btn--gold" data-act="tutup" data-lvl="' + lv.kod + '" data-fk="tutup:' + lv.kod + '">Tutup Mesyuarat</button></div>';
         }
         if (lv.status === 'selesai' && lv.ringkasan) {
           var r = lv.ringkasan;
-          h += '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn--gold" data-act="ringkasan" data-lvl="' + lv.kod + '">Lihat Ringkasan</button><button type="button" class="btn btn--ghost" data-act="bulan">Teruskan ke Bulan Seterusnya →</button></div>';
-          h += '<p class="note" style="margin-top:12px">Ringkasan: ' + r.lulus + ' lulus, ' + r.ditolak + ' ditolak, ' + r.disertai + ' anda sertai.' +
+          hk += '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn--gold" data-act="ringkasan" data-lvl="' + lv.kod + '">Lihat Ringkasan</button><button type="button" class="btn btn--ghost" data-act="bulan">Teruskan ke Bulan Seterusnya →</button></div>';
+          hk += '<p class="note" style="margin-top:12px">Ringkasan: ' + r.lulus + ' lulus, ' + r.ditolak + ' ditolak, ' + r.disertai + ' anda sertai.' +
             (r.pemilihan && r.pemilihan.length ? ' ' + r.pemilihan.map(function (x) { return (x.menang ? 'Menang' : 'Kalah') + ' perwakilan (kedudukan ' + x.kedudukan + ')'; }).join('; ') + '.' : '') + '</p>';
         }
       }
-      h += '</section>';
+      hk += '</section>';
+      if (lv.status === 'boleh_mula' || lv.status === 'sedang') { h += hk; } else { hLain += hk; }
     });
+    h += lipat('mes-jadual', '<span>Jadual tahunan</span>', hLain, { buka: false });
+
     return h;
   }
 
@@ -1048,7 +1100,7 @@
     var id = state.tab, el = $('panel-' + id);
     if (id === 'peta') { return; }
     var fk = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-fk') : null;
-    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : id === 'pencapaian' ? (W.NusaPencapaian_UI ? W.NusaPencapaian_UI.panel(p) : '') : id === 'harta' ? (W.NusaHarta_UI ? W.NusaHarta_UI.panel(p) : '') : panelMesyuarat(p);
+    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : id === 'profil' ? panelProfil(p) : panelMesyuarat(p);
     if (fk) { var f = el.querySelector('[data-fk="' + fk.replace(/"/g, '\\"') + '"]'); if (f && !f.disabled) { f.focus({ preventScroll: true }); } }
   }
 
@@ -1069,12 +1121,10 @@
       if (a && t === 'pilihanraya' && b.scrollIntoView && !b.hidden) { try { b.scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (e) { /* abaikan */ } }
     });
     Array.prototype.forEach.call($('bottom-nav').querySelectorAll('button'), function (b) { b.classList.toggle('is-active', b.getAttribute('data-tab') === state.tab); });
-    var tp = $('tab-pemilihan'); tp.innerHTML = '🗳️ Pemilihan &amp; Kempen' + (adalahTahunPemilihan(p.tahun) ? '<span class="dot" title="Tahun pemilihan"></span>' : '');
+    var tp = $('tab-pemilihan'); tp.innerHTML = '🗳️ Pemilihan' + (adalahTahunPemilihan(p.tahun) ? '<span class="dot" title="Tahun pemilihan"></span>' : '');
     var tm = $('tab-mesyuarat'), sedia = M && M.getKeadaanMesyuarat(p).peringkat.some(function (x) { return x.status === 'boleh_mula' || x.status === 'sedang'; });
-    var tc = $('tab-pencapaian'), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;                      // v8.6: lencana trofi baharu
-    tc.innerHTML = '🏆 Pencapaian' + (nb ? '<span class="dot" title="Pencapaian baharu"></span>' : '');
-    var th = $('tab-harta'), hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(S.loadPlayer());                          // v8.13: pengisytiharan harta menunggu
-    if (th) { th.innerHTML = '💰 Harta' + (hm ? '<span class="dot" title="Pengisytiharan Harta SPRM menunggu"></span>' : ''); }
+    var nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0, hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(S.loadPlayer());   // v8.30: lencana Profil (trofi baharu, pengisytiharan harta)
+    var tpf = $('tab-profil'); if (tpf) { tpf.innerHTML = '👤 Profil' + (nb || hm ? '<span class="dot" title="Ada perkara baharu di Profil"></span>' : ''); }
     tm.innerHTML = '📜 Mesyuarat &amp; Usul' + (sedia ? '<span class="dot" title="Mesyuarat tersedia"></span>' : '');
   }
 
@@ -1130,12 +1180,12 @@
   }
 
   function setTab(t, fokus) {
+    if (TAB_LAMA[t]) { t = TAB_LAMA[t]; }
     if (TABS.indexOf(t) < 0) { return; }
     state.tab = t;
     try { W.history.replaceState(null, '', '#' + t); } catch (e) { /* abaikan */ }
     render();
     if (t === 'peta') { muatPeta(); }
-    if (t === 'pencapaian' && W.NusaPencapaian_UI && W.NusaPencapaian_UI.bilBaru()) { W.NusaPencapaian_UI.tandaDilihat(); var tcc = $('tab-pencapaian'); if (tcc) { tcc.innerHTML = '🏆 Pencapaian'; } }   // v8.6
     if (fokus) { $('tab-' + t).focus(); }
   }
 
@@ -1636,6 +1686,7 @@
     if (!p) { W.location.replace(INDEX_URL); return; }
     $('kandungan').hidden = false;
     var h = (W.location.hash || '').replace('#', '');
+    if (TAB_LAMA[h]) { h = TAB_LAMA[h]; }
     if (TABS.indexOf(h) >= 0) { state.tab = h; }
     render();
     if (state.tab === 'peta') { muatPeta(); }

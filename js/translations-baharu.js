@@ -2617,7 +2617,18 @@
   ["Nusa Pengangkutan Awam", "Nusa Public Transport"],
   ["Pengerusi, Nusa Pengangkutan Awam", "Chairman, Nusa Public Transport"],
   ["Ahli Lembaga, Nusa Pengangkutan Awam", "Board Member, Nusa Public Transport"],
-  ["Pengarah, Nusa Pengangkutan Awam", "Director, Nusa Public Transport"]
+  ["Pengarah, Nusa Pengangkutan Awam", "Director, Nusa Public Transport"],
+  ["Petunjuk warna", "Colour key"],
+  ["Jadual tahunan", "Annual schedule"],
+  ["Didaftar", "Registered"],
+  ["👤 Profil", "👤 Profile"],
+  ["Profil", "Profile"],
+  ["🗳️ Pemilihan", "🗳️ Elections"],
+  ["Ke Pemilihan", "Go to Elections"],
+  ["Ada perkara baharu di Profil", "Something new in your Profile"],
+  ["Reset permainan", "Reset game"],
+  ["Keputusan pemilihan dikira apabila mesyuarat ditutup. Pastikan anda sudah mendaftar bertanding di tab Pemilihan.", "Election results are counted when the meeting closes. Make sure you have registered to contest in the Elections tab."],
+  ["Isu kementerian menunggu:", "Ministry issue pending:"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
