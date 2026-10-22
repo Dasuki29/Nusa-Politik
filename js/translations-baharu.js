@@ -2628,7 +2628,11 @@
   ["Ada perkara baharu di Profil", "Something new in your Profile"],
   ["Reset permainan", "Reset game"],
   ["Keputusan pemilihan dikira apabila mesyuarat ditutup. Pastikan anda sudah mendaftar bertanding di tab Pemilihan.", "Election results are counted when the meeting closes. Make sure you have registered to contest in the Elections tab."],
-  ["Isu kementerian menunggu:", "Ministry issue pending:"]
+  ["Isu kementerian menunggu:", "Ministry issue pending:"],
+  ["🏛️ Kawasan & Rakyat", "🏛️ Constituency & Public"],
+  ["💼 Jawatan & Aset Luar", "💼 Outside Posts & Assets"],
+  ["📡 Media & Integriti", "📡 Media & Integrity"],
+  ["{n} keluhan", "{n} complaints"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

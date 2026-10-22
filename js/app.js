@@ -762,7 +762,17 @@
     if (!mod) { return '<div class="card"><p class="empty">Modul tindakan tidak dimuatkan.</p></div>'; }
     var senarai = mod.senaraiTindakan(p), h = '';
     var tkb = K ? K.getTakwim(p) : null;
-    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + (W.NusaIntegriti_UI ? W.NusaIntegriti_UI.kad(p) : '') + (W.NusaMedia_UI ? W.NusaMedia_UI.kad(p) : '') + (W.NusaSampingan_UI ? W.NusaSampingan_UI.kad(p) : '') + (W.NusaKawasan_UI ? W.NusaKawasan_UI.kad(p) : '') + (W.NusaGLC_UI ? W.NusaGLC_UI.kad(p) : '') + (W.NusaKomuniti_UI ? W.NusaKomuniti_UI.kad(p) : '') + bannerUndiTP(p) + kadMisi(p) + kadSayap(p);
+    var ui = function (n) { return W[n] ? W[n].kad(p) : ''; };
+    var gKaw = ui('NusaKawasan_UI'), nKel = (gKaw.match(/data-act="kawasan-selesai"/g) || []).length;
+    var gAset = ui('NusaKomuniti_UI') + ui('NusaGLC_UI') + ui('NusaSampingan_UI');
+    var gMedia = ui('NusaMedia_UI') + ui('NusaIntegriti_UI');
+    h += PUIh(p, 'tindakan') + bannerDisiplin(p) + bannerUndiTP(p);
+    /* v8.31: kad dikumpulkan dan dilipat (keadaan diingat dalam pelayar sahaja). */
+    var kumpul = [
+      ['tn-kawasan', '<span>🏛️ Kawasan &amp; Rakyat</span>', gKaw, { buka: nKel > 0, lencana: nKel ? nKel + ' keluhan' : '' }],
+      ['tn-aset', '<span>💼 Jawatan &amp; Aset Luar</span>', gAset, {}],
+      ['tn-media', '<span>📡 Media &amp; Integriti</span>', gMedia, {}]
+    ];
     if (tkb && tkb.bonusAkarUmbi) {
       h += '<div class="banner banner--gold"><strong>Musim Akar Umbi (bulan 1-3)</strong>Setiap tindakan memberi bonus +' + Math.round(tkb.bonusAkarUmbi * 100) + '% IP dan kesetiaan. Manfaatkan sebelum musim mesyuarat bermula pada bulan 4.</div>';
     }
@@ -786,6 +796,9 @@
         (t.boleh ? '' : '<span class="choice__desc" style="color:var(--danger)">' + esc(t.sebab) + '</span>') + '</button>';
     });
     h += '</div>' + (state.mesej.tindakan ? '<p class="result" style="margin-top:12px">' + esc(state.mesej.tindakan) + '</p>' : '') + '</section>';
+
+    h += kadMisi(p) + kadSayap(p);
+    h += kumpul.map(function (g) { return lipat(g[0], g[1], g[2], g[3]); }).join('');
 
     if (!peg && O) {
       var k = O.getKelayakanBertanding(p), peratus = clamp(Math.round(k.ip / k.ipMin * 100), 0, 100);
