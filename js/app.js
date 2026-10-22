@@ -32,7 +32,8 @@
     resume: $('resume'), resumeText: $('resume-text'), resumeNew: $('btn-resume-new')
   };
 
-  var state = { data: null, negeri: null, bahagian: null, dun: null, cawangan: null };
+  var state = { data: null, negeri: null, bahagian: null, dun: null, cawangan: null, parti: 'UMNO' };
+  var PT = window.MyPolitikParti;
 
   /* ---------- Pembantu UI ---------- */
   function cari(senarai, id) {
@@ -119,7 +120,7 @@
     state.data = h; state.negeri = { id: nama, nama: nama, bahagian: h.bahagian };
     setStatus(h.source === 'cache' ? 'cache' : 'sheet', (h.source === 'cache' ? 'Salinan tersimpan: ' : 'Data langsung: ') + nama + ' (' + ringkasan(h) + ').');
     el.submit.disabled = false;
-    isi(el.bahagian, 'Pilih bahagian (parlimen)', state.negeri.bahagian, function (p) { return p.nama + ' (P.' + p.kod + ')'; });
+    isi(el.bahagian, state.parti === 'PBB' ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian, function (p) { return state.parti === 'PBB' ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
   }
 
   el.negeri.addEventListener('change', function () {
@@ -130,8 +131,8 @@
     reset(el.dun, 'Pilih bahagian dahulu');
     reset(el.cawangan, 'Pilih DUN dahulu');
     if (state.negeri) {
-      isi(el.bahagian, 'Pilih bahagian (parlimen)', state.negeri.bahagian,
-        function (p) { return p.nama + ' (P.' + p.kod + ')'; });
+      isi(el.bahagian, state.parti === 'PBB' ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian,
+        function (p) { return state.parti === 'PBB' ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
     } else { reset(el.bahagian, 'Pilih negeri dahulu'); }
   });
 
@@ -140,7 +141,10 @@
     state.dun = state.cawangan = null;
     setError('bahagian'); sembunyiInfo();
     reset(el.cawangan, 'Pilih DUN dahulu');
-    if (state.bahagian && state.bahagian.tiadaDUN) {            // v7.14: Wilayah Persekutuan: tiada DUN, terus pilih cawangan
+    if (state.bahagian && state.parti === 'PBB') {               // v8.32: DUN ialah Bahagian PBB; terus pilih cawangan (DM)
+      state.dun = state.bahagian.dun[0];
+      isi(el.cawangan, 'Pilih cawangan (daerah mengundi)', state.dun.cawangan, function (c) { return c.nama; });
+    } else if (state.bahagian && state.bahagian.tiadaDUN) {            // v7.14: Wilayah Persekutuan: tiada DUN, terus pilih cawangan
       state.dun = state.bahagian.dun[0];
       reset(el.dun, 'Tiada DUN (Wilayah Persekutuan)');
       isi(el.cawangan, 'Pilih cawangan (lokaliti)', state.dun.cawangan, function (c) { return c.nama + ' (' + c.kod + ')'; });
@@ -238,13 +242,14 @@
   function kemaskiniSayap() {
     if (!SYP || !$('sayap-grid')) { return; }
     var j = el.form.querySelector('input[name="jantina"]:checked'), u = parseInt(el.umur.value, 10);
-    var ok = !!j && isFinite(u) && u >= 18 && u <= 100, kel = ok ? SYP.kelayakan(j.value, u) : SYP.kelayakan('', 0);
+    var ok = !!j && isFinite(u) && u >= 18 && u <= 100, kel = ok ? SYP.kelayakan(j.value, u, state.parti) : SYP.kelayakan('', 0, state.parti);
     Array.prototype.forEach.call(document.querySelectorAll('#sayap-grid .sy'), function (l) {
       var k = l.getAttribute('data-kod'), inp = l.querySelector('input'), sy = l.querySelector('.sy__syarat');
       inp.disabled = !kel[k].boleh; sy.textContent = kel[k].boleh ? '' : kel[k].sebab;
+      l.style.display = state.parti === 'PBB' && k === 'puteri' ? 'none' : '';         // v8.32: PBB tiada sayap Puteri
     });
     if (!(kel[sayapState.kod] && kel[sayapState.kod].boleh)) { sayapState.manual = false; }       // pilihan manual tidak lagi sah selepas jantina/umur diubah
-    if (!sayapState.manual) { pilihSayap(ok ? SYP.cadangan(j.value, u) : 'utama', false); }
+    if (!sayapState.manual) { pilihSayap(ok ? SYP.cadangan(j.value, u, state.parti) : 'utama', false); }
   }
 
   function escS(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -272,6 +277,7 @@
   }
 
   async function muatData() {
+    if (state.parti === 'PBB') { return muatDataPBB(); }
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true;
     setStatus('loading', 'Memuatkan data daripada Google Sheets...');
@@ -306,7 +312,43 @@
     el.submit.disabled = false;
   }
 
-  el.retry.addEventListener('click', function () { if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
+  /* ---------- v8.32: PBB (Sarawak). Bahagian = DUN, Cawangan = DM; data tempatan data/pbb-sarawak.csv ---------- */
+  function suaikanBorangParti() {
+    var pbb = state.parti === 'PBB';
+    var fd = el.dun && el.dun.closest ? el.dun.closest('.field') : null; if (fd) { fd.hidden = pbb; }
+    var tb = $('t-bahagian'), tc = $('t-cawangan'), hp = $('h-parti');
+    if (tb) { tb.textContent = pbb ? 'Bahagian (DUN)' : 'Bahagian (Parlimen)'; }
+    if (tc) { tc.textContent = pbb ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
+    if (hp) { hp.hidden = !pbb; }
+    if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
+  }
+  async function muatDataPBB() {
+    kosongkanSemua('Memuatkan data...');
+    el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
+    setStatus('loading', 'Memuatkan data PBB Sarawak...');
+    try {
+      var res = await fetch(PT.info('PBB').data, { cache: 'no-cache' });
+      if (!res.ok) { throw new Error('HTTP ' + res.status); }
+      var h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
+      h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });   // PBB tiada Puteri
+      state.data = h;
+    } catch (e) {
+      setStatus('fallback', 'Data PBB tidak dapat dimuatkan: ' + (e && e.message ? e.message : e)); el.retry.hidden = false; return;
+    }
+    setStatus('sheet', 'Data PBB Sarawak (' + ringkasan(state.data) + '). Bilangan ahli ialah anggaran permainan.');
+    isiNegeri();
+    el.negeri.value = 'sarawak'; el.negeri.dispatchEvent(new Event('change'));
+    el.submit.disabled = false;
+  }
+  Array.prototype.forEach.call(el.form.querySelectorAll('input[name="parti"]'), function (r) {
+    r.addEventListener('change', function () {
+      if (!r.checked) { return; }
+      state.parti = r.value; if (PT) { PT.tetapPilihan(r.value); }
+      suaikanBorangParti(); muatData();
+    });
+  });
+
+  el.retry.addEventListener('click', function () { if (state.parti === 'PBB') { muatDataPBB(); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
 
   /* ---------- Padam ralat sebaik pengguna membetulkan medan ---------- */
   el.nama.addEventListener('input', function () { if (el.nama.value.trim().length >= 3) { setError('nama'); } });
@@ -349,7 +391,7 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ parti: state.parti, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -390,6 +432,7 @@
 
   segerakNilaiMula();
   semakPemain();
+  if (PT && !S.loadPlayer()) { PT.tetapPilihan('UMNO'); }
   muatData();
 })();
 
@@ -574,7 +617,7 @@
       um.parentNode.classList.toggle('is-risiko', !!(hr && hr.label === 'Tinggi'));
     }
     $('p-negeri').textContent = p.negeri || '–'; $('p-bahagian').textContent = p.bahagian || '–';
-    $('p-dun').textContent = p.dun || '–'; if ($('p-dun-li')) { $('p-dun-li').hidden = !p.dun; } $('p-cawangan').textContent = p.cawangan || '–';
+    $('p-dun').textContent = p.dun || '–'; if ($('p-dun-li')) { $('p-dun-li').hidden = !p.dun || p.parti === 'PBB'; } $('p-cawangan').textContent = p.cawangan || '–';
     var pem = adalahTahunPemilihan(p.tahun);
     var tk = K ? K.getTakwim(p) : null;
     var tp = $('p-tahun'); tp.textContent = labelTahun(p.tahun) + (tk ? ' · BULAN ' + tk.bulan : ''); tp.setAttribute('data-fasa', pem ? 'pemilihan' : 'pentadbiran');
@@ -1096,6 +1139,15 @@
     pt.status = 'memuat';
     host.innerHTML = '<div class="loading" role="status">Memuatkan data peta...</div>';
     try {
+      var pPBB = S && S.loadPlayer();
+      if (pPBB && pPBB.parti === 'PBB' && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js)
+        var GG = W.MyPolitikGeo;
+        await GG.muat(['negeri', 'parlimen', 'dun']); await GG.muatDM('13');
+        host.innerHTML = '';
+        if (pt.instance && pt.instance.destroy) { pt.instance.destroy(); }
+        pt.instance = GG.mount(host, { peringkat: 'dun', negeri: '13', warna: 'pemilih', fokus: pPBB });
+        pt.status = 'siap'; return;
+      }
       if (!pt.data) { var pp = S && S.loadPlayer(); pt.data = await D.loadSemuaNegeri(pp && pp.negeri, { url: CFG.sheetCsvUrl, appsScriptUrl: CFG.appsScriptUrl }); }
       host.innerHTML = '';
       if (pt.instance) { pt.instance.destroy(); }

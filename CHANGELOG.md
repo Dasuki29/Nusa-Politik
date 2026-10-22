@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v8.32 (2026-10-22)
+
+Fasa 1 modul Sarawak: parti PBB boleh dimainkan.
+
+### Baharu
+- **Data Sarawak:** `data/dm-13.json` (887 Daerah Mengundi, 2,037,648 pemilih, dengan jantina, umur dan etnik setiap DM) dibina daripada fail `lukis-sarawak` oleh `tools/build-geo.js` (mod `DM_SAHAJA=13`). `tools/build-pbb.js` menjana `data/pbb-sarawak.csv`.
+- **Pilihan parti** di skrin pendaftaran: UMNO (lalai, simpanan lama kekal UMNO) atau PBB.
+- **PBB:** Bahagian = DUN (82), Cawangan = Daerah Mengundi (887), sayap Pemuda dan Wanita sahaja (perempuan 18 hingga 35 tahun masuk Wanita). Bilangan ahli ialah anggaran permainan (12% pemilih, 50 hingga 500).
+- **Penjenamaan** (`js/parti.js`): logo PBB (`assets/images/logo-pbb.png`, daripada pengguna) dan perkataan UMNO ditukar kepada PBB dalam paparan BM dan EN.
+- Tab Peta PBB memaparkan peta DUN dan Daerah Mengundi Sarawak.
+- Tutorial topik "Parti PBB (Sarawak)", terjemahan EN (`js/translations-parti.js`), ujian unit dan `PARTI=PBB node tools/simulasi.js`.
+
+### Belum (fasa seterusnya)
+- Imbangan sayap Bumiputera/Pesaka, PRN Sarawak penuh, DUN Sarawak dan kerusi Parlimen PBB (PBB bertanding kerusi DUN sahaja buat masa ini), Pindah Cawangan PBB, parti lain (PRS, SUPP, DAP dan lain-lain).
+- Istilah MKT dan PAU kekal (belum ditukar kepada Majlis Tertinggi dan Perhimpunan Agung).
+
 ## v8.31 (2026-10-22)
 
 Tab Tindakan dikumpulkan (kira-kira 5,200px menjadi kira-kira 2,000px pada telefon).

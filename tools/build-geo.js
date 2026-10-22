@@ -47,11 +47,12 @@ const KESUKARAN = {                                                  // heuristi
   beratSaizPemilih: 0.6,                                             // kawasan besar = lebih sukar dipengaruhi
   beratBukanBumi: 0.4                                                // campuran etnik lebih tinggi = lebih sukar
 };
-const LAPISAN_DM = [                                                 // fail DM per negeri (medan: kod_dm, daerah_mengundi, pemilih, kod_dun, dun, kod_parlimen, parlimen, state). Sarawak belum ada.
+const LAPISAN_DM = [                                                 // fail DM per negeri (medan: kod_dm, daerah_mengundi, pemilih, kod_dun, dun, kod_parlimen, parlimen, state). Sarawak: v8.32.
   { fail: 'dm_johor.geojson', negeri: '1' }, { fail: 'dm_kedah.geojson', negeri: '2' }, { fail: 'dm_kelantan.geojson', negeri: '3' },
   { fail: 'dm_melaka.geojson', negeri: '4' }, { fail: 'dm_n9.geojson', negeri: '5' }, { fail: 'dm_pahang.geojson', negeri: '6' },
   { fail: 'dm_pp.geojson', negeri: '7' }, { fail: 'dm_perak.geojson', negeri: '8' }, { fail: 'dm_perlis.geojson', negeri: '9' },
   { fail: 'dm_selangor.geojson', negeri: '10' }, { fail: 'dm_terengganu.geojson', negeri: '11' }, { fail: 'dm_sabah.geojson', negeri: '12' },
+  { fail: 'dm_sarawak.geojson', negeri: '13', csv: 'dm_sarawak_demografi.csv' },   // v8.32: demografi DM (etnik, umur, jantina) daripada CSV
   { fail: 'dm_kl.geojson', negeri: '14' }, { fail: 'dm_labuan.geojson', negeri: '15' }, { fail: 'dm_putrajaya.geojson', negeri: '16' }
 ];
 const PEMILIH_UMUR_ANGGARAN = 'warganegara x peratus umur 18+ (banci 2020)';
@@ -229,12 +230,15 @@ function tambahKesukaran(senarai) {                                  // senarai:
 /* ---- Utama ---- */
 function utama() {
   fs.mkdirSync(KELUAR, { recursive: true });
-  const hir = csv('state_parlimen_dun.csv');
-  const negeriDariP = {};                                            // P.097 -> kod negeri
+  /* v8.32: DM_SAHAJA=13 (atau 13,14) membina semula lapisan DM negeri itu sahaja, tanpa fail mentah lain. */
+  const DMS = process.env.DM_SAHAJA ? process.env.DM_SAHAJA.split(',') : null;
+  const baca = n => JSON.parse(fs.readFileSync(path.join(KELUAR, n), 'utf8'));
+  const hir = DMS ? [] : csv('state_parlimen_dun.csv');
+  const negeriDariP = DMS ? baca('meta.json').negeriDariParlimen : {};                                            // P.097 -> kod negeri
   hir.forEach(r => { if (r.code_parlimen) { negeriDariP[r.code_parlimen] = r.code_state || null; } });
 
-  const cenP = csv('census_parlimen.csv'), cenD = csv('census_dun.csv');
-  const demo = { versi: 1, sumberBanci: 'DOSM banci 2020', pemilihAnggaran: PEMILIH_UMUR_ANGGARAN, kesukaranHeuristik: KESUKARAN, negeri: {}, parlimen: {}, dun: {} };
+  const cenP = DMS ? [] : csv('census_parlimen.csv'), cenD = DMS ? [] : csv('census_dun.csv');
+  const demo = DMS ? baca('demografi.json') : { versi: 1, sumberBanci: 'DOSM banci 2020', pemilihAnggaran: PEMILIH_UMUR_ANGGARAN, kesukaranHeuristik: KESUKARAN, negeri: {}, parlimen: {}, dun: {} };
 
   cenP.forEach(r => { demo.parlimen[r.code_parlimen] = Object.assign({ kod: r.code_parlimen, nama: r.parlimen.replace(/^P\.\d+\s+/, ''), negeri: String(r.code_state) }, entriDemografi(r)); });
   cenD.forEach(r => { demo.dun[r.code_state_dun] = Object.assign({ kod: r.code_state_dun, nama: r.dun.replace(/^N\.\d+\s+/, ''), noDun: r.code_dun, parlimen: r.code_parlimen, negeri: String(r.code_state) }, entriDemografi(r)); });
@@ -247,7 +251,7 @@ function utama() {
     demo.negeri[k] = { kod: String(k), nama: kumpulan[k].nama, luas: Math.round(jum('luas')), penduduk: jum('penduduk'), warganegara: jum('warganegara'), pemilih: jum('pemilih'),
       bumi: pw('bumi'), cina: pw('cina'), india: pw('india'), lain: pw('lain'), umur18: pw('umur18'), kemiskinan: pw('kemiskinan'), pengangguran: pw('pengangguran'), bilParlimen: b.length };
   });
-  ['negeri', 'parlimen', 'dun'].forEach(p => tambahKesukaran(Object.values(demo[p])));
+  if (!DMS) { ['negeri', 'parlimen', 'dun'].forEach(p => tambahKesukaran(Object.values(demo[p]))); }
 
   // Geometri
   const fail = [
@@ -255,10 +259,10 @@ function utama() {
     ['parlimen', 'electoral_0_parlimen.geojson', f => f.properties.code_parlimen, f => f.properties.parlimen.replace(/^P\.\d+\s+/, '')],
     ['dun', 'electoral_1_dun.geojson', f => f.properties.code_state_dun, f => f.properties.dun.replace(/^N\.\d+\s+/, '')]
   ];
-  const meta = { versi: 1, unitPerDarjah: UNIT_PER_DARJAH, asal: { lonMin: LON_MIN, latMax: LAT_MAX, latTengah: LAT_TENGAH },
+  const meta = DMS ? baca('meta.json') : { versi: 1, unitPerDarjah: UNIT_PER_DARJAH, asal: { lonMin: LON_MIN, latMax: LAT_MAX, latTengah: LAT_TENGAH },
     kredit: 'Data sempadan dan banci: Jabatan Perangkaan Malaysia (DOSM), Open Data License. Bukan produk rasmi.', peringkat: {} };
-  let maksX = 0, maksY = 0;
-  fail.forEach(([p, nama, kodFn, namaFn]) => {
+  let maksX = DMS ? meta.viewBox[2] : 0, maksY = DMS ? meta.viewBox[3] : 0;
+  (DMS ? [] : fail).forEach(([p, nama, kodFn, namaFn]) => {
     const gj = JSON.parse(fs.readFileSync(path.join(SUMBER, nama), 'utf8'));
     const fitur = gj.features.map(f => {
       const r = binaFitur(f, p), kod = kodFn(f), pr = f.properties;
@@ -276,8 +280,8 @@ function utama() {
     console.log(p.padEnd(9), String(fitur.length).padStart(4), 'kawasan', String(kb).padStart(5) + ' KB', tanpaDemo.length ? ' tanpa demografi: ' + tanpaDemo.length : '');
   });
   // Lapisan Daerah Mengundi (pemilih sebenar)
-  meta.dm = {};
-  LAPISAN_DM.forEach(L => {
+  if (!DMS) { meta.dm = {}; }
+  LAPISAN_DM.filter(L => !DMS || DMS.indexOf(L.negeri) >= 0).forEach(L => {
     const gj = JSON.parse(fs.readFileSync(path.join(SUMBER, L.fail), 'utf8')), ada = {}, fitur = [], dmDemo = {}, amaran = [];
     const topo = topoDM(gj.features);
     gj.features.forEach((f, fi) => {
@@ -291,6 +295,15 @@ function utama() {
       fitur.push({ id, nama: pr.daerah_mengundi, negeri: L.negeri, parlimen: pr.kod_parlimen, dun: kodDun, bbox: r.bbox, d: r.d });
       dmDemo[id] = { kod: id, nama: pr.daerah_mengundi, negeri: L.negeri, parlimen: pr.kod_parlimen, dun: kodDun, namaDun: pr.dun, namaParlimen: pr.parlimen, pemilih: pr.pemilih };
     });
+    if (L.csv) {                                                     // v8.32: jantina, umur dan etnik setiap DM (bilangan pemilih)
+      csv(L.csv).forEach(r => {
+        const d = dmDemo[r.kod_dm]; if (!d) { amaran.push('CSV: DM tiada dalam geometri ' + r.kod_dm); return; }
+        const n = k => parseInt(r[k], 10) || 0;
+        d.lelaki = n('lelaki'); d.perempuan = n('perempuan');
+        d.umur = [n('umur_18-20'), n('umur_21-30'), n('umur_31-45'), n('umur_46-59'), n('umur_60+')];
+        d.etnik = { melayu: n('etnik_Malay-Melanau-Kedayan'), cina: n('etnik_Chinese'), india: n('etnik_Indian'), iban: n('etnik_Iban'), bidayuh: n('etnik_Bidayuh'), orangUlu: n('etnik_Orang Ulu'), lain: n('etnik_Other') };
+      });
+    }
     const senarai = Object.values(dmDemo), saiz = senarai.map(x => x.pemilih || 0);
     senarai.forEach(x => { x.kesukaran = Math.max(1, Math.min(5, 1 + Math.floor(pctl(saiz, x.pemilih || 0) * 5 - 1e-9))); });
     const fail = path.join(KELUAR, 'dm-' + L.negeri + '.json');
@@ -302,7 +315,7 @@ function utama() {
   });
   meta.viewBox = [0, 0, Math.ceil(maksX), Math.ceil(maksY)];
   meta.negeriDariParlimen = negeriDariP;
-  fs.writeFileSync(path.join(KELUAR, 'demografi.json'), JSON.stringify(demo));
+  if (!DMS) { fs.writeFileSync(path.join(KELUAR, 'demografi.json'), JSON.stringify(demo)); }
   fs.writeFileSync(path.join(KELUAR, 'meta.json'), JSON.stringify(meta));
   console.log('demografi.json', Math.round(fs.statSync(path.join(KELUAR, 'demografi.json')).size / 1024) + ' KB', '· viewBox', meta.viewBox.join(' '));
 }

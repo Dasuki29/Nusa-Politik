@@ -1477,6 +1477,12 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
 
           <fieldset class="form-section">
             <legend><svg class="legend-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>Cawangan anda</legend>
+            <div class="field" id="f-parti" data-jenama-skip role="radiogroup" aria-labelledby="l-parti" style="margin-bottom:14px">
+              <span id="l-parti" style="display:block;font-weight:600;margin-bottom:6px">Parti</span>
+              <label style="margin-right:16px"><input type="radio" name="parti" value="UMNO" checked> UMNO <span class="note" style="font-size:.78rem">(Semenanjung &amp; Sabah)</span></label>
+              <label><input type="radio" name="parti" value="PBB"> PBB <span class="note" style="font-size:.78rem">(Sarawak, dalam GPS)</span></label>
+              <p class="field__hint" id="h-parti" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)" hidden>PBB ialah parti regional Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi, sayap Pemuda dan Wanita sahaja. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.</p>
+            </div>
             <p class="status" id="status" data-state="loading" role="status">
               <span class="status__dot" aria-hidden="true"></span>
               <span class="status__text" id="status-text">Memuatkan data daripada Google Sheets...</span>
@@ -1489,7 +1495,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                 <p class="field__error" id="e-negeri" role="alert"></p>
               </div>
               <div class="field">
-                <label for="s-bahagian"><span class="step" aria-hidden="true">2</span>Bahagian (Parlimen)</label>
+                <label for="s-bahagian" id="l-bahagian"><span class="step" aria-hidden="true">2</span><span id="t-bahagian">Bahagian (Parlimen)</span></label>
                 <select class="select" id="s-bahagian" name="bahagian" aria-describedby="e-bahagian" disabled><option value="">Pilih negeri dahulu</option></select>
                 <p class="field__error" id="e-bahagian" role="alert"></p>
               </div>
@@ -1499,7 +1505,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                 <p class="field__error" id="e-dun" role="alert"></p>
               </div>
               <div class="field">
-                <label for="s-cawangan"><span class="step" aria-hidden="true">4</span>Cawangan (Lokaliti)</label>
+                <label for="s-cawangan"><span class="step" aria-hidden="true">4</span><span id="t-cawangan">Cawangan (Lokaliti)</span></label>
                 <select class="select" id="s-cawangan" name="cawangan" aria-describedby="h-cawangan e-cawangan" disabled><option value="">Pilih DUN dahulu</option></select>
                 <p class="field__error" id="e-cawangan" role="alert"></p>
               </div>
@@ -1599,6 +1605,8 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   <script src="js/sayap.js"></script>
   <script src="js/save.js"></script>
   <script src="js/translations.js"></script>
+  <script src="js/parti.js"></script>
+  <script src="js/translations-parti.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/infra.js"></script>
   <script src="js/slot.js"></script>

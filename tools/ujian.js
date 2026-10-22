@@ -1064,6 +1064,20 @@ ujian('glc: sektor melaraskan ganjaran dan risiko; jawatan lama (spn/lpm/apn) di
   P.tetap({ glc: { lobi: null, jawatan: { id: 'lpm_ahli', nama: 'Ahli Lembaga, Lembaga Pelabuhan Maritim', tahap: 'ahli', mula: 1, tamat: 9999999, gaji: 1500, ip: 3 }, konflik: 0, audit: 0, akhir: '', sejarah: [] } });
   const j = GL.getGLC(S.loadPlayer()).jawatan; sama(j.id, 'pengangkutan_ahli'); betul(/Nusa Pengangkutan Awam/.test(j.nama), j.nama); sama(j.gaji, 1500, 'gaji lama dihormati');
 });
+ujian('parti PBB: sayap (tiada Puteri), profil parti dan penukaran teks', () => {
+  const SY = g.MyPolitikSayap, PT = g.MyPolitikParti, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const k1 = SY.kelayakan('Perempuan', 25, 'PBB'); sama(k1.puteri.boleh, false); sama(k1.wanita.boleh, true); sama(SY.cadangan('Perempuan', 25, 'PBB'), 'wanita');
+  const k2 = SY.kelayakan('Perempuan', 25, 'UMNO'); sama(k2.puteri.boleh, true, 'UMNO tidak berubah'); sama(SY.cadangan('Perempuan', 25), 'puteri');
+  sama(SY.kelayakan('Lelaki', 30, 'PBB').pemuda.boleh, true);
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  sama(h.bahagian.length, 82, '82 DUN = 82 Bahagian PBB'); sama(h.jumlah.cawangan, 887); sama(h.negeri.length, 1);
+  const c = h.bahagian[0].dun[0].cawangan[0], dem = D.tentukanDemografi('Perempuan', 25);
+  const p = S.buildPlayerProfile({ parti: 'PBB', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'wanita', avatar: 'puteri' });
+  sama(p.parti, 'PBB'); sama(p.sayap, 'wanita'); sama(p.negeri, 'Sarawak'); sama(p.bahagian, p.dun, 'Bahagian = DUN');
+  const p2 = S.buildPlayerProfile({ nama: 'Uji', demografik: dem, cawangan: c, sayap: 'puteri', avatar: 'puteri' }); sama(p2.parti, 'UMNO'); sama(p2.sayap, 'puteri');
+  S.savePlayer(p); sama(PT.kini(), 'PBB'); sama(PT.ke('Presiden UMNO'), 'Presiden PBB'); sama(PT.dari('Presiden PBB'), 'Presiden UMNO');
+  S.clearPlayer(); sama(PT.kini(), 'UMNO'); sama(PT.ke('Presiden UMNO'), 'Presiden UMNO');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

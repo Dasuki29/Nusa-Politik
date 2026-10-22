@@ -287,15 +287,23 @@ function mesyuarat() {
   }
 }
 
+let _pbb = null;
+function pbbData() {
+  if (_pbb) { return _pbb; }
+  const h = D.rowsToHierarchy(D.teksKeBaris(require('fs').readFileSync(require('path').join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  h.bahagian.forEach(b => b.cawangan.forEach(c => { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }));
+  return (_pbb = h);
+}
 function daftarBaharu(seed) {
   S.clearPlayer(); EV.reset && EV.reset();
   localStorage.clear();
-  const data = D.getFallbackData();
+  const PBB = process.env.PARTI === 'PBB', parti = PBB ? 'PBB' : 'UMNO';        // v8.32: PARTI=PBB mainkan bot PBB (data/pbb-sarawak.csv)
+  const data = PBB ? pbbData() : D.getFallbackData();
   const negeri = pick(data.negeri), bahagian = pick(negeri.bahagian), dun = pick(bahagian.dun), caw = pick(dun.cawangan);
   const jantina = pick(['Lelaki', 'Perempuan']), umur = 18 + Math.floor(R() * 40);
   const dem = D.tentukanDemografi(jantina, umur);
-  const kel = SYP.kelayakan(jantina, umur), syOk = SYP.SENARAI.filter(k => kel[k].boleh);
-  const prof = S.buildPlayerProfile({ nama: 'Bot ' + seed, demografik: dem, cawangan: caw, avatar: pick(g.MyPolitikAvatar.LIST).kod, sayap: pick(syOk), difficultyLevel: pick(['EASY', 'NORMAL', 'HARDCORE']), tahunAhli: Math.floor(R() * 10) });
+  const kel = SYP.kelayakan(jantina, umur, parti), syOk = SYP.SENARAI.filter(k => kel[k].boleh);
+  const prof = S.buildPlayerProfile({ parti: parti, nama: 'Bot ' + seed, demografik: dem, cawangan: caw, avatar: pick(g.MyPolitikAvatar.LIST).kod, sayap: pick(syOk), difficultyLevel: pick(['EASY', 'NORMAL', 'HARDCORE']), tahunAhli: Math.floor(R() * 10) });
   const r = S.savePlayer(prof); if (!r.ok) { throw new Error('daftar gagal ' + r.ralat); }
   return prof;
 }

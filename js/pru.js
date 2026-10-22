@@ -224,6 +224,7 @@
       if (ip < c.ipMin) { sebab.push('Perlu IP ' + c.ipMin + ' (anda ' + ip + ')'); }
       if (jenis === 'DUN' && !p.dun && !lain) { sebab.push('Wilayah Persekutuan tiada DUN'); }
       if (jenis === 'DUN' && !ada) { sebab.push('Perlu pegang jawatan Cawangan atau lebih'); }
+      if (jenis === 'PARLIMEN' && p.parti === 'PBB') { sebab.push('PBB bertanding kerusi DUN (PRN Sarawak) pada fasa ini; kerusi Parlimen menyusul'); }   // v8.32
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
       var peluang = clamp(0.45 + (ratio - 1) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.004 + (jenis === 'DUN' ? 0.1 : 0), CONFIG.TERIMA_MIN, CONFIG.TERIMA_MAKS);

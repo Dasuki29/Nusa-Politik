@@ -59,13 +59,15 @@
   }
 
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
-  function cadangan(jantina, umur) { var k = kategori(jantina, umur); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
+  /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
+  function katParti(jantina, umur, parti) { var k = kategori(jantina, umur); return parti === 'PBB' && k === 'puteri' ? 'wanita' : k; }
+  function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
   /** Kelayakan semua laluan bagi jantina dan umur: { utama:{boleh,sebab}, pemuda:{...}, ... }. */
-  function kelayakan(jantina, umur) {
-    var k = kategori(jantina, umur), r = {};
+  function kelayakan(jantina, umur, parti) {
+    var k = katParti(jantina, umur, parti), r = {};
     SENARAI.forEach(function (s) {
-      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.' };
+      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: parti === 'PBB' && s === 'puteri' ? 'PBB tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
     });
     return r;
   }
@@ -267,7 +269,7 @@
   }
 
   return {
-    SENARAI: SENARAI, SAYAP: SAYAP, CONFIG: CONFIG, INFO: INFO, ISU: ISU, sah: sah, kategori: kategori, cadangan: cadangan, kelayakan: kelayakan,
+    SENARAI: SENARAI, SAYAP: SAYAP, CONFIG: CONFIG, INFO: INFO, ISU: ISU, sah: sah, kategori: kategori, cadangan: cadangan, kelayakan: kelayakan, katParti: katParti,
     kod: kod, sayapJawatan: sayapJawatan, info: info, sesuaikan: sesuaikan, bebanStres: bebanStres, pemulihanStres: pemulihanStres, kurangSusutAkarUmbi: kurangSusutAkarUmbi,
     TINDAKAN_SAYAP: TINDAKAN_SAYAP, TS_CONFIG: TS_CONFIG, TRANSISI: TRANSISI, WARISAN: WARISAN, senaraiTindakanSayap: senaraiTindakanSayap, jalankanTindakanSayap: jalankanTindakanSayap,
     bonusKuota: bonusKuota, sokonganDilindungi: sokonganDilindungi, notisTransisi: notisTransisi, bentukWarisan: bentukWarisan, bonusWarisan: bonusWarisan, ringkasWarisan: ringkasWarisan, kiraBonusWarisan: kiraBonusWarisan

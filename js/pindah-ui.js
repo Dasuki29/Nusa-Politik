@@ -17,6 +17,7 @@
   function kad(p) {
     try {
       if (p.tamat) { return ''; }
+      if (p.parti === 'PBB') { return '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏠 Pindah Cawangan</h2><p class="note" style="font-size:.78rem">' + sp('Pindah cawangan PBB (antara Daerah Mengundi dan DUN) belum dibuka; menyusul dalam kemas kini seterusnya.') + '</p></section>'; }   // v8.32
       var r = PD.ringkasan(p), C = PD.CONFIG;
       var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏠 Pindah Cawangan</h2>' +
         '<p class="note" style="font-size:.78rem">' + sp('Tukar keahlian ke cawangan lain. Jawatan Cawangan dan Bahagian hilang, sokongan bermula semula. Simulasi sahaja.') + '</p>';

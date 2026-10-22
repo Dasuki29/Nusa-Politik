@@ -138,6 +138,13 @@
    * Pulang { negeri:'10', parlimen:'P.097', dun:'10_N.13', dm:'097/13/01' } (medan null jika tidak ditemui; dm hanya jika dimuatDM).
    */
   function kunciDariCawangan(x) {
+    if (x && x.parti === 'PBB' && x.kod) {                 // v8.32: PBB: kod.parlimen = no DUN (Bahagian), kod.lokaliti = no DM dalam DUN; kod geo sebenar diterbitkan daripada banci DUN
+      var kd = '13_N.' + dua(x.kod.parlimen), dD = data.demografi && data.demografi.dun && data.demografi.dun[kd];
+      var noP = dD ? String(dD.parlimen).replace('P.', '') : null;
+      var km = noP ? tiga(noP) + '/' + dua(x.kod.parlimen) + '/' + dua(x.kod.lokaliti) : null;
+      if (km && !(data.demografi && data.demografi.dm && data.demografi.dm[km])) { km = null; }
+      return { negeri: '13', parlimen: dD ? dD.parlimen : null, dun: dD ? kd : null, dm: km };
+    }
     var par = null, dn = null;
     if (x && x.kod && x.kod.parlimen) { par = x.kod.parlimen; dn = x.kod.dun; }
     else {

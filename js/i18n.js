@@ -102,9 +102,10 @@
   function terjemah(s) {
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();
+    var PT = W.MyPolitikParti; if (PT) { s = PT.dari(s); }                       // v8.32: teks dijenamakan (PBB) -> kunci kamus (UMNO)
     T.NORMAL.forEach(function (n) { s = s.replace(n[0], n[1]); });
     if (/^(Wikipedia|mStar|Laman rasmi UMNO)\b/.test(s)) { return null; }          // tajuk sumber rujukan kekal
-    if (cache.has(s)) { return cache.get(s); }
+    if (cache.has(s)) { var cr = cache.get(s); return cr !== null && PT ? PT.ke(cr) : cr; }
     var r = tepat(s), aw = null;
     if (r === null) { r = peraturan(s); }
     if (r === null) { r = gubah(s); }
@@ -114,7 +115,7 @@
     if (r === null && (aw = s.match(/^([^A-Za-zÀ-ÿ0-9(+\-−]{1,6}\s*)(.+)$/u))) { var d = terjemah(aw[2]); if (d !== null) { r = aw[1] + d; } }   // awalan emoji / simbol
     if (cache.size > 6000) { cache.clear(); }
     cache.set(s, r);
-    return r;
+    return r !== null && PT ? PT.ke(r) : r;
   }
   /** t('branchMeeting') -> teks dalam bahasa semasa. */
   function t(kunci) { var K = lang === 'EN' ? T.EN : T.BM; return K[kunci] !== undefined ? K[kunci] : (T.BM[kunci] !== undefined ? T.BM[kunci] : kunci); }
