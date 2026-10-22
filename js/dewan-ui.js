@@ -59,7 +59,7 @@
       var k = r.kerusi, h = sw;
       h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(L.dewan) + (L.negeri ? ' · ' + esc(L.negeri) : '') + '</h2>';
       if (!k) { return h + '<p class="note">Belum ada keputusan PRU untuk dipaparkan.</p></section>'; }
-      h += '<p class="note">' + esc(r.peranan === 'MP' ? 'Ahli Parlimen' : r.peranan === 'ADUN' ? 'ADUN' : r.peranan === 'EXCO' ? 'EXCO Negeri' : 'Menteri') + (r.portfolio ? ' · ' + esc(r.portfolio) : '') + ' · ' + (r.kerajaan ? (L.gab && L.gab !== 'BN' ? '<b>Kerajaan: ' + esc(L.gab) + '</b>' : '<b>Kerajaan: BN</b>') : (L.gab && L.gab !== 'BN' ? 'Bukan kerajaan ' + esc(L.gab) : 'Bukan kerajaan BN')) + ' · majoriti ' + r.ambang + '/' + k.jumlah + '</p>';
+      h += '<p class="note">' + esc(r.peranan === 'MP' ? 'Ahli Parlimen' : r.peranan === 'ADUN' ? 'ADUN' : r.peranan === 'EXCO' ? (L.gab === 'GPS' ? 'Menteri Negeri' : 'EXCO Negeri') : 'Menteri') + (r.portfolio ? ' · ' + esc(r.portfolio) : '') + ' · ' + (r.kerajaan ? (L.gab && L.gab !== 'BN' ? '<b>Kerajaan: ' + esc(L.gab) + '</b>' : '<b>Kerajaan: BN</b>') : (L.gab && L.gab !== 'BN' ? 'Bukan kerajaan ' + esc(L.gab) : 'Bukan kerajaan BN')) + ' · majoriti ' + r.ambang + '/' + k.jumlah + '</p>';
       h += pecahKerusi(k);
       h += '<p class="note">Kerajaan (' + esc(L.gab || 'BN') + ') <b>' + k.BN + '</b> · PH <b>' + k.PH + '</b> · PN <b>' + k.PN + '</b> · Bebas/lain <b>' + k.LAIN + '</b></p>';
       if (r.kerajaan) { h += bar('Kestabilan gabungan', r.kestabilan, r.kestabilan < 30) + (r.rating !== null ? bar('Penarafan Tadbir Urus', r.rating, r.rating < 30) : ''); }
@@ -69,7 +69,7 @@
       if (r.soalan) { h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🎤 Waktu Pertanyaan Menteri</h2><p class="note"><b>' + esc(r.soalan.yb) + '</b>: ' + esc(r.soalan.soal) + '</p><button type="button" class="btn btn--primary btn--block" data-dewan="soalan">Jawab Soalan</button></section>'; }
       if (r.undi) { h += kadUndi(r.undi); }
       else if (r.bolehBentang && r.kerajaan && !r.tp) { h += kadBentang(r.bentang, L); }
-      else if (!r.bolehBentang) { h += '<section class="card"><p class="note">' + (r.dun ? 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.' : 'Hanya Menteri Penuh, Timbalan Perdana Menteri atau Perdana Menteri boleh membentang RUU dan Bajet.') + '</p></section>'; }
+      else if (!r.bolehBentang) { h += '<section class="card"><p class="note">' + (r.dun ? (L.gab === 'GPS' ? 'Hanya Menteri Negeri boleh membentang Enakmen dan Bajet Negeri.' : 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.') : 'Hanya Menteri Penuh, Timbalan Perdana Menteri atau Perdana Menteri boleh membentang RUU dan Bajet.') + '</p></section>'; }
       if (r.sejarah.length) {
         h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">📜 Rekod Dewan</h2><ul class="dw-sej">' + r.sejarah.slice().reverse().map(function (x) {
           return '<li>' + esc(BULAN[(x.bulan || 1) - 1] + ' ' + x.tahun) + ': ' + esc(x.tajuk || 'Usul Undi Tidak Percaya') + ' — <span class="' + (x.lulus ? 'dw-lulus' : 'dw-gagal') + '">' + (x.jenis === 'tp' ? (x.lulus ? 'selamat' : 'tumbang') : (x.lulus ? 'lulus' : 'gagal')) + '</span> (' + x.sokong + ')</li>';

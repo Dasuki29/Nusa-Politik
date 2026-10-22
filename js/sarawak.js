@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nusa Politik — js/sarawak.js   (v8.33; v9.0 imbangan sayap dalaman; v9.1 Premier & Exco)
+   Nusa Politik — js/sarawak.js   (v8.33; v9.0 imbangan sayap dalaman; v9.1 Premier & Exco; v9.3 rundingan kerusi GPS)
    PRN Sarawak untuk pemain PBB: jadual pilihan raya, kekuatan kerusi DUN mengikut komposisi etnik dan parti lawan mengikut kawasan.
    Data DUN (pemilih, peratus etnik) daripada data/pbb-dun.json (dibina oleh tools/build-pbb.js) disimpan dalam profil (p.dunInfo) semasa pendaftaran.
    v9.0: IMBANGAN SAYAP DALAMAN PBB. Pemain PBB ialah ahli blok Bumiputera atau Pesaka (p.blokPBB, dipilih semasa mendaftar).
@@ -93,10 +93,41 @@
     return /^Presiden$/i.test(String(p.jawatan || '')) || l.some(function (j) { return /^Presiden$/i.test(String(j && j.jawatan || '')); });
   }
   function benih(p, r) { var h = hash(String(p.id || p.nama) + '|premier|' + p.tahun), x = (h % 1000) / 1000; return r === 1 ? ((h >>> 10) % 1000) / 1000 : x; }
+  /* ---------- v9.3: rundingan kerusi GPS ----------
+     Presiden PBB berunding dengan PRS, SUPP dan PDP berapa kerusi PBB bertanding (daripada 82) dalam masa 12 bulan sebelum PRN. Sekali setiap kitaran PRN, kos 3 AP.
+     Kerusi PBB menentukan bahagian kerusi PBB dalam GPS (kongsi = kerusi / 82), maka peluang menuntut Premier. Hubungan gabungan turut berubah.
+     ANDAIAN: 44 kerusi (seimbang, hubungan 0), 50 (tegas, hubungan -10), 38 (beralah, hubungan +10). Bukan data pembahagian kerusi sebenar. */
+  var RUNDING = { AP: 3, BULAN_AWAL: 12, PILIHAN: {
+    seimbang: { id: 'seimbang', nama: 'Seimbang', kerusi: 44, hubungan: 0 },
+    tegas: { id: 'tegas', nama: 'Tegas', kerusi: 50, hubungan: -10 },
+    beralah: { id: 'beralah', nama: 'Beralah', kerusi: 38, hubungan: 10 } } };
+  function modulPRU() { return typeof globalThis !== 'undefined' && globalThis.MyPolitikPRU ? globalThis.MyPolitikPRU : require('./pru.js'); }
+  /** Kitaran PRN semasa: tahun PRN akan datang (atau yang baru berlalu jika belum dijadual semula). */
+  function statusRunding(p) {
+    if (!adalahPresidenPBB(p)) { return null; }
+    var pru = modulPRU().getPRU(p), kitar = parseInt(pru.tahunPRU, 10) || CONFIG.TAHUN_PRN, bulanPRN = parseInt(pru.bulanPRU, 10) || 1;
+    var baki = (kitar * 12 + bulanPRN) - idxBulan(p), sudah = p.rundingGPS && p.rundingGPS.kitar === kitar ? p.rundingGPS : null;
+    var dalamTempoh = baki > 0 && baki <= RUNDING.BULAN_AWAL;
+    return { kitar: kitar, bakiBulan: baki, dalamTempoh: dalamTempoh, sudah: sudah, boleh: dalamTempoh && !sudah && !(pru.aktif), pilihan: RUNDING.PILIHAN };
+  }
+  function runding(pilihan) {
+    var Sv = typeof globalThis !== 'undefined' && globalThis.MyPolitikSave ? globalThis.MyPolitikSave : require('./save.js'), p = Sv.loadPlayer(), st = statusRunding(p), c = RUNDING.PILIHAN[pilihan];
+    if (!st) { return { ok: false, ralat: 'Hanya Presiden PBB boleh berunding kerusi GPS.' }; }
+    if (!c) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
+    if (st.sudah) { return { ok: false, ralat: 'Rundingan kerusi untuk PRN ini sudah selesai.' }; }
+    if (!st.boleh) { return { ok: false, ralat: 'Rundingan dibuka ' + RUNDING.BULAN_AWAL + ' bulan sebelum PRN.' }; }
+    if ((Number(p.ap) || 0) < RUNDING.AP) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    var PR = modulPRU(), pru = PR.getPRU(p); pru.hubunganGabungan = Math.max(0, Math.min(100, (Number(pru.hubunganGabungan) || 50) + c.hubungan));
+    var r = Sv.applyEffects({ ap: -RUNDING.AP }, { kiraTindakan: false, patch: { pru: pru, rundingGPS: { kitar: st.kitar, pilihan: c.id, kerusi: c.kerusi } }, log: { tindakan: 'gps_runding', nama: 'Rundingan kerusi GPS: ' + c.nama + ' (' + c.kerusi + ' kerusi)', peringkat: 'ahli' } });
+    return r && r.ok ? { ok: true, mesej: 'Rundingan GPS selesai: PBB bertanding ' + c.kerusi + ' kerusi' + (c.hubungan ? ' (hubungan gabungan ' + (c.hubungan > 0 ? '+' : '') + c.hubungan + ')' : '') + '.', kerusi: c.kerusi } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
+  }
+
   /** Anggaran kerusi untuk tuntutan Premier. Pulang null jika bukan PBB. */
   function kerusiPremier(p) {
     if (!p || p.parti !== 'PBB') { return null; }
     var gps = Math.round(KERAJAAN.GPS_MIN + benih(p, 0) * (KERAJAAN.GPS_MAKS - KERAJAAN.GPS_MIN)), kongsi = KERAJAAN.KONGSI_MIN + benih(p, 1) * (KERAJAAN.KONGSI_MAKS - KERAJAAN.KONGSI_MIN);
+    var rg = p.rundingGPS && p.rundingGPS.kerusi && (parseInt(p.tahun, 10) || 0) >= p.rundingGPS.kitar && (parseInt(p.tahun, 10) || 0) < p.rundingGPS.kitar + 5;   // v9.3
+    if (rg) { kongsi = p.rundingGPS.kerusi / KERAJAAN.JUMLAH; }
     var parti = Math.round(gps * kongsi);
     return { jumlah: KERAJAAN.JUMLAH, ambang: KERAJAAN.AMBANG, parti: parti, rakan: gps - parti, gabungan: gps, sendiri: parti >= KERAJAAN.AMBANG, kongsi: gps > 0 ? parti / gps : 1 };
   }
@@ -117,5 +148,5 @@
   function ofset(p) { var m = maklumat(p); return m ? m.ofset : 0; }
   return { CONFIG: CONFIG, TAHAP: TAHAP, jadual: jadual, maklumat: maklumat, ofset: ofset,
     BLOK: BLOK, BLOK_CFG: BLOK_CFG, sahBlok: sahBlok, blokLalai: blokLalai, blokPemain: blokPemain, giliran: giliran, sokongan: sokongan, ofsetJawatan: ofsetJawatan, ringkasBlok: ringkasBlok, dekati: dekati,
-    KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan };
+    KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan, RUNDING: RUNDING, statusRunding: statusRunding, runding: runding };
 });

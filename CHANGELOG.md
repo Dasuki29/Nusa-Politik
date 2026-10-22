@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v9.3 (2026-10-22)
+
+Rundingan kerusi GPS dan istilah Menteri Sarawak.
+
+### Baharu
+- **Istilah Menteri:** untuk pemain PBB, "EXCO Negeri" dipaparkan sebagai "Menteri Negeri" dan "EXCO Kanan" sebagai "Menteri Kanan" (lobi, kad Pentadbiran, tab DUN, mesej). Nota ringkas menerangkan bahawa di Sarawak anggota kabinet negeri dipanggil Menteri; elaun dan peraturan sama dengan EXCO Negeri. UMNO tidak berubah.
+- **🤝 Rundingan Kerusi GPS** (tab Profil, Presiden PBB): dalam masa 12 bulan sebelum PRN, pilih Seimbang (44 kerusi, hubungan gabungan 0), Tegas (50 kerusi, hubungan -10) atau Beralah (38 kerusi, hubungan +10). Kos 3 AP, sekali setiap PRN. Bilangan kerusi PBB menentukan bahagian PBB dalam GPS (kerusi / 82) dan peluang menuntut Premier. Tanpa rundingan, bahagian kekal 50% hingga 60% (v9.1).
+- Angka ialah andaian permainan, bukan pembahagian kerusi sebenar. Terjemahan EN, tutorial dan ujian unit dikemas kini.
+
+### Belum
+- Kerusi Parlimen, Pindah Cawangan PBB, parti lain, penamaan MKT/PAU.
+
 ## v9.2 (2026-10-22)
 
 Portfolio menteri Sarawak untuk PBB.

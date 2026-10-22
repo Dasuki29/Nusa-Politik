@@ -1161,6 +1161,27 @@ ujian('PBB v9.2: portfolio Menteri Sarawak untuk lobi DUN (UMNO kekal portfolio 
   P.daftar({}); betul(KB.bukaLobi('DUN').ok); sn = KB.senaraiPortfolio(S.loadPlayer()); betul(sn.length === 5 && sn.every((x) => /^exco_/.test(x.id)), 'UMNO: 5 portfolio EXCO umum');
   S.clearPlayer();
 });
+ujian('PBB v9.3: rundingan kerusi GPS (Presiden PBB, 12 bulan sebelum PRN) dan label Menteri Negeri', () => {
+  const SW = g.MyPolitikSarawak, KB = g.MyPolitikKabinet, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }));
+  P.tetap({ jawatan: 'Presiden', ap: 10 });
+  let p = S.loadPlayer(); const pru = PR.getPRU(p); sama(SW.runding('seimbang').ok, false, 'belum dalam tempoh 12 bulan atau bukan masanya');
+  P.tetap({ tahun: pru.tahunPRU - 1, bulan: 12 }); p = S.loadPlayer(); let st = SW.statusRunding(p);
+  const dlm = st.bakiBulan > 0 && st.bakiBulan <= 12; if (!dlm) { P.tetap({ tahun: pru.tahunPRU, bulan: Math.max(1, (parseInt(pru.bulanPRU, 10) || 1) - 1) }); st = SW.statusRunding(S.loadPlayer()); }
+  betul(st.boleh, 'dalam tempoh rundingan');
+  const hub0 = Number(PR.getPRU(S.loadPlayer()).hubunganGabungan) || 50;
+  const r = SW.runding('tegas'); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(p.rundingGPS.kerusi, 50); sama(p.ap, 7); sama(Number(PR.getPRU(p).hubunganGabungan), Math.max(0, hub0 - 10));
+  sama(SW.runding('beralah').ok, false, 'sekali setiap PRN');
+  const kt = SW.kerusiPremier(Object.assign({}, p, { tahun: p.rundingGPS.kitar })); sama(kt.parti, Math.round(kt.gabungan * 50 / 82), 'kerusi ikut keputusan rundingan');
+  const pb = Object.assign({}, p, { rundingGPS: { kitar: p.rundingGPS.kitar, pilihan: 'beralah', kerusi: 38 }, tahun: p.rundingGPS.kitar }); betul(SW.kerusiPremier(pb).parti < kt.parti, 'beralah = kerusi PBB kurang');
+  sama(SW.statusRunding(Object.assign({}, p, { jawatan: 'Ahli', jawatanList: [] })), null, 'bukan Presiden');
+  sama(KB.ringkasan(Object.assign({}, p, { parti: 'PBB' })).tahapNama, '');
+  P.tetap({ tahun: 2027 }); KB.bukaLobi('DUN'); const sn = KB.senaraiPortfolio(S.loadPlayer()); sama(sn[0].tahapNama, 'Menteri Negeri');
+  S.clearPlayer(); P.daftar({}); KB.bukaLobi('DUN'); sama(KB.senaraiPortfolio(S.loadPlayer())[0].tahapNama, 'EXCO Negeri', 'UMNO kekal EXCO');
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

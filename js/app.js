@@ -1050,9 +1050,23 @@
     return h;
   }
 
+  /** v9.3: Rundingan Kerusi GPS (Presiden PBB, 12 bulan sebelum PRN). */
+  function kadGPS(p) {
+    var SW = W.MyPolitikSarawak, st = SW && SW.statusRunding ? SW.statusRunding(p) : null; if (!st) { return ''; }
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🤝 Rundingan Kerusi GPS</h2>' +
+      '<p class="note" style="font-size:.78rem">Sebagai Presiden, anda berunding dengan rakan GPS berapa kerusi PBB bertanding (daripada 82). Lebih banyak kerusi menaikkan bahagian PBB dalam GPS dan peluang menuntut Premier, tetapi boleh menjejaskan hubungan gabungan.</p>';
+    if (st.sudah) { return h + '<div class="kv"><span>Keputusan rundingan</span><b>' + esc(SW.RUNDING.PILIHAN[st.sudah.pilihan] ? SW.RUNDING.PILIHAN[st.sudah.pilihan].nama : '') + ' · ' + st.sudah.kerusi + ' kerusi</b></div></section>'; }
+    if (!st.dalamTempoh) { return h + '<p class="note">Rundingan dibuka ' + SW.RUNDING.BULAN_AWAL + ' bulan sebelum PRN (' + Math.max(0, st.bakiBulan - SW.RUNDING.BULAN_AWAL) + ' bulan lagi).</p></section>'; }
+    var o = SW.RUNDING.PILIHAN;
+    h += ['seimbang', 'tegas', 'beralah'].map(function (k) {
+      var c = o[k]; return '<button type="button" class="btn btn--sm ' + (k === 'seimbang' ? 'btn--primary' : 'btn--ghost') + '" data-act="gps-runding" data-pil="' + k + '" data-fk="gps-' + k + '"' + (st.boleh ? '' : ' disabled') + '>' + esc(c.nama) + ': ' + c.kerusi + ' kerusi' + (c.hubungan ? ' (hubungan ' + (c.hubungan > 0 ? '+' : '') + c.hubungan + ')' : '') + '</button> ';
+    }).join('') + '<p class="note" style="font-size:.78rem">Kos ' + SW.RUNDING.AP + ' AP, sekali setiap PRN. Angka ialah andaian permainan, bukan pembahagian kerusi sebenar.</p></section>';
+    return h;
+  }
+
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
@@ -1602,6 +1616,7 @@
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
+    else if (act === 'gps-runding') { var gr = W.MyPolitikSarawak.runding(t.getAttribute('data-pil')); render(); toast(gr.ok ? gr.mesej : gr.ralat, gr.ok ? 'ok' : 'ralat'); }
     else if (act === 'blok-dekati') { var bd = W.MyPolitikSarawak.dekati(); render(); toast(bd.ok ? bd.mesej : bd.ralat, bd.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
@@ -1812,7 +1827,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'blok-dekati': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

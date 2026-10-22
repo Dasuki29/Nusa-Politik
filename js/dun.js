@@ -108,9 +108,9 @@
   function sesiKunci(p) { return CONFIG.SESI.indexOf(parseInt(p.bulan, 10)) >= 0 ? (parseInt(p.tahun, 10) || 0) * 100 + parseInt(p.bulan, 10) : 0; }
   function senaraiBentang(p) {
     var d = getSidang(p), sebab = '', k = kerusi(p);
-    if (!aktif(p)) { sebab = 'Anda bukan ADUN atau EXCO Negeri.'; }
+    if (!aktif(p)) { sebab = p.parti === 'PBB' ? 'Anda bukan ADUN atau Menteri Negeri.' : 'Anda bukan ADUN atau EXCO Negeri.'; }
     else if (!k) { sebab = 'Belum ada keputusan PRN.'; }
-    else if (!bolehBentang(p)) { sebab = 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.'; }
+    else if (!bolehBentang(p)) { sebab = p.parti === 'PBB' ? 'Hanya Menteri Negeri boleh membentang Enakmen dan Bajet Negeri.' : 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.'; }
     else if (!k.kerajaanBN) { sebab = 'Parti anda bukan kerajaan negeri.'; }
     else if (d.undi) { sebab = 'Satu undian sedang berjalan.'; }
     else if (d.tp) { sebab = 'Usul Undi Tidak Percaya sedang berlangsung.'; }

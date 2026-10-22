@@ -217,7 +217,7 @@
       var sebab = [], kosMyr = S().kosSebenar ? S().kosSebenar(p, d.myr) : d.myr;     // v8.0: kos ikut tahap kesukaran
       if ((Number(p.ip) || 0) < d.ip) { sebab.push('IP tidak cukup (perlu ' + d.ip + ')'); }
       if ((Number(p.myr) || 0) < kosMyr) { sebab.push('Dana tidak cukup (perlu RM ' + kosMyr.toLocaleString('ms-MY') + ')'); }
-      return { id: d.id, nama: d.nama, tahap: d.tahap, tahapNama: TAHAP[d.tahap].nama, ip: d.ip, myr: kosMyr, peluang: Math.round(peluang(p, d) * 100),
+      return { id: d.id, nama: d.nama, tahap: d.tahap, tahapNama: namaTahap(p, d.tahap), ip: d.ip, myr: kosMyr, peluang: Math.round(peluang(p, d) * 100),
         elaun: TAHAP[d.tahap].elaun, risiko: d.risiko, boleh: !sebab.length, sebab: sebab.join('; ') };
     });
   }
@@ -262,6 +262,8 @@
   }
   /* ---------- v7.63: Menteri Besar / Ketua Menteri ---------- */
   var KETUA_MENTERI = ['melaka', 'pulau pinang', 'sabah', 'sarawak'];
+  /** v9.3: di Sarawak anggota kabinet negeri dipanggil Menteri (bukan EXCO). Tahap dalaman kekal EXCO_NEGERI; hanya label berubah. */
+  function namaTahap(p, tahap) { var t = TAHAP[tahap]; if (!t) { return ''; } return p && p.parti === 'PBB' && tahap === 'EXCO_NEGERI' ? 'Menteri Negeri' : t.nama; }
   function SWk() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function labelKetua(p) { if (p && p.parti === 'PBB') { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
   /** Syarat: lobi DUN dibuka (parti membentuk kerajaan negeri), pemain ADUN, Pengerusi Badan Perhubungan Negeri (induk), bukan Sarawak. */
@@ -327,15 +329,15 @@
     }
     if (PR && PR.getPRU) { var pru = PR.getPRU(p); pru.hubunganGabungan = clamp((Number(pru.hubunganGabungan) || 50) - 10, 0, 100); S().applyEffects({}, { kiraTindakan: false, patch: { pru: pru } }); }
     p = S().loadPlayer(); k = getKabinet(p);
-    var rs = lantikDi(p, k, 'EXCO_NEGERI', 'EXCO Kanan', 'lantik_exco_kanan');
-    return { ok: !!(rs && rs.ok), dilantik: false, mesej: 'Rakan gabungan menolak tuntutan ' + m.label + '. Hubungan gabungan -10 dan anda ditawarkan EXCO Kanan.' };
+    var kn = p.parti === 'PBB' ? 'Menteri Kanan' : 'EXCO Kanan', rs = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
+    return { ok: !!(rs && rs.ok), dilantik: false, mesej: 'Rakan gabungan menolak tuntutan ' + m.label + '. Hubungan gabungan -10 dan anda ditawarkan ' + kn + '.' };
   }
   /** Terima terus EXCO Kanan tanpa menuntut (tiada risiko). */
   function terimaExcoKanan() {
     var p = S().loadPlayer(), k = getKabinet(p), sy = syaratMB(p);
     if (!sy.boleh) { return { ok: false, ralat: sy.sebab }; }
-    var res = lantikDi(p, k, 'EXCO_NEGERI', 'EXCO Kanan', 'lantik_exco_kanan');
-    return { ok: !!(res && res.ok), mesej: 'Dilantik sebagai EXCO Kanan. Elaun bulanan bermula.' };
+    var kn = p.parti === 'PBB' ? 'Menteri Kanan' : 'EXCO Kanan', res = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
+    return { ok: !!(res && res.ok), mesej: 'Dilantik sebagai ' + kn + '. Elaun bulanan bermula.' };
   }
   function lepaskanLobi() {
     var p = S().loadPlayer(), k = getKabinet(p);
@@ -501,7 +503,7 @@
 
   function ringkasan(p) {
     var k = getKabinet(p), t = TAHAP[k.roleLevel] || null;
-    return { hasGovernmentRole: k.hasGovernmentRole, roleLevel: k.roleLevel, tahapNama: t ? t.nama : '', portfolioName: k.portfolioName, governanceRating: k.governanceRating,
+    return { hasGovernmentRole: k.hasGovernmentRole, roleLevel: k.roleLevel, tahapNama: t ? namaTahap(p, k.roleLevel) : '', portfolioName: k.portfolioName, governanceRating: k.governanceRating,
       tekananPolitik: k.tekananPolitik, elaun: t ? t.elaun : null, bulanBerjawatan: k.bulanBerjawatan, ratingRendah: k.ratingRendah, lobi: k.lobi, acara: acaraSemasa(p),
       sejarah: k.sejarah, portfolio: senaraiPortfolio(p),
       kpiLabel: labelKPI(k.governanceRating), ratingLalu: k.ratingLalu, arah: k.governanceRating - k.ratingLalu, popularitiNasional: k.popularitiNasional, risikoRombak: k.risikoRombak,
