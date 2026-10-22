@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v9.1 (2026-10-22)
+
+Kerajaan negeri Sarawak: Premier dan Exco untuk PBB.
+
+### Baharu
+- **Peluang kerajaan negeri:** selepas menang kerusi DUN, peluang kerajaan negeri dibentuk 60% hingga 90% (GPS dominan; andaian). UMNO tidak berubah.
+- **Premier:** Presiden PBB yang menjadi ADUN boleh menuntut Premier (2 AP). Kerusi GPS dianggar 70 hingga 78 daripada 82 (benih tetap), PBB memegang 50% hingga 60% kerusi GPS, ambang 42. Peluang dilaraskan: blok dalam giliran +5%, bukan giliran -5%, sokongan antara blok melebihi 30 menambah 0.2% setiap mata. Gagal: hubungan gabungan -10 dan ditawarkan EXCO Kanan.
+- **Exco negeri:** pemain PBB lain boleh melobi portfolio Exco seperti biasa (senarai portfolio masih umum, belum nama sebenar Sarawak).
+- **Tab DUN:** memaparkan Dewan Undangan Negeri Sarawak (82 kerusi, label GPS dan Premier). Pembangkang ialah anggaran: PH separuh, selebihnya Lain.
+- Terjemahan EN, tutorial dan ujian unit (termasuk ujian hujung ke hujung tuntut Premier) dikemas kini.
+
+### Belum
+- Kerusi Parlimen, rundingan kerusi GPS, Pindah Cawangan PBB, parti lain, nama portfolio Sarawak, penamaan MKT/PAU.
+
 ## v9.0 (2026-10-22)
 
 Modul politik Sarawak bermula siri v9.x. Imbangan Bumiputera dan Pesaka dalam PBB.

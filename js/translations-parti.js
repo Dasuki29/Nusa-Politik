@@ -60,6 +60,11 @@
   ["Dekati blok Bumiputera (3 AP, RM 1,500)", "Approach the Bumiputera bloc (3 AP, RM 1,500)"],
   ["Dekati blok Pesaka (3 AP, RM 1,500)", "Approach the Pesaka bloc (3 AP, RM 1,500)"],
   ["Sudah dilakukan bulan ini.", "Already done this month."],
-  ["Anda mendekati pemimpin blok {x}. Sokongan antara blok {a}/100 (-3 AP, -RM 1,500).", "You approach the {x} bloc's leaders. Inter-bloc support {a}/100 (-3 AP, -RM 1,500)."]
+  ["Anda mendekati pemimpin blok {x}. Sokongan antara blok {a}/100 (-3 AP, -RM 1,500).", "You approach the {x} bloc's leaders. Inter-bloc support {a}/100 (-3 AP, -RM 1,500)."],
+  ["Kerajaan: GPS", "Government: GPS"],
+  ["Kerajaan (GPS)", "Government (GPS)"],
+  ["Bukan kerajaan GPS", "Not a GPS government"],
+  ["Hanya Presiden PBB boleh menuntut jawatan Premier.", "Only the PBB President can claim the Premier post."],
+  ["Rakan gabungan GPS turut menuntut jawatan itu.", "GPS coalition partners also claim the post."]
   ]);
 })();

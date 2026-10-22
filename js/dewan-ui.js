@@ -59,9 +59,9 @@
       var k = r.kerusi, h = sw;
       h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(L.dewan) + (L.negeri ? ' · ' + esc(L.negeri) : '') + '</h2>';
       if (!k) { return h + '<p class="note">Belum ada keputusan PRU untuk dipaparkan.</p></section>'; }
-      h += '<p class="note">' + esc(r.peranan === 'MP' ? 'Ahli Parlimen' : r.peranan === 'ADUN' ? 'ADUN' : r.peranan === 'EXCO' ? 'EXCO Negeri' : 'Menteri') + (r.portfolio ? ' · ' + esc(r.portfolio) : '') + ' · ' + (r.kerajaan ? '<b>Kerajaan: BN</b>' : 'Bukan kerajaan BN') + ' · majoriti ' + r.ambang + '/' + k.jumlah + '</p>';
+      h += '<p class="note">' + esc(r.peranan === 'MP' ? 'Ahli Parlimen' : r.peranan === 'ADUN' ? 'ADUN' : r.peranan === 'EXCO' ? 'EXCO Negeri' : 'Menteri') + (r.portfolio ? ' · ' + esc(r.portfolio) : '') + ' · ' + (r.kerajaan ? (L.gab && L.gab !== 'BN' ? '<b>Kerajaan: ' + esc(L.gab) + '</b>' : '<b>Kerajaan: BN</b>') : (L.gab && L.gab !== 'BN' ? 'Bukan kerajaan ' + esc(L.gab) : 'Bukan kerajaan BN')) + ' · majoriti ' + r.ambang + '/' + k.jumlah + '</p>';
       h += pecahKerusi(k);
-      h += '<p class="note">Kerajaan (BN) <b>' + k.BN + '</b> · PH <b>' + k.PH + '</b> · PN <b>' + k.PN + '</b> · Bebas/lain <b>' + k.LAIN + '</b></p>';
+      h += '<p class="note">Kerajaan (' + esc(L.gab || 'BN') + ') <b>' + k.BN + '</b> · PH <b>' + k.PH + '</b> · PN <b>' + k.PN + '</b> · Bebas/lain <b>' + k.LAIN + '</b></p>';
       if (r.kerajaan) { h += bar('Kestabilan gabungan', r.kestabilan, r.kestabilan < 30) + (r.rating !== null ? bar('Penarafan Tadbir Urus', r.rating, r.rating < 30) : ''); }
       h += '<p class="note" style="font-size:.78rem">Simulasi: angka kerusi dianggar daripada keputusan PRU dalam permainan.</p></section>';
 

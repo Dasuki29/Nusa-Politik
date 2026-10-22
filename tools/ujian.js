@@ -1119,6 +1119,33 @@ ujian('PBB v9.0: imbangan blok Bumiputera/Pesaka (giliran Presiden, ofset jawata
   const pU = S.loadPlayer(); pU.parti = 'UMNO'; sama(SW.ofsetJawatan(pU, { kod: 'presiden', peringkat: 'pusat' }), 0, 'bukan PBB');
   S.clearPlayer();
 });
+ujian('PBB v9.1: Premier Sarawak (hanya Presiden PBB, kerusi GPS, peluang ikut blok, kerajaan GPS dominan)', () => {
+  const SW = g.MyPolitikSarawak, KB = g.MyPolitikKabinet, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }));
+  let p = S.loadPlayer();
+  sama(SW.peluangKerajaan(10), 0.6, 'lantai 60%'); sama(SW.peluangKerajaan(90), 0.9, 'siling 90%'); sama(SW.peluangKerajaan(70), 0.75);
+  const k = SW.kerusiPremier(p); sama(k.jumlah, 82); sama(k.ambang, 42); betul(k.gabungan >= 70 && k.gabungan <= 78, 'GPS 70-78'); sama(k.parti + k.rakan, k.gabungan);
+  const k2 = SW.kerusiPremier(p); sama(k2.parti, k.parti, 'benih tetap');
+  sama(SW.kerusiPremier(Object.assign({}, p, { parti: 'UMNO' })), null);
+  sama(KB.maklumatMB(p).label, 'Premier');
+  betul(SW.sebabPremier(p).length > 0, 'bukan Presiden ditolak');
+  sama(SW.sebabPremier(Object.assign({}, p, { jawatan: 'Presiden' })), '');
+  P.tetap({ tahun: 2026 }); const pg = Object.assign({}, S.loadPlayer(), { jawatan: 'Presiden' });
+  const a1 = SW.pelarasPremier(pg); sama(a1, 0.05, 'blok giliran +5%, sokongan 30 = 0');
+  const pp = Object.assign({}, pg, { blokPBB: 'pesaka' }); sama(SW.pelarasPremier(pp), -0.05, 'bukan giliran -5%');
+  const tinggi = SW.pelarasPremier(Object.assign({}, pg, { blokSokong: { nilai: 80, idx: (parseInt(pg.tahun, 10) * 12 + parseInt(pg.bulan, 10)), dekati: 0 } })); betul(tinggi > a1, 'sokongan tinggi menambah peluang');
+  // hujung-ke-hujung: Presiden PBB + ADUN + lobi DUN
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }));
+  P.tetap({ tahun: 2027, jawatan: 'Presiden', ap: 10, reputasi: 70, pru: Object.assign({}, g.MyPolitikPRU.getPRU(S.loadPlayer()), { status: { jenis: 'ADUN', kerusi: 'N.01', sejakTahun: 2027, sejakBulan: 1, kerajaan: true } }) });
+  betul(KB.bukaLobi('DUN').ok, 'lobi dibuka');
+  let mb = KB.maklumatMB(S.loadPlayer()); betul(mb.boleh, mb.sebab); sama(mb.label, 'Premier'); betul(mb.peluang >= 10 && mb.peluang <= 100);
+  let tm = null; for (let i = 0; i < 40 && !(tm && tm.dilantik); i++) { P.tetap({ ap: 10 }); const kk = KB.getKabinet(S.loadPlayer()); if (kk.hasGovernmentRole) { break; } tm = KB.tuntutMB(); }
+  betul(tm && tm.ok, 'tuntut berjalan'); const kk2 = KB.getKabinet(S.loadPlayer()); betul(kk2.hasGovernmentRole, 'dapat jawatan kerajaan');
+  betul(/Premier|EXCO/.test(kk2.portfolioName), kk2.portfolioName);
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

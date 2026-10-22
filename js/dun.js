@@ -85,6 +85,11 @@
   function aktif(p) { return !!p && !p.tamat && (statusADUN(p) || exco(p)); }
   function bolehBentang(p) { return exco(p); }
   function kerusi(p) {
+    if (p && p.parti === 'PBB') {                                                // v9.1: Dewan Undangan Negeri Sarawak (GPS)
+      var SWd = root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null), Pd = PRU(), pr = Pd && Pd.getPRU ? Pd.getPRU(p) : null;
+      var st = pr ? [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN'; })[0] : null;
+      return SWd && SWd.kerusiDewan ? SWd.kerusiDewan(p, st ? st.kerajaan : false) : null;
+    }
     var A = PAP(); if (!A || !A.kerusiGabungan) { return null; }
     var k = A.kerusiGabungan(p); if (!k && A.kemaskiniKerusi) { try { A.kemaskiniKerusi(p); k = A.kerusiGabungan(S().loadPlayer()); } catch (e) { /* abaikan */ } }
     var d = k && k.dun; if (!d) { return null; }
@@ -311,7 +316,7 @@
     return { aktif: aktif(p), dun: true, peranan2: statusADUN(p) ? 'ADUN' : 'EXCO', kerusi: k, ambang: k ? k.ambang : 0, kerajaan: adaKerajaan(p), kestabilan: aktif(p) ? kestabilan(p) : null, rating: rating(p),
       menteri: exco(p), bolehBentang: bolehBentang(p), bentang: sb, undi: undiSemasa(p), tp: tpSemasa(p), soalan: soalanSemasa(p), sejarah: d.sejarah || [],
       peranan: statusADUN(p) ? 'ADUN' : 'EXCO', portfolio: exco(p) ? (peranKabinet(p).portfolioName || '') : '',
-      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: 'Menteri Besar', tab: 'DUN', negeri: p.negeri || '' } };
+      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: p.parti === 'PBB' ? 'Premier' : 'Menteri Besar', gab: p.parti === 'PBB' ? 'GPS' : 'BN', tab: 'DUN', negeri: p.negeri || '' } };
   }
 
   return {

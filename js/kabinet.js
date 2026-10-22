@@ -249,10 +249,18 @@
   }
   /* ---------- v7.63: Menteri Besar / Ketua Menteri ---------- */
   var KETUA_MENTERI = ['melaka', 'pulau pinang', 'sabah', 'sarawak'];
-  function labelKetua(p) { var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
+  function SWk() { return modul('MyPolitikSarawak', 'sarawak.js'); }
+  function labelKetua(p) { if (p && p.parti === 'PBB') { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
   /** Syarat: lobi DUN dibuka (parti membentuk kerajaan negeri), pemain ADUN, Pengerusi Badan Perhubungan Negeri (induk), bukan Sarawak. */
   function syaratMB(p) {
     var k = getKabinet(p), PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), sebab = '';
+    if (p && p.parti === 'PBB') {                                                // v9.1: Premier Sarawak: ADUN dan Presiden PBB
+      var W9 = SWk();
+      if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
+      else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
+      else if (W9 && W9.sebabPremier) { sebab = W9.sebabPremier(p); }
+      return { boleh: !sebab, sebab: sebab };
+    }
     if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
     else if (String(p.negeri || '').toLowerCase() === 'sarawak') { sebab = 'UMNO tiada cawangan di Sarawak.'; }
     else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
@@ -265,6 +273,7 @@
   }
   /** Anggaran kerusi parti sendiri dalam DUN: bahagian rakan dalam BN ditentukan benih tetap (andaian 10%-30% kerusi BN). */
   function kerusiMB(p) {
+    if (p && p.parti === 'PBB') { var W9 = SWk(); return W9 && W9.kerusiPremier ? W9.kerusiPremier(p) : null; }   // v9.1
     var A = modul('NusaPaparan', 'paparan.js'), g = A && A.kerusiGabungan ? A.kerusiGabungan(p) : null, d = g && g.dun;
     if (!d && A && A.kemaskiniKerusi) { try { A.kemaskiniKerusi(p); g = A.kerusiGabungan(S().loadPlayer()); d = g && g.dun; } catch (e) { d = null; } }
     if (!d) { return null; }
@@ -276,7 +285,8 @@
     var k = kerusiMB(p), PR = modul('MyPolitikPRU', 'pru.js'), hub = Number(PR && PR.getPRU ? PR.getPRU(p).hubunganGabungan : 50) || 50;
     if (!k) { return 0.5; }
     if (k.sendiri) { return 1; }
-    return clamp(0.4 + (k.kongsi - 0.5) * 1.2 + (hub - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002, 0.1, 0.9);
+    var W9 = p && p.parti === 'PBB' ? SWk() : null, adj = W9 && W9.pelarasPremier ? W9.pelarasPremier(p) : 0;       // v9.1: imbangan blok PBB
+    return clamp(0.4 + (k.kongsi - 0.5) * 1.2 + (hub - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002 + adj, 0.1, 0.9);
   }
   function maklumatMB(p) {
     var sy = syaratMB(p), k = kerusiMB(p);

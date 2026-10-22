@@ -653,7 +653,8 @@
         bonus = jenis === 'DUN' ? clamp(bonus, 150, 250) : clamp(bonus, 220, 300);
         if (a.calonImport && !sekunder) { bonus = Math.round(bonus * (CONFIG.KERUSI_LAIN.TAHAP[a.calonImport.tahap] || { bonus: 1 }).bonus); }   // v8.17: kerusi lebih sukar = ganjaran lebih tinggi
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
-        g.kerajaan = r() < clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8); kk.kerajaan = g.kerajaan;
+        var SWg = p.parti === 'PBB' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
+        g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8)); kk.kerajaan = g.kerajaan;
         if (!sekunder) {
           var siasat = a.siasatSprm || 0;
           if (siasat > 0 && r() < clamp(0.5 + 0.2 * (siasat - 1), 0.5, 0.9)) { g.petisyen = true; }
