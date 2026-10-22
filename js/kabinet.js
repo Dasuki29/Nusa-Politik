@@ -64,6 +64,17 @@
       { id: 'exco_pelancong', tahap: 'EXCO_NEGERI', nama: 'EXCO Pelancongan & Kebudayaan', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
       { id: 'exco_kewangan',  tahap: 'EXCO_NEGERI', nama: 'EXCO Kewangan Negeri', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi' }
     ],
+    /* v9.2: portfolio kabinet negeri Sarawak (untuk pemain PBB). Nama kementerian ialah label simulasi; IP/kos/peluang ialah andaian permainan. */
+    SARAWAK: [
+      { id: 'sw_kesihatan',  tahap: 'EXCO_NEGERI', nama: 'Menteri Kesihatan Awam, Perumahan & Kerajaan Tempatan Sarawak', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
+      { id: 'sw_pembangunan_sosial', tahap: 'EXCO_NEGERI', nama: 'Menteri Pembangunan Sosial & Perbandaran Sarawak', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
+      { id: 'sw_pendidikan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pendidikan, Inovasi & Pembangunan Bakat Sarawak', ip: 110, myr: 1800, asas: 0.70, risiko: 'rendah' },
+      { id: 'sw_pengangkutan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pengangkutan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
+      { id: 'sw_utiliti',    tahap: 'EXCO_NEGERI', nama: 'Menteri Utiliti & Telekomunikasi Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
+      { id: 'sw_pelancongan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pelancongan, Industri Kreatif & Seni Persembahan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
+      { id: 'sw_sumber_asli', tahap: 'EXCO_NEGERI', nama: 'Menteri Sumber Asli & Pembangunan Bandar Sarawak', ip: 160, myr: 3000, asas: 0.50, risiko: 'sederhana' },
+      { id: 'sw_kewangan',   tahap: 'EXCO_NEGERI', nama: 'Menteri Kewangan Sarawak', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi' }
+    ],
     PARLIMEN: [
       { id: 'tm_pendidikan', tahap: 'TIMBALAN_MENTERI', nama: 'Timbalan Menteri Pendidikan', ip: 250, myr: 4000, asas: 0.80, risiko: 'rendah' },
       { id: 'tm_kesihatan',  tahap: 'TIMBALAN_MENTERI', nama: 'Timbalan Menteri Kesihatan', ip: 280, myr: 4500, asas: 0.70, risiko: 'sederhana' },
@@ -88,7 +99,7 @@
   }
   var DARI_CSV = binaParlimen(); if (DARI_CSV) { PORTFOLIO.PARLIMEN = DARI_CSV; }
   function cariPortfolio(id) {
-    var s = PORTFOLIO.DUN.concat(PORTFOLIO.PARLIMEN);
+    var s = PORTFOLIO.DUN.concat(PORTFOLIO.SARAWAK, PORTFOLIO.PARLIMEN);
     for (var i = 0; i < s.length; i++) { if (s[i].id === id) { return s[i]; } }
     return null;
   }
@@ -188,8 +199,10 @@
     return clamp(def.asas + ((Number(p.ip) || 0) - def.ip) / (def.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003, 0.1, 0.95);
   }
   /** v7.42: Parlimen: hanya portfolio dengan IP perlu <= IP pemain; paling HAMPIR dengan IP pemain dahulu, maks HAD_PILIHAN (rawak tetap bagi IP sama). */
+  /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */
+  function kolamSumber(p, sumber) { return sumber === 'DUN' && p && p.parti === 'PBB' ? PORTFOLIO.SARAWAK : PORTFOLIO[sumber]; }
   function kolamPaparan(p, sumber) {
-    var semua = PORTFOLIO[sumber];
+    var semua = kolamSumber(p, sumber);
     if (sumber !== 'PARLIMEN' || !DARI_CSV) { return semua; }
     var ip = Number(p.ip) || 0, rg = S().rngBerbenih(String(p.id) + '|kabinet|' + p.tahun), kunci = {};
     semua.forEach(function (d) { kunci[d.id] = rg(); });
@@ -211,7 +224,7 @@
   function lobiPortfolio(id, o) {
     var p = S().loadPlayer(), k = getKabinet(p), d = cariPortfolio(id), r = rng(o);
     if (!k.lobi || k.lobi.baki <= 0) { return { ok: false, ralat: 'Lobi tidak tersedia.' }; }
-    if (!d || PORTFOLIO[k.lobi.sumber].indexOf(d) < 0) { return { ok: false, ralat: 'Portfolio tidak tersedia.' }; }
+    if (!d || kolamSumber(p, k.lobi.sumber).indexOf(d) < 0) { return { ok: false, ralat: 'Portfolio tidak tersedia.' }; }
     var s = senaraiPortfolio(p).filter(function (x) { return x.id === id; })[0];
     if (!s) { return { ok: false, ralat: 'Portfolio tidak tersedia pada IP anda sekarang.' }; }
     if (!s.boleh) { return { ok: false, ralat: s.sebab }; }

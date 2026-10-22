@@ -65,6 +65,14 @@
   ["Kerajaan (GPS)", "Government (GPS)"],
   ["Bukan kerajaan GPS", "Not a GPS government"],
   ["Hanya Presiden PBB boleh menuntut jawatan Premier.", "Only the PBB President can claim the Premier post."],
-  ["Rakan gabungan GPS turut menuntut jawatan itu.", "GPS coalition partners also claim the post."]
+  ["Rakan gabungan GPS turut menuntut jawatan itu.", "GPS coalition partners also claim the post."],
+  ["Menteri Kesihatan Awam, Perumahan & Kerajaan Tempatan Sarawak", "Sarawak Minister of Public Health, Housing & Local Government"],
+  ["Menteri Pembangunan Sosial & Perbandaran Sarawak", "Sarawak Minister of Social Development & Urbanisation"],
+  ["Menteri Pendidikan, Inovasi & Pembangunan Bakat Sarawak", "Sarawak Minister of Education, Innovation & Talent Development"],
+  ["Menteri Pengangkutan Sarawak", "Sarawak Minister of Transport"],
+  ["Menteri Utiliti & Telekomunikasi Sarawak", "Sarawak Minister of Utility & Telecommunication"],
+  ["Menteri Pelancongan, Industri Kreatif & Seni Persembahan Sarawak", "Sarawak Minister of Tourism, Creative Industries & Performing Arts"],
+  ["Menteri Sumber Asli & Pembangunan Bandar Sarawak", "Sarawak Minister of Natural Resources & Urban Development"],
+  ["Menteri Kewangan Sarawak", "Sarawak Minister of Finance"]
   ]);
 })();

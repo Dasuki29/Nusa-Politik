@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v9.2 (2026-10-22)
+
+Portfolio menteri Sarawak untuk PBB.
+
+### Baharu
+- **8 portfolio Sarawak** menggantikan senarai EXCO umum apabila pemain PBB melobi selepas menang kerusi DUN: Kesihatan Awam/Perumahan/Kerajaan Tempatan, Pembangunan Sosial/Perbandaran, Pendidikan/Inovasi/Bakat, Pengangkutan, Utiliti/Telekomunikasi, Pelancongan/Industri Kreatif, Sumber Asli/Pembangunan Bandar, Kewangan.
+- IP, kos dan peluang mengikut tahap EXCO Negeri sedia ada (andaian; nama kementerian ialah label simulasi). Tahap jawatan kekal "EXCO Negeri" dalaman. UMNO kekal 5 portfolio EXCO umum.
+- Terjemahan EN, tutorial dan ujian unit dikemas kini.
+
+### Belum
+- Rundingan kerusi GPS, kerusi Parlimen, Pindah Cawangan PBB, parti lain, penamaan MKT/PAU, label tahap "Menteri Sarawak" dalam UI.
+
 ## v9.1 (2026-10-22)
 
 Kerajaan negeri Sarawak: Premier dan Exco untuk PBB.

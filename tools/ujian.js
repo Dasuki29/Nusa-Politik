@@ -1146,6 +1146,21 @@ ujian('PBB v9.1: Premier Sarawak (hanya Presiden PBB, kerusi GPS, peluang ikut b
   betul(/Premier|EXCO/.test(kk2.portfolioName), kk2.portfolioName);
   S.clearPlayer();
 });
+ujian('PBB v9.2: portfolio Menteri Sarawak untuk lobi DUN (UMNO kekal portfolio EXCO umum)', () => {
+  const KB = g.MyPolitikKabinet, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'pesaka', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }));
+  P.tetap({ tahun: 2027, ip: 1000, myr: 50000, ap: 10 }); betul(KB.bukaLobi('DUN').ok, 'lobi dibuka');
+  let sn = KB.senaraiPortfolio(S.loadPlayer()); sama(sn.length, 8, '8 portfolio Sarawak'); betul(sn.every((x) => /^sw_/.test(x.id) && /Sarawak$/.test(x.nama)), 'semua nama Sarawak');
+  betul(sn.every((x) => x.tahap === 'EXCO_NEGERI'), 'tahap EXCO_NEGERI kekal');
+  let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('sw_kesihatan', () => 0.01); if (!lj.ok) { break; } }
+  betul(lj.ok && lj.dilantik, lj.ralat); const k = KB.getKabinet(S.loadPlayer()); sama(k.portfolioId, 'sw_kesihatan'); betul(/Sarawak/.test(k.portfolioName));
+  sama(KB.lobiPortfolio('exco_kesihatan', () => 0.01).ok, false, 'portfolio UMNO tidak tersedia untuk PBB');
+  S.clearPlayer();
+  P.daftar({}); betul(KB.bukaLobi('DUN').ok); sn = KB.senaraiPortfolio(S.loadPlayer()); betul(sn.length === 5 && sn.every((x) => /^exco_/.test(x.id)), 'UMNO: 5 portfolio EXCO umum');
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
