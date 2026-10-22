@@ -135,7 +135,7 @@
     h += '<p class="note" style="margin:6px 0 4px"><b>🏗️ Peruntukan Projek (CDF)</b> · baki RM ' + fmt(k.cdfBaki) + ' · digunakan ' + k.cdfBulan + '/' + k.cdfHad + ' bulan ini. Salur ke kawasan sendiri untuk IP; jumlah besar menjejaskan KPI.</p><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">' +
       k.cdfPilihan.map(function (x) { return '<button type="button" class="btn btn--sm" data-pru="cdf" data-jumlah="' + x.jumlah + '"' + (x.boleh ? '' : ' disabled title="' + esc(x.sebab) + '"') + '>RM ' + fmt(x.jumlah) + ' → +' + x.ip + ' IP</button>'; }).join('') + '</div>';
     if (k.ratingRendah > 0) { h += '<div class="banner banner--warn" role="alert"><strong>Amaran rombakan</strong>Penarafan di bawah 30% sudah ' + k.ratingRendah + ' bulan. Satu bulan lagi anda digugurkan.</div>'; }
-    if (k.acara) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="acara">⚠️ Isu kementerian menunggu: ' + esc(k.acara.tajuk) + '</button>'; }
+    if (k.acara) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="acara">⚠️ <span>Isu kementerian menunggu:</span> <span>' + esc(k.acara.tajuk) + '</span></button>'; }
     return h + '</section>';
   }
   /** Musim pilihan raya aktif (PRU/PRN atau PRK): tab khas Pilihan Raya dipaparkan. */

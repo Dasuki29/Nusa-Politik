@@ -100,15 +100,27 @@
     .dash-profile { display: grid; gap: var(--space-4); }
     .dash-profile__top { display: flex; gap: var(--space-4); align-items: center; flex-wrap: wrap; }
     .dash-profile__info { min-width: 0; flex: 1 1 240px; }
-    .dash-loc { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--space-2) 0 0; padding: 0; list-style: none; }
-    .dash-loc li { font-size: .78rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border-soft); border-radius: 999px; padding: .2rem .65rem; }
+    .dash-loc { display: flex; flex-wrap: wrap; gap: 4px; margin: var(--space-2) 0 0; padding: 0; list-style: none; }
+    .dash-loc li { font-size: .72rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border-soft); border-radius: 999px; padding: .1rem .5rem; }
     .dash-loc b { color: var(--text-dim); font-weight: 600; margin-right: 4px; }
     .year-pill { display: inline-flex; align-items: center; gap: 8px; padding: .45rem .9rem; border-radius: 999px; font-weight: 800; font-size: .85rem; letter-spacing: .03em; background: var(--bg-elev-3); border: 1px solid var(--border); color: var(--text); }
     .year-pill[data-fasa="pemilihan"] { background: linear-gradient(135deg, var(--red), var(--red-dark)); border-color: transparent; color: #fff; box-shadow: var(--shadow-red); }
     .year-pill[data-fasa="pentadbiran"] { background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); border-color: transparent; color: #2B2100; }
-    .res-bar { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-    @media (min-width: 720px) { .res-bar { grid-template-columns: repeat(4, 1fr); } }
+    .res-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
     .res-bar .stat__value { font-size: 1.5rem; }
+    .res-bar .stat--tahun { display: none; }   /* v8.30: Status Tahun digabung dengan lencana tahun di atas */
+    @media (max-width: 560px) { .dash-profile__top { display: grid; grid-template-columns: auto 1fr; align-items: center; } .dash-profile__info { display: contents; } .dash-profile__top .avatar { grid-row: 1 / span 3; } .dash-profile__top .dash-loc { grid-column: 1 / -1; } .res-bar .stat { padding: var(--space-2) var(--space-3); } .res-bar .stat__value { font-size: .9rem; white-space: nowrap; overflow: visible; text-overflow: clip; } .res-bar .stat__label { font-size: .62rem; } .dash-profile { gap: var(--space-3); } .dash-profile__top { gap: var(--space-3); } .year-pill { padding: .3rem .7rem; font-size: .75rem; } .meter small { display: none; } }
+    .takwim__ket summary { cursor: pointer; font-size: .78rem; color: var(--text-muted); }
+    /* v8.30: bahagian boleh dilipat (tab Profil, Pemilihan, Mesyuarat, Tindakan) */
+    .lipat { border: 2px solid var(--garis, var(--border)); border-radius: var(--radius); background: var(--bg-elev-1); margin: var(--space-3) 0; }
+    .lipat > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: .7rem .9rem; font-weight: 800; font-size: .95rem; min-height: 46px; }
+    .lipat > summary::-webkit-details-marker { display: none; }
+    .lipat > summary::after { content: "▸"; margin-left: auto; color: var(--text-muted); }
+    .lipat[open] > summary::after { content: "▾"; }
+    .lipat__t { min-width: 0; }
+    .lipat__isi { padding: 0 .9rem .9rem; }
+    .lipat__isi > .card, .lipat__isi > section.card { border: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 0 var(--space-3) !important; }
+    .lipat > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     .dash-time { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
     .dash-time .grow { flex: 1 1 200px; font-size: .85rem; color: var(--text-muted); }
     .tabs { display: flex; gap: var(--space-2); overflow-x: auto; padding: var(--space-1); background: var(--bg-elev-1); border: 1px solid var(--border-soft); border-radius: var(--radius); margin: var(--space-4) 0; scrollbar-width: none; }
@@ -215,8 +227,8 @@
       <button type="button" class="btn btn--ghost btn--sm" id="btn-skema" data-skema-btn title="Tukar ke paparan gelap" aria-label="Tukar ke paparan gelap">🌙</button>
       <button type="button" class="btn btn--ghost btn--sm" id="btn-menu" title="Menu: rupa, struktur, perlembagaan, simpanan &amp; tukar watak" aria-label="Menu" aria-haspopup="dialog">🏠<span class="plb-btn-teks"> Menu</span></button>
       <button type="button" class="btn btn--ghost btn--sm lagu-btn" id="btn-lagu" aria-expanded="false" aria-controls="kad-lagu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 18V5l11-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm11-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lagu</span></button>
-      <button type="button" class="btn btn--ghost btn--sm" id="btn-bersara" title="Bersara awal dan lihat rumusan kerjaya">Bersara</button>
-      <button type="button" class="btn btn--danger btn--sm" id="btn-reset">Reset</button>
+      <button type="button" class="btn btn--ghost btn--sm" id="btn-bersara" title="Bersara awal dan lihat rumusan kerjaya" aria-label="Bersara"><span aria-hidden="true">🏁</span><span class="btn__text">Bersara</span></button>
+      <button type="button" class="btn btn--danger btn--sm" id="btn-reset" title="Reset permainan" aria-label="Reset"><span aria-hidden="true">🔄</span><span class="btn__text">Reset</span></button>
     </div>
   </header>
 
@@ -264,7 +276,7 @@
         <div class="stat"><div class="stat__label">Pengaruh (IP)</div><div class="stat__value stat__value--gold" id="r-ip">0</div></div>
         <div class="stat"><div class="stat__label">Dana (MYR)</div><div class="stat__value" id="r-myr">0</div></div>
         <div class="stat"><div class="stat__label">Mata Tindakan (AP)</div><div class="stat__value stat__value--red" id="r-ap">0</div></div>
-        <div class="stat"><div class="stat__label">Status Tahun</div><div class="stat__value" id="r-tahun" style="font-size:1.1rem">2026</div><div class="stat__label" id="r-tahun-sub" style="margin-top:2px;text-transform:none;letter-spacing:0"></div></div>
+        <div class="stat stat--tahun"><div class="stat__label">Status Tahun</div><div class="stat__value" id="r-tahun" style="font-size:1.1rem">2026</div><div class="stat__label" id="r-tahun-sub" style="margin-top:2px;text-transform:none;letter-spacing:0"></div></div>
       </div>
 
       <div class="meter-bar" id="meter-bar" aria-label="Stress dan Kesihatan">
@@ -277,6 +289,7 @@
       <div class="takwim" aria-label="Takwim bulanan">
         <div class="takwim__head"><b id="tk-judul"></b><span id="tk-fasa"></span></div>
         <ol class="takwim__strip" id="tk-strip"></ol>
+        <details class="takwim__ket"><summary>Petunjuk warna</summary>
         <ul class="takwim__legend" aria-hidden="true">
           <li><i class="c-akar_umbi"></i>Bulan 1-3 Akar umbi</li>
           <li><i class="c-cawangan"></i>Bulan 4-6 Cawangan &amp; Sayap</li>
@@ -284,6 +297,7 @@
           <li><i class="c-pau"></i>Bulan 8 PAU &amp; Pusat</li>
           <li><i class="c-pasca_pau"></i>Bulan 9-12 Pasca-PAU</li>
         </ul>
+        </details>
       </div>
 
       <div class="dash-time">
@@ -297,11 +311,10 @@
     <div class="tabs" role="tablist" aria-label="Menu utama">
       <button class="tab" role="tab" id="tab-peta" data-tab="peta" aria-controls="panel-peta" aria-selected="true">🗺️ Peta Pengaruh</button>
       <button class="tab" role="tab" id="tab-tindakan" data-tab="tindakan" aria-controls="panel-tindakan" aria-selected="false" tabindex="-1">⚡ Tindakan Pemain</button>
-      <button class="tab" role="tab" id="tab-pemilihan" data-tab="pemilihan" aria-controls="panel-pemilihan" aria-selected="false" tabindex="-1">🗳️ Pemilihan &amp; Kempen</button>
+      <button class="tab" role="tab" id="tab-profil" data-tab="profil" aria-controls="panel-profil" aria-selected="false" tabindex="-1">👤 Profil</button>
+      <button class="tab" role="tab" id="tab-pemilihan" data-tab="pemilihan" aria-controls="panel-pemilihan" aria-selected="false" tabindex="-1">🗳️ Pemilihan</button>
       <button class="tab" role="tab" id="tab-mesyuarat" data-tab="mesyuarat" aria-controls="panel-mesyuarat" aria-selected="false" tabindex="-1">📜 Mesyuarat &amp; Usul</button>
       <button class="tab" role="tab" id="tab-dewan" data-tab="dewan" aria-controls="panel-dewan" aria-selected="false" tabindex="-1" hidden>🏛️ Dewan Rakyat</button>
-      <button class="tab" role="tab" id="tab-pencapaian" data-tab="pencapaian" aria-controls="panel-pencapaian" aria-selected="false" tabindex="-1">🏆 Pencapaian</button>
-      <button class="tab" role="tab" id="tab-harta" data-tab="harta" aria-controls="panel-harta" aria-selected="false" tabindex="-1">💰 Harta</button>
       <button class="tab tab--khas" role="tab" id="tab-pilihanraya" data-tab="pilihanraya" aria-controls="panel-pilihanraya" aria-selected="false" tabindex="-1" hidden>📣 Pilihan Raya<span class="dot" title="Musim pilihan raya"></span></button>
     </div>
 
@@ -311,11 +324,10 @@
           <div id="peta-host"><div class="loading">Buka tab ini untuk memuatkan peta...</div></div>
         </section>
         <section class="panel" id="panel-tindakan" role="tabpanel" aria-labelledby="tab-tindakan" hidden></section>
+        <section class="panel" id="panel-profil" role="tabpanel" aria-labelledby="tab-profil" hidden></section>
         <section class="panel" id="panel-pemilihan" role="tabpanel" aria-labelledby="tab-pemilihan" hidden></section>
         <section class="panel" id="panel-mesyuarat" role="tabpanel" aria-labelledby="tab-mesyuarat" hidden></section>
         <section class="panel" id="panel-dewan" role="tabpanel" aria-labelledby="tab-dewan" hidden></section>
-        <section class="panel" id="panel-pencapaian" role="tabpanel" aria-labelledby="tab-pencapaian" hidden></section>
-        <section class="panel" id="panel-harta" role="tabpanel" aria-labelledby="tab-harta" hidden></section>
         <section class="panel" id="panel-pilihanraya" role="tabpanel" aria-labelledby="tab-pilihanraya" hidden></section>
       </div>
 
@@ -341,6 +353,7 @@
   <nav class="bottom-nav" aria-label="Navigasi bawah" id="bottom-nav">
     <button type="button" data-tab="peta"><span class="icon" aria-hidden="true">🗺️</span>Peta</button>
     <button type="button" data-tab="tindakan"><span class="icon" aria-hidden="true">⚡</span>Tindakan</button>
+    <button type="button" data-tab="profil"><span class="icon" aria-hidden="true">👤</span>Profil</button>
     <button type="button" data-tab="pemilihan"><span class="icon" aria-hidden="true">🗳️</span>Pemilihan</button>
     <button type="button" data-tab="mesyuarat"><span class="icon" aria-hidden="true">📜</span>Mesyuarat</button>
     <button type="button" data-tab="dewan" id="nav-dewan" hidden><span class="icon" aria-hidden="true">🏛️</span>Dewan</button>
