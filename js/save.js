@@ -148,25 +148,38 @@
     return u ? Math.min(t, Math.max(0, u - 18)) : t;
   }
 
-  function buildPlayerProfile(input) {
-    var c = input.cawangan, d = input.demografik;
+  /** v8.28: medan identiti kawasan daripada objek cawangan data.js (dikongsi pendaftaran dan Pindah Cawangan). */
+  function identitiKawasan(c) {
     var idPenuh = String(c.idSheet || c.id);      // ID seperti dalam Google Sheets
     var bhg = idPenuh.split('/'), n = bhg.length;
-    return normalisasi({
-      versi: VERSI,
-      nama: String(input.nama || '').trim(),
+    return {
       negeri: c.negeri,
       bahagian: c.bahagianNama,
       dun: c.dunNama,
       cawangan: c.nama,
       id: idPenuh,
       kod: { negeri: n === 4 ? bhg[0] : null, parlimen: bhg[n - 3], dun: bhg[n - 2], lokaliti: bhg[n - 1] },
-      demografik: { jantina: d.jantina, umur: d.umur, kategori: d.label, kategoriKod: d.kod },
       cawanganInfo: {
         jumlahAhli: c.jumlahAhli, lelaki: c.lelaki, perempuan: c.perempuan,
         bawah40: c.bawah40, atas40: c.atas40,
         kumpulan: c.kumpulan ? { pemuda: c.kumpulan.pemuda, puteri: c.kumpulan.puteri, wanita: c.kumpulan.wanita, induk: c.kumpulan.induk, langsung: !!c.kumpulan.langsung } : null     // v6.3
-      },
+      }
+    };
+  }
+
+  function buildPlayerProfile(input) {
+    var c = input.cawangan, d = input.demografik, ik = identitiKawasan(c);
+    return normalisasi({
+      versi: VERSI,
+      nama: String(input.nama || '').trim(),
+      negeri: ik.negeri,
+      bahagian: ik.bahagian,
+      dun: ik.dun,
+      cawangan: ik.cawangan,
+      id: ik.id,
+      kod: ik.kod,
+      demografik: { jantina: d.jantina, umur: d.umur, kategori: d.label, kategoriKod: d.kod },
+      cawanganInfo: ik.cawanganInfo,
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
@@ -474,6 +487,7 @@
     ipSebenar: ipSebenar,
     ralatDana: ralatDana,
     buildPlayerProfile: buildPlayerProfile,
+    identitiKawasan: identitiKawasan,
     savePlayer: savePlayer,
     loadPlayer: loadPlayer,
     saveGame: saveGame,

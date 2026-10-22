@@ -922,7 +922,7 @@
     state.cabaran = I && I.getCabaranAktif ? I.getCabaranAktif() : null;          // v8.0: untuk lencana "Dicabar" pada pertandingan
     h += '<div class="banner ' + (f.fasa === 'pemilihan' ? 'banner--gold' : '') + '"><strong>' + esc(p.tahun + ': ' + f.tajuk + (K ? ' · Bulan ' + p.bulan : '')) + '</strong>' + esc(f.fokus.join(' · ')) +
       (f.fasa === 'pemilihan' ? '' : '. Pertandingan jawatan seterusnya pada ' + f.pemilihanBerikutnya + '.') + '</div>';
-    h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '') + kadEtika(p) + kadJawatan(p) + kadWatak(p) + kadLaluan();
+    h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '') + kadEtika(p) + (W.NusaPindah_UI ? W.NusaPindah_UI.kad(p) : '') + kadJawatan(p) + kadWatak(p) + kadLaluan();
     if (f.fasa !== 'pemilihan') {
       h += '<div class="banner"><strong>Pertandingan jawatan ditutup</strong>Tahun pentadbiran: hanya pemilihan perwakilan tahunan yang dibuka. Pertandingan jawatan dan kempen dibuka semula pada tahun ' + f.pemilihanBerikutnya + '.</div>';
     }
@@ -1439,6 +1439,7 @@
     else if (act === 'lobi-presiden') { tawarkanLobi(nginst(t)); }
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
     else if (act === 'glc-syarikat' || act === 'glc-kembali') { if (W.NusaGLC_UI) { W.NusaGLC_UI.pilih(act === 'glc-syarikat' ? t.getAttribute('data-id') : null); } render(); }
+    else if (act === 'pindah-mula') { if (W.NusaPindah_UI) { W.NusaPindah_UI.mula(); } }   // v8.28
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }

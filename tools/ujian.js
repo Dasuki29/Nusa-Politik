@@ -996,6 +996,42 @@ ujian('AP: majuBulan menambah AP asas Biasa 6 dan menghadkan pada 20', () => {
   P.daftar({ kesukaran: 'NORMAL' }); P.tetap({ ap: 18 }); r = K.majuBulan(); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 20, 'had 20'); betul(/had 20 dicapai/.test(r.mesej), r.mesej);
   P.daftar({ kesukaran: 'HARDCORE' }); P.tetap({ ap: 12 }); r = K.majuBulan(); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 15, 'Hardcore had 15');
 });
+/* ---------- Pindah Cawangan (v8.28) ---------- */
+function pdPemain(o) {
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama', umur: 40 });
+  P.tetap(Object.assign({ ip: 700, myr: 20000, ap: 10, reputasi: 60, tahun: 2026, bulan: 3, keahlian: { sejakTahun: 2015, sejakBulan: 1 }, jawatan: 'Ketua Cawangan', jawatanList: [pegang('ketua_cawangan'), pegang('ketua_bahagian'), { kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', peringkat: 'pusat', kumpulan: 'utama', sayap: null, pangkat: 12, tahun: 2026 }], perwakilan: { cawangan: 2026, bahagian: 2026 }, kesetiaan: { ketuaCawangan: 80, ajk: 70, akarUmbi: 90, perwakilan: 60, penentang: 30 } }, (o && o.p) || {}));
+  const h = g.MyPolitikData.getFallbackData(); const semua = [];
+  h.negeri.forEach((n) => n.bahagian.forEach((b) => b.dun.forEach((d) => d.cawangan.forEach((c) => semua.push(Object.assign({}, c, { negeri: n.nama, bahagianNama: b.nama, dunNama: d.nama }))))));
+  const p = S.loadPlayer(); const lain = semua.filter((c) => String(c.idSheet || c.id) !== p.id)[0];
+  return { PD: g.MyPolitikPindah, lain, p };
+}
+ujian('pindah cawangan: syarat (tempoh, kerusi, disiplin, dana) menyekat', () => {
+  const { PD } = pdPemain({ p: { keahlian: { sejakTahun: 2026, sejakBulan: 1 } } });
+  sama(PD.semak(S.loadPlayer()).boleh, false, 'baru 2 bulan'); betul(PD.semak(S.loadPlayer()).syarat.filter((x) => x.id === 'tempoh')[0].lulus === false);
+  P.tetap({ keahlian: { sejakTahun: 2015, sejakBulan: 1 } }); sama(PD.semak(S.loadPlayer()).boleh, true);
+  P.tetap({ myr: 1500 }); sama(PD.semak(S.loadPlayer()).boleh, false, 'dana kurang'); P.tetap({ myr: 20000, ap: 2 }); sama(PD.semak(S.loadPlayer()).boleh, false, 'AP kurang'); P.tetap({ ap: 10 });
+  P.tetap({ pru: Object.assign({}, g.MyPolitikPRU.getPRU(S.loadPlayer()), { status: { jenis: 'ADUN', kerusi: 'Uji', sejakTahun: 2026, sejakBulan: 1, kerajaan: false } }) });
+  sama(PD.semak(S.loadPlayer()).boleh, false, 'ADUN tidak boleh');
+});
+ujian('pindah cawangan: kos, identiti baharu, jawatan setempat hilang, Pusat kekal, sokongan mula semula', () => {
+  const { PD, lain } = pdPemain(); const sebelum = S.loadPlayer();
+  const pt = PD.pratonton(sebelum, lain); sama(pt.selepas.akarUmbi, 25); sama(pt.jawatanKekal.length, 1); sama(pt.sebelum.jawatan.length, 2);
+  const r = PD.pindah(lain); betul(r.ok, r.ralat); const p = S.loadPlayer();
+  sama(p.id, String(lain.idSheet || lain.id)); sama(p.cawangan, lain.nama); sama(p.bahagian, lain.bahagianNama); sama(p.negeri, lain.negeri);
+  sama(sebelum.myr - p.myr, 2000); sama(sebelum.ap - p.ap, 3); sama(p.ip, Math.round(sebelum.ip * 0.7));
+  sama(p.jawatanList.length, 1); sama(p.jawatanList[0].peringkat, 'pusat'); sama(p.perwakilan.cawangan, 0); sama(p.perwakilan.bahagian, 0);
+  sama(p.kesetiaan.akarUmbi, 25); sama(p.kesetiaan.ajk, 25); sama(p.kesetiaan.perwakilan, 0); sama(p.kesetiaan.penentang, 30, 'penentang tidak berubah');
+  sama(p.keahlian.sejakTahun, 2015, 'tempoh keahlian parti kekal'); sama(p.pindah.bil, 1); sama(PD.bakiMenunggu(p), 12);
+  sama(PD.semak(p).syarat.filter((x) => x.id === 'had')[0].lulus, false, 'sekali setiap penggal'); sama(PD.pindah(lain).ok, false);
+});
+ujian('pindah cawangan: tempoh menunggu menyekat jawatan Cawangan/Bahagian sahaja; Sarawak ditolak', () => {
+  const { PD, lain } = pdPemain(); PD.pindah(lain); const J = g.MyPolitikJawatan; const p = S.loadPlayer();
+  const kat = (peringkat) => J.KATALOG ? J.KATALOG.filter((d) => d.peringkat === peringkat && d.kumpulan === 'utama')[0] : null;
+  const dc = kat('cawangan'); if (dc) { const k = J.semakKelayakan(p, dc); sama(k.terbuka, false); betul(/berpindah/.test(k.sebab), k.sebab); }
+  P.tetap({ tahun: 2027, bulan: 4 }); sama(PD.bakiMenunggu(S.loadPlayer()), 0, 'tamat 12 bulan');
+  sama(PD.negeriTerlarang('Sarawak'), true); sama(PD.negeriTerlarang('Selangor'), false);
+  const r = PD.pindah(Object.assign({}, lain, { negeri: 'Sarawak', idSheet: '999/001/001/001' })); sama(r.ok, false);
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

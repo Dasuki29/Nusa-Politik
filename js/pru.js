@@ -827,7 +827,7 @@
   return {
     CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KOS_RUNDING: KOS_RUNDING,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
+    getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
     mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan

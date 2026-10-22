@@ -274,6 +274,19 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pu.waitForTimeout(400);
   const k3 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts/i.test(x.textContent))[0]; return { n: window.MyPolitikKomuniti.getKomuniti(window.MyPolitikSave.loadPlayer()).jawatan.length, t: c ? c.textContent : '' }; });
   if (k3.n !== 1 || !/Resign/.test(k3.t) || !/months left/.test(k3.t) || /Letak jawatan|baki|sebulan/.test(k3.t)) { ralat.push('kad komuniti dipegang EN salah: ' + JSON.stringify(k3).slice(0, 260)); }
+  /* v8.28: Pindah Cawangan (EN): kad syarat, modal pemilih kawasan, kad selepas pindah; tiada BM bocor. */
+  await pu.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 80000, ap: 10, keahlian: { sejakTahun: 2015, sejakBulan: 1 }, pru: Object.assign({}, window.MyPolitikPRU.getPRU(p), { status: null, statusKedua: null }), kabinet: Object.assign({}, window.MyPolitikKabinet.getKabinet(p), { hasGovernmentRole: false }) } }); window.NusaUI.render(); });
+  await pu.locator('[data-tab="pemilihan"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(500);
+  const pd1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Branch Transfer/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  if (!/Branch Transfer/.test(pd1) || !/Once per term/.test(pd1) || !/Transfer Branch/.test(pd1) || /Pindah Cawangan|Sekali setiap|Tiada hukuman|Ahli sekurang/.test(pd1)) { ralat.push('kad pindah cawangan EN salah: ' + pd1.slice(0, 300)); }
+  await pu.locator('[data-act="pindah-mula"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(1500);
+  const pd2 = await pu.evaluate(() => (document.getElementById('modal-isi') || {}).innerText || '');
+  if (!/Choose your new area/.test(pd2) || /Pilih kawasan|Cawangan|Negeri/.test(pd2)) { ralat.push('modal pindah cawangan EN salah: ' + pd2.slice(0, 260)); }
+  await pu.evaluate(() => { const t = document.getElementById('modal-tutup'); if (t) { t.click(); } }); await pu.waitForTimeout(300);
+  await pu.evaluate(() => { const D = window.MyPolitikData, h = D.getFallbackData(), n = h.negeri[h.negeri.length - 1], b = n.bahagian[n.bahagian.length - 1], d = b.dun[b.dun.length - 1], c = d.cawangan[d.cawangan.length - 1]; window.MyPolitikPindah.pindah(Object.assign({}, c, { negeri: n.nama, bahagianNama: b.nama, dunNama: d.nama })); window.NusaUI.render(); });
+  await pu.waitForTimeout(500);
+  const pd3 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Branch Transfer/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
+  if (!/Waiting period before contesting/.test(pd3) || !/Transfer history/.test(pd3) || /Tempoh menunggu|Sejarah pindahan/.test(pd3)) { ralat.push('kad pindah cawangan selepas pindah EN salah: ' + pd3.slice(0, 300)); }
   await pu.close();
 
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
