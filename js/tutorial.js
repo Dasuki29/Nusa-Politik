@@ -184,7 +184,7 @@
       { id: 'paparan', tajuk: 'Kerusi, Sentimen & Log Aktiviti', isi: 'Kad <b>Kerusi Parlimen/DUN</b> menunjukkan <b>anggaran</b> kerusi mengikut gabungan selepas PRU (paparan sahaja): <b>Barisan Nasional</b> (biru diraja, parti anda bersama rakan), <b>Pakatan Harapan</b> (merah), <b>Perikatan Nasional</b> (biru tua) dan Bebas &amp; lain-lain (kelabu). Warna mengikut nama warna rasmi gabungan; kod warna ialah anggaran. Pecahan antara PH dan PN hanyalah anggaran simulasi, dan Sabah/Sarawak guna nama yang sama untuk kesederhanaan. Bar <b>Sentimen</b> bergerak langsung semasa kempen. Setiap tindakan memunculkan <b>toast</b> kanan bawah (IP, Dana, Stress), dengan butang <b>—</b> (kecilkan, mod senyap) dan <b>✕</b> (tutup). Pil <b>🔔 Notifikasi</b> di kiri bawah menunjukkan bilangan notifikasi belum dibaca; ketik untuk senarai ringkas dan <b>Log Aktiviti</b> penuh, atau aktifkan semula pop-up.' },
       { id: 'dewan-tab', tajuk: 'Tab Khas: Dewan Rakyat', isi: 'Tab <b>🏛️ Dewan Rakyat</b> (atau <b>🏛️ DUN</b> bagi ADUN/EXCO) muncul sendiri apabila anda menjadi Ahli Parlimen atau Menteri. Di situ anda melihat kerusi mengikut gabungan, membentang RUU/Bajet, menghadapi usul undi tidak percaya dan menjawab soalan lisan pembangkang.' },
       { id: 'bantuan', sasaran: '.tut-fab', tajuk: 'Perlukan bantuan?', isi: 'Butang <b>(?)</b> ini sentiasa ada. Ia menjelaskan mekanik bulanan, peranan sayap, strategi pemilihan dan acara rawak. Anda juga boleh mengulang tutorial ini dari sana. Semoga berjaya!' }
-    ];
+    ].filter(function (st) { return !(st.id === 'perlembagaan' && p && p.parti && p.parti !== 'UMNO'); });      // v10.6: tiada Perlembagaan UMNO untuk parti lain
   }
 
   var ov = null;   // keadaan overlay aktif
@@ -475,8 +475,7 @@
           ['Dipecat', 'Semua jawatan hilang; rayuan selepas 3 tahun (Fasal 20.12.2)']]) +
         '<div class="tut-kotak">Ahli yang hanya <b>dalam siasatan</b> masih mempunyai hak penuh (Fasal 6.2.4). Hak hanya terjejas selepas hukuman dikenakan (Fasal 6.3.4).</div>' },
       { id: 'kepimpinan', tajuk: 'Gaya Kepimpinan', html:
-        '<h3>Gaya Kepimpinan &amp; Laluan Karier</h3><p>Kad <b>Gaya Kepimpinan Anda</b> (tab Pemilihan) menilai cara anda bermain: jawatan dipegang, kesetiaan, Modal Sosial dan rekod disiplin. Ia berubah mengikut tindakan anda.</p>' +
-        '<p>Di bawahnya, <b>Laluan Karier Sebenar</b> ialah kad rujukan neutral tentang laluan beberapa Presiden UMNO terdahulu, lengkap dengan pautan sumber. Ia untuk bacaan sahaja dan tidak mempengaruhi permainan.</p>' },
+        '<h3>Gaya Kepimpinan</h3><p>Kad <b>Gaya Kepimpinan Anda</b> (tab Pemilihan) menilai cara anda bermain: jawatan dipegang, kesetiaan, Modal Sosial dan rekod disiplin. Ia berubah mengikut tindakan anda.</p>' },
       { id: 'acara', tajuk: 'Acara Rawak', html:
         '<h3>Pengurusan Acara Rawak</h3><p>Pop-up acara muncul <b>kira-kira 70%</b> pada pergantian bulan, dan <b>15%</b> selepas tindakan akar umbi (maksimum 2 sebulan). Hanya satu acara pada satu masa.</p>' +
         '<h4>Jenis acara</h4><ul><li><b>Isu cawangan</b>: dana program kering, keahlian tertunggak, pertikaian AJK.</li><li><b>Projek</b>: program kebajikan, Sukaneka Pemuda, Konvensyen Puteri, Kursus Kepimpinan.</li><li><b>Isu tempatan</b>: banjir (lebih kerap Nov–Feb), kebakaran, jalan berlubang.</li><li><b>Politik</b>: fitnah media sosial, tawaran penaja, temu bual.</li></ul>' +

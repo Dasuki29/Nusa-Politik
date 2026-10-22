@@ -228,7 +228,7 @@
   function kategoriSepatutnya(p) {
     var D = Dt(), u = umurSemasa(p);
     if (!D || !D.kategoriMengikutUmur || u === null || !p.demografik) { return null; }
-    return D.kategoriMengikutUmur(String(p.demografik.jantina || '').charAt(0), u);
+    return D.kategoriMengikutUmur(String(p.demografik.jantina || '').charAt(0), u, p.parti);
   }
 
   /** Semak dan laksanakan peralihan. Pulang { berubah, daripada, kepada, peristiwa:[] }. */

@@ -202,7 +202,7 @@
     if (avatarState.manual || !AV || !D) { return; }
     var j = el.form.querySelector('input[name="jantina"]:checked'), u = parseInt(el.umur.value, 10);
     if (!j || !isFinite(u) || u < 18 || u > 100) { return; }
-    var dem = D.tentukanDemografi(j.value, u);
+    var dem = D.tentukanDemografi(j.value, u, state.parti);
     if (dem) { pilihAvatar(AV.cadangan(dem, state.parti), false); }
   }
 
@@ -427,7 +427,7 @@
     var v = sahkan();
     if (!v) { return; }
 
-    var demografik = D.tentukanDemografi(v.jantina, v.umur);
+    var demografik = D.tentukanDemografi(v.jantina, v.umur, state.parti);
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
@@ -931,7 +931,7 @@
     var h = '<section class="card etika"><h2 class="card__title" style="margin:0 0 4px">Tataetika &amp; Tempoh Keahlian</h2>';
     h += '<p class="note">Kempen bersih membina <b>Modal Sosial</b> (kekuatan undi +' + r.bonusUndi + ') dan menurunkan risiko dilapor. Politik wang, fitnah dan ugutan melanggar Tataetika Ahli UMNO dan boleh dihukum Lembaga Disiplin (Fasal 20.10): amaran, gantung, dilarang bertanding atau dipecat.</p>';
     h += bar(r.modal, 'baik', 'Modal Sosial') + bar(r.risiko, r.risiko >= 45 ? 'bahaya' : r.risiko >= 20 ? 'amaran' : 'baik', 'Risiko Disiplin (' + r.labelRisiko + ')');
-    h += '<div class="kv"><span>Tempoh keahlian</span><b class="' + (r.cukup3Tahun ? 'text-gold' : '') + '">' + Math.floor(r.bulanKeahlian / 12) + ' tahun ' + (r.bulanKeahlian % 12) + ' bulan' + (r.cukup3Tahun ? '' : ' (perlu 3 tahun untuk Bahagian, Fasal 15.5)') + '</b></div>';
+    h += '<div class="kv"><span>Tempoh keahlian</span><b class="' + (r.cukup3Tahun ? 'text-gold' : '') + '">' + Math.floor(r.bulanKeahlian / 12) + ' tahun ' + (r.bulanKeahlian % 12) + ' bulan' + (r.cukup3Tahun ? '' : (esSW(p.parti) ? ' (perlu 3 tahun untuk Bahagian)' : ' (perlu 3 tahun untuk Bahagian, Fasal 15.5)')) + '</b></div>';
     h += '<div class="kv"><span>Rekod disiplin</span><b>' + r.salah + ' hukuman' + (r.amaran ? ' · ' + r.amaran + ' amaran' : '') + '</b></div>';
     if (r.rekod && r.rekod.length) {
       h += '<details class="note" style="margin-top:6px"><summary>Sejarah disiplin</summary><ul style="margin:6px 0 0;padding-left:18px">' +
@@ -967,21 +967,6 @@
       '<p class="note">' + esc(w.huraian) + '</p>' +
       (w.sebab.length ? '<p class="note">' + w.sebab.map(esc).join(' ') + '</p>' : '') +
       '<p class="note">Gaya ini dikira daripada pilihan anda dalam permainan dan boleh berubah.</p></section>';
-  }
-
-  /* v3.9: Laluan Karier Sebenar (maklumat neutral, bersumber, tidak mempengaruhi permainan) */
-  function kadLaluan() {
-    if (!WK) { return ''; }
-    var h = '<section class="card"><details><summary class="card__title" style="cursor:pointer">Laluan Karier Sebenar: Presiden UMNO</summary>';
-    h += '<p class="note" style="margin-top:8px">Tangga jawatan dalam permainan: ' + WK.TANGGA.map(function (t) { return esc(t.jawatan); }).join(' &rarr; ') + '.</p>';
-    h += '<ul style="margin:6px 0 0;padding-left:18px">' + WK.LALUAN_TOKOH.map(function (t) {
-      var src = t.sumber.map(function (k) { var s = WK.SUMBER[k]; return s ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.nama) + '</a>' : ''; }).join(', ');
-      return '<li style="margin-bottom:6px"><b>' + esc(t.nama) + '</b> &middot; Presiden ' + esc(t.tempoh) +
-        (t.sebelum.length ? '<br>Jawatan parti sebelum itu: ' + t.sebelum.map(esc).join(', ') : '') +
-        (t.nota ? '<br><i>' + esc(t.nota) + '</i>' : '') + '<br><small>Sumber: ' + src + '</small></li>';
-    }).join('') + '</ul>';
-    h += '<p class="note" style="margin-top:8px">' + esc(WK.NOTA_UMUM) + '</p></details></section>';
-    return h;
   }
 
   function barisPertandingan(e) {
@@ -1144,7 +1129,7 @@
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
     return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
-      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
+      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
   }
@@ -1215,7 +1200,7 @@
   function panelMesyuarat(p) {
     if (!M) { return '<div class="card"><p class="empty">Modul mesyuarat tidak dimuatkan.</p></div>'; }
     var k = M.getKeadaanMesyuarat(p), h = '';
-    h += '<div class="banner"><strong>Mesyuarat Tahun ' + p.tahun + '</strong>Mesyuarat berlangsung mengikut urutan: Cawangan, Bahagian, kemudian Perhimpunan Agung (PAU). Jika anda dalam laluan Pemuda, Puteri atau Wanita, setiap peringkat didahului mesyuarat sayap anda; mesyuarat utama terkunci sehingga mesyuarat sayap selesai, dan sayap membawa satu usul ke mesyuarat utama. Pilih peranan anda bagi setiap usul: Pembawa, Pembahas atau Pengundi. Setiap pilihan mempengaruhi IP dan Reputasi Parti.</div>';
+    h += '<div class="banner"><strong>Mesyuarat Tahun ' + p.tahun + '</strong>Mesyuarat berlangsung mengikut urutan: Cawangan, Bahagian, kemudian Perhimpunan Agung (PAU). Jika anda dalam laluan ' + (esSW(p.parti) ? 'Pemuda atau Wanita' : 'Pemuda, Puteri atau Wanita') + ', setiap peringkat didahului mesyuarat sayap anda; mesyuarat utama terkunci sehingga mesyuarat sayap selesai, dan sayap membawa satu usul ke mesyuarat utama. Pilih peranan anda bagi setiap usul: Pembawa, Pembahas atau Pengundi. Setiap pilihan mempengaruhi IP dan Reputasi Parti.</div>';
     var sp = M.getStatusPerwakilan(p);
     function kadPerw(nama, st) {
       var w = st.tetingkap, jarak = w ? (w.status === 'dibuka' ? 'Dibuka sekarang' : w.status === 'belum_tiba' ? 'Dibuka bulan ' + w.label.replace('Bulan ', '') + ' (' + w.jarak + ' bulan lagi)' : 'Musim tahun ini tamat') : '';
@@ -1620,19 +1605,19 @@
       return h;
     }
     function isi() {
-      var h = '<div class="org-tabs" role="tablist">' + [['induk', 'Induk'], ['pemuda', 'Pemuda'], ['puteri', 'Puteri'], ['wanita', 'Wanita']].map(function (t) {
+      var h = '<div class="org-tabs" role="tablist">' + [['induk', 'Induk'], ['pemuda', 'Pemuda'], ['puteri', 'Puteri'], ['wanita', 'Wanita']].filter(function (t) { return !(esSW(p.parti) && t[0] === 'puteri'); }).map(function (t) {
         return '<button type="button" class="org-tab" role="tab" data-org="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + t[1] + (st.laluan === t[0] || (t[0] === 'induk' && st.laluan === 'utama') ? ' ★' : '') + '</button>'; }).join('') + '</div>';
       if (tab === 'induk') {
-        h += '<p class="note">Struktur Induk: Ketua, Naib Ketua dan AJK di setiap peringkat. Sayap meniru struktur ini.</p>' + OG.PERINGKAT.map(function (k) { return blok(st.induk[k]) + (k === 'pusat' && W.MyPolitikNegeri ? W.MyPolitikNegeri.htmlPusat(p) : ''); }).join('');
+        h += '<p class="note">Struktur Induk: Ketua, Naib Ketua dan AJK di setiap peringkat. Sayap meniru struktur ini.</p>' + OG.PERINGKAT.map(function (k) { return blok(st.induk[k]) + (k === 'pusat' && W.MyPolitikNegeri && !esSW(p.parti) ? W.MyPolitikNegeri.htmlPusat(p) : ''); }).join('');
       } else {
         var s = st.sayap[tab];
         h += '<p class="note"><strong>' + esc(s.nama) + '</strong>: ' + esc(s.penerangan) + ' Isu yang diperjuangkan:</p><ul class="org-isu">' + s.isu.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' +
-          OG.PERINGKAT.map(function (k) { return blok(s.peringkat[k]) + (k === 'pusat' && W.MyPolitikNegeri && W.MyPolitikNegeri.sayap.aktif(p) && p.sayap === tab ? W.MyPolitikNegeri.sayap.htmlPusat(p) : ''); }).join('');
+          OG.PERINGKAT.map(function (k) { return blok(s.peringkat[k]) + (k === 'pusat' && W.MyPolitikNegeri && !esSW(p.parti) && W.MyPolitikNegeri.sayap.aktif(p) && p.sayap === tab ? W.MyPolitikNegeri.sayap.htmlPusat(p) : ''); }).join('');
       }
-      var NGs = W.MyPolitikNegeri;
+      var NGs = esSW(p.parti) ? null : W.MyPolitikNegeri;      // v10.6: parti Sarawak tiada Badan Perhubungan negeri
       if (NGs) { h += tab === 'induk' ? NGs.htmlStruktur(p) : (NGs.sayap.aktif(p) && p.sayap === tab ? NGs.sayap.htmlStruktur(p) : ''); }
       if (st.ahli) {
-        h += '<p class="note"><b>Ahli Cawangan anda mengikut kumpulan:</b> Induk (lelaki atas 40) ' + fmt(st.ahli.induk) + ' · Pemuda (lelaki bawah 40) ' + fmt(st.ahli.pemuda) + ' · Puteri (perempuan bawah 40) ' + fmt(st.ahli.puteri) + ' · Wanita (perempuan atas 40) ' + fmt(st.ahli.wanita) +
+        h += '<p class="note"><b>Ahli Cawangan anda mengikut kumpulan:</b> Induk (lelaki atas 40) ' + fmt(st.ahli.induk) + ' · Pemuda (lelaki bawah 40) ' + fmt(st.ahli.pemuda) + ' ' + (esSW(p.parti) ? '· Wanita (semua perempuan) ' + fmt(st.ahli.wanita + st.ahli.puteri) : '· Puteri (perempuan bawah 40) ' + fmt(st.ahli.puteri) + ' · Wanita (perempuan atas 40) ' + fmt(st.ahli.wanita)) +
           (st.ahli.langsung ? '' : '. Angka ini anggaran daripada data jantina dan umur (andaian kedua-duanya tidak bersandar)') + '.</p>';
       }
       return h + '<p class="note">Nama pemimpin lain ialah watak simulasi (bukan individu sebenar). Hanya jawatan Ketua sayap boleh dipegang oleh pemain.</p>';

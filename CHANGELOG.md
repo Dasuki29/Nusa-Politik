@@ -1,5 +1,21 @@
 # Catatan Perubahan
 
+## v10.6 (2026-10-22)
+
+Pembetulan dashboard berdasarkan ujian pemain PBB.
+
+### Berubah
+- **Peta "Failed to fetch":** apabila permainan dibuka terus dari folder (file://), `js/fetch-lokal.js` memuatkan data daripada `data/js/*.js` (dijana oleh `tools/bina-data-lokal.js`). Peta, data Sarawak dan data lain kini berfungsi tanpa pelayan. Jalankan semula skrip itu selepas mengubah fail dalam `data/`.
+- **Laluan Karier Sebenar** dibuang daripada permainan (semua parti, termasuk UMNO), bersama rujukannya dalam tutorial.
+- **Parti selain UMNO tiada Puteri:** kategori ahli perempuan bawah 36 tahun kini Wanita (`data.js`, `hayat.js`); jawatan "Ketua Puteri Cawangan" tidak lagi muncul; acara rawak "Konvensyen Puteri" hanya untuk UMNO, parti lain mendapat "Konvensyen Wanita"; kad Mesyuarat & Usul dan Struktur Organisasi tanpa Puteri.
+- **Tiada rujukan Perlembagaan UMNO untuk parti lain:** syarat "Fasal 9.5" (calon MT mesti pernah memegang jawatan MT atau AJK Bahagian satu penggal) digugurkan; sebab keahlian dan baris tempoh keahlian tanpa "Fasal 15.5"; butang Perlembagaan dan langkah tutorial Perlembagaan disembunyi.
+- **Struktur Organisasi** parti Sarawak tanpa Badan Perhubungan negeri (parti regional).
+- Ujian: unit (demografi, Fasal, acara), `ujian-pbb.js` (semakan dashboard), ujian bahasa.
+
+### Andaian dan had
+- Rujukan Fasal 20 (disiplin/Tataetika) pada mesej disiplin masih dipaparkan untuk semua parti kerana ia mekanik disiplin permainan; boleh dibuang jika dikehendaki.
+- Struktur jawatan Pusat (Ahli MT, Naib Presiden, Timbalan Presiden, Presiden) tidak diubah.
+
 ## v10.5.1 (2026-10-22)
 
 - **Pembetulan "Failed to fetch" pada Cawangan anda (parti Sarawak):** apabila `fetch` data gagal (cth. `index.html` dibuka terus dari folder, atau fail `data/` belum dipasang di pelayan), data PBB/PRS/SUPP/PDP/PSB kini dimuat daripada `js/data-sarawak.js` (data terbenam, dijana oleh `tools/bina-data-sarawak.js`). Jalankan semula skrip itu selepas menukar mana-mana `data/*-sarawak.csv` atau `data/pbb-dun.json`.

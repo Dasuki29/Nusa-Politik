@@ -23,8 +23,8 @@ const PARTI = ['SUPP', 'PDP', 'PSB'].indexOf(process.env.PARTI) >= 0 ? process.e
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('text=Permainan baharu'); await pg.waitForTimeout(1000);
   await pg.selectOption('#s-parti', PARTI); await pg.waitForTimeout(2500);
-  semak((await pg.getAttribute('.brand__img', 'src')).indexOf(CFG.logo) >= 0, 'logo PRS pada skrin pendaftaran');
-  semak(new RegExp(PARTI).test(await pg.textContent('.brand')) && !/UMNO/.test(await pg.textContent('.brand')), 'jenama PRS');
+  semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-nusa') >= 0, 'logo Nusa Politik (neutral) pada skrin pendaftaran');
+  semak(/Nusa Politik/.test(await pg.textContent('.brand')) && !/UMNO/.test(await pg.textContent('.brand')), 'jenama neutral pada skrin pendaftaran');
   semak((await pg.$$eval('#s-bahagian option', (o) => o.length)) === CFG.n, '34 Bahagian (DUN kawasan operasi PRS)');
   await pg.selectOption('#s-bahagian', { index: 3 }); await pg.waitForTimeout(300);
   semak((await pg.$$eval('#s-cawangan option', (o) => o.length)) > 2, 'cawangan (DM) dimuatkan');

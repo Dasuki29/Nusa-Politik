@@ -22,8 +22,8 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('text=Permainan baharu'); await pg.waitForTimeout(1000);
   await pg.selectOption('#s-parti', 'PBB'); await pg.waitForTimeout(2500);
-  semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-pbb') >= 0, 'logo PBB pada skrin pendaftaran');
-  semak(/PBB/.test(await pg.textContent('.brand')) && !/UMNO/.test(await pg.textContent('.brand')), 'jenama PBB');
+  semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-nusa') >= 0, 'logo Nusa Politik (neutral) pada skrin pendaftaran');
+  semak(/Nusa Politik/.test(await pg.textContent('.brand')) && !/UMNO|PBB/.test(await pg.textContent('.brand')), 'jenama neutral pada skrin pendaftaran');
   semak((await pg.$$eval('#s-bahagian option', (o) => o.length)) === 83, '82 Bahagian (DUN)');
   await pg.selectOption('#s-bahagian', { index: 3 }); await pg.waitForTimeout(300);
   semak((await pg.$$eval('#s-cawangan option', (o) => o.length)) > 2, 'cawangan (DM) dimuatkan');
@@ -45,6 +45,17 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   }
   const semuaTeks = (await Promise.all(['tindakan', 'profil', 'pemilihan', 'mesyuarat'].map((tb) => pg.textContent('#panel-' + tb)))).join(' ');
   semak(/\bMT\b|Majlis Tertinggi|Perhimpunan Agung PBB|\bPA\b/.test(semuaTeks), 'istilah PBB: Majlis Tertinggi (MT) / Perhimpunan Agung PBB (PA) muncul');
+  { // v10.6: dashboard parti Sarawak
+    const semuaDash = (await Promise.all(['tindakan', 'profil', 'pemilihan', 'mesyuarat'].map((tb) => pg.textContent('#panel-' + tb)))).join(' ');
+    semak(!/Laluan Karier Sebenar/.test(semuaDash), 'v10.6: kad Laluan Karier Sebenar dibuang');
+    semak(!/Fasal 9\.5|Fasal 15\.5/.test(semuaDash), 'v10.6: tiada Fasal 9.5 / 15.5 dalam tab');
+    semak(!/Ketua Puteri|Puteri atau Wanita|, Puteri/.test(semuaDash), 'v10.6: tiada Puteri dalam tab');
+    semak(!(await pg.isVisible('[data-perlembagaan]')), 'v10.6: butang Perlembagaan (UMNO) disembunyi');
+    await pg.click('#btn-menu'); await pg.waitForTimeout(400); await pg.click('#btn-struktur'); await pg.waitForTimeout(600);
+    const st = await pg.textContent('#modal-isi');
+    semak(!/Perhubungan/.test(st) && !/Puteri/.test(st), 'v10.6: struktur organisasi tiada Badan Perhubungan negeri / Puteri');
+    await pg.keyboard.press('Escape'); await pg.waitForTimeout(300);
+  }
   semak(/Kerusi DUN Anda/.test(await pg.textContent('#panel-profil')) && /Lawan utama/.test(await pg.textContent('#panel-profil')), 'kad Kerusi DUN Anda dalam tab Profil');
   semak(/Kerusi Parlimen Anda/.test(await pg.textContent('#panel-profil')) && /Pilihan raya seterusnya/.test(await pg.textContent('#panel-profil')), 'kad Kerusi Parlimen Anda dalam tab Profil (v9.4)');
   const pem = await pg.textContent('#panel-profil');

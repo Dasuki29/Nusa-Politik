@@ -82,19 +82,19 @@
   };
 
   /** Kod kategori ikut jantina ('L'|'P') dan umur. Pulang null jika tidak sah (umur < 18). */
-  function kategoriMengikutUmur(jantina, umur) {
+  function kategoriMengikutUmur(jantina, umur, parti) {
     var j = String(jantina || '').trim().toUpperCase().charAt(0);
     umur = parseInt(umur, 10);
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < 18) { return null; }
     if (umur >= 60) { return 'veteran'; }
     if (j === 'L') { return umur <= 40 ? 'pemuda' : 'biasa'; }
-    return umur <= 35 ? 'puteri' : 'wanita';
+    return umur <= 35 && !(parti && parti !== 'UMNO') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri
   }
 
   /** Tentukan kategori demografi pemain. jantina: 'L' | 'P'. Pulang null jika tidak sah. */
-  function tentukanDemografi(jantina, umur) {
+  function tentukanDemografi(jantina, umur, parti) {
     var j = String(jantina || '').trim().toUpperCase().charAt(0);
-    var kod = kategoriMengikutUmur(j, umur);
+    var kod = kategoriMengikutUmur(j, umur, parti);
     return kod ? { kod: kod, label: DEMOGRAFI[kod].label, jantina: j === 'L' ? 'Lelaki' : 'Perempuan', umur: parseInt(umur, 10) } : null;
   }
 

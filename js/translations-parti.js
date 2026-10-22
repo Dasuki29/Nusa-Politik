@@ -9,6 +9,11 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["Konvensyen Wanita", "Wanita Convention"],
+  ["Wanita UMNO menjemput anda hadir ke Konvensyen Wanita peringkat pusat dan memohon sokongan logistik.", "Wanita UMNO invites you to the central-level Wanita Convention and asks for logistical support."],
+  ["Perlu menjadi ahli sekurang-kurangnya 3 tahun. Anda ahli {x} bulan; {y} bulan lagi.", "You must be a member for at least 3 years. You have been a member for {x} months; {y} months to go."],
+  ["Mesyuarat berlangsung mengikut urutan: Cawangan, Bahagian, kemudian Perhimpunan Agung (PAU). Jika anda dalam laluan Pemuda atau Wanita, setiap peringkat didahului mesyuarat sayap anda; mesyuarat utama terkunci sehingga mesyuarat sayap selesai, dan sayap membawa satu usul ke mesyuarat utama. Pilih peranan anda bagi setiap usul: Pembawa, Pembahas atau Pengundi. Setiap pilihan mempengaruhi IP dan Reputasi Parti.", "Meetings run in sequence: Branch, Division, then the General Assembly (PAU). If you are on the Pemuda or Wanita Wing track, each level is preceded by your Wing’s meeting; the main meeting is locked until the Wing meeting is done, and the Wing brings one motion to the main meeting. Choose your role for each motion: Mover, Debater or Voter. Each choice affects IP and Party Reputation."],
+  [" (perlu 3 tahun untuk Bahagian)", " (3 years needed for Division)"],
   ["Menjadi ahli PBB sejak", "PBB member since"], ["Menjadi ahli PRS sejak", "PRS member since"], ["Menjadi ahli SUPP sejak", "SUPP member since"], ["Menjadi ahli PDP sejak", "PDP member since"], ["Menjadi ahli PSB sejak", "PSB member since"],
   ["Menjadi ahli UMNO sejak", "UMNO member since"],
   ["Parti", "Party"],

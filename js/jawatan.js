@@ -188,7 +188,7 @@
       var kh = Et.semakKeahlian(p, d.keahlian, d.fasal);
       if (!kh.sah) { return { terbuka: false, sebab: kh.sebab, tunggu: kh.baki }; }
     }
-    if (Et && d.penggal) {                                     // Fasal 9.5: satu penggal AJK Bahagian/MKT
+    if (Et && d.penggal && !(p.parti && p.parti !== 'UMNO')) {                                     // Fasal 9.5: satu penggal AJK Bahagian/MKT
       var pg = Et.semakPenggal(p, { getJawatan: getJawatan });
       if (!pg.sah) { return { terbuka: false, sebab: pg.sebab }; }
     }

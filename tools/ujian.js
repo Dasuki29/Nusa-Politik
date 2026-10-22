@@ -1377,6 +1377,17 @@ ujian('v10.5: avatar bukan-UMNO tanpa Puteri dan rupa umum', () => {
   betul(AV.svg('puteri', { parti: 'PDP' }).indexOf('Wanita') >= 0);
 });
 
+
+ujian('v10.6: parti Sarawak tiada Puteri, Fasal UMNO dan syarat penggal MKT', () => {
+  const D2 = require('../js/data.js'), ET2 = require('../js/etika.js');
+  sama(D2.tentukanDemografi('P', 25, 'PBB').kod, 'wanita'); sama(D2.tentukanDemografi('P', 25, 'UMNO').kod, 'puteri'); sama(D2.tentukanDemografi('P', 25).kod, 'puteri');
+  const p = { parti: 'PBB', tahun: 2026, bulan: 1, keahlian: { sejakTahun: 2026, sejakBulan: 1 } };
+  const k = ET2.semakKeahlian(p, 36, 'Fasal 15.5'); betul(!k.sah && !/Fasal/.test(k.sebab), 'PBB: sebab keahlian tanpa Fasal');
+  betul(/Fasal 15\.5/.test(ET2.semakKeahlian(Object.assign({}, p, { parti: 'UMNO' }), 36, 'Fasal 15.5').sebab), 'UMNO: Fasal 15.5 kekal');
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'EventDatabase.js'), 'utf8');
+  betul(/id: 'konvensyen_puteri'[^\n]*\n[^]*?syarat: function \(p\) \{ return !p\.parti \|\| p\.parti === 'UMNO'/.test(src) === false || src.indexOf("id: 'konvensyen_wanita'") > 0, 'acara Konvensyen Wanita untuk parti lain wujud');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

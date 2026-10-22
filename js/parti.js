@@ -110,6 +110,7 @@
   function terapkan() {
     if (!D || !D.body) { return; }
     var k = kini(); D.documentElement.setAttribute('data-parti', k);
+    var pb = D.querySelectorAll('[data-perlembagaan]'); for (var q = 0; q < pb.length; q++) { pb[q].style.display = k === 'UMNO' ? '' : 'none'; }      // v10.6: Perlembagaan yang dipaparkan ialah Perlembagaan UMNO; disembunyi untuk parti lain
     if (k === 'UMNO') { if (pernahTukar) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { pernahTukar = false; sambung(); } } return; }
     pernahTukar = true;
     if (pemerhati) { pemerhati.disconnect(); }

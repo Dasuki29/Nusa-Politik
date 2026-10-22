@@ -78,7 +78,9 @@
     var bulan = bulanKeahlian(p), sah = bulan >= perlu, baki = Math.max(0, perlu - bulan);
     return {
       sah: sah, bulan: bulan, perlu: perlu, baki: baki,
-      sebab: sah ? '' : 'Perlu menjadi ahli sekurang-kurangnya ' + Math.round(perlu / 12) + ' tahun (' + (fasal || 'Fasal 15.5') + '). Anda ahli ' + bulan + ' bulan; ' + baki + ' bulan lagi.'
+      sebab: sah ? '' : (p && p.parti && p.parti !== 'UMNO'
+        ? 'Perlu menjadi ahli sekurang-kurangnya ' + Math.round(perlu / 12) + ' tahun. Anda ahli ' + bulan + ' bulan; ' + baki + ' bulan lagi.'      // v10.6: parti selain UMNO tanpa rujukan Fasal UMNO
+        : 'Perlu menjadi ahli sekurang-kurangnya ' + Math.round(perlu / 12) + ' tahun (' + (fasal || 'Fasal 15.5') + '). Anda ahli ' + bulan + ' bulan; ' + baki + ' bulan lagi.')
     };
   }
 
