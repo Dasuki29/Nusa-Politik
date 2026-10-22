@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v10.7.1 (2026-10-22)
+
+- Butang **Perlembagaan** dibuang daripada tetingkap Menu dashboard (semua parti) dan langkah tutorial Perlembagaan dibuang.
+
 ## v10.7 (2026-10-22)
 
 - **Rujukan Perlembagaan/Fasal/Tataetika UMNO dijadikan umum untuk parti selain UMNO** (UMNO tidak berubah): "(Fasal 20.10b)" dibuang, "Fasal 20.13" menjadi "peraturan parti", "Tataetika Ahli UMNO 2025" menjadi "Tataetika parti", "Perlembagaan UMNO" menjadi "perlembagaan parti". Dilaksanakan di `js/translations.js` (`UMUM`) dan `js/parti.js`; setiap baris kamus EN didaftar juga dalam bentuk umum, jadi terjemahan EN kekal berfungsi (ujian bahasa baharu).
