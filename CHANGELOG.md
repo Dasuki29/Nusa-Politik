@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v10.4 (2026-10-22)
+
+Kejutan kempen khusus parti untuk parti Sarawak mod ringan.
+
+### Baharu
+- **8 kejutan kempen baharu** (2 setiap parti, `KEJUTAN_PARTI` dalam `js/pru.js`): PRS (jalan pedalaman terputus, jemputan perayaan rumah panjang), SUPP (banjir kilat bandar, rungutan peniaga kecil), PDP (isu sensitif antara komuniti, dialog tiga komuniti), PSB (ceramah dihalang, dakwaan bantuan tidak sampai). Setiap kejutan ada 3 pilihan (kos dana, peluang rawak, kesan sokongan) seperti kejutan biasa; kejutan kawasan sensitif (bandar / luar bandar) mendapat penalti 1.3 kali seperti biasa.
+- **Penjadualan:** setiap slot kejutan dalam kempen 14 hari mempunyai peluang 40% (`KEJUTAN_PARTI_PELUANG`) untuk mengambil kejutan parti pemain; selebihnya kejutan umum. UMNO dan PBB tidak terjejas.
+- Terjemahan EN penuh dan tutorial BM/EN. Ujian: unit (struktur, pemilihan, semua 24 pilihan boleh dijawab) dan ujian bahasa (semua teks kejutan diterjemah).
+
+### Andaian dan had
+- Peristiwa ialah rekaan permainan, bukan kejadian sebenar; peluang 40% dan semua angka kesan ialah andaian. Kejutan tidak mengubah meter ciri teras (Sokongan Bandar, Imbangan Kaum, Naratif); hanya sokongan kempen.
+
 ## v10.3.1 (2026-10-22)
 
 PSB: baris "Rakan Gabungan" dibuang. Sebagai pembangkang tanpa rakan gabungan, PSB tidak lagi melalui fasa rundingan kerusi (`perluRunding` = false), jadi tiada pertandingan 3-penjuru dan tiada baris "Rakan Gabungan" dalam pecahan undi atau keputusan (`js/pru.js`). Ujian PSB menyemak ketiga-tiganya.

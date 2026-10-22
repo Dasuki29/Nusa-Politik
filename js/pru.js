@@ -170,7 +170,66 @@
         { id: 'tawar', label: 'Tawarkan insentif', kesan: { dana: -2000, jentera: 8 }, etika: { risiko: 6, lapor: { peluang: 20, berat: 1, perkara: 'Insentif kepada sukarelawan', fasal: 'Fasal 20.13' } } },
         { id: 'biar', label: 'Biarkan mereka pergi', kesan: { jentera: -12, stress: 1 } }] }
   ];
-  function kejutanId(id) { for (var i = 0; i < KEJUTAN.length; i++) { if (KEJUTAN[i].id === id) { return KEJUTAN[i]; } } return null; }
+
+  /* v10.4: kejutan kempen khusus parti Sarawak mod ringan (PRS, SUPP, PDP, PSB). Peristiwa rekaan permainan, bukan kejadian sebenar; angka ialah andaian.
+     Setiap slot kejutan dalam kempen mempunyai peluang KEJUTAN_PARTI_PELUANG untuk mengambil daripada senarai parti pemain. */
+  var KEJUTAN_PARTI_PELUANG = 0.4;
+  var KEJUTAN_PARTI = {
+    PRS: [
+      { id: 'sw_jalan_banjir', jenis: 'kontroversi', ikon: '🛣️', tajuk: 'Jalan pedalaman terputus', huraian: 'Banjir memutuskan jalan ke beberapa kampung dan rumah panjang di kawasan anda. Penduduk menunggu bantuan.', sensitif: 'RURAL',
+        pilihan: [
+          { id: 'bantu', label: 'Hantar bantuan sendiri ke kampung', kesan: { dana: -700, jentera: -3, vs: 2, stress: 3 } },
+          { id: 'majlis', label: 'Minta bantuan segera daripada Majlis GPS', rawak: { p: 0.55, jaya: { vs: 3, stress: 2 }, gagal: { vs: -6, stress: 4 } } },
+          { id: 'diam', label: 'Berdiam diri', kesan: { vs: -5, stress: 1 } }] },
+      { id: 'sw_gawai', jenis: 'lawatan', ikon: '🏠', tajuk: 'Jemputan perayaan rumah panjang', huraian: 'Sebuah rumah panjang menjemput anda ke majlis perayaan tahunan mereka.', sensitif: null,
+        pilihan: [
+          { id: 'hadir', label: 'Hadir dan menyumbang kepada majlis', kesan: { dana: -600, vs: 3, stress: 2 } },
+          { id: 'ucapan', label: 'Hadir dan menyampaikan ucapan politik', rawak: { p: 0.5, jaya: { vs: 4, stress: 2 }, gagal: { vs: -5, stress: 3 } } },
+          { id: 'tidak', label: 'Tidak hadir', kesan: { vs: -4 } }] }
+    ],
+    SUPP: [
+      { id: 'sw_banjir_kilat', jenis: 'kontroversi', ikon: '🌧️', tajuk: 'Banjir kilat di pusat bandar', huraian: 'Hujan lebat menenggelamkan deretan kedai di pusat bandar. Peniaga meminta anda bertindak.', sensitif: 'URBAN',
+        pilihan: [
+          { id: 'lawat', label: 'Melawat peniaga dan membantu membersihkan', kesan: { dana: -800, jentera: -3, vs: 2, stress: 3 } },
+          { id: 'desak', label: 'Mendesak pihak berkuasa tempatan', rawak: { p: 0.55, jaya: { vs: 3, stress: 2 }, gagal: { vs: -6, stress: 4 } } },
+          { id: 'abai', label: 'Abaikan', kesan: { vs: -5, stress: 1 } }] },
+      { id: 'sw_peniaga_kecil', jenis: 'kontroversi', ikon: '🏪', tajuk: 'Rungutan peniaga kecil', huraian: 'Peniaga kecil merungut tentang kos sewa dan kerumitan lesen premis.', sensitif: 'URBAN',
+        pilihan: [
+          { id: 'dialog', label: 'Anjur dialog dengan persatuan peniaga', kesan: { jentera: -4, vs: 1, stress: 2 } },
+          { id: 'skim', label: 'Umumkan skim bantuan peniaga', kesan: { dana: -1000, vs: 3, stress: 2 } },
+          { id: 'abai', label: 'Abaikan', kesan: { vs: -5 } }] }
+    ],
+    PDP: [
+      { id: 'sw_isu_kaum', jenis: 'kontroversi', ikon: '⚖️', tajuk: 'Isu sensitif antara komuniti', huraian: 'Satu isu setempat mencetuskan perbalahan antara komuniti di kawasan campuran anda.', sensitif: null,
+        pilihan: [
+          { id: 'seimbang', label: 'Mengeluarkan kenyataan seimbang', kesan: { vs: 1, stress: 3 } },
+          { id: 'berpihak', label: 'Menyebelahi satu komuniti', rawak: { p: 0.5, jaya: { vs: 4, stress: 3 }, gagal: { vs: -9, stress: 5 } } },
+          { id: 'diam', label: 'Berdiam diri', kesan: { vs: -4, stress: 1 } }] },
+      { id: 'sw_dialog_komuniti', jenis: 'lawatan', ikon: '🤝', tajuk: 'Dialog tiga komuniti', huraian: 'Pemimpin masyarakat mencadangkan dialog bersama untuk komuniti Melayu/Melanau, Dayak dan Cina di kawasan anda.', sensitif: null,
+        pilihan: [
+          { id: 'anjur', label: 'Menganjurkan dialog dan menanggung kos', kesan: { dana: -700, vs: 2, jentera: 3, stress: 2 } },
+          { id: 'wakil', label: 'Menghantar wakil sahaja', kesan: { vs: 0, stress: 1 } },
+          { id: 'abai', label: 'Abaikan', kesan: { vs: -3 } }] }
+    ],
+    PSB: [
+      { id: 'sw_sekat_ceramah', jenis: 'kontroversi', ikon: '📢', tajuk: 'Ceramah dihalang', huraian: 'Pihak berkuasa tempatan tidak membenarkan ceramah anda di lokasi yang dirancang.', sensitif: null,
+        pilihan: [
+          { id: 'bantah', label: 'Membantah dan menyiarkan secara langsung', rawak: { p: 0.55, jaya: { vs: 4, stress: 3 }, gagal: { vs: -5, stress: 4 } } },
+          { id: 'pindah', label: 'Memindahkan ceramah ke lokasi lain', kesan: { dana: -500, vs: 0, stress: 2 } },
+          { id: 'akur', label: 'Akur dan batalkan ceramah', kesan: { vs: -4, stress: 1 } }] },
+      { id: 'sw_dakwaan_bantuan', jenis: 'kontroversi', ikon: '🧾', tajuk: 'Dakwaan bantuan tidak sampai', huraian: 'Penduduk mengadu bantuan kerajaan negeri tidak sampai kepada mereka. Anda boleh membangkitkannya.', sensitif: 'RURAL',
+        pilihan: [
+          { id: 'bukti', label: 'Mengumpul bukti dan membentangkannya', kesan: { dana: -600, vs: 3, stress: 3 } },
+          { id: 'serang', label: 'Menyerang pihak lawan secara peribadi', rawak: { p: 0.4, jaya: { vs: 5, stress: 2 }, gagal: { vs: -9, stress: 5 } } },
+          { id: 'abai', label: 'Abaikan', kesan: { vs: -4 } }] }
+    ]
+  };
+  /** Senarai kejutan yang boleh dipilih untuk pemain: umum, dengan kejutan parti dalam kebarangkalian KEJUTAN_PARTI_PELUANG. */
+  function pilihKejutan(p, r) {
+    var kp = p && KEJUTAN_PARTI[p.parti];
+    return kp && kp.length && r() < KEJUTAN_PARTI_PELUANG ? kp[Math.floor(r() * kp.length)] : KEJUTAN[Math.floor(r() * KEJUTAN.length)];
+  }
+  function kejutanId(id) { var q = KEJUTAN_PARTI, kk; for (kk in q) { if (Object.prototype.hasOwnProperty.call(q, kk)) { for (var z = 0; z < q[kk].length; z++) { if (q[kk][z].id === id) { return q[kk][z]; } } } } for (var i = 0; i < KEJUTAN.length; i++) { if (KEJUTAN[i].id === id) { return KEJUTAN[i]; } } return null; }
 
   var ISU_TEMPATAN = ['jalan_air', 'kerja_belia', 'klinik_warga', 'harga_barang', 'perumahan', 'pertanian'];
 
@@ -484,7 +543,7 @@
     a.kejutanHari = {};
     while (n-- > 0 && hariSedia.length) {
       var i = Math.floor(r() * hariSedia.length), hr = hariSedia.splice(i, 1)[0];
-      a.kejutanHari[hr] = KEJUTAN[Math.floor(r() * KEJUTAN.length)].id;
+      a.kejutanHari[hr] = pilihKejutan(p, r).id;   // v10.4: kejutan khusus parti
     }
     a.log = [{ hari: 0, teks: 'Kempen bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '; manifesto: ' + ids.map(function (x) { return janjiId(x).nama; }).join(', ') + '.' }];
     var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
@@ -863,7 +922,7 @@
   }
 
   return {
-    CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KOS_RUNDING: KOS_RUNDING,
+    CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KEJUTAN_PARTI: KEJUTAN_PARTI, KEJUTAN_PARTI_PELUANG: KEJUTAN_PARTI_PELUANG, pilihKejutan: pilihKejutan, KOS_RUNDING: KOS_RUNDING,
     setRng: function (f) { rngLalai = f || Math.random; },
     getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,

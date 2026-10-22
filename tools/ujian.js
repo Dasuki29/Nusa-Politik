@@ -1341,6 +1341,31 @@ ujian('PSB v10.3: pembangkang (Naratif Pembangkang, tiada kuota/kerajaan, menang
   } finally { Math.random = lama; }
 });
 
+
+ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
+  const D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));
+  sama(Object.keys(K).sort().join(), 'PDP,PRS,PSB,SUPP');
+  Object.keys(K).forEach((k) => { sama(K[k].length, 2, k + ' ada 2 kejutan'); K[k].forEach((e) => { betul(!ids.has(e.id), 'id unik ' + e.id); ids.add(e.id); sama(e.pilihan.length, 3, e.id + ' 3 pilihan'); betul(PRU.KEJUTAN_PARTI && e.id.indexOf('sw_') === 0, 'awalan sw_'); }); });
+  /* pemilihan: umum bila rng tinggi, parti bila rng rendah; UMNO / PBB tidak pernah dapat kejutan parti */
+  const pp = { parti: 'PRS' }; betul(K.PRS.some((e) => e.id === PRU.pilihKejutan(pp, () => 0.01).id), 'PRS: rng rendah = kejutan parti');
+  betul(PRU.KEJUTAN.some((e) => e.id === PRU.pilihKejutan(pp, () => 0.99).id), 'PRS: rng tinggi = kejutan umum');
+  ['UMNO', 'PBB'].forEach((x) => betul(PRU.KEJUTAN.some((e) => e.id === PRU.pilihKejutan({ parti: x }, () => 0.01).id), x + ' tiada kejutan parti'));
+  /* semua pilihan boleh dijawab (kejutanId menemui kejutan parti) */
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'prs-sarawak.csv'), 'utf8'))), duns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  const b = h.bahagian.find((x) => duns[parseInt(x.kod, 10)] && duns[parseInt(x.kod, 10)].rkPRS === 1), dem = D.tentukanDemografi('Lelaki', 40);
+  Object.keys(K).forEach((k) => K[k].forEach((e) => e.pilihan.forEach((c) => {
+    S.savePlayer(S.buildPlayerProfile({ parti: 'PRS', nama: 'Uji', demografik: dem, cawangan: (b.dun ? b.dun[0].cawangan[0] : b.cawangan[0]), sayap: 'utama', avatar: 'biasa', dunInfo: duns[parseInt(b.kod, 10)] }));
+    P.tetap({ jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan')], ip: 800, myr: 500000, ap: 50, reputasi: 80, tahun: 2027, bulan: 1 });
+    const pru = PRU.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PRU.isytihar('tamat_penggal').ok);
+    betul(PRU.pilihKerusi('DUN', { rng: () => 0.01 }).ok); let a = PRU.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PRU.runding('abai'); a = PRU.getPRU(S.loadPlayer()).aktif; }
+    const pil = PRU.peruntukanPilihan(S.loadPlayer(), a); betul(PRU.mulaKempen(PRU.JANJI.map((x) => x.id).slice(0, 3), pil.pilihan[pil.pilihan.length - 1]).ok);
+    const pr2 = PRU.getPRU(S.loadPlayer()); pr2.aktif.kejutanAktif = { id: e.id, hari: 3 }; S.applyEffects({}, { kiraTindakan: false, patch: { pru: pr2 } });
+    const kp = PRU.keadaanKempen(S.loadPlayer()); sama(kp.kejutan && kp.kejutan.id, e.id, 'kejutan aktif ' + e.id);
+    const r = PRU.jawabKejutan(c.id, { rng: () => 0.3 }); betul(r.ok, e.id + '/' + c.id + ': ' + r.ralat);
+  })));
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

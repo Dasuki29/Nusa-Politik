@@ -195,6 +195,12 @@ ujian('PSB v10.3: teks Naratif Pembangkang (pembangkang, mod ringan) mempunyai t
   } finally { g.sessionStorage = asalSS; }
 });
 
+ujian('v10.4: kejutan kempen khusus parti (PRS, SUPP, PDP, PSB) diterjemah penuh', () => {
+  const K = g.MyPolitikPRU.KEJUTAN_PARTI, s = [];
+  Object.keys(K).forEach((k) => K[k].forEach((e) => { s.push(e.tajuk, e.huraian, e.tajuk + ': Berjaya!'); e.pilihan.forEach((c) => { s.push(c.label, c.label + '.'); }); }));
+  return s.filter((x) => I.terjemah(x) === null);
+});
+
 let gagal = 0;
 hasil.forEach((h) => {
   if (h.ok) { console.log('  ✓ ' + h.nama); return; }
