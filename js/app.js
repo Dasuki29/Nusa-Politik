@@ -348,19 +348,28 @@
     var r = el.form.querySelector('input[name="blokPBB"][value="' + state.blok + '"]'); if (r) { r.checked = true; }
   }
   Array.prototype.forEach.call(el.form.querySelectorAll('input[name="blokPBB"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { state.blok = r.value; state.blokManual = true; } }); });
+  /** v10.5.1: muat js/data-sarawak.js (skrip, berfungsi walaupun fetch disekat) sekali sahaja. */
+  var terbenamJanji = null;
+  function muatDataTerbenam() {
+    if (window.MyPolitikDataSarawak) { return Promise.resolve(window.MyPolitikDataSarawak); }
+    if (!terbenamJanji) { terbenamJanji = new Promise(function (ok) { var sc = document.createElement('script'); sc.src = 'js/data-sarawak.js'; sc.onload = function () { ok(window.MyPolitikDataSarawak || null); }; sc.onerror = function () { ok(null); }; document.head.appendChild(sc); }); }
+    return terbenamJanji;
+  }
   async function muatDataPBB() {
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
     var parti1 = state.parti;
     setStatus('loading', 'Memuatkan data PBB Sarawak...');
     try {
-      var res = await fetch(PT.info(state.parti).data, { cache: 'no-cache' });
-      if (!res.ok) { throw new Error('HTTP ' + res.status); }
-      var h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
+      var teksCsv = null, kodP = state.parti.toLowerCase();
+      try { var res = await fetch(PT.info(state.parti).data, { cache: 'no-cache' }); if (!res.ok) { throw new Error('HTTP ' + res.status); } teksCsv = await res.text(); }
+      catch (eF) { var emb = await muatDataTerbenam(); if (emb && emb.csv[kodP]) { teksCsv = emb.csv[kodP]; } else { throw eF; } }      // v10.5.1: fetch gagal (cth. buka dari folder) -> guna data terbenam
+      var h = D.rowsToHierarchy(D.teksKeBaris(teksCsv));
       h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });   // PBB tiada Puteri
       if (state.parti !== parti1) { return; }
       state.data = h;
       try { var rd = await fetch('data/pbb-dun.json', { cache: 'no-cache' }); state.dunData = rd.ok ? await rd.json() : null; } catch (e2) { state.dunData = null; }      // v8.33
+      if (!state.dunData) { var emb2 = await muatDataTerbenam(); state.dunData = emb2 ? emb2.dun : null; }
       if (state.parti !== parti1) { return; }
     } catch (e) {
       setStatus('fallback', 'Data PBB tidak dapat dimuatkan: ' + (e && e.message ? e.message : e)); el.retry.hidden = false; return;

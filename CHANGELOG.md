@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v10.5.1 (2026-10-22)
+
+- **Pembetulan "Failed to fetch" pada Cawangan anda (parti Sarawak):** apabila `fetch` data gagal (cth. `index.html` dibuka terus dari folder, atau fail `data/` belum dipasang di pelayan), data PBB/PRS/SUPP/PDP/PSB kini dimuat daripada `js/data-sarawak.js` (data terbenam, dijana oleh `tools/bina-data-sarawak.js`). Jalankan semula skrip itu selepas menukar mana-mana `data/*-sarawak.csv` atau `data/pbb-dun.json`.
+- Nota: data UMNO (Google Sheets) masih perlukan internet/pelayan.
+
 ## v10.5 (2026-10-22)
 
 Halaman indeks neutral (tidak lagi berjenama UMNO) dan borang pendaftaran ikut parti.
