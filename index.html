@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="description" content="Daftar sebagai ahli cawangan UMNO dan mulakan perjalanan politik anda.">
+  <meta name="description" content="Daftar sebagai ahli cawangan parti pilihan anda dan mulakan perjalanan politik anda.">
   <script src="js/tema.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,6 +188,7 @@ a:hover { color: var(--gold-light); }
   background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
 }
 
+.field[hidden], #f-blok[hidden], #h-parti[hidden], #h-ahli[hidden] { display: none !important; }
 .brand {
   display: flex;
   align-items: center;
@@ -1252,7 +1253,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
       <div class="kertas">
         <div class="kertas__jalur" aria-hidden="true"></div>
         <div class="kertas__kepala">
-          <img class="kertas__logo" src="assets/images/logo.png" alt="" width="56" height="56" onerror="this.onerror=null;this.src='assets/images/logo-placeholder.svg'">
+          <img class="kertas__logo" data-netral src="assets/images/logo-nusa.svg" alt="" width="56" height="56" onerror="this.onerror=null;this.src='assets/images/logo-placeholder.svg'">
           <div>
             <p class="kertas__kecil">Kertas pilihan</p>
             <h1 id="menu-tajuk" class="kertas__tajuk">Nusa Politik</h1>
@@ -1282,10 +1283,10 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   </section>
 
   <header class="app-header">
-    <a class="brand" href="index.html" aria-label="Nusa Politik UMNO, laman utama">
-      <img class="brand__img" src="assets/images/logo.png" alt="" width="34" height="34"
+    <a class="brand" href="index.html" aria-label="Nusa Politik, laman utama">
+      <img class="brand__img" data-netral src="assets/images/logo-nusa.svg" alt="" width="34" height="34"
            onerror="this.onerror=null;this.src='assets/images/logo-placeholder.svg'">
-      <span>Nusa Politik <span class="brand__sub">UMNO</span></span>
+      <span>Nusa Politik</span>
     </a>
     <div class="header-actions">
       <button type="button" class="btn btn--ghost btn--sm lang-switch" data-lang-switch id="btn-lang" aria-pressed="false" aria-label="Tukar bahasa / Switch language" title="Bahasa / Language"><span data-lang="BM" class="is-on">BM</span><span class="lang-switch__sep" aria-hidden="true"> | </span><span data-lang="EN">EN</span></button>
@@ -1301,7 +1302,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
         <div class="hero__copy">
           <div class="hero__top">
             <div class="hero__emblem">
-              <img src="assets/images/logo.png" alt="Logo" width="50" height="50"
+              <img data-netral src="assets/images/logo-nusa.svg" alt="Logo Nusa Politik" width="50" height="50"
                    onerror="this.onerror=null;this.src='assets/images/logo-placeholder.svg'">
             </div>
             <span class="hero__eyebrow">Simulasi Politik &middot; Tahun 2026</span>
@@ -1312,7 +1313,6 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
             <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><b>12</b> bulan setahun</span>
             <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 13l9 5 9-5"/></svg><b>3</b> peringkat parti</span>
             <span class="chip" data-i18n-skip><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>Pemilihan <b>sebenar</b></span>
-            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 21V9l8-6 8 6v12M9 21v-6h6v6"/></svg>PAU di <b>WTC KL</b> &middot; Menara Dato&rsquo; Onn</span>
           </div>
         </div>
         <div class="hero__art" aria-hidden="true">
@@ -1407,6 +1407,24 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
           <fieldset class="form-section">
             <legend><svg class="legend-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Maklumat anda</legend>
             <div class="form-grid form-grid--nama">
+              <div class="field field--wide" id="f-parti" data-jenama-skip>
+                <label for="s-parti">Parti</label>
+                <select class="select" id="s-parti" name="parti" aria-describedby="h-parti">
+                  <option value="UMNO" selected>UMNO (Semenanjung &amp; Sabah)</option>
+                  <option value="PBB">PBB (Sarawak, GPS, mod penuh)</option>
+                  <option value="PRS">PRS (Sarawak, GPS, mod ringan)</option>
+                  <option value="SUPP">SUPP (Sarawak, GPS, mod ringan)</option>
+                  <option value="PDP">PDP (Sarawak, GPS, mod ringan)</option>
+                  <option value="PSB">PSB (Sarawak, pembangkang, mod ringan)</option>
+                </select>
+                <p class="field__hint" id="h-parti" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)" hidden>Parti Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.</p>
+              </div>
+              <div class="field field--wide" id="f-blok" role="radiogroup" aria-labelledby="l-blok" hidden>
+                <span id="l-blok" style="display:block;font-weight:600;margin-bottom:6px">Sayap dalaman PBB</span>
+                <label style="margin-right:16px"><input type="radio" name="blokPBB" value="bumiputera"> <span>Bumiputera</span> <span class="note" style="font-size:.78rem">(Melayu/Melanau)</span></label>
+                <label><input type="radio" name="blokPBB" value="pesaka"> <span>Pesaka</span> <span class="note" style="font-size:.78rem">(Dayak)</span></label>
+                <p class="field__hint" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)">Jawatan Pusat dibahagi antara dua blok. Dicadangkan mengikut kawasan yang anda pilih; anda boleh menukarnya.</p>
+              </div>
               <div class="field field--wide">
                 <label for="f-nama">Nama penuh</label>
                 <input class="input" id="f-nama" name="nama" type="text" maxlength="60" autocomplete="name" placeholder="cth. Ahmad Faiz bin Hassan" aria-describedby="e-nama" required>
@@ -1427,7 +1445,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                 <p class="field__error" id="e-umur" role="alert"></p>
               </div>
               <div class="field" style="grid-column:1/-1">
-                <label for="s-ahli">Menjadi ahli UMNO sejak</label>
+                <label for="s-ahli" id="l-ahli">Menjadi ahli UMNO sejak</label>
                 <select class="select" id="s-ahli" name="tahunAhli" aria-describedby="h-ahli">
                   <option value="0" selected>Ahli baharu (2026)</option>
                   <option value="1">1 tahun lalu</option>
@@ -1477,22 +1495,6 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
 
           <fieldset class="form-section">
             <legend><svg class="legend-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>Cawangan anda</legend>
-            <div class="field" id="f-parti" data-jenama-skip role="radiogroup" aria-labelledby="l-parti" style="margin-bottom:14px">
-              <span id="l-parti" style="display:block;font-weight:600;margin-bottom:6px">Parti</span>
-              <label style="margin-right:16px"><input type="radio" name="parti" value="UMNO" checked> UMNO <span class="note" style="font-size:.78rem">(Semenanjung &amp; Sabah)</span></label>
-              <label style="margin-right:16px"><input type="radio" name="parti" value="PBB"> PBB <span class="note" style="font-size:.78rem">(Sarawak, GPS, mod penuh)</span></label>
-              <label style="margin-right:16px"><input type="radio" name="parti" value="PRS"> PRS <span class="note" style="font-size:.78rem">(Sarawak, GPS, mod ringan)</span></label>
-              <label style="margin-right:16px"><input type="radio" name="parti" value="SUPP"> SUPP <span class="note" style="font-size:.78rem">(Sarawak, GPS, mod ringan)</span></label>
-              <label style="margin-right:16px"><input type="radio" name="parti" value="PDP"> PDP <span class="note" style="font-size:.78rem">(Sarawak, GPS, mod ringan)</span></label>
-              <label><input type="radio" name="parti" value="PSB"> PSB <span class="note" style="font-size:.78rem">(Sarawak, pembangkang, mod ringan)</span></label>
-              <p class="field__hint" id="h-parti" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)" hidden>PBB ialah parti regional Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi, sayap Pemuda dan Wanita sahaja. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.</p>
-            </div>
-            <div class="field" id="f-blok" role="radiogroup" aria-labelledby="l-blok" style="margin-bottom:14px" hidden>
-              <span id="l-blok" style="display:block;font-weight:600;margin-bottom:6px">Sayap dalaman PBB</span>
-              <label style="margin-right:16px"><input type="radio" name="blokPBB" value="bumiputera"> <span>Bumiputera</span> <span class="note" style="font-size:.78rem">(Melayu/Melanau)</span></label>
-              <label><input type="radio" name="blokPBB" value="pesaka"> <span>Pesaka</span> <span class="note" style="font-size:.78rem">(Dayak)</span></label>
-              <p class="field__hint" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)">Jawatan Pusat dibahagi antara dua blok. Dicadangkan mengikut kawasan yang anda pilih; anda boleh menukarnya.</p>
-            </div>
             <p class="status" id="status" data-state="loading" role="status">
               <span class="status__dot" aria-hidden="true"></span>
               <span class="status__text" id="status-text">Memuatkan data daripada Google Sheets...</span>
@@ -1520,7 +1522,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                 <p class="field__error" id="e-cawangan" role="alert"></p>
               </div>
             </div>
-              <p class="field__hint" id="h-cawangan" style="margin:12px 0 0;font-size:.78rem;color:var(--text-muted)"><b>Nota:</b> senarai &ldquo;cawangan&rdquo; ini diambil daripada data <b>Daerah Mengundi (DM) SPR</b>, bukan data cawangan rasmi UMNO. Ia digunakan untuk simulasi sahaja.</p>
+              <p class="field__hint" id="h-cawangan" style="margin:12px 0 0;font-size:.78rem;color:var(--text-muted)"><b>Nota:</b> senarai &ldquo;cawangan&rdquo; ini diambil daripada data <b>Daerah Mengundi (DM) SPR</b>, bukan data cawangan rasmi mana-mana parti politik. Ia digunakan untuk simulasi sahaja.</p>
 
             <div class="stats-panel info" id="info" hidden aria-live="polite">
               <h3 class="stats-panel__title">Cawangan dipilih</h3>
@@ -1544,15 +1546,6 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
         </form>
 
         <aside class="dashboard-layout__side stack" aria-label="Keadaan permulaan">
-          <section class="card lagu lagu--index" id="kad-lagu" aria-labelledby="lagu-tajuk">
-          <button type="button" class="lagu__kepala" id="lagu-tog" aria-expanded="false" aria-controls="lagu-badan">
-            <span class="lagu__ikon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 18V5l11-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm11-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span class="lagu__tajuk" id="lagu-tajuk">Lagu Rasmi &amp; Pemain Audio<small>Dengar lagu tema sambil bermain</small></span>
-            <span class="lagu__tog" aria-hidden="true">&#9662;</span>
-          </button>
-          <div class="lagu__badan" id="lagu-badan" data-spotify="6DXCRlgStdHtqYWOxHRWSH" hidden></div>
-          <p class="lagu__nota">Dimainkan melalui Spotify (perlu internet; log masuk Spotify untuk lagu penuh). Senyapkan audio permainan jika bunyi bertindih.</p>
-        </section>
           <section class="stats-panel">
             <h2 class="stats-panel__title">Permulaan anda</h2>
             <div class="preview-avatar" id="preview-avatar" aria-live="polite"></div>
@@ -1623,8 +1616,6 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   <script src="js/latihan.js"></script>
   <script>try { if (window.MyPolitikLatihan) { window.MyPolitikLatihan.pulihJikaPerlu(); } } catch (e) {}</script>
   <script src="js/avatar.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/lagu.js"></script>
   <script src="js/app.js"></script>
   <script src="js/perlembagaan.js"></script>
   <script src="js/slotpanel.js"></script>

@@ -12,6 +12,8 @@
   function $(id) { return document.getElementById(id); }
   var kad = $('kad-lagu'), badan = $('lagu-badan'), tog = $('lagu-tog'), btn = $('btn-lagu');
   if (!kad || !badan) { return; }
+  /* v10.5: lagu rasmi hanya untuk pemain UMNO; parti lain neutral. */
+  try { var PT0 = window.MyPolitikParti; if (PT0 && PT0.kini && PT0.kini() !== 'UMNO') { kad.hidden = true; if (document.getElementById('btn-lagu')) { document.getElementById('btn-lagu').style.display = 'none'; } return; } } catch (e0) { /* teruskan */ }
   var pop = kad.classList.contains('lagu-pop');
 
   function pasang() {

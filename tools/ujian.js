@@ -1366,6 +1366,17 @@ ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   })));
 });
 
+
+ujian('v10.5: avatar bukan-UMNO tanpa Puteri dan rupa umum', () => {
+  const AV = require('../js/avatar.js');
+  betul(AV.senarai('UMNO').some(a => a.kod === 'puteri'));
+  ['PBB', 'PRS', 'SUPP', 'PDP', 'PSB'].forEach(k => betul(!AV.senarai(k).some(a => a.kod === 'puteri')));
+  sama(AV.cadangan('puteri', 'PBB'), 'wanita');
+  sama(AV.cadangan('puteri', 'UMNO'), 'puteri');
+  betul(AV.svg('pemuda', { parti: 'UMNO' }).indexOf('#15171D') >= 0 && AV.svg('pemuda', { parti: 'PSB' }).replace(/mpa\d+/g, 'x') !== AV.svg('pemuda', { parti: 'UMNO' }).replace(/mpa\d+/g, 'x'));
+  betul(AV.svg('puteri', { parti: 'PDP' }).indexOf('Wanita') >= 0);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v10.5 (2026-10-22)
+
+Halaman indeks neutral (tidak lagi berjenama UMNO) dan borang pendaftaran ikut parti.
+
+### Berubah
+- Pengepala, kertas menu dan hero guna logo Nusa Politik (`assets/images/logo-nusa.svg`, atribut `data-netral` supaya tidak ditukar logo parti). Tulisan kuning "UMNO" dan chip "PAU di WTC KL" dibuang.
+- Kad Lagu Rasmi dibuang dari indeks; di papan pemuka lagu hanya untuk pemain UMNO.
+- Pilihan parti (senarai juntai: UMNO, PBB, PRS, SUPP, PDP, PSB) dipindah ke "Maklumat anda". Sayap dalaman (Bumiputera/Pesaka) hanya untuk PBB, terus di bawahnya.
+- Label "Menjadi ahli {parti} sejak" ikut parti; nota Fasal 15.5 hanya untuk UMNO.
+- Parti bukan-UMNO: tiada Puteri (watak dan laluan sayap); set avatar umum baharu (kemeja/blazer/blaus, tanpa songkok) dalam `js/avatar.js`.
+- Nota senarai cawangan: "bukan data cawangan rasmi mana-mana parti politik".
+- Pembetulan: hasil muat data lambat tidak lagi menimpa data apabila parti ditukar pantas.
+- Ujian: `tools/ujian-indeks.js` (baharu), unit avatar, terjemahan EN.
+
 ## v10.4 (2026-10-22)
 
 Kejutan kempen khusus parti untuk parti Sarawak mod ringan.

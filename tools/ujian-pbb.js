@@ -21,7 +21,7 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.route('**/*', (rt) => { if (rt.request().url().startsWith(base)) { rt.continue(); } else { rt.abort(); } });
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('text=Permainan baharu'); await pg.waitForTimeout(1000);
-  await pg.check('input[name=parti][value=PBB]'); await pg.waitForTimeout(2500);
+  await pg.selectOption('#s-parti', 'PBB'); await pg.waitForTimeout(2500);
   semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-pbb') >= 0, 'logo PBB pada skrin pendaftaran');
   semak(/PBB/.test(await pg.textContent('.brand')) && !/UMNO/.test(await pg.textContent('.brand')), 'jenama PBB');
   semak((await pg.$$eval('#s-bahagian option', (o) => o.length)) === 83, '82 Bahagian (DUN)');

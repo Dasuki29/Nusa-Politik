@@ -182,8 +182,8 @@
   function kemaskiniPratonton() {
     var box = $('preview-avatar');
     if (!box || !AV) { return; }
-    var kod = avatarTerpilih(), info = AV.LIST.filter(function (a) { return a.kod === kod; })[0];
-    box.innerHTML = AV.svg(kod, { saiz: 64 }) + '<div><b></b><span></span></div>';
+    var kod = avatarTerpilih(), info = AV.senarai(state.parti).filter(function (a) { return a.kod === kod; })[0];
+    box.innerHTML = AV.svg(kod, { saiz: 64, parti: state.parti }) + '<div><b></b><span></span></div>';
     box.querySelector('b').textContent = el.nama.value.trim() || 'Nama anda';
     box.querySelector('span').textContent = 'Watak ' + (info ? info.label : '');
   }
@@ -203,23 +203,30 @@
     var j = el.form.querySelector('input[name="jantina"]:checked'), u = parseInt(el.umur.value, 10);
     if (!j || !isFinite(u) || u < 18 || u > 100) { return; }
     var dem = D.tentukanDemografi(j.value, u);
-    if (dem) { pilihAvatar(AV.cadangan(dem), false); }
+    if (dem) { pilihAvatar(AV.cadangan(dem, state.parti), false); }
   }
 
   function binaPemilihAvatar() {
     var grid = $('avatar-grid');
     if (!grid || !AV) { if (grid && grid.parentNode) { grid.parentNode.hidden = true; } return; }
-    grid.innerHTML = AV.LIST.map(function (a) {
+    grid.innerHTML = AV.senarai(state.parti).map(function (a) {
       return '<label class="av" data-kod="' + a.kod + '"><input type="radio" name="avatar" value="' + a.kod + '"' + (a.kod === avatarState.kod ? ' checked' : '') + '>' +
-        '<span class="av__box">' + AV.svg(a.kod, { saiz: 72 }) + '<span class="av__nama">' + a.label + '</span><span class="av__desc">' + a.penerangan + '</span><span class="av__saran">Dicadangkan</span></span></label>';
+        '<span class="av__box">' + AV.svg(a.kod, { saiz: 72, parti: state.parti }) + '<span class="av__nama">' + a.label + '</span><span class="av__desc">' + a.penerangan + '</span><span class="av__saran">Dicadangkan</span></span></label>';
     }).join('');
+    if (!grid.getAttribute('data-terikat')) { grid.setAttribute('data-terikat', '1');
     grid.addEventListener('click', function (ev) { if (ev.target && ev.target.name === 'avatar') { pilihAvatar(ev.target.value, true); } });   // 'click' (bukan 'change') supaya klik pada kad yang sudah dicadangkan pun mengunci pilihan
     Array.prototype.forEach.call(el.form.querySelectorAll('input[name="jantina"]'), function (r) { r.addEventListener('change', cadangkanAvatar); });
     el.umur.addEventListener('input', cadangkanAvatar);
-    el.nama.addEventListener('input', kemaskiniPratonton);
+    el.nama.addEventListener('input', kemaskiniPratonton); }
     kemaskiniPratonton();
   }
   binaPemilihAvatar();
+  /** v10.5: bina semula watak apabila parti bertukar (bukan-UMNO: tiada Puteri, rupa umum). */
+  function segarAvatar() {
+    if (!AV || !$('avatar-grid')) { return; }
+    if (state.parti !== 'UMNO' && avatarState.kod === 'puteri') { avatarState.kod = 'wanita'; }
+    binaPemilihAvatar(); pilihAvatar(avatarState.kod, false); cadangkanAvatar();
+  }
 
   /* ---------- Pilihan sayap / laluan kerjaya (v5.9) ---------- */
   var SYP = window.MyPolitikSayap;
@@ -280,12 +287,14 @@
 
   async function muatData() {
     if (esSW(state.parti)) { return muatDataPBB(); }
+    var parti0 = state.parti;                                       // v10.5: abaikan hasil lambat jika parti sudah ditukar
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true;
     setStatus('loading', 'Memuatkan data daripada Google Sheets...');
     var url = CFG.sheetCsvUrl || D.CONFIG.SHEET_CSV_URL;
     var h, sen = null;
     try { sen = D.loadSenaraiTab ? await D.loadSenaraiTab({ appsScriptUrl: CFG.appsScriptUrl }) : null; } catch (e) { sen = null; }
+    if (state.parti !== parti0) { return; }
     if (sen && sen.tab.length) {                                  // v7.14: Sheet berbilang tab (satu tab = satu negeri)
       state.tab = sen.tab; state.cacheTab = {}; state.data = { negeri: [], bahagian: [] };
       kosongkanSemua();
@@ -297,6 +306,7 @@
     state.tab = null;
     try {
       h = await D.loadPartyData({ url: url, appsScriptUrl: CFG.appsScriptUrl });
+      if (state.parti !== parti0) { return; }
     } catch (e) {
       setStatus('fallback', 'Data tidak dapat dimuatkan: ' + (e && e.message ? e.message : e));
       el.retry.hidden = false;
@@ -319,6 +329,8 @@
   function suaikanBorangParti() {
     if (HINT_PBB === null) { var h0 = $('h-parti'); HINT_PBB = h0 ? h0.textContent : ''; }
     var pbb = esSW(state.parti);
+    var la = $('l-ahli'); if (la) { la.textContent = 'Menjadi ahli ' + state.parti + ' sejak'; }
+    var ha = $('h-ahli'); if (ha) { ha.hidden = state.parti !== 'UMNO'; }
     var fd = el.dun && el.dun.closest ? el.dun.closest('.field') : null; if (fd) { fd.hidden = pbb; }
     var tb = $('t-bahagian'), tc = $('t-cawangan'), hp = $('h-parti');
     if (tb) { tb.textContent = pbb ? 'Bahagian (DUN)' : 'Bahagian (Parlimen)'; }
@@ -327,6 +339,7 @@
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
     if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : state.parti === 'SUPP' ? HINT_SUPP : state.parti === 'PDP' ? HINT_PDP : state.parti === 'PSB' ? HINT_PSB : HINT_PBB; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
+    if (typeof segarAvatar === 'function') { segarAvatar(); }
   }
   /** v9.0: cadangkan blok (Bumiputera/Pesaka) mengikut majoriti etnik DUN; pilihan manual dihormati. */
   function cadangBlok() {
@@ -338,14 +351,17 @@
   async function muatDataPBB() {
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
+    var parti1 = state.parti;
     setStatus('loading', 'Memuatkan data PBB Sarawak...');
     try {
       var res = await fetch(PT.info(state.parti).data, { cache: 'no-cache' });
       if (!res.ok) { throw new Error('HTTP ' + res.status); }
       var h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
       h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });   // PBB tiada Puteri
+      if (state.parti !== parti1) { return; }
       state.data = h;
       try { var rd = await fetch('data/pbb-dun.json', { cache: 'no-cache' }); state.dunData = rd.ok ? await rd.json() : null; } catch (e2) { state.dunData = null; }      // v8.33
+      if (state.parti !== parti1) { return; }
     } catch (e) {
       setStatus('fallback', 'Data PBB tidak dapat dimuatkan: ' + (e && e.message ? e.message : e)); el.retry.hidden = false; return;
     }
@@ -354,13 +370,14 @@
     el.negeri.value = 'sarawak'; el.negeri.dispatchEvent(new Event('change'));
     el.submit.disabled = false;
   }
-  Array.prototype.forEach.call(el.form.querySelectorAll('input[name="parti"]'), function (r) {
-    r.addEventListener('change', function () {
-      if (!r.checked) { return; }
-      state.parti = r.value; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(r.value); }
+  var selParti = $('s-parti');
+  if (selParti) {
+    selParti.addEventListener('change', function () {
+      var v = selParti.value; if (PT && !PT.sah(v)) { v = 'UMNO'; }
+      state.parti = v; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(v); }
       suaikanBorangParti(); muatData();
     });
-  });
+  }
 
   el.retry.addEventListener('click', function () { if (esSW(state.parti)) { muatDataPBB(); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
 

@@ -9,6 +9,12 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["Menjadi ahli PBB sejak", "PBB member since"], ["Menjadi ahli PRS sejak", "PRS member since"], ["Menjadi ahli SUPP sejak", "SUPP member since"], ["Menjadi ahli PDP sejak", "PDP member since"], ["Menjadi ahli PSB sejak", "PSB member since"],
+  ["Menjadi ahli UMNO sejak", "UMNO member since"],
+  ["Parti", "Party"],
+  ["UMNO (Semenanjung & Sabah)", "UMNO (Peninsular & Sabah)"], ["PBB (Sarawak, GPS, mod penuh)", "PBB (Sarawak, GPS, full mode)"], ["PRS (Sarawak, GPS, mod ringan)", "PRS (Sarawak, GPS, light mode)"], ["SUPP (Sarawak, GPS, mod ringan)", "SUPP (Sarawak, GPS, light mode)"], ["PDP (Sarawak, GPS, mod ringan)", "PDP (Sarawak, GPS, light mode)"], ["PSB (Sarawak, pembangkang, mod ringan)", "PSB (Sarawak, opposition, light mode)"],
+  ["Parti Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "Sarawak parties: Division = DUN, Branch = Polling District. Member numbers are game estimates. Simulation, not official party data."],
+  ["Lelaki muda, kemeja putih dan tali leher", "Young man, white shirt and tie"], ["Perempuan, blaus dan rambut panjang", "Woman, blouse and long hair"], ["Lelaki pertengahan umur, blazer biru tua", "Middle-aged man, navy blazer"], ["Lelaki berusia, berkaca mata, baju batik coklat", "Older man, glasses, brown batik shirt"],
 ["Parti", "Party"],
   ["(Semenanjung & Sabah)", "(Peninsular Malaysia & Sabah)"],
   ["(Sarawak, dalam GPS)", "(Sarawak, in GPS)"],
