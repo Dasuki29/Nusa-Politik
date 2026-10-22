@@ -1212,6 +1212,22 @@ ujian('PBB v9.4: PRN (DUN) dan PRU (Parlimen) berasingan; lobi Premier terbuka u
   const kn = PR.getPRU(S.loadPlayer()).aktif; sama(kn, null);
   S.clearPlayer();
 });
+ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
+  const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dun = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  const dem = D.tentukanDemografi('Lelaki', 40), c0 = h.bahagian[0].dun[0].cawangan[0];
+  const bhgBaru = h.bahagian.filter((b) => parseInt(b.kod, 10) === 40)[0] || h.bahagian[h.bahagian.length - 1], cBaru = bhgBaru.dun[0].cawangan[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: c0, sayap: 'utama', avatar: 'biasa', dunInfo: dun['1'] }));
+  P.tetap({ keahlian: { sejakTahun: 2015, sejakBulan: 1 }, myr: 20000, ap: 10, ip: 500 });
+  let p = S.loadPlayer(); sama(PD.negeriTerlarang('Sarawak', 'PBB'), false); sama(PD.negeriTerlarang('Johor', 'PBB'), true, 'PBB tiada cawangan di luar Sarawak'); sama(PD.negeriTerlarang('Sarawak', 'UMNO'), true); sama(PD.negeriTerlarang('Johor', 'UMNO'), false);
+  betul(PD.semak(p).boleh, PD.semak(p).sebab.join(';')); betul(/Menteri Negeri/.test(PD.semak(p).syarat.filter((x) => x.id === 'jawatan')[0].teks), 'syarat guna istilah Menteri');
+  const noBaru = parseInt(bhgBaru.kod, 10), pt = PD.pratonton(p, cBaru, { dunInfo: dun[noBaru] }); betul(pt.selepas.tahap, 'tahap kerusi DUN baharu'); sama(pt.terlarang, false);
+  const r = PD.pindah(cBaru, { dunInfo: dun[noBaru] }); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.parti, 'PBB'); sama(p.negeri, 'Sarawak'); sama(p.dunInfo.nama, dun[noBaru].nama, 'dunInfo ikut DUN baharu'); sama(SW.maklumat(p).nama, dun[noBaru].nama); sama(p.blokPBB, 'bumiputera', 'blok kekal');
+  sama(p.ip, 350); sama(p.pindah.bil, 1);
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

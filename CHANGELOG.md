@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v9.5 (2026-10-22)
+
+Pindah Cawangan PBB, label gabungan dan pembetulan terjemahan peristiwa disiplin.
+
+### Baharu
+- **Pindah Cawangan PBB:** kad 🏠 Pindah Cawangan (tab Profil) kini dibuka untuk PBB. Pilih Bahagian (DUN) dan Cawangan (Daerah Mengundi) di Sarawak sahaja (PBB tiada cawangan di luar Sarawak; UMNO tetap tidak boleh ke Sarawak). Syarat dan kos sama (12 bulan ahli, bukan Menteri / ADUN / MP, tiada hukuman disiplin, tiada pilihan raya, sekali setiap 3 tahun; RM 2,000, 3 AP, IP -30%). `dunInfo` dikemas kini ikut DUN baharu, maka tahap kerusi, lawan dan Parlimen dikira semula. Blok Bumiputera / Pesaka kekal.
+- **Label gabungan:** untuk PBB, "BN" digantikan "GPS" (DUN: kad kerusi, legenda, tab DUN) dan "Kerajaan Perpaduan" (persekutuan: kad kerusi, Dewan Rakyat). Kad kerusi DUN PBB kini guna 82 kerusi Sarawak yang sama dengan sidang DUN. UMNO tidak berubah. Nama gabungan persekutuan ialah label simulasi.
+- Jika PBB tidak membentuk kerajaan negeri, GPS dipaparkan di bawah ambang (pembangkang) dalam Dewan.
+
+### Pembetulan
+- **Teks BM bocor dalam EN selepas peristiwa disiplin rawak:** sejarah etika ("bulan/tahun: hukuman: perkara"), banner keahlian digantung ("⛔ Keahlian anda DIGANTUNG" dan tempoh), mesej gantung / dilarang / pecat / amaran, dan perkara "Menganjurkan jamuan sambil berkempen" kini diterjemah. Ujian bahasa baharu menyemak semua `perkara` etika dalam setiap templat mesej disiplin dan sejarah.
+
+### Belum
+- Parti lain, penamaan MKT/PAU.
+
 ## v9.4 (2026-10-22)
 
 Kerusi Parlimen dan PRU untuk PBB.

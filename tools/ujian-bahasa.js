@@ -28,7 +28,7 @@ require(path.join(JS, 'translations.js'));
 const T = g.MyPolitikTranslations, baris = [];
 const asalTambah = T.tambah;
 T.tambah = function (b, i) { (b || []).forEach((r) => baris.push(r)); return asalTambah.apply(T, arguments); };
-['translations-acara', 'translations-data', 'translations-ui', 'translations-baharu', 'translations-perlembagaan', 'translations-pindah', 'i18n']
+['translations-acara', 'translations-data', 'translations-ui', 'translations-baharu', 'translations-perlembagaan', 'translations-pindah', 'translations-parti', 'i18n']
   .forEach((f) => require(path.join(JS, f + '.js')));
 const I = g.MyPolitikI18n;
 if (!I || !I.terjemah) { console.error('MyPolitikI18n tidak dimuat'); process.exit(1); }
@@ -131,6 +131,22 @@ const EMAS = [
 ujian('contoh emas: terjemahan tepat', () => {
   const r = [];
   EMAS.forEach((e) => { const x = I.terjemah(e[0]); if (x !== e[1]) { r.push(e[0] + ' => ' + x + ' (jangka ' + e[1] + ')'); } });
+  return r;
+});
+
+ujian('disiplin: semua "perkara" etika diterjemah dalam mesej hukuman, panggilan dan sejarah (v9.5)', () => {
+  const fs = require('fs'), per = new Set(), r = [];
+  fs.readdirSync(JS).filter((f) => f.endsWith('.js') && !/^translations/.test(f)).forEach((f) => { const tt = fs.readFileSync(path.join(JS, f), 'utf8'); for (const m of tt.matchAll(/perkara:\s*'((?:[^'\\]|\\.)*)'/g)) { if (!/ $/.test(m[1])) { per.add(m[1]); } } });
+  const BM = /\b(dan|untuk|yang|dengan|kepada|atau|daripada|bagi|dalam|anda|tidak|boleh|Semua|jawatan|Lembaga|Disiplin|telah|sehingga)\b/;
+  const T = [(p) => 'Jawatankuasa Disiplin memanggil anda untuk pendengaran berhubung: ' + p + '. Kemukakan pembelaan anda (Fasal 20.5).',
+    (p) => 'Lembaga Disiplin MENGGANTUNG hak keahlian anda selama 12 bulan (Fasal 20.10b) atas: ' + p + '. Semua jawatan anda dilucutkan serta-merta. Anda tidak boleh mencalon, mengundi, bertanding atau berkempen, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan sehingga bulan 7/2027.',
+    (p) => 'Anda DILARANG BERTANDING mana-mana jawatan selama 2 tahun (Fasal 20.10c) atas: ' + p + '. Anda masih boleh berkhidmat dan menjadi perwakilan.',
+    (p) => 'Lembaga Disiplin mengesyorkan PEMECATAN dan MKT telah MENGESAHKANNYA (Fasal 20.10d) atas: ' + p + '. Semua jawatan anda hilang. Rayuan boleh dibuat selepas 3 tahun (Fasal 20.12.2).',
+    (p) => 'Lembaga Disiplin memberi AMARAN kepada anda (Fasal 20.10a) atas: ' + p + '. Rekod disiplin anda dicatat; kesalahan seterusnya lebih berat.',
+    (p) => '7/2026: Gantung hak keahlian: ' + p, (p) => '5/2026: ' + p, (p) => '5/2026: Amaran: ' + p];
+  per.forEach((p) => T.forEach((f, i) => { const s = f(p), x = I.terjemah(s); if (x === null || x === s || BM.test(x)) { r.push('T' + i + ' ' + s.slice(0, 90) + ' => ' + (x && x.slice(0, 90))); } }));
+  ['⛔ Keahlian anda DIGANTUNG', 'Sehingga bulan 7/2027 (Fasal 20.10b). Semua jawatan anda telah dilucutkan. Anda tidak boleh mencalon, mengundi atau bertanding dalam pemilihan parti, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan.',
+    'Sehingga bulan 7/2027 (Fasal 20.10b). Semua jawatan anda telah dilucutkan (Ketua Cawangan). Anda tidak boleh mencalon, mengundi atau bertanding dalam pemilihan parti, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan.'].forEach((s) => { const x = I.terjemah(s); if (x === null || BM.test(x)) { r.push(s.slice(0, 60) + ' => ' + x); } });
   return r;
 });
 

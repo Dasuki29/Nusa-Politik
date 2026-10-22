@@ -290,18 +290,25 @@
     var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(jumlah * r);
     return { PH: ph, PN: jumlah - ph };
   }
-  function segGabungan(n) {
-    return ['BN', 'PH', 'PN', 'LAIN'].map(function (k) { return { nama: GABUNGAN[k].nama + (k === 'BN' ? ' (★ parti anda)' : ''), n: n[k], warna: GABUNGAN[k].warna, kod: k, label: k === 'LAIN' ? '' : GABUNGAN[k].pendek }; });
+  /** v9.5: nama gabungan parti pemain (slot 'BN'): UMNO = Barisan Nasional; PBB = Gabungan Parti Sarawak (DUN) / Kerajaan Perpaduan (persekutuan). */
+  function labelBN(p, dun) {
+    if (p && p.parti === 'PBB') { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
+    return GABUNGAN.BN;
+  }
+  function segGabungan(n, bn) {
+    bn = bn || GABUNGAN.BN;
+    return ['BN', 'PH', 'PN', 'LAIN'].map(function (k) { return { nama: (k === 'BN' ? bn.nama : GABUNGAN[k].nama) + (k === 'BN' ? ' (★ parti anda)' : ''), n: n[k], warna: GABUNGAN[k].warna, kod: k, label: k === 'LAIN' ? '' : (k === 'BN' ? bn.pendek : GABUNGAN[k].pendek) }; });
   }
   /** Selaras dengan permainan: BN membentuk kerajaan jika kerusinya mencapai ambang; jika tidak, pihak pembangkang membentuk kerajaan (diketuai PH atau PN yang lebih besar). */
-  function ayatKerajaan(tajuk, n, ambang) {
-    if (n.BN >= ambang) { return '<b>' + tajuk + ': ' + GABUNGAN.BN.nama + '</b> (' + n.BN + ' kerusi, majoriti ' + ambang + ').'; }
+  function ayatKerajaan(tajuk, n, ambang, bn) {
+    bn = bn || GABUNGAN.BN;
+    if (n.BN >= ambang) { return '<b>' + tajuk + ': ' + bn.nama + '</b> (' + n.BN + ' kerusi, majoriti ' + ambang + ').'; }
     var ketua = n.PH >= n.PN ? 'PH' : 'PN', lain = ketua === 'PH' ? 'PN' : 'PH', opp = n.PH + n.PN + n.LAIN;
     if (opp >= ambang) {
       return '<b>' + tajuk + ': gabungan pembangkang diketuai ' + GABUNGAN[ketua].nama + '</b> (' + GABUNGAN[ketua].pendek + ' ' + n[ketua] + ' + ' + GABUNGAN[lain].pendek + ' ' + n[lain] + ' + lain-lain ' + n.LAIN + ' = ' + opp + ' kerusi, majoriti ' + ambang + '). ' +
-        GABUNGAN.BN.nama + ' menjadi pembangkang (' + n.BN + ' kerusi).';
+        bn.nama + ' menjadi pembangkang (' + n.BN + ' kerusi).';
     }
-    return '<b>Tiada majoriti</b> (perlu ' + ambang + '): ' + GABUNGAN.BN.pendek + ' ' + n.BN + ', ' + GABUNGAN.PH.pendek + ' ' + n.PH + ', ' + GABUNGAN.PN.pendek + ' ' + n.PN + '. Kerajaan minoriti atau gabungan baharu perlu dibentuk.';
+    return '<b>Tiada majoriti</b> (perlu ' + ambang + '): ' + bn.pendek + ' ' + n.BN + ', ' + GABUNGAN.PH.pendek + ' ' + n.PH + ', ' + GABUNGAN.PN.pendek + ' ' + n.PN + '. Kerajaan minoriti atau gabungan baharu perlu dibentuk.';
   }
   /** v7.55: kerusi mengikut gabungan (untuk Dewan Rakyat): { jumlah, ambang, BN, PH, PN, LAIN, rakan, kerajaanBN, tahun, bulan, dun? } atau null jika belum ada PRU. */
   function kerusiGabungan(p) {
@@ -317,13 +324,16 @@
     var k = p.kerusiNasional, r = kunciRekod(p);
     if (!k || !r) { return '<p class="pp-nota">Belum ada keputusan PRU. Anggaran kerusi muncul selepas pilihan raya pertama.</p>'; }
     var gabung = k.parti + k.rakan, pp = pecahPembangkang(p, k, k.pembangkang, k.kerajaan, 'parlimen');
-    var np = { BN: gabung, PH: pp.PH, PN: pp.PN, LAIN: k.bebas }, seg = segGabungan(np);
+    var np = { BN: gabung, PH: pp.PH, PN: pp.PN, LAIN: k.bebas }, seg = segGabungan(np, labelBN(p, false));
     var h = '<h4>Kerusi Parlimen <small>PRU ' + esc(k.tahun) + ' · anggaran</small></h4>' + bar(seg, CONFIG.MAJORITI) + legend(seg) +
-      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI) + ' Garis putus = majoriti.</p>';
+      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, labelBN(p, false)) + ' Garis putus = majoriti.</p>';
     if (k.dun) {
-      var amb = Math.floor(k.dun.jumlah / 2) + 1, pd = pecahPembangkang(p, k, k.dun.pembangkang, k.dun.kerajaan >= amb, 'dun'), nd = { BN: k.dun.kerajaan, PH: pd.PH, PN: pd.PN, LAIN: k.dun.bebas }, sd = segGabungan(nd);
-      h += '<h4 class="pp-sub">Kerusi DUN <small>' + esc(p.negeri) + ' · ' + k.dun.jumlah + ' kerusi · anggaran</small></h4>' + bar(sd, amb) + legend(sd) +
-        '<p class="pp-nota">' + ayatKerajaan('Kerajaan negeri', nd, amb) + '</p>';
+      var amb = Math.floor(k.dun.jumlah / 2) + 1, pd = pecahPembangkang(p, k, k.dun.pembangkang, k.dun.kerajaan >= amb, 'dun'), nd = { BN: k.dun.kerajaan, PH: pd.PH, PN: pd.PN, LAIN: k.dun.bebas }, jumDun = k.dun.jumlah;
+      var SWp = p.parti === 'PBB' ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN
+      if (SWp && SWp.kerusiDewan) { var PRp = root.MyPolitikPRU, sta = PRp && PRp.semuaStatus ? PRp.semuaStatus(p).filter(function (x) { return x.jenis === 'ADUN'; })[0] : null, kd = SWp.kerusiDewan(p, sta ? sta.kerajaan : true); if (kd) { nd = { BN: kd.BN, PH: kd.PH, PN: kd.PN, LAIN: kd.LAIN }; amb = kd.ambang; jumDun = kd.jumlah; } }
+      var sd = segGabungan(nd, labelBN(p, true));
+      h += '<h4 class="pp-sub">Kerusi DUN <small>' + esc(p.negeri) + ' · ' + jumDun + ' kerusi · anggaran</small></h4>' + bar(sd, amb) + legend(sd) +
+        '<p class="pp-nota">' + ayatKerajaan('Kerajaan negeri', nd, amb, labelBN(p, true)) + '</p>';
     }
     return h;
   }

@@ -118,6 +118,26 @@
   ["PBB bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)", "PBB contests Parliament seats in the general election (not the Sarawak state election)"],
   ["UMNO bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)", "PBB contests Parliament seats in the general election (not the Sarawak state election)"],
   ["PBB bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)", "PBB contests state seats in the Sarawak state election (not the general election)"],
-  ["UMNO bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)", "PBB contests state seats in the Sarawak state election (not the general election)"]
+  ["UMNO bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)", "PBB contests state seats in the Sarawak state election (not the general election)"],
+  ["⛔ Keahlian anda DIGANTUNG", "⛔ Your membership is SUSPENDED"],
+  ["Lembaga Disiplin MENGGANTUNG hak keahlian anda selama {n} bulan (Fasal 20.10b) atas: {x}. Semua jawatan anda dilucutkan serta-merta. Anda tidak boleh mencalon, mengundi, bertanding atau berkempen, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan sehingga bulan {t}.", "The Disciplinary Board SUSPENDS your membership rights for {n} months (Clause 20.10b) for: {x}. All your posts are stripped immediately. You cannot stand, vote, contest or campaign, and cannot use AP for the official duties of a post until month {t}."],
+  ["Lembaga Disiplin MENGGANTUNG hak keahlian anda selama {n} bulan (Fasal 20.10b) atas: {x}. Semua jawatan anda dilucutkan serta-merta. Anda tidak boleh mencalon, mengundi, bertanding atau berkempen, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan sehingga tempoh ditetapkan MKT.", "The Disciplinary Board SUSPENDS your membership rights for {n} months (Clause 20.10b) for: {x}. All your posts are stripped immediately. You cannot stand, vote, contest or campaign, and cannot use AP for the official duties of a post until the period set by the MKT."],
+  ["Anda DILARANG BERTANDING mana-mana jawatan selama {n} tahun (Fasal 20.10c) atas: {x}. Anda masih boleh berkhidmat dan menjadi perwakilan.", "You are BANNED FROM CONTESTING any post for {n} years (Clause 20.10c) for: {x}. You can still serve and be a delegate."],
+  ["Lembaga Disiplin mengesyorkan PEMECATAN dan MKT telah MENGESAHKANNYA (Fasal 20.10d) atas: {x}. Semua jawatan anda hilang. Rayuan boleh dibuat selepas 3 tahun (Fasal 20.12.2).", "The Disciplinary Board recommends DISMISSAL and the MKT has CONFIRMED it (Clause 20.10d) for: {x}. All your posts are lost. An appeal can be made after 3 years (Clause 20.12.2)."],
+  ["Lembaga Disiplin memberi AMARAN kepada anda (Fasal 20.10a) atas: {x}. Rekod disiplin anda dicatat; kesalahan seterusnya lebih berat.", "The Disciplinary Board issues you a WARNING (Clause 20.10a) for: {x}. Your disciplinary record is noted; further offences weigh heavier."],
+  ["Menganjurkan jamuan sambil berkempen (Tataetika Perkara 5.6)", "Hosting a feast while campaigning (Code of Ethics Article 5.6)"],
+  ["Kerajaan: Perpaduan", "Government: Unity"],
+  ["Bukan kerajaan Perpaduan", "Not a Unity government"],
+  ["Kerajaan (Perpaduan)", "Government (Unity)"],
+  ["Kerajaan persekutuan: Kerajaan Perpaduan", "Federal government: Unity Government"],
+  ["Kerajaan negeri: Gabungan Parti Sarawak", "State government: Gabungan Parti Sarawak (GPS)"],
+  ["Gabungan Parti Sarawak (★ parti anda) {x}", "Gabungan Parti Sarawak (★ your party) {x}"],
+  ["Kerajaan Perpaduan (★ parti anda) {x}", "Unity Government (★ your party) {x}"],
+  ["Bukan Menteri / Menteri Negeri dan tiada kerusi ADUN / MP", "Not a Minister / State Minister and holding no ADUN / MP seat"],
+  ["Kos: RM 2,000, 3 AP dan IP -30%. Hanya antara Bahagian dan Cawangan di Sarawak.", "Cost: RM 2,000, 3 AP and IP -30%. Only between Divisions and Branches in Sarawak."],
+  ["Tahap kerusi DUN", "State seat level"],
+  ["Pilih bahagian dahulu", "Choose a division first"],
+  ["PBB tiada cawangan di luar Sarawak.", "PBB has no branches outside Sarawak."],
+  ["UMNO tiada cawangan di luar Sarawak.", "PBB has no branches outside Sarawak."]
   ]);
 })();

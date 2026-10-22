@@ -40,6 +40,9 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   for (const t of ['tindakan', 'profil', 'pemilihan', 'mesyuarat']) { await pg.click('[data-tab="' + t + '"]'); await pg.waitForTimeout(400); }
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
   semak(/Kerusi DUN Anda/.test(await pg.textContent('#panel-profil')) && /Lawan utama/.test(await pg.textContent('#panel-profil')), 'kad Kerusi DUN Anda dalam tab Profil');
+  semak(/Kerusi Parlimen Anda/.test(await pg.textContent('#panel-profil')) && /Pilihan raya seterusnya/.test(await pg.textContent('#panel-profil')), 'kad Kerusi Parlimen Anda dalam tab Profil (v9.4)');
+  const pem = await pg.textContent('#panel-profil');
+  semak(/Pindah Cawangan/.test(pem) && !/belum dibuka/.test(pem) && /Hanya antara Bahagian dan Cawangan di Sarawak/.test(pem), 'kad Pindah Cawangan PBB dibuka (v9.5)');
   await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(4000);
   semak((await pg.$$eval('#peta-host svg path', (p) => p.length)) === 82, 'peta DUN Sarawak (82 kawasan)');
   semak(!/UMNO/.test(await pg.evaluate(() => document.body.innerText)), 'tiada perkataan UMNO tertinggal dalam dashboard PBB');

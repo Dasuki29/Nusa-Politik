@@ -5,7 +5,8 @@
    ini menukar keahlian sebenar, tanpa penalti calon luar, tetapi dengan kos terus dan jawatan setempat hilang.
 
    Syarat: ahli >= 12 bulan di cawangan semasa; bukan Menteri / EXCO / ADUN / MP; tiada hukuman disiplin;
-           tiada pilihan raya berjalan; belum pindah dalam 36 bulan lepas; bukan ke Sarawak.
+           tiada pilihan raya berjalan; belum pindah dalam 36 bulan lepas; bukan ke Sarawak (UMNO).
+   v9.5: PBB boleh pindah antara Bahagian (DUN) dan Daerah Mengundi di Sarawak sahaja (peraturan lain sama). dunInfo dikemas kini ikut DUN baharu.
    Kos:    RM 2,000, 3 AP, IP -30%.
    Kesan:  jawatan Cawangan & Bahagian (termasuk sayap) hilang; jawatan Pusat kekal. Sokongan mula semula
            (akar umbi 25, AJK 25, ketua cawangan 25, perwakilan 0). Tidak boleh bertanding jawatan parti
@@ -84,7 +85,7 @@
     var bulan = bulanDiCawangan(p);
     syarat.push({ id: 'tempoh', teks: 'Ahli sekurang-kurangnya ' + CONFIG.BULAN_MIN + ' bulan di cawangan semasa', lulus: bulan >= CONFIG.BULAN_MIN, nota: bulan >= 9999 ? '' : Math.floor(bulan / 12) + ' tahun ' + (bulan % 12) + ' bulan' });
     var f = faktor(p), kerusi = pegangKerusi(p);
-    syarat.push({ id: 'jawatan', teks: 'Bukan Menteri / EXCO dan tiada kerusi ADUN / MP', lulus: f >= 1 && !kerusi, nota: '' });
+    syarat.push({ id: 'jawatan', teks: p && p.parti === 'PBB' ? 'Bukan Menteri / Menteri Negeri dan tiada kerusi ADUN / MP' : 'Bukan Menteri / EXCO dan tiada kerusi ADUN / MP', lulus: f >= 1 && !kerusi, nota: '' });
     var e = Et && Et.getEtika ? Et.getEtika(p) : null;
     var hukum = !!(e && (e.status === 'digantung' || e.status === 'dilarang' || e.status === 'dipecat' || e.hukuman));
     syarat.push({ id: 'disiplin', teks: 'Tiada hukuman disiplin', lulus: !hukum, nota: '' });
@@ -97,7 +98,8 @@
     return { boleh: sebab.length === 0, syarat: syarat, sebab: sebab };
   }
 
-  function negeriTerlarang(nama) { return CONFIG.NEGERI_TERLARANG.indexOf(nm(nama)) >= 0; }
+  /** UMNO: Sarawak terlarang. PBB (v9.5): hanya Sarawak dibenarkan. */
+  function negeriTerlarang(nama, parti) { var sarawak = CONFIG.NEGERI_TERLARANG.indexOf(nm(nama)) >= 0; return parti === 'PBB' ? !sarawak : sarawak; }
 
   function ringkasJawatan(p) {
     var J = modul('MyPolitikJawatan', 'jawatan.js'), senarai = J && J.getJawatan ? J.getJawatan(p) : (Array.isArray(p.jawatanList) ? p.jawatanList : []);
@@ -106,6 +108,8 @@
     return { hilang: hilang, kekal: kekal };
   }
 
+  /** v9.5: PBB: tahap kerusi DUN ikut komposisi etnik (js/sarawak.js); null jika bukan PBB. */
+  function tahapPBB(p) { var W9 = p && p.parti === 'PBB' ? modul('MyPolitikSarawak', 'sarawak.js') : null, m = W9 && W9.maklumat ? W9.maklumat(p) : null; return m ? m.tahapNama : null; }
   function tahapAnggaran(bahagianNama) {
     var Pr = PR(); if (!Pr || !Pr.tahapKerusi) { return null; }
     var t = Pr.tahapKerusi({ kod: '', nama: String(bahagianNama || '') });
@@ -113,14 +117,14 @@
   }
 
   /** Perbandingan sebelum / selepas untuk paparan semakan. c = objek cawangan data.js. */
-  function pratonton(p, c) {
+  function pratonton(p, c, extra) {
     var S_ = S(), ik = S_.identitiKawasan(c), j = ringkasJawatan(p), k = p.kesetiaan || {};
     var ip1 = Math.max(0, Math.round((Number(p.ip) || 0) * (1 - CONFIG.IP_POTONG)));
     return {
-      sebelum: { cawangan: p.cawangan, bahagian: p.bahagian, dun: p.dun, negeri: p.negeri, tahap: tahapAnggaran(p.bahagian), jawatan: j.hilang.map(function (x) { return x.jawatan; }), akarUmbi: Math.round(k.akarUmbi || 0), ajk: Math.round(k.ajk || 0), ip: Math.round(p.ip), myr: Math.round(p.myr), ap: p.ap },
-      selepas: { cawangan: ik.cawangan, bahagian: ik.bahagian, dun: ik.dun, negeri: ik.negeri, tahap: tahapAnggaran(ik.bahagian), jawatan: [], akarUmbi: CONFIG.SOKONGAN.akarUmbi, ajk: CONFIG.SOKONGAN.ajk, ip: ip1, myr: Math.round(p.myr) - CONFIG.KOS_MYR, ap: p.ap - CONFIG.KOS_AP },
+      sebelum: { cawangan: p.cawangan, bahagian: p.bahagian, dun: p.dun, negeri: p.negeri, tahap: tahapPBB(p) || tahapAnggaran(p.bahagian), jawatan: j.hilang.map(function (x) { return x.jawatan; }), akarUmbi: Math.round(k.akarUmbi || 0), ajk: Math.round(k.ajk || 0), ip: Math.round(p.ip), myr: Math.round(p.myr), ap: p.ap },
+      selepas: { cawangan: ik.cawangan, bahagian: ik.bahagian, dun: ik.dun, negeri: ik.negeri, tahap: (extra && extra.dunInfo && tahapPBB({ parti: 'PBB', dunInfo: extra.dunInfo })) || tahapAnggaran(ik.bahagian), jawatan: [], akarUmbi: CONFIG.SOKONGAN.akarUmbi, ajk: CONFIG.SOKONGAN.ajk, ip: ip1, myr: Math.round(p.myr) - CONFIG.KOS_MYR, ap: p.ap - CONFIG.KOS_AP },
       jawatanKekal: j.kekal.map(function (x) { return x.jawatan; }),
-      menunggu: CONFIG.MENUNGGU, sama: ik.id === p.id, terlarang: negeriTerlarang(ik.negeri)
+      menunggu: CONFIG.MENUNGGU, sama: ik.id === p.id, terlarang: negeriTerlarang(ik.negeri, p.parti)
     };
   }
 
@@ -128,14 +132,14 @@
    * Laksanakan pindahan. c = objek cawangan data.js. Pulang { ok, mesej, ralat }.
    * Menulis satu kali melalui applyEffects (kos + patch identiti + reset setempat).
    */
-  function pindah(c) {
+  function pindah(c, extra) {
     var Sv = S(), p = Sv && Sv.loadPlayer();
     if (!p) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
     var sm = semak(p);
     if (!sm.boleh) { return { ok: false, ralat: 'Syarat belum dipenuhi: ' + sm.sebab.join('; ') + '.' }; }
     var ik = Sv.identitiKawasan(c);
     if (ik.id === p.id) { return { ok: false, ralat: 'Anda sudah menjadi ahli cawangan ini.' }; }
-    if (negeriTerlarang(ik.negeri)) { return { ok: false, ralat: 'UMNO tiada cawangan di Sarawak.' }; }
+    if (negeriTerlarang(ik.negeri, p.parti)) { return { ok: false, ralat: p.parti === 'PBB' ? 'PBB tiada cawangan di luar Sarawak.' : 'UMNO tiada cawangan di Sarawak.' }; }
     var j = ringkasJawatan(p), g = getPindah(p), tahun = p.tahun, bulan = p.bulan;
     var menunggu = mutlak(tahun, bulan) + CONFIG.MENUNGGU, mt = Math.floor((menunggu - 1) / 12), mb = ((menunggu - 1) % 12) + 1;
     var dari = { cawangan: p.cawangan, bahagian: p.bahagian, negeri: p.negeri };
@@ -144,6 +148,7 @@
     var kes = Object.assign({}, p.kesetiaan || {}, CONFIG.SOKONGAN);
     var patch = {
       negeri: ik.negeri, bahagian: ik.bahagian, dun: ik.dun, cawangan: ik.cawangan, id: ik.id, kod: ik.kod, cawanganInfo: ik.cawanganInfo,
+      dunInfo: p.parti === 'PBB' && extra && extra.dunInfo ? extra.dunInfo : p.dunInfo,
       jawatanList: j.kekal, jawatan: j.kekal.length ? j.kekal.slice().sort(function (a, b) { return (b.pangkat || 0) - (a.pangkat || 0); })[0].jawatan : 'Ahli Biasa',
       perwakilan: perwakilan, kesetiaan: kes,
       ip: Math.max(0, Math.round((Number(p.ip) || 0) * (1 - CONFIG.IP_POTONG))),

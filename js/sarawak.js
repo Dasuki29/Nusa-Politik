@@ -170,8 +170,8 @@
   /** Kerusi Dewan Undangan Negeri Sarawak untuk sidang DUN (bentuk sama dengan dun.js kerusi()). BN = GPS. Pembangkang: PH separuh, selebihnya Lain (andaian). */
   function kerusiDewan(p, kerajaan) {
     var k = kerusiPremier(p); if (!k) { return null; }
-    var opp = k.jumlah - k.gabungan, ph = Math.round(opp * 0.5);
-    return { jumlah: k.jumlah, ambang: k.ambang, BN: k.gabungan, PH: ph, PN: 0, LAIN: opp - ph, kerajaanBN: !!kerajaan, tahun: p.tahun, bulan: p.bulan };
+    var gps = kerajaan ? k.gabungan : Math.round(k.ambang * 0.8), opp = k.jumlah - gps, ph = Math.round(opp * 0.5);      // kerajaan false: GPS di bawah ambang (pembangkang)
+    return { jumlah: k.jumlah, ambang: k.ambang, BN: gps, PH: ph, PN: 0, LAIN: opp - ph, kerajaanBN: !!kerajaan, tahun: p.tahun, bulan: p.bulan };
   }
   function ofset(p) { var m = maklumat(p); return m ? m.ofset : 0; }
   return { CONFIG: CONFIG, TAHAP: TAHAP, jadual: jadual, maklumat: maklumat, ofset: ofset,
