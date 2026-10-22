@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v8.28 (2026-10-22)
+
+Pindah Cawangan (maklum balas pemain: mahu menukar kawasan, cth Kuala Selangor ke Setiawangsa).
+
+### Baharu
+- **Kad 🏠 Pindah Cawangan** (tab Pemilihan, bawah Tataetika): pilih negeri, Parlimen, DUN dan cawangan seperti pendaftaran, kemudian semak jadual sebelum dan selepas (cawangan, bahagian, tahap kerusi anggaran, jawatan, sokongan, IP, Dana, AP) sebelum mengesahkan.
+- **Syarat:** ahli 12 bulan di cawangan semasa; bukan Menteri/EXCO; tiada kerusi ADUN/MP; tiada hukuman disiplin; tiada pilihan raya berjalan; sekali setiap 36 bulan; bukan ke Sarawak.
+- **Kos:** RM 2,000, 3 AP, IP -30%. Jawatan Cawangan dan Bahagian (termasuk sayap) hilang, jawatan Pusat kekal. Sokongan akar umbi/AJK/ketua cawangan mula 25, perwakilan 0.
+- **Tempoh menunggu 12 bulan** sebelum boleh bertanding jawatan parti Cawangan/Bahagian di kawasan baharu (PRU/PRN tidak terjejas). Tempoh keahlian parti tidak mula semula.
+- Isu tempatan, pencabar, aduan kawasan dan organisasi NPC dijana semula (benih = id cawangan baharu).
+- `MyPolitikSave.identitiKawasan()` dikongsi dengan pendaftaran; `MyPolitikPRU.tahapKerusi` didedahkan. Tutorial BM/EN (panduan + Soalan Lazim), 3 ujian unit dan ujian pelayar EN.
+
+### Andaian
+- Semua angka ialah penyeimbang simulasi; tahap kerusi ialah anggaran deterministik. Sokongan ketua cawangan turut dimula 25 (tidak dinyatakan secara jelas).
+
 ## v8.27 (2026-10-22)
 
 Lebih Mata Tindakan (AP) (maklum balas pemain: 5 AP sebulan dan had 15 terasa sedikit).

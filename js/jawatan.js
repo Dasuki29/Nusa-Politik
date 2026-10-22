@@ -170,6 +170,10 @@
     }
     var pertahan = pegang(p, d.kod);
     if (pertahan) { return { terbuka: true, sebab: '', pertahan: true }; }
+    var pdh = (typeof globalThis !== 'undefined' && globalThis.MyPolitikPindah) || null;                  // v8.28: tempoh menunggu selepas Pindah Cawangan
+    if (!pdh) { try { pdh = require('./pindah.js'); } catch (e) { pdh = null; } }
+    var sekat = pdh && pdh.sekatBertanding ? pdh.sekatBertanding(p, d.peringkat) : null;
+    if (sekat) { return sekat; }
     if (d.kumpulan === 'sayap' && d.sayap !== sayapPemain(p)) { return { terbuka: false, sebab: 'Hanya untuk sayap ' + NAMA_SAYAP[d.sayap] + '.' }; }
     var sama = jawatanSamaPeringkat(p, d);                      // v5.7: satu jawatan setiap peringkat; calon mesti naik pangkat di peringkat itu
     if (sama && penggalLamaTamat(p, sama)) { sama = null; }     // v7.44: jawatan penggal lama boleh ditukar semasa pemilihan (peraturan satu-jawatan terpakai selepas keputusan)
