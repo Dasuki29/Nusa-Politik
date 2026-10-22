@@ -253,11 +253,11 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pu.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 40000, reputasi: 60 } }); window.MyPolitikGLC.bukaLobi('kerajaan'); window.NusaUI.render(); window.NusaUI.gotoTab('tindakan'); });
   await pu.waitForTimeout(500);
   const g1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /GLC Post/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
-  if (!/Nusa Investment Company/.test(g1) || !/3 posts, Chairman from IP 220/.test(g1) || /Pengerusi|Pilih syarikat|Parti membentuk/.test(g1)) { ralat.push('kad GLC EN salah: ' + g1.slice(0, 240)); }
-  await pu.locator('[data-act="glc-syarikat"][data-id="apn"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
+  if (!/Nusa Financing Berhad/.test(g1) || !/Select sector/.test(g1) || !/Agriculture \/ Plantation/.test(g1) || !/3 posts, Chairman from IP 220/.test(g1) || /Pengerusi|Pilih sektor|Pilih syarikat|Parti membentuk|Pertanian|Kewangan/.test(g1)) { ralat.push('kad GLC EN salah: ' + g1.slice(0, 240)); }
+  await pu.locator('[data-act="glc-syarikat"][data-id="pertanian"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
   const g1b = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).map((x) => x.textContent).join(' | '));
-  if (!/State Development Agency/.test(g1b) || !/Chairman/.test(g1b) || /Pengerusi|Agensi Pembangunan/.test(g1b)) { ralat.push('kad jawatan syarikat EN salah'); }
-  await pu.locator('[data-act="glc-lobi"][data-id="apn_pengarah"]').first().evaluate((e) => e.click()).catch(() => {});
+  if (!/Nusa Plantation Corporation/.test(g1b) || !/Chairman/.test(g1b) || /Pengerusi|Perbadanan Ladang|Pertanian/.test(g1b)) { ralat.push('kad jawatan syarikat EN salah'); }
+  await pu.locator('[data-act="glc-lobi"][data-id="pertanian_pengarah"]').first().evaluate((e) => e.click()).catch(() => {});
   await pu.waitForTimeout(500);
   const g2 = await pu.evaluate(() => { const gl = window.MyPolitikGLC.getGLC(window.MyPolitikSave.loadPlayer()); const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /GLC Post/i.test(x.textContent))[0]; return { j: !!gl.jawatan, baki: gl.lobi && gl.lobi.baki, t: c ? c.textContent : '' }; });
   if (!g2.j && g2.baki !== 1) { ralat.push('lobi GLC tidak menukar keadaan: ' + JSON.stringify(g2).slice(0, 200)); }
@@ -266,14 +266,24 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pu.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 80000, reputasi: 60, glc: { lobi: null, jawatan: null, konflik: 0, audit: 0 }, demografik: Object.assign({}, p.demografik, { umur: 35 }), jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', sayap: null, pangkat: 7, tahun: 2026 }] } }); window.NusaKomuniti_UI.pilih(null); window.NusaUI.render(); window.NusaUI.gotoTab('tindakan'); });
   await pu.waitForTimeout(500);
   const k1 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts/i.test(x.textContent))[0]; return c ? c.textContent : ''; });
-  if (!/Mosque & PTA/.test(k1) || !/Youth Associations/.test(k1) || !/High-Income Agency/.test(k1) || /Jawatan Komuniti|Masjid|Persatuan|Pilih jenis/.test(k1)) { ralat.push('kad komuniti EN salah: ' + k1.slice(0, 260)); }
+  if (!/Mosque & PTA/.test(k1) || !/Youth & Students/.test(k1) || !/High-Income Agency/.test(k1) || /Jawatan Komuniti|Masjid|Persatuan|Pilih jenis/.test(k1)) { ralat.push('kad komuniti EN salah: ' + k1.slice(0, 260)); }
   await pu.locator('[data-act="kom-jenis"][data-id="sukan"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
   const k2 = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).map((x) => x.textContent).join(' | '));
-  if (!/State Sports Association/.test(k2) || !/National Sports Association/.test(k2) || !/Need a Headquarters post or a Parliament seat/.test(k2) || /Persatuan Sukan|Perlu jawatan|Kos IP/.test(k2)) { ralat.push('kad jawatan komuniti EN salah: ' + k2.slice(-300)); }
-  await pu.evaluate(() => { window.MyPolitikKomuniti.lobi('sukan_negeri', { rng: () => 0 }); window.NusaUI.render(); });
+  if (!/Choose a sport/.test(k2) || !/Football/.test(k2) || !/Badminton/.test(k2) || !/Rugby/.test(k2) || !/State Badminton Association Chairman/.test(k2) || /Persatuan Sukan|Pengerusi Persatuan|Pilih sukan|Bola Sepak|Rugbi|Perlu jawatan|Kos IP/.test(k2)) { ralat.push('kad jawatan komuniti EN salah: ' + k2.slice(-300)); }
+  await pu.locator('[data-act="kom-sukan"][data-id="bola"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
+  const k2b = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).map((x) => x.textContent).join(' | '));
+  if (!/State Football Association Chairman/.test(k2b) || !/National Football Association Chairman/.test(k2b) || !/Need a Headquarters post or a Parliament seat/.test(k2b) || /Pengerusi Persatuan|Bola Sepak|Perlu jawatan/.test(k2b)) { ralat.push('kad sukan bola EN salah: ' + k2b.slice(-300)); }
+  await pu.evaluate(() => { window.MyPolitikKomuniti.lobi('sukan_negeri_bola', { rng: () => 0 }); window.NusaUI.render(); });
   await pu.waitForTimeout(400);
   const k3 = await pu.evaluate(() => { const c = Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts/i.test(x.textContent))[0]; return { n: window.MyPolitikKomuniti.getKomuniti(window.MyPolitikSave.loadPlayer()).jawatan.length, t: c ? c.textContent : '' }; });
   if (k3.n !== 1 || !/Resign/.test(k3.t) || !/months left/.test(k3.t) || /Letak jawatan|baki|sebulan/.test(k3.t)) { ralat.push('kad komuniti dipegang EN salah: ' + JSON.stringify(k3).slice(0, 260)); }
+  /* v8.29: PBT (Ketua Whip) dan Belia & Mahasiswa (EN). */
+  for (const jn of ['pbt', 'belia']) {
+    await pu.locator('[data-act="kom-jenis"][data-id="' + jn + '"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(400);
+    const kj = await pu.evaluate(() => Array.from(document.querySelectorAll('section.card')).filter((x) => /Community Posts|Local Council|Youth/i.test(x.querySelector('h2') ? x.querySelector('h2').textContent : '')).map((x) => x.textContent).join(' | '));
+    const jangka = jn === 'pbt' ? /Local Council Chief Whip \(PBT\)/ : /Student Association Chairman/;
+    if (!jangka.test(kj) || /Ketua Whip|Mahasiswa|Perlu memegang|Sudah memegang|Pengerusi Persatuan|Pengerusi Majlis/.test(kj)) { ralat.push('kad komuniti ' + jn + ' EN salah: ok=' + jangka.test(kj) + ' bocor=' + (kj.match(/Ketua Whip|Mahasiswa|Perlu memegang|Sudah memegang|Pengerusi Persatuan|Pengerusi Majlis/) || [''])[0]); }
+  }
   /* v8.28: Pindah Cawangan (EN): kad syarat, modal pemilih kawasan, kad selepas pindah; tiada BM bocor. */
   await pu.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { ip: 700, myr: 80000, ap: 10, keahlian: { sejakTahun: 2015, sejakBulan: 1 }, pru: Object.assign({}, window.MyPolitikPRU.getPRU(p), { status: null, statusKedua: null }), kabinet: Object.assign({}, window.MyPolitikKabinet.getKabinet(p), { hasGovernmentRole: false }) } }); window.NusaUI.render(); });
   await pu.locator('[data-tab="pemilihan"]').first().evaluate((e) => e.click()).catch(() => {}); await pu.waitForTimeout(500);

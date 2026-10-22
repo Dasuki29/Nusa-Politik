@@ -9,7 +9,7 @@
   if (!KM) { return; }
   function esc(s) { return W.NusaUI ? W.NusaUI.esc(s) : String(s); }
   function rm(n) { return 'RM ' + Math.round(Number(n) || 0).toLocaleString('ms-MY'); }
-  var pilih = null;
+  var pilih = null, pilihSukan = 'badminton';
   function sp(t) { return '<span>' + esc(t) + '</span>'; }
   /* Setiap bahagian dalam <span> sendiri supaya padanan terjemahan EN berfungsi. */
   function ganjaranH(g) {
@@ -43,7 +43,12 @@
         var jn2 = KM.JENIS.filter(function (x) { return x.id === pilih; })[0];
         if (!jn2) { pilih = null; return h; }
         h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + esc(jn2.ikon) + ' ' + esc(jn2.nama) + '</h2>';
-        r.senarai.filter(function (x) { return x.jenis === pilih; }).forEach(function (x) {
+        if (pilih === 'sukan') {                                   // v8.29: pilih sukan dahulu
+          if (!KM.SUKAN.some(function (sk) { return sk.id === pilihSukan; })) { pilihSukan = KM.SUKAN[0].id; }
+          h += '<div class="note" style="font-size:.78rem;margin:2px 0 4px">' + sp('Pilih sukan:') + '</div><div class="btn-group" style="flex-wrap:wrap;margin-bottom:6px">' +
+            KM.SUKAN.map(function (sk) { return '<button type="button" class="btn btn--sm' + (pilihSukan === sk.id ? ' btn--gold' : '') + '" data-act="kom-sukan" data-id="' + esc(sk.id) + '">' + esc(sk.ikon) + ' ' + sp(sk.nama) + '</button>'; }).join('') + '</div>';
+        }
+        r.senarai.filter(function (x) { return x.jenis === pilih && (pilih !== 'sukan' || x.sukan === pilihSukan); }).forEach(function (x) {
           h += '<div style="margin:8px 0"><b>' + esc(x.ikon) + ' ' + esc(x.nama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">' + sp('Kos IP ' + x.ip + ' dan ' + rm(x.myr) + ', peluang ' + x.peluang + '%, ganjaran') + ' ' + ganjaranH(x.ganjaran) + ' ' + sp('sebulan') +
             (x.risiko.audit ? ', ' + sp('risiko Konflik dan Audit SPRM') : '') + '</div>' +
             (x.milik ? '<div class="note">Dipegang.</div>' :
@@ -55,5 +60,5 @@
       return h;
     } catch (e) { return ''; }
   }
-  W.NusaKomuniti_UI = { kad: kad, pilih: function (id) { pilih = id || null; } };
+  W.NusaKomuniti_UI = { kad: kad, pilih: function (id) { pilih = id || null; }, sukan: function (id) { pilihSukan = id || 'badminton'; } };
 })(window);

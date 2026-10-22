@@ -36,20 +36,32 @@
     ahli: { nama: 'Ahli Lembaga', ip: 120, myr: 8000, gaji: 1500, ipBulan: 3, asas: 0.65 },
     pengarah: { nama: 'Pengarah', ip: 80, myr: 5000, gaji: 1000, ipBulan: 2, asas: 0.75 }
   };
+  /* v8.29: sektor menggantikan 3 syarikat lama. mod = pelarasan pada ganjaran asas setiap tahap: gaji (darab), ip / reputasi / akarUmbi (tambah sebulan), konflik / audit (tambah risiko sebulan). ANDAIAN: penyeimbang simulasi, nama syarikat rekaan. */
   var SYARIKAT = [
-    { id: 'spn', nama: 'Syarikat Pelaburan Nusa' },
-    { id: 'lpm', nama: 'Lembaga Pelabuhan Maritim' },
-    { id: 'apn', nama: 'Agensi Pembangunan Negeri' }
+    { id: 'kewangan', ikon: '💵', sektor: 'Pembiayaan / Kewangan', nama: 'Nusa Pembiayaan Berhad', mod: { gaji: 1.4, konflik: 1, audit: 1 } },
+    { id: 'pendidikan', ikon: '🎓', sektor: 'Pendidikan', nama: 'Yayasan Pendidikan Nusa', mod: { gaji: 0.8, reputasi: 1 } },
+    { id: 'teknologi', ikon: '💻', sektor: 'Teknologi', nama: 'Nusa Digital Sdn Bhd', mod: { gaji: 1.1, ip: 1, audit: 1 } },
+    { id: 'sdm', ikon: '👥', sektor: 'Sumber Manusia', nama: 'Lembaga Tenaga Kerja Nusa', mod: { gaji: 0.9, akarUmbi: 1 } },
+    { id: 'pertanian', ikon: '🌴', sektor: 'Pertanian / Ladang', nama: 'Perbadanan Ladang Nusa', mod: { gaji: 0.8, akarUmbi: 2, konflik: 1 } },
+    { id: 'pengangkutan', ikon: '🚆', sektor: 'Pengangkutan', nama: 'Nusa Pengangkutan Awam', mod: { gaji: 1.2, audit: 1 } }
   ];
+  var ALIAS_SYARIKAT = { spn: 'kewangan', lpm: 'pengangkutan', apn: 'pertanian' };   // ID lama (sebelum v8.29)
+  function idBaharu(id) { var s = String(id || ''), i = s.indexOf('_'); return i > 0 && ALIAS_SYARIKAT[s.slice(0, i)] ? ALIAS_SYARIKAT[s.slice(0, i)] + s.slice(i) : s; }
+  function sektorDari(id) { var s = String(id || ''), i = s.indexOf('_'); return SYARIKAT.filter(function (x) { return x.id === (i > 0 ? s.slice(0, i) : s); })[0] || null; }
+  /** Ganjaran / risiko bulanan sebenar bagi jawatan d (tahap + pelarasan sektor). */
+  function ganjaranJawatan(d) {
+    var t = TAHAP[d.tahap], m = (sektorDari(d.id) || {}).mod || {};
+    return { gaji: Math.round(t.gaji * (m.gaji || 1)), ip: t.ipBulan + (m.ip || 0), reputasi: m.reputasi || 0, akarUmbi: m.akarUmbi || 0, konflik: CONFIG.KONFLIK + (m.konflik || 0), audit: CONFIG.AUDIT + (m.audit || 0) };
+  }
   var JAWATAN = [];
   SYARIKAT.forEach(function (s) { Object.keys(TAHAP).forEach(function (t) { JAWATAN.push({ id: s.id + '_' + t, syarikat: s.nama, tahap: t, nama: TAHAP[t].nama + ', ' + s.nama }); }); });
-  function cari(id) { return JAWATAN.filter(function (x) { return x.id === id; })[0] || null; }
+  function cari(id) { id = idBaharu(id); return JAWATAN.filter(function (x) { return x.id === id; })[0] || null; }
 
   function dasar() { return { lobi: null, jawatan: null, konflik: 0, audit: 0, akhir: '', sejarah: [] }; }
   function getGLC(p) {
     var g = p && p.glc && typeof p.glc === 'object' ? p.glc : {}, o = dasar();
     o.lobi = g.lobi && typeof g.lobi === 'object' ? { jenis: g.lobi.jenis === 'kalah' ? 'kalah' : 'kerajaan', baki: Math.max(0, Number(g.lobi.baki) || 0) } : null;
-    o.jawatan = g.jawatan && typeof g.jawatan === 'object' && cari(g.jawatan.id) ? Object.assign({}, g.jawatan) : null;
+    o.jawatan = g.jawatan && typeof g.jawatan === 'object' && cari(g.jawatan.id) ? Object.assign({}, g.jawatan, { id: idBaharu(g.jawatan.id), nama: cari(g.jawatan.id).nama }) : null;   // v8.29: ID / nama lama dipetakan ke sektor
     o.konflik = clamp(Math.round(Number(g.konflik) || 0), 0, 100); o.audit = clamp(Math.round(Number(g.audit) || 0), 0, 100);
     o.akhir = String(g.akhir || ''); o.sejarah = Array.isArray(g.sejarah) ? g.sejarah.slice(-10) : [];
     return o;
@@ -79,7 +91,8 @@
       var t = TAHAP[d.tahap], kos = S().kosSebenar ? S().kosSebenar(p, t.myr) : t.myr, sebab = [];
       if ((Number(p.ip) || 0) < t.ip) { sebab.push('IP tidak cukup (perlu ' + t.ip + ')'); }
       if ((Number(p.myr) || 0) < kos) { sebab.push('Dana tidak cukup (perlu ' + rm(kos) + ')'); }
-      return { id: d.id, nama: d.nama, tahapNama: t.nama, ip: t.ip, myr: kos, gaji: t.gaji, ipBulan: t.ipBulan, peluang: Math.round(peluang(p, d) * 100), boleh: !sebab.length, sebab: sebab.join('; ') };
+      var gj = ganjaranJawatan(d);
+      return { id: d.id, nama: d.nama, tahapNama: t.nama, ip: t.ip, myr: kos, gaji: gj.gaji, ipBulan: gj.ip, reputasi: gj.reputasi, akarUmbi: gj.akarUmbi, konflik: gj.konflik, audit: gj.audit, peluang: Math.round(peluang(p, d) * 100), boleh: !sebab.length, sebab: sebab.join('; ') };
     });
   }
   function lobi(id, o) {
@@ -97,7 +110,7 @@
     g.lobi.baki -= 1;
     if (lulus) {
       kes = { ip: -t.ip, myr: -s.myr };
-      g.jawatan = { id: d.id, nama: d.nama, tahap: d.tahap, mula: idx(p), tamat: idx(p) + CONFIG.TEMPOH, gaji: t.gaji, ip: t.ipBulan };
+      g.jawatan = { id: d.id, nama: d.nama, tahap: d.tahap, mula: idx(p), tamat: idx(p) + CONFIG.TEMPOH, gaji: ganjaranJawatan(d).gaji, ip: ganjaranJawatan(d).ip, reputasi: ganjaranJawatan(d).reputasi, akarUmbi: ganjaranJawatan(d).akarUmbi, dk: ganjaranJawatan(d).konflik, da: ganjaranJawatan(d).audit };
       g.lobi = null; g.konflik = 0; g.audit = 0;
       g.sejarah = g.sejarah.concat([{ tahun: p.tahun, bulan: p.bulan, nama: d.nama, hasil: 'dilantik' }]).slice(-10);
       var r = simpan(g, kes, { pindahan: true, log: { tindakan: 'glc_jaya', nama: 'Dilantik GLC: ' + d.nama, peringkat: 'ahli' } });
@@ -141,10 +154,11 @@
     g.akhir = kunci;
     if (kerajaan(p)) { tamatkan(g, p, 'menteri', {}, 'glc_tamat'); ev.push({ jenis: 'glc_tamat', mesej: 'Jawatan GLC tamat kerana anda dilantik ke jawatan kerajaan.' }); return { peristiwa: ev }; }
     var j = g.jawatan;
-    g.konflik = clamp(g.konflik + CONFIG.KONFLIK, 0, 100); g.audit = clamp(g.audit + CONFIG.AUDIT, 0, 100);
+    g.konflik = clamp(g.konflik + (j.dk || CONFIG.KONFLIK), 0, 100); g.audit = clamp(g.audit + (j.da || CONFIG.AUDIT), 0, 100);
     var ig = IG(), skor = ig && ig.getIntegriti ? Number(ig.getIntegriti(p).skor) : 50;
-    var kes = { myr: j.gaji, ip: j.ip };
-    if (g.konflik >= 60) { kes.reputasi = -1; }
+    var kes = { myr: j.gaji, ip: j.ip, reputasi: j.reputasi || 0 };
+    if (j.akarUmbi) { kes.kesetiaan = { akarUmbi: j.akarUmbi }; }
+    if (g.konflik >= 60) { kes.reputasi -= 1; }
     var risiko = g.audit >= CONFIG.AUDIT_MULA || skor < CONFIG.SKOR_RENDAH;
     var kemungkinan = risiko ? clamp((g.audit - CONFIG.AUDIT_MULA) / 200 + (skor < CONFIG.SKOR_RENDAH ? 0.1 : 0), 0.02, 0.6) : 0;
     if (risiko && rngBulan(p, o, 'pecat')() < kemungkinan) {

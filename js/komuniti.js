@@ -43,31 +43,67 @@
     { id: 'masjid', ikon: '🕌', nama: 'Masjid & PIBG' },
     { id: 'sukan', ikon: '⚽', nama: 'Persatuan Sukan' },
     { id: 'pbt', ikon: '🏘️', nama: 'Majlis PBT' },
-    { id: 'belia', ikon: '🧑‍🤝‍🧑', nama: 'Persatuan Belia' },
+    { id: 'belia', ikon: '🧑‍🤝‍🧑', nama: 'Belia & Mahasiswa' },
     { id: 'agensi', ikon: '💰', nama: 'Agensi Berpendapatan Tinggi' }
   ];
   /* syarat: per = peringkat parti minimum; umurMin/umurMaks; kerusi = ADUN atau MP; mp = MP sahaja; atau = alternatif per/mp (Sukan Kebangsaan);
              kerajaan = pegang kerusi daripada pihak kerajaan; menang = pernah menang DUN/Parlimen; ipMin = IP minimum;
      kos: { ip, myr }; ganjaran bulanan: { akarUmbi, reputasi, ip, myr }; risiko: { konflik, audit }; gajiTinggi = tidak bersama Menteri/EXCO atau GLC. */
   var JAWATAN = [
-    { id: 'ajk_masjid', jenis: 'masjid', ikon: '🕌', nama: 'AJK Masjid', syarat: { per: 'cawangan', umurMin: 30 }, ip: 40, myr: 500, asas: 0.75, ganjaran: { akarUmbi: 2, reputasi: 1 }, risiko: { konflik: 0, audit: 0 } },
-    { id: 'ajk_pibg', jenis: 'masjid', ikon: '🏫', nama: 'AJK PIBG', syarat: { per: 'cawangan', umurMin: 25 }, ip: 30, myr: 300, asas: 0.8, ganjaran: { akarUmbi: 2, ip: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'ajk_masjid', jenis: 'masjid', ikon: '🕌', nama: 'Pengerusi Masjid', syarat: { per: 'cawangan', umurMin: 30 }, ip: 40, myr: 500, asas: 0.75, ganjaran: { akarUmbi: 2, reputasi: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'ajk_pibg', jenis: 'masjid', ikon: '🏫', nama: 'Yang Dipertua PIBG', syarat: { per: 'cawangan', umurMin: 25 }, ip: 30, myr: 300, asas: 0.8, ganjaran: { akarUmbi: 2, ip: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'pbt', ikon: '🏘️', nama: 'Majlis PBT' },
+    { id: 'belia', ikon: '🧑‍🤝‍🧑', nama: 'Belia & Mahasiswa' },
+    { id: 'agensi', ikon: '💰', nama: 'Agensi Berpendapatan Tinggi' }
+  ];
+  /* syarat: per = peringkat parti minimum; umurMin/umurMaks; kerusi = ADUN atau MP; mp = MP sahaja; atau = alternatif per/mp (Sukan Kebangsaan);
+             kerajaan = pegang kerusi daripada pihak kerajaan; menang = pernah menang DUN/Parlimen; ipMin = IP minimum;
+     kos: { ip, myr }; ganjaran bulanan: { akarUmbi, reputasi, ip, myr }; risiko: { konflik, audit }; gajiTinggi = tidak bersama Menteri/EXCO atau GLC. */
+  var JAWATAN = [
+    { id: 'ajk_masjid', jenis: 'masjid', ikon: '🕌', nama: 'Pengerusi Masjid', syarat: { per: 'cawangan', umurMin: 30 }, ip: 40, myr: 500, asas: 0.75, ganjaran: { akarUmbi: 2, reputasi: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'ajk_pibg', jenis: 'masjid', ikon: '🏫', nama: 'Yang Dipertua PIBG', syarat: { per: 'cawangan', umurMin: 25 }, ip: 30, myr: 300, asas: 0.8, ganjaran: { akarUmbi: 2, ip: 1 }, risiko: { konflik: 0, audit: 0 } },
     { id: 'sukan_negeri', jenis: 'sukan', ikon: '⚽', nama: 'Persatuan Sukan Negeri', syarat: { per: 'bahagian' }, ip: 100, myr: 3000, asas: 0.65, ganjaran: { ip: 3, reputasi: 1, myr: 300 }, risiko: { konflik: 1, audit: 0 } },
     { id: 'sukan_nasional', jenis: 'sukan', ikon: '🏅', nama: 'Persatuan Sukan Kebangsaan', syarat: { per: 'pusat', atauMP: true }, ip: 200, myr: 8000, asas: 0.55, ganjaran: { ip: 5, reputasi: 2, myr: 600 }, risiko: { konflik: 1, audit: 1 }, gajiTinggi: true },
-    { id: 'pbt', jenis: 'pbt', ikon: '🏘️', nama: 'Ahli Majlis PBT', syarat: { per: 'bahagian', kerajaan: true }, ip: 120, myr: 2000, asas: 0.6, ganjaran: { akarUmbi: 3, ip: 2, myr: 800 }, risiko: { konflik: 1, audit: 0 }, gajiTinggi: true },
-    { id: 'belia_kampung', jenis: 'belia', ikon: '🧑‍🤝‍🧑', nama: 'Persatuan Belia Kampung/Taman', syarat: { per: 'cawangan', umurMin: 18, umurMaks: 40 }, ip: 30, myr: 300, asas: 0.8, ganjaran: { ip: 2, akarUmbi: 2 }, risiko: { konflik: 0, audit: 0 } },
-    { id: 'belia_negeri', jenis: 'belia', ikon: '🏛️', nama: 'Majlis Belia Negeri', syarat: { per: 'bahagian', umurMin: 18, umurMaks: 40 }, ip: 80, myr: 1500, asas: 0.7, ganjaran: { ip: 3, akarUmbi: 2, reputasi: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'pbt', jenis: 'pbt', ikon: '🏘️', nama: 'Ahli Majlis PBT', syarat: { per: 'bahagian', kerajaan: true }, ip: 120, myr: 2000, asas: 0.6, ganjaran: { akarUmbi: 3, ip: 2, myr: 800 }, risiko: { konflik: 1, audit: 0 }, gajiTinggi: true, tidakJikaPegang: 'pbt_whip' },
+    { id: 'pbt_whip', jenis: 'pbt', ikon: '🏘️', nama: 'Ketua Whip PBT', syarat: { per: 'bahagian', kerajaan: true, perluPegang: 'pbt' }, ip: 160, myr: 3000, asas: 0.5, ganjaran: { akarUmbi: 3, ip: 3, myr: 1100 }, risiko: { konflik: 2, audit: 0 }, gajiTinggi: true, ganti: 'pbt' },
+    { id: 'belia_kampung', jenis: 'belia', ikon: '🧑‍🤝‍🧑', nama: 'Pengerusi Persatuan Belia', syarat: { per: 'cawangan', umurMin: 18, umurMaks: 40 }, ip: 30, myr: 300, asas: 0.8, ganjaran: { ip: 2, akarUmbi: 2 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'belia_negeri', jenis: 'belia', ikon: '🏛️', nama: 'Pengerusi Majlis Belia Negeri', syarat: { per: 'bahagian', umurMin: 18, umurMaks: 40 }, ip: 80, myr: 1500, asas: 0.7, ganjaran: { ip: 3, akarUmbi: 2, reputasi: 1 }, risiko: { konflik: 0, audit: 0 } },
+    { id: 'mahasiswa', jenis: 'belia', ikon: '🎓', nama: 'Pengerusi Persatuan Mahasiswa', syarat: { per: 'cawangan', umurMin: 18, umurMaks: 30 }, ip: 20, myr: 150, asas: 0.85, ganjaran: { ip: 1, akarUmbi: 2 }, risiko: { konflik: 0, audit: 0 } },
     { id: 'agensi_tinggi', jenis: 'agensi', ikon: '💰', nama: 'Lembaga Agensi Pendapatan Tinggi', syarat: { menang: true, ipMin: 400 }, ip: 350, myr: 30000, asas: 0.45, ganjaran: { ip: 6, myr: 6000 }, risiko: { konflik: 3, audit: 3 }, gajiTinggi: true }
   ];
-  function cari(id) { return JAWATAN.filter(function (x) { return x.id === id; })[0] || null; }
+  /* v8.29: Persatuan Sukan ikut jenis sukan (Negeri / Kebangsaan x 5 sukan). Pelarasan pada kos Dana, ganjaran dan risiko asas. ANDAIAN: penyeimbang simulasi. */
+  var SUKAN = [
+    { id: 'bola', ikon: '⚽', nama: 'Bola Sepak', kos: 1.4, tambah: { reputasi: 1, akarUmbi: 1 }, myrG: 1.3, konflik: 1 },
+    { id: 'badminton', ikon: '🏸', nama: 'Badminton', kos: 1.0, tambah: { ip: 1 }, myrG: 1, konflik: 0 },
+    { id: 'takraw', ikon: '🥥', nama: 'Sepak Takraw', kos: 0.8, tambah: { akarUmbi: 2 }, myrG: 1, konflik: 0 },
+    { id: 'hoki', ikon: '🏑', nama: 'Hoki', kos: 0.7, tambah: { ip: 1 }, myrG: 0.7, konflik: -1 },
+    { id: 'rugbi', ikon: '🏉', nama: 'Rugbi', kos: 0.9, tambah: { reputasi: 1, ip: 1 }, myrG: 1, konflik: 0 }
+  ];
+  var SUKAN_ASAS = [
+    { id: 'sukan_negeri', akhir: 'Negeri', syarat: { per: 'bahagian' }, ip: 100, myr: 3000, asas: 0.65, ganjaran: { ip: 3, reputasi: 1, myr: 300 }, risiko: { konflik: 1, audit: 0 } },
+    { id: 'sukan_nasional', akhir: 'Kebangsaan', syarat: { per: 'pusat', atauMP: true }, ip: 200, myr: 8000, asas: 0.55, ganjaran: { ip: 5, reputasi: 2, myr: 600 }, risiko: { konflik: 1, audit: 1 }, gajiTinggi: true }
+  ];
+  SUKAN_ASAS.forEach(function (a) {
+    SUKAN.forEach(function (sk) {
+      var g = { ip: a.ganjaran.ip || 0, reputasi: a.ganjaran.reputasi || 0, myr: Math.round((a.ganjaran.myr || 0) * sk.myrG) };
+      Object.keys(sk.tambah).forEach(function (k) { g[k] = (g[k] || 0) + sk.tambah[k]; });
+      var d = { id: a.id + '_' + sk.id, jenis: 'sukan', sukan: sk.id, ikon: sk.ikon, nama: 'Pengerusi Persatuan ' + sk.nama + ' ' + a.akhir, syarat: a.syarat, ip: a.ip, myr: Math.round(a.myr * sk.kos), asas: a.asas,
+        ganjaran: g, risiko: { konflik: Math.max(0, a.risiko.konflik + sk.konflik), audit: a.risiko.audit } };
+      if (a.gajiTinggi) { d.gajiTinggi = true; }
+      JAWATAN.push(d);
+    });
+  });
+  /* ID lama (sebelum v8.29) dipetakan ke sukan neutral (Badminton). */
+  var ALIAS = { sukan_negeri: 'sukan_negeri_badminton', sukan_nasional: 'sukan_nasional_badminton' };
+  function cari(id) { id = ALIAS[id] || id; return JAWATAN.filter(function (x) { return x.id === id; })[0] || null; }
 
   function dasar() { return { jawatan: [], cuba: {}, akhir: '', sejarah: [] }; }
   function getKomuniti(p) {
     var k = p && p.komuniti && typeof p.komuniti === 'object' ? p.komuniti : {}, o = dasar();
     o.jawatan = (Array.isArray(k.jawatan) ? k.jawatan : []).filter(function (j) { return j && cari(j.id); }).map(function (j) {
-      return { id: j.id, mula: Number(j.mula) || 0, tamat: Number(j.tamat) || 0, konflik: clamp(Math.round(Number(j.konflik) || 0), 0, 100), audit: clamp(Math.round(Number(j.audit) || 0), 0, 100) };
+      return { id: cari(j.id).id, mula: Number(j.mula) || 0, tamat: Number(j.tamat) || 0, konflik: clamp(Math.round(Number(j.konflik) || 0), 0, 100), audit: clamp(Math.round(Number(j.audit) || 0), 0, 100) };
     }).slice(0, CONFIG.MAKS);
-    if (k.cuba && typeof k.cuba === 'object') { Object.keys(k.cuba).forEach(function (id) { if (cari(id)) { o.cuba[id] = Number(k.cuba[id]) || 0; } }); }
+    if (k.cuba && typeof k.cuba === 'object') { Object.keys(k.cuba).forEach(function (id) { if (cari(id)) { o.cuba[cari(id).id] = Number(k.cuba[id]) || 0; } }); }
     o.akhir = String(k.akhir || ''); o.sejarah = Array.isArray(k.sejarah) ? k.sejarah.slice(-10) : [];
     return o;
   }
@@ -106,6 +142,8 @@
     if (s.kerajaan && !kerusiKerajaan(p)) { o.push('Parti anda perlu dalam kerajaan'); }
     if (s.menang && !pernahMenang(p)) { o.push('Perlu pernah menang kerusi DUN atau Parlimen'); }
     if (s.ipMin && (Number(p.ip) || 0) < s.ipMin) { o.push('Perlu IP ' + s.ipMin + '+'); }
+    if (s.perluPegang && !pegang(k, s.perluPegang)) { o.push('Perlu memegang ' + cari(s.perluPegang).nama + ' dahulu'); }
+    if (d.tidakJikaPegang && pegang(k, d.tidakJikaPegang)) { o.push('Sudah memegang ' + cari(d.tidakJikaPegang).nama); }
     if (d.gajiTinggi && menteri(p)) { o.push('Tidak boleh bersama jawatan Menteri atau EXCO'); }
     if (d.gajiTinggi && pegangGLC(p)) { o.push('Tidak boleh bersama jawatan GLC'); }
     return o;
@@ -113,7 +151,7 @@
   function peluang(p, d) {
     return clamp(d.asas + ((Number(p.ip) || 0) - d.ip) / (d.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003, 0.1, 0.95);
   }
-  function pegang(k, id) { return k.jawatan.filter(function (j) { return j.id === id; })[0] || null; }
+  function pegang(k, id) { id = ALIAS[id] || id; return k.jawatan.filter(function (j) { return j.id === id; })[0] || null; }
   function bolehBerjawatanTinggi(p) { return !menteri(p) && !pegangGLC(p); }
 
   function senarai(p) {
@@ -122,13 +160,13 @@
       var kos = S().kosSebenar ? S().kosSebenar(p, d.myr) : d.myr, sebab = halangan(p, d, k), milik = !!pegang(k, d.id);
       if (milik) { sebab = []; }
       else {
-        if (k.jawatan.length >= CONFIG.MAKS) { sebab.push('Sudah memegang ' + CONFIG.MAKS + ' jawatan komuniti'); }
+        if (k.jawatan.length >= CONFIG.MAKS && !(d.ganti && pegang(k, d.ganti))) { sebab.push('Sudah memegang ' + CONFIG.MAKS + ' jawatan komuniti'); }
         if ((Number(p.ip) || 0) < d.ip) { sebab.push('IP tidak cukup (perlu ' + d.ip + ')'); }
         if ((Number(p.myr) || 0) < kos) { sebab.push('Dana tidak cukup (perlu ' + rm(kos) + ')'); }
         var tunggu = k.cuba[d.id] ? CONFIG.TUNGGU_SEMULA - (kini - k.cuba[d.id]) : 0;
         if (tunggu > 0) { sebab.push('Lobi gagal baru-baru ini (tunggu ' + tunggu + ' bulan)'); }
       }
-      return { id: d.id, jenis: d.jenis, ikon: d.ikon, nama: d.nama, ip: d.ip, myr: kos, ganjaran: d.ganjaran, risiko: d.risiko, gajiTinggi: !!d.gajiTinggi,
+      return { id: d.id, jenis: d.jenis, sukan: d.sukan || null, ikon: d.ikon, nama: d.nama, ip: d.ip, myr: kos, ganjaran: d.ganjaran, risiko: d.risiko, gajiTinggi: !!d.gajiTinggi,
         peluang: Math.round(peluang(p, d) * 100), milik: milik, boleh: !milik && !sebab.length, sebab: sebab.join('; '), sebabList: sebab };
     });
   }
@@ -142,6 +180,7 @@
     if (!s.boleh) { return { ok: false, ralat: s.sebab }; }
     var lulus = rngBulan(p, o, id)() < peluang(p, d), kini = idx(p), kes, r;
     if (lulus) {
+      if (d.ganti) { k.jawatan = k.jawatan.filter(function (x) { return x.id !== d.ganti; }); }
       k.jawatan.push({ id: d.id, mula: kini, tamat: kini + CONFIG.TEMPOH, konflik: 0, audit: 0 }); delete k.cuba[id];
       k.sejarah = k.sejarah.concat([{ tahun: p.tahun, bulan: p.bulan, nama: d.nama, hasil: 'dilantik' }]).slice(-10);
       r = simpan(k, { ip: -d.ip, myr: -s.myr }, { log: { tindakan: 'komuniti_jaya', nama: 'Dilantik: ' + d.nama, peringkat: 'ahli' } });
@@ -217,5 +256,5 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, JENIS: JENIS, JAWATAN: JAWATAN, getKomuniti: getKomuniti, senarai: senarai, lobi: lobi, baharui: baharui, letak: letak, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  return { CONFIG: CONFIG, JENIS: JENIS, SUKAN: SUKAN, JAWATAN: JAWATAN, getKomuniti: getKomuniti, senarai: senarai, lobi: lobi, baharui: baharui, letak: letak, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });
