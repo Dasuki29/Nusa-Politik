@@ -107,6 +107,17 @@
   ["Hanya Presiden PBB boleh berunding kerusi GPS.", "Only the PBB President can negotiate GPS seats."],
   ["Hanya Presiden UMNO boleh berunding kerusi GPS.", "Only the PBB President can negotiate GPS seats."],
   ["Rundingan kerusi untuk PRN ini sudah selesai.", "The seat negotiation for this state election is already done."],
-  ["Rundingan dibuka 12 bulan sebelum PRN.", "Negotiation opens 12 months before the state election."]
+  ["Rundingan dibuka 12 bulan sebelum PRN.", "Negotiation opens 12 months before the state election."],
+  ["🏛️ Kerusi Parlimen Anda", "🏛️ Your Parliament Seat"],
+  ["Bilangan DUN", "Number of state seats"],
+  ["Pilihan raya seterusnya", "Next election"],
+  ["PRU (kerusi Parlimen)", "General Election (Parliament seat)"],
+  ["PRN Sarawak (kerusi DUN)", "Sarawak State Election (state seat)"],
+  ["PBB bertanding kerusi DUN dalam PRN dan kerusi Parlimen dalam PRU, dua pilihan raya berasingan (andaian jadual: PRN 2027, PRU 2028, kemudian setiap 5 tahun). Kerusi Parlimen anda ialah Parlimen yang mengandungi DUN anda. Kekuatan kerusi ialah andaian permainan, bukan data keputusan sebenar.", "PBB contests state seats in the state election and Parliament seats in the general election, two separate elections (assumed schedule: state election 2027, general election 2028, then every 5 years). Your Parliament seat is the one containing your state seat. Seat strength is a game assumption, not real result data."],
+  ["UMNO bertanding kerusi DUN dalam PRN dan kerusi Parlimen dalam PRU, dua pilihan raya berasingan (andaian jadual: PRN 2027, PRU 2028, kemudian setiap 5 tahun). Kerusi Parlimen anda ialah Parlimen yang mengandungi DUN anda. Kekuatan kerusi ialah andaian permainan, bukan data keputusan sebenar.", "PBB contests state seats in the state election and Parliament seats in the general election, two separate elections (assumed schedule: state election 2027, general election 2028, then every 5 years). Your Parliament seat is the one containing your state seat. Seat strength is a game assumption, not real result data."],
+  ["PBB bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)", "PBB contests Parliament seats in the general election (not the Sarawak state election)"],
+  ["UMNO bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)", "PBB contests Parliament seats in the general election (not the Sarawak state election)"],
+  ["PBB bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)", "PBB contests state seats in the Sarawak state election (not the general election)"],
+  ["UMNO bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)", "PBB contests state seats in the Sarawak state election (not the general election)"]
   ]);
 })();

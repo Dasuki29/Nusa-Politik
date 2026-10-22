@@ -1032,6 +1032,23 @@
   }
 
   /** v9.0: kad Imbangan Bumiputera & Pesaka (PBB). */
+  /** v9.4: kad kerusi Parlimen pemain PBB (31 Parlimen Sarawak) dan musim pilihan raya seterusnya. */
+  function kadParlimenPBB(p) {
+    var SW = W.MyPolitikSarawak, m = SW && SW.maklumatParlimen ? SW.maklumatParlimen(p) : null; if (!m) { return ''; }
+    var pr = W.MyPolitikPRU && W.MyPolitikPRU.getPRU ? W.MyPolitikPRU.getPRU(p) : null, kelas = m.tahap === 'sukar' ? 'is-lock' : m.tahap === 'selamat' ? 'is-done' : 'is-open';
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Kerusi Parlimen Anda</h2>' +
+      '<div class="kv"><span>Parlimen</span><b>' + esc(m.nama) + (m.kod ? ' (' + esc(m.kod) + ')' : '') + '</b></div>' +
+      '<div class="kv"><span>Bilangan DUN</span><b>' + (m.bilDUN || 1) + '</b></div>' +
+      '<div class="kv"><span>Pemilih</span><b>' + fmt(m.pemilih) + '</b></div>' +
+      '<div class="kv"><span>Melayu/Melanau</span><b>' + m.melayu + '%</b></div><div class="kv"><span>Dayak (Iban, Bidayuh, Orang Ulu)</span><b>' + m.dayak + '%</b></div>' +
+      '<div class="kv"><span>Cina</span><b>' + m.cina + '%</b></div>' +
+      '<div class="kv"><span>Tahap kerusi</span><b><span class="status-chip ' + kelas + '">' + esc(m.tahapNama) + '</span> <span>(' + (m.ofset > 0 ? '+' : '') + m.ofset + ' sokongan asas)</span></b></div>' +
+      '<div class="kv"><span>Lawan utama (label simulasi)</span><b>' + esc(m.lawan.join(', ')) + '</b></div>' +
+      (pr ? '<div class="kv"><span>Pilihan raya seterusnya</span><b>' + (pr.jenisPBB === 'PRU' ? '<span>PRU (kerusi Parlimen)</span>' : '<span>PRN Sarawak (kerusi DUN)</span>') + ' · ' + pr.tahunPRU + '</b></div>' : '') +
+      '<p class="note" style="font-size:.78rem">PBB bertanding kerusi DUN dalam PRN dan kerusi Parlimen dalam PRU, dua pilihan raya berasingan (andaian jadual: PRN 2027, PRU 2028, kemudian setiap 5 tahun). Kerusi Parlimen anda ialah Parlimen yang mengandungi DUN anda. Kekuatan kerusi ialah andaian permainan, bukan data keputusan sebenar.</p></section>';
+    return h;
+  }
+
   function kadBlokPBB(p) {
     var SW = W.MyPolitikSarawak, r = SW && SW.ringkasBlok ? SW.ringkasBlok(p) : null; if (!r) { return ''; }
     function ef(n) { return n === 0 ? 'Sama rata' : n < 0 ? 'Lebih mudah (' + n + ')' : 'Lebih sukar (+' + n + ')'; }
@@ -1066,7 +1083,7 @@
 
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');

@@ -1,5 +1,25 @@
 # Catatan Perubahan
 
+## v9.4 (2026-10-22)
+
+Kerusi Parlimen dan PRU untuk PBB.
+
+### Baharu
+- **PRU berasingan daripada PRN:** pemain PBB bertanding kerusi DUN dalam PRN dan kerusi Parlimen dalam PRU. Jadual (andaian): PRN 2027, PRU 2028, PRN 2032, PRU 2033, dan seterusnya (setiap satu kitaran 5 tahun; bulan PRU ikut ID pemain). Kelayakan: kerusi DUN hanya semasa PRN, kerusi Parlimen hanya semasa PRU (juga perlu Ketua Bahagian ke atas dan IP).
+- **Kerusi Parlimen:** Parlimen yang mengandungi DUN pemain (31 Parlimen Sarawak). Kad **🏛️ Kerusi Parlimen Anda** di tab Profil. Komposisi etnik wajaran pemilih (`pl` dalam `data/pbb-dun.json`, dijana semula oleh `tools/build-pbb.js`); kekuatan kerusi sama peraturan DUN (Sukar/Marginal/Sederhana/Selamat). Simpanan lama tanpa `pl` guna etnik DUN sebagai anggaran.
+- **Status kerusi kekal:** semasa PRU, status ADUN kekal; semasa PRN, status MP kekal. Jawatan Premier/Menteri negeri tidak tamat apabila Parlimen dibubarkan, dan jawatan persekutuan tidak tamat apabila DUN dibubarkan.
+- Banner jadual menunjukkan "PRN Sarawak" atau "PRU". Terjemahan EN, tutorial dan ujian unit dikemas kini.
+
+### Pembetulan
+- **Presiden PBB dan PRN:** sebelum ini keputusan nasional (peringkat persekutuan) dijana untuk Presiden PBB selepas PRN, menutup lobi kerajaan negeri dan menghalang tuntutan Premier. PBB (parti regional) kini tidak mendapat keputusan nasional; lobi kerajaan negeri dibuka mengikut peluang kerajaan GPS.
+
+### Andaian dan had
+- Jawatan kerajaan hanya satu pada satu masa (Premier atau Menteri persekutuan, bukan kedua-duanya); label "BN" dalam Dewan Rakyat belum ditukar untuk PBB.
+- Kerajaan persekutuan selepas PRU ikut peluang umum (25% hingga 80%), tiada rundingan kerajaan nasional untuk PBB.
+
+### Belum
+- Pindah Cawangan PBB, parti lain, penamaan MKT/PAU, label gabungan persekutuan dalam Dewan Rakyat.
+
 ## v9.3 (2026-10-22)
 
 Rundingan kerusi GPS dan istilah Menteri Sarawak.

@@ -29,6 +29,13 @@ Object.keys(dm).forEach(k => {
   o.pemilih += d.pemilih || 0; o.bil++; Object.keys(o.e).forEach(x => { o.e[x] += e[x] || 0; });
 });
 Object.keys(dun).forEach(no => { const o = dun[no], t = Object.values(o.e).reduce((a, b) => a + b, 0) || 1; Object.keys(o.e).forEach(x => { o.e[x] = Math.round(o.e[x] / t * 1000) / 10; }); });
+/* v9.4: ringkasan Parlimen (31 kerusi) disalin ke setiap DUN sebagai `pl` (disimpan dalam profil bersama dunInfo): pemilih, bilangan DUN dan etnik wajaran pemilih. */
+const pl = {};
+Object.keys(dun).forEach(no => { const o = dun[no], z = pl[o.kodParlimen] = pl[o.kodParlimen] || { nama: o.parlimen, kod: o.kodParlimen, pemilih: 0, bilDUN: 0, e: { melayu: 0, cina: 0, india: 0, iban: 0, bidayuh: 0, orangUlu: 0, lain: 0 } };
+  z.pemilih += o.pemilih; z.bilDUN++; Object.keys(z.e).forEach(x => { z.e[x] += (o.e[x] || 0) * o.pemilih; }); });
+Object.keys(pl).forEach(k => { const z = pl[k]; Object.keys(z.e).forEach(x => { z.e[x] = Math.round(z.e[x] / (z.pemilih || 1) * 10) / 10; }); });
+Object.keys(dun).forEach(no => { dun[no].pl = pl[dun[no].kodParlimen]; });
+console.log('Parlimen:', Object.keys(pl).length);
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), JSON.stringify(dun));
 console.log('data/pbb-dun.json', Object.keys(dun).length, 'DUN');
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), baris.map(r => r.join(',')).join('\n') + '\n');

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nusa Politik — js/sarawak.js   (v8.33; v9.0 imbangan sayap dalaman; v9.1 Premier & Exco; v9.3 rundingan kerusi GPS)
+   Nusa Politik — js/sarawak.js   (v8.33; v9.0 imbangan sayap dalaman; v9.1 Premier & Exco; v9.3 rundingan kerusi GPS; v9.4 kerusi Parlimen & PRU)
    PRN Sarawak untuk pemain PBB: jadual pilihan raya, kekuatan kerusi DUN mengikut komposisi etnik dan parti lawan mengikut kawasan.
    Data DUN (pemilih, peratus etnik) daripada data/pbb-dun.json (dibina oleh tools/build-pbb.js) disimpan dalam profil (p.dunInfo) semasa pendaftaran.
    v9.0: IMBANGAN SAYAP DALAMAN PBB. Pemain PBB ialah ahli blok Bumiputera atau Pesaka (p.blokPBB, dipilih semasa mendaftar).
@@ -81,6 +81,33 @@
     var r = Sv.applyEffects({ ap: -BLOK_CFG.DEKATI_AP, myr: -BLOK_CFG.DEKATI_MYR }, { kiraTindakan: false, patch: { blokSokong: { nilai: baru, idx: n, dekati: n } }, log: { tindakan: 'blok_dekati', nama: 'Dekati blok ' + BLOK[lain(b)].nama, peringkat: 'bulan' } });
     return r && r.ok ? { ok: true, mesej: 'Anda mendekati pemimpin blok ' + BLOK[lain(b)].nama + '. Sokongan antara blok ' + baru + '/100 (-' + BLOK_CFG.DEKATI_AP + ' AP, -RM ' + BLOK_CFG.DEKATI_MYR.toLocaleString('en') + ').' } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
   }
+  /* ---------- v9.4: kerusi Parlimen & musim PRU ----------
+     PBB bertanding dua jenis pilihan raya berasingan: PRN (kerusi DUN) dan PRU (kerusi Parlimen). Kitaran 5 tahun masing-masing.
+     ANDAIAN: PRN 2027, PRU setahun kemudian (2028), kemudian PRN 4 tahun selepas PRU (2032), PRU 2033, dan seterusnya. Bulan PRU ditetapkan daripada ID pemain.
+     Kerusi Parlimen pemain ialah Parlimen yang mengandungi DUN mereka (31 Parlimen Sarawak). Kekuatan kerusi ikut komposisi etnik wajaran pemilih
+     (sama peraturan DUN). Data Parlimen daripada data/pbb-dun.json (`pl`); simpanan lama tanpa `pl` guna etnik DUN sebagai anggaran. */
+  var MUSIM = { PRU_SELEPAS_PRN: 1, PRN_SELEPAS_PRU: 4 };
+  function kekuatan(e, nama, kod, pemilih, bil) {
+    var dayak = Math.round((e.iban + e.bidayuh + e.orangUlu) * 10) / 10, bumi = Math.round((100 - e.cina - e.india - e.lain) * 10) / 10;
+    var tahap = e.cina >= CONFIG.CINA.sukar ? 'sukar' : e.cina >= CONFIG.CINA.marginal ? 'marginal' : bumi >= CONFIG.BUMI_SELAMAT ? 'selamat' : 'biasa';
+    var profil = e.cina >= CONFIG.BANDAR_CINA ? 'URBAN' : bumi >= 80 ? 'RURAL' : 'MIXED';
+    var lawan = e.cina >= CONFIG.BANDAR_CINA ? ['DAP', 'PSB'] : dayak >= 50 ? ['PSB', 'PKR'] : e.melayu >= 50 ? ['PKR', 'PAS'] : ['PKR', 'PSB'];
+    return { nama: nama, kod: kod, pemilih: pemilih, bil: bil, melayu: e.melayu, cina: e.cina, india: e.india, dayak: dayak, bumi: bumi, lain: e.lain,
+      tahap: tahap, tahapNama: TAHAP[tahap], ofset: CONFIG.OFSET[tahap], profil: profil, lawan: lawan };
+  }
+  /** Ringkasan kerusi Parlimen pemain PBB (null jika bukan PBB / tiada data). */
+  function maklumatParlimen(p) {
+    var d = p && p.parti === 'PBB' && p.dunInfo ? p.dunInfo : null; if (!d || !d.e) { return null; }
+    var z = d.pl && d.pl.e ? d.pl : { nama: d.parlimen, kod: d.kodParlimen, pemilih: d.pemilih, bilDUN: 1, e: d.e };
+    var m = kekuatan(z.e, z.nama || d.parlimen || 'Parlimen', z.kod || d.kodParlimen || '', z.pemilih, z.bilDUN); m.bilDUN = z.bilDUN; return m;
+  }
+  function ofsetParlimen(p) { var m = maklumatParlimen(p); return m ? m.ofset : 0; }
+  /** Jadual musim seterusnya selepas musim 'PRN' atau 'PRU' tamat: { jenis, tahun, bulan }. */
+  function jadualBerikut(p, jenisTamat) {
+    var tahun = parseInt(p.tahun, 10) || CONFIG.TAHUN_PRN, bulan = 1 + hash(((p && (p.id || p.nama)) || 'pbb') + '|pru') % 12;
+    return jenisTamat === 'PRN' ? { jenis: 'PRU', tahun: tahun + MUSIM.PRU_SELEPAS_PRN, bulan: bulan } : { jenis: 'PRN', tahun: tahun + MUSIM.PRN_SELEPAS_PRU, bulan: jadual(p).bulan };
+  }
+
   /* ---------- v9.1: kerajaan negeri Sarawak (Premier & Exco) ----------
      ANDAIAN (penyeimbang simulasi): GPS dominan, maka peluang parti membentuk kerajaan selepas PRN 60% hingga 90% (UMNO 25% hingga 80%).
      Kerusi GPS 70 hingga 78 daripada 82 (benih tetap ikut pemain dan tahun); PBB memegang 50% hingga 60% kerusi GPS; ambang 42.
@@ -105,7 +132,8 @@
   /** Kitaran PRN semasa: tahun PRN akan datang (atau yang baru berlalu jika belum dijadual semula). */
   function statusRunding(p) {
     if (!adalahPresidenPBB(p)) { return null; }
-    var pru = modulPRU().getPRU(p), kitar = parseInt(pru.tahunPRU, 10) || CONFIG.TAHUN_PRN, bulanPRN = parseInt(pru.bulanPRU, 10) || 1;
+    var pru = modulPRU().getPRU(p); if (pru.jenisPBB && pru.jenisPBB !== 'PRN') { return { kitar: 0, bakiBulan: 0, dalamTempoh: false, sudah: p.rundingGPS || null, boleh: false, pilihan: RUNDING.PILIHAN, bukanPRN: true }; }
+    var kitar = parseInt(pru.tahunPRU, 10) || CONFIG.TAHUN_PRN, bulanPRN = parseInt(pru.bulanPRU, 10) || 1;
     var baki = (kitar * 12 + bulanPRN) - idxBulan(p), sudah = p.rundingGPS && p.rundingGPS.kitar === kitar ? p.rundingGPS : null;
     var dalamTempoh = baki > 0 && baki <= RUNDING.BULAN_AWAL;
     return { kitar: kitar, bakiBulan: baki, dalamTempoh: dalamTempoh, sudah: sudah, boleh: dalamTempoh && !sudah && !(pru.aktif), pilihan: RUNDING.PILIHAN };
@@ -148,5 +176,6 @@
   function ofset(p) { var m = maklumat(p); return m ? m.ofset : 0; }
   return { CONFIG: CONFIG, TAHAP: TAHAP, jadual: jadual, maklumat: maklumat, ofset: ofset,
     BLOK: BLOK, BLOK_CFG: BLOK_CFG, sahBlok: sahBlok, blokLalai: blokLalai, blokPemain: blokPemain, giliran: giliran, sokongan: sokongan, ofsetJawatan: ofsetJawatan, ringkasBlok: ringkasBlok, dekati: dekati,
-    KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan, RUNDING: RUNDING, statusRunding: statusRunding, runding: runding };
+    KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan, RUNDING: RUNDING, statusRunding: statusRunding, runding: runding,
+    MUSIM: MUSIM, maklumatParlimen: maklumatParlimen, ofsetParlimen: ofsetParlimen, jadualBerikut: jadualBerikut };
 });

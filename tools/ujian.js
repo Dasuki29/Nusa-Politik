@@ -1182,6 +1182,36 @@ ujian('PBB v9.3: rundingan kerusi GPS (Presiden PBB, 12 bulan sebelum PRN) dan l
   S.clearPlayer(); P.daftar({}); KB.bukaLobi('DUN'); sama(KB.senaraiPortfolio(S.loadPlayer())[0].tahapNama, 'EXCO Negeri', 'UMNO kekal EXCO');
   S.clearPlayer();
 });
+ujian('PBB v9.4: PRN (DUN) dan PRU (Parlimen) berasingan; lobi Premier terbuka untuk Presiden; status kerusi jenis lain kekal', () => {
+  const SW = g.MyPolitikSarawak, KB = g.MyPolitikKabinet, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dun = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  betul(dun['1'].pl && dun['1'].pl.e && dun['1'].pl.bilDUN >= 1, 'data Parlimen (pl) ada'); sama(Object.keys(dun).reduce((s, k) => s.add(dun[k].pl.kod), new Set()).size, 31, '31 Parlimen');
+  const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa', dunInfo: dun['1'] }));
+  P.tetap({ jawatan: 'Presiden', jawatanList: [{ jawatan: 'Presiden', pangkat: 12, peringkat: 'pusat', kumpulan: 'utama' }], ip: 2000, myr: 500000, ap: 50, reputasi: 80, tahun: 2027, bulan: 1 });
+  const mp = SW.maklumatParlimen(S.loadPlayer()); sama(mp.kod, 'P.192'); betul(mp.nama === 'Mas Gading' && mp.pemilih > dun['1'].pemilih, 'Parlimen > DUN');
+  const lama = Math.random, kempen = (jenis) => {
+    let pru = PR.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PR.isytihar('tamat_penggal').ok);
+    const kl = PR.kelayakan(S.loadPlayer()); sama(kl[jenis].boleh, true); sama(kl[jenis === 'DUN' ? 'PARLIMEN' : 'DUN'].boleh, false, 'jenis lain dihalang');
+    Math.random = () => 0.01; const r = PR.pilihKerusi(jenis, { rng: () => 0.01 }); betul(r.ok && r.diluluskan, r.mesej || r.ralat);
+    let a = PR.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PR.runding('abai'); a = PR.getPRU(S.loadPlayer()).aktif; }
+    const pil = PR.peruntukanPilihan(S.loadPlayer(), a); betul(PR.mulaKempen(PR.JANJI.map((x) => x.id).slice(0, 3), pil.pilihan[pil.pilihan.length - 1]).ok);
+    for (let i = 0; i < 40; i++) { const ck = PR.keadaanKempen(S.loadPlayer()); if (ck.kejutan) { PR.jawabKejutan(ck.kejutan.pilihan.filter((x) => x.boleh)[0].id); continue; } if (ck.hariBaki <= 0) { break; } const tt = (ck.hariFinal ? ck.final : []).concat(ck.biasa).filter((x) => x.boleh)[0]; if (!tt) { break; } PR.tindakanKempen(tt.id); }
+    const s = PR.selesaikan({ rng: () => 0.01 }); Math.random = lama; betul(s.ok, s.ralat); return s.keputusan;
+  };
+  sama(PR.ringkasan(S.loadPlayer()).jenisPBB, 'PRN');
+  let kp = kempen('DUN'); betul(kp.menang, 'menang DUN'); betul(!kp.nasional, 'PBB tiada keputusan nasional'); betul(kp.kabinetBuka, 'lobi kerajaan negeri terbuka untuk Presiden');
+  betul(KB.getKabinet(S.loadPlayer()).lobi && KB.getKabinet(S.loadPlayer()).lobi.sumber === 'DUN', 'lobi DUN'); PR.tutupKeputusan();
+  let pru = PR.getPRU(S.loadPlayer()); sama(pru.jenisPBB, 'PRU'); sama(pru.tahunPRU, 2028, 'PRU setahun selepas PRN');
+  betul(KB.tuntutMB().ok, 'tuntut Premier'); sama(KB.getKabinet(S.loadPlayer()).roleLevel === 'MENTERI_BESAR' || KB.getKabinet(S.loadPlayer()).roleLevel === 'EXCO_NEGERI', true);
+  kp = kempen('PARLIMEN'); PR.tutupKeputusan();
+  const st = PR.semuaStatus(S.loadPlayer()).map((x) => x.jenis).sort(); sama(st.join(','), kp.menang ? 'ADUN,MP' : 'ADUN', 'ADUN kekal; MP ditambah jika menang');
+  betul(/Premier|Menteri/.test(KB.getKabinet(S.loadPlayer()).portfolioName), 'jawatan negeri tidak tamat semasa PRU');
+  pru = PR.getPRU(S.loadPlayer()); sama(pru.jenisPBB, 'PRN'); sama(pru.tahunPRU, 2032, 'PRN 4 tahun selepas PRU');
+  const kn = PR.getPRU(S.loadPlayer()).aktif; sama(kn, null);
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

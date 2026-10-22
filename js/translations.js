@@ -301,6 +301,8 @@
     [/^(\d+) tahun · risiko kesihatan (rendah|sederhana|tinggi)$/, function (m) { return m[1] + ' years · ' + { rendah: 'low', sederhana: 'moderate', tinggi: 'high' }[m[2]] + ' health risk'; }],
     [/^(\d+) tahun (\d+) bulan \(perlu (\d+) tahun untuk Bahagian, Fasal ([\d.]+)\)$/, function (m) { return m[1] + ' years ' + m[2] + ' months (' + m[3] + ' years needed for Division, Clause ' + m[4] + ')'; }],
     [/^🗳️ PRU\/PRN: (\w+) (\d{4})$/, function (m) { return '🗳️ PRU/PRN: ' + (MINGGU[m[1]] || m[1]) + ' ' + m[2]; }],
+    [/^🗳️ PRN Sarawak: (\w+) (\d{4})$/, function (m) { return '🗳️ Sarawak State Election: ' + (MINGGU[m[1]] || m[1]) + ' ' + m[2]; }],
+    [/^🗳️ PRU: (\w+) (\d{4})$/, function (m) { return '🗳️ General Election: ' + (MINGGU[m[1]] || m[1]) + ' ' + m[2]; }],
     [/^(\d+) bulan lagi · kawasan (.+?) (Bandar|Luar Bandar|Separa Bandar|Pedalaman)\. Kelayakan: DUN (✓|✗) \(IP (\d+) \+ jawatan\), Parlimen (✓|✗) \(IP (\d+) \+ Ketua Bahagian\)\.$/, function (m) { var pr = { 'Bandar': 'Urban', 'Luar Bandar': 'Rural', 'Separa Bandar': 'Semi-urban', 'Pedalaman': 'Interior' }[m[3]]; return m[1] + ' months left · ' + m[2] + ' ' + pr + ' area. Eligibility: DUN ' + m[4] + ' (IP ' + m[5] + ' + position), Parliament ' + m[6] + ' (IP ' + m[7] + ' + Division Chief).'; }],
     [/^\(Fasal 15\.5\)\. Ahli baharu layak bertanding di Bahagian pada (\d{4})\. Tempoh dihadkan mengikut umur anda\.$/, function (m) { return '(Clause 15.5). New members become eligible to contest at Division level in ' + m[1] + '. The period is limited by your age.'; }],
     [/^Tetapan paparan\. Sekarang: (.+)$/, function (m, tr) { return 'Display settings. Current: ' + tr(m[1]); }],

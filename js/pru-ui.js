@@ -89,7 +89,7 @@
       var bl = r.bulanKePRU;
       var tek = (r.semuaStatus || []).map(function (s) { return '<b>' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + ' ' + esc(s.kerusi) + '</b>'; }).join(' + ');
       tek = tek ? tek + ' · ' : '';
-      h = '<div class="banner' + (bl <= 12 && bl >= 0 ? ' banner--gold' : '') + '"><strong>🗳️ PRU/PRN: ' + BULAN[(r.bulanPRU || 1) - 1] + ' ' + r.tahunPRU + '</strong>' + tek +
+      h = '<div class="banner' + (bl <= 12 && bl >= 0 ? ' banner--gold' : '') + '"><strong>🗳️ ' + (r.jenisPBB === 'PRU' ? 'PRU' : r.jenisPBB === 'PRN' ? 'PRN Sarawak' : 'PRU/PRN') + ': ' + BULAN[(r.bulanPRU || 1) - 1] + ' ' + r.tahunPRU + '</strong>' + tek +
         (bl > 0 ? bl + ' bulan lagi' : 'Bila-bila masa') + ' · kawasan ' + r.ikonProfil + ' ' + esc(r.profilNama) + '. Kelayakan: DUN ' + (r.kelayakan.DUN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.DUN.ipMin + ' + jawatan)') + ', Parlimen ' + (r.kelayakan.PARLIMEN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.PARLIMEN.ipMin + ' + Ketua Bahagian)') + '.</div>';
       return h;
     }
