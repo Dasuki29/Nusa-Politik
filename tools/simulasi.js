@@ -63,7 +63,7 @@ function semakProfil(p, tag) {
   if (p.ip < 0) { langgar('IP negatif', p.ip); }
   if (p.myr < 0) { langgar('MYR negatif', p.myr); }
   if (p.ap < 0) { langgar('AP negatif', p.ap); }
-  if (p.ap > K.CONFIG.AP_MAKS + 10) { langgar('AP melebihi had jauh (' + tag + ')', p.ap); }
+  if (p.ap > K.apTetapan(p).maks + 10) { langgar('AP melebihi had jauh (' + tag + ')', p.ap); }
   if (!(p.bulan >= 1 && p.bulan <= 12)) { langgar('Bulan luar julat', p.bulan); }
   if (p.stress < 0 || p.stress > 100) { langgar('Stress luar julat', p.stress); }
   if (p.kesihatan < 0 || p.kesihatan > 100) { langgar('Kesihatan luar julat', p.kesihatan); }

@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.27 (2026-10-22)
+
+Lebih Mata Tindakan (AP) (maklum balas pemain: 5 AP sebulan dan had 15 terasa sedikit).
+
+### Berubah
+- **AP sebulan ikut kesukaran:** Mudah 7, Biasa 6 (dahulu 5), Hardcore 5 (kekal).
+- **Bonus pemegang kerusi:** ADUN, MP dan EXCO Negeri +1; Menteri, Timbalan Menteri, Menteri Besar, TPM dan PM +2. Pratonton Bulan Seterusnya memaparkan "AP sebulan: asas + bonus".
+- **Had simpanan:** 20 (dahulu 15); Hardcore kekal 15.
+- Tutorial BM/EN (tur, panduan, Soalan Lazim), Latihan Amir dan halaman utama dikemas kini; jadual "Diset semula kepada 5" yang lapuk dibetulkan. Dua ujian unit baharu.
+
+### Andaian
+- Angka ialah penyeimbang simulasi, belum diuji dengan data main pemain. Jika pertumbuhan IP terlalu laju, boleh diturunkan (cadangan seterusnya: pilihan konservatif tanpa kenaikan asas Biasa).
+- AP semasa pemain tidak berubah; had baharu terpakai serta-merta.
+
 ## v8.26 (2026-10-21)
 
 Pembetulan tutorial berdasarkan tangkapan skrin pemain.

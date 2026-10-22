@@ -274,8 +274,8 @@ ujian('takwim: mesej bulan baharu menunjukkan tambahan AP sebenar', () => {
   P.tetap({ ap: 13 });
   const r = K.majuBulan();
   betul(r.ok, 'majuBulan gagal: ' + r.ralat);
-  betul(/AP \+2 \(had 15 dicapai\)/.test(r.mesej), 'mesej: ' + r.mesej);
-  sama(S.loadPlayer().ap, 15, 'AP selepas bulan baharu');
+  betul(/AP \+6 \(had 20 dicapai\)/.test(r.mesej) || /AP \+7 \(had 20 dicapai\)/.test(r.mesej) || /had 20/.test(r.mesej), 'mesej: ' + r.mesej);
+  sama(S.loadPlayer().ap, 19, 'AP selepas bulan baharu (13 + 6, had 20)');
 });
 
 ujian('acara: kiraan acara aktiviti bulanan tidak membesar tanpa had', () => {
@@ -979,6 +979,22 @@ ujian('gelaran NPC: organisasi Pusat induk = Tan Sri/Puan Sri, AJK dan Cawangan 
   const tan = (n) => /^(Tan Sri|Puan Sri) /.test(n);
   betul(tan(pu.ketua.nama) && tan(pu.naib.nama), 'Presiden dan Timbalan: ' + pu.ketua.nama); betul(pu.tambahan.every((x) => tan(x.nama)), 'Naib Presiden');
   betul(pu.ajk.every((x) => !/^(Tan Sri|Puan Sri|Dato|Datin)/.test(x.nama)), 'AJK Pusat tiada gelaran'); betul(!/^(Tan Sri|Puan Sri|Dato|Datin)/.test(cw.ketua.nama), 'Cawangan tiada gelaran');
+});
+/* ---------- AP lebih banyak (v8.27) ---------- */
+ujian('AP: asas ikut kesukaran (7/6/5), had 20/20/15; bonus ADUN/MP +1 dan Menteri ke atas +2', () => {
+  const at = (kes, patch) => { P.daftar({ kesukaran: kes }); if (patch) { P.tetap(patch); } return K.apTetapan(S.loadPlayer()); };
+  let a = at('EASY'); sama(a.asas, 7); sama(a.maks, 20); sama(a.bonus, 0);
+  a = at('NORMAL'); sama(a.bulanan, 6); sama(a.maks, 20);
+  a = at('HARDCORE'); sama(a.bulanan, 5); sama(a.maks, 15);
+  P.daftar({ kesukaran: 'NORMAL' }); P.tetap({ pru: Object.assign({}, g.MyPolitikPRU.getPRU(S.loadPlayer()), { status: { jenis: 'ADUN', kerusi: 'Uji', sejakTahun: 2026, sejakBulan: 1, kerajaan: false } }) });
+  a = K.apTetapan(S.loadPlayer()); sama(a.bonus, 1, 'ADUN +1'); sama(a.bulanan, 7);
+  P.tetap({ kabinet: Object.assign({}, g.MyPolitikKabinet.getKabinet(S.loadPlayer()), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }) });
+  a = K.apTetapan(S.loadPlayer()); sama(a.bonus, 2, 'Menteri +2'); sama(a.bulanan, 8);
+});
+ujian('AP: majuBulan menambah AP asas Biasa 6 dan menghadkan pada 20', () => {
+  P.daftar({ kesukaran: 'NORMAL' }); P.tetap({ ap: 2 }); let r = K.majuBulan(); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 8);
+  P.daftar({ kesukaran: 'NORMAL' }); P.tetap({ ap: 18 }); r = K.majuBulan(); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 20, 'had 20'); betul(/had 20 dicapai/.test(r.mesej), r.mesej);
+  P.daftar({ kesukaran: 'HARDCORE' }); P.tetap({ ap: 12 }); r = K.majuBulan(); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 15, 'Hardcore had 15');
 });
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
