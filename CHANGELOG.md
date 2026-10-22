@@ -2,7 +2,7 @@
 
 ## v10.7.1 (2026-10-22)
 
-- Butang **Perlembagaan** dibuang daripada tetingkap Menu dashboard (semua parti) dan langkah tutorial Perlembagaan dibuang.
+- Butang **Perlembagaan** dalam Menu dashboard dan langkah tutorialnya dikekalkan untuk UMNO; hanya disembunyi untuk parti lain (seperti v10.6).
 
 ## v10.7 (2026-10-22)
 
