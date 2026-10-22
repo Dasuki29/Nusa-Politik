@@ -22,6 +22,8 @@
   root.MyPolitikSayap = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function () {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   var SENARAI = ['utama', 'pemuda', 'puteri', 'wanita'];
   var SAYAP = ['pemuda', 'puteri', 'wanita'];
@@ -60,14 +62,14 @@
 
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
   /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
-  function katParti(jantina, umur, parti) { var k = kategori(jantina, umur); return parti === 'PBB' && k === 'puteri' ? 'wanita' : k; }
+  function katParti(jantina, umur, parti) { var k = kategori(jantina, umur); return SW(parti) && k === 'puteri' ? 'wanita' : k; }
   function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
   /** Kelayakan semua laluan bagi jantina dan umur: { utama:{boleh,sebab}, pemuda:{...}, ... }. */
   function kelayakan(jantina, umur, parti) {
     var k = katParti(jantina, umur, parti), r = {};
     SENARAI.forEach(function (s) {
-      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: parti === 'PBB' && s === 'puteri' ? 'PBB tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
+      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: SW(parti) && s === 'puteri' ? 'PBB tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
     });
     return r;
   }

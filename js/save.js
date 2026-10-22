@@ -17,6 +17,8 @@
   root.MyPolitikSave = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   var KEY = 'myPolitik_player';
   var KEY_BAK = 'myPolitik_player_bak';      // v7.25: sandaran simpanan sah sebelumnya (watak yang sama)
@@ -183,10 +185,10 @@
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: input.parti === 'PBB' ? 'PBB' : 'UMNO',
+      parti: SW(input.parti) ? input.parti : 'UMNO',
       blokPBB: input.parti === 'PBB' && (input.blokPBB === 'bumiputera' || input.blokPBB === 'pesaka') ? input.blokPBB : undefined,   // v9.0
-      dunInfo: input.parti === 'PBB' && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
-      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || (input.parti === 'PBB' && input.sayap === 'wanita' && d.kod === 'puteri')) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
+      dunInfo: SW(input.parti) && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
+      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || (SW(input.parti) && input.sayap === 'wanita' && d.kod === 'puteri')) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
       ip: DEFAULTS.ip,
       myr: DEFAULTS.myr,

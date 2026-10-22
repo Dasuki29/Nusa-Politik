@@ -15,6 +15,8 @@
   root.NusaPaparan = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   var CONFIG = { JUMLAH_PARLIMEN: 222, MAJORITI: 112, GABUNG_MS: 400, MAKS_TOAST: 3, MAKS_BIASA: 4, TOAST_MS: 4000, BEBAS_MAKS: 8, KUNCI_LIHAT: 'myPolitik_logLihat', KUNCI_SENYAP: 'myPolitik_notifSenyap' };
   var BULAN = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
@@ -292,7 +294,7 @@
   }
   /** v9.5: nama gabungan parti pemain (slot 'BN'): UMNO = Barisan Nasional; PBB = Gabungan Parti Sarawak (DUN) / Kerajaan Perpaduan (persekutuan). */
   function labelBN(p, dun) {
-    if (p && p.parti === 'PBB') { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
+    if (p && SW(p.parti)) { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
     return GABUNGAN.BN;
   }
   function segGabungan(n, bn) {
@@ -329,7 +331,7 @@
       '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, labelBN(p, false)) + ' Garis putus = majoriti.</p>';
     if (k.dun) {
       var amb = Math.floor(k.dun.jumlah / 2) + 1, pd = pecahPembangkang(p, k, k.dun.pembangkang, k.dun.kerajaan >= amb, 'dun'), nd = { BN: k.dun.kerajaan, PH: pd.PH, PN: pd.PN, LAIN: k.dun.bebas }, jumDun = k.dun.jumlah;
-      var SWp = p.parti === 'PBB' ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN
+      var SWp = SW(p.parti) ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN
       if (SWp && SWp.kerusiDewan) { var PRp = root.MyPolitikPRU, sta = PRp && PRp.semuaStatus ? PRp.semuaStatus(p).filter(function (x) { return x.jenis === 'ADUN'; })[0] : null, kd = SWp.kerusiDewan(p, sta ? sta.kerajaan : true); if (kd) { nd = { BN: kd.BN, PH: kd.PH, PN: kd.PN, LAIN: kd.LAIN }; amb = kd.ambang; jumDun = kd.jumlah; } }
       var sd = segGabungan(nd, labelBN(p, true));
       h += '<h4 class="pp-sub">Kerusi DUN <small>' + esc(p.negeri) + ' · ' + jumDun + ' kerusi · anggaran</small></h4>' + bar(sd, amb) + legend(sd) +

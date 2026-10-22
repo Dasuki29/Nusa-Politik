@@ -6,6 +6,8 @@
    ========================================================================== */
 (function (W) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
   var PD = W.MyPolitikPindah, D = W.MyPolitikData, S = W.MyPolitikSave;
   if (!PD) { return; }
   function U() { return W.NusaUI; }
@@ -24,7 +26,7 @@
         h += '<div class="kv"><span>' + (x.lulus ? '✅ ' : '⛔ ') + sp(x.teks) + '</span><b>' + (x.nota ? sp(x.nota) : '') + '</b></div>';
       });
       if (r.bakiMenunggu) { h += '<div class="kv"><span>' + sp('Tempoh menunggu bertanding jawatan Cawangan / Bahagian') + '</span><b>' + r.bakiMenunggu + ' ' + sp('bulan') + '</b></div>'; }
-      h += '<p class="note" style="font-size:.8rem;margin-top:8px">' + sp('Kos: ' + rm(C.KOS_MYR) + ', ' + C.KOS_AP + ' AP dan IP -' + Math.round(C.IP_POTONG * 100) + '%. ' + (p.parti === 'PBB' ? 'Hanya antara Bahagian dan Cawangan di Sarawak.' : 'Tidak boleh pindah ke Sarawak.')) + '</p>' +
+      h += '<p class="note" style="font-size:.8rem;margin-top:8px">' + sp('Kos: ' + rm(C.KOS_MYR) + ', ' + C.KOS_AP + ' AP dan IP -' + Math.round(C.IP_POTONG * 100) + '%. ' + (SW(p.parti) ? 'Hanya antara Bahagian dan Cawangan di Sarawak.' : 'Tidak boleh pindah ke Sarawak.')) + '</p>' +
         '<button type="button" class="btn btn--sm' + (r.semak.boleh ? ' btn--gold' : ' is-off') + '" data-act="pindah-mula"' + (r.semak.boleh ? '' : ' disabled') + '>Pindah Cawangan…</button>';
       if (r.sejarah.length) {
         h += '<details class="note" style="margin-top:8px"><summary>' + sp('Sejarah pindahan') + '</summary><ul style="margin:6px 0 0;padding-left:18px">' +
@@ -62,7 +64,7 @@
     toast('Memuatkan senarai kawasan…', 'ok');
     var PT = W.MyPolitikParti, h, dunData = null;
     try {
-      var res = await fetch(PT.info('PBB').data, { cache: 'no-cache' }); if (!res.ok) { throw new Error('HTTP ' + res.status); }
+      var res = await fetch(PT.info(p.parti).data, { cache: 'no-cache' }); if (!res.ok) { throw new Error('HTTP ' + res.status); }
       h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
       h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });
       try { var rd = await fetch('data/pbb-dun.json', { cache: 'no-cache' }); dunData = rd.ok ? await rd.json() : null; } catch (e2) { dunData = null; }
@@ -151,7 +153,7 @@
     var sm = PD.semak(p);
     if (!sm.boleh) { toast('Belum memenuhi syarat: ' + sm.sebab[0], 'ralat'); return; }
     var c, extra = null;
-    if (p.parti === 'PBB') { var pk = await pilihKawasanPBB(p); if (!pk) { return; } c = pk.c; extra = { dunInfo: pk.dunInfo }; }
+    if (SW(p.parti)) { var pk = await pilihKawasanPBB(p); if (!pk) { return; } c = pk.c; extra = { dunInfo: pk.dunInfo }; }
     else { c = await pilihKawasan(p); }
     if (!c) { return; }
     var pt = PD.pratonton(p, c, extra), a = pt.sebelum, b = pt.selepas;
@@ -159,7 +161,7 @@
     var isi = '<p>' + sp('Semak perubahan sebelum mengesahkan. Pindahan ini tidak boleh dibatalkan.') + '</p>' +
       '<table class="tbl" style="width:100%;font-size:.82rem"><thead><tr><th></th><th>' + sp('Sebelum') + '</th><th>' + sp('Selepas') + '</th></tr></thead><tbody>' +
       baris('Cawangan', esc(a.cawangan), esc(b.cawangan)) + baris('Bahagian', esc(a.bahagian), esc(b.bahagian)) +
-      baris(p.parti === 'PBB' ? 'Tahap kerusi DUN' : 'Tahap kerusi Parlimen (anggaran)', esc(a.tahap || '-'), esc(b.tahap || '-')) +
+      baris(SW(p.parti) ? 'Tahap kerusi DUN' : 'Tahap kerusi Parlimen (anggaran)', esc(a.tahap || '-'), esc(b.tahap || '-')) +
       baris('Jawatan Cawangan / Bahagian', teksJ(a.jawatan), teksJ([])) +
       baris('Sokongan akar umbi', a.akarUmbi, b.akarUmbi) + baris('Sokongan AJK', a.ajk, b.ajk) +
       baris('IP', a.ip, b.ip) + baris('Dana', esc(rm(a.myr)), esc(rm(b.myr))) + baris('AP', a.ap, b.ap) + '</tbody></table>' +

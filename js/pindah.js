@@ -22,6 +22,8 @@
   root.MyPolitikPindah = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   function modul(nama, fail) {
     if (root[nama]) { return root[nama]; }
@@ -85,7 +87,7 @@
     var bulan = bulanDiCawangan(p);
     syarat.push({ id: 'tempoh', teks: 'Ahli sekurang-kurangnya ' + CONFIG.BULAN_MIN + ' bulan di cawangan semasa', lulus: bulan >= CONFIG.BULAN_MIN, nota: bulan >= 9999 ? '' : Math.floor(bulan / 12) + ' tahun ' + (bulan % 12) + ' bulan' });
     var f = faktor(p), kerusi = pegangKerusi(p);
-    syarat.push({ id: 'jawatan', teks: p && p.parti === 'PBB' ? 'Bukan Menteri / Menteri Negeri dan tiada kerusi ADUN / MP' : 'Bukan Menteri / EXCO dan tiada kerusi ADUN / MP', lulus: f >= 1 && !kerusi, nota: '' });
+    syarat.push({ id: 'jawatan', teks: p && SW(p.parti) ? 'Bukan Menteri / Menteri Negeri dan tiada kerusi ADUN / MP' : 'Bukan Menteri / EXCO dan tiada kerusi ADUN / MP', lulus: f >= 1 && !kerusi, nota: '' });
     var e = Et && Et.getEtika ? Et.getEtika(p) : null;
     var hukum = !!(e && (e.status === 'digantung' || e.status === 'dilarang' || e.status === 'dipecat' || e.hukuman));
     syarat.push({ id: 'disiplin', teks: 'Tiada hukuman disiplin', lulus: !hukum, nota: '' });
@@ -99,7 +101,7 @@
   }
 
   /** UMNO: Sarawak terlarang. PBB (v9.5): hanya Sarawak dibenarkan. */
-  function negeriTerlarang(nama, parti) { var sarawak = CONFIG.NEGERI_TERLARANG.indexOf(nm(nama)) >= 0; return parti === 'PBB' ? !sarawak : sarawak; }
+  function negeriTerlarang(nama, parti) { var sarawak = CONFIG.NEGERI_TERLARANG.indexOf(nm(nama)) >= 0; return SW(parti) ? !sarawak : sarawak; }
 
   function ringkasJawatan(p) {
     var J = modul('MyPolitikJawatan', 'jawatan.js'), senarai = J && J.getJawatan ? J.getJawatan(p) : (Array.isArray(p.jawatanList) ? p.jawatanList : []);
@@ -109,7 +111,7 @@
   }
 
   /** v9.5: PBB: tahap kerusi DUN ikut komposisi etnik (js/sarawak.js); null jika bukan PBB. */
-  function tahapPBB(p) { var W9 = p && p.parti === 'PBB' ? modul('MyPolitikSarawak', 'sarawak.js') : null, m = W9 && W9.maklumat ? W9.maklumat(p) : null; return m ? m.tahapNama : null; }
+  function tahapPBB(p) { var W9 = p && SW(p.parti) ? modul('MyPolitikSarawak', 'sarawak.js') : null, m = W9 && W9.maklumat ? W9.maklumat(p) : null; return m ? m.tahapNama : null; }
   function tahapAnggaran(bahagianNama) {
     var Pr = PR(); if (!Pr || !Pr.tahapKerusi) { return null; }
     var t = Pr.tahapKerusi({ kod: '', nama: String(bahagianNama || '') });
@@ -139,7 +141,7 @@
     if (!sm.boleh) { return { ok: false, ralat: 'Syarat belum dipenuhi: ' + sm.sebab.join('; ') + '.' }; }
     var ik = Sv.identitiKawasan(c);
     if (ik.id === p.id) { return { ok: false, ralat: 'Anda sudah menjadi ahli cawangan ini.' }; }
-    if (negeriTerlarang(ik.negeri, p.parti)) { return { ok: false, ralat: p.parti === 'PBB' ? 'PBB tiada cawangan di luar Sarawak.' : 'UMNO tiada cawangan di Sarawak.' }; }
+    if (negeriTerlarang(ik.negeri, p.parti)) { return { ok: false, ralat: SW(p.parti) ? 'PBB tiada cawangan di luar Sarawak.' : 'UMNO tiada cawangan di Sarawak.' }; }
     var j = ringkasJawatan(p), g = getPindah(p), tahun = p.tahun, bulan = p.bulan;
     var menunggu = mutlak(tahun, bulan) + CONFIG.MENUNGGU, mt = Math.floor((menunggu - 1) / 12), mb = ((menunggu - 1) % 12) + 1;
     var dari = { cawangan: p.cawangan, bahagian: p.bahagian, negeri: p.negeri };
@@ -148,7 +150,7 @@
     var kes = Object.assign({}, p.kesetiaan || {}, CONFIG.SOKONGAN);
     var patch = {
       negeri: ik.negeri, bahagian: ik.bahagian, dun: ik.dun, cawangan: ik.cawangan, id: ik.id, kod: ik.kod, cawanganInfo: ik.cawanganInfo,
-      dunInfo: p.parti === 'PBB' && extra && extra.dunInfo ? extra.dunInfo : p.dunInfo,
+      dunInfo: SW(p.parti) && extra && extra.dunInfo ? extra.dunInfo : p.dunInfo,
       jawatanList: j.kekal, jawatan: j.kekal.length ? j.kekal.slice().sort(function (a, b) { return (b.pangkat || 0) - (a.pangkat || 0); })[0].jawatan : 'Ahli Biasa',
       perwakilan: perwakilan, kesetiaan: kes,
       ip: Math.max(0, Math.round((Number(p.ip) || 0) * (1 - CONFIG.IP_POTONG))),

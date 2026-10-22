@@ -14,6 +14,8 @@
    ========================================================================== */
 (function () {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function esSW(k) { return k === 'PBB' || k === 'PRS'; }
   if (!document.getElementById('reg-form')) { return; }      // halaman lain (dashboard.html): lihat pengawal dashboard di bawah
 
   var D = window.MyPolitikData, S = window.MyPolitikSave;
@@ -120,7 +122,7 @@
     state.data = h; state.negeri = { id: nama, nama: nama, bahagian: h.bahagian };
     setStatus(h.source === 'cache' ? 'cache' : 'sheet', (h.source === 'cache' ? 'Salinan tersimpan: ' : 'Data langsung: ') + nama + ' (' + ringkasan(h) + ').');
     el.submit.disabled = false;
-    isi(el.bahagian, state.parti === 'PBB' ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian, function (p) { return state.parti === 'PBB' ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
+    isi(el.bahagian, esSW(state.parti) ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian, function (p) { return esSW(state.parti) ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
   }
 
   el.negeri.addEventListener('change', function () {
@@ -131,8 +133,8 @@
     reset(el.dun, 'Pilih bahagian dahulu');
     reset(el.cawangan, 'Pilih DUN dahulu');
     if (state.negeri) {
-      isi(el.bahagian, state.parti === 'PBB' ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian,
-        function (p) { return state.parti === 'PBB' ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
+      isi(el.bahagian, esSW(state.parti) ? 'Pilih bahagian (DUN)' : 'Pilih bahagian (parlimen)', state.negeri.bahagian,
+        function (p) { return esSW(state.parti) ? p.nama : p.nama + ' (P.' + p.kod + ')'; });
     } else { reset(el.bahagian, 'Pilih negeri dahulu'); }
   });
 
@@ -141,7 +143,7 @@
     state.dun = state.cawangan = null;
     setError('bahagian'); sembunyiInfo();
     reset(el.cawangan, 'Pilih DUN dahulu');
-    if (state.bahagian && state.parti === 'PBB') {               // v8.32: DUN ialah Bahagian PBB; terus pilih cawangan (DM)
+    if (state.bahagian && esSW(state.parti)) {               // v8.32: DUN ialah Bahagian PBB; terus pilih cawangan (DM)
       state.dun = state.bahagian.dun[0]; cadangBlok();
       isi(el.cawangan, 'Pilih cawangan (daerah mengundi)', state.dun.cawangan, function (c) { return c.nama; });
     } else if (state.bahagian && state.bahagian.tiadaDUN) {            // v7.14: Wilayah Persekutuan: tiada DUN, terus pilih cawangan
@@ -246,7 +248,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('#sayap-grid .sy'), function (l) {
       var k = l.getAttribute('data-kod'), inp = l.querySelector('input'), sy = l.querySelector('.sy__syarat');
       inp.disabled = !kel[k].boleh; sy.textContent = kel[k].boleh ? '' : kel[k].sebab;
-      l.style.display = state.parti === 'PBB' && k === 'puteri' ? 'none' : '';         // v8.32: PBB tiada sayap Puteri
+      l.style.display = esSW(state.parti) && k === 'puteri' ? 'none' : '';         // v8.32: PBB tiada sayap Puteri
     });
     if (!(kel[sayapState.kod] && kel[sayapState.kod].boleh)) { sayapState.manual = false; }       // pilihan manual tidak lagi sah selepas jantina/umur diubah
     if (!sayapState.manual) { pilihSayap(ok ? SYP.cadangan(j.value, u, state.parti) : 'utama', false); }
@@ -277,7 +279,7 @@
   }
 
   async function muatData() {
-    if (state.parti === 'PBB') { return muatDataPBB(); }
+    if (esSW(state.parti)) { return muatDataPBB(); }
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true;
     setStatus('loading', 'Memuatkan data daripada Google Sheets...');
@@ -313,14 +315,17 @@
   }
 
   /* ---------- v8.32: PBB (Sarawak). Bahagian = DUN, Cawangan = DM; data tempatan data/pbb-sarawak.csv ---------- */
+  var HINT_PBB = null, HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   function suaikanBorangParti() {
-    var pbb = state.parti === 'PBB';
+    if (HINT_PBB === null) { var h0 = $('h-parti'); HINT_PBB = h0 ? h0.textContent : ''; }
+    var pbb = esSW(state.parti);
     var fd = el.dun && el.dun.closest ? el.dun.closest('.field') : null; if (fd) { fd.hidden = pbb; }
     var tb = $('t-bahagian'), tc = $('t-cawangan'), hp = $('h-parti');
     if (tb) { tb.textContent = pbb ? 'Bahagian (DUN)' : 'Bahagian (Parlimen)'; }
     if (tc) { tc.textContent = pbb ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb; }
-    var fb = $('f-blok'); if (fb) { fb.hidden = !pbb; }
+    var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
+    if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : HINT_PBB; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
   }
   /** v9.0: cadangkan blok (Bumiputera/Pesaka) mengikut majoriti etnik DUN; pilihan manual dihormati. */
@@ -335,7 +340,7 @@
     el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
     setStatus('loading', 'Memuatkan data PBB Sarawak...');
     try {
-      var res = await fetch(PT.info('PBB').data, { cache: 'no-cache' });
+      var res = await fetch(PT.info(state.parti).data, { cache: 'no-cache' });
       if (!res.ok) { throw new Error('HTTP ' + res.status); }
       var h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
       h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });   // PBB tiada Puteri
@@ -357,7 +362,7 @@
     });
   });
 
-  el.retry.addEventListener('click', function () { if (state.parti === 'PBB') { muatDataPBB(); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
+  el.retry.addEventListener('click', function () { if (esSW(state.parti)) { muatDataPBB(); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
 
   /* ---------- Padam ralat sebaik pengguna membetulkan medan ---------- */
   el.nama.addEventListener('input', function () { if (el.nama.value.trim().length >= 3) { setError('nama'); } });
@@ -400,7 +405,7 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: state.parti === 'PBB' && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -454,6 +459,7 @@
    ========================================================================== */
 (function () {
   'use strict';
+  function esSW(k) { return k === 'PBB' || k === 'PRS'; }
   if (!document.getElementById('btn-tahun')) { return; }
 
   var W = window, S = W.MyPolitikSave, D = W.MyPolitikData, O = W.MyPolitikOrdinaryMember,
@@ -626,7 +632,7 @@
       um.parentNode.classList.toggle('is-risiko', !!(hr && hr.label === 'Tinggi'));
     }
     $('p-negeri').textContent = p.negeri || '–'; $('p-bahagian').textContent = p.bahagian || '–';
-    $('p-dun').textContent = p.dun || '–'; if ($('p-dun-li')) { $('p-dun-li').hidden = !p.dun || p.parti === 'PBB'; } $('p-cawangan').textContent = p.cawangan || '–';
+    $('p-dun').textContent = p.dun || '–'; if ($('p-dun-li')) { $('p-dun-li').hidden = !p.dun || esSW(p.parti); } $('p-cawangan').textContent = p.cawangan || '–';
     var pem = adalahTahunPemilihan(p.tahun);
     var tk = K ? K.getTakwim(p) : null;
     var tp = $('p-tahun'); tp.textContent = labelTahun(p.tahun) + (tk ? ' · BULAN ' + tk.bulan : ''); tp.setAttribute('data-fasa', pem ? 'pemilihan' : 'pentadbiran');
@@ -1081,9 +1087,28 @@
     return h;
   }
 
+  /** v10.0: kad mod ringan (parti rakan GPS, cth PRS): Pengaruh GPS, kuota kerusi dan rundingan. */
+  function kadRingan(p) {
+    var SWm = W.MyPolitikSarawak, r = SWm && SWm.ringkasRingan ? SWm.ringkasRingan(p) : null; if (!r) { return ''; }
+    var st = SWm.statusRundingRakan(p), R = SWm.RINGAN;
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🤝 Pengaruh dalam GPS</h2>' +
+      '<p class="note" style="font-size:.78rem">Mod ringan: ' + esc(p.parti) + ' ialah parti rakan GPS. Tiada Premier atau imbangan blok; kerusi DUN anda bergantung pada kuota kerusi GPS.</p>' +
+      '<div class="kv"><span>Pengaruh GPS</span><b>' + r.pengaruh + '/100</b></div>' +
+      '<div class="kv"><span>Kuota kerusi DUN ' + esc(p.parti) + '</span><b>' + r.kuota + ' / ' + r.jumlahGPS + ' (asas ' + r.kuotaAsas + ')</b></div>' +
+      '<div class="kv"><span>Kerusi DUN anda</span><b>' + (r.dalamKuota ? '✅ dalam kuota' : '⛔ di luar kuota') + (r.kedudukan ? ' (kedudukan ' + r.kedudukan + ')' : '') + '</b></div>' +
+      '<button type="button" class="btn btn--sm btn--ghost" data-act="gps-lobi" data-fk="gps-lobi">Lobi Majlis GPS (' + R.LOBI_AP + ' AP, RM ' + R.LOBI_MYR.toLocaleString('en') + ')</button> ';
+    if (st && st.sudah) { h += '<div class="kv"><span>Keputusan rundingan</span><b>' + st.sudah.kerusi + ' kerusi</b></div>'; }
+    else if (st && st.dalamTempoh) {
+      h += '<p class="note" style="font-size:.78rem">Rundingan kuota dibuka. Tuntut lebih berjaya dengan peluang ' + Math.round(SWm.peluangTuntut(p) * 100) + '%.</p>' +
+        ['terima', 'tuntut', 'beralah'].map(function (k) { var nm = k === 'terima' ? 'Terima tawaran' : k === 'tuntut' ? 'Tuntut lebih (+' + R.TUNTUT_TAMBAH + ')' : 'Beralah (-' + R.BERALAH_KURANG + ')'; return '<button type="button" class="btn btn--sm ' + (k === 'terima' ? 'btn--primary' : 'btn--ghost') + '" data-act="gps-rakan" data-pil="' + k + '" data-fk="gps-rakan-' + k + '"' + (st.boleh ? '' : ' disabled') + '>' + esc(nm) + '</button> '; }).join('') +
+        '<p class="note" style="font-size:.78rem">Kos ' + R.AP + ' AP, sekali setiap PRN. Angka ialah andaian permainan.</p>';
+    } else if (st && !st.bukanPRN) { h += '<p class="note" style="font-size:.78rem">Rundingan kuota dibuka ' + R.BULAN_AWAL + ' bulan sebelum PRN (' + Math.max(0, st.bakiBulan - R.BULAN_AWAL) + ' bulan lagi).</p>'; }
+    return h + '</section>';
+  }
+
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
@@ -1214,7 +1239,7 @@
     host.innerHTML = '<div class="loading" role="status">Memuatkan data peta...</div>';
     try {
       var pPBB = S && S.loadPlayer();
-      if (pPBB && pPBB.parti === 'PBB' && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js)
+      if (pPBB && esSW(pPBB.parti) && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js)
         var GG = W.MyPolitikGeo;
         await GG.muat(['negeri', 'parlimen', 'dun']); await GG.muatDM('13');
         host.innerHTML = '';
@@ -1633,6 +1658,8 @@
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
+    else if (act === 'gps-lobi') { var gl = W.MyPolitikSarawak.lobiGPS(); render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? 'ok' : 'ralat'); }
+    else if (act === 'gps-rakan') { var gk = W.MyPolitikSarawak.rundingRakan(t.getAttribute('data-pil')); render(); toast(gk.ok ? gk.mesej : gk.ralat, gk.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-runding') { var gr = W.MyPolitikSarawak.runding(t.getAttribute('data-pil')); render(); toast(gr.ok ? gr.mesej : gr.ralat, gr.ok ? 'ok' : 'ralat'); }
     else if (act === 'blok-dekati') { var bd = W.MyPolitikSarawak.dekati(); render(); toast(bd.ok ? bd.mesej : bd.ralat, bd.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
@@ -1844,7 +1871,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

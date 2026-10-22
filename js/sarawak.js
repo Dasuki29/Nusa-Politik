@@ -17,6 +17,8 @@
   root.MyPolitikSarawak = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function () {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
   var CONFIG = {
     TAHUN_PRN: 2027,
     CINA: { sukar: 50, marginal: 30 }, OFSET: { sukar: -12, marginal: -5, biasa: 0, selamat: 5 }, BUMI_SELAMAT: 85, BANDAR_CINA: 40
@@ -29,7 +31,7 @@
 
   /** Ringkasan kerusi DUN pemain PBB, atau null jika bukan PBB / tiada data. */
   function maklumat(p) {
-    var d = p && p.parti === 'PBB' && p.dunInfo ? p.dunInfo : null; if (!d || !d.e) { return null; }
+    var d = p && SW(p.parti) && p.dunInfo ? p.dunInfo : null; if (!d || !d.e) { return null; }
     var e = d.e, dayak = Math.round((e.iban + e.bidayuh + e.orangUlu) * 10) / 10, bumi = Math.round((100 - e.cina - e.india - e.lain) * 10) / 10;
     var tahap = e.cina >= CONFIG.CINA.sukar ? 'sukar' : e.cina >= CONFIG.CINA.marginal ? 'marginal' : bumi >= CONFIG.BUMI_SELAMAT ? 'selamat' : 'biasa';
     var profil = e.cina >= CONFIG.BANDAR_CINA ? 'URBAN' : bumi >= 80 ? 'RURAL' : 'MIXED';
@@ -97,7 +99,7 @@
   }
   /** Ringkasan kerusi Parlimen pemain PBB (null jika bukan PBB / tiada data). */
   function maklumatParlimen(p) {
-    var d = p && p.parti === 'PBB' && p.dunInfo ? p.dunInfo : null; if (!d || !d.e) { return null; }
+    var d = p && SW(p.parti) && p.dunInfo ? p.dunInfo : null; if (!d || !d.e) { return null; }
     var z = d.pl && d.pl.e ? d.pl : { nama: d.parlimen, kod: d.kodParlimen, pemilih: d.pemilih, bilDUN: 1, e: d.e };
     var m = kekuatan(z.e, z.nama || d.parlimen || 'Parlimen', z.kod || d.kodParlimen || '', z.pemilih, z.bilDUN); m.bilDUN = z.bilDUN; return m;
   }
@@ -150,12 +152,76 @@
     return r && r.ok ? { ok: true, mesej: 'Rundingan GPS selesai: PBB bertanding ' + c.kerusi + ' kerusi' + (c.hubungan ? ' (hubungan gabungan ' + (c.hubungan > 0 ? '+' : '') + c.hubungan + ')' : '') + '.', kerusi: c.kerusi } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
   }
 
+
+  /* ---------- v10.0: MOD RINGAN (PRS dan parti rakan GPS lain kemudian) ----------
+     Jadual PRN 2021 (diberi pengguna): GPS bertanding 82 kerusi, PBB 48, SUPP 18, PRS 11, PDP 5. Jadi kuota asas PRS = 11.
+     Meter Pengaruh GPS (0-100, mula 40): "Lobi Majlis GPS" (3 AP, RM 1,500) +8. Rundingan kuota (12 bulan sebelum PRN, sekali setiap kitaran, 3 AP):
+       Terima = kuota asas; Tuntut lebih = +3 kerusi dengan peluang 25%+Pengaruh/200 (had 25% hingga 85%), gagal: kuota -1, hubungan -10, berjaya: hubungan -5;
+       Beralah = kuota -2, hubungan +10, Pengaruh +5. Kerusi dalam kuota ialah DUN Dayak teratas dalam kawasan operasi (data rkPRS). Semua angka ialah ANDAIAN. */
+  var KUOTA_2021 = { PBB: 48, SUPP: 18, PRS: 11, PDP: 5 };
+  var RINGAN = { PENGARUH_MULA: 40, LOBI_AP: 3, LOBI_MYR: 1500, LOBI_TAMBAH: 8, TUNTUT_TAMBAH: 3, TUNTUT_KURANG: 1, BERALAH_KURANG: 2, BERALAH_PENGARUH: 5,
+    TUNTUT_MIN: 0.25, TUNTUT_MAKS: 0.85, AP: 3, BULAN_AWAL: 12 };
+  function ringan(p) { return !!(p && SW(p.parti) && p.parti !== 'PBB'); }
+  function pengaruh(p) { var v = Number(p && p.pengaruhGPS); return isFinite(v) ? Math.max(0, Math.min(100, Math.round(v))) : RINGAN.PENGARUH_MULA; }
+  function kuotaAsas(p) { return KUOTA_2021[p && p.parti] || 0; }
+  /** Kuota kerusi DUN parti ringan untuk PRN semasa (hasil rundingan jika dalam kitaran, jika tidak kuota asas). */
+  function kuota(p) {
+    if (!ringan(p)) { return null; }
+    var th = parseInt(p.tahun, 10) || 0, r = p.rundingGPS;
+    return r && isFinite(Number(r.kerusi)) && th >= r.kitar - 1 && th < r.kitar + 5 ? Number(r.kerusi) : kuotaAsas(p);
+  }
+  /** Adakah kerusi DUN pemain dalam kuota parti? (kedudukan rkPRS; tiada data = dibenarkan) */
+  function dalamKuota(p) {
+    if (!ringan(p)) { return true; }
+    var d = p.dunInfo, rk = d && Number(d.rkPRS); if (!rk) { return !d; }
+    return rk <= kuota(p);
+  }
+  function ringkasRingan(p) {
+    if (!ringan(p)) { return null; }
+    var m = maklumat(p), rk = p.dunInfo && p.dunInfo.rkPRS || 0;
+    return { parti: p.parti, pengaruh: pengaruh(p), kuota: kuota(p), kuotaAsas: kuotaAsas(p), dalamKuota: dalamKuota(p), kedudukan: rk, jumlahGPS: KERAJAAN.JUMLAH, tahap: m ? m.tahapNama : '' };
+  }
+  function lobiGPS() {
+    var Sv = typeof globalThis !== 'undefined' && globalThis.MyPolitikSave ? globalThis.MyPolitikSave : require('./save.js'), p = Sv.loadPlayer();
+    if (!ringan(p)) { return { ok: false, ralat: 'Hanya untuk parti rakan GPS (mod ringan).' }; }
+    if ((Number(p.ap) || 0) < RINGAN.LOBI_AP) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    if (Sv.cukupDana && !Sv.cukupDana(p, RINGAN.LOBI_MYR)) { return { ok: false, ralat: Sv.ralatDana ? Sv.ralatDana(p, RINGAN.LOBI_MYR) : 'Dana tidak mencukupi.' }; }
+    var baru = Math.min(100, pengaruh(p) + RINGAN.LOBI_TAMBAH);
+    var r = Sv.applyEffects({ ap: -RINGAN.LOBI_AP, myr: -RINGAN.LOBI_MYR }, { kiraTindakan: false, patch: { pengaruhGPS: baru }, log: { tindakan: 'gps_lobi', nama: 'Lobi Majlis GPS', peringkat: 'bulan' } });
+    return r && r.ok ? { ok: true, mesej: 'Anda melobi Majlis GPS. Pengaruh GPS ' + baru + '/100 (-' + RINGAN.LOBI_AP + ' AP, -RM ' + RINGAN.LOBI_MYR.toLocaleString('en') + ').' } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
+  }
+  function statusRundingRakan(p) {
+    if (!ringan(p)) { return null; }
+    var pru = modulPRU().getPRU(p); if (pru.jenisPBB && pru.jenisPBB !== 'PRN') { return { kitar: 0, bakiBulan: 0, dalamTempoh: false, sudah: p.rundingGPS || null, boleh: false, bukanPRN: true }; }
+    var kitar = parseInt(pru.tahunPRU, 10) || CONFIG.TAHUN_PRN, bulanPRN = parseInt(pru.bulanPRU, 10) || 1;
+    var baki = (kitar * 12 + bulanPRN) - idxBulan(p), sudah = p.rundingGPS && p.rundingGPS.kitar === kitar ? p.rundingGPS : null, dalam = baki > 0 && baki <= RINGAN.BULAN_AWAL;
+    return { kitar: kitar, bakiBulan: baki, dalamTempoh: dalam, sudah: sudah, boleh: dalam && !sudah && !pru.aktif };
+  }
+  function peluangTuntut(p) { return Math.max(RINGAN.TUNTUT_MIN, Math.min(RINGAN.TUNTUT_MAKS, 0.25 + pengaruh(p) / 200)); }
+  /** pilihan: 'terima' | 'tuntut' | 'beralah'. opsyen.rng untuk ujian. */
+  function rundingRakan(pilihan, opsyen) {
+    var Sv = typeof globalThis !== 'undefined' && globalThis.MyPolitikSave ? globalThis.MyPolitikSave : require('./save.js'), p = Sv.loadPlayer(), st = statusRundingRakan(p);
+    if (!st) { return { ok: false, ralat: 'Hanya untuk parti rakan GPS (mod ringan).' }; }
+    if (['terima', 'tuntut', 'beralah'].indexOf(pilihan) < 0) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
+    if (st.sudah) { return { ok: false, ralat: 'Rundingan kerusi untuk PRN ini sudah selesai.' }; }
+    if (!st.boleh) { return { ok: false, ralat: 'Rundingan dibuka ' + RINGAN.BULAN_AWAL + ' bulan sebelum PRN.' }; }
+    if ((Number(p.ap) || 0) < RINGAN.AP) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    var asas = kuotaAsas(p), k = asas, hub = 0, peng = pengaruh(p), berjaya = null, rng = opsyen && opsyen.rng ? opsyen.rng : (Sv.rngBerbenih ? Sv.rngBerbenih(String(p.id) + '|rundingrakan|' + st.kitar) : Math.random);
+    if (pilihan === 'tuntut') { berjaya = rng() < peluangTuntut(p); if (berjaya) { k = asas + RINGAN.TUNTUT_TAMBAH; hub = -5; } else { k = Math.max(1, asas - RINGAN.TUNTUT_KURANG); hub = -10; } }
+    if (pilihan === 'beralah') { k = Math.max(1, asas - RINGAN.BERALAH_KURANG); hub = 10; peng = Math.min(100, peng + RINGAN.BERALAH_PENGARUH); }
+    var PR = modulPRU(), pru = PR.getPRU(p); pru.hubunganGabungan = Math.max(0, Math.min(100, (Number(pru.hubunganGabungan) || 50) + hub));
+    var r = Sv.applyEffects({ ap: -RINGAN.AP }, { kiraTindakan: false, patch: { pru: pru, pengaruhGPS: peng, rundingGPS: { kitar: st.kitar, pilihan: pilihan, kerusi: k } }, log: { tindakan: 'gps_runding', nama: 'Rundingan kuota GPS: ' + pilihan + ' (' + k + ' kerusi)', peringkat: 'ahli' } });
+    var tx = pilihan === 'tuntut' ? (berjaya ? 'Tuntutan berjaya' : 'Tuntutan ditolak') : pilihan === 'beralah' ? 'Anda beralah' : 'Anda menerima tawaran';
+    return r && r.ok ? { ok: true, berjaya: berjaya, kerusi: k, mesej: tx + ': ' + p.parti + ' bertanding ' + k + ' kerusi dalam GPS' + (hub ? ' (hubungan gabungan ' + (hub > 0 ? '+' : '') + hub + ')' : '') + '.' } : { ok: false, ralat: (r && r.ralat) || 'Gagal.' };
+  }
+
   /** Anggaran kerusi untuk tuntutan Premier. Pulang null jika bukan PBB. */
   function kerusiPremier(p) {
-    if (!p || p.parti !== 'PBB') { return null; }
+    if (!p || !SW(p.parti)) { return null; }
     var gps = Math.round(KERAJAAN.GPS_MIN + benih(p, 0) * (KERAJAAN.GPS_MAKS - KERAJAAN.GPS_MIN)), kongsi = KERAJAAN.KONGSI_MIN + benih(p, 1) * (KERAJAAN.KONGSI_MAKS - KERAJAAN.KONGSI_MIN);
     var rg = p.rundingGPS && p.rundingGPS.kerusi && (parseInt(p.tahun, 10) || 0) >= p.rundingGPS.kitar && (parseInt(p.tahun, 10) || 0) < p.rundingGPS.kitar + 5;   // v9.3
     if (rg) { kongsi = p.rundingGPS.kerusi / KERAJAAN.JUMLAH; }
+    if (ringan(p)) { kongsi = kuota(p) / KERAJAAN.JUMLAH; }                                       // v10.0: bahagian parti rakan = kuota / 82
     var parti = Math.round(gps * kongsi);
     return { jumlah: KERAJAAN.JUMLAH, ambang: KERAJAAN.AMBANG, parti: parti, rakan: gps - parti, gabungan: gps, sendiri: parti >= KERAJAAN.AMBANG, kongsi: gps > 0 ? parti / gps : 1 };
   }
@@ -165,7 +231,7 @@
     return (b === giliran(p.tahun) ? KERAJAAN.GILIRAN_PELARAS : -KERAJAAN.GILIRAN_PELARAS) + (sokongan(p) - BLOK_CFG.SOKONGAN_MULA) * KERAJAAN.SOKONGAN_PELARAS;
   }
   /** Sebab pemain PBB tidak boleh menuntut Premier ('' jika boleh). */
-  function sebabPremier(p) { return adalahPresidenPBB(p) ? '' : 'Hanya Presiden PBB boleh menuntut jawatan Premier.'; }
+  function sebabPremier(p) { return adalahPresidenPBB(p) ? '' : (ringan(p) ? 'Parti rakan GPS tidak menuntut jawatan Premier.' : 'Hanya Presiden PBB boleh menuntut jawatan Premier.'); }
 
   /** Kerusi Dewan Undangan Negeri Sarawak untuk sidang DUN (bentuk sama dengan dun.js kerusi()). BN = GPS. Pembangkang: PH separuh, selebihnya Lain (andaian). */
   function kerusiDewan(p, kerajaan) {
@@ -177,5 +243,6 @@
   return { CONFIG: CONFIG, TAHAP: TAHAP, jadual: jadual, maklumat: maklumat, ofset: ofset,
     BLOK: BLOK, BLOK_CFG: BLOK_CFG, sahBlok: sahBlok, blokLalai: blokLalai, blokPemain: blokPemain, giliran: giliran, sokongan: sokongan, ofsetJawatan: ofsetJawatan, ringkasBlok: ringkasBlok, dekati: dekati,
     KERAJAAN: KERAJAAN, peluangKerajaan: peluangKerajaan, adalahPresidenPBB: adalahPresidenPBB, kerusiPremier: kerusiPremier, pelarasPremier: pelarasPremier, sebabPremier: sebabPremier, kerusiDewan: kerusiDewan, RUNDING: RUNDING, statusRunding: statusRunding, runding: runding,
+    KUOTA_2021: KUOTA_2021, RINGAN: RINGAN, ringan: ringan, pengaruh: pengaruh, kuota: kuota, kuotaAsas: kuotaAsas, dalamKuota: dalamKuota, ringkasRingan: ringkasRingan, lobiGPS: lobiGPS, statusRundingRakan: statusRundingRakan, peluangTuntut: peluangTuntut, rundingRakan: rundingRakan,
     MUSIM: MUSIM, maklumatParlimen: maklumatParlimen, ofsetParlimen: ofsetParlimen, jadualBerikut: jadualBerikut };
 });

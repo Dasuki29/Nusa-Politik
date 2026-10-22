@@ -1228,6 +1228,44 @@ ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN bah
   sama(p.ip, 350); sama(p.pindah.bil, 1);
   S.clearPlayer();
 });
+
+ujian('PRS v10.0: mod ringan (kuota GPS 11, Pengaruh GPS, rundingan, kelayakan PRN ikut kuota)', () => {
+  const SW = g.MyPolitikSarawak, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'prs-sarawak.csv'), 'utf8')));
+  const duns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  sama(SW.KUOTA_2021.PRS, 11); sama(SW.KUOTA_2021.PBB + SW.KUOTA_2021.SUPP + SW.KUOTA_2021.PRS + SW.KUOTA_2021.PDP, 82, 'jumlah GPS 2021');
+  betul(Object.keys(duns).filter((k) => duns[k].rkPRS).length >= 14, 'kawasan operasi PRS cukup luas');
+  const dem = D.tentukanDemografi('Lelaki', 40);
+  const pilihDUN = (rk) => { const b = h.bahagian.find((x) => duns[parseInt(x.kod, 10)] && duns[parseInt(x.kod, 10)].rkPRS === rk); return b ? { b, info: duns[parseInt(b.kod, 10)] } : null; };
+  const a = pilihDUN(1), z = pilihDUN(Math.max.apply(null, Object.keys(duns).map((k) => duns[k].rkPRS || 0)));
+  betul(a && z, 'DUN rk 1 dan terakhir ada dalam CSV PRS');
+  const daftar = (x) => S.savePlayer(S.buildPlayerProfile({ parti: 'PRS', nama: 'Uji', demografik: dem, cawangan: x.b.dun ? x.b.dun[0].cawangan[0] : x.b.cawangan[0], sayap: 'utama', avatar: 'biasa', dunInfo: x.info, blokPBB: 'pesaka' }));
+  daftar(a); let p = S.loadPlayer();
+  sama(p.parti, 'PRS'); sama(p.blokPBB, undefined, 'PRS tiada blok'); betul(SW.ringan(p) && !SW.blokPemain(p), 'ringan tanpa blok');
+  sama(SW.kuota(p), 11); sama(SW.pengaruh(p), 40); betul(SW.dalamKuota(p), 'rk 1 dalam kuota');
+  const rk = SW.ringkasRingan(p); sama(rk.kuota, 11); sama(rk.jumlahGPS, 82);
+  sama(SW.sebabPremier(p).indexOf('rakan GPS') >= 0, true, 'tiada Premier untuk PRS'); sama(SW.statusRunding(p), null, 'runding PBB tidak untuk PRS');
+  const k82 = SW.kerusiDewan(p, true); betul(k82 && k82.jumlah === 82 && k82.BN >= 70, 'dewan GPS 82 kerusi');
+  /* Pengaruh GPS */
+  P.tetap({ ap: 10, myr: 20000 }); let r = SW.lobiGPS(); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(SW.pengaruh(p), 48); sama(p.ap, 7);
+  /* Rundingan: masuk tempoh 12 bulan sebelum PRN */
+  const pru = PR.getPRU(p); P.tetap({ tahun: pru.tahunPRU - 1, bulan: 12 }); let st = SW.statusRundingRakan(S.loadPlayer());
+  if (!(st.bakiBulan > 0 && st.bakiBulan <= 12)) { P.tetap({ tahun: pru.tahunPRU, bulan: Math.max(1, (parseInt(pru.bulanPRU, 10) || 1) - 1) }); st = SW.statusRundingRakan(S.loadPlayer()); }
+  betul(st.boleh, 'rundingan dibuka');
+  r = SW.rundingRakan('tuntut', { rng: () => 0.01 }); betul(r.ok && r.berjaya, r.ralat); p = S.loadPlayer(); sama(p.rundingGPS.kerusi, 14); sama(SW.kuota(p), 14, 'kuota baharu');
+  sama(SW.rundingRakan('beralah').ok, false, 'sekali setiap PRN');
+  /* tuntut gagal dan beralah (profil bersih) */
+  P.tetap({ rundingGPS: undefined, ap: 10 }); r = SW.rundingRakan('tuntut', { rng: () => 0.99 }); betul(r.ok && !r.berjaya, r.ralat); sama(S.loadPlayer().rundingGPS.kerusi, 10);
+  P.tetap({ rundingGPS: undefined, ap: 10 }); r = SW.rundingRakan('beralah'); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(p.rundingGPS.kerusi, 9); sama(SW.pengaruh(p), 53, 'beralah +5 pengaruh');
+  /* kelayakan PRN: DUN di luar kuota */
+  daftar(z); P.tetap({ ip: 600, jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan')], tahun: pru.tahunPRU, bulan: parseInt(pru.bulanPRU, 10) || 1 }); p = S.loadPlayer();
+  betul(!SW.dalamKuota(p), 'DUN rk terakhir di luar kuota 11');
+  const kel = PR.kelayakan ? PR.kelayakan(p) : null; if (kel && kel.DUN) { betul(kel.DUN.sebab.some((x) => /luar kuota/.test(x)), 'sebab luar kuota'); }
+  /* PBB tidak terjejas */
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'bumiputera', nama: 'Uji', demografik: dem, cawangan: D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8'))).bahagian[0].dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa' }));
+  p = S.loadPlayer(); sama(SW.ringan(p), false); sama(SW.kuota(p), null); betul(SW.dalamKuota(p), 'PBB tiada had kuota');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

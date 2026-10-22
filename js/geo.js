@@ -33,6 +33,8 @@
   root.MyPolitikGeo = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   var CONFIG = {
     BASE: 'data/',
@@ -138,7 +140,7 @@
    * Pulang { negeri:'10', parlimen:'P.097', dun:'10_N.13', dm:'097/13/01' } (medan null jika tidak ditemui; dm hanya jika dimuatDM).
    */
   function kunciDariCawangan(x) {
-    if (x && x.parti === 'PBB' && x.kod) {                 // v8.32: PBB: kod.parlimen = no DUN (Bahagian), kod.lokaliti = no DM dalam DUN; kod geo sebenar diterbitkan daripada banci DUN
+    if (x && SW(x.parti) && x.kod) {                 // v8.32: PBB: kod.parlimen = no DUN (Bahagian), kod.lokaliti = no DM dalam DUN; kod geo sebenar diterbitkan daripada banci DUN
       var kd = '13_N.' + dua(x.kod.parlimen), dD = data.demografi && data.demografi.dun && data.demografi.dun[kd];
       var noP = dD ? String(dD.parlimen).replace('P.', '') : null;
       var km = noP ? tiga(noP) + '/' + dua(x.kod.parlimen) + '/' + dua(x.kod.lokaliti) : null;

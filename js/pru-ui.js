@@ -9,6 +9,8 @@
    ========================================================================== */
 (function (W) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
   var PRU = W.MyPolitikPRU, KB = W.MyPolitikKabinet, S = W.MyPolitikSave;
   if (!PRU || !S) { return; }
   var BULAN = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
@@ -125,7 +127,7 @@
     if (k.lobi && !k.hasGovernmentRole) {
       var mb = k.mb && k.mb.boleh ? k.mb : null;
       var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
-      return bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button>' + (p.parti === 'PBB' ? '<p class="note" style="font-size:.78rem;margin-top:8px">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '') + '</section>';
+      return bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem;margin-top:8px">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '') + '</section>';
     }
     if (!k.hasGovernmentRole) { return kadTiadaLobi(p); }
     h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
@@ -136,7 +138,7 @@
       k.cdfPilihan.map(function (x) { return '<button type="button" class="btn btn--sm" data-pru="cdf" data-jumlah="' + x.jumlah + '"' + (x.boleh ? '' : ' disabled title="' + esc(x.sebab) + '"') + '>RM ' + fmt(x.jumlah) + ' → +' + x.ip + ' IP</button>'; }).join('') + '</div>';
     if (k.ratingRendah > 0) { h += '<div class="banner banner--warn" role="alert"><strong>Amaran rombakan</strong>Penarafan di bawah 30% sudah ' + k.ratingRendah + ' bulan. Satu bulan lagi anda digugurkan.</div>'; }
     if (k.acara) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="acara">⚠️ <span>Isu kementerian menunggu:</span> <span>' + esc(k.acara.tajuk) + '</span></button>'; }
-    return h + '</section>' + (p.parti === 'PBB' ? '<p class="note" style="font-size:.78rem">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '');
+    return h + '</section>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '');
   }
   /** Musim pilihan raya aktif (PRU/PRN atau PRK): tab khas Pilihan Raya dipaparkan. */
   function musim(p) { return !!((PRU.getPRU(p).aktif) || (PK && PK.getPRK(p).aktif)); }
@@ -486,13 +488,13 @@
     if (!m.boleh) { toast(m.sebab || 'Tidak tersedia.', 'ralat'); return; }
     var isi = m.sendiri
       ? '<p>Parti anda menang <b>' + m.parti + '</b> daripada ' + m.jumlah + ' kerusi DUN (majoriti ' + m.ambang + '). Anda boleh mengangkat sumpah sebagai <b>' + esc(m.label) + '</b>.</p>'
-      : !m.jumlah ? '<p>Rakan gabungan turut menuntut jawatan itu. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan ' + (p.parti === 'PBB' ? 'Menteri Kanan' : 'EXCO Kanan') + '.</p>'
+      : !m.jumlah ? '<p>Rakan gabungan turut menuntut jawatan itu. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan ' + (SW(p.parti) ? 'Menteri Kanan' : 'EXCO Kanan') + '.</p>'
       : '<p>Parti anda <b>' + m.parti + '</b> kerusi + rakan gabungan <b>' + m.rakan + '</b> = <b>' + m.gabungan + '</b> daripada ' + m.jumlah + ' (majoriti ' + m.ambang + '). Bahagian kerusi parti dalam gabungan: <b>' + m.kongsi + '%</b>. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan EXCO Kanan.</p>';
     var id = await modal({ tajuk: '👔 ' + esc(m.label) + ' ' + esc(m.negeri),
       isi: isi + '<ul class="acara__pil">' +
         opsi('TUNTUT', m.sendiri ? '👔 Angkat sumpah ' + esc(m.label) : '👔 Tuntut ' + esc(m.label), '2 AP · elaun +RM 6,000 &amp; +18 IP sebulan · Stress lebih berat', (Number(p.ap) || 0) >= 2) +
-        (m.sendiri ? '' : opsi('KANAN', p.parti === 'PBB' ? '🤝 Terima Menteri Kanan' : '🤝 Terima EXCO Kanan', p.parti === 'PBB' ? 'Selamat, tanpa menuntut. Elaun Menteri Negeri.' : 'Selamat, tanpa menuntut. Elaun EXCO.', true)) +
-        opsi('LAIN', 'Lobi portfolio biasa', (p.parti === 'PBB' ? 'Tidak menuntut jawatan tertinggi; pilih portfolio Menteri seperti biasa.' : 'Tidak menuntut jawatan tertinggi; pilih portfolio EXCO seperti biasa.'), true) + '</ul>', butang: [] });
+        (m.sendiri ? '' : opsi('KANAN', SW(p.parti) ? '🤝 Terima Menteri Kanan' : '🤝 Terima EXCO Kanan', SW(p.parti) ? 'Selamat, tanpa menuntut. Elaun Menteri Negeri.' : 'Selamat, tanpa menuntut. Elaun EXCO.', true)) +
+        opsi('LAIN', 'Lobi portfolio biasa', (SW(p.parti) ? 'Tidak menuntut jawatan tertinggi; pilih portfolio Menteri seperti biasa.' : 'Tidak menuntut jawatan tertinggi; pilih portfolio EXCO seperti biasa.'), true) + '</ul>', butang: [] });
     if (!id) { return; }
     if (id === 'LAIN') { await lobi(); return; }
     var r = id === 'TUNTUT' ? KB.tuntutMB() : KB.terimaExcoKanan();

@@ -174,6 +174,20 @@ ujian('PBB v9.6: istilah MKT -> Majlis Tertinggi (MT), PAU -> Perhimpunan Agung 
   return r;
 });
 
+/* ---- v10.0: teks mod ringan (PRS) dalam bentuk dijenamakan (PRS) mesti ada terjemahan ---- */
+ujian('PRS v10.0: teks kad Pengaruh GPS, rundingan dan mesej mempunyai terjemahan EN', () => {
+  const asalSS = g.sessionStorage; g.sessionStorage = { getItem: () => 'PRS', setItem() {} };
+  try {
+    const sampel = ['🤝 Pengaruh dalam GPS', 'Mod ringan: PRS ialah parti rakan GPS. Tiada Premier atau imbangan blok; kerusi DUN anda bergantung pada kuota kerusi GPS.', 'Pengaruh GPS', 'Kuota kerusi DUN PRS', '11 / 82 (asas 11)',
+      '✅ dalam kuota (kedudukan 3)', '⛔ di luar kuota (kedudukan 30)', 'Lobi Majlis GPS (3 AP, RM 1,500)', 'Rundingan kuota dibuka. Tuntut lebih berjaya dengan peluang 45%.', 'Tuntut lebih (+3)', 'Beralah (-2)', 'Terima tawaran',
+      'Kos 3 AP, sekali setiap PRN. Angka ialah andaian permainan.', 'Rundingan kuota dibuka 12 bulan sebelum PRN (5 bulan lagi).', 'Anda melobi Majlis GPS. Pengaruh GPS 48/100 (-3 AP, -RM 1,500).',
+      'Tuntutan berjaya: PRS bertanding 14 kerusi dalam GPS (hubungan gabungan -5).', 'Tuntutan ditolak: PRS bertanding 10 kerusi dalam GPS (hubungan gabungan -10).', 'Anda beralah: PRS bertanding 9 kerusi dalam GPS (hubungan gabungan +10).',
+      'Anda menerima tawaran: PRS bertanding 11 kerusi dalam GPS.', 'DUN anda di luar kuota PRS dalam GPS (kuota 11 kerusi)', 'Parti rakan GPS tidak menuntut jawatan Premier.', 'Hanya untuk parti rakan GPS (mod ringan).',
+      'PRS tiada cawangan di luar Sarawak.', 'PRS bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'];
+    return sampel.filter((s) => I.terjemah(s) === null);
+  } finally { g.sessionStorage = asalSS; }
+});
+
 let gagal = 0;
 hasil.forEach((h) => {
   if (h.ok) { console.log('  ✓ ' + h.nama); return; }

@@ -14,6 +14,8 @@
   root.MyPolitikDUN = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   function modul(nama, fail) {
     if (root[nama]) { return root[nama]; }
@@ -85,7 +87,7 @@
   function aktif(p) { return !!p && !p.tamat && (statusADUN(p) || exco(p)); }
   function bolehBentang(p) { return exco(p); }
   function kerusi(p) {
-    if (p && p.parti === 'PBB') {                                                // v9.1: Dewan Undangan Negeri Sarawak (GPS)
+    if (p && SW(p.parti)) {                                                // v9.1: Dewan Undangan Negeri Sarawak (GPS)
       var SWd = root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null), Pd = PRU(), pr = Pd && Pd.getPRU ? Pd.getPRU(p) : null;
       var st = pr ? [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN'; })[0] : null;
       return SWd && SWd.kerusiDewan ? SWd.kerusiDewan(p, st ? st.kerajaan : false) : null;
@@ -108,9 +110,9 @@
   function sesiKunci(p) { return CONFIG.SESI.indexOf(parseInt(p.bulan, 10)) >= 0 ? (parseInt(p.tahun, 10) || 0) * 100 + parseInt(p.bulan, 10) : 0; }
   function senaraiBentang(p) {
     var d = getSidang(p), sebab = '', k = kerusi(p);
-    if (!aktif(p)) { sebab = p.parti === 'PBB' ? 'Anda bukan ADUN atau Menteri Negeri.' : 'Anda bukan ADUN atau EXCO Negeri.'; }
+    if (!aktif(p)) { sebab = SW(p.parti) ? 'Anda bukan ADUN atau Menteri Negeri.' : 'Anda bukan ADUN atau EXCO Negeri.'; }
     else if (!k) { sebab = 'Belum ada keputusan PRN.'; }
-    else if (!bolehBentang(p)) { sebab = p.parti === 'PBB' ? 'Hanya Menteri Negeri boleh membentang Enakmen dan Bajet Negeri.' : 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.'; }
+    else if (!bolehBentang(p)) { sebab = SW(p.parti) ? 'Hanya Menteri Negeri boleh membentang Enakmen dan Bajet Negeri.' : 'Hanya EXCO Negeri boleh membentang Enakmen dan Bajet Negeri.'; }
     else if (!k.kerajaanBN) { sebab = 'Parti anda bukan kerajaan negeri.'; }
     else if (d.undi) { sebab = 'Satu undian sedang berjalan.'; }
     else if (d.tp) { sebab = 'Usul Undi Tidak Percaya sedang berlangsung.'; }
@@ -316,7 +318,7 @@
     return { aktif: aktif(p), dun: true, peranan2: statusADUN(p) ? 'ADUN' : 'EXCO', kerusi: k, ambang: k ? k.ambang : 0, kerajaan: adaKerajaan(p), kestabilan: aktif(p) ? kestabilan(p) : null, rating: rating(p),
       menteri: exco(p), bolehBentang: bolehBentang(p), bentang: sb, undi: undiSemasa(p), tp: tpSemasa(p), soalan: soalanSemasa(p), sejarah: d.sejarah || [],
       peranan: statusADUN(p) ? 'ADUN' : 'EXCO', portfolio: exco(p) ? (peranKabinet(p).portfolioName || '') : '',
-      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: p.parti === 'PBB' ? 'Premier' : 'Menteri Besar', gab: p.parti === 'PBB' ? 'GPS' : 'BN', tab: 'DUN', negeri: p.negeri || '' } };
+      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: SW(p.parti) ? 'Premier' : 'Menteri Besar', gab: SW(p.parti) ? 'GPS' : 'BN', tab: 'DUN', negeri: p.negeri || '' } };
   }
 
   return {

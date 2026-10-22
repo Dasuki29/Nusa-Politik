@@ -19,6 +19,8 @@
   root.MyPolitikKabinet = api;
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this), function (root) {
   'use strict';
+  /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
+  function SW(k) { return k === 'PBB' || k === 'PRS'; }
 
   function modul(nama, fail) {
     if (root[nama]) { return root[nama]; }
@@ -200,7 +202,7 @@
   }
   /** v7.42: Parlimen: hanya portfolio dengan IP perlu <= IP pemain; paling HAMPIR dengan IP pemain dahulu, maks HAD_PILIHAN (rawak tetap bagi IP sama). */
   /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */
-  function kolamSumber(p, sumber) { return sumber === 'DUN' && p && p.parti === 'PBB' ? PORTFOLIO.SARAWAK : PORTFOLIO[sumber]; }
+  function kolamSumber(p, sumber) { return sumber === 'DUN' && p && SW(p.parti) ? PORTFOLIO.SARAWAK : PORTFOLIO[sumber]; }
   function kolamPaparan(p, sumber) {
     var semua = kolamSumber(p, sumber);
     if (sumber !== 'PARLIMEN' || !DARI_CSV) { return semua; }
@@ -263,13 +265,13 @@
   /* ---------- v7.63: Menteri Besar / Ketua Menteri ---------- */
   var KETUA_MENTERI = ['melaka', 'pulau pinang', 'sabah', 'sarawak'];
   /** v9.3: di Sarawak anggota kabinet negeri dipanggil Menteri (bukan EXCO). Tahap dalaman kekal EXCO_NEGERI; hanya label berubah. */
-  function namaTahap(p, tahap) { var t = TAHAP[tahap]; if (!t) { return ''; } return p && p.parti === 'PBB' && tahap === 'EXCO_NEGERI' ? 'Menteri Negeri' : t.nama; }
+  function namaTahap(p, tahap) { var t = TAHAP[tahap]; if (!t) { return ''; } return p && SW(p.parti) && tahap === 'EXCO_NEGERI' ? 'Menteri Negeri' : t.nama; }
   function SWk() { return modul('MyPolitikSarawak', 'sarawak.js'); }
-  function labelKetua(p) { if (p && p.parti === 'PBB') { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
+  function labelKetua(p) { if (p && SW(p.parti)) { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
   /** Syarat: lobi DUN dibuka (parti membentuk kerajaan negeri), pemain ADUN, Pengerusi Badan Perhubungan Negeri (induk), bukan Sarawak. */
   function syaratMB(p) {
     var k = getKabinet(p), PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), sebab = '';
-    if (p && p.parti === 'PBB') {                                                // v9.1: Premier Sarawak: ADUN dan Presiden PBB
+    if (p && SW(p.parti)) {                                                // v9.1: Premier Sarawak: ADUN dan Presiden PBB
       var W9 = SWk();
       if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
       else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
@@ -329,14 +331,14 @@
     }
     if (PR && PR.getPRU) { var pru = PR.getPRU(p); pru.hubunganGabungan = clamp((Number(pru.hubunganGabungan) || 50) - 10, 0, 100); S().applyEffects({}, { kiraTindakan: false, patch: { pru: pru } }); }
     p = S().loadPlayer(); k = getKabinet(p);
-    var kn = p.parti === 'PBB' ? 'Menteri Kanan' : 'EXCO Kanan', rs = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
+    var kn = SW(p.parti) ? 'Menteri Kanan' : 'EXCO Kanan', rs = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
     return { ok: !!(rs && rs.ok), dilantik: false, mesej: 'Rakan gabungan menolak tuntutan ' + m.label + '. Hubungan gabungan -10 dan anda ditawarkan ' + kn + '.' };
   }
   /** Terima terus EXCO Kanan tanpa menuntut (tiada risiko). */
   function terimaExcoKanan() {
     var p = S().loadPlayer(), k = getKabinet(p), sy = syaratMB(p);
     if (!sy.boleh) { return { ok: false, ralat: sy.sebab }; }
-    var kn = p.parti === 'PBB' ? 'Menteri Kanan' : 'EXCO Kanan', res = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
+    var kn = SW(p.parti) ? 'Menteri Kanan' : 'EXCO Kanan', res = lantikDi(p, k, 'EXCO_NEGERI', kn, 'lantik_exco_kanan');
     return { ok: !!(res && res.ok), mesej: 'Dilantik sebagai ' + kn + '. Elaun bulanan bermula.' };
   }
   function lepaskanLobi() {
