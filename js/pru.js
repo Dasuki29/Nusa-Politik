@@ -359,7 +359,7 @@
       a.calonImport = { tahap: kl.tahap, sokongan: kl.sokongan, negeriSama: kr.negeriSama };
       a.constituencyType = profilKawasan({ bahagian: kr.nama, dun: kr.nama, negeri: kr.negeri }); a.lawan = lawanPool(a.constituencyType);
     }
-    a.perluRunding = jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15;
+    a.perluRunding = p.parti !== 'PSB' && (jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan: ' + a.kerusi.nama + ' (' + jenis + ')', peringkat: 'ahli' } });
     return { ok: true, diluluskan: true, perluRunding: a.perluRunding, lain: lain, mesej: 'Dicalonkan bertanding kerusi ' + a.kerusi.nama + ' (' + (jenis === 'DUN' ? 'DUN' : 'Parlimen') + ').' };
@@ -387,7 +387,7 @@
     var kodP = (p2.kod && p2.kod.parlimen) || p2.bahagian, kodD = (p2.kod && p2.kod.dun) || p2.dun;
     a.candidateType = 'PARLIMEN'; a.kerusi = { jenis: 'PARLIMEN', nama: p2.bahagian || 'Parlimen', kod: kodP || '' };
     a.candidateType2 = 'DUN'; a.kerusi2 = { jenis: 'DUN', nama: p2.dun || 'DUN', kod: kodD || '' };
-    a.perluRunding = r() < CONFIG.GABUNGAN.peluangRunding + 0.1;
+    a.perluRunding = p.parti !== 'PSB' && (r() < CONFIG.GABUNGAN.peluangRunding + 0.1);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan serentak: ' + a.kerusi.nama + ' (Parlimen) + ' + a.kerusi2.nama + ' (DUN)', peringkat: 'ahli' } });
     return { ok: true, diluluskan: true, dua: true, perluRunding: a.perluRunding, mesej: 'Dicalonkan bertanding serentak kerusi ' + a.kerusi.nama + ' (Parlimen) dan ' + a.kerusi2.nama + ' (DUN).' };

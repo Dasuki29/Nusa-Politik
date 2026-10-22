@@ -1332,12 +1332,12 @@ ujian('PSB v10.3: pembangkang (Naratif Pembangkang, tiada kuota/kerajaan, menang
   const pru = PR.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU, naratif: { nilai: 100, idx: pru.tahunPRU * 12 + pru.bulanPRU } }); betul(PR.isytihar('tamat_penggal').ok);
   const lama = Math.random; Math.random = () => 0.01;
   try {
-    const pk = PR.pilihKerusi('DUN', { rng: () => 0.01 }); betul(pk.ok && pk.diluluskan, pk.mesej || pk.ralat);
-    let a = PR.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PR.runding('abai'); a = PR.getPRU(S.loadPlayer()).aktif; }
+    const pk = PR.pilihKerusi('DUN', { rng: () => 0.01 }); betul(pk.ok && pk.diluluskan, pk.mesej || pk.ralat); sama(pk.perluRunding, false, 'PSB tiada rundingan rakan gabungan');
+    let a = PR.getPRU(S.loadPlayer()).aktif; sama(a.fasa === 'runding', false, 'PSB terus ke manifesto'); sama(a.isThreeCorneredFight, false, 'PSB tiada 3-penjuru');
     const pil = PR.peruntukanPilihan(S.loadPlayer(), a); betul(PR.mulaKempen(PR.JANJI.map((x) => x.id).slice(0, 3), pil.pilihan[pil.pilihan.length - 1]).ok);
     for (let i = 0; i < 40; i++) { const ck = PR.keadaanKempen(S.loadPlayer()); if (ck.kejutan) { PR.jawabKejutan(ck.kejutan.pilihan.filter((x) => x.boleh)[0].id); continue; } if (ck.hariBaki <= 0) { break; } const tt = (ck.hariFinal ? ck.final : []).concat(ck.biasa).filter((x) => x.boleh)[0]; if (!tt) { break; } PR.tindakanKempen(tt.id); }
     const s = PR.selesaikan({ rng: () => 0.01 }); betul(s.ok, s.ralat);
-    betul(s.keputusan.menang, 'PSB menang DUN'); sama(!!s.keputusan.kerajaan, false, 'PSB tidak membentuk kerajaan'); sama(!!s.keputusan.kabinetBuka, false, 'tiada lobi portfolio'); sama(!!(KB.getKabinet(S.loadPlayer()).lobi), false, 'tiada lobi kabinet');
+    betul(s.keputusan.menang, 'PSB menang DUN'); betul(!s.keputusan.pecah.some((x) => x.ke === 'rakan'), 'tiada baris Rakan Gabungan untuk PSB'); sama(!!s.keputusan.kerajaan, false, 'PSB tidak membentuk kerajaan'); sama(!!s.keputusan.kabinetBuka, false, 'tiada lobi portfolio'); sama(!!(KB.getKabinet(S.loadPlayer()).lobi), false, 'tiada lobi kabinet');
   } finally { Math.random = lama; }
 });
 

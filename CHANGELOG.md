@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v10.3.1 (2026-10-22)
+
+PSB: baris "Rakan Gabungan" dibuang. Sebagai pembangkang tanpa rakan gabungan, PSB tidak lagi melalui fasa rundingan kerusi (`perluRunding` = false), jadi tiada pertandingan 3-penjuru dan tiada baris "Rakan Gabungan" dalam pecahan undi atau keputusan (`js/pru.js`). Ujian PSB menyemak ketiga-tiganya.
+
 ## v10.3 (2026-10-22)
 
 PSB (mod ringan, pembangkang) dengan ciri teras Naratif Pembangkang.
@@ -14,7 +18,6 @@ PSB (mod ringan, pembangkang) dengan ciri teras Naratif Pembangkang.
 
 ### Andaian dan had
 - Kawasan operasi (Melayu/Melanau kurang 40%) dan angka Naratif ialah andaian permainan, bukan senarai kerusi PSB sebenar.
-- Keputusan pilihan raya PSB masih memaparkan baris "Rakan Gabungan" daripada enjin umum; belum dibuang untuk pembangkang.
 - Kerusi Parlimen PSB memaparkan label "Parti Sarawak Bersatu" untuk gabungan sendiri (di luar Kerajaan Perpaduan).
 
 ### Belum
