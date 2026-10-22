@@ -49,8 +49,10 @@
      ------------------------------------------------------------------------ */
   var CONFIG = {
     BULAN_NAMA: ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'],
-    AP_BULANAN: 5,                       // AP bertambah sebanyak ini setiap bulan (v7.23: baki dibawa)
-    AP_MAKS: 15,                         // had AP terkumpul (3 bulan); ubah di sini untuk laras keseimbangan
+    AP_BULANAN: 6,                       // AP asas sebulan bagi Biasa (v8.27: lihat AP_IKUT_KESUKARAN; v7.23: baki dibawa)
+    AP_MAKS: 20,                         // had AP terkumpul bagi Biasa (v8.27: lihat AP_IKUT_KESUKARAN)
+    AP_IKUT_KESUKARAN: { EASY: { bulanan: 7, maks: 20 }, NORMAL: { bulanan: 6, maks: 20 }, HARDCORE: { bulanan: 5, maks: 15 } },   // v8.27
+    AP_BONUS: { wakil: 1, menteri: 2 },  // v8.27: bonus AP sebulan bagi ADUN / MP / EXCO Negeri (+1) dan Menteri ke atas (+2)
     PERINGKAT_PARTI: ['cawangan', 'bahagian', 'pusat'],   // v8.12: elaun asas dan elaun jawatan parti DIHAPUSKAN; lihat js/kerjaya.js (pendapatan kerjaya, kos operasi, elaun rasmi YB)
     // v3.8: sokongan susut setiap bulan jika tidak dijaga. Pemegang jawatan menanggung susutan Akar Umbi tambahan.
     SUSUT_BULANAN: { akarUmbi: 2, ajk: 2, perwakilan: 3 },       // v8.21: akarUmbi 3 kepada 2       // ketuaCawangan tidak disusutkan: pemegang jawatan tiada tindakan untuk memulihkannya
@@ -148,6 +150,14 @@
     return { jumlah: jumlah, butiran: d.butiran };
   }
 
+  /** v8.27: AP sebulan = asas (ikut kesukaran) + bonus jawatan (wakil rakyat/EXCO +1, Menteri ke atas +2); had simpanan ikut kesukaran. */
+  function apTetapan(profil) {
+    var p = profil || S.loadPlayer(), lvl = p && p.settings && p.settings.difficultyLevel, t = CONFIG.AP_IKUT_KESUKARAN[lvl] || CONFIG.AP_IKUT_KESUKARAN.NORMAL;
+    var KJ = muat('MyPolitikKerjaya', 'kerjaya.js'), f = KJ && KJ.faktorKerjaya ? KJ.faktorKerjaya(p) : 1;
+    var bonus = f === 0 ? CONFIG.AP_BONUS.menteri : (f < 1 ? CONFIG.AP_BONUS.wakil : 0);
+    return { asas: t.bulanan, bonus: bonus, bulanan: t.bulanan + bonus, maks: t.maks };
+  }
+
   /** Perubahan AP dan MYR pada permulaan bulan baharu. */
   function regenerasi(profil) {
     var p = profil || S.loadPlayer(), d = pendapatanBulanan(p);
@@ -158,8 +168,8 @@
       susut.akarUmbi -= Math.max(0, CONFIG.SUSUT_PEMEGANG_JAWATAN - syKurang);
     }
     if (root.MyPolitikSayap && root.MyPolitikSayap.sokonganDilindungi && root.MyPolitikSayap.sokonganDilindungi(p)) { susut.akarUmbi = 0; susut.ajk = 0; }   // v6.5: Skuad Sayang melindungi sokongan Cawangan
-    var apBaharu = Math.max(Number(p.ap) || 0, Math.min(CONFIG.AP_MAKS, (Number(p.ap) || 0) + CONFIG.AP_BULANAN));   // v7.23: kumpul; tidak pernah mengurangkan baki sedia ada
-    return { ap: apBaharu - p.ap, apBaharu: apBaharu, myr: d.jumlah, butiran: d.butiran, kesetiaan: susut };
+    var at = apTetapan(p), apBaharu = Math.max(Number(p.ap) || 0, Math.min(at.maks, (Number(p.ap) || 0) + at.bulanan));   // v7.23: kumpul; tidak pernah mengurangkan baki sedia ada
+    return { ap: apBaharu - p.ap, apBaharu: apBaharu, apTetapan: at, myr: d.jumlah, butiran: d.butiran, kesetiaan: susut };
   }
 
   /**
@@ -376,7 +386,7 @@
       fasa: getFasa(bulan), regenerasi: rg,
       perubahan: { ip: akhir.ip - asal.ip, myr: akhir.myr - asal.myr, ap: akhir.ap - asal.ap, reputasi: akhir.reputasi - asal.reputasi },
       peristiwa: peristiwa,
-      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + Math.max(0, akhir.ap - asal.ap) + (akhir.ap >= CONFIG.AP_MAKS ? ' (had ' + CONFIG.AP_MAKS + ' dicapai)' : ' (had ' + CONFIG.AP_MAKS + ')') + ', elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',   // v8.0: tambahan AP sebenar
+      mesej: 'Bulan ' + bulan + ' (' + namaBulan(bulan) + ') ' + tahun + ': AP +' + Math.max(0, akhir.ap - asal.ap) + (akhir.ap >= rg.apTetapan.maks ? ' (had ' + rg.apTetapan.maks + ' dicapai)' : ' (had ' + rg.apTetapan.maks + ')') + ', elaun +MYR ' + rg.myr.toLocaleString('ms-MY') + '. Sokongan susut jika tidak dijaga.',   // v8.0: tambahan AP sebenar
       profil: akhir
     };
   }
@@ -384,6 +394,7 @@
   return {
     CONFIG: CONFIG,
     namaBulan: namaBulan,
+    apTetapan: apTetapan,
     getBulan: getBulan,
     getFasa: getFasa,
     getTetingkap: getTetingkap,
