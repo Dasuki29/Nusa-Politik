@@ -54,6 +54,9 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
     await pg.click('#btn-menu'); await pg.waitForTimeout(400); await pg.click('#btn-struktur'); await pg.waitForTimeout(600);
     const st = await pg.textContent('#modal-isi');
     semak(!/Perhubungan/.test(st) && !/Puteri/.test(st), 'v10.6: struktur organisasi tiada Badan Perhubungan negeri / Puteri');
+    await pg.click('[data-org="induk"]'); await pg.waitForTimeout(300); const stI = await pg.textContent('#modal-isi');
+    semak(/Yang Dipertua \/ Presiden/.test(stI) && /Pengerusi Tetap/.test(stI) && /Naib Yang Dipertua Kanan/.test(stI) && /Setiausaha Agung/.test(stI), 'v10.6: struktur Majlis Tertinggi PBB ikut gambar rujukan');
+    await pg.screenshot({ path: process.env.SS_STRUKTUR || '/tmp/struktur-pbb.png' });
     await pg.keyboard.press('Escape'); await pg.waitForTimeout(300);
   }
   semak(/Kerusi DUN Anda/.test(await pg.textContent('#panel-profil')) && /Lawan utama/.test(await pg.textContent('#panel-profil')), 'kad Kerusi DUN Anda dalam tab Profil');

@@ -74,6 +74,43 @@
 
   function jantinaSlot(sayap, rng) { return sayap === 'pemuda' ? 'L' : sayap ? 'P' : (rng() < 0.7 ? 'L' : 'P'); }
 
+
+  /* v10.6: struktur Peringkat Pusat PBB (Majlis Tertinggi, Pergerakan Wanita, Pergerakan Pemuda) mengikut gambar rujukan pengguna.
+     Hanya jawatan dan bilangan (nama pemimpin ialah watak simulasi). ANDAIAN: bilangan Ahli MT Dilantik (Pesaka), Ahli MT Dipilih Wanita (Pesaka) dan Ahli JK Pemuda
+     tidak kelihatan penuh dalam gambar, jadi dianggar (3, 5 dan 11). kod = jawatan katalog permainan yang dipegang pemain (jika ada). */
+  var STRUKTUR_PBB = {
+    induk: [
+      { j: 'Yang Dipertua / Presiden', n: 1, kod: 'presiden' }, { j: 'Pengerusi Tetap', n: 1 }, { j: 'Timbalan Yang Dipertua', n: 2, kod: 'timbalan_presiden' },
+      { j: 'Naib Yang Dipertua Kanan', n: 2 }, { j: 'Naib Yang Dipertua (Pesaka)', n: 3, kod: 'naib_presiden' }, { j: 'Naib Yang Dipertua (Bumiputera)', n: 4 },
+      { j: 'Setiausaha Agung', n: 1 }, { j: 'Timbalan Setiausaha Agung', n: 1 }, { j: 'Penolong Setiausaha Agung', n: 5 }, { j: 'Bendahari Agung', n: 1 }, { j: 'Timbalan Bendahari Agung', n: 1 },
+      { j: 'Ketua Penerangan', n: 1 }, { j: 'Timbalan Ketua Penerangan', n: 1 }, { j: 'Penasihat Undang-Undang', n: 1 }, { j: 'Setiausaha Eksekutif', n: 1 },
+      { j: 'Ahli Majlis Tertinggi (Terpilih)', n: 21, kod: 'ahli_mkt', ahli: true }, { j: 'Ahli Majlis Tertinggi (Dilantik, Bumiputera)', n: 9, ahli: true }, { j: 'Ahli Majlis Tertinggi (Dilantik, Pesaka)', n: 3, ahli: true },
+      { j: 'Wakil Majlis Tertinggi Pergerakan Wanita', n: 5, ahli: true, jantina: 'P' }, { j: 'Wakil Majlis Tertinggi Pergerakan Pemuda', n: 5, ahli: true, jantina: 'L' }
+    ],
+    wanita: [
+      { j: 'Ketua Wanita', n: 1, kod: 'sayap_pusat_wanita' }, { j: 'Timbalan Ketua Wanita', n: 2 }, { j: 'Naib Ketua Wanita', n: 3, kod: 'sayap_naib_pusat_wanita' }, { j: 'Setiausaha', n: 1 },
+      { j: 'Penolong Setiausaha', n: 2 }, { j: 'Bendahari', n: 1 }, { j: 'Penolong Bendahari', n: 1 }, { j: 'Ketua Penerangan', n: 1 }, { j: 'Penolong Ketua Penerangan', n: 1 },
+      { j: 'Ahli Majlis Tertinggi Wanita (Dipilih, Bumiputera)', n: 12, kod: 'sayap_ajk_pusat_wanita', ahli: true }, { j: 'Ahli Majlis Tertinggi Wanita (Dipilih, Pesaka)', n: 5, ahli: true }
+    ],
+    pemuda: [
+      { j: 'Ketua Pemuda', n: 1, kod: 'sayap_pusat_pemuda' }, { j: 'Timbalan Ketua Pemuda', n: 2 }, { j: 'Naib Ketua Pemuda', n: 3, kod: 'sayap_naib_pusat_pemuda' }, { j: 'Setiausaha', n: 1 },
+      { j: 'Penolong Setiausaha', n: 2 }, { j: 'Bendahari', n: 1 }, { j: 'Penolong Bendahari', n: 1 }, { j: 'Ketua Penerangan', n: 1 }, { j: 'Penolong Ketua Penerangan', n: 1 },
+      { j: 'Setiausaha Kerja', n: 2 }, { j: 'Ahli Jawatankuasa Pemuda (Terpilih)', n: 11, kod: 'sayap_ajk_pusat_pemuda', ahli: true }
+    ]
+  };
+
+  /** Senarai jawatan Pusat PBB: [{ jawatan, bil, nama:[{nama, pemain}] }]. */
+  function senaraiPBB(p, sayap, rng) {
+    return STRUKTUR_PBB[sayap || 'induk'].map(function (x) {
+      var ada = x.kod && pemegang(p, x.kod), orang = [];
+      for (var i = 0; i < x.n; i++) {
+        var sendiri = ada && i === 0;
+        orang.push({ nama: sendiri ? (p.nama || 'Anda') : nama(rng, x.jantina || (sayap === 'pemuda' ? 'L' : sayap ? 'P' : (rng() < 0.75 ? 'L' : 'P')), x.ahli ? null : (sayap ? 'dato' : 'tan')), pemain: !!sendiri });
+      }
+      return { jawatan: x.j, bil: x.n, ahli: !!x.ahli, orang: orang };
+    });
+  }
+
   function binaSatu(p, peringkat, sayap) {
     var t = tajuk(peringkat, sayap), rng = D.createRng(benih(p) + '|' + peringkat + '|' + (sayap || 'induk'));
     var bil = (sayap ? CONFIG.AJK_SAYAP : CONFIG.AJK)[peringkat];
@@ -95,6 +132,7 @@
         out.tambahan.push({ jawatan: 'Naib Presiden ' + n, nama: nm ? (p.nama || 'Anda') : nama(rng, 'L', 'tan'), pemain: nm });
       }
     }
+    if (peringkat === 'pusat' && p && p.parti === 'PBB' && (!sayap || STRUKTUR_PBB[sayap])) { out.senarai = senaraiPBB(p, sayap, D.createRng(benih(p) + '|pbb|' + (sayap || 'induk'))); out.label = 'Peringkat Pusat (Majlis Tertinggi)'; }      // v10.6
     return out;
   }
 
@@ -112,5 +150,5 @@
     return hasil;
   }
 
-  return { CONFIG: CONFIG, PERINGKAT: PERINGKAT, LABEL: LABEL, tajuk: tajuk, getStruktur: getStruktur };
+  return { STRUKTUR_PBB: STRUKTUR_PBB, CONFIG: CONFIG, PERINGKAT: PERINGKAT, LABEL: LABEL, tajuk: tajuk, getStruktur: getStruktur };
 });

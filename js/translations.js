@@ -331,8 +331,19 @@
   /* Kamus hidup: BM/EN (kunci), INDEKS (BM -> kunci), TEMPLAT (ayat berpemegang tempat {nama}). Fail tambahan memanggil tambah(). */
   var BM = {}, EN = {}, INDEKS = {}, TEMPLAT = [], TAMBAH_ISTILAH = [], bil = 0;
   function esk(s) { return s.replace(/[.*+?^$()|[\]\\\/]/g, '\\$&'); }
+  /* v10.6: rujukan Perlembagaan/Fasal/Tataetika UMNO dijadikan umum untuk parti selain UMNO (js/parti.js memanggil UMUM.bm/UMUM.en).
+     Setiap baris kamus yang berubah selepas ditukar didaftar juga (kunci umum), supaya terjemahan EN kekal berfungsi. */
+  var UMUM = (function () {
+    var BM_R = [[/\s*\((?:Tataetika |Perlembagaan )?(?:Fasal|Perkara)[^)]*\)/g, ''], [/\s*\(Perlembagaan[^)]*\)/g, ''], [/Tataetika Ahli UMNO(?: 20\d\d)?/g, 'Tataetika parti'], [/Perlembagaan UMNO/g, 'perlembagaan parti'],
+      [/\b(?:Fasal|Perkara) \d+(?:\.\d+)*[a-z]?(?:[ ,]+(?:dan )?\d+(?:\.\d+)*)*/g, 'peraturan parti'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
+    var EN_R = [[/\s*\((?:Code of Ethics |Code of Conduct )?(?:Clause|Article)s?[^)]*\)/g, ''], [/UMNO Members.? Code of (?:Ethics|Conduct)|UMNO Code of (?:Ethics|Conduct)|Code of (?:Ethics|Conduct) for UMNO Members/g, 'party code of ethics'], [/UMNO Constitution/g, 'party constitution'],
+      [/\b(?:Clause|Article)s? [\d.]+[a-z]?(?:[ ,]+(?:and )?[\d.]+)*/g, 'party rules'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
+    function terap(t, R) { for (var i = 0; i < R.length; i++) { t = t.replace(R[i][0], R[i][1]); } return t; }
+    return { RE: /Fasal \d|Perkara \d|Perlembagaan|Tataetika Ahli UMNO|Clause|Article \d|UMNO Constitution|Code of (?:Ethics|Conduct)/, bm: function (t) { return t == null ? t : terap(String(t), BM_R); }, en: function (t) { return t == null ? t : terap(String(t), EN_R); } };
+  })();
   function tambahBaris(b) {
     var k = b[2] || ('ui' + (bil++));
+    if (!b[3] && UMUM.RE.test(b[0])) { var b2 = UMUM.bm(b[0]), e2 = UMUM.en(b[1]); if (b2 !== b[0]) { tambahBaris([b2, e2, null, true]); } }
     if (b[0].indexOf('{') >= 0 && /\{\w+\}/.test(b[0])) {
       var bhg = b[0].split(/\{(\w+)\}/), nama = [], re = '', i;
       for (i = 0; i < bhg.length; i++) { if (i % 2) { nama.push(bhg[i]); re += '([\\s\\S]+?)'; } else { re += esk(bhg[i]); } }
@@ -365,5 +376,5 @@
   }
   BARIS.forEach(tambahBaris); urutTemplat();
 
-  return { BM: BM, EN: EN, INDEKS: INDEKS, TEMPLAT: TEMPLAT, ISTILAH: ISTILAH, KEKAL: KEKAL, PERATURAN: PERATURAN, MINGGU: MINGGU, NORMAL: NORMAL, tambah: tambah, padan: padan };
+  return { UMUM: UMUM, BM: BM, EN: EN, INDEKS: INDEKS, TEMPLAT: TEMPLAT, ISTILAH: ISTILAH, KEKAL: KEKAL, PERATURAN: PERATURAN, MINGGU: MINGGU, NORMAL: NORMAL, tambah: tambah, padan: padan };
 });

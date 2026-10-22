@@ -1599,6 +1599,14 @@
     var st = OG.getStruktur(p), tab = st.laluan === 'utama' ? 'induk' : st.laluan;
     function baris(x) { return '<div class="org-baris' + (x.pemain ? ' is-anda' : '') + '"><span>' + esc(x.jawatan) + '</span><span>' + esc(x.nama) + (x.pemain ? ' (anda)' : '') + '</span></div>'; }
     function blok(o) {
+      if (o.senarai) {                                              // v10.6: struktur Pusat PBB (Majlis Tertinggi, Wanita, Pemuda)
+        var hs = '<div class="org-peringkat"><h3>' + esc(o.label) + '</h3>';
+        o.senarai.forEach(function (g) {
+          if (g.bil <= 3) { g.orang.forEach(function (x, i) { hs += '<div class="org-baris' + (x.pemain ? ' is-anda' : '') + '"><span>' + esc(g.jawatan) + (g.bil > 1 ? ' ' + (i + 1) : '') + '</span><span>' + esc(x.nama) + (x.pemain ? ' (anda)' : '') + '</span></div>'; }); }
+          else { hs += '<details class="org-ajk"><summary>' + esc(g.jawatan) + ' (' + g.bil + ' orang)</summary>' + g.orang.map(function (x, i) { return '<div class="org-baris' + (x.pemain ? ' is-anda' : '') + '"><span>' + (i + 1) + '</span><span>' + esc(x.nama) + (x.pemain ? ' (anda)' : '') + '</span></div>'; }).join('') + '</details>'; }
+        });
+        return hs + '</div>';
+      }
       var h = '<div class="org-peringkat"><h3>' + esc(o.label) + '</h3>' + baris(o.ketua) + (o.timbalan ? baris(o.timbalan) : '') + baris(o.naib);
       o.tambahan.forEach(function (x) { h += baris(x); });
       h += '<details class="org-ajk"><summary>' + esc(o.ajk[0].jawatan.replace(/ 1$/, '')) + ' (' + o.bilAjk + ' orang)</summary>' + o.ajk.map(baris).join('') + '</details></div>';

@@ -195,6 +195,36 @@ ujian('PSB v10.3: teks Naratif Pembangkang (pembangkang, mod ringan) mempunyai t
   } finally { g.sessionStorage = asalSS; }
 });
 
+ujian('v10.6: parti selain UMNO tiada rujukan Fasal/Perlembagaan UMNO (BM dan EN)', () => {
+  const asalSS = g.sessionStorage, PT = g.MyPolitikParti, gagalan = [];
+  const contoh = ['Perlu menjadi ahli sekurang-kurangnya 3 tahun (Fasal 15.5). Anda ahli 0 bulan; 36 bulan lagi.', 'Menerima wang bagi mendapatkan sokongan dan kontrak (Tataetika Perkara 5.1.3, 6.1)', 'Membalas fitnah di media sosial secara terbuka (Tataetika Perkara 5.3)', 'Satisfying'];
+  try {
+    ['PBB', 'PRS'].forEach((k) => {
+      g.sessionStorage = { getItem: () => k, setItem() {} };
+      contoh.slice(0, 3).forEach((bm) => {
+        const b = PT.ke(bm), en = I.terjemah(b);
+        if (/Fasal|Perkara \d|Perlembagaan UMNO/.test(b)) { gagalan.push(k + ' BM: ' + b); }
+        if (en === null) { gagalan.push(k + ' tiada EN: ' + b); } else if (/Clause|Article \d|UMNO Constitution/.test(en)) { gagalan.push(k + ' EN: ' + en); }
+      });
+    });
+    g.sessionStorage = { getItem: () => 'UMNO', setItem() {} };
+    if (!/Fasal 15\.5/.test(PT.ke(contoh[0]))) { gagalan.push('UMNO: Fasal hilang'); }
+  } finally { g.sessionStorage = asalSS; }
+  return gagalan;
+});
+
+ujian('v10.6: struktur Pusat PBB (jawatan, nombor dan bilangan) ada EN', () => {
+  const asalSS = g.sessionStorage, gagalan = [], O = require(path.join(JS, 'organisasi.js'));
+  g.sessionStorage = { getItem: () => 'PBB', setItem() {} };
+  try {
+    Object.keys(O.STRUKTUR_PBB).forEach((k) => O.STRUKTUR_PBB[k].forEach((x) => {
+      const u = [x.j]; if (x.n > 1 && x.n <= 3) { for (let i = 1; i <= x.n; i++) { u.push(x.j + ' ' + i); } } if (x.n > 3) { u.push(x.j + ' (' + x.n + ' orang)'); }
+      u.forEach((t) => { const e = I.terjemah(t); if (e === null) { gagalan.push(t); } });
+    }));
+  } finally { g.sessionStorage = asalSS; }
+  return gagalan;
+});
+
 ujian('v10.4: kejutan kempen khusus parti (PRS, SUPP, PDP, PSB) diterjemah penuh', () => {
   const K = g.MyPolitikPRU.KEJUTAN_PARTI, s = [];
   Object.keys(K).forEach((k) => K[k].forEach((e) => { s.push(e.tajuk, e.huraian, e.tajuk + ': Berjaya!'); e.pilihan.forEach((c) => { s.push(c.label, c.label + '.'); }); }));

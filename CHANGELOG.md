@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v10.7 (2026-10-22)
+
+- **Rujukan Perlembagaan/Fasal/Tataetika UMNO dijadikan umum untuk parti selain UMNO** (UMNO tidak berubah): "(Fasal 20.10b)" dibuang, "Fasal 20.13" menjadi "peraturan parti", "Tataetika Ahli UMNO 2025" menjadi "Tataetika parti", "Perlembagaan UMNO" menjadi "perlembagaan parti". Dilaksanakan di `js/translations.js` (`UMUM`) dan `js/parti.js`; setiap baris kamus EN didaftar juga dalam bentuk umum, jadi terjemahan EN kekal berfungsi (ujian bahasa baharu).
+- **Struktur Organisasi PBB mengikut gambar rujukan:** Peringkat Pusat induk = Majlis Tertinggi (Yang Dipertua/Presiden, Pengerusi Tetap, Timbalan dan Naib Yang Dipertua, Setiausaha Agung dan penolong, Bendahari Agung, Ketua Penerangan, Penasihat Undang-Undang, Ahli MT terpilih dan dilantik, wakil Wanita/Pemuda); Pergerakan Wanita dan Pemuda Pusat dengan jawatan masing-masing. Nama pemimpin kekal watak simulasi (bukan individu sebenar). Parti Sarawak lain kekal struktur umum.
+
+### Andaian dan had
+- Bilangan Ahli MT Dilantik (Pesaka) 3, Ahli MT Wanita Dipilih (Pesaka) 5 dan Ahli JK Pemuda 11 dianggar kerana gambar terpotong.
+- Senarai jawatan dalam tab Pemilihan (Ahli MT, Naib Presiden, Timbalan Presiden, Presiden) tidak diubah; hanya paparan Struktur Organisasi mengikut gambar.
+
 ## v10.6 (2026-10-22)
 
 Pembetulan dashboard berdasarkan ujian pemain PBB.
