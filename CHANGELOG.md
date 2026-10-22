@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.33 (2026-10-22)
+
+PRN Sarawak dan kerusi DUN untuk PBB.
+
+### Baharu
+- **Jadual PRN:** PRN Sarawak pertama pada tahun 2027 (bulan tetap mengikut pemain), kemudian setiap 5 tahun (`js/sarawak.js`, `js/pru.js`).
+- **Kekuatan kerusi ikut etnik:** `data/pbb-dun.json` (82 DUN: pemilih dan peratus etnik) disimpan dalam profil (`dunInfo`). Kerusi majoriti Cina 50% ke atas: Sukar (-12), 30 hingga 50%: Marginal (-5), Bumiputera 85% ke atas: Selamat (+5).
+- **Parti lawan ikut kawasan** (label simulasi): Cina 40% ke atas = DAP, PSB; Dayak 50% ke atas = PSB, PKR; Melayu/Melanau 50% ke atas = PKR, PAS; lain-lain = PKR, PSB.
+- Kad **🗳️ Kerusi DUN Anda** di tab Profil (PBB). Tutorial, terjemahan EN, ujian unit dan ujian PBB dikemas kini.
+
+### Andaian (sila semak)
+- Semua nombor ialah penyeimbang simulasi, bukan ramalan atau data keputusan sebenar.
+- Belum: imbangan sayap Bumiputera/Pesaka, jawatan Exco negeri/Premier, kerusi Parlimen PBB, rundingan kerusi GPS, Pindah Cawangan PBB, parti lain.
+
 ## v8.32 (2026-10-22)
 
 Fasa 1 modul Sarawak: parti PBB boleh dimainkan.

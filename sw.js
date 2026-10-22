@@ -4,7 +4,7 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v8.32';
+var VERSI = 'nusa-v8.33';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
@@ -16,13 +16,13 @@ var ASAS = [
   'js/ElectionEngine.js', 'js/CabinetEngine.js', 'js/WingEngine.js', 'js/pru-ui.js', 'js/dewan.js', 'js/dun.js', 'js/dewan-ui.js', 'js/pencapaian.js', 'js/pencapaian-ui.js',
   'js/paparan.js', 'js/app.js',
   'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js', 'js/glc.js', 'js/glc-ui.js', 'js/komuniti.js', 'js/komuniti-ui.js',
-  'js/parti.js', 'js/translations-parti.js',
+  'js/parti.js', 'js/sarawak.js', 'js/translations-parti.js',
   'js/pindah.js',
   'js/pindah-ui.js',
   'assets/images/favicon.svg', 'assets/images/favicon-32.png', 'assets/images/favicon-192.png', 'assets/images/apple-touch-icon.png',
   'assets/images/icon-512.png', 'assets/images/icon-maskable-512.png', 'assets/images/logo.png', 'assets/images/logo-pbb.png', 'assets/images/logo-placeholder.svg',
   'assets/images/menara-dato-onn.jpg', 'assets/images/menara-dato-onn.svg',
-  'data/meta.json', 'data/negeri.json', 'data/parlimen.json', 'data/pbb-sarawak.csv'
+  'data/meta.json', 'data/negeri.json', 'data/parlimen.json', 'data/pbb-sarawak.csv', 'data/pbb-dun.json'
 ];
 
 self.addEventListener('install', function (e) {

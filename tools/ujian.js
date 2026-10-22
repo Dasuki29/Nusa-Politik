@@ -1078,6 +1078,26 @@ ujian('parti PBB: sayap (tiada Puteri), profil parti dan penukaran teks', () => 
   S.savePlayer(p); sama(PT.kini(), 'PBB'); sama(PT.ke('Presiden UMNO'), 'Presiden PBB'); sama(PT.dari('Presiden PBB'), 'Presiden UMNO');
   S.clearPlayer(); sama(PT.kini(), 'UMNO'); sama(PT.ke('Presiden UMNO'), 'Presiden UMNO');
 });
+ujian('PRN Sarawak (PBB): jadual 2027, kekuatan kerusi ikut etnik, lawan ikut kawasan', () => {
+  const SW = g.MyPolitikSarawak, PRU = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const dun = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const nombor = Object.keys(dun).sort((a, b) => dun[b].e.cina - dun[a].e.cina);
+  const cina = dun[nombor[0]], bumi = Object.values(dun).filter((d) => d.e.cina + d.e.india + d.e.lain <= 12)[0];
+  const mk = (d) => ({ parti: 'PBB', id: 'x1', nama: 'Uji', dunInfo: d });
+  const m1 = SW.maklumat(mk(cina)); sama(m1.tahap, 'sukar'); sama(m1.ofset, -12); sama(m1.lawan[0], 'DAP'); sama(m1.profil, 'URBAN');
+  const m2 = SW.maklumat(mk(bumi)); sama(m2.tahap, 'selamat'); sama(m2.ofset, 5);
+  sama(SW.maklumat({ parti: 'UMNO', dunInfo: cina }), null, 'bukan PBB');
+  const j = SW.jadual(mk(cina)); sama(j.tahun, 2027); betul(j.bulan >= 1 && j.bulan <= 12);
+  const dem = D.tentukanDemografi('Lelaki', 30), c = h.bahagian[0].dun[0].cawangan[0];
+  const p = S.buildPlayerProfile({ parti: 'PBB', dunInfo: cina, nama: 'Uji', demografik: dem, cawangan: c, sayap: 'pemuda', avatar: 'pemuda' }); S.savePlayer(p);
+  const pru = PRU.getPRU(S.loadPlayer()); sama(pru.tahunPRU, 2027); sama(PRU.profilKawasan(S.loadPlayer()), 'URBAN');
+  sama(PRU.kelayakan(S.loadPlayer()).PARLIMEN.boleh, false, 'PBB tidak bertanding Parlimen pada fasa ini');
+  const a = { constituencyType: 'URBAN', manifestoChoice: [], isuTempatan: 'x', voterSupport: 60, isThreeCorneredFight: false, candidateType: 'DUN', lawan: ['DAP', 'PSB'] };
+  const r0 = PRU.hitungKeputusan(S.loadPlayer(), Object.assign({ ofsetKerusi: 0 }, a), { rng: () => 0.5 }), r1 = PRU.hitungKeputusan(S.loadPlayer(), Object.assign({ ofsetKerusi: -12 }, a), { rng: () => 0.5 });
+  betul(r0.anda - r1.anda > 11.9 && r0.anda - r1.anda < 12.1, 'ofset -12 mengurangkan undi: ' + r0.anda + ' vs ' + r1.anda); sama(r1.pecah[r1.pecah.length - 1].nama, 'DAP');
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

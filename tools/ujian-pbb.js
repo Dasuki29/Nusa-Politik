@@ -38,6 +38,8 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(400); }
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
   for (const t of ['tindakan', 'profil', 'pemilihan', 'mesyuarat']) { await pg.click('[data-tab="' + t + '"]'); await pg.waitForTimeout(400); }
+  await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
+  semak(/Kerusi DUN Anda/.test(await pg.textContent('#panel-profil')) && /Lawan utama/.test(await pg.textContent('#panel-profil')), 'kad Kerusi DUN Anda dalam tab Profil');
   await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(4000);
   semak((await pg.$$eval('#peta-host svg path', (p) => p.length)) === 82, 'peta DUN Sarawak (82 kawasan)');
   semak(!/UMNO/.test(await pg.evaluate(() => document.body.innerText)), 'tiada perkataan UMNO tertinggal dalam dashboard PBB');

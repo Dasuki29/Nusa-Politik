@@ -332,6 +332,7 @@
       var h = D.rowsToHierarchy(D.teksKeBaris(await res.text()));
       h.bahagian.forEach(function (b) { b.cawangan.forEach(function (c) { if (c.kumpulan) { c.kumpulan.wanita += c.kumpulan.puteri; c.kumpulan.puteri = 0; c.kumpulan.langsung = false; } }); });   // PBB tiada Puteri
       state.data = h;
+      try { var rd = await fetch('data/pbb-dun.json', { cache: 'no-cache' }); state.dunData = rd.ok ? await rd.json() : null; } catch (e2) { state.dunData = null; }      // v8.33
     } catch (e) {
       setStatus('fallback', 'Data PBB tidak dapat dimuatkan: ' + (e && e.message ? e.message : e)); el.retry.hidden = false; return;
     }
@@ -391,7 +392,7 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ parti: state.parti, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ parti: state.parti, dunInfo: state.parti === 'PBB' && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -1007,9 +1008,24 @@
   }, true);
 
   /** v8.30: tab Profil: kad identiti dan keahlian (dahulu dalam Pemilihan), Pencapaian dan Harta. */
+  /** v8.33: kad Kerusi DUN anda (PBB): komposisi etnik dan tahap kerusi dalam PRN Sarawak. */
+  function kadDUN(p) {
+    var SW = W.MyPolitikSarawak, m = SW && SW.maklumat ? SW.maklumat(p) : null; if (!m) { return ''; }
+    var kelas = m.tahap === 'sukar' ? 'is-lock' : m.tahap === 'selamat' ? 'is-done' : 'is-open';
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🗳️ Kerusi DUN Anda</h2>' +
+      '<div class="kv"><span>DUN (Bahagian)</span><b>' + esc(m.nama) + '</b></div><div class="kv"><span>Parlimen</span><b>' + esc(m.parlimen) + '</b></div>' +
+      '<div class="kv"><span>Pemilih (' + m.bil + ' daerah mengundi)</span><b>' + fmt(m.pemilih) + '</b></div>' +
+      '<div class="kv"><span>Melayu/Melanau</span><b>' + m.melayu + '%</b></div><div class="kv"><span>Dayak (Iban, Bidayuh, Orang Ulu)</span><b>' + m.dayak + '%</b></div>' +
+      '<div class="kv"><span>Cina</span><b>' + m.cina + '%</b></div>' +
+      '<div class="kv"><span>Tahap kerusi</span><b><span class="status-chip ' + kelas + '">' + esc(m.tahapNama) + '</span> <span>(' + (m.ofset > 0 ? '+' : '') + m.ofset + ' sokongan asas)</span></b></div>' +
+      '<div class="kv"><span>Lawan utama (label simulasi)</span><b>' + esc(m.lawan.join(', ')) + '</b></div>' +
+      '<p class="note" style="font-size:.78rem">Kekuatan kerusi ialah andaian permainan berdasarkan komposisi etnik pemilih (kerusi majoriti Cina lebih sukar, kerusi Bumiputera lebih selamat), bukan ramalan atau data keputusan sebenar.</p></section>';
+    return h;
+  }
+
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');

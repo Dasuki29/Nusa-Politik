@@ -21,5 +21,15 @@ Object.keys(dm).sort().forEach(k => {
   const lelaki = Math.round(jumlah * pL), bawah = Math.round(jumlah * pU);
   baris.push(['013/' + noDun.padStart(3, '0') + '/001/' + seq, 'Sarawak', lok(d.namaDun), lok(d.namaDun), lok(d.nama), jumlah, lelaki, jumlah - lelaki, bawah, jumlah - bawah]);
 });
+/* v8.33: ringkasan setiap DUN (kerusi PBB): pemilih dan komposisi etnik, untuk kekuatan kerusi dalam PRN. */
+const dun = {};
+Object.keys(dm).forEach(k => {
+  const d = dm[k], no = parseInt(String(d.dun).split('N.')[1], 10), e = d.etnik || {};
+  const o = dun[no] = dun[no] || { nama: d.namaDun, parlimen: d.namaParlimen, kodParlimen: d.parlimen, pemilih: 0, bil: 0, e: { melayu: 0, cina: 0, india: 0, iban: 0, bidayuh: 0, orangUlu: 0, lain: 0 } };
+  o.pemilih += d.pemilih || 0; o.bil++; Object.keys(o.e).forEach(x => { o.e[x] += e[x] || 0; });
+});
+Object.keys(dun).forEach(no => { const o = dun[no], t = Object.values(o.e).reduce((a, b) => a + b, 0) || 1; Object.keys(o.e).forEach(x => { o.e[x] = Math.round(o.e[x] / t * 1000) / 10; }); });
+fs.writeFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), JSON.stringify(dun));
+console.log('data/pbb-dun.json', Object.keys(dun).length, 'DUN');
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), baris.map(r => r.join(',')).join('\n') + '\n');
 console.log('data/pbb-sarawak.csv', baris.length - 1, 'cawangan');

@@ -182,9 +182,13 @@
   /** v7.55: senarai kerusi yang dipegang (satu atau dua: Parlimen + DUN serentak). */
   function semuaStatus(p) { var pru = getPRU(p), h = []; if (pru.status) { h.push(pru.status); } if (pru.statusKedua) { h.push(pru.statusKedua); } return h; }
   function pegang(p, jenis) { return semuaStatus(p).some(function (s) { return s.jenis === jenis; }); }
+  function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function getPRU(p) {
     var b = dasar(), x = p && p.pru && typeof p.pru === 'object' ? p.pru : {};
     for (var k in b) { if (x[k] === undefined) { x[k] = b[k]; } }
+    if (p && p.parti === 'PBB' && !x.jadualPBB && !x.sejarah.length && !x.aktif && sarawak()) {          // v8.33: PRN Sarawak (jadual sendiri)
+      var j = sarawak().jadual(p); x.tahunPRU = j.tahun; x.bulanPRU = j.bulan; x.jadualPBB = true;
+    }
     return x;
   }
   function simpanPRU(pru, kesan, opts) {
@@ -197,6 +201,7 @@
 
   /** Profil kawasan: ditentukan secara tetap daripada negeri, bahagian dan DUN pemain. */
   function profilKawasan(p) {
+    var sw = p && p.parti === 'PBB' && sarawak() ? sarawak().maklumat(p) : null; if (sw) { return sw.profil; }          // v8.33
     var nama = ((p.bahagian || '') + ' ' + (p.dun || '') + ' ' + (p.negeri || '')).toLowerCase();
     if (/kuala lumpur|putrajaya|labuan|petaling|shah alam|klang|subang|johor bahru|george town|georgetown|ipoh|kuching|kota kinabalu|seremban|melaka|bangi|cheras|kepong|setiawangsa|lembah pantai|bandar|selayang|ampang|puchong|damansara/.test(nama)) { return 'URBAN'; }
     var h = hash(p.bahagian + '|' + p.dun) % 10;
@@ -272,7 +277,7 @@
       campaignDaysLeft: CONFIG.HARI, hari: 0, voterSupport: 0, campaignFunds: 0, jentera: 70,
       isThreeCorneredFight: false, manifestoChoice: [], partiPopulariti: partiPopulariti(p, o), isuTempatan: isu,
       perluRunding: false, runding: null, kerusi: null, kejutanHari: {}, kejutanAktif: null, finalDigunakan: {},
-      dermaGuna: 0, risikoSprm: 0, risikoFitnah: 0, log: [], lawan: lawanPool(profil), ditolak: {}, baki3: false
+      dermaGuna: 0, risikoSprm: 0, risikoFitnah: 0, log: [], lawan: (p.parti === 'PBB' && sarawak() && sarawak().maklumat(p) ? sarawak().maklumat(p).lawan : lawanPool(profil)), ditolak: {}, baki3: false
     };
     pru.krisisSudah = true;
     var tamatKab = K && K.tamatPenggal ? K.tamatPenggal() : null;       // Parlimen / Dewan dibubarkan: peranan kerajaan tamat
@@ -322,7 +327,7 @@
       return { ok: true, diluluskan: false, mesej: 'Permohonan ' + (jenis === 'DUN' ? 'kerusi DUN' : 'kerusi Parlimen') + ' tidak diluluskan oleh Majlis Tertinggi (peluang ' + kl.peluang + '%).' + (semuaTolak ? '' : ' Anda boleh memohon jenis lain.') };
     }
     var kod = jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun) : ((p.kod && p.kod.parlimen) || p.bahagian);
-    a.candidateType = jenis;
+    a.candidateType = jenis; a.ofsetKerusi = jenis === 'DUN' && !lain && sarawak() ? sarawak().ofset(p) : 0;
     a.kerusi = { jenis: jenis, nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: kod || '' };
     a.calonImport = null;
     if (lain) {                                                                // v8.17: kerusi lain (calon import)
@@ -492,7 +497,7 @@
     }
     var biasa = ['ceramah', 'ziarah', 'digital', 'rehat', 'derma'].map(function (k) { return baris(TINDAKAN[k], false); });
     var fin = hariFinal(a) ? ['jelajah', 'bantuan', 'media'].map(function (k) { return baris(FINAL[k], true); }) : [];
-    var lw = lawanPool(a.constituencyType), pk = pecahan(a);
+    var lw = a.lawan && a.lawan.length ? a.lawan : lawanPool(a.constituencyType), pk = pecahan(a);
     return { aktif: a, hariSemasa: a.hari, hariBaki: a.campaignDaysLeft, hariFinal: hariFinal(a), biasa: biasa, final: fin, pecahan: pk, lawan: lw,
       profil: a.constituencyType, profilNama: PROFIL[a.constituencyType], ikonProfil: IKON_PROFIL[a.constituencyType], kejutan: a.kejutanAktif ? kejutanPapar(a) : null,
       janji: a.manifestoChoice.map(janjiId) };
@@ -500,7 +505,7 @@
 
   /** Pecahan undi semasa (anggaran) untuk paparan. */
   function pecahan(a) {
-    var s1 = clamp(30 + a.voterSupport * 0.4, 5, 95), lw = lawanPool(a.constituencyType);
+    var s1 = clamp(30 + a.voterSupport * 0.4 + (a.ofsetKerusi || 0), 5, 95), lw = a.lawan && a.lawan.length ? a.lawan : lawanPool(a.constituencyType);
     if (!a.isThreeCorneredFight) { return [{ nama: 'Anda (UMNO)', nilai: round1(s1), ke: 'anda' }, { nama: lw[0], nilai: round1(100 - s1), ke: 'lawan' }]; }
     var anda = s1 * CONFIG.PECAH_3;
     return [{ nama: 'Anda (UMNO)', nilai: round1(anda), ke: 'anda' }, { nama: 'Rakan Gabungan', nilai: round1(s1 - anda), ke: 'rakan' }, { nama: lw[0], nilai: round1(100 - s1), ke: 'lawan' }];
@@ -606,14 +611,15 @@
     var isuTepat = ids.indexOf(a.isuTempatan) >= 0;
     var rawak = (r() + r() + r() - 1.5) * 4;                       // sehingga lebih kurang +/-6
     var isu = (isuTepat ? 2 : -1) + antara(r, -2, 2);
-    var s1 = clamp(30 + a.voterSupport * 0.4 + rawak * 0.5 + isu * 0.5, 5, 95);
+    var ofsetKerusi = a.ofsetKerusi || 0;                                                                         // v8.33: kekuatan kerusi PBB ikut etnik (ditetapkan semasa mencalon)
+    var s1 = clamp(30 + a.voterSupport * 0.4 + rawak * 0.5 + isu * 0.5 + ofsetKerusi, 5, 95);
     var anda, rakan = 0, lawan;
     if (a.isThreeCorneredFight) { anda = s1 * CONFIG.PECAH_3; rakan = s1 - anda; lawan = 100 - s1; }
     else { anda = s1; lawan = 100 - s1; }
     var menang = anda > Math.max(rakan, lawan);
     var pecah = [{ nama: 'Anda (UMNO)', nilai: round1(anda), ke: 'anda' }];
     if (a.isThreeCorneredFight) { pecah.push({ nama: 'Rakan Gabungan', nilai: round1(rakan), ke: 'rakan' }); }
-    pecah.push({ nama: lawanPool(prof)[0], nilai: round1(lawan), ke: 'lawan' });
+    pecah.push({ nama: (a.lawan && a.lawan[0]) || lawanPool(prof)[0], nilai: round1(lawan), ke: 'lawan' });
     var c = CONFIG[a.candidateType], jumlah = Math.round(antara(r, c.pengundi[0], c.pengundi[1]) / 100) * 100;
     var lawanTertinggi = Math.max(rakan, lawan);
     var majoritiPct = Math.abs(anda - lawanTertinggi);

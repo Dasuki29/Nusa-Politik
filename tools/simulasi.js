@@ -303,7 +303,7 @@ function daftarBaharu(seed) {
   const jantina = pick(['Lelaki', 'Perempuan']), umur = 18 + Math.floor(R() * 40);
   const dem = D.tentukanDemografi(jantina, umur);
   const kel = SYP.kelayakan(jantina, umur, parti), syOk = SYP.SENARAI.filter(k => kel[k].boleh);
-  const prof = S.buildPlayerProfile({ parti: parti, nama: 'Bot ' + seed, demografik: dem, cawangan: caw, avatar: pick(g.MyPolitikAvatar.LIST).kod, sayap: pick(syOk), difficultyLevel: pick(['EASY', 'NORMAL', 'HARDCORE']), tahunAhli: Math.floor(R() * 10) });
+  const prof = S.buildPlayerProfile({ parti: parti, dunInfo: PBB ? JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'))[parseInt(bahagian.kod, 10)] : null, nama: 'Bot ' + seed, demografik: dem, cawangan: caw, avatar: pick(g.MyPolitikAvatar.LIST).kod, sayap: pick(syOk), difficultyLevel: pick(['EASY', 'NORMAL', 'HARDCORE']), tahunAhli: Math.floor(R() * 10) });
   const r = S.savePlayer(prof); if (!r.ok) { throw new Error('daftar gagal ' + r.ralat); }
   return prof;
 }

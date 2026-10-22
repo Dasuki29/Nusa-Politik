@@ -28,6 +28,16 @@
   ["Pindah cawangan PBB (antara Daerah Mengundi dan DUN) belum dibuka; menyusul dalam kemas kini seterusnya.", "Transferring PBB branches (between polling districts and state seats) is not open yet; coming in a later update."],
   ["Pindah cawangan UMNO (antara Daerah Mengundi dan DUN) belum dibuka; menyusul dalam kemas kini seterusnya.", "Transferring PBB branches (between polling districts and state seats) is not open yet; coming in a later update."],
   ["PBB bertanding kerusi DUN (PRN Sarawak) pada fasa ini; kerusi Parlimen menyusul", "PBB contests state seats (Sarawak state election) at this stage; Parliament seats come later"],
-  ["UMNO bertanding kerusi DUN (PRN Sarawak) pada fasa ini; kerusi Parlimen menyusul", "PBB contests state seats (Sarawak state election) at this stage; Parliament seats come later"]
+  ["UMNO bertanding kerusi DUN (PRN Sarawak) pada fasa ini; kerusi Parlimen menyusul", "PBB contests state seats (Sarawak state election) at this stage; Parliament seats come later"],
+  ["🗳️ Kerusi DUN Anda", "🗳️ Your State Seat"],
+  ["DUN (Bahagian)", "State seat (Division)"],
+  ["Pemilih ({x} daerah mengundi)", "Voters ({x} polling districts)"],
+  ["Melayu/Melanau", "Malay/Melanau"],
+  ["Dayak (Iban, Bidayuh, Orang Ulu)", "Dayak (Iban, Bidayuh, Orang Ulu)"],
+  ["Tahap kerusi", "Seat level"],
+  ["({x} sokongan asas)", "({x} base support)"],
+  ["Lawan utama (label simulasi)", "Main opponents (simulation labels)"],
+  ["Sederhana", "Moderate"],
+  ["Kekuatan kerusi ialah andaian permainan berdasarkan komposisi etnik pemilih (kerusi majoriti Cina lebih sukar, kerusi Bumiputera lebih selamat), bukan ramalan atau data keputusan sebenar.", "Seat strength is a game assumption based on the ethnic composition of voters (Chinese-majority seats are harder, Bumiputera seats are safer), not a forecast or real result data."]
   ]);
 })();

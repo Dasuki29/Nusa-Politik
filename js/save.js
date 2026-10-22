@@ -183,7 +183,8 @@
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: input.parti === 'PBB' ? 'PBB' : 'UMNO',            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
+      parti: input.parti === 'PBB' ? 'PBB' : 'UMNO',
+      dunInfo: input.parti === 'PBB' && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
       sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || (input.parti === 'PBB' && input.sayap === 'wanita' && d.kod === 'puteri')) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
       ip: DEFAULTS.ip,
