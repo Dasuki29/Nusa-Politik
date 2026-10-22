@@ -13,6 +13,7 @@
     return '<div class="loy__row"><div class="loy__label"><span>' + esc(label) + '</span><b>' + nilai + '%</b></div><div class="progress progress--sm' + (bahaya ? ' progress--danger' : '') + '" role="progressbar" aria-label="' + esc(label) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + nilai + '"><div class="progress__bar" style="width:' + nilai + '%"></div></div></div>';
   }
   var pilih = null;
+  function sp(t) { return '<span>' + esc(t) + '</span>'; }
   function kad(p) {
     try {
       var r = GL.ringkasan(p), j = r.jawatan; if (p.tamat || (!j && !r.lobi)) { return ''; }
@@ -30,15 +31,15 @@
       GL.SYARIKAT.forEach(function (s) {
         var ps = r.senarai.filter(function (x) { return x.id.indexOf(s.id + '_') === 0; }); if (!ps.length) { return; }
         var tertinggi = ps.reduce(function (a, x) { return x.ip > a.ip ? x : a; }, ps[0]);
-        h += '<div style="margin:8px 0"><b>' + esc(s.nama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">' + ps.length + ' jawatan, ' + esc(tertinggi.tahapNama) + ' dari IP ' + tertinggi.ip + '</div>' +
-          '<button type="button" class="btn btn--sm' + (pilih === s.id ? ' btn--gold' : '') + '" data-act="glc-syarikat" data-id="' + esc(s.id) + '">' + (pilih === s.id ? 'Dipilih' : 'Pilih syarikat') + '</button></div>';
+        h += '<div style="margin:8px 0"><b>' + esc(s.ikon) + ' ' + sp(s.sektor) + '</b> <span class="note">' + esc(s.nama) + '</span><div class="note" style="font-size:.78rem;margin:2px 0 4px">' + ps.length + ' jawatan, ' + esc(tertinggi.tahapNama) + ' dari IP ' + tertinggi.ip + '</div>' +
+          '<button type="button" class="btn btn--sm' + (pilih === s.id ? ' btn--gold' : '') + '" data-act="glc-syarikat" data-id="' + esc(s.id) + '">' + (pilih === s.id ? 'Dipilih' : 'Pilih sektor') + '</button></div>';
       });
       h += '<p class="note" style="font-size:.78rem">Tempoh 3 tahun. Setiap bulan: Risiko Konflik Kepentingan +2 dan Risiko Audit SPRM +1. Lobi kekal terbuka sehingga pilihan raya berikutnya.</p></section>';
       if (pilih) {
         var sy = GL.SYARIKAT.filter(function (s) { return s.id === pilih; })[0];
-        h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏢 ' + esc(sy.nama) + '</h2>';
+        h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + esc(sy.ikon) + ' ' + esc(sy.nama) + '</h2><p class="note" style="font-size:.78rem">' + sp(sy.sektor) + '</p>';
         r.senarai.filter(function (x) { return x.id.indexOf(pilih + '_') === 0; }).forEach(function (x) {
-          h += '<div style="margin:8px 0"><b>' + esc(x.tahapNama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">Kos IP ' + x.ip + ' dan ' + esc(rm(x.myr)) + ', peluang ' + x.peluang + '%, ganjaran ' + esc(rm(x.gaji)) + ' dan +' + x.ipBulan + ' IP sebulan</div>' +
+          h += '<div style="margin:8px 0"><b>' + esc(x.tahapNama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">Kos IP ' + x.ip + ' dan ' + esc(rm(x.myr)) + ', peluang ' + x.peluang + '%, ganjaran ' + esc(rm(x.gaji)) + ' dan +' + x.ipBulan + ' IP sebulan' + (x.reputasi ? ', ' + sp('reputasi +' + x.reputasi) : '') + (x.akarUmbi ? ', ' + sp('akar umbi +' + x.akarUmbi) : '') + '</div>' +
             '<button type="button" class="btn btn--sm' + (x.boleh ? '' : ' is-off') + '" data-act="glc-lobi" data-id="' + esc(x.id) + '"' + (x.boleh ? '' : ' disabled title="' + esc(x.sebab) + '"') + '>Lobi</button></div>';
         });
         h += '<button type="button" class="btn btn--sm" data-act="glc-kembali">Kembali</button></section>';

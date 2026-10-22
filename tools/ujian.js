@@ -856,33 +856,33 @@ function glcPemain(o) {
   return g.MyPolitikGLC;
 }
 ujian('glc: lobi hanya selepas dibuka; kalah = tawaran lebih rendah (tiada Pengerusi); lobi lapuk ditutup', () => {
-  const GL = glcPemain(); sama(GL.lobi('spn_ahli').ok, false, 'lobi belum dibuka');
-  GL.bukaLobi('kerajaan'); sama(GL.senarai(S.loadPlayer()).length, 9);
-  GL.bukaLobi('kalah'); const s = GL.senarai(S.loadPlayer()); sama(s.length, 6); betul(!s.some((x) => /^Pengerusi/.test(x.nama)), 'tiada Pengerusi');
+  const GL = glcPemain(); sama(GL.lobi('kewangan_ahli').ok, false, 'lobi belum dibuka');
+  GL.bukaLobi('kerajaan'); sama(GL.senarai(S.loadPlayer()).length, 18, '6 sektor x 3 tahap');
+  GL.bukaLobi('kalah'); const s = GL.senarai(S.loadPlayer()); sama(s.length, 12); betul(!s.some((x) => /^Pengerusi/.test(x.nama)), 'tiada Pengerusi');
   GL.bukaLobi(null); sama(GL.getGLC(S.loadPlayer()).lobi, null);
 });
 ujian('glc: lobi berjaya potong IP dan Dana, beri jawatan 36 bulan; gagal hilang separuh kos', () => {
   const GL = glcPemain(); GL.bukaLobi('kerajaan'); const a = S.loadPlayer();
-  let r = GL.lobi('spn_ahli', { rng: () => 0.99 }); betul(r.ok && !r.dilantik, r.ralat);
+  let r = GL.lobi('kewangan_ahli', { rng: () => 0.99 }); betul(r.ok && !r.dilantik, r.ralat);
   let b = S.loadPlayer(); sama(a.myr - b.myr, 4000, 'separuh RM8,000'); sama(a.ip - b.ip, 60, 'separuh IP 120'); sama(GL.getGLC(b).lobi.baki, 1);
-  r = GL.lobi('spn_ahli', { rng: () => 0 }); betul(r.ok && r.dilantik, r.ralat);
+  r = GL.lobi('kewangan_ahli', { rng: () => 0 }); betul(r.ok && r.dilantik, r.ralat);
   const j = GL.getGLC(S.loadPlayer()).jawatan; sama(j.tamat - j.mula, 36); sama(GL.getGLC(S.loadPlayer()).lobi, null);
-  sama(GL.lobi('apn_pengarah').ok, false, 'sudah ada jawatan');
+  sama(GL.lobi('pertanian_pengarah').ok, false, 'sudah ada jawatan');
 });
-ujian('glc: ganjaran bulanan, konflik +2, audit +1, sekali sebulan; tamat 36 bulan', () => {
-  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 });
+ujian('glc: ganjaran bulanan ikut sektor, konflik, audit, sekali sebulan; tamat 36 bulan', () => {
+  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('pertanian_pengarah', { rng: () => 0 });
   const a = S.loadPlayer(); GL.prosesBulan({ rng: () => 0.99 }); GL.prosesBulan({ rng: () => 0.99 });
-  const b = S.loadPlayer(), gl = GL.getGLC(b); sama(b.myr - a.myr, 1000); sama(gl.konflik, 2); sama(gl.audit, 1);
+  const b = S.loadPlayer(), gl = GL.getGLC(b); sama(b.myr - a.myr, 800, 'RM1,000 x0.8 (Pertanian)'); sama(gl.konflik, 3, '2 + 1 Pertanian'); sama(gl.audit, 1); sama(b.kesetiaan.akarUmbi - a.kesetiaan.akarUmbi, 2, 'akar umbi +2 sebulan');
   S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { jawatan: Object.assign({}, gl.jawatan, { tamat: 0 }), akhir: '' }) } });
   GL.prosesBulan({ rng: () => 0.99 }); sama(GL.getGLC(S.loadPlayer()).jawatan, null, 'tamat tempoh');
 });
 ujian('glc: tamat jika dilantik Menteri; pembaharuan hanya 6 bulan terakhir; pemecatan SPRM denda dan Integriti', () => {
-  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 });
+  const GL = glcPemain(); GL.bukaLobi('kerajaan'); GL.lobi('pertanian_pengarah', { rng: () => 0 });
   sama(GL.baharui().ok, false, 'terlalu awal');
   let p = S.loadPlayer(), gl = GL.getGLC(p); S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { audit: 80, konflik: 70 }) } });
   const m0 = S.loadPlayer().myr; GL.prosesBulan({ rng: () => 0 }); p = S.loadPlayer();
   sama(GL.getGLC(p).jawatan, null, 'dipecat'); sama(m0 - p.myr, 5000, 'denda');
-  GL.bukaLobi('kerajaan'); GL.lobi('apn_pengarah', { rng: () => 0 }); p = S.loadPlayer(); gl = GL.getGLC(p);
+  GL.bukaLobi('kerajaan'); GL.lobi('pertanian_pengarah', { rng: () => 0 }); p = S.loadPlayer(); gl = GL.getGLC(p);
   S.applyEffects({}, { kiraTindakan: false, patch: { glc: Object.assign({}, gl, { jawatan: Object.assign({}, gl.jawatan, { tamat: gl.jawatan.mula + 5 }) }) } });
   const t0 = GL.getGLC(S.loadPlayer()).jawatan.tamat; betul(GL.baharui().ok, 'boleh baharui'); sama(GL.getGLC(S.loadPlayer()).jawatan.tamat, t0 + 36);
   S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign({}, KB.getKabinet(S.loadPlayer()), { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH' }), glc: Object.assign({}, GL.getGLC(S.loadPlayer()), { akhir: '' }) } });
@@ -927,13 +927,13 @@ ujian('komuniti: syarat peringkat dan umur; lobi berjaya potong kos dan beri jaw
   const KM = kmPemain({ umur: 28 }); let p = S.loadPlayer();
   const s0 = (id) => KM.senarai(S.loadPlayer()).filter((x) => x.id === id)[0];
   sama(s0('ajk_masjid').boleh, false, 'AJK Masjid perlu umur 30'); betul(/umur/i.test(s0('ajk_masjid').sebab));
-  sama(s0('ajk_pibg').boleh, true, 'PIBG umur 25 + Cawangan'); sama(s0('sukan_negeri').boleh, false, 'perlu Bahagian');
+  sama(s0('ajk_pibg').boleh, true, 'PIBG umur 25 + Cawangan'); sama(s0('sukan_negeri_bola').boleh, false, 'perlu Bahagian');
   const ip0 = p.ip, m0 = p.myr; let r = KM.lobi('ajk_pibg', { rng: () => 0.01 }); betul(r.ok && r.dilantik, r.ralat);
   p = S.loadPlayer(); sama(ip0 - p.ip, 30); sama(m0 - p.myr, 300); sama(KM.getKomuniti(p).jawatan.length, 1);
   sama(KM.lobi('ajk_pibg', { rng: () => 0.01 }).ok, false, 'sudah dipegang');
   KM.lobi('belia_kampung', { rng: () => 0.01 }); P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] });
   betul(KM.lobi('belia_negeri', { rng: () => 0.01 }).ok); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 3);
-  sama(KM.senarai(S.loadPlayer()).filter((x) => x.id === 'sukan_negeri')[0].boleh, false, 'had 3'); sama(KM.lobi('sukan_negeri').ok, false);
+  sama(KM.senarai(S.loadPlayer()).filter((x) => x.id === 'sukan_negeri_bola')[0].boleh, false, 'had 3'); sama(KM.lobi('sukan_negeri_bola').ok, false);
 });
 ujian('komuniti: lobi gagal hilang separuh kos dan tunggu 6 bulan', () => {
   const KM = kmPemain({ umur: 35 }); let p = S.loadPlayer(); const ip0 = p.ip, m0 = p.myr;
@@ -943,7 +943,7 @@ ujian('komuniti: lobi gagal hilang separuh kos dan tunggu 6 bulan', () => {
 });
 ujian('komuniti: ganjaran bulanan (akar umbi, IP, Dana) sekali sebulan; Agensi menambah risiko Audit', () => {
   const KM = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] } });
-  betul(KM.lobi('ajk_masjid', { rng: () => 0.01 }).ok); betul(KM.lobi('sukan_negeri', { rng: () => 0.01 }).ok);
+  betul(KM.lobi('ajk_masjid', { rng: () => 0.01 }).ok); betul(KM.lobi('sukan_negeri_badminton', { rng: () => 0.01 }).ok);
   let p = S.loadPlayer(); const m0 = p.myr, ip0 = p.ip, au0 = p.kesetiaan.akarUmbi;
   KM.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
   sama(p.myr - m0, 300, 'sukan negeri RM300'); betul(p.ip > ip0 && p.ip - ip0 <= 3, 'IP bertambah (diredam IP tinggi)'); sama(p.kesetiaan.akarUmbi - au0, 2, 'akar umbi +2');
@@ -956,9 +956,9 @@ ujian('komuniti: Belia tamat selepas 40 tahun; jawatan bergaji tinggi tidak bers
   P.tetap({ tahun: 2027, bulan: 4 }); const e = KM.prosesBulan({ rng: () => 0.99 }).peristiwa;
   betul(e.some((x) => x.jenis === 'komuniti_tamat'), 'peristiwa tamat'); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 0);
   const K2 = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], pru: undefined } });
-  P.tetap({ glc: { lobi: null, jawatan: { id: 'spn_ahli', nama: 'Ahli Lembaga, Syarikat Pelaburan Nusa', tahap: 'ahli', mula: 1, tamat: 9999999, gaji: 1500, ip: 3 }, konflik: 0, audit: 0 } });
-  const s = K2.senarai(S.loadPlayer()); sama(s.filter((x) => x.id === 'sukan_nasional')[0].boleh, false);
-  betul(/GLC/.test(s.filter((x) => x.id === 'sukan_nasional')[0].sebab) || true);
+  P.tetap({ glc: { lobi: null, jawatan: { id: 'kewangan_ahli', nama: 'Ahli Lembaga, Syarikat Pelaburan Nusa', tahap: 'ahli', mula: 1, tamat: 9999999, gaji: 1500, ip: 3 }, konflik: 0, audit: 0 } });
+  const s = K2.senarai(S.loadPlayer()); sama(s.filter((x) => x.id === 'sukan_nasional_bola')[0].boleh, false);
+  betul(/GLC/.test(s.filter((x) => x.id === 'sukan_nasional_bola')[0].sebab) || true);
 });
 /* ---------- Gelaran NPC (v8.24) ---------- */
 ujian('gelaran NPC: Tan Sri/Dato\' ikut tahap; perempuan boleh Datin/Datin Paduka/Puan Sri; Bahagian sebahagian sahaja; Cawangan tiada', () => {
@@ -1031,6 +1031,38 @@ ujian('pindah cawangan: tempoh menunggu menyekat jawatan Cawangan/Bahagian sahaj
   P.tetap({ tahun: 2027, bulan: 4 }); sama(PD.bakiMenunggu(S.loadPlayer()), 0, 'tamat 12 bulan');
   sama(PD.negeriTerlarang('Sarawak'), true); sama(PD.negeriTerlarang('Selangor'), false);
   const r = PD.pindah(Object.assign({}, lain, { negeri: 'Sarawak', idSheet: '999/001/001/001' })); sama(r.ok, false);
+});
+/* ---------- Sukan, Ketua Whip, Mahasiswa, sektor GLC (v8.29) ---------- */
+ujian('komuniti: sukan ikut jenis (kos dan ganjaran berbeza); ID lama dipetakan ke Badminton', () => {
+  const KM = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] } });
+  const j = (id) => KM.senarai(S.loadPlayer()).filter((x) => x.id === id)[0];
+  sama(j('sukan_negeri_bola').myr, 4200, 'bola x1.4'); sama(j('sukan_negeri_takraw').myr, 2400); sama(j('sukan_negeri_hoki').myr, 2100); sama(j('sukan_negeri_badminton').myr, 3000);
+  sama(j('sukan_negeri_bola').ganjaran.akarUmbi, 1); sama(j('sukan_negeri_takraw').ganjaran.akarUmbi, 2); sama(j('sukan_negeri_hoki').risiko.konflik, 0); sama(j('sukan_negeri_bola').risiko.konflik, 2);
+  betul(KM.lobi('sukan_negeri_bola', { rng: () => 0.01 }).ok); betul(KM.lobi('sukan_negeri_takraw', { rng: () => 0.01 }).ok, 'sukan lain boleh serentak'); sama(KM.lobi('sukan_negeri_bola').ok, false, 'sukan sama');
+  P.tetap({ komuniti: { jawatan: [{ id: 'sukan_negeri', mula: 1, tamat: 9999999, konflik: 0, audit: 0 }], cuba: {}, akhir: '', sejarah: [] } });
+  sama(KM.getKomuniti(S.loadPlayer()).jawatan[0].id, 'sukan_negeri_badminton', 'ID lama dipetakan');
+});
+ujian('komuniti: Ketua Whip PBT perlu Ahli Majlis dan menggantikannya (had 3 tidak bertambah); Mahasiswa had umur 30', () => {
+  const KM = kmPemain({ umur: 28, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], pru: Object.assign({}, g.MyPolitikPRU.getPRU(S.loadPlayer() || {}), { status: { jenis: 'ADUN', kerusi: 'Uji', sejakTahun: 2026, sejakBulan: 1, kerajaan: true } }) } });
+  const j = (id) => KM.senarai(S.loadPlayer()).filter((x) => x.id === id)[0];
+  sama(j('pbt_whip').boleh, false, 'perlu Ahli Majlis'); betul(/Ahli Majlis PBT/.test(j('pbt_whip').sebab), j('pbt_whip').sebab);
+  sama(j('mahasiswa').boleh, true, 'umur 28'); betul(KM.lobi('mahasiswa', { rng: () => 0.01 }).ok);
+  betul(KM.lobi('pbt', { rng: () => 0.01 }).ok, 'Ahli Majlis'); betul(KM.lobi('belia_kampung', { rng: () => 0.01 }).ok); sama(KM.getKomuniti(S.loadPlayer()).jawatan.length, 3);
+  sama(j('pbt_whip').boleh, true, 'menggantikan, jadi tidak terhalang had 3');
+  const r = KM.lobi('pbt_whip', { rng: () => 0.01 }); betul(r.ok && r.dilantik, r.ralat);
+  const ids = KM.getKomuniti(S.loadPlayer()).jawatan.map((x) => x.id); sama(ids.length, 3); betul(ids.indexOf('pbt_whip') >= 0 && ids.indexOf('pbt') < 0, ids.join());
+  sama(j('pbt').boleh, false, 'Ahli Majlis tidak boleh dilobi semasa Ketua Whip');
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama', umur: 32 }); P.tetap({ ip: 700, myr: 100000, jawatan: 'Ketua Cawangan', jawatanList: [pegang('ketua_cawangan')] });
+  sama(KM.senarai(S.loadPlayer()).filter((x) => x.id === 'mahasiswa')[0].boleh, false, 'umur 32 melebihi 30');
+});
+ujian('glc: sektor melaraskan ganjaran dan risiko; jawatan lama (spn/lpm/apn) dipetakan ke sektor', () => {
+  const GL = glcPemain(); GL.bukaLobi('kerajaan');
+  const s = (id) => GL.senarai(S.loadPlayer()).filter((x) => x.id === id)[0];
+  sama(s('kewangan_pengerusi').gaji, 3500, '2500 x1.4'); sama(s('kewangan_pengerusi').konflik, 3); sama(s('kewangan_pengerusi').audit, 2);
+  sama(s('pendidikan_ahli').reputasi, 1); sama(s('teknologi_ahli').ipBulan, 4); sama(s('sdm_pengarah').akarUmbi, 1); sama(s('pengangkutan_pengarah').gaji, 1200);
+  sama(GL.SYARIKAT.length, 6);
+  P.tetap({ glc: { lobi: null, jawatan: { id: 'lpm_ahli', nama: 'Ahli Lembaga, Lembaga Pelabuhan Maritim', tahap: 'ahli', mula: 1, tamat: 9999999, gaji: 1500, ip: 3 }, konflik: 0, audit: 0, akhir: '', sejarah: [] } });
+  const j = GL.getGLC(S.loadPlayer()).jawatan; sama(j.id, 'pengangkutan_ahli'); betul(/Nusa Pengangkutan Awam/.test(j.nama), j.nama); sama(j.gaji, 1500, 'gaji lama dihormati');
 });
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });

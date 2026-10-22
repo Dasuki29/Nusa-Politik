@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v8.29 (2026-10-22)
+
+Nama jawatan komuniti, pilihan sukan dan sektor GLC (maklum balas pemain).
+
+### Berubah
+- **Nama jawatan:** Yang Dipertua PIBG, Pengerusi Masjid, Pengerusi Persatuan Belia, Pengerusi Majlis Belia Negeri. Jenis "Persatuan Belia" menjadi "Belia & Mahasiswa".
+- **Baharu:** Pengerusi Persatuan Mahasiswa (Cawangan, umur 18 hingga 30, kos rendah) dan **Ketua Whip PBT** (perlu memegang Ahli Majlis PBT, menggantikannya, IP 160, RM 3,000, ganjaran lebih tinggi, Konflik 2).
+- **Pilihan sukan:** Persatuan Sukan Negeri/Kebangsaan ada 5 sukan (Bola Sepak, Badminton, Sepak Takraw, Hoki, Rugbi) dengan kos Dana, ganjaran dan risiko berbeza. Boleh pegang sukan berlainan serentak (had 3 jawatan kekal). ID lama dipetakan ke Badminton.
+- **Sektor GLC:** 6 sektor (Pembiayaan/Kewangan, Pendidikan, Teknologi, Sumber Manusia, Pertanian/Ladang, Pengangkutan) menggantikan 3 syarikat lama; pelarasan gaji, IP, reputasi, akar umbi, Konflik dan Audit. Jawatan GLC lama dipetakan (Pelaburan jadi Kewangan, Pelabuhan jadi Pengangkutan, Agensi Negeri jadi Pertanian) dan ganjaran lama dihormati.
+- Tutorial BM/EN, terjemahan, 3 ujian unit baharu dan ujian pelayar EN dikemas kini.
+
+### Andaian
+- Semua angka ialah penyeimbang simulasi, belum diuji dengan data main pemain. Had umur Mahasiswa (30) ialah andaian.
+
 ## v8.28 (2026-10-22)
 
 Pindah Cawangan (maklum balas pemain: mahu menukar kawasan, cth Kuala Selangor ke Setiawangsa).
