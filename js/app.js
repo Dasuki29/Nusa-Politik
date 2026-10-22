@@ -32,7 +32,7 @@
     resume: $('resume'), resumeText: $('resume-text'), resumeNew: $('btn-resume-new')
   };
 
-  var state = { data: null, negeri: null, bahagian: null, dun: null, cawangan: null, parti: 'UMNO' };
+  var state = { data: null, negeri: null, bahagian: null, dun: null, cawangan: null, parti: 'UMNO', blok: null, blokManual: false };
   var PT = window.MyPolitikParti;
 
   /* ---------- Pembantu UI ---------- */
@@ -142,7 +142,7 @@
     setError('bahagian'); sembunyiInfo();
     reset(el.cawangan, 'Pilih DUN dahulu');
     if (state.bahagian && state.parti === 'PBB') {               // v8.32: DUN ialah Bahagian PBB; terus pilih cawangan (DM)
-      state.dun = state.bahagian.dun[0];
+      state.dun = state.bahagian.dun[0]; cadangBlok();
       isi(el.cawangan, 'Pilih cawangan (daerah mengundi)', state.dun.cawangan, function (c) { return c.nama; });
     } else if (state.bahagian && state.bahagian.tiadaDUN) {            // v7.14: Wilayah Persekutuan: tiada DUN, terus pilih cawangan
       state.dun = state.bahagian.dun[0];
@@ -320,8 +320,16 @@
     if (tb) { tb.textContent = pbb ? 'Bahagian (DUN)' : 'Bahagian (Parlimen)'; }
     if (tc) { tc.textContent = pbb ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb; }
+    var fb = $('f-blok'); if (fb) { fb.hidden = !pbb; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
   }
+  /** v9.0: cadangkan blok (Bumiputera/Pesaka) mengikut majoriti etnik DUN; pilihan manual dihormati. */
+  function cadangBlok() {
+    var SW = window.MyPolitikSarawak, info = state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null;
+    if (!state.blokManual) { state.blok = SW && info ? SW.blokLalai(info) : 'bumiputera'; }
+    var r = el.form.querySelector('input[name="blokPBB"][value="' + state.blok + '"]'); if (r) { r.checked = true; }
+  }
+  Array.prototype.forEach.call(el.form.querySelectorAll('input[name="blokPBB"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { state.blok = r.value; state.blokManual = true; } }); });
   async function muatDataPBB() {
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
@@ -344,7 +352,7 @@
   Array.prototype.forEach.call(el.form.querySelectorAll('input[name="parti"]'), function (r) {
     r.addEventListener('change', function () {
       if (!r.checked) { return; }
-      state.parti = r.value; if (PT) { PT.tetapPilihan(r.value); }
+      state.parti = r.value; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(r.value); }
       suaikanBorangParti(); muatData();
     });
   });
@@ -392,7 +400,7 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ parti: state.parti, dunInfo: state.parti === 'PBB' && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: state.parti === 'PBB' && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -1023,9 +1031,28 @@
     return h;
   }
 
+  /** v9.0: kad Imbangan Bumiputera & Pesaka (PBB). */
+  function kadBlokPBB(p) {
+    var SW = W.MyPolitikSarawak, r = SW && SW.ringkasBlok ? SW.ringkasBlok(p) : null; if (!r) { return ''; }
+    function ef(n) { return n === 0 ? 'Sama rata' : n < 0 ? 'Lebih mudah (' + n + ')' : 'Lebih sukar (+' + n + ')'; }
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">⚖️ Imbangan Bumiputera &amp; Pesaka</h2>' +
+      '<p class="note" style="font-size:.78rem">Jawatan Pusat dibahagi antara dua blok. Presiden mengikut giliran, Timbalan Presiden daripada blok yang satu lagi.</p>' +
+      '<div class="kv"><span>Blok anda</span><b>' + r.ikon + ' ' + esc(r.nama) + '</b></div>' +
+      '<div class="kv"><span>Giliran Presiden (setiap ' + r.giliranTahun + ' tahun)</span><b>' + esc(r.giliranNama) + '</b></div>' +
+      '<div class="kv"><span>Presiden</span><b>' + esc(ef(r.ofsetPresiden)) + '</b></div>' +
+      '<div class="kv"><span>Timbalan Presiden</span><b>' + esc(ef(r.ofsetTP)) + '</b></div>' +
+      '<div class="kv"><span>Naib Presiden dan Ahli MKT</span><b>' + esc(ef(r.ofsetNaib)) + '</b></div>' +
+      '<div class="kv"><span>Sokongan antara blok</span><b>' + r.sokongan + '/100</b></div>' +
+      '<div class="meter__track" role="progressbar" aria-valuenow="' + r.sokongan + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + r.sokongan + '%"></i></div>' +
+      '<p class="note" style="font-size:.78rem">Sokongan antara blok mengurangkan kelemahan blok anda dan memberi sedikit bonus di semua jawatan Pusat. Ia susut 1 sebulan sehingga 30. Angka ialah andaian permainan.</p>' +
+      '<button type="button" class="btn btn--primary btn--sm" data-act="blok-dekati" data-fk="blok-dekati"' + (r.sudahBulanIni ? ' disabled' : '') + '>Dekati blok ' + esc(r.blok === 'pesaka' ? 'Bumiputera' : 'Pesaka') + ' (' + SW.BLOK_CFG.DEKATI_AP + ' AP, RM ' + fmt(SW.BLOK_CFG.DEKATI_MYR) + ')</button>' +
+      (r.sudahBulanIni ? '<p class="note" style="font-size:.78rem">Sudah dilakukan bulan ini.</p>' : '') + '</section>';
+    return h;
+  }
+
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) + kadLaluan() +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
@@ -1575,6 +1602,7 @@
     else if (act === 'kom-jenis' || act === 'kom-kembali') { if (W.NusaKomuniti_UI) { W.NusaKomuniti_UI.pilih(act === 'kom-jenis' ? t.getAttribute('data-id') : null); } render(); }   // v8.23
     else if (act === 'kom-lobi' || act === 'kom-baharui' || act === 'kom-letak') { var kmI = t.getAttribute('data-id'), kmR = act === 'kom-lobi' ? W.MyPolitikKomuniti.lobi(kmI) : act === 'kom-baharui' ? W.MyPolitikKomuniti.baharui(kmI) : W.MyPolitikKomuniti.letak(kmI); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(kmR.ok ? kmR.mesej : kmR.ralat, kmR.ok ? (kmR.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
     else if (act === 'glc-lobi' || act === 'glc-baharui') { var gl = act === 'glc-lobi' ? W.MyPolitikGLC.lobi(t.getAttribute('data-id')) : W.MyPolitikGLC.baharui(); if (W.MyPolitikUndo && W.MyPolitikUndo.kunci) { W.MyPolitikUndo.kunci(); } render(); toast(gl.ok ? gl.mesej : gl.ralat, gl.ok ? (gl.dilantik === false ? 'ralat' : 'ok') : 'ralat'); }
+    else if (act === 'blok-dekati') { var bd = W.MyPolitikSarawak.dekati(); render(); toast(bd.ok ? bd.mesej : bd.ralat, bd.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
     else if (act === 'ke-tab') { setTab(t.getAttribute('data-v')); }
@@ -1784,7 +1812,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

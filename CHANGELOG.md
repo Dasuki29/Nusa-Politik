@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v9.0 (2026-10-22)
+
+Modul politik Sarawak bermula siri v9.x. Imbangan Bumiputera dan Pesaka dalam PBB.
+
+### Baharu
+- **Blok dalaman PBB:** pemain PBB memilih blok Bumiputera (Melayu/Melanau) atau Pesaka (Dayak) semasa pendaftaran. Cadangan lalai mengikut majoriti etnik DUN.
+- **Giliran Presiden:** bergilir setiap 5 tahun (andaian; Bumiputera 2026 hingga 2030, Pesaka 2031 hingga 2035). Pemilihan Presiden dan Timbalan Presiden Pusat/PAU dikenakan penalti jika bukan blok giliran.
+- **Sokongan antara blok** (permulaan 30, susut 1 sebulan, lantai 30): mengurangkan penalti dan memberi bonus kecil. Tindakan **Dekati blok** (3 AP, RM 1,500, sekali sebulan) menambah 12.
+- Kad **⚖️ Imbangan Bumiputera & Pesaka** di tab Profil. Ujian unit, simulasi, terjemahan EN dan tutorial dikemas kini.
+- Semua angka ialah andaian permainan, bukan data rasmi.
+
+### Belum
+- Exco negeri / Premier, kerusi Parlimen, rundingan kerusi GPS, Pindah Cawangan PBB, parti lain, penamaan MKT/PAU.
+
 ## v8.33 (2026-10-22)
 
 PRN Sarawak dan kerusi DUN untuk PBB.

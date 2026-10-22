@@ -1098,6 +1098,27 @@ ujian('PRN Sarawak (PBB): jadual 2027, kekuatan kerusi ikut etnik, lawan ikut ka
   betul(r0.anda - r1.anda > 11.9 && r0.anda - r1.anda < 12.1, 'ofset -12 mengurangkan undi: ' + r0.anda + ' vs ' + r1.anda); sama(r1.pecah[r1.pecah.length - 1].nama, 'DAP');
   S.clearPlayer();
 });
+ujian('PBB v9.0: imbangan blok Bumiputera/Pesaka (giliran Presiden, ofset jawatan Pusat, sokongan antara blok)', () => {
+  const SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  sama(SW.giliran(2026), 'bumiputera'); sama(SW.giliran(2030), 'bumiputera'); sama(SW.giliran(2031), 'pesaka'); sama(SW.giliran(2036), 'bumiputera');
+  sama(SW.blokLalai({ e: { melayu: 4, iban: 10, bidayuh: 76, orangUlu: 1 } }), 'pesaka'); sama(SW.blokLalai({ e: { melayu: 60, iban: 10, bidayuh: 1, orangUlu: 1 } }), 'bumiputera');
+  const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
+  const bina = (blok) => { const p = S.buildPlayerProfile({ parti: 'PBB', blokPBB: blok, nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }); S.savePlayer(p); return S.loadPlayer(); };
+  let p = bina('bumiputera');
+  sama(p.blokPBB, 'bumiputera'); sama(SW.sokongan(p), 30);
+  sama(SW.ofsetJawatan(p, { kod: 'presiden', peringkat: 'pusat' }), -6 - 0.9, 'giliran sendiri: -6 dan bonus umum 30 x 0.03');
+  sama(SW.ofsetJawatan(p, { kod: 'timbalan_presiden', peringkat: 'pau', kumpulan: 'utama' }), 10 - 2.4, 'bukan giliran TP: +10 tolak 30 x 0.08');
+  sama(SW.ofsetJawatan(p, { kod: 'ketua_bahagian', peringkat: 'bahagian' }), 0, 'bukan jawatan Pusat'); sama(SW.ofsetJawatan(p, { kod: 'sayap_pusat_pemuda', peringkat: 'pusat', kumpulan: 'sayap' }), 0, 'sayap tiada kesan');
+  P.tetap({ tahun: 2031 }); p = S.loadPlayer(); sama(SW.giliran(p.tahun), 'pesaka');
+  sama(SW.ofsetJawatan(p, { kod: 'presiden', peringkat: 'pusat' }), Math.round((10 - 2.4) * 10) / 10, 'giliran Pesaka: Bumiputera +10');
+  P.tetap({ tahun: 2026, ap: 10, myr: 20000 }); p = S.loadPlayer();
+  const r = SW.dekati(); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(SW.sokongan(p), 42); sama(p.ap, 7); sama(p.myr, 18500);
+  sama(SW.dekati().ok, false, 'sekali sebulan');
+  P.tetap({ bulan: 5 }); p = S.loadPlayer(); sama(SW.sokongan(p), 38, 'susut 1 sebulan (4 bulan)');
+  const pU = S.loadPlayer(); pU.parti = 'UMNO'; sama(SW.ofsetJawatan(pU, { kod: 'presiden', peringkat: 'pusat' }), 0, 'bukan PBB');
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
