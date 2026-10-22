@@ -20,7 +20,7 @@ var ASAS = [
   'js/pindah.js',
   'js/pindah-ui.js',
   'assets/images/favicon.svg', 'assets/images/favicon-32.png', 'assets/images/favicon-192.png', 'assets/images/apple-touch-icon.png',
-  'assets/images/icon-512.png', 'assets/images/icon-maskable-512.png', 'assets/images/logo.png', 'assets/images/logo-pbb.png', 'assets/images/logo-prs.svg', 'assets/images/logo-placeholder.svg',
+  'assets/images/icon-512.png', 'assets/images/icon-maskable-512.png', 'assets/images/logo.png', 'assets/images/logo-pbb.png', 'assets/images/logo-prs.jpg', 'assets/images/logo-placeholder.svg',
   'assets/images/menara-dato-onn.jpg', 'assets/images/menara-dato-onn.svg',
   'data/meta.json', 'data/negeri.json', 'data/parlimen.json', 'data/pbb-sarawak.csv', 'data/prs-sarawak.csv', 'data/pbb-dun.json'
 ];

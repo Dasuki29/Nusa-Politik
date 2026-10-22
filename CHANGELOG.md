@@ -10,12 +10,12 @@ Mod ringan untuk parti Sarawak lain: PRS dahulu (PBB kekal mod penuh).
 - **Kuota kerusi GPS:** jadual PRN 2021 daripada pengguna (PBB 48, SUPP 18, PRS 11, PDP 5; jumlah 82). Kuota asas PRS = 11. Hanya DUN dalam kuota (kedudukan 1 hingga kuota) boleh dicalonkan dalam PRN.
 - **Pengaruh GPS (0 hingga 100, mula 40):** Lobi Majlis GPS (3 AP, RM 1,500) menaikkan 8.
 - **Rundingan kuota** (12 bulan sebelum PRN, sekali setiap kitaran, 3 AP): terima (kuota asas), tuntut lebih (+3 dengan peluang 25% + Pengaruh/200, had 25% hingga 85%; berjaya hubungan -5, gagal kuota -1 dan hubungan -10), beralah (-2, hubungan +10, Pengaruh +5).
-- Kad **🤝 Pengaruh dalam GPS** (tab Profil), tutorial BM/EN, terjemahan EN dan penjenamaan (teks yang menyebut PBB dijenamakan semula PRS untuk parti mod ringan; logo sementara `assets/images/logo-prs.svg`).
+- Kad **🤝 Pengaruh dalam GPS** (tab Profil), tutorial BM/EN, terjemahan EN dan penjenamaan (teks yang menyebut PBB dijenamakan semula PRS untuk parti mod ringan; logo `assets/images/logo-prs.jpg`).
 - Pelaksanaan: pemeriksaan `parti === 'PBB'` yang bersifat umum Sarawak digantikan `SW(parti)` (PBB atau PRS); logik khusus PBB (blok, rundingan Presiden, Premier) kekal PBB sahaja. `tools/build-pbb.js` turut menjana data PRS. Ujian baharu: `tools/ujian.js` (PRS), `tools/ujian-bahasa.js`, `tools/ujian-prs.js` (pelayar), `PARTI=PRS tools/simulasi.js`.
 
 ### Andaian dan had
 - Kawasan operasi (Dayak 60%+) dan semua nombor rundingan/pengaruh ialah andaian permainan, bukan senarai kerusi PRS sebenar. Jadual kuota 2021 diambil daripada jadual yang diberi pengguna.
-- Logo PRS ialah penanda sementara; ganti dengan logo sebenar daripada anda.
+- Logo PRS (logo-prs.jpg) daripada pengguna.
 - PRS tiada Premier; portfolio Menteri Negeri guna kolam portfolio Sarawak yang sama dengan PBB.
 
 ### Belum
