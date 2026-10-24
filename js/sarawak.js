@@ -35,7 +35,7 @@
     var e = d.e, dayak = Math.round((e.iban + e.bidayuh + e.orangUlu) * 10) / 10, bumi = Math.round((100 - e.cina - e.india - e.lain) * 10) / 10;
     var tahap = e.cina >= CONFIG.CINA.sukar ? 'sukar' : e.cina >= CONFIG.CINA.marginal ? 'marginal' : bumi >= CONFIG.BUMI_SELAMAT ? 'selamat' : 'biasa';
     var profil = e.cina >= CONFIG.BANDAR_CINA ? 'URBAN' : bumi >= 80 ? 'RURAL' : 'MIXED';
-    var lawan0 = e.cina >= CONFIG.BANDAR_CINA ? ['DAP', 'PSB'] : dayak >= 50 ? ['PSB', 'PKR'] : e.melayu >= 50 ? ['PKR', 'PAS'] : ['PKR', 'PSB'];
+    var lawan0 = e.cina >= CONFIG.BANDAR_CINA ? ['DAP', 'PKR'] : dayak >= 50 ? ['PBDS Baru', 'PKR'] : e.melayu >= 50 ? ['PKR', 'PAS'] : ['PKR', 'PBDS Baru'];   // v11.0: PSB dibubarkan; label simulasi
     var lawan = p.parti === 'PSB' ? (e.cina >= CONFIG.BANDAR_CINA ? ['SUPP', 'PDP'] : dayak >= 50 ? ['PRS', 'PDP'] : ['PDP', 'SUPP']) : lawan0;   // v10.3: lawan PSB ialah parti GPS (label simulasi)
     return { nama: d.nama, parlimen: d.parlimen, pemilih: d.pemilih, bil: d.bil, melayu: e.melayu, cina: e.cina, india: e.india, dayak: dayak, bumi: bumi, lain: e.lain,
       tahap: tahap, tahapNama: TAHAP[tahap], ofset: CONFIG.OFSET[tahap], profil: profil, lawan: lawan };
@@ -94,7 +94,7 @@
     var dayak = Math.round((e.iban + e.bidayuh + e.orangUlu) * 10) / 10, bumi = Math.round((100 - e.cina - e.india - e.lain) * 10) / 10;
     var tahap = e.cina >= CONFIG.CINA.sukar ? 'sukar' : e.cina >= CONFIG.CINA.marginal ? 'marginal' : bumi >= CONFIG.BUMI_SELAMAT ? 'selamat' : 'biasa';
     var profil = e.cina >= CONFIG.BANDAR_CINA ? 'URBAN' : bumi >= 80 ? 'RURAL' : 'MIXED';
-    var lawan = e.cina >= CONFIG.BANDAR_CINA ? ['DAP', 'PSB'] : dayak >= 50 ? ['PSB', 'PKR'] : e.melayu >= 50 ? ['PKR', 'PAS'] : ['PKR', 'PSB'];
+    var lawan = e.cina >= CONFIG.BANDAR_CINA ? ['DAP', 'PKR'] : dayak >= 50 ? ['PBDS Baru', 'PKR'] : e.melayu >= 50 ? ['PKR', 'PAS'] : ['PKR', 'PBDS Baru'];
     return { nama: nama, kod: kod, pemilih: pemilih, bil: bil, melayu: e.melayu, cina: e.cina, india: e.india, dayak: dayak, bumi: bumi, lain: e.lain,
       tahap: tahap, tahapNama: TAHAP[tahap], ofset: CONFIG.OFSET[tahap], profil: profil, lawan: lawan };
   }
@@ -176,7 +176,7 @@
   }
   /** Adakah kerusi DUN pemain dalam kuota parti? (kedudukan rk<PARTI>; tiada data = dibenarkan) */
   function dalamKuota(p) {
-    if (!rakan(p)) { return true; }
+    if (!rakan(p) || p.dariPSB) { return true; }      // v11.0: bekas pemain PSB tidak disekat kuota PDP
     var d = p.dunInfo, rk = d && Number(d['rk' + p.parti]); if (!rk) { return !d; }
     return rk <= kuota(p);
   }

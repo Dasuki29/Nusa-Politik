@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v11.0 (2026-10-24)
+
+- **PSB dibuang sebagai parti pilihan** (dibubarkan; ahli menyertai PDP). Simpanan lama PSB dipindah automatik ke PDP dengan notis sekali sahaja; bekas PSB tidak disekat kuota kerusi GPS.
+- **Pencabar sebenar menggantikan PSB** (label sahaja, kesukaran tidak berubah): kawasan Cina >=40% = DAP/PKR; Dayak >=50% = PBDS Baru/PKR; Melayu >=50% = PKR/PAS; lain-lain = PKR/PBDS Baru.
+- **Peristiwa baharu "Arahan Pusat"** untuk wakil rakyat Parlimen PBB tanpa jawatan Pusat: Terima / Minta tangguh / Tolak.
+- Tutorial BM/EN dikemas kini; ujian ditambah.
+
+### Andaian dan had
+- ⚠️ Tarikh pembubaran PSB (~2024) tidak disahkan.
+- ⚠️ "Terima" Arahan Pusat tidak memberi jawatan Ketua Cawangan dan tiada kesan -10% pencalonan semula; "Sokongan Pusat" dipetakan kepada kesetiaan.ajk.
+- ⚠️ Pencabar hanya label. Kod enjin PSB dibiarkan dorman.
+- Belum dibina (menunggu pengesahan): struktur Cawangan/Ranting, pemilihan trimester, sayap Belia, susunan gelaran, laluan Putrajaya/TYT, pemilihan calon oleh Jawatankuasa Pusat.
+
 ## v10.7.1 (2026-10-22)
 
 - Butang **Perlembagaan** dalam Menu dashboard dan langkah tutorialnya dikekalkan untuk UMNO; hanya disembunyi untuk parti lain (seperti v10.6).

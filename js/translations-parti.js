@@ -9,6 +9,14 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["Arahan Pusat: Pimpin Cawangan Kawasan Pembangkang", "Central Directive: Lead a Branch in an Opposition Area"],
+  ["Anda Ahli Parlimen tanpa jawatan Pusat. Jawatankuasa Pusat meminta anda memimpin cawangan di sebuah kawasan pembangkang bagi memperkukuh parti di sana.", "You are an MP without a Central post. The Central Committee asks you to lead a branch in an opposition area to strengthen the party there."],
+  ["Terima arahan Pusat", "Accept the Central directive"], ["Kerja berat, tetapi Pusat menghargai anda. Stress +4.", "Heavy work, but the Central leadership values you. Stress +4."],
+  ["Anda menerima tugas itu. Pusat berpuas hati dan akar umbi di kawasan baharu mula mengenali anda.", "You accept the task. The Central leadership is pleased and grassroots in the new area start to know you."],
+  ["Minta tangguh", "Ask for a delay"], ["Anda perlukan masa menyelesaikan urusan kawasan sendiri.", "You need time to settle matters in your own area."],
+  ["Pusat bersetuju menangguhkan, tetapi sebahagian pemimpin menilai anda kurang komited.", "The Central leadership agrees to delay, but some leaders see you as less committed."],
+  ["Tolak", "Decline"], ["Anda enggan meninggalkan kawasan sendiri.", "You refuse to leave your own area."],
+  ["Penolakan anda tidak disenangi Pusat dan menjejaskan nama baik anda.", "Your refusal displeases the Central leadership and hurts your reputation."],
   ["Timbalan Yang Dipertua 1", "Deputy Yang Dipertua 1"],
   ["Timbalan Yang Dipertua 2", "Deputy Yang Dipertua 2"],
   ["Naib Yang Dipertua Kanan 1", "Senior Vice Yang Dipertua 1"],
@@ -355,6 +363,7 @@
   ["Isu sensitif antara komuniti: {x}", "Sensitive Issue Between Communities: {x}"],
   ["Dialog tiga komuniti: {x}", "Three-Community Dialogue: {x}"],
   ["Ceramah dihalang: {x}", "Talk Blocked: {x}"],
-  ["Dakwaan bantuan tidak sampai: {x}", "Claims Aid Did Not Arrive: {x}"]
+  ["Dakwaan bantuan tidak sampai: {x}", "Claims Aid Did Not Arrive: {x}"],
+  ["PSB telah dibubarkan. Keahlian anda dipindahkan ke PDP.", "PSB has been dissolved. Your membership has been transferred to PDP."]
   ]);
 })();

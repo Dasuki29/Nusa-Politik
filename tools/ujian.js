@@ -1309,38 +1309,16 @@ ujian('PDP v10.2: mod ringan (kuota 5, Imbangan Kaum Kawasan menjejas kerusi)', 
 });
 
 
-ujian('PSB v10.3: pembangkang (Naratif Pembangkang, tiada kuota/kerajaan, menang DUN tanpa lobi portfolio)', () => {
-  const SW = g.MyPolitikSarawak, KB = g.MyPolitikKabinet, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
-  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'psb-sarawak.csv'), 'utf8')));
-  const duns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
-  sama(Object.keys(duns).filter((k) => duns[k].rkPSB).length, 53, 'DUN kawasan operasi PSB');
-  const dem = D.tentukanDemografi('Lelaki', 40), b = h.bahagian[0], info = duns[parseInt(b.kod, 10)];
-  S.savePlayer(S.buildPlayerProfile({ parti: 'PSB', nama: 'Uji', demografik: dem, cawangan: (b.dun ? b.dun[0].cawangan[0] : b.cawangan[0]), sayap: 'utama', avatar: 'biasa', dunInfo: info }));
-  let p = S.loadPlayer(); sama(p.parti, 'PSB'); betul(SW.ringan(p) && SW.pembangkang(p) && !SW.rakan(p), 'pembangkang bukan rakan GPS');
-  sama(SW.kuota(p), null, 'tiada kuota'); betul(SW.dalamKuota(p), 'tiada had kuota'); sama(SW.statusRundingRakan(p), null, 'tiada rundingan GPS'); sama(SW.lobiGPS().ok, false);
-  sama(SW.sokonganNaratif(p), 40); sama(SW.ofsetNaratif(p), 0); sama(SW.ringkasRingan(p).pengaruh, null);
-  betul(SW.maklumat(p).lawan.every((x) => ['SUPP', 'PRS', 'PDP'].indexOf(x) >= 0), 'lawan ialah parti GPS: ' + SW.maklumat(p).lawan.join());
-  const kd = SW.kerusiDewan(p, true); sama(kd.kerajaanBN, false, 'PSB bukan kerajaan'); betul(kd.BN >= 70 && kd.jumlah === 82, 'GPS memerintah');
-  betul(SW.sebabPremier(p).indexOf('pembangkang') >= 0, 'tiada Premier');
-  P.tetap({ ap: 10, myr: 20000 }); const r = SW.kempenNaratif(); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(SW.sokonganNaratif(p), 47); sama(p.ap, 8);
-  const idx = (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1), tinggi = Object.assign({}, p, { naratif: { nilai: 100, idx } });
-  betul(SW.ofset(tinggi) > SW.ofset(Object.assign({}, p, { naratif: { nilai: 40, idx } })), 'Naratif tinggi menambah kekuatan kerusi');
-  betul(SW.sokonganNaratif(Object.assign({}, tinggi, { tahun: (parseInt(p.tahun, 10) || 0) + 1 })) < 100, 'Naratif susut');
-  const prs = Object.assign({}, p, { parti: 'PRS' }); sama(SW.sokonganNaratif(prs), null); sama(SW.kempenNaratif.length, 0);
-  /* menang DUN: PSB tetap tidak membentuk kerajaan, tiada lobi portfolio */
-  P.tetap({ jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan')], ip: 800, myr: 500000, ap: 50, reputasi: 100, tahun: 2027, bulan: 1, naratif: { nilai: 100, idx: 2027 * 12 + 1 } });
-  const pru = PR.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU, naratif: { nilai: 100, idx: pru.tahunPRU * 12 + pru.bulanPRU } }); betul(PR.isytihar('tamat_penggal').ok);
-  const lama = Math.random; Math.random = () => 0.01;
-  try {
-    const pk = PR.pilihKerusi('DUN', { rng: () => 0.01 }); betul(pk.ok && pk.diluluskan, pk.mesej || pk.ralat); sama(pk.perluRunding, false, 'PSB tiada rundingan rakan gabungan');
-    let a = PR.getPRU(S.loadPlayer()).aktif; sama(a.fasa === 'runding', false, 'PSB terus ke manifesto'); sama(a.isThreeCorneredFight, false, 'PSB tiada 3-penjuru');
-    const pil = PR.peruntukanPilihan(S.loadPlayer(), a); betul(PR.mulaKempen(PR.JANJI.map((x) => x.id).slice(0, 3), pil.pilihan[pil.pilihan.length - 1]).ok);
-    for (let i = 0; i < 40; i++) { const ck = PR.keadaanKempen(S.loadPlayer()); if (ck.kejutan) { PR.jawabKejutan(ck.kejutan.pilihan.filter((x) => x.boleh)[0].id); continue; } if (ck.hariBaki <= 0) { break; } const tt = (ck.hariFinal ? ck.final : []).concat(ck.biasa).filter((x) => x.boleh)[0]; if (!tt) { break; } PR.tindakanKempen(tt.id); }
-    const s = PR.selesaikan({ rng: () => 0.01 }); betul(s.ok, s.ralat);
-    betul(s.keputusan.menang, 'PSB menang DUN'); betul(!s.keputusan.pecah.some((x) => x.ke === 'rakan'), 'tiada baris Rakan Gabungan untuk PSB'); sama(!!s.keputusan.kerajaan, false, 'PSB tidak membentuk kerajaan'); sama(!!s.keputusan.kabinetBuka, false, 'tiada lobi portfolio'); sama(!!(KB.getKabinet(S.loadPlayer()).lobi), false, 'tiada lobi kabinet');
-  } finally { Math.random = lama; }
+ujian('v11.0: PSB dibubarkan: simpanan PSB dipindah ke PDP; pencabar tanpa PSB; arahan Pusat', () => {
+  const SWm = require('../js/sarawak.js');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PSB', nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' } }));
+  const p = S.loadPlayer(); sama(p.parti, 'PDP'); betul(p.dariPSB && p.notisPSB, 'bendera dariPSB dan notis');
+  const jenis = [{ cina: 60, melayu: 10, iban: 20, bidayuh: 5, orangUlu: 2, india: 1, lain: 2 }, { cina: 5, melayu: 5, iban: 70, bidayuh: 10, orangUlu: 5, india: 1, lain: 1 }, { cina: 5, melayu: 70, iban: 10, bidayuh: 5, orangUlu: 5, india: 1, lain: 1 }, { cina: 20, melayu: 30, iban: 20, bidayuh: 10, orangUlu: 5, india: 5, lain: 5 }];
+  const hasilL = jenis.map((e) => { const m = SWm.maklumat({ parti: 'PBB', dunInfo: { e } }); betul(m && m.lawan && !m.lawan.includes('PSB'), 'lawan tanpa PSB: ' + JSON.stringify(m && m.lawan)); return m.lawan.join('/'); });
+  sama(hasilL.join(','), 'DAP/PKR,PBDS Baru/PKR,PKR/PAS,PKR/PBDS Baru');
+  betul(SWm.dalamKuota({ parti: 'PDP', dariPSB: true, dunInfo: { rkPDP: 99 } }), 'bekas PSB tidak disekat kuota');
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'EventDatabase.js'), 'utf8'); betul(src.indexOf("id: 'arahan_pusat_cawangan'") > 0, 'peristiwa Arahan Pusat wujud');
 });
-
 
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');

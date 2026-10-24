@@ -15,13 +15,13 @@ let gagal = 0; const betul = (c, m) => { console.log((c ? '  ✓ ' : '  ✗ ') +
   betul(!/Lagu Rasmi/.test(t), 'kad Lagu Rasmi dibuang dari indeks');
   betul(await pg.evaluate(() => document.querySelector('.brand').innerText.trim()) === 'Nusa Politik', 'jenama pengepala = Nusa Politik sahaja');
   betul(await pg.evaluate(() => [].every.call(document.querySelectorAll('img[data-netral]'), (i) => /logo-nusa\.svg$/.test(i.getAttribute('src')))), 'logo neutral Nusa Politik');
-  betul(await pg.evaluate(() => document.querySelectorAll('#s-parti option').length) === 6, 'pilihan parti 6 pilihan dalam Maklumat anda');
+  betul(await pg.evaluate(() => document.querySelectorAll('#s-parti option').length) === 5, 'pilihan parti 5 pilihan dalam Maklumat anda');
   betul(await pg.evaluate(() => !!document.querySelector('fieldset.form-section #s-parti')) && await pg.evaluate(() => document.querySelector('#s-parti').closest('fieldset').innerText.toLowerCase().indexOf('maklumat anda') >= 0), 's-parti di dalam Maklumat anda');
   betul(/mana-mana parti politik/.test(t) && !/cawangan rasmi UMNO/.test(t), 'nota cawangan neutral');
   betul(await pg.evaluate(() => !!document.querySelector('#avatar-grid [data-kod=puteri]')), 'UMNO: Puteri ada (avatar)');
   betul(await pg.evaluate(() => getComputedStyle(document.querySelector('#sayap-grid [data-kod=puteri]')).display !== 'none'), 'UMNO: Puteri ada (sayap)');
   betul(await pg.evaluate(() => /Menjadi ahli UMNO sejak/.test(document.getElementById('l-ahli').innerText) && !document.getElementById('h-ahli').hidden), 'UMNO: label ahli UMNO + nota Fasal 15.5');
-  for (const P of ['PBB', 'PRS', 'SUPP', 'PDP', 'PSB']) {
+  for (const P of ['PBB', 'PRS', 'SUPP', 'PDP']) {
     await pg.selectOption('#s-parti', P); await pg.waitForTimeout(2200);
     const r = await pg.evaluate((P) => ({
       lbl: document.getElementById('l-ahli').innerText, hint: document.getElementById('h-ahli').hidden,

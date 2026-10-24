@@ -81,6 +81,7 @@
 
   function normalisasi(p) {
     if (!sah(p)) { return p; }
+    if (p.parti === 'PSB') { p.parti = 'PDP'; p.dariPSB = true; p.notisPSB = true; }      // v11.0: PSB dibubarkan (2024); ahli menyertai PDP
     if (KERJAYA_SAH.indexOf(p.careerBackground) < 0) { p.careerBackground = 'korporat'; }          // v8.12: simpanan lama diberi Profesional / Korporat
     if (!avatarSah(p.avatar)) { p.avatar = avatarSah(p.demografik && p.demografik.kategoriKod) ? p.demografik.kategoriKod : 'pemuda'; }
     if (SY && !SY.sah(p.sayap)) { p.sayap = SY.kod(p); }          // v5.9: laluan sayap (simpanan lama mengikut avatar/kategori)

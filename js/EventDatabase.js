@@ -92,6 +92,20 @@
         ]
       },
       {
+        id: 'arahan_pusat_cawangan', kategori: 'projek', ikon: '🏛️', tajuk: 'Arahan Pusat: Pimpin Cawangan Kawasan Pembangkang', berat: 1,
+        syarat: function (p) {
+          var st = p.pru ? [p.pru.status, p.pru.statusKedua] : [], mp = st.some(function (x) { return x && x.jenis === 'MP'; });
+          var pusat = Array.isArray(p.jawatanList) && p.jawatanList.some(function (j) { return j.peringkat === 'pusat'; });
+          return p.parti === 'PBB' && mp && !pusat;
+        },
+        huraian: 'Anda Ahli Parlimen tanpa jawatan Pusat. Jawatankuasa Pusat meminta anda memimpin cawangan di sebuah kawasan pembangkang bagi memperkukuh parti di sana.',
+        pilihan: [
+          { id: 'a', label: 'Terima arahan Pusat', huraian: 'Kerja berat, tetapi Pusat menghargai anda. Stress +4.', kesan: { ip: 10, reputasi: 3 }, stres: { stress: 4 }, mesej: 'Anda menerima tugas itu. Pusat berpuas hati dan akar umbi di kawasan baharu mula mengenali anda.' },
+          { id: 'b', label: 'Minta tangguh', huraian: 'Anda perlukan masa menyelesaikan urusan kawasan sendiri.', kesan: { ip: -5, kesetiaan: { ajk: -4 } }, mesej: 'Pusat bersetuju menangguhkan, tetapi sebahagian pemimpin menilai anda kurang komited.' },
+          { id: 'c', label: 'Tolak', huraian: 'Anda enggan meninggalkan kawasan sendiri.', kesan: { reputasi: -6, ip: -4 }, mesej: 'Penolakan anda tidak disenangi Pusat dan menjejaskan nama baik anda.' }
+        ]
+      },
+      {
         id: 'kursus_kepimpinan', kategori: 'projek', ikon: '🎓', tajuk: 'Kursus Kepimpinan Parti',
         huraian: 'Bahagian {bahagian} membuka tempat terhad untuk Kursus Kepimpinan. Peserta mendapat kenalan dan kredibiliti.',
         pilihan: [
