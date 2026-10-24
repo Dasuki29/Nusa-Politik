@@ -103,7 +103,12 @@
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();
     var PT = W.MyPolitikParti, d = PT ? PT.dari(s) : s;                               // v8.32: teks dijenamakan (PBB) -> kunci kamus (UMNO)
-    var hasil = dalam(d); if (hasil === null && d !== s) { hasil = dalam(s); }          // v9.6: jika songsangan istilah gagal (cth "Majlis Tertinggi" asli), cuba teks asal
+    if (PT && PT.dariAlt) {                                                            // v11.1: padanan tepat dahulu (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan selepas dijenamakan)
+      var cal = PT.dariAlt(s);
+      for (var ci = 0; ci < cal.length; ci++) { var cx = cal[ci]; T.NORMAL.forEach(function (n) { cx = cx.replace(n[0], n[1]); }); var rt = tepat(cx); if (rt !== null) { return PT.ke(rt); } }
+    }
+    var hasil = dalam(d); if (hasil === null && d !== s) { hasil = dalam(s); }
+    if (hasil === null && PT && PT.dariAlt) { var al = PT.dariAlt(s); for (var ai = 0; ai < al.length && hasil === null; ai++) { if (al[ai] !== d && al[ai] !== s) { hasil = dalam(al[ai]); } } }   // v11.1: calon songsangan PBB (PAU/Konvensyen, bulan)          // v9.6: jika songsangan istilah gagal (cth "Majlis Tertinggi" asli), cuba teks asal
     return hasil;
   }
   function dalam(s) {

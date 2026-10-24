@@ -1320,6 +1320,17 @@ ujian('v11.0: PSB dibubarkan: simpanan PSB dipindah ke PDP; pencabar tanpa PSB; 
   const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'EventDatabase.js'), 'utf8'); betul(src.indexOf("id: 'arahan_pusat_cawangan'") > 0, 'peristiwa Arahan Pusat wujud');
 });
 
+ujian('v11.1: kalendar PBB: Ranting bulan 3, Cawangan bulan 5, Konvensyen bulan 8; UMNO tidak berubah', () => {
+  const K = require('../js/calendar.js'); const simpan = S.loadPlayer();
+  const bina = (parti) => { S.savePlayer(S.buildPlayerProfile({ parti, nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' } })); };
+  bina('PBB');
+  const win = (k) => { const t = K.getTetingkap(k, 1); return t.mula + '-' + t.tamat; };
+  sama([win('cawangan'), win('bahagian'), win('pau')].join(), '3-3,5-5,8-8', 'tetingkap PBB');
+  sama(K.getFasa(4).kod, 'antara'); sama(K.getFasa(3).kod, 'cawangan'); sama(K.getFasa(5).kod, 'bahagian'); sama(K.getFasa(8).kod, 'pau'); sama(K.getFasa(2).kod, 'akar_umbi');
+  bina('UMNO');
+  sama([win('cawangan'), win('bahagian'), win('pau')].join(), '4-6,7-7,8-8', 'tetingkap UMNO kekal'); sama(K.getFasa(3).kod, 'akar_umbi');
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));

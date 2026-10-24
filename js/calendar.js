@@ -83,6 +83,26 @@
       pau:      { mula: 8, tamat: 8, nama: 'Perhimpunan Agung UMNO (PAU)' }
     }
   };
+  /* v11.1: kalendar PBB. Proses sama (Ranting -> Cawangan -> Pusat), kitaran tetap 3 tahun, tetapi tiada bulan tetap rasmi seperti UMNO.
+     ANDAIAN (⚠️): bulan 3 (Ranting), 5 (Cawangan/DUN) dan 8 (Konvensyen PBB) dipilih oleh simulasi. Kunci dalaman (cawangan/bahagian/pau) dikekalkan:
+     'cawangan' = peringkat Ranting (lokaliti), 'bahagian' = peringkat Cawangan (DUN), 'pau' = Konvensyen PBB. */
+  /* Teks ditulis dalam bentuk dalaman (UMNO); js/parti.js menukar 'Cawangan' -> 'Ranting', 'Bahagian' -> 'Cawangan (DUN)' dan PAU -> Konvensyen PBB untuk pemain PBB. */
+  function bulanPBB(f, mula, tamat) { var x = JSON.parse(JSON.stringify(f)); x.mula = mula; x.tamat = tamat; return x; }
+  var F0 = CONFIG.FASA, T0 = CONFIG.TETINGKAP;
+  function tt(k, mula, tamat) { var x = {}; for (var q in T0[k]) { x[q] = T0[k][q]; } x.mula = mula; x.tamat = tamat; return x; }
+  var antara = { kod: 'antara', tajuk: 'Antara Musim', ringkas: 'Khidmat Masyarakat antara musim mesyuarat', fokus: ['Laksana keputusan mesyuarat', 'Bersedia untuk mesyuarat seterusnya'] };
+  function antaraBulan(m, t) { var x = JSON.parse(JSON.stringify(antara)); x.mula = m; x.tamat = t; return x; }
+  CONFIG.PBB = {
+    FASA: [bulanPBB(F0[0], 1, 2), bulanPBB(F0[1], 3, 3), antaraBulan(4, 4), bulanPBB(F0[2], 5, 5), antaraBulan(6, 7), bulanPBB(F0[3], 8, 8), bulanPBB(F0[4], 9, 12)],
+    TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 3, 3), cawangan: tt('cawangan', 3, 3), sayap_bahagian: tt('sayap_bahagian', 5, 5), bahagian: tt('bahagian', 5, 5), sayap_pau: tt('sayap_pau', 8, 8), pau: tt('pau', 8, 8) }
+  };
+  /** Set takwim aktif mengikut parti pemain (PBB atau lalai UMNO). */
+  function takwimSet() {
+    var k = null;
+    try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
+    if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
+    return k === 'PBB' ? CONFIG.PBB : CONFIG;
+  }
 
   /* ------------------------------------------------------------------------
      2. PEMBANTU
@@ -95,10 +115,11 @@
 
   function getFasa(bulan) {
     bulan = sah(bulan);
-    for (var i = 0; i < CONFIG.FASA.length; i++) {
-      if (bulan >= CONFIG.FASA[i].mula && bulan <= CONFIG.FASA[i].tamat) { return CONFIG.FASA[i]; }
+    var F = takwimSet().FASA;
+    for (var i = 0; i < F.length; i++) {
+      if (bulan >= F[i].mula && bulan <= F[i].tamat) { return F[i]; }
     }
-    return CONFIG.FASA[0];
+    return F[0];
   }
 
   /* ------------------------------------------------------------------------
@@ -106,7 +127,7 @@
      ------------------------------------------------------------------------ */
   /** { mula, tamat, nama, status:'belum_tiba'|'dibuka'|'tamat', label:'Bulan 4-6' } */
   function getTetingkap(peringkat, bulan) {
-    var t = CONFIG.TETINGKAP[normPeringkat(peringkat)];
+    var t = takwimSet().TETINGKAP[normPeringkat(peringkat)];
     if (!t) { return null; }
     bulan = sah(bulan === undefined ? getBulan() : bulan);
     return {
@@ -196,7 +217,7 @@
     var tahunBaharu = bulan >= 12;
     var jadual = CONFIG.BULAN_NAMA.map(function (nama, i) {
       var b = i + 1, f = getFasa(b), acara = [];
-      Object.keys(CONFIG.TETINGKAP).forEach(function (k) { if (b >= CONFIG.TETINGKAP[k].mula && b <= CONFIG.TETINGKAP[k].tamat) { acara.push(CONFIG.TETINGKAP[k].nama); } });
+      var TT = takwimSet().TETINGKAP; Object.keys(TT).forEach(function (k) { if (b >= TT[k].mula && b <= TT[k].tamat) { acara.push(TT[k].nama); } });
       return { bulan: b, nama: nama, pendek: nama.slice(0, 3), fasa: f.kod, semasa: b === bulan, lepas: b < bulan, acara: acara };
     });
     return {
@@ -214,13 +235,23 @@
      ------------------------------------------------------------------------ */
   function mesejMasuk(bulan, tahun, tahunBaharu) {
     var f = getFasa(bulan), nb = namaBulan(bulan), out = [];
-    if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 4-6).' }); }
-    else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka (bulan 4-6).' }); }
-    else if (bulan === 7) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 7 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
-    else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat di WTC Kuala Lumpur (Menara Dato\' Onn). Hanya bulan ini.' }); }
-    else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
-    Object.keys(CONFIG.TETINGKAP).forEach(function (k) {
-      var t = CONFIG.TETINGKAP[k];
+    var pbb = takwimSet() === CONFIG.PBB;
+    if (pbb) {
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
+      else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 5) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 5 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat. Hanya bulan ini.' }); }
+      else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+    } else {
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 4-6).' }); }
+      else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka (bulan 4-6).' }); }
+      else if (bulan === 7) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 7 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat di WTC Kuala Lumpur (Menara Dato\' Onn). Hanya bulan ini.' }); }
+      else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+
+    }
+    var TS = takwimSet().TETINGKAP; Object.keys(TS).forEach(function (k) {
+      var t = TS[k];
       if (bulan === t.tamat && bulan !== t.mula) { out.push({ jenis: 'tetingkap_akhir', mesej: 'Bulan ' + bulan + ' ialah bulan terakhir untuk ' + t.nama + '.' }); }
     });
     return out;
@@ -235,8 +266,8 @@
   function tutupMusim(p) {
     var M = muat('MyPolitikMeeting', 'meeting.js'), E = muat('MyPolitikElection', 'election.js'), out = [];
     if (!M) { return out; }
-    Object.keys(CONFIG.TETINGKAP).forEach(function (k) {
-      var t = CONFIG.TETINGKAP[k];
+    var TS = takwimSet().TETINGKAP; Object.keys(TS).forEach(function (k) {
+      var t = TS[k];
       if (sah(p.bulan) !== t.tamat) { return; }
       var lv = M.getKeadaanMesyuarat(S.loadPlayer()).peringkat.filter(function (x) { return x.kod === k; })[0];
       if (!lv) { return; }
@@ -274,8 +305,8 @@
     var M = muat('MyPolitikMeeting', 'meeting.js');
     if (M) {
       var ms = M.getKeadaanMesyuarat(p);
-      Object.keys(CONFIG.TETINGKAP).forEach(function (k) {
-        var t = CONFIG.TETINGKAP[k];
+      var TS = takwimSet().TETINGKAP; Object.keys(TS).forEach(function (k) {
+        var t = TS[k];
         if (tk.bulan !== t.tamat) { return; }
         var lv = ms.peringkat.filter(function (x) { return x.kod === k; })[0];
         if (lv && lv.status === 'sedang') { amaran.push(t.nama + ' sedang berjalan dan akan ditutup secara automatik.'); }

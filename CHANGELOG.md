@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v11.1 (2026-10-24)
+
+- **Kalendar PBB** (maklumat daripada pengguna: PBB tiada bulan kalendar rasmi tetap seperti UMNO, tetapi tidak terlalu rawak; proses Ranting (lokaliti) -> Cawangan (DUN) -> Pusat; kitaran tetap 3 tahun): **Ranting bulan 3, Cawangan (DUN) bulan 5, Konvensyen PBB bulan 8**; bulan 1-2 akar umbi (bonus), bulan 4 dan 6-7 "Antara Musim", bulan 9-12 pasca-Konvensyen. Kitaran pemilihan 3 tahun sedia ada dikekalkan. UMNO tidak berubah (ujian baharu).
+- **Label PBB** (js/parti.js): PAU -> **Konvensyen PBB**; "Cawangan" -> **Ranting**; "Bahagian" -> **Cawangan** (DUN); bulan dalam teks tetap (4-6 -> 3, 7 -> 5, 1-3 -> 1-2). Teks EN turut ditukar (Branch -> Ranting, Division -> Cawangan, General Assembly -> Convention). Pengawal dalam DOM supaya penukaran tidak berulang. Jawatan kekal seperti sedia ada (permintaan pengguna).
+- Carian terjemahan EN untuk teks PBB mencuba beberapa bentuk asal (PAU / Perhimpunan Agung UMNO / (PAU)); `PT.dariAlt` dalam parti.js.
+
+### Andaian dan had
+- ⚠️ Bulan 3, 5 dan 8 ialah pilihan simulasi (bukan tarikh rasmi PBB). Bulan Konvensyen belum digerakkan ikut ID pemain.
+- ⚠️ Kunci dalaman kekal (cawangan = Ranting, bahagian = Cawangan/DUN, pau = Konvensyen) supaya simpanan lama tidak rosak.
+- ⚠️ Jadual bulan dalam teks tutorial (lajur nombor bulan 4-6, 7) dan perlembagaan UMNO tidak ditukar; hanya frasa "bulan X" dalam ayat. Pemilihan pada peringkat Ranting masih guna kaedah/jawatan sedia ada.
+- Parti Sarawak lain (PRS, SUPP, PDP) kekal kalendar dan istilah umum.
+
 ## v11.0 (2026-10-24)
 
 - **PSB dibuang sebagai parti pilihan** (dibubarkan; ahli menyertai PDP). Simpanan lama PSB dipindah automatik ke PDP dengan notis sekali sahaja; bekas PSB tidak disekat kuota kerusi GPS.
