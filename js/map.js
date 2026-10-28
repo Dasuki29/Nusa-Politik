@@ -489,7 +489,7 @@
     '.mpm-poli.is-pilih{stroke:#fff;stroke-width:2.6;filter:brightness(1.15)}',
     '.mpm-poli.is-rumah{stroke:var(--mpm-gold);stroke-width:2.2;stroke-linejoin:round;paint-order:stroke}',          // v12.4: garis penuh (garis putus-putus nampak bersepah pada skala kecil)
     '.mpm-poli.is-rumah.is-pilih{stroke:#fff;stroke-dasharray:none}',
-    '.mpm-garisdun{fill:none;stroke:#FFD84D;stroke-width:2.4;stroke-linejoin:round;pointer-events:none;paint-order:stroke}','.mpm-garisdun-halo{fill:none;stroke:rgba(0,0,0,.65);stroke-width:4.4;stroke-linejoin:round;pointer-events:none}','.mpm-poli--dm{stroke-width:.35}',
+    '.mpm-garisdun{fill:none;stroke:#FFD84D;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;pointer-events:none;paint-order:stroke}','.mpm-garisdun-halo{fill:none;stroke:rgba(0,0,0,.65);stroke-width:4.4;stroke-linejoin:round;stroke-linecap:round;pointer-events:none}','.mpm-poli--dm{stroke-width:.35}',
     '.mpm-label{font:700 210px/1 var(--font-body,system-ui);fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.65);stroke-width:46px;text-anchor:middle;pointer-events:none;letter-spacing:.02em}',
     '.mpm-zum{position:absolute;top:10px;right:10px;display:grid;gap:4px;z-index:2}',
     '.mpm-zum button{width:36px;height:36px;border-radius:10px;border:1px solid var(--mpm-bd);background:rgba(22,24,30,.88);color:var(--mpm-tx);font:700 1.1rem/1 inherit;font-family:inherit;cursor:pointer;backdrop-filter:blur(4px)}',
@@ -1037,6 +1037,50 @@
       return tahapNod(it.nod).warna;
     }
 
+    /* v12.4: garis sempadan DUN dalam peta Daerah Mengundi diterbitkan daripada poligon DM sendiri, supaya garis mengikut sempadan DM dengan tepat.
+       (Dahulu poligon data/dun.json dilukis di atas; ia dipermudah secara berasingan, dan bagi Sarawak teranjak kira-kira 7 unit, jadi garis "lari".)
+       Kaedah: setiap tepi DM menjadi garis DUN jika sisi luarnya tidak berada dalam DM lain daripada DUN yang sama. */
+    var cacheGaris = {};
+    function dalamRing(px, py, ring) {
+      var c = false; for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        var a = ring[i], b = ring[j]; if (((a.y > py) !== (b.y > py)) && (px < (b.x - a.x) * (py - a.y) / ((b.y - a.y) || 1e-9) + a.x)) { c = !c; }
+      } return c;
+    }
+    function dalamPoli(px, py, o) {
+      if (px < o.bb[0] || px > o.bb[2] || py < o.bb[1] || py > o.bb[3]) { return false; }
+      var c = false; for (var r = 0; r < o.rings.length; r++) { if (dalamRing(px, py, o.rings[r])) { c = !c; } } return c;
+    }
+    function garisDariDM(dm, kunci) {
+      if (!dm.length || !G.toPolygons) { return []; }
+      var k = kunci + '|' + dm.length; if (cacheGaris[k]) { return cacheGaris[k]; }
+      var E = 1.1, perDun = {}, semua = dm.map(function (f) { var o = { f: f, rings: G.toPolygons(f), bb: [f.bbox[0] - E, f.bbox[1] - E, f.bbox[2] + E, f.bbox[3] + E] }; (perDun[f.dun] = perDun[f.dun] || []).push(o); return o; });
+      var bhg = [];
+      semua.forEach(function (o) {
+        var sama = perDun[o.f.dun];
+        o.rings.forEach(function (ring) {
+          for (var i = 0; i < ring.length; i++) {
+            var a = ring[i], b = ring[(i + 1) % ring.length], dx = b.x - a.x, dy = b.y - a.y, L = Math.sqrt(dx * dx + dy * dy); if (L < 0.05) { continue; }
+            var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, nx = -dy / L * E, ny = dx / L * E;
+            var sg = dalamPoli(mx + nx, my + ny, o) ? -1 : 1, dalamSama = false;
+            for (var t = 1; t <= 8 && !dalamSama; t++) {                       // uji hingga 8 jarak ke luar: celah kecil antara DM sekawasan diabaikan
+              var luarX = mx + sg * nx * t, luarY = my + sg * ny * t;
+              for (var s = 0; s < sama.length && !dalamSama; s++) { if (sama[s] !== o && dalamPoli(luarX, luarY, sama[s])) { dalamSama = true; } }
+            }
+            if (!dalamSama) { bhg.push([a.x, a.y, b.x, b.y]); }
+          }
+        });
+      });
+      /* buang serpihan kecil terpencil (gelung kecil di simpang DM akibat pemudahan poligon): kumpul segmen bersambung, buang kumpulan bersaiz < 6 unit */
+      var ibu = {}, kunciT = function (x, y) { return x.toFixed(1) + ',' + y.toFixed(1); };
+      function cariI(k0) { while (ibu[k0] !== k0) { ibu[k0] = ibu[ibu[k0]]; k0 = ibu[k0]; } return k0; }
+      bhg.forEach(function (sg) { var p = kunciT(sg[0], sg[1]), q = kunciT(sg[2], sg[3]); if (ibu[p] === undefined) { ibu[p] = p; } if (ibu[q] === undefined) { ibu[q] = q; } var rp = cariI(p), rq = cariI(q); if (rp !== rq) { ibu[rp] = rq; } });
+      var bbK = {}; bhg.forEach(function (sg) { var r = cariI(kunciT(sg[0], sg[1])), b0 = bbK[r] || (bbK[r] = [1e9, 1e9, -1e9, -1e9]); b0[0] = Math.min(b0[0], sg[0], sg[2]); b0[1] = Math.min(b0[1], sg[1], sg[3]); b0[2] = Math.max(b0[2], sg[0], sg[2]); b0[3] = Math.max(b0[3], sg[1], sg[3]); });
+      var dd = bhg.filter(function (sg) { var b0 = bbK[cariI(kunciT(sg[0], sg[1]))]; return Math.max(b0[2] - b0[0], b0[3] - b0[1]) >= 6; })
+        .map(function (sg) { return 'M' + sg[0].toFixed(1) + ' ' + sg[1].toFixed(1) + 'L' + sg[2].toFixed(1) + ' ' + sg[3].toFixed(1); }).join('');
+      var out = dd ? [{ id: 'garis-' + kunci, d: dd, negeri: dm[0].negeri, parlimen: dm[0].parlimen }] : [];
+      cacheGaris[k] = out; return out;
+    }
+
     /** Susun lapisan poligon untuk mod semasa: { items:[{f,tahap,nod}], garis:[f], fit:[f], tajuk } */
     function susunLapisan() {
       var items = [], garis = [], fit, tajuk = '', b;
@@ -1079,7 +1123,7 @@
         if (dm.length) {
           var cm = {}; b.cawangan.forEach(function (c) { var k = kunciDM(c); if (k) { cm[k] = c; } });
           dm.forEach(function (f) { items.push({ f: f, tahap: 'cawangan', nod: cm[f.id] || null }); });
-          garis = duns; tajuk = 'Daerah Mengundi (Cawangan)';
+          garis = garisDariDM(dm, SW ? kodDs : kodP); tajuk = 'Daerah Mengundi (Cawangan)';
         } else if (duns.length) {
           var dmp = {}; b.dun.forEach(function (d) { dmp[parseInt(String(d.kod).replace(/\D/g, ''), 10)] = d; });
           duns.forEach(function (f) { items.push({ f: f, tahap: 'dun', nod: dmp[parseInt(String(f.noDun).replace(/\D/g, ''), 10)] || null }); });

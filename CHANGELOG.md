@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v12.5 (2026-10-28)
+
+- **Garis sempadan DUN dalam Peta PDM / Lokaliti kini mengikut sempadan Daerah Mengundi dengan tepat** (semua negeri, UMNO dan parti Sarawak). Dahulu garis DUN dilukis daripada poligon data/dun.json yang dipermudah secara berasingan (dan bagi Sarawak teranjak kira-kira 7 unit), jadi garis "lari" daripada peta. Kini garis diterbitkan daripada tepi poligon DM sendiri (tepi yang bersempadan dengan DUN lain atau laut), serpihan kecil dibuang, dan hasil dicache bagi setiap Bahagian.
+
 ## v12.4 (2026-10-28)
 
 - Peta Pengaruh: sempadan "Kawasan anda" kini garis kuning penuh (bukan putus-putus) dan kawasan anda / dipilih dilukis paling atas. Garis putus-putus nampak bersepah dan seolah-olah tidak selari dengan sempadan pada skala kecil (maklum balas pengguna).
