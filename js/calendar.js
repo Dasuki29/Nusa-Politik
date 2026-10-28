@@ -364,6 +364,9 @@
     var RVL = muat('MyPolitikRival', 'rival.js');                                               // v7.28: AI pencabar bergerak pada akhir setiap bulan
     if (RVL && RVL.tick) { peristiwa = peristiwa.concat(RVL.tick().peristiwa || []); }
 
+    var ISU = muat('MyPolitikIsu', 'isu.js');                                                  // v12.2: Isu Semasa
+    if (ISU && ISU.prosesBulan) { peristiwa = peristiwa.concat(ISU.prosesBulan().peristiwa || []); }
+
     var JMH = muat('MyPolitikJemaah', 'jemaah.js');                                            // v12.1: kesetiaan Jemaah Menteri melaras Tekanan Politik PM
     if (JMH && JMH.prosesBulan) { peristiwa = peristiwa.concat(JMH.prosesBulan().peristiwa || []); }
 

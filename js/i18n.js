@@ -121,6 +121,7 @@
     if (r === null) { r = gubah(s); }
     if (r === null) { r = bahagi(s); }
     if (r === null) { r = ayat(s); }
+    if (r === null && /^[“"].+[”"]$/.test(s)) { var dq = terjemah(s.slice(1, -1)); if (dq !== null) { r = s.charAt(0) + dq + s.charAt(s.length - 1); } }   // v12.2: ayat dalam tanda petik (soalan wartawan)
     if (r === null && /[^.]\.$/.test(s)) { var tp = terjemah(s.slice(0, -1)); if (tp !== null) { r = tp + '.'; } }
     if (r === null && (aw = s.match(/^([^A-Za-zÀ-ÿ0-9(+\-−]{1,6}\s*)(.+)$/u))) { var d = terjemah(aw[2]); if (d !== null) { r = aw[1] + d; } }   // awalan emoji / simbol
     if (cache.size > 6000) { cache.clear(); }

@@ -58,6 +58,8 @@
     SIDANG: { peluang: 0.18, peluangPersepsi: 0.002, peluangPRU: 0.08, jeda: 3, bilSoalan: 3, jenis: ['SIDANG', 'TV', 'ONLINE'],
               tidakJawab: { persepsi: 8, skor: -3 } },
     BERFAKTA: { ip: 4, skor: 3, reputasi: 1, padan: 1.5, tidakPadan: 0.7 },
+    DIAM: { persepsi: 3 },                                                    // v12.2: Tiada komen
+    SERANG: { akarUmbi: 6, reputasi: -1, lapor: 15, risiko: 5 },              // v12.2: Serang balik pembangkang (aduan Tataetika ~15%)
     POPULIS: { ip: 6, akarUmbi: 4, stress: 4, padan: 1.5, tidakPadan: 0.7,
                serangBalas: { asas: 0.30, persepsi: 0.002, tidakPadan: 0.10 }, rugi: { persepsi: 12, skor: -4, reputasi: -2 } }
   };
@@ -78,8 +80,54 @@
     { id: 'tuduhan', jenis: 'emosi', isu: 'tuduhan rasuah', soal: 'Pembangkang menuduh pemimpin parti anda terlibat penyelewengan. Apa jawapan anda?' },
     { id: 'kepimpinan', jenis: 'emosi', isu: 'perpecahan dalaman', soal: 'Dikatakan wujud perpecahan dalam parti mengenai kepimpinan. Benarkah?' },
     { id: 'tular', jenis: 'emosi', isu: 'isu tular media sosial', soal: 'Satu video tular mempersoalkan sikap pemimpin parti terhadap rakyat. Apa respons anda?' },
-    { id: 'gabungan', jenis: 'fakta', isu: 'rundingan gabungan', soal: 'Bagaimana parti anda menyeimbangkan kepentingan rakan gabungan dengan suara akar umbi?' }
+    { id: 'gabungan', jenis: 'fakta', isu: 'rundingan gabungan', soal: 'Bagaimana parti anda menyeimbangkan kepentingan rakan gabungan dengan suara akar umbi?' },
+    /* v12.2: soalan ikut konteks pemain (kump bukan 'umum'; syarat(c) dengan c = konteks(p)). {kunci} diisi daripada konteks. Semua rekaan. */
+    { id: 'port_lewat', kump: 'portfolio', jenis: 'fakta', isu: 'projek kementerian', syarat: function (c) { return !!c.portfolio; }, soal: 'Beberapa projek di bawah {portfolio} lewat siap. Siapa yang bertanggungjawab?' },
+    { id: 'port_bajet', kump: 'portfolio', jenis: 'fakta', isu: 'peruntukan kementerian', syarat: function (c) { return !!c.portfolio; }, soal: 'Peruntukan {portfolio} dikatakan tidak sampai kepada rakyat bawahan. Apa jawapan anda?' },
+    { id: 'port_kpi', kump: 'portfolio', jenis: 'fakta', isu: 'prestasi kementerian', syarat: function (c) { return !!c.portfolio; }, soal: 'Apakah tiga pencapaian utama anda sebagai {portfolio} setakat ini?' },
+    { id: 'port_rombak', kump: 'portfolio', jenis: 'emosi', isu: 'khabar rombakan kabinet', syarat: function (c) { return !!c.portfolio && !c.pm; }, soal: 'Ada khabar anda akan digugurkan dalam rombakan kabinet. Adakah anda risau?' },
+    { id: 'port_kontrak', kump: 'portfolio', jenis: 'emosi', isu: 'kontrak kerajaan', syarat: function (c) { return !!c.portfolio; }, soal: 'Syarikat yang dikaitkan dengan ahli parti anda mendapat kontrak {portfolio}. Adakah ini konflik kepentingan?' },
+    { id: 'kaw_jalan', kump: 'kawasan', jenis: 'fakta', isu: 'infrastruktur kawasan', syarat: function (c) { return !!c.kerusi; }, soal: 'Penduduk {kerusi} mengadu jalan rosak sejak pilihan raya lalu. Bila akan dibaiki?' },
+    { id: 'kaw_janji', kump: 'kawasan', jenis: 'emosi', isu: 'janji pilihan raya', syarat: function (c) { return !!c.kerusi; }, soal: 'Pengundi {kerusi} berkata janji manifesto anda belum ditunaikan. Apa komen anda?' },
+    { id: 'kaw_jarang', kump: 'kawasan', jenis: 'emosi', isu: 'kehadiran wakil rakyat', syarat: function (c) { return !!c.kerusi; }, soal: 'Ada dakwaan anda jarang turun ke {kerusi}. Benarkah?' },
+    { id: 'kaw_peruntukan', kump: 'kawasan', jenis: 'fakta', isu: 'peruntukan wakil rakyat', syarat: function (c) { return !!c.kerusi; }, soal: 'Bagaimana peruntukan wakil rakyat untuk {kerusi} dibelanjakan tahun ini?' },
+    { id: 'sw_ma63', kump: 'sarawak', jenis: 'fakta', isu: 'MA63', syarat: function (c) { return c.sw; }, soal: 'Sejauh mana tuntutan hak Sarawak di bawah MA63 telah dipenuhi oleh kerajaan persekutuan?' },
+    { id: 'sw_royalti', kump: 'sarawak', jenis: 'emosi', isu: 'royalti minyak', syarat: function (c) { return c.sw; }, soal: 'Adakah {parti} akan terus mendesak royalti minyak 20% walaupun ditolak kerajaan pusat?' },
+    { id: 'sw_inggeris', kump: 'sarawak', jenis: 'fakta', isu: 'bahasa Inggeris di sekolah', syarat: function (c) { return c.sw; }, soal: 'Apakah pendirian {parti} tentang penggunaan bahasa Inggeris untuk Sains dan Matematik di sekolah Sarawak?' },
+    { id: 'sw_elektrik', kump: 'sarawak', jenis: 'fakta', isu: 'bekalan elektrik luar bandar', syarat: function (c) { return c.sw; }, soal: 'Masih ada rumah panjang tanpa bekalan elektrik 24 jam. Bila masalah ini akan selesai?' },
+    { id: 'sw_jalan', kump: 'sarawak', jenis: 'fakta', isu: 'jalan Pan Borneo', syarat: function (c) { return c.sw; }, soal: 'Sebahagian jalan Pan Borneo masih belum siap dan kerap berlaku kemalangan. Apa tindakan anda?' },
+    { id: 'sw_tempatan', kump: 'sarawak', jenis: 'emosi', isu: 'parti tempatan', syarat: function (c) { return c.sw; }, soal: 'Ramai pengundi Sarawak memilih parti tempatan. Adakah parti dari Semenanjung masih relevan di sini?' },
+    { id: 'pem_cabar', kump: 'pemilihan', jenis: 'emosi', isu: 'pemilihan parti', syarat: function (c) { return c.pemilihan || c.rival; }, soal: 'Benarkah anda akan dicabar dalam pemilihan parti tahun ini?' },
+    { id: 'pem_wang', kump: 'pemilihan', jenis: 'emosi', isu: 'politik wang', syarat: function (c) { return c.pemilihan; }, soal: 'Ada dakwaan politik wang dalam pemilihan parti. Adakah kem anda bersih?' },
+    { id: 'pem_pelan', kump: 'pemilihan', jenis: 'fakta', isu: 'hala tuju parti', syarat: function (c) { return c.pemilihan; }, soal: 'Jika menang pemilihan, apakah pelan anda untuk memperkukuh parti?' },
+    { id: 'ev_kalah', kump: 'peristiwa', jenis: 'emosi', isu: 'kekalahan pilihan raya', syarat: function (c) { return c.kalah; }, soal: 'Anda kalah dalam pilihan raya lalu. Adakah anda akan bertanding lagi?' },
+    { id: 'ev_gantung', kump: 'peristiwa', jenis: 'emosi', isu: 'tindakan disiplin', syarat: function (c) { return c.gantung; }, soal: 'Keahlian anda sedang digantung. Adakah anda akan membuat rayuan atau keluar parti?' },
+    { id: 'ev_siasat', kump: 'peristiwa', jenis: 'emosi', isu: 'siasatan disiplin', syarat: function (c) { return c.siasatan; }, soal: 'Jawatankuasa Disiplin sedang menyiasat anda. Apa sebenarnya yang berlaku?' },
+    { id: 'ev_lain', kump: 'peristiwa', jenis: 'emosi', isu: 'calon dari luar', syarat: function (c) { return c.lain; }, soal: 'Pengundi tempatan mempersoalkan kenapa calon dari luar bertanding di kawasan mereka. Apa jawapan anda?' },
+    { id: 'ev_jemaah', kump: 'peristiwa', jenis: 'emosi', isu: 'lantikan kabinet', syarat: function (c) { return c.jemaahPencabar; }, soal: 'Kenapa anda melantik pencabar dalaman sendiri ke dalam Jemaah Menteri? Adakah ini untuk menutup mulutnya?' },
+    { id: 'ev_rombak', kump: 'peristiwa', jenis: 'emosi', isu: 'rombakan kabinet', syarat: function (c) { return c.rombak; }, soal: 'Menteri yang digugurkan dalam rombakan kabinet berkata dia dianiaya. Apa respons anda?' },
+    { id: 'ev_krisis', kump: 'peristiwa', jenis: 'emosi', isu: 'krisis tempatan', syarat: function (c) { return c.krisis; }, soal: 'Penduduk kecewa krisis di kawasan mereka dibiarkan terlalu lama. Kenapa anda lambat bertindak?' },
+    { id: 'int_kontraktor', kump: 'integriti', jenis: 'emosi', isu: 'sumbangan kontraktor', syarat: function (c) { return c.risiko; }, soal: 'Ada laporan anda menerima sumbangan daripada kontraktor. Apa komen anda?' },
+    { id: 'int_harta', kump: 'integriti', jenis: 'fakta', isu: 'pengisytiharan harta', syarat: function (c) { return c.risiko || !!c.portfolio; }, soal: 'Adakah anda bersedia mendedahkan pengisytiharan harta anda kepada umum?' },
+    { id: 'susulan', kump: 'susulan', jenis: 'emosi', isu: 'konsistensi pendirian', syarat: function (c) { return !!c.pendirian; }, soal: 'Anda pernah {pendirian} dalam isu {isuTajuk}. Adakah pendirian itu masih sama?' },
+    { id: 'kj_stabil', kump: 'kerajaan', jenis: 'fakta', isu: 'kestabilan kerajaan', syarat: function (c) { return c.kerajaan && (!!c.kerusi || !!c.portfolio); }, soal: 'Bagaimana kerajaan memastikan kestabilan sehingga penggal tamat?' },
+    { id: 'pb_alternatif', kump: 'kerajaan', jenis: 'fakta', isu: 'dasar alternatif', syarat: function (c) { return !c.kerajaan && !!c.kerusi; }, soal: 'Apakah dasar alternatif parti anda jika diberi peluang memerintah?' }
   ];
+  var PENDIRIAN = { pertahan: 'mempertahankan dasar kerajaan', kritik: 'mengkritik dasar itu', neutral: 'memilih untuk berkecuali' };
+  /** v12.2: konteks pemain untuk soalan wartawan. */
+  function konteks(p) {
+    var K = KB(), k = K ? K.getKabinet(p) : null, P = PRU(), st = P && P.semuaStatus ? P.semuaStatus(p) : [], E = ET(), et = E ? E.getEtika(p) : {};
+    var sj = (p.pru && p.pru.sejarah) || [], akhir = sj[sj.length - 1], IS = modul('MyPolitikIsu', 'isu.js'), pa = IS && IS.pendirianAkhir ? IS.pendirianAkhir(p) : null;
+    var EL = modul('MyPolitikElection', 'election.js'), j = p.jemaah || {};
+    return { portfolio: k && k.hasGovernmentRole ? (k.portfolioName || '') : '', pm: !!(k && k.roleLevel === 'PERDANA_MENTERI'), kerusi: st[0] ? st[0].kerusi || '' : '',
+      parti: p.parti || 'UMNO', sw: /^(PBB|PRS|SUPP|PDP|PSB)$/.test(p.parti || ''), kerajaan: IS && IS.kerajaan ? IS.kerajaan(p) : st.some(function (s) { return s.kerajaan; }),
+      pemilihan: !!(EL && EL.adalahTahunPemilihan && EL.adalahTahunPemilihan(p.tahun)), rival: !!(p.rival && p.rival.senaraiPencabar && Object.keys(p.rival.senaraiPencabar).length),
+      kalah: !!(akhir && akhir.hasil === 'kalah' && idx(p) - ((parseInt(akhir.tahun, 10) || 0) * 12 + (parseInt(akhir.bulan, 10) || 1)) <= 12),
+      gantung: et.status === 'digantung' || et.status === 'dilarang', siasatan: !!et.siasatan, lain: st.some(function (s) { return s.lain; }),
+      jemaahPencabar: !!(j.umum && j.pencabar), rombak: !!(j.umum && j.tahunRombak && j.tahunRombak === p.tahun), krisis: !!(p.krisisPeta && p.krisisPeta.terabai > 0),
+      risiko: (Number(et.risiko) || 0) >= 25, pendirian: pa ? PENDIRIAN[pa.pilihan] : '', isuTajuk: pa ? pa.isu.tajuk : '' };
+  }
+  function isiSoal(q, c) { return String(q.soal).replace(/\{(\w+)\}/g, function (m, k) { return c[k] != null && c[k] !== '' ? c[k] : m; }); }
 
   function dasar0() { return { persepsi: CONFIG.PERSEPSI_AWAL, belia: CONFIG.BELIA_AWAL, kesedaran: CONFIG.KESEDARAN_AWAL, terakhir: {}, sidang: null, sidangTerakhir: -999, sejarah: [] }; }
   function getMedia(p) {
@@ -171,21 +219,27 @@
     if (!aktif(p)) { return { ok: false, ralat: 'Tidak layak.' }; }
     if (d.sidang) { return { ok: false, ralat: 'Sidang media sedang menunggu.' }; }
     var jenis = (o && o.jenis) || CONFIG.SIDANG.jenis[Math.floor(r() * CONFIG.SIDANG.jenis.length)];
-    var pool = SOALAN.slice(), ids = [];
+    var c = konteks(p), sesuai = SOALAN.filter(function (q) { return !q.syarat || q.syarat(c); }), khas = sesuai.filter(function (q) { return q.kump && q.kump !== 'umum'; }), ids = [];
+    if (khas.length) { ids.push(khas[Math.floor(r() * khas.length)].id); }                       // v12.2: sekurang-kurangnya satu soalan ikut konteks pemain
+    var pool = sesuai.filter(function (q) { return ids.indexOf(q.id) < 0; });
     while (ids.length < CONFIG.SIDANG.bilSoalan && pool.length) { ids.push(pool.splice(Math.floor(r() * pool.length), 1)[0].id); }
-    d.sidang = { jenis: jenis, soalan: ids, i: 0, jawab: [], tahun: p.tahun, bulan: p.bulan };
+    var teks = ids.map(function (id) { return isiSoal(soalanById(id), c); });
+    d.sidang = { jenis: jenis, soalan: ids, teks: teks, i: 0, jawab: [], tahun: p.tahun, bulan: p.bulan };
     var res = simpan(d, {});
     return res.ok ? { ok: true, sidang: d.sidang } : { ok: false, ralat: res.ralat };
   }
   function soalanById(id) { return SOALAN.filter(function (x) { return x.id === id; })[0]; }
   function sidangSemasa(p) {
     var d = getMedia(p), s = d.sidang; if (!s) { return null; }
-    var q = soalanById(s.soalan[s.i]); if (!q) { return null; }
-    var j = JENIS_SIDANG[s.jenis] || JENIS_SIDANG.SIDANG, B = CONFIG.BERFAKTA, P = CONFIG.POPULIS;
+    var q0 = soalanById(s.soalan[s.i]); if (!q0) { return null; }
+    var q = { id: q0.id, jenis: q0.jenis, isu: q0.isu, kump: q0.kump || 'umum', soal: (s.teks && s.teks[s.i]) || isiSoal(q0, konteks(p)) };
+    var j = JENIS_SIDANG[s.jenis] || JENIS_SIDANG.SIDANG, B = CONFIG.BERFAKTA, P = CONFIG.POPULIS, Dm = CONFIG.DIAM, Sg = CONFIG.SERANG;
     return { jenis: s.jenis, nama: j.nama, ikon: j.ikon, nombor: s.i + 1, jumlah: s.soalan.length, soalan: q,
       pilihan: [
         { id: 'berfakta', nama: '📘 Pendekatan Berfakta & Diplomatis', huraian: 'Imej matang & berwibawa · IP +' + B.ip + ' · Integriti Parti +' + B.skor + (q.jenis === 'fakta' ? ' (padan dengan soalan teknikal)' : '') },
-        { id: 'populis', nama: '🔥 Pendekatan Populis & Lantang', huraian: 'Akar umbi +' + P.akarUmbi + ' · IP +' + P.ip + ' · Stress +' + P.stress + ' · risiko perdebatan terbuka ' + Math.round(peluangSerang(p, q) * 100) + '%' + (q.jenis === 'emosi' ? ' (padan dengan soalan emosi)' : '') }
+        { id: 'populis', nama: '🔥 Pendekatan Populis & Lantang', huraian: 'Akar umbi +' + P.akarUmbi + ' · IP +' + P.ip + ' · Stress +' + P.stress + ' · risiko perdebatan terbuka ' + Math.round(peluangSerang(p, q) * 100) + '%' + (q.jenis === 'emosi' ? ' (padan dengan soalan emosi)' : '') },
+        { id: 'diam', nama: '🤐 Tiada komen', huraian: 'Tiada IP · tiada risiko · Persepsi negatif +' + Dm.persepsi },
+        { id: 'serang', nama: '🎯 Serang balik pembangkang', huraian: 'Akar umbi +' + Sg.akarUmbi + ' · Reputasi ' + Sg.reputasi + ' · risiko aduan Tataetika kira-kira ' + Sg.lapor + '%' }
       ] };
   }
   function peluangSerang(p, q) {
@@ -200,9 +254,20 @@
   function jawabSidang(id, o) {
     var p = S().loadPlayer(), d = getMedia(p), s = d.sidang, r = rng(o, p);
     if (!s) { return { ok: false, ralat: 'Tiada sidang media menunggu.' }; }
-    if (id !== 'berfakta' && id !== 'populis') { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
-    var q = soalanById(s.soalan[s.i]), kes = {}, dSkor = 0, dStres = 0, mesej, serang = false, nilai = 1;
-    if (id === 'berfakta') {
+    if (['berfakta', 'populis', 'diam', 'serang'].indexOf(id) < 0) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
+    var q = soalanById(s.soalan[s.i]), kes = {}, dSkor = 0, dStres = 0, mesej, serang = false, nilai = 1, patchEt = null;
+    if (id === 'diam') {
+      d.persepsi = clamp(d.persepsi + CONFIG.DIAM.persepsi, 0, 100); nilai = 0;
+      mesej = 'Anda enggan mengulas tentang ' + q.isu + '. Wartawan menulis bahawa anda mengelak (persepsi negatif +' + CONFIG.DIAM.persepsi + '%).';
+    } else if (id === 'serang') {
+      var Sg = CONFIG.SERANG, Et = ET();
+      kes.kesetiaan = { akarUmbi: Sg.akarUmbi }; kes.reputasi = Sg.reputasi; nilai = q.jenis === 'emosi' ? 1 : 0;
+      mesej = 'Anda menyerang balik pembangkang tentang ' + q.isu + '. Ahli akar umbi bersorak (akar umbi +' + Sg.akarUmbi + ', reputasi ' + Sg.reputasi + ').';
+      if (Et && Et.selepasAcara) {
+        var hs = Et.selepasAcara(p, { risiko: Sg.risiko, lapor: { peluang: Sg.lapor, perkara: 'Kenyataan berunsur fitnah terhadap pembangkang dalam sidang media (Tataetika)', fasal: 'Fasal 20.13', berat: 1 } }, { rng: r });
+        if (hs && hs.etika) { patchEt = hs.etika; if (hs.mesej) { mesej += hs.mesej; serang = true; nilai = -1; } }
+      }
+    } else if (id === 'berfakta') {
       var B = CONFIG.BERFAKTA, m = q.jenis === 'fakta' ? B.padan : B.tidakPadan;
       kes.ip = Math.round(B.ip * m); dSkor = Math.round(B.skor * m); kes.reputasi = B.reputasi;
       mesej = 'Anda menjawab dengan tenang dan berfakta tentang ' + q.isu + '. Imej parti kelihatan matang dan berwibawa (IP +' + kes.ip + ', Integriti Parti +' + dSkor + ').';
@@ -222,11 +287,11 @@
     var tamat = s.i >= s.soalan.length, ringkas = null;
     if (tamat) {
       var g = gred(s.soalan.length, s.skorBersih), nBerfakta = s.jawab.filter(function (x) { return x.pilihan === 'berfakta'; }).length;
-      ringkas = { gred: g, berfakta: nBerfakta, populis: s.jawab.length - nBerfakta, serang: s.jawab.filter(function (x) { return x.serang; }).length };
+      ringkas = { gred: g, berfakta: nBerfakta, populis: s.jawab.filter(function (x) { return x.pilihan === 'populis'; }).length, serang: s.jawab.filter(function (x) { return x.serang; }).length };
       d.sidangTerakhir = idx(p); d.sidang = null; rekod(d, p, 'sidang', (JENIS_SIDANG[s.jenis] || JENIS_SIDANG.SIDANG).nama + ': prestasi ' + g);
       if (g === 'Cemerlang') { kes.reputasi = (kes.reputasi || 0) + 2; }
     }
-    var res = simpan(d, kes, { log: { tindakan: 'media_sidang', nama: (JENIS_SIDANG[s.jenis] || JENIS_SIDANG.SIDANG).nama + ': ' + q.isu + ' (' + (id === 'berfakta' ? 'berfakta' : 'populis') + ')', peringkat: 'ahli' } });
+    var res = simpan(d, kes, { patch: patchEt ? { etika: patchEt } : null, log: { tindakan: 'media_sidang', nama: (JENIS_SIDANG[s.jenis] || JENIS_SIDANG.SIDANG).nama + ': ' + q.isu + ' (' + ({ berfakta: 'berfakta', populis: 'populis', diam: 'tiada komen', serang: 'serang balik' })[id] + ')', peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     ubahSkor(dSkor, 'Sidang media: ' + q.isu); stres(dStres);
     return { ok: true, mesej: mesej, serang: serang, tamat: tamat, ringkasan: ringkas };
@@ -267,7 +332,7 @@
 
   return {
     CONFIG: CONFIG, SOALAN: SOALAN, JENIS_SIDANG: JENIS_SIDANG, setRng: function (f) { rngLalai = f || null; },
-    getMedia: getMedia, aktif: aktif, senaraiTugas: senaraiTugas, tugasBoleh: tugasBoleh, gerakkanSkuad: gerakkanSkuad,
+    getMedia: getMedia, aktif: aktif, konteks: konteks, senaraiTugas: senaraiTugas, tugasBoleh: tugasBoleh, gerakkanSkuad: gerakkanSkuad,
     mulaSidang: mulaSidang, sidangSemasa: sidangSemasa, jawabSidang: jawabSidang, prosesBulan: prosesBulan, ringkasan: ringkasan
   };
 });

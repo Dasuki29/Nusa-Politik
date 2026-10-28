@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v12.2 (2026-10-28)
+
+- **Isu Semasa** (baharu; js/isu.js, js/isu-ui.js): 12 senario politik rekaan (harga beras, banjir, tarif elektrik, subsidi minyak, anti lompat parti, mogok doktor kontrak, pusat data, yuran universiti, video tular, had umur calon; khas Sabah/Sarawak: MA63 dan royalti minyak 20%). Muncul dengan peluang 1/3 setiap bulan (jeda 2 bulan, tiada semasa kempen) kepada pemegang jawatan / wakil rakyat. Tiga pendirian (pertahan / kritik / berkecuali) dengan kesan berbeza untuk kerajaan dan pembangkang; tidak dijawab: Reputasi -1. Pendirian diingati.
+- **Sidang Media diperkaya** (js/media.js): bank soalan 9 -> 39, termasuk soalan ikut portfolio, kawasan, isu Sarawak, pemilihan parti, peristiwa anda (kalah PRU, digantung, siasatan, calon luar, kabinet, krisis terabai), integriti, dan **soalan susulan pendirian Isu Semasa**. Sekurang-kurangnya satu soalan ikut konteks pada setiap sidang.
+- Dua cara menjawab baharu: **Tiada komen** (persepsi negatif +3) dan **Serang balik pembangkang** (akar umbi +6, reputasi -1, risiko aduan Tataetika kira-kira 15%).
+- i18n: ayat dalam tanda petik diterjemah (soalan wartawan). Semua teks baharu ada EN. Ujian unit dan ujian pelayar baharu tools/ujian-isu.js.
+
+### Nota
+- Bank soalan 39 (mockup menyebut kira-kira 45).
+- Semua senario ialah rekaan berasaskan tema politik Malaysia; tiada individu sebenar.
+
 ## v12.1 (2026-10-28)
 
 - **Jemaah Menteri** (mockup dipersetujui; js/jemaah.js, js/jemaah-ui.js):

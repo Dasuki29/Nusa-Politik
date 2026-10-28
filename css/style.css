@@ -1074,3 +1074,7 @@ body.menu-aktif { overflow: hidden; }
 .jm-jadual table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 560px; }
 .jm-jadual th, .jm-jadual td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
 .jm-jadual tr.is-anda td { background: var(--bg-elev-3); font-weight: 700; }
+
+/* ---------- v12.2: Isu Semasa (js/isu-ui.js) ---------- */
+.isu-kad { border-left: 8px solid var(--red); }
+.isu-label { margin: 0 0 4px; font-size: .78rem; font-weight: 800; color: var(--text-muted); }

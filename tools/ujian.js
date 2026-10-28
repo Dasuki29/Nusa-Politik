@@ -1401,6 +1401,33 @@ ujian('v12.1: Jemaah Menteri: PM pilih 8 portfolio, kesan tadbir urus / gabungan
   const l2 = J.senarai(S.loadPlayer()); betul(l2.some((x) => x.portfolio === 'Menteri Kesihatan' && x.anda), 'menteri: baris anda'); betul(!l2[0].anda, 'PM NPC');
 });
 
+ujian('v12.2: Isu Semasa (muncul, kesan kerajaan/pembangkang, abai, isu Sarawak) dan soalan wartawan ikut konteks', () => {
+  const I = g.MyPolitikIsu, M = g.MyPolitikMedia, KB = g.MyPolitikKabinet;
+  P.daftar({}); P.tetap({ jawatan: 'Ketua Cawangan', tahun: 2030, bulan: 3, negeri: 'Johor' });
+  let ev = I.prosesBulan({ rng: () => 0 }).peristiwa; betul(ev.some((e) => e.jenis === 'isu_semasa'), 'isu muncul');
+  let p = S.loadPlayer(), s = I.semasa(p); betul(s && s.pilihan.length === 3, 'tiga pilihan'); betul(!s.isu.sw, 'bukan isu Sarawak untuk Johor/UMNO');
+  sama(I.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'tiada isu kedua bulan sama');
+  const kp = I.kesan(p, s.isu, 'kritik'), rep0 = p.reputasi, au0 = p.kesetiaan.akarUmbi;
+  betul(I.jawab('kritik').ok); p = S.loadPlayer(); sama(p.kesetiaan.akarUmbi, Math.min(100, au0 + kp.akarUmbi), 'akar umbi'); betul(!I.semasa(p), 'isu dijawab');
+  betul(I.pendirianAkhir(p) && I.pendirianAkhir(p).pilihan === 'kritik', 'pendirian diingati');
+  sama(I.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'jeda 2 bulan');
+  P.tetap({ bulan: 5 }); I.prosesBulan({ rng: () => 0 }); P.tetap({ bulan: 6 }); const r0 = S.loadPlayer().reputasi;
+  ev = I.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /tidak menyatakan pendirian/.test(e.mesej)), 'abai'); sama(S.loadPlayer().reputasi, r0 - 1);
+  /* kerajaan vs pembangkang */
+  const isuB = I.cari('beras'); const pk = Object.assign({}, S.loadPlayer(), { kerusiNasional: { kerajaan: true } }), po = Object.assign({}, S.loadPlayer(), { kerusiNasional: { kerajaan: false } });
+  betul(I.kesan(pk, isuB, 'kritik').hubungan < 0 && !I.kesan(po, isuB, 'kritik').hubungan, 'kritik dalam kerajaan rosakkan hubungan gabungan');
+  /* Sarawak: isu MA63 / royalti khas */
+  const pw = { parti: 'PBB', negeri: 'Sarawak', kesetiaan: {} }; sama(I.kesan(pw, I.cari('royalti'), 'kritik').akarUmbi, 6); sama(I.kesan(pw, I.cari('royalti'), 'pertahan').akarUmbi, -5);
+  /* soalan wartawan ikut konteks */
+  betul(KB.lantikKanan('TIMBALAN_PM').ok); M.setRng(() => 0.3);
+  const ms = M.mulaSidang({}); betul(ms.ok, ms.ralat); const sd = M.getMedia(S.loadPlayer()).sidang;
+  betul(sd.soalan.some((id) => /^(port_|susulan|pem_|kj_|int_)/.test(id)), 'sekurang-kurangnya satu soalan ikut konteks: ' + sd.soalan.join());
+  betul(sd.teks.every((t) => !/\{\w+\}/.test(t)), 'tiada pemegang tempat tertinggal');
+  const per0 = M.getMedia(S.loadPlayer()).persepsi; betul(M.jawabSidang('diam').ok); sama(M.getMedia(S.loadPlayer()).persepsi, Math.min(100, per0 + 3), 'tiada komen: persepsi +3');
+  const au1 = S.loadPlayer().kesetiaan.akarUmbi; betul(M.jawabSidang('serang').ok); sama(S.loadPlayer().kesetiaan.akarUmbi, Math.min(100, au1 + 6), 'serang balik: akar umbi +6');
+  M.setRng(null);
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));
