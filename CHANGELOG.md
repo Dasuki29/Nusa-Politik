@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v12.0 (2026-10-28)
+
+- **Hero halaman utama baharu** (mockup v12 dipersetujui): desktop dua lajur, iaitu poster tajuk besar "Dari ahli biasa ke kerusi Presiden." di kiri dan kertas pilihan di kanan; mudah alih bertindan. Tali bendera kempen di atas menu. Pangkah pada petak kini dakwat ungu (dakwat kekal). Nombor pilihan 1, 2, 3 (dahulu 1, S, 2); arahan "Pangkah satu petak untuk bermula."
+- **Cip parti** (logo UMNO, PBB, PRS, SUPP, PDP) pada poster: tekan untuk terus mendaftar dengan parti itu dipilih.
+- Fon baharu untuk halaman utama: **Anton** (tajuk) dan **Plus Jakarta Sans** (teks), disimpan dalam assets/fonts (lesen OFL) dan dicache untuk luar talian. Skema Cerah dan Gelap disokong; BM/EN diterjemah.
+
+### Nota
+- ⚠️ "Simpanan permainan" dikekalkan (mockup menulis "Sambung permainan", tetapi menu sudah ada baris Sambung berasingan apabila ada simpanan).
+- Kad "3. Menuju PAU" yang kelihatan bertindih dalam tangkapan skrin mockup ialah artifak tangkapan halaman penuh (menu ialah lapisan tetap), bukan bug sebenar.
+
 ## v11.4 (2026-10-28)
 
 Pembetulan daripada maklum balas pemain:

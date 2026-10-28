@@ -368,6 +368,15 @@
   ["N.{k} {n} — {c} cawangan. Seret untuk alih; Ctrl + roda tetikus atau butang +/− untuk zum.", "N.{k} {n} — {c} branches. Drag to pan; Ctrl + mouse wheel or the +/− buttons to zoom."],
   ["{n} Daerah Mengundi", "{n} Polling Districts"],
   ["Hantar Rayuan Pemecatan", "Submit Expulsion Appeal"],
+  ["Dari ahli biasa", "From rank-and-file"],
+  ["ke kerusi", "to party"],
+  ["Presiden.", "President."],
+  ["Simulasi politik Malaysia. Menangi pemilihan cawangan, berkempen untuk PRU, bina gabungan dan jaga integriti anda, satu bulan pada satu masa.", "A Malaysian politics simulation. Win branch elections, campaign in the general election, build coalitions and guard your integrity, one month at a time."],
+  ["Tekan parti untuk terus mendaftar sebagai ahli parti itu.", "Tap a party to register straight away as its member."],
+  ["Pilih parti untuk permainan baharu", "Choose a party for a new game"],
+  ["Pangkah satu petak untuk bermula.", "Mark one box to begin."],
+  ["Pangkah", "Mark"],
+  ["petak untuk bermula.", "box to begin."],
   ["Tempoh 3 tahun selepas pemecatan telah tamat. Anda kini boleh menghantar rayuan: buka tab Tindakan Pemain dan tekan \"Hantar Rayuan Pemecatan\".", "The 3-year period after your expulsion has ended. You can now appeal: open the Player Actions tab and press \"Submit Expulsion Appeal\"."]
   ]);
 })();

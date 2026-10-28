@@ -112,7 +112,7 @@
   function logo() {
     var i = info(kini()); if (i.kod === 'UMNO') { return; }
     var im = D.querySelectorAll('img.brand__img, img.kertas__logo, img[src$="assets/images/logo.png"]');
-    for (var k = 0; k < im.length; k++) { if (im[k].hasAttribute('data-netral')) { continue; } if (im[k].getAttribute('src') !== i.logo) { im[k].onerror = null; im[k].setAttribute('src', i.logo); im[k].classList.add('logo-parti'); } }
+    for (var k = 0; k < im.length; k++) { if (im[k].hasAttribute('data-netral') || (im[k].closest && im[k].closest('[data-jenama-skip]'))) { continue; } if (im[k].getAttribute('src') !== i.logo) { im[k].onerror = null; im[k].setAttribute('src', i.logo); im[k].classList.add('logo-parti'); } }
     gaya();
   }
   var pernahTukar = false;

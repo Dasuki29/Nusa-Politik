@@ -386,6 +386,10 @@
       state.parti = v; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(v); }
       suaikanBorangParti(); muatData();
     });
+    try {                                                                                    // v12.0: parti dipilih daripada cip poster di menu utama (selepas muat semula slot)
+      var pMula = window.sessionStorage.getItem('nusa_parti_mula');
+      if (pMula && (!PT || PT.sah(pMula))) { window.sessionStorage.removeItem('nusa_parti_mula'); if (selParti.value !== pMula) { selParti.value = pMula; selParti.dispatchEvent(new Event('change')); } }
+    } catch (ePM) { /* abaikan */ }
   }
 
   el.retry.addEventListener('click', function () { if (esSW(state.parti)) { muatDataPBB(); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
