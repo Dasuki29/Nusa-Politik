@@ -602,6 +602,9 @@
     kira(inst.model, profil0);
 
     var st = inst.state, M = inst.model;
+    /* v11.3: mod Sarawak (parti Sarawak): Bahagian permainan = DUN (82), Cawangan = Daerah Mengundi. Poligon DUN/DM Sarawak (geo '13'). */
+    var SW = !!opts.sarawak; M.sw = SW;
+    function kodBhg(b) { return SW ? 'N.' + ('0' + parseInt(b.kod, 10)).slice(-2) : 'P.' + b.kod; }     // v11.3: label kod Bahagian (DUN Sarawak / Parlimen)
     var rumah0 = M.rumah;
     if (root.MyPolitikKrisisPeta && root.MyPolitikKrisisPeta.sediakanLokasi && rumah0 && rumah0.bahagian) {
       root.MyPolitikKrisisPeta.sediakanLokasi(function () { return rumah0.bahagian.cawangan.map(function (c) { return { id: c.id, nama: c.nama }; }); });
@@ -611,7 +614,7 @@
     var geoSedia = false, peta = null, lapSemasa = [], zumFn = null, tarikh = 0;
     if (G && typeof root.fetch === 'function') {
       for (var cuba = 0; cuba < 2 && !geoSedia; cuba++) {                       // cuba sekali lagi jika rangkaian tersekat
-        try { await G.muat(['negeri', 'parlimen']); geoSedia = true; } catch (eg) { inst.geoRalat = eg && eg.message ? eg.message : String(eg); }
+        try { await G.muat(SW ? ['negeri', 'parlimen', 'dun'] : ['negeri', 'parlimen']); if (SW) { await G.muatDM('13'); } geoSedia = true; } catch (eg) { inst.geoRalat = eg && eg.message ? eg.message : String(eg); }
       }
     }
     inst.geoSedia = geoSedia;
@@ -624,6 +627,11 @@
     function dua(n) { n = parseInt(n, 10); return (n < 10 ? '0' : '') + n; }
     function tiga(n) { n = parseInt(n, 10); return (n < 10 ? '00' : n < 100 ? '0' : '') + n; }
     function kunciDM(c) {
+      if (SW) {                                                // v11.3: '192/01/01' = Parlimen / DUN negeri / DM
+        var nd = parseInt(String(c.bahagian && c.bahagian.kod).replace(/\D/g, ''), 10), kd = '13_N.' + dua(nd), fd = G.getFitur('dun').filter(function (f) { return f.id === kd; })[0], pl = fd && fd.parlimen ? String(fd.parlimen).replace(/\D/g, '') : null;
+        var nm = parseInt(String(c.kod).replace(/\D/g, ''), 10);
+        return pl && nm ? tiga(pl) + '/' + dua(nd) + '/' + dua(nm) : null;
+      }
       var b = String(c.idSheet || c.id).split('/'), n = b.length;
       return n >= 3 ? tiga(b[n - 3]) + '/' + dua(b[n - 2]) + '/' + dua(b[n - 1]) : null;
     }
@@ -801,7 +809,7 @@
     }
     function demografiNod(nod) {
       if (!geoSedia || !nod || nod.tahap === 'negeri') { return null; }
-      if (nod.tahap === 'bahagian') { return G.getDemografi('parlimen', 'P.' + tiga(nod.kod)); }
+      if (nod.tahap === 'bahagian') { return SW ? G.getDemografi('dun', '13_N.' + dua(nod.kod)) : G.getDemografi('parlimen', 'P.' + tiga(nod.kod)); }
       if (nod.tahap === 'dun') { var kg = geoNegeriBahagian(nod.bahagian); return kg ? G.getDemografi('dun', kg + '_N.' + dua(nod.kod)) : null; }
       var km = kunciDM(nod); return km ? G.getDemografi('dm', km) : null;
     }
@@ -812,7 +820,10 @@
     }
 
     function renderTabs() {
-      var defs = [
+      var defs = SW ? [
+        ['bahagian', 'Peta Bahagian', fmt(M.bahagian.length) + ' DUN'],
+        ['pdm', 'Peta PDM / Lokaliti', fmt(M.cawangan.length) + ' Daerah Mengundi']
+      ] : [
         ['negeri', 'Peta Negeri', M.negeri.filter(function (n) { return n.pos; }).length + ' negeri'],
         ['bahagian', 'Peta Bahagian', fmt(M.bahagian.length) + ' bahagian'],
         ['dun', 'Peta DUN', fmt(M.dun.length) + ' DUN'],
@@ -845,15 +856,17 @@
         (geoSedia ? '<button data-act="metrik" data-v="pemilih" aria-pressed="' + (st.metrik === 'pemilih') + '">Saiz Pemilih</button>' : '') + '</div>' +
         '<div class="mpm-seg" role="group" aria-label="Lapisan peta">' + [['sentimen', '🗳️ Sentimen Undi'], ['sayap', '🧩 Kawasan Sayap'], ['pemain', '⭐ Kawasan Pemain']].map(function (x) {
           return '<button data-act="metrik" data-v="' + x[0] + '" aria-pressed="' + (st.metrik === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
-      if (geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && !st.negeriTapis))) {
+      if (!SW && geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && !st.negeriTapis))) {
         h += '<div class="mpm-seg" role="group" aria-label="Rantau">' + [['semua', 'Semua'], ['semenanjung', 'Semenanjung'], ['timur', 'Sabah &amp; Sarawak']].map(function (r) {
           return '<button data-act="rantau" data-v="' + r[0] + '" aria-pressed="' + (st.rantau === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
       }
-      if (geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && (!st.negeriTapis || st.negeriTapis === 'wp')))) {          // v8.21: pilih wilayah WP dengan butang besar (poligon KL, Putrajaya, Labuan terlalu kecil)
+      if (!SW && geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && (!st.negeriTapis || st.negeriTapis === 'wp')))) {          // v8.21: pilih wilayah WP dengan butang besar (poligon KL, Putrajaya, Labuan terlalu kecil)
         h += '<div class="mpm-seg" role="group" aria-label="Wilayah Persekutuan">' + [['semua', 'WP (semua)'], ['14', 'Kuala Lumpur'], ['16', 'Putrajaya'], ['15', 'Labuan']].map(function (r) {
           return '<button data-act="wp" data-v="' + r[0] + '" aria-pressed="' + (st.mode === 'bahagian' && st.negeriTapis === 'wp' && (st.wp || 'semua') === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
       }
-      if (st.mode === 'bahagian') {
+      if (st.mode === 'bahagian' && SW) {
+        h += '';
+      } else if (st.mode === 'bahagian') {
         h += '<label class="mpm-field">Negeri <select data-act="tapis">' + opsiNegeri(st.negeriTapis, true) + '</select></label>';
       } else if (st.mode === 'dun') {
         var nd = M.idxN[st.pdmNegeri];
@@ -863,9 +876,9 @@
         }).join('') : '') + '</select></label>';
       } else if (st.mode === 'pdm') {
         var n = M.idxN[st.pdmNegeri];
-        h += '<label class="mpm-field">Negeri <select data-act="pdm-negeri">' + opsiNegeri(st.pdmNegeri, false) + '</select></label>';
+        if (!SW) { h += '<label class="mpm-field">Negeri <select data-act="pdm-negeri">' + opsiNegeri(st.pdmNegeri, false) + '</select></label>'; }
         h += '<label class="mpm-field">Bahagian <select data-act="pdm-bahagian">' + (n ? n.bahagian.map(function (b) {
-          return '<option value="' + esc(b.id) + '"' + (b.id === st.pdmBahagian ? ' selected' : '') + '>P.' + esc(b.kod) + ' ' + esc(b.nama) + '</option>';
+          return '<option value="' + esc(b.id) + '"' + (b.id === st.pdmBahagian ? ' selected' : '') + '>' + (SW ? 'N.' + dua(b.kod) : 'P.' + esc(b.kod)) + ' ' + esc(b.nama) + '</option>';
         }).join('') : '') + '</select></label>';
         var pp = [];
         if (geoSedia) { pp.push(['peta', 'Peta']); }
@@ -909,7 +922,7 @@
     function jubin(nod) {
       var t = tahapNod(nod), rm = M.rumah && (M.rumah[nod.tahap] === nod), n = nilaiMetrik(nod);
       var pilih = st.dipilih && st.dipilih.tahap === nod.tahap && st.dipilih.id === nod.id;
-      var nama = (nod.tahap === 'bahagian' ? 'P.' + nod.kod + ' ' : nod.tahap === 'cawangan' ? nod.kod + ' ' : '') + (nod.nama || '');
+      var nama = (nod.tahap === 'bahagian' ? (SW ? 'N.' + dua(nod.kod) : 'P.' + nod.kod) + ' ' : nod.tahap === 'cawangan' ? nod.kod + ' ' : '') + (nod.nama || '');
       return '<button type="button" class="mpm-baris' + (rm ? ' is-rumah' : '') + '" data-act="pilih" data-tahap="' + nod.tahap + '" data-id="' + esc(nod.id) +
         '" data-level="' + t.indeks + '" aria-pressed="' + !!pilih + '" aria-label="' + esc(nod.nama + ': ' + n + '%, ' + t.label + (rm ? ', kawasan anda' : '')) +
         '" title="' + esc(nod.nama + ' (' + n + '%)') + '"><span class="mpm-b-nama">' + esc(nama) + '</span><span class="mpm-b-bar"><i style="width:' + clamp(n, 0, 100) + '%;background:' + t.warna +
@@ -926,14 +939,14 @@
       var b = M.idxB[st.pdmBahagian];
       if (!b) { return '<div class="mpm-status">Pilih bahagian untuk melihat cawangan.</div>'; }
       if (st.pdmPaparan === 'peta' && geoSedia) {
-        return '<p class="mpm-nota">P.' + esc(b.kod) + ' ' + esc(b.nama) + ' — ' + fmt(b.cawangan.length) + ' cawangan. Seret untuk alih; Ctrl + roda tetikus atau butang +/&minus; untuk zum.</p>' +
+        return '<p class="mpm-nota">' + esc(kodBhg(b)) + ' ' + esc(b.nama) + ' — ' + fmt(b.cawangan.length) + ' cawangan. Seret untuk alih; Ctrl + roda tetikus atau butang +/&minus; untuk zum.</p>' +
           '<div class="mpm-kanvas" data-kanvas></div><div class="mpm-gridwrap" data-gridwrap></div><p class="mpm-kredit">' + esc(G.KREDIT) + '</p>';
       }
       if (st.pdmPaparan === 'svg' && adaSvg(b.id)) {
-        return '<p class="mpm-nota">P.' + esc(b.kod) + ' ' + esc(b.nama) + ' — peta SVG kustom. <span data-svgstat></span></p><div class="mpm-svgwrap" data-svgwrap><div class="mpm-status" role="status">Memuatkan peta SVG...</div></div>';
+        return '<p class="mpm-nota">' + esc(kodBhg(b)) + ' ' + esc(b.nama) + ' — peta SVG kustom. <span data-svgstat></span></p><div class="mpm-svgwrap" data-svgwrap><div class="mpm-status" role="status">Memuatkan peta SVG...</div></div>';
       }
       if (!b.cawangan.length) { return '<div class="mpm-status">Tiada cawangan dalam bahagian ini.</div>'; }
-      return '<p class="mpm-nota">P.' + esc(b.kod) + ' ' + esc(b.nama) + ' — ' + fmt(b.cawangan.length) + ' cawangan (sempadan DUN tidak tersedia, senarai dipaparkan).</p>' +
+      return '<p class="mpm-nota">' + esc(kodBhg(b)) + ' ' + esc(b.nama) + ' — ' + fmt(b.cawangan.length) + ' cawangan (sempadan DUN tidak tersedia, senarai dipaparkan).</p>' +
         b.dun.filter(function (d) { return d.cawangan.length; }).map(function (d) {
           return '<section class="mpm-sek"><h3>' + esc(d.nama) + ' <small>' + d.cawangan.length + ' cawangan</small></h3><div class="mpm-grid">' +
             d.cawangan.map(function (c) {
@@ -985,10 +998,10 @@
       return isFinite(mt) ? mb + CONFIG.JARAK_TIMUR - mt : 0;
     }
     function adaTimur(f) { return CONFIG.NEGERI_TIMUR.indexOf(String(f.negeri || f.id)) >= 0 && (f.negeri != null || true); }
-    function geoNegeriBahagian(b) { var m = G.getMeta(); return m && m.negeriDariParlimen ? m.negeriDariParlimen['P.' + tiga(b.kod)] : null; }
+    function geoNegeriBahagian(b) { if (SW) { return '13'; } var m = G.getMeta(); return m && m.negeriDariParlimen ? m.negeriDariParlimen['P.' + tiga(b.kod)] : null; }
 
     function demoGeo(it) {
-      var p = it.tahap === 'negeri' ? 'negeri' : it.tahap === 'bahagian' ? 'parlimen' : it.tahap === 'dun' ? 'dun' : 'dm';
+      var p = it.tahap === 'negeri' ? 'negeri' : it.tahap === 'bahagian' ? (SW ? 'dun' : 'parlimen') : it.tahap === 'dun' ? 'dun' : 'dm';
       return G.getDemografi(p, it.f.id);
     }
     /** Jumlah pemilih bagi nod model (untuk panel): { n, anggaran } atau null. */
@@ -999,7 +1012,7 @@
         Object.keys(KOD_GEO_GAME).forEach(function (kg) { if (KOD_GEO_GAME[kg] === nod.id) { var x = G.getDemografi('negeri', kg); if (x && x.JUMLAH_PEMILIH != null) { tot += x.JUMLAH_PEMILIH; ada = true; } } });
         return ada ? { n: tot, anggaran: true } : null;
       }
-      if (nod.tahap === 'bahagian') { d = G.getDemografi('parlimen', 'P.' + tiga(nod.kod)); }
+      if (nod.tahap === 'bahagian') { d = SW ? G.getDemografi('dun', '13_N.' + dua(nod.kod)) : G.getDemografi('parlimen', 'P.' + tiga(nod.kod)); }
       else if (nod.tahap === 'dun') { var kg2 = geoNegeriBahagian(nod.bahagian); d = kg2 ? G.getDemografi('dun', kg2 + '_N.' + dua(nod.kod)) : null; }
       else { var km = kunciDM(nod); d = km ? G.getDemografi('dm', km) : null; }
       return d && d.JUMLAH_PEMILIH != null ? { n: d.JUMLAH_PEMILIH, anggaran: d.ANGGARAN !== false } : null;
@@ -1035,6 +1048,9 @@
         fit = items.map(function (i) { return i.f; });
         if (st.rantau !== 'semua') { fit = fit.filter(function (f) { return (st.rantau === 'timur') === (CONFIG.NEGERI_TIMUR.indexOf(f.id) >= 0); }); }
         tajuk = 'Negeri';
+      } else if (st.mode === 'bahagian' && SW) {
+        G.getFitur('dun').forEach(function (f) { if (f.negeri === '13') { items.push({ f: f, tahap: 'bahagian', nod: IDX_B_NO[parseInt(String(f.noDun).replace(/\D/g, ''), 10)] || null }); } });
+        fit = items.map(function (i) { return i.f; }); tajuk = 'Bahagian';
       } else if (st.mode === 'bahagian') {
         G.getFitur('parlimen').forEach(function (f) {
           var game = KOD_GEO_GAME[f.negeri];
@@ -1057,9 +1073,9 @@
         });
         fit = items.map(function (i) { return i.f; }); tajuk = 'DUN';
       } else {
-        b = M.idxB[st.pdmBahagian]; var kodP = 'P.' + tiga(b.kod);
-        var dm = G.getFitur('dm').filter(function (f) { return f.parlimen === kodP; });
-        var duns = G.getFitur('dun').filter(function (f) { return f.parlimen === kodP; });
+        b = M.idxB[st.pdmBahagian]; var kodP = 'P.' + tiga(b.kod), kodDs = '13_N.' + dua(b.kod);
+        var dm = G.getFitur('dm').filter(function (f) { return SW ? f.dun === kodDs : f.parlimen === kodP; });
+        var duns = G.getFitur('dun').filter(function (f) { return SW ? f.id === kodDs : f.parlimen === kodP; });
         if (dm.length) {
           var cm = {}; b.cawangan.forEach(function (c) { var k = kunciDM(c); if (k) { cm[k] = c; } });
           dm.forEach(function (f) { items.push({ f: f, tahap: 'cawangan', nod: cm[f.id] || null }); });
@@ -1080,7 +1096,7 @@
 
     function tipHtml(it) {
       var n = it.nod, f = it.f, t = n ? tahapNod(n) : null, d = demoGeo(it), p, h;
-      var label = it.tahap === 'negeri' ? 'Negeri' : it.tahap === 'bahagian' ? 'Bahagian P.' + (n ? n.kod : f.id.replace(/\D/g, '')) : it.tahap === 'dun' ? 'DUN' + (n ? ' · P.' + n.bahagian.kod : '') : 'Cawangan (Daerah Mengundi)';
+      var label = it.tahap === 'negeri' ? 'Negeri' : it.tahap === 'bahagian' ? (n ? 'Bahagian ' + kodBhg(n) : 'Bahagian P.' + f.id.replace(/\D/g, '')) : it.tahap === 'dun' ? 'DUN' + (n ? ' · P.' + n.bahagian.kod : '') : 'Cawangan (Daerah Mengundi)';
       h = '<b class="n">' + esc(n ? n.nama : f.nama) + '</b><div class="s">' + esc(label) + '</div>';
       if (n) {
         h += '<div class="b"><span>' + esc(jenisMetrikLabel()) + '</span><strong><i class="k" style="background:' + t.warna + '"></i>' + nilaiMetrik(n) + '%</strong></div>' +
@@ -1234,7 +1250,7 @@
     }
 
     function stagePoligon() {
-      var tip = st.mode === 'negeri' ? 'Klik negeri untuk butiran. ' : st.mode === 'dun' ? 'Klik DUN untuk butiran. ' : 'Klik bahagian (parlimen) untuk butiran. ';
+      var tip = st.mode === 'negeri' ? 'Klik negeri untuk butiran. ' : st.mode === 'dun' ? 'Klik DUN untuk butiran. ' : SW ? 'Klik DUN untuk butiran. ' : 'Klik bahagian (parlimen) untuk butiran. ';
       return '<div class="mpm-pelan"><span>' + tip + 'Seret untuk alih; Ctrl + roda tetikus atau butang +/&minus; untuk zum.</span></div>' +
         '<div class="mpm-kanvas" data-kanvas></div><p class="mpm-kredit">' + esc(G.KREDIT) + '</p>';
     }
@@ -1271,7 +1287,7 @@
       }
       var t = tahapNod(nod), tS = tahapSokongan(nod.sokongan, nod.tahap === 'bahagian' ? 'lobi' : 'sokongan'), tK = tahapSokongan(nod.kekuatan, 'sokongan');
       var rm = M.rumah && M.rumah[nod.tahap] === nod;
-      var sub = nod.tahap === 'negeri' ? 'Negeri' : nod.tahap === 'bahagian' ? 'Bahagian P.' + nod.kod + ' · ' + nod.negeri.nama : 'Cawangan ' + nod.kod + ' · ' + nod.dunNama + ' · P.' + nod.bahagian.kod + ' ' + nod.bahagian.nama;
+      var sub = nod.tahap === 'negeri' ? 'Negeri' : nod.tahap === 'bahagian' ? 'Bahagian ' + kodBhg(nod) + ' · ' + nod.negeri.nama : SW ? 'Cawangan ' + nod.kod + ' · ' + kodBhg(nod.bahagian) + ' ' + nod.bahagian.nama : 'Cawangan ' + nod.kod + ' · ' + nod.dunNama + ' · P.' + nod.bahagian.kod + ' ' + nod.bahagian.nama;
       if (nod.tahap === 'dun') { sub = 'DUN ' + nod.kod + ' · P.' + nod.bahagian.kod + ' ' + nod.bahagian.nama; }
       var dl = '<dl class="mpm-dl"><dt>Jumlah Ahli</dt><dd>' + (nod.jumlahAhli ? fmt(nod.jumlahAhli) : '–') + '</dd>';
       if (nod.tahap === 'negeri') {
@@ -1310,7 +1326,7 @@
 
     /* ----- tindakan pengguna ----- */
     function setMode(mode) {
-      if (['negeri', 'bahagian', 'dun', 'pdm'].indexOf(mode) < 0) { return; }
+      if ((SW ? ['bahagian', 'pdm'] : ['negeri', 'bahagian', 'dun', 'pdm']).indexOf(mode) < 0) { return; }
       var d = st.dipilih;
       if (mode === 'pdm' && d) {
         if (d.tahap === 'bahagian' && M.idxB[d.id]) { st.pdmNegeri = M.idxB[d.id].negeri.id; st.pdmBahagian = d.id; }

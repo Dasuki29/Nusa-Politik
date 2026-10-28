@@ -364,6 +364,8 @@
   ["Dialog tiga komuniti: {x}", "Three-Community Dialogue: {x}"],
   ["Ceramah dihalang: {x}", "Talk Blocked: {x}"],
   ["Dakwaan bantuan tidak sampai: {x}", "Claims Aid Did Not Arrive: {x}"],
-  ["PSB telah dibubarkan. Keahlian anda dipindahkan ke PDP.", "PSB has been dissolved. Your membership has been transferred to PDP."]
+  ["PSB telah dibubarkan. Keahlian anda dipindahkan ke PDP.", "PSB has been dissolved. Your membership has been transferred to PDP."],
+  ["N.{k} {n} — {c} cawangan. Seret untuk alih; Ctrl + roda tetikus atau butang +/− untuk zum.", "N.{k} {n} — {c} branches. Drag to pan; Ctrl + mouse wheel or the +/− buttons to zoom."],
+  ["{n} Daerah Mengundi", "{n} Polling Districts"]
   ]);
 })();

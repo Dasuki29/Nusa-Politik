@@ -69,9 +69,11 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   /* v11.2: krisis tempatan kelihatan dan boleh diselesaikan di peta Sarawak */
   await pg.evaluate(() => { const S = MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: (p.jawatanList || []).concat([{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', tahun: p.tahun, bulan: p.bulan }]), krisisPeta: null } }); MyPolitikKrisisPeta.prosesBulan({ rng: () => 0 }); });
   await pg.click('[data-tab="tindakan"]'); await pg.waitForTimeout(300); await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(800);
-  semak((await pg.$$('.krisis-sw [data-krisis-sw]')).length === 1, 'bar krisis tempatan di peta Sarawak');
-  await pg.click('[data-krisis-sw]'); await pg.waitForTimeout(500); await pg.click('#modal [data-pilih="abai"]'); await pg.waitForTimeout(500);
-  semak((await pg.$$('.krisis-sw')).length === 0, 'krisis diselesaikan dari bar');
+  await pg.evaluate(() => { const b = document.querySelector('#peta-host [data-act="metrik"][data-v="kekuatan"]'); if (b) { b.click(); } }); await pg.waitForTimeout(500);   // paksa toolbar dilukis semula
+  semak((await pg.$$('#peta-host .mpm-krisis [data-act="krisis"]')).length === 1, 'bar krisis tempatan di Peta Pengaruh Sarawak');
+  await pg.click('#peta-host .mpm-krisis [data-act="krisis"]'); await pg.waitForTimeout(500); await pg.click('#modal [data-pilih="abai"]'); await pg.waitForTimeout(800);
+  semak((await pg.$$('#peta-host .mpm-krisis')).length === 0, 'krisis diselesaikan dari bar');
+  semak((await pg.$$('#mpm-tab-pdm')).length === 1 && (await pg.$$('#mpm-tab-negeri')).length === 0, 'Peta Pengaruh Sarawak: tab DUN dan DM sahaja');
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

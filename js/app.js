@@ -1251,6 +1251,18 @@
   }
 
   /* ---------- Peta ---------- */
+  /** v11.3: data Peta Pengaruh parti Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi (CSV parti; sandaran js/data-sarawak.js). */
+  function skripSW() {
+    if (W.MyPolitikDataSarawak) { return Promise.resolve(W.MyPolitikDataSarawak); }
+    return new Promise(function (ok) { var sc = document.createElement('script'); sc.src = 'js/data-sarawak.js'; sc.onload = function () { ok(W.MyPolitikDataSarawak || null); }; sc.onerror = function () { ok(null); }; document.head.appendChild(sc); });
+  }
+  async function dataPetaSW(k) {
+    var teks = null, kod = String(k).toLowerCase();
+    try { var res = await fetch(W.MyPolitikParti.info(k).data, { cache: 'no-cache' }); if (!res.ok) { throw new Error('HTTP ' + res.status); } teks = await res.text(); }
+    catch (eF) { var emb = await skripSW(); if (emb && emb.csv && emb.csv[kod]) { teks = emb.csv[kod]; } else { throw eF; } }
+    var h = D.rowsToHierarchy(D.teksKeBaris(teks));
+    return { negeri: [{ nama: 'Sarawak', bahagian: h.bahagian }] };
+  }
   async function muatPeta(paksa) {
     var pt = state.peta, host = $('peta-host');
     if (pt.status === 'memuat' || (pt.status === 'siap' && !paksa)) { return; }
@@ -1259,7 +1271,16 @@
     host.innerHTML = '<div class="loading" role="status">Memuatkan data peta...</div>';
     try {
       var pPBB = S && S.loadPlayer();
-      if (pPBB && esSW(pPBB.parti) && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js)
+      if (pPBB && esSW(pPBB.parti) && W.MyPolitikParti) {          // v11.3: parti Sarawak guna Peta Pengaruh penuh (js/map.js, mod Sarawak)
+        try {
+          if (!pt.data) { pt.data = await dataPetaSW(pPBB.parti); }
+          host.innerHTML = '';
+          if (pt.instance && pt.instance.destroy) { pt.instance.destroy(); }
+          pt.instance = await MAP.mount(host, { data: pt.data, mode: 'bahagian', sarawak: true });
+          pt.status = 'siap'; return;
+        } catch (eSW) { pt.data = null; if (W.console) { W.console.warn('Peta Pengaruh Sarawak gagal; guna peta ringkas', eSW); } }
+      }
+      if (pPBB && esSW(pPBB.parti) && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js) — sandaran
         var GG = W.MyPolitikGeo;
         await GG.muat(['negeri', 'parlimen', 'dun']); await GG.muatDM('13');
         host.innerHTML = '<div id="krisis-sw"></div><div id="geo-sw"></div>';

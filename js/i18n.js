@@ -138,7 +138,7 @@
     var en = terjemah(v); if (en === null) { return; }
     var baru = v.match(/^\s*/)[0] + en + v.match(/\s*$/)[0];
     if (baru === v) { return; }
-    teks.set(n, { bm: v, en: baru }); n.nodeValue = baru;
+    teks.set(n, { bm: v, en: baru, dij: n.__npKe === v }); n.__npKe = baru; n.nodeValue = baru;      // v11.3: __npKe = teks sudah dijenamakan (js/parti.js tidak menukar lagi)
   }
   function atribut(el, a) {
     var v = el.getAttribute(a); if (!v || !v.trim()) { return; }
@@ -146,7 +146,7 @@
     if (r && v === r.en) { return; }
     var en = T.MINGGU[v.trim()] || terjemah(v); if (en === null || en === v) { return; }   // title bulan = nama penuh (Mac -> March)
     if (!rec) { rec = {}; attr.set(el, rec); }
-    rec[a] = { bm: v, en: en }; el.setAttribute(a, en);
+    el.__npKa = el.__npKa || {}; rec[a] = { bm: v, en: en, dij: el.__npKa[a] === v }; el.__npKa[a] = en; el.setAttribute(a, en);
   }
   function guna(akar) {
     if (!akar) { return; }
@@ -159,8 +159,8 @@
     for (var i = 0; i < senarai.length; i++) { for (var j = 0; j < ATTR.length; j++) { if (senarai[i].hasAttribute(ATTR[j])) { atribut(senarai[i], ATTR[j]); } } }
   }
   function pulih() {
-    teks.forEach(function (rec, n) { if (n.isConnected && n.nodeValue === rec.en) { n.nodeValue = rec.bm; } });
-    attr.forEach(function (rec, el) { if (!el.isConnected) { return; } Object.keys(rec).forEach(function (a) { if (el.getAttribute(a) === rec[a].en) { el.setAttribute(a, rec[a].bm); } }); });
+    teks.forEach(function (rec, n) { if (n.isConnected && n.nodeValue === rec.en) { n.__npKe = rec.dij ? rec.bm : undefined; n.nodeValue = rec.bm; } });
+    attr.forEach(function (rec, el) { if (!el.isConnected) { return; } Object.keys(rec).forEach(function (a) { if (el.getAttribute(a) === rec[a].en) { el.__npKa = el.__npKa || {}; el.__npKa[a] = rec[a].dij ? rec[a].bm : undefined; el.setAttribute(a, rec[a].bm); } }); });
     teks.clear(); attr.clear();
   }
   function pantau() {
