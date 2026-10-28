@@ -55,7 +55,7 @@
     KREDIBILITI: { min: 0.6, maks: 1.2 },                         // pengganda kesan mengikut Integriti Parti (skor 0 hingga 100)
     PERSEPSI: { lantai: 20, susut: 2, etikaBuruk: 3, skorRendah: 2, auditTinggi: 2, tinggi: 70, kesanTinggi: { akarUmbi: -1, reputasi: -1 } },
     BELIA: { lantai: 30, susut: 1, tinggi: 70, kesanTinggi: { ip: 1 } },
-    SIDANG: { peluang: 0.18, peluangPersepsi: 0.002, peluangPRU: 0.08, jeda: 3, bilSoalan: 3, jenis: ['SIDANG', 'TV', 'ONLINE'],
+    SIDANG: { peluangSarawak: 0.5, peluang: 0.18, peluangPersepsi: 0.002, peluangPRU: 0.08, jeda: 3, bilSoalan: 3, jenis: ['SIDANG', 'TV', 'ONLINE'],
               tidakJawab: { persepsi: 8, skor: -3 } },
     BERFAKTA: { ip: 4, skor: 3, reputasi: 1, padan: 1.5, tidakPadan: 0.7 },
     DIAM: { persepsi: 3 },                                                    // v12.2: Tiada komen
@@ -220,8 +220,12 @@
     if (d.sidang) { return { ok: false, ralat: 'Sidang media sedang menunggu.' }; }
     var jenis = (o && o.jenis) || CONFIG.SIDANG.jenis[Math.floor(r() * CONFIG.SIDANG.jenis.length)];
     var c = konteks(p), sesuai = SOALAN.filter(function (q) { return !q.syarat || q.syarat(c); }), khas = sesuai.filter(function (q) { return q.kump && q.kump !== 'umum'; }), ids = [];
-    if (khas.length) { ids.push(khas[Math.floor(r() * khas.length)].id); }                       // v12.2: sekurang-kurangnya satu soalan ikut konteks pemain
-    var pool = sesuai.filter(function (q) { return ids.indexOf(q.id) < 0; });
+    var khasSW = khas.filter(function (q) { return q.kump === 'sarawak'; }), khasLain = khas.filter(function (q) { return q.kump !== 'sarawak'; });
+    if (khasSW.length) {                                                                         // v12.3: soalan Sarawak dalam kira-kira separuh sidang sahaja, maksimum satu
+      var calonK = r() < CONFIG.SIDANG.peluangSarawak ? khasSW : khasLain;
+      if (calonK.length) { ids.push(calonK[Math.floor(r() * calonK.length)].id); }
+    } else if (khas.length) { ids.push(khas[Math.floor(r() * khas.length)].id); }                // v12.2: sekurang-kurangnya satu soalan ikut konteks pemain
+    var pool = sesuai.filter(function (q) { return ids.indexOf(q.id) < 0 && q.kump !== 'sarawak'; });
     while (ids.length < CONFIG.SIDANG.bilSoalan && pool.length) { ids.push(pool.splice(Math.floor(r() * pool.length), 1)[0].id); }
     var teks = ids.map(function (id) { return isiSoal(soalanById(id), c); });
     d.sidang = { jenis: jenis, soalan: ids, teks: teks, i: 0, jawab: [], tahun: p.tahun, bulan: p.bulan };

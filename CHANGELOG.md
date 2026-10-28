@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v12.3 (2026-10-28)
+
+- Sidang Media pemain parti Sarawak: soalan berkaitan Sarawak kini muncul dalam kira-kira separuh sidang sahaja, dan maksimum satu soalan setiap sidang (sebelum ini hampir setiap sidang). Separuh lagi diberi kepada soalan portfolio, kawasan, pemilihan dan peristiwa. Pemain UMNO Semenanjung tetap tidak mendapat soalan Sarawak (diuji).
+
 ## v12.2 (2026-10-28)
 
 - **Isu Semasa** (baharu; js/isu.js, js/isu-ui.js): 12 senario politik rekaan (harga beras, banjir, tarif elektrik, subsidi minyak, anti lompat parti, mogok doktor kontrak, pusat data, yuran universiti, video tular, had umur calon; khas Sabah/Sarawak: MA63 dan royalti minyak 20%). Muncul dengan peluang 1/3 setiap bulan (jeda 2 bulan, tiada semasa kempen) kepada pemegang jawatan / wakil rakyat. Tiga pendirian (pertahan / kritik / berkecuali) dengan kesan berbeza untuk kerajaan dan pembangkang; tidak dijawab: Reputasi -1. Pendirian diingati.

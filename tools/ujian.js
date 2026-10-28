@@ -1428,6 +1428,13 @@ ujian('v12.2: Isu Semasa (muncul, kesan kerajaan/pembangkang, abai, isu Sarawak)
   M.setRng(null);
 });
 
+ujian('v12.3: soalan Sarawak kira-kira separuh sidang pemain Sarawak (maksimum satu); tiada untuk UMNO Semenanjung', () => {
+  const M = g.MyPolitikMedia; P.daftar({}); P.tetap({ jawatan: 'Ketua Bahagian', negeri: 'Melaka' });
+  const kira = (parti, negeri) => { let ada = 0, lebih = 0; for (let i = 0; i < 200; i++) { const q = S.loadPlayer(); q.parti = parti; q.negeri = negeri; q.media = null; S.savePlayer(q); M.setRng(P.rng ? P.rng(i) : (() => { let x = i * 9301 + 49297; return () => { x = (x * 9301 + 49297) % 233280; return x / 233280; }; })()); M.mulaSidang({}); const n = M.getMedia(S.loadPlayer()).sidang.soalan.filter((x) => /^sw_/.test(x)).length; if (n) { ada++; } if (n > 1) { lebih++; } } M.setRng(null); return { ada, lebih }; };
+  const pbb = kira('PBB', 'Sarawak'); betul(pbb.ada >= 70 && pbb.ada <= 130, 'PBB kira-kira separuh: ' + pbb.ada + '/200'); sama(pbb.lebih, 0, 'maksimum satu soalan Sarawak');
+  sama(kira('UMNO', 'Melaka').ada, 0, 'UMNO Melaka tiada soalan Sarawak');
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));
