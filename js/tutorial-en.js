@@ -67,6 +67,8 @@
     "Simpanan watak anda <b>selamat</b> dan dipulihkan selepas latihan.": "Your character save is <b>safe</b> and restored after the training.",
     "<button type=\"button\" class=\"tut-btn tut-btn--emas\" data-lat-mula=\"1\">Mula Latihan Bersama Amir</button>": "<button type=\"button\" class=\"tut-btn tut-btn--emas\" data-lat-mula=\"1\">Start Training with Amir</button>",
     "Mula Latihan Bersama Amir": "Start Training with Amir",
+    "<p class=\"note\">Latihan Bersama Amir belum tersedia untuk parti Sarawak. Tutorial interaktif (butang ?) sudah disesuaikan untuk parti anda.</p>": "<p class=\"note\">Training with Amir is not yet available for Sarawak parties. The interactive tutorial (the ? button) is already adapted to your party.</p>",
+    "Latihan Bersama Amir belum tersedia untuk parti Sarawak. Tutorial interaktif (butang ?) sudah disesuaikan untuk parti anda.": "Training with Amir is not yet available for Sarawak parties. The interactive tutorial (the ? button) is already adapted to your party.",
     "Ringkasan pantas": "Quick summary",
     "<b>Guna 5 AP</b> setiap bulan di tab Tindakan (AP tidak dibawa ke bulan depan).": "<b>Use 5 AP</b> every month in the Actions tab (AP is not carried over to next month).",
     "<b>Semak</b> tab Pemilihan, Mesyuarat dan 📣 Pilihan Raya (muncul sendiri semasa musim pilihan raya).": "<b>Check</b> the Elections, Meetings and 📣 General Election tabs (it appears by itself during election season).",

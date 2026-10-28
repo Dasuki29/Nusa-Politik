@@ -1262,9 +1262,10 @@
       if (pPBB && esSW(pPBB.parti) && W.MyPolitikGeo) {            // v8.32: PBB: peta DUN dan Daerah Mengundi Sarawak (js/geo.js)
         var GG = W.MyPolitikGeo;
         await GG.muat(['negeri', 'parlimen', 'dun']); await GG.muatDM('13');
-        host.innerHTML = '';
+        host.innerHTML = '<div id="krisis-sw"></div><div id="geo-sw"></div>';
         if (pt.instance && pt.instance.destroy) { pt.instance.destroy(); }
-        pt.instance = GG.mount(host, { peringkat: 'dun', negeri: '13', warna: 'pemilih', fokus: pPBB });
+        pt.instance = GG.mount($('geo-sw'), { peringkat: 'dun', negeri: '13', warna: 'pemilih', fokus: pPBB });
+        renderKrisisSW();
         pt.status = 'siap'; return;
       }
       if (!pt.data) { var pp = S && S.loadPlayer(); pt.data = await D.loadSemuaNegeri(pp && pp.negeri, { url: CFG.sheetCsvUrl, appsScriptUrl: CFG.appsScriptUrl }); }
@@ -1279,10 +1280,38 @@
     }
   }
 
+  /* ---------- v11.2: krisis tempatan untuk parti Sarawak ----------
+     Peta Sarawak (js/geo.js) tiada ikon krisis seperti Peta Pengaruh (js/map.js), jadi krisis dahulu tidak kelihatan dan
+     terabai secara automatik. Bar krisis dipaparkan di atas peta Sarawak dengan dialog penyelesaian yang sama. */
+  function renderKrisisSW() {
+    var box = $('krisis-sw'), KP = W.MyPolitikKrisisPeta, p = S && S.loadPlayer();
+    if (!box) { return; }
+    var a = (KP && p) ? KP.senarai(p) : [];
+    box.innerHTML = a.length ? '<div class="krisis-sw" role="group" aria-label="Krisis tempatan"><strong>⚠️ Krisis tempatan (' + a.length + '):</strong>' + a.map(function (k) {
+      return '<button type="button" class="krisis-sw__btn" data-krisis-sw="' + esc(k.id) + '"><span aria-hidden="true">' + k.ikon + '</span> <span>' + esc(k.nama) + '</span> · <span>' + esc(k.tempat) + '</span></button>'; }).join('') + '</div>' : '';
+  }
+  async function urusKrisisSW(kid) {
+    var KPm = W.MyPolitikKrisisPeta, U = W.NusaUI; if (!KPm || !U || !U.modal || !S) { return; }
+    var p = S.loadPlayer(), k = KPm.senarai(p).filter(function (x) { return x.id === kid; })[0];
+    if (!k) { renderKrisisSW(); return; }
+    var j = KPm.JENIS.filter(function (x) { return x.id === k.jenis; })[0], ops = KPm.pilihan(p, kid);
+    var umur = (p.tahun * 12 + p.bulan) - (k.tahun * 12 + k.bulan), baki = Math.max(0, KPm.CONFIG.LEWAT_BULAN - umur);
+    var isi = '<p>' + esc(j.cerita) + '</p><p class="note" style="font-size:.82rem">Lokasi: ' + esc(k.tempat) + '. Belum selesai ' + umur + ' bulan; diabaikan secara automatik dalam ' + baki + ' bulan.</p>' +
+      '<p style="margin:8px 0 0;font-size:.82rem">AP anda: ' + p.ap + ' · Dana anda: RM ' + fmt(p.myr) + '</p><ul class="acara__pil">' + ops.map(function (o) {
+        return '<li><button type="button" class="acara__opsi' + (o.id === 'turun' ? ' is-utama' : '') + (o.boleh ? '' : ' is-off') + '" data-pilih="' + o.id + '"' + (o.boleh ? '' : ' disabled') + '><b>' + esc(o.label) + '</b>' +
+          '<small class="acara__kesan">' + esc(o.ringkas) + '</small>' + (o.boleh ? '' : '<small>' + esc(o.sebab) + '</small>') + '</button></li>'; }).join('') + '</ul>';
+    var id = await U.modal({ tajuk: '⚠️ Krisis: ' + j.nama, isi: isi, butang: [] });
+    if (!id) { return; }
+    var r = KPm.selesai(kid, id);
+    U.toast(r.ok ? r.mesej : r.ralat, r.ok ? 'ok' : 'ralat');
+    renderKrisisSW(); if (U.render) { U.render(); }
+  }
+  document.addEventListener('click', function (ev) { var b = ev.target && ev.target.closest ? ev.target.closest('[data-krisis-sw]') : null; if (b) { urusKrisisSW(b.getAttribute('data-krisis-sw')); } });
+
   /* ---------- Render utama ---------- */
   function renderPanel(p) {
     var id = state.tab, el = $('panel-' + id);
-    if (id === 'peta') { return; }
+    if (id === 'peta') { renderKrisisSW(); return; }
     var fk = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-fk') : null;
     el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : id === 'profil' ? panelProfil(p) : panelMesyuarat(p);
     if (fk) { var f = el.querySelector('[data-fk="' + fk.replace(/"/g, '\\"') + '"]'); if (f && !f.disabled) { f.focus({ preventScroll: true }); } }

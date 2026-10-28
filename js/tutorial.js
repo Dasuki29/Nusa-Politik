@@ -318,7 +318,8 @@
     return [
       { id: 'panduan', tajuk: 'Latihan Bersama Amir', html:
         '<h3>Latihan Bersama Amir</h3><p>Cara terbaik belajar ialah dengan bermain. <b>Latihan bersama Amir</b> ialah permainan contoh berpandu (kira-kira 10 minit): daripada ahli biasa cawangan, ke pemilihan, mesyuarat, PRU, Kabinet dan PRK, hingga <b>Rumusan Kerjaya</b>.</p><ul><li>Pemandu menyorot butang yang perlu ditekan. Anda boleh tekan <b>Seterusnya</b> bila-bila masa.</li><li>Kemenangan penting dijamin supaya cerita sampai ke penghujung.</li><li>Simpanan watak anda <b>selamat</b> dan dipulihkan selepas latihan.</li></ul>' +
-        '<p><button type="button" class="tut-btn tut-btn--emas" data-lat-mula="1">Mula Latihan Bersama Amir</button></p>' +
+        (!p || !p.parti || p.parti === 'UMNO' ? '<p><button type="button" class="tut-btn tut-btn--emas" data-lat-mula="1">Mula Latihan Bersama Amir</button></p>'
+          : '<p class="note">Latihan Bersama Amir belum tersedia untuk parti Sarawak. Tutorial interaktif (butang ?) sudah disesuaikan untuk parti anda.</p>') +      // v11.2: skrip Amir khusus parti asal
         '<h4>Ringkasan pantas</h4><ol><li><b>Guna AP</b> di tab Tindakan. AP bertambah 6 setiap bulan (Biasa) dan baki dibawa sehingga had 20, jadi jangan biarkan AP penuh.</li><li><b>Semak</b> tab Pemilihan, Mesyuarat dan 📣 Pilihan Raya (muncul sendiri semasa musim pilihan raya).</li><li>Tekan <b>Teruskan ke Bulan Seterusnya</b>; jawab acara, krisis atau dilema yang muncul.</li></ol>' },
       { id: 'asas', tajuk: 'Asas Permainan', html:
         '<h3>Asas Permainan</h3><p>Anda ialah ahli biasa sebuah cawangan UMNO. Tujuan: kumpul <b>Pengaruh (IP)</b>, menang pemilihan, dan mendaki hierarki: Cawangan → Bahagian → Pusat.</p>' +

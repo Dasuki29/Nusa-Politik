@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v11.2 (2026-10-28)
+
+Pembetulan daripada ujian pemain PBB:
+- **Krisis tempatan kini kelihatan untuk parti Sarawak.** Peta Sarawak (js/geo.js) tiada ikon krisis seperti Peta Pengaruh UMNO, jadi krisis tidak boleh diselesaikan dan "terabai" secara automatik. Bar "⚠️ Krisis tempatan" kini dipaparkan di atas peta Sarawak dengan dialog penyelesaian yang sama.
+- **Tiada lagi "Lantikan Pimpinan Negeri" / Badan Perhubungan** untuk PBB, PRS, SUPP dan PDP (induk dan sayap).
+- **Nama PAU untuk PBB = "Perhimpunan Agung PBB"** (singkatan PA). v11.1 tersilap guna "Konvensyen", iaitu istilah GPS.
+- **Latihan Amir** (skrip UMNO) tidak lagi ditawarkan kepada parti Sarawak; latihan lama yang sedang berjalan daripada simpanan parti Sarawak ditamatkan dan simpanan asal dipulihkan. Tutorial biasa kekal.
+
 ## v11.1 (2026-10-24)
 
 - **Kalendar PBB** (maklumat daripada pengguna: PBB tiada bulan kalendar rasmi tetap seperti UMNO, tetapi tidak terlalu rawak; proses Ranting (lokaliti) -> Cawangan (DUN) -> Pusat; kitaran tetap 3 tahun): **Ranting bulan 3, Cawangan (DUN) bulan 5, Konvensyen PBB bulan 8**; bulan 1-2 akar umbi (bonus), bulan 4 dan 6-7 "Antara Musim", bulan 9-12 pasca-Konvensyen. Kitaran pemilihan 3 tahun sedia ada dikekalkan. UMNO tidak berubah (ujian baharu).

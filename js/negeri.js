@@ -348,7 +348,7 @@
   /** Pulang tawaran jika pemain Ketua Bahagian belum membuat keputusan lobi tahun ini; selain itu null. */
   function tawaranLobi(p) {
     p = p || (S() && S().loadPlayer());
-    if (!p || p.tamat || sayaPresiden(p) || !layak(p) || !tahunPemilihan(p)) { return null; }
+    if (!p || p.tamat || !ctx.aktif(p) || sayaPresiden(p) || !layak(p) || !tahunPemilihan(p)) { return null; }
     var b = Number(p.bulan) || 1, bp = p[ctx.kunci] || {};
     if (b < CONFIG.BULAN_LOBI_MULA || b > CONFIG.BULAN_LOBI_TAMAT || bp.lobiTahun === p.tahun) { return null; }
     var W0 = ctx.sayap ? WN() : '', tajuk = ctx.sayap ? 'Anda Ketua ' + W0 + ' Bahagian ' + (p.bahagian || '') : 'Anda Ketua Bahagian ' + (p.bahagian || '');
@@ -476,7 +476,7 @@
 
   /** Keputusan menunggu pemain (untuk pop-up): null | { jenis, jawatan?, sumber?, pilihan?, calon[] }. */
   function menunggu(p) {
-    p = p || (S() && S().loadPlayer()); if (!p || !p[ctx.kunci]) { return null; }
+    p = p || (S() && S().loadPlayer()); if (!p || !p[ctx.kunci] || !ctx.aktif(p)) { return null; }
     var bp = p[ctx.kunci];
     if (!bp.menunggu) { return menungguLain(p); }                    // v7.43: Presiden: negeri lain
     if (bp.menunggu === 'pilih_pengerusi') { return { jenis: 'pilih_pengerusi', calon: bp.calon || [] }; }
@@ -549,8 +549,10 @@
   return API;
   }
 
-  var CTX_INDUK = { id: 'induk', kunci: 'negeriBP', sayap: false, aktif: function () { return true; }, kodKB: function () { return 'ketua_bahagian'; }, kodPemberi: function () { return 'presiden'; } };
-  var CTX_SAYAP = { id: 'sayap', kunci: 'negeriSayap', sayap: true, aktif: function (p) { return !!p && NAMA_SAYAP[p.sayap] !== undefined; },
+  /* v11.2: tiada Badan Perhubungan negeri untuk parti Sarawak (PBB, PRS, SUPP, PDP); parti itu sendiri bertaraf negeri. */
+  function partiSW(p) { return !!p && /^(PBB|PRS|SUPP|PDP|PSB)$/.test(p.parti || ''); }
+  var CTX_INDUK = { id: 'induk', kunci: 'negeriBP', sayap: false, aktif: function (p) { return !partiSW(p); }, kodKB: function () { return 'ketua_bahagian'; }, kodPemberi: function () { return 'presiden'; } };
+  var CTX_SAYAP = { id: 'sayap', kunci: 'negeriSayap', sayap: true, aktif: function (p) { return !!p && !partiSW(p) && NAMA_SAYAP[p.sayap] !== undefined; },
     kodKB: function (p) { return 'sayap_bahagian_' + p.sayap; }, kodPemberi: function (p) { return 'sayap_pusat_' + p.sayap; } };
   var induk = bina(CTX_INDUK), sayap = bina(CTX_SAYAP), prosesInduk = induk.prosesBulan;
   induk.prosesBulan = function (o) { var a = prosesInduk(o), b2 = sayap.prosesBulan(o); return { peristiwa: (a.peristiwa || []).concat(b2.peristiwa || []) }; };

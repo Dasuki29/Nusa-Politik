@@ -1320,7 +1320,7 @@ ujian('v11.0: PSB dibubarkan: simpanan PSB dipindah ke PDP; pencabar tanpa PSB; 
   const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'EventDatabase.js'), 'utf8'); betul(src.indexOf("id: 'arahan_pusat_cawangan'") > 0, 'peristiwa Arahan Pusat wujud');
 });
 
-ujian('v11.1: kalendar PBB: Ranting bulan 3, Cawangan bulan 5, Konvensyen bulan 8; UMNO tidak berubah', () => {
+ujian('v11.1: kalendar PBB: Ranting bulan 3, Cawangan bulan 5, Perhimpunan Agung PBB bulan 8; UMNO tidak berubah', () => {
   const K = require('../js/calendar.js'); const simpan = S.loadPlayer();
   const bina = (parti) => { S.savePlayer(S.buildPlayerProfile({ parti, nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' } })); };
   bina('PBB');
@@ -1329,6 +1329,23 @@ ujian('v11.1: kalendar PBB: Ranting bulan 3, Cawangan bulan 5, Konvensyen bulan 
   sama(K.getFasa(4).kod, 'antara'); sama(K.getFasa(3).kod, 'cawangan'); sama(K.getFasa(5).kod, 'bahagian'); sama(K.getFasa(8).kod, 'pau'); sama(K.getFasa(2).kod, 'akar_umbi');
   bina('UMNO');
   sama([win('cawangan'), win('bahagian'), win('pau')].join(), '4-6,7-7,8-8', 'tetingkap UMNO kekal'); sama(K.getFasa(3).kod, 'akar_umbi');
+});
+
+ujian('v11.2: Latihan Amir hanya untuk UMNO; parti Sarawak tidak ditawarkan', () => {
+  const L = require('../js/latihan.js');
+  betul(L.tersedia({ parti: 'UMNO' }) && L.tersedia({}), 'UMNO / lama tersedia');
+  ['PBB', 'PRS', 'SUPP', 'PDP'].forEach((k) => betul(!L.tersedia({ parti: k }), k + ' tidak tersedia'));
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' } }));
+  sama(L.mula(), false, 'mula() ditolak untuk PBB'); sama(g.localStorage.getItem('myPolitik_latihan'), null, 'tiada bendera latihan');
+});
+
+ujian('v11.2: tiada Lantikan Badan Perhubungan negeri untuk parti Sarawak', () => {
+  const N = require('../js/negeri.js');
+  ['PBB', 'PRS', 'SUPP', 'PDP'].forEach((k) => { betul(!N.aktif({ parti: k, sayap: 'utama' }), k + ' induk tidak aktif'); betul(!N.sayap.aktif({ parti: k, sayap: 'pemuda' }), k + ' sayap tidak aktif'); });
+  betul(N.aktif({ parti: 'UMNO', sayap: 'utama' }) && N.sayap.aktif({ parti: 'UMNO', sayap: 'pemuda' }), 'UMNO kekal');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' } }));
+  const p = S.loadPlayer(); p.bulan = 9; S.savePlayer(p);
+  sama(N.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'tiada peristiwa lantikan_negeri');
 });
 
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {

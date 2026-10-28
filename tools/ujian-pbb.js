@@ -66,6 +66,12 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(4000);
   semak((await pg.$$eval('#peta-host svg path', (p) => p.length)) === 82, 'peta DUN Sarawak (82 kawasan)');
   semak(!/UMNO/.test(await pg.evaluate(() => document.body.innerText)), 'tiada perkataan UMNO tertinggal dalam dashboard PBB');
+  /* v11.2: krisis tempatan kelihatan dan boleh diselesaikan di peta Sarawak */
+  await pg.evaluate(() => { const S = MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: (p.jawatanList || []).concat([{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', tahun: p.tahun, bulan: p.bulan }]), krisisPeta: null } }); MyPolitikKrisisPeta.prosesBulan({ rng: () => 0 }); });
+  await pg.click('[data-tab="tindakan"]'); await pg.waitForTimeout(300); await pg.click('[data-tab="peta"]'); await pg.waitForTimeout(800);
+  semak((await pg.$$('.krisis-sw [data-krisis-sw]')).length === 1, 'bar krisis tempatan di peta Sarawak');
+  await pg.click('[data-krisis-sw]'); await pg.waitForTimeout(500); await pg.click('#modal [data-pilih="abai"]'); await pg.waitForTimeout(500);
+  semak((await pg.$$('.krisis-sw')).length === 0, 'krisis diselesaikan dari bar');
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

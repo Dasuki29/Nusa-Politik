@@ -63,9 +63,12 @@
     return S().buildPlayerProfile({ nama: 'Amir', demografik: d, cawangan: c, sayap: 'utama', tahunAhli: 0 });
   }
 
+  /** v11.2: skrip Amir ditulis untuk laluan UMNO (Bahagian, PRU, Kabinet); belum ditawarkan untuk parti Sarawak. */
+  function tersedia(p) { return !!p && (!p.parti || p.parti === 'UMNO'); }
+
   function mula() {
     var s = S(), p = s && s.loadPlayer();
-    if (!p || aktif()) { return false; }
+    if (!p || aktif() || !tersedia(p)) { return false; }
     sandar();
     var amir = binaAmir(p);
     var r = s.savePlayer(amir);
@@ -279,6 +282,8 @@
 
   function init() {
     var b = bendera(); if (!b || !b.aktif || !doc()) { return false; }
+    var asal = null; try { asal = JSON.parse(JSON.parse(baca(K_ASAL) || 'null').player || 'null'); } catch (e) { asal = null; }
+    if (asal && !tersedia(asal)) { keluar(); return false; }      // v11.2: latihan lama yang dimulakan daripada simpanan parti Sarawak ditamatkan; simpanan asal dipulihkan
     pasang();
     ui.i = Math.min(Math.max(0, b.langkah | 0), LANGKAH.length - 1);
     paparLangkah();
@@ -289,7 +294,7 @@
   function tawar(opts) {
     opts = opts || {};
     var p = opts.profil, UI = root.NusaUI;
-    if (!p || aktif() || !UI || !UI.modal) { return false; }
+    if (!p || aktif() || !UI || !UI.modal || !tersedia(p)) { return false; }
     if (baca(K_TAWAR) === p.id) { return false; }
     tulis(K_TAWAR, p.id);
     UI.modal({
@@ -320,5 +325,5 @@
     ui.selesai = true; var ov = doc().getElementById('lat-ov'); if (ov) { ov.hidden = true; }
   }
 
-  return { aktif: aktif, tawar: tawar, init: init, mula: mula, keluar: keluar, pulihJikaPerlu: pulihJikaPerlu, pasangLegasi: pasangLegasi, LANGKAH: LANGKAH };
+  return { aktif: aktif, tersedia: tersedia, tawar: tawar, init: init, mula: mula, keluar: keluar, pulihJikaPerlu: pulihJikaPerlu, pasangLegasi: pasangLegasi, LANGKAH: LANGKAH };
 });

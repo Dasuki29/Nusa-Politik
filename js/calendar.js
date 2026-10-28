@@ -84,9 +84,9 @@
     }
   };
   /* v11.1: kalendar PBB. Proses sama (Ranting -> Cawangan -> Pusat), kitaran tetap 3 tahun, tetapi tiada bulan tetap rasmi seperti UMNO.
-     ANDAIAN (⚠️): bulan 3 (Ranting), 5 (Cawangan/DUN) dan 8 (Konvensyen PBB) dipilih oleh simulasi. Kunci dalaman (cawangan/bahagian/pau) dikekalkan:
-     'cawangan' = peringkat Ranting (lokaliti), 'bahagian' = peringkat Cawangan (DUN), 'pau' = Konvensyen PBB. */
-  /* Teks ditulis dalam bentuk dalaman (UMNO); js/parti.js menukar 'Cawangan' -> 'Ranting', 'Bahagian' -> 'Cawangan (DUN)' dan PAU -> Konvensyen PBB untuk pemain PBB. */
+     ANDAIAN (⚠️): bulan 3 (Ranting), 5 (Cawangan/DUN) dan 8 (Perhimpunan Agung PBB) dipilih oleh simulasi. Kunci dalaman (cawangan/bahagian/pau) dikekalkan:
+     'cawangan' = peringkat Ranting (lokaliti), 'bahagian' = peringkat Cawangan (DUN), 'pau' = Perhimpunan Agung PBB. */
+  /* Teks ditulis dalam bentuk dalaman (UMNO); js/parti.js menukar 'Cawangan' -> 'Ranting', 'Bahagian' -> 'Cawangan (DUN)' dan PAU -> Perhimpunan Agung PBB untuk pemain PBB. */
   function bulanPBB(f, mula, tamat) { var x = JSON.parse(JSON.stringify(f)); x.mula = mula; x.tamat = tamat; return x; }
   var F0 = CONFIG.FASA, T0 = CONFIG.TETINGKAP;
   function tt(k, mula, tamat) { var x = {}; for (var q in T0[k]) { x[q] = T0[k][q]; } x.mula = mula; x.tamat = tamat; return x; }
