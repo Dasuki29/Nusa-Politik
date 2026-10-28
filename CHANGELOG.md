@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v12.1 (2026-10-28)
+
+- **Jemaah Menteri** (mockup dipersetujui; js/jemaah.js, js/jemaah-ui.js):
+  - **Perdana Menteri membentuk kabinet:** kad "Bentuk Jemaah Menteri" di tab Tindakan. Pilih menteri bagi 8 portfolio utama (Kewangan, Dalam Negeri, Pertahanan, Pendidikan, Kesihatan, Luar Negeri, Ekonomi, Kerja Raya); setiap portfolio 3 calon (Parti anda / Rakan gabungan / Sabah-Sarawak) dengan Kecekapan, Kesetiaan dan tanda Pencabar. 21 portfolio lain diisi automatik.
+  - **Kesan:** Penarafan Tadbir Urus awal = 40 + Kecekapan x 0.3; Tekanan Politik setiap bulan -2 / 0 / +2 ikut Kesetiaan (>= 60 / 45-59 / < 45); kuota rakan gabungan 3/8 (setiap kurang: Hubungan Gabungan -10); wakil Sabah/Sarawak 2/8 (jika kurang: Hubungan Gabungan -5); melantik pencabar dalam parti: kuasa pencabar -15%.
+  - **Rombakan kabinet:** sekali setahun, 3 AP.
+  - **Senarai Jemaah Menteri** (31 jawatan) untuk semua pemain dalam kerajaan persekutuan (Timbalan Menteri, Menteri, TPM, PM); jawatan anda diserlahkan. Nama ialah watak rekaan; menteri wanita bergelar Dato' (bukan Datin).
+  - BM/EN; ujian unit baharu dan ujian pelayar tools/ujian-jemaah.js.
+
+### Andaian dan had
+- ⚠️ Tiada statistik "sokongan Sabah/Sarawak" dalam permainan, jadi penalti wakil Borneo dipetakan kepada Hubungan Gabungan -5.
+- ⚠️ "Risiko dicabar -15%" dilaksanakan sebagai kuasa semua pencabar (js/rival.js) dikurangkan 15% sekali sahaja.
+- ⚠️ Menteri digugurkan menjadi pengkritik (acara baharu) belum dibuat. Versi negeri (MB/Premier pilih EXCO) belum dibuat.
+
 ## v12.0 (2026-10-28)
 
 - **Hero halaman utama baharu** (mockup v12 dipersetujui): desktop dua lajur, iaitu poster tajuk besar "Dari ahli biasa ke kerusi Presiden." di kiri dan kertas pilihan di kanan; mudah alih bertindan. Tali bendera kempen di atas menu. Pangkah pada petak kini dakwat ungu (dakwat kekal). Nombor pilihan 1, 2, 3 (dahulu 1, S, 2); arahan "Pangkah satu petak untuk bermula."

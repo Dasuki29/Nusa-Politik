@@ -1379,6 +1379,28 @@ ujian('v11.4: status kerajaan pemain sama dengan anggaran kerusi yang dipaparkan
   sama(ET.prosesBulan({ rng: () => 0.99 }).peristiwa.filter((x) => /Hantar Rayuan/.test(x.mesej)).length, 0, 'notis sekali sahaja');
 });
 
+ujian('v12.1: Jemaah Menteri: PM pilih 8 portfolio, kesan tadbir urus / gabungan / tekanan, rombakan, senarai untuk menteri', () => {
+  const J = g.MyPolitikJemaah, KB = g.MyPolitikKabinet;
+  P.daftar({}); P.tetap({ ap: 10, tahun: 2030, bulan: 3 });
+  betul(!J.perluBentuk(S.loadPlayer()) && J.senarai(S.loadPlayer()) === null, 'bukan kerajaan: tiada');
+  betul(KB.lantikKanan('PERDANA_MENTERI').ok, 'lantik PM');
+  let p = S.loadPlayer(); betul(J.perluBentuk(p), 'PM perlu bentuk');
+  const sl = J.calon(p); sama(sl.length, 8); sl.forEach((s) => { sama(s.calon.length, 3); sama(s.calon.map((c) => c.jenis).sort().join(), 'anda,borneo,rakan'); });
+  sama(JSON.stringify(J.calon(p)), JSON.stringify(sl), 'calon deterministik');
+  betul(!J.umumkan([0, 1]).ok, 'mesti lengkap');
+  const pilihAnda = sl.map((s) => s.calon.findIndex((c) => c.jenis === 'anda')), n = J.nilai(p, pilihAnda);
+  sama(n.rakan, 0); sama(n.penaltiHubungan, 35, '3 kurang x 10 + Borneo 5');
+  const hub0 = PRU.getPRU(p).hubunganGabungan, r = J.umumkan(pilihAnda); betul(r.ok, r.ralat);
+  p = S.loadPlayer(); sama(KB.getKabinet(p).governanceRating, n.tadbir); sama(PRU.getPRU(p).hubunganGabungan, Math.max(0, hub0 - 35));
+  betul(!J.perluBentuk(p), 'sudah diumumkan'); const l = J.senarai(p); sama(l.length, 2 + g.MyPolitikKabinetData.menteri.length); betul(l[0].anda, 'PM = anda');
+  sl.forEach((s0, i) => sama(l.filter((x) => x.portfolio === s0.portfolio)[0].menteri, s0.calon[pilihAnda[i]].nama, 'senarai ikut pilihan: ' + s0.portfolio));
+  const t0 = KB.getKabinet(p).tekananPolitik; J.prosesBulan(); sama(KB.getKabinet(S.loadPlayer()).tekananPolitik, Math.max(0, Math.min(100, t0 + n.tekananBulanan)), 'tekanan bulanan');
+  betul(J.rombak().ok, 'rombak'); p = S.loadPlayer(); sama(p.ap, 7); betul(J.perluBentuk(p), 'rombakan buka semula');
+  betul(J.umumkan(J.calon(p).map((s) => s.calon.findIndex((c) => c.jenis === 'rakan'))).ok); betul(!J.rombak().ok, 'sekali setahun');
+  const k = KB.getKabinet(S.loadPlayer()); k.roleLevel = 'MENTERI_PENUH'; k.portfolioName = 'Menteri Kesihatan'; S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  const l2 = J.senarai(S.loadPlayer()); betul(l2.some((x) => x.portfolio === 'Menteri Kesihatan' && x.anda), 'menteri: baris anda'); betul(!l2[0].anda, 'PM NPC');
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));

@@ -1050,3 +1050,27 @@ body.menu-aktif { overflow: hidden; }
 .lang-switch [data-lang].is-on { opacity: 1; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .lang-switch__sep { opacity: .4; }
 .menu__bahasa { position: fixed; top: 12px; right: 64px; z-index: 60; }
+
+/* ---------- v12.1: Jemaah Menteri (js/jemaah-ui.js) ---------- */
+.jm-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (max-width: 899px) { .jm-imbangan { order: -1; position: sticky; top: 0; z-index: 2; background: var(--bg-elev-1); padding: 8px 0 2px; border-bottom: 2px solid var(--border); } .jm-imbangan .jm-meter { margin-bottom: 6px; } }
+@media (min-width: 900px) { .jm-grid { grid-template-columns: 1.4fr 1fr; align-items: start; } .jm-imbangan { position: sticky; top: 12px; } }
+.jm-slot { border: 2px solid var(--border); border-radius: var(--radius); padding: 8px 10px 4px; margin: 0 0 10px; }
+.jm-slot legend { font-weight: 800; padding: 0 4px; }
+.jm-calon { display: flex; gap: 10px; align-items: flex-start; padding: 6px 4px; border-radius: 6px; cursor: pointer; }
+.jm-calon:hover { background: var(--bg-elev-3); }
+.jm-calon input { margin-top: 4px; accent-color: #5B2A86; width: 18px; height: 18px; flex: none; }
+.jm-calon small { display: block; color: var(--text-muted); font-size: .8rem; }
+.jm-tag { display: inline-block; border: 1.5px solid var(--border); border-radius: 999px; padding: 0 7px; font-size: .72rem; font-weight: 700; margin: 0 3px 0 0; white-space: nowrap; color: #111; }
+.jm-tag--anda { background: #FFD6DD; } .jm-tag--rakan { background: #D6E6FF; } .jm-tag--borneo { background: #D8F2E0; } .jm-tag--pencabar { background: #FFE0B3; }
+.jm-meter { margin: 0 0 10px; }
+.jm-meter__t { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 700; }
+.jm-meter__b { height: 12px; border: 2px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 3px; background: var(--bg-elev-2); }
+.jm-meter__b i { display: block; height: 100%; }
+.jm-meter small { color: var(--text-muted); font-size: .78rem; }
+.jm-senarai { margin-top: 10px; }
+.jm-senarai summary { cursor: pointer; font-weight: 700; }
+.jm-jadual { overflow-x: auto; }
+.jm-jadual table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 560px; }
+.jm-jadual th, .jm-jadual td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+.jm-jadual tr.is-anda td { background: var(--bg-elev-3); font-weight: 700; }

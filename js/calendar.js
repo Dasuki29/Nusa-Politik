@@ -364,6 +364,9 @@
     var RVL = muat('MyPolitikRival', 'rival.js');                                               // v7.28: AI pencabar bergerak pada akhir setiap bulan
     if (RVL && RVL.tick) { peristiwa = peristiwa.concat(RVL.tick().peristiwa || []); }
 
+    var JMH = muat('MyPolitikJemaah', 'jemaah.js');                                            // v12.1: kesetiaan Jemaah Menteri melaras Tekanan Politik PM
+    if (JMH && JMH.prosesBulan) { peristiwa = peristiwa.concat(JMH.prosesBulan().peristiwa || []); }
+
     var NGR = muat('MyPolitikNegeri', 'negeri.js');                                            // v7.34: lantikan Badan Perhubungan Negeri (bulan 9 tahun pemilihan)
     if (NGR && NGR.prosesBulan) { peristiwa = peristiwa.concat(NGR.prosesBulan().peristiwa || []); }
 

@@ -155,7 +155,7 @@
     try {
       if (jenis === 'pilihanraya') { return musim(p) ? kadPRK(p) + (PRU.getPRU(p).aktif ? kadPRU(p) : '') : '<div class="banner"><strong>Bukan musim pilihan raya</strong>Tab ini hanya aktif semasa PRU/PRN atau PRK.</div>'; }
       if (jenis === 'pemilihan') { return musim(p) ? bannerMusim(p) : kadPRU(p); }
-      return bannerNasional(p) + bannerMusim(p) + kadJanji(p) + kadKabinet(p);
+      return bannerNasional(p) + bannerMusim(p) + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
     } catch (e) { return ''; }
   }
   function bannerNasional(p) {      // v7.22: keputusan nasional menunggu Presiden (cth. pemain memuat semula halaman)
