@@ -318,7 +318,7 @@
     return { aktif: aktif(p), dun: true, peranan2: statusADUN(p) ? 'ADUN' : 'EXCO', kerusi: k, ambang: k ? k.ambang : 0, kerajaan: adaKerajaan(p), kestabilan: aktif(p) ? kestabilan(p) : null, rating: rating(p),
       menteri: exco(p), bolehBentang: bolehBentang(p), bentang: sb, undi: undiSemasa(p), tp: tpSemasa(p), soalan: soalanSemasa(p), sejarah: d.sejarah || [],
       peranan: statusADUN(p) ? 'ADUN' : 'EXCO', portfolio: exco(p) ? (peranKabinet(p).portfolioName || '') : '',
-      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: SW(p.parti) ? 'Premier' : 'Menteri Besar', gab: SW(p.parti) ? 'GPS' : 'BN', tab: 'DUN', negeri: p.negeri || '' } };
+      label: { dewan: 'Dewan Undangan Negeri', usul: 'Enakmen', ketua: SW(p.parti) ? 'Premier' : 'Menteri Besar', gab: SW(p.parti) ? 'GPS' : 'BN', tab: 'DUN', negeri: (PRU() && PRU().negeriADUN ? PRU().negeriADUN(p) : p.negeri) || '' } };
   }
 
   return {

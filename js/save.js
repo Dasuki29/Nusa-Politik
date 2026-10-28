@@ -132,7 +132,8 @@
       status: ['baik', 'digantung', 'dilarang', 'dipecat'].indexOf(e.status) >= 0 ? e.status : 'baik',
       hukuman: e.hukuman || null,
       siasatan: e.siasatan || null,
-      rekod: Array.isArray(e.rekod) ? e.rekod.slice(0, 20) : []
+      rekod: Array.isArray(e.rekod) ? e.rekod.slice(0, 20) : [],
+      notisRayu: !!e.notisRayu                              // v11.4: notis rayuan pemecatan telah ditunjukkan
     };
     return p;
   }

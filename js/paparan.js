@@ -231,30 +231,32 @@
      4. KERUSI PARLIMEN / DUN
      ------------------------------------------------------------------------ */
   function hash(t) { var h = 7; t = String(t || ''); for (var i = 0; i < t.length; i++) { h = (h * 31 + t.charCodeAt(i)) >>> 0; } return h; }
-  function negeriDUN(p) {
-    var n = String(p.negeri || '').toLowerCase().replace(/^wp\s+/, 'wilayah ');
+  /** v11.4: negeri DUN pemain (kerusi negeri lain jika bertanding di luar negeri cawangan). */
+  function negeriPemainDUN(p) { var PR = root.MyPolitikPRU; try { return PR && PR.negeriADUN ? PR.negeriADUN(p) : (p.negeri || ''); } catch (e) { return p.negeri || ''; } }
+  function negeriDUN(p, negeri) {
+    var n = String(negeri || negeriPemainDUN(p) || '').toLowerCase().replace(/^wp\s+/, 'wilayah ');
     if (/wilayah|kuala lumpur|putrajaya|labuan/.test(n)) { return 0; }
     return DUN_NEGERI[n] || 0;
   }
   /** Anggaran kerusi bagi satu pilihan raya (deterministik: benih = id + tahun/bulan rekod). */
-  function anggarKerusi(p, rekod) {
+  function anggarKerusi(p, rekod, opt) {
     var N = p.pru && p.pru.nasional;
     var rng = S().rngBerbenih(hash((p.id || '') + '|' + rekod.tahun + '|' + rekod.bulan));
     var J = CONFIG.JUMLAH_PARLIMEN, parti, rakan, bebas = Math.round(rng() * CONFIG.BEBAS_MAKS);
     if (N && typeof N.parti === 'number' && typeof N.rakan === 'number' && N.tahun === rekod.tahun && N.bulan === rekod.bulan) { parti = N.parti; rakan = N.rakan; }
     else {
-      var pop = clamp(45 + ((Number(p.reputasi) || 50) - 50) * 0.3 + (rng() * 12 - 6), 30, 70);
+      var pop = clamp((opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3) + (rng() * 12 - 6), 30, 70);      // v11.4: populariti parti semasa PRU jika ada
       parti = clamp(Math.round(J * (0.18 + (pop - 30) / 40 * 0.42) + (rng() * 16 - 8)), 30, 150);
       rakan = Math.min(J - parti, Math.round(J * (0.14 + rng() * 0.12)));
     }
     bebas = Math.min(bebas, J - parti - rakan);
     var lawan = J - parti - rakan - bebas, gabung = parti + rakan, kerajaan = gabung >= CONFIG.MAJORITI;
     var o = { tahun: rekod.tahun, bulan: rekod.bulan, parti: parti, rakan: rakan, pembangkang: lawan, bebas: bebas, kerajaan: kerajaan };
-    var dun = negeriDUN(p);
+    var ngr = (opt && opt.negeri) || negeriPemainDUN(p), dun = negeriDUN(p, ngr);
     if (dun) {
       var skala = (kerajaan ? gabung : J - gabung) / J, nBebas = Math.round(rng() * 2);
       var kr = clamp(Math.round(dun * (kerajaan ? clamp(gabung / J + (rng() * 0.1 - 0.05), 0.3, 0.8) : clamp(gabung / J + (rng() * 0.1 - 0.05), 0.15, 0.6))), 1, dun - nBebas - 1);
-      o.dun = { jumlah: dun, kerajaan: kr, bebas: nBebas, pembangkang: dun - kr - nBebas };
+      o.dun = { jumlah: dun, kerajaan: kr, bebas: nBebas, pembangkang: dun - kr - nBebas, negeri: ngr };
       void skala;
     }
     return o;
@@ -335,7 +337,7 @@
       var SWp = SW(p.parti) ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN
       if (SWp && SWp.kerusiDewan) { var PRp = root.MyPolitikPRU, sta = PRp && PRp.semuaStatus ? PRp.semuaStatus(p).filter(function (x) { return x.jenis === 'ADUN'; })[0] : null, kd = SWp.kerusiDewan(p, sta ? sta.kerajaan : true); if (kd) { nd = { BN: kd.BN, PH: kd.PH, PN: kd.PN, LAIN: kd.LAIN }; amb = kd.ambang; jumDun = kd.jumlah; } }
       var sd = segGabungan(nd, labelBN(p, true));
-      h += '<h4 class="pp-sub">Kerusi DUN <small>' + esc(p.negeri) + ' · ' + jumDun + ' kerusi · anggaran</small></h4>' + bar(sd, amb) + legend(sd) +
+      h += '<h4 class="pp-sub">Kerusi DUN <small>' + esc(k.dun.negeri || p.negeri) + ' · ' + jumDun + ' kerusi · anggaran</small></h4>' + bar(sd, amb) + legend(sd) +
         '<p class="pp-nota">' + ayatKerajaan('Kerajaan negeri', nd, amb, labelBN(p, true)) + '</p>';
     }
     return h;

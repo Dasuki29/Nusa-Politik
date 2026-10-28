@@ -1715,6 +1715,7 @@
     var t = ev.target.closest ? ev.target.closest('[data-act],[data-tab]') : null;
     if (!t) { return; }
     var act = t.getAttribute('data-act');
+    if (act && act !== 'ulang-peta' && ((ev.composedPath && ev.composedPath().some(function (n) { return n && n.id === 'peta-host'; })) || (t.closest && t.closest('#peta-host')))) { return; }   // composedPath: panel peta mungkin sudah dilukis semula (butang tercabut) sebelum klik sampai ke sini      // v11.4: butang peta (cth. "Turun Padang (Ziarah)" data-act="tindakan") diurus oleh js/map.js; dahulu turut dicetuskan di sini: "Tindakan tidak dikenali: null"
     if (!act) { var tb = t.getAttribute('data-tab'); if (tb) { setTab(tb); } return; }
     var kod = t.getAttribute('data-kod'), lvl = t.getAttribute('data-lvl');
     var UB = W.MyPolitikUndo, uMula = !!(UB && UNDO_ACT[act] && !(LAT && LAT.aktif()) && UB.mula((t.getAttribute('data-nama') || (t.querySelector && t.querySelector('.choice__title') || t).textContent || act).replace(/\s+/g, ' ').trim()));   // v8.15

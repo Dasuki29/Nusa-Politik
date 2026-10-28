@@ -74,6 +74,14 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.click('#peta-host .mpm-krisis [data-act="krisis"]'); await pg.waitForTimeout(500); await pg.click('#modal [data-pilih="abai"]'); await pg.waitForTimeout(800);
   semak((await pg.$$('#peta-host .mpm-krisis')).length === 0, 'krisis diselesaikan dari bar');
   semak((await pg.$$('#mpm-tab-pdm')).length === 1 && (await pg.$$('#mpm-tab-negeri')).length === 0, 'Peta Pengaruh Sarawak: tab DUN dan DM sahaja');
+  /* v11.4: butang "Turun Padang (Ziarah)" di peta tidak lagi mencetuskan tindakan dashboard ("Tindakan tidak dikenali: null") */
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { ap: 20, myr: 50000 } }); });
+  await pg.evaluate(() => { const x = document.querySelector('#peta-host svg [data-act="pilih"].is-rumah') || document.querySelector('#peta-host svg [data-act="pilih"]'); x.dispatchEvent(new MouseEvent('click', { bubbles: true })); }); await pg.waitForTimeout(600);
+  const bz = await pg.$('#peta-host [data-act="tindakan"][data-v="jelajah"]:not([disabled])');
+  semak(!!bz, 'butang Turun Padang (Ziarah) di panel peta');
+  if (bz) { await bz.evaluate((e) => e.click()); await pg.waitForTimeout(800); }
+  const tst = await pg.evaluate(() => document.body.innerText);
+  semak(!/tidak dikenali/i.test(tst) && !/\bnull\b/.test(tst), 'tiada "Tindakan tidak dikenali: null" selepas Ziarah di peta');
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

@@ -247,7 +247,7 @@
       e.status = 'dilarang'; e.modal = clamp(e.modal - 12, 0, 100);
       kesan.reputasi = -15; kesan.kesetiaan = { akarUmbi: -8, ajk: -8 };
     } else {
-      e.status = 'dipecat'; e.modal = 0;
+      e.status = 'dipecat'; e.modal = 0; e.notisRayu = false;
       var t3 = tambahBulan(p.tahun, p.bulan, CONFIG.BULAN_RAYUAN_PECAT); h.tamatTahun = t3.tahun; h.tamatBulan = t3.bulan;   // tarikh layak merayu
       kesan.reputasi = -30; kesan.ip = -Math.round(p.ip * 0.75);
       patch.jawatanList = []; patch.jawatan = 'Ahli Biasa'; patch.cabaran = null; patch.amaranAktif = false;
@@ -297,6 +297,11 @@
       e.status = 'baik'; e.hukuman = null; berubah = true;
     }
 
+    // 1b. v11.4: notis apabila rayuan pemecatan sudah boleh dibuat (pemain sebelum ini tidak tahu di mana rayuan)
+    if (e.status === 'dipecat' && e.hukuman && e.hukuman.tamatTahun && !e.notisRayu && mutlak(p.tahun, p.bulan) >= mutlak(e.hukuman.tamatTahun, e.hukuman.tamatBulan)) {
+      peristiwa.push({ jenis: 'disiplin', mesej: 'Tempoh 3 tahun selepas pemecatan telah tamat. Anda kini boleh menghantar rayuan: buka tab Tindakan Pemain dan tekan "Hantar Rayuan Pemecatan".' });
+      e.notisRayu = true; berubah = true;
+    }
     // 2. Siasatan: aduan -> pendengaran -> keputusan
     if (e.siasatan && e.status !== 'dipecat') {
       var s = e.siasatan;
@@ -373,7 +378,7 @@
     var b = bolehRayu(p);
     if (!b.boleh) { return { ok: false, ralat: b.sebab }; }
     var e = getEtika(p);
-    e.status = 'baik'; e.hukuman = null; e.modal = 10; e.risiko = 0;
+    e.status = 'baik'; e.hukuman = null; e.notisRayu = false; e.modal = 10; e.risiko = 0;
     catat(e, p, 'rayuan', 'Rayuan pemecatan diterima; keahlian dipulihkan.');
     var r = S.applyEffects({ reputasi: 10 }, {
       kiraTindakan: false,

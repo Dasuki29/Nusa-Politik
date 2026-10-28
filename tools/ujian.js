@@ -1360,6 +1360,25 @@ ujian('v11.3: nama Dayak (blok Pesaka) dan gelaran Sarawak untuk NPC PBB; UMNO k
   bina('UMNO'); const su = JSON.stringify(OG.getStruktur(S.loadPlayer())); betul(/Tan Sri/.test(su) && !/ anak |Datuk Amar|Pehin Sri/.test(su), 'UMNO kekal Tan Sri / Dato\', tiada nama Dayak');
 });
 
+ujian('v11.4: status kerajaan pemain sama dengan anggaran kerusi yang dipaparkan; negeri DUN kerusi lain; notis rayuan', () => {
+  const benih = (x) => () => { x = (x + 0x6D2B79F5) | 0; let t = Math.imul(x ^ (x >>> 15), 1 | x); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  let semak = 0;
+  for (let i = 1; i <= 12; i++) {
+    const r = lobiKempen(benih(i), true); betul(r.ok, r.ralat); if (!r.keputusan.menang) { continue; }
+    const p = S.loadPlayer(), st = PRU.getPRU(p).status, k = p.kerusiNasional; betul(k && st, 'kerusiNasional dan status disimpan');
+    const kerajaanKerusi = st.jenis === 'MP' ? k.kerajaan : (k.dun.kerajaan >= Math.floor(k.dun.jumlah / 2) + 1);
+    sama(!!st.kerajaan, !!kerajaanKerusi, 'status kerajaan = kad kerusi (' + st.jenis + ')'); semak++;
+    PRU.tutupKeputusan();
+  }
+  betul(semak > 0, 'sekurang-kurangnya satu kemenangan disemak');
+  const p = S.loadPlayer(), pru = PRU.getPRU(p); pru.status = { jenis: 'ADUN', kerusi: 'Balakong', lain: true, negeri: 'Selangor', kerajaan: true }; S.applyEffects({}, { kiraTindakan: false, patch: { pru, negeri: 'Melaka' } });
+  sama(PRU.negeriADUN(S.loadPlayer()), 'Selangor', 'negeri DUN ikut kerusi');
+  const PP = g.MyPolitikPaparan || require('../js/paparan.js'); sama(PP.anggarKerusi(S.loadPlayer(), { tahun: 2030, bulan: 1 }).dun.negeri, 'Selangor');
+  const ET = g.MyPolitikEtika; const q = S.loadPlayer(); const e = ET.getEtika(q); e.status = 'dipecat'; e.hukuman = { perkara: 'x', tamatTahun: q.tahun, tamatBulan: q.bulan }; S.applyEffects({}, { kiraTindakan: false, patch: { etika: e } });
+  const ev = ET.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /Hantar Rayuan Pemecatan/.test(x.mesej)), 'notis rayuan');
+  sama(ET.prosesBulan({ rng: () => 0.99 }).peristiwa.filter((x) => /Hantar Rayuan/.test(x.mesej)).length, 0, 'notis sekali sahaja');
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));

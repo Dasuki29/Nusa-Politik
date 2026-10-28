@@ -242,6 +242,8 @@
   }
   /** v7.55: senarai kerusi yang dipegang (satu atau dua: Parlimen + DUN serentak). */
   function semuaStatus(p) { var pru = getPRU(p), h = []; if (pru.status) { h.push(pru.status); } if (pru.statusKedua) { h.push(pru.statusKedua); } return h; }
+  /** v11.4: negeri kerusi DUN pemain (kerusi negeri lain, cth. bertanding di Selangor walaupun cawangan di Melaka), jika tidak negeri cawangan. */
+  function negeriADUN(p) { var st = p ? semuaStatus(p).filter(function (s) { return s.jenis === 'ADUN'; })[0] : null; return (st && st.negeri) || (p && p.negeri) || ''; }
   function pegang(p, jenis) { return semuaStatus(p).some(function (s) { return s.jenis === jenis; }); }
   function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
@@ -739,7 +741,9 @@
         if (a.calonImport && !sekunder) { bonus = Math.round(bonus * (CONFIG.KERUSI_LAIN.TAHAP[a.calonImport.tahap] || { bonus: 1 }).bonus); }   // v8.17: kerusi lebih sukar = ganjaran lebih tinggi
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
-        g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8)); kk.kerajaan = g.kerajaan;
+        g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8));
+        if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
+        kk.kerajaan = g.kerajaan;
         if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
         if (!sekunder) {
           var siasat = a.siasatSprm || 0;
@@ -753,6 +757,16 @@
         g.ip = -Math.min(Math.round((Number(p.ip) || 0) * f), Math.round(Math.abs(CONFIG.KALAH.ip) * f)); g.rep = Math.round(CONFIG.KALAH.reputasi * f);
       }
       return g;
+    }
+    /* v11.4: anggaran kerusi Parlimen/DUN dijana sekali di sini dan disimpan (p.kerusiNasional), supaya "kerajaan/pembangkang" pemain
+       sama dengan kad Kerusi Parlimen / DUN. Sebelum ini kedua-duanya rawak berasingan, jadi pemain boleh menjadi pembangkang walaupun parti majoriti. */
+    var PPk = modul('MyPolitikPaparan', 'paparan.js'), kerusiAnggar = null;
+    try { if (PPk && PPk.anggarKerusi) { kerusiAnggar = PPk.anggarKerusi(p, { tahun: p.tahun, bulan: p.bulan }, { negeri: a.kerusi && a.kerusi.lain && a.kerusi.negeri && a.candidateType === 'DUN' ? a.kerusi.negeri : null, pop: a.partiPopulariti }); } } catch (eK) { kerusiAnggar = null; }
+    function kerajaanDariKerusi(jenis, sekunder) {
+      if (!kerusiAnggar) { return null; }
+      if (jenis === 'PARLIMEN') { return !!kerusiAnggar.kerajaan; }
+      var dn = kerusiAnggar.dun; if (!dn || (sekunder && a.kerusi && a.kerusi.lain && a.candidateType !== 'DUN')) { return null; }
+      return dn.kerajaan >= Math.floor(dn.jumlah / 2) + 1;
     }
     var g1 = ganjaran(k, a.candidateType, false), wins = [], rekods = [];
     ipD = g1.ip; kes.reputasi = g1.rep; siasatMsg = g1.msg;
@@ -773,7 +787,7 @@
     pru.status = null; pru.statusKedua = null;
     wins.forEach(function (w, n) {
       var st = { jenis: w.jenis === 'DUN' ? 'ADUN' : 'MP', kerusi: w.kerusi, sejakTahun: p.tahun, sejakBulan: p.bulan, kerajaan: w.kerajaan };
-      if (n === 0 && a.calonImport) { st.lain = true; st.negeriSama = !!a.calonImport.negeriSama; }                      // v8.17
+      if (n === 0 && a.calonImport) { st.lain = true; st.negeriSama = !!a.calonImport.negeriSama; if (a.kerusi && a.kerusi.negeri) { st.negeri = a.kerusi.negeri; } }                      // v8.17
       if (n === 0) { pru.status = st; } else { pru.statusKedua = st; }
       if (w.kerajaan && !kabinetBuka) { kabinetBuka = true; lobiJenis = w.jenis; }
     });
@@ -790,7 +804,7 @@
     k.siasatMsg = siasatMsg; k.kabinetBuka = kabinetBuka;
     a.fasa = 'keputusan'; a.keputusan = k; a.campaignFunds = 0; a.finalDigunakan = a.finalDigunakan || {};
     var menangP = k.menang && !g1.petisyen;
-    var res = simpanPRU(pru, kes, { pindahan: true, patch: { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
+    var res = simpanPRU(pru, kes, { pindahan: true, patch: kerusiAnggar && !(adalahPresiden(p) && !SW(p.parti)) ? { ip: Math.max(0, (Number(p.ip) || 0) + ipD), kerusiNasional: kerusiAnggar } : { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (!k.menang) { laras({ stress: CONFIG.KALAH.stress }); }
     if (kabinetBuka) { var Kb = modul('MyPolitikKabinet', 'kabinet.js'); if (Kb && Kb.bukaLobi) { Kb.bukaLobi(lobiJenis); } }
@@ -924,7 +938,7 @@
   return {
     CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KEJUTAN_PARTI: KEJUTAN_PARTI, KEJUTAN_PARTI_PELUANG: KEJUTAN_PARTI_PELUANG, pilihKejutan: pilihKejutan, KOS_RUNDING: KOS_RUNDING,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getPRU: getPRU, semuaStatus: semuaStatus, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
+    getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
     mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan

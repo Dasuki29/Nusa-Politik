@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v11.4 (2026-10-28)
+
+Pembetulan daripada maklum balas pemain:
+- **"Kenapa saya pembangkang sedangkan parti majoriti?"** Status kerajaan pemain selepas menang dahulu ditentukan dengan lambungan rawak berasingan daripada kad Kerusi Parlimen/DUN, jadi kedua-duanya boleh bercanggah. Kini anggaran kerusi dijana sekali semasa keputusan (ikut populariti parti semasa PRU) dan status kerajaan/pembangkang mengikut kad itu. (DUN Sarawak kekal ikut peluang GPS seperti sebelum ini; Presiden UMNO kekal ikut rundingan nasional.)
+- **"null" / "Tindakan tidak dikenali" apabila tekan Turun Padang (Ziarah) di Peta.** Butang peta turut dicetuskan oleh pengendali tindakan dashboard (dan memakan satu Undo). Kini hanya peta yang mengendalikannya.
+- **Bertanding DUN negeri lain (cth. Balakong, Selangor) tetapi Dewan/kerusi DUN masih Melaka.** Negeri kerusi kini disimpan pada status ADUN; Dewan Undangan Negeri dan kad Kerusi DUN ikut negeri kerusi itu. (Simpanan lama: berkuat kuasa selepas pilihan raya seterusnya.)
+- **Rayuan pemecatan sukar dicari:** notis sekali apabila tempoh 3 tahun tamat, menunjukkan butang "Hantar Rayuan Pemecatan" di tab Tindakan Pemain.
+
 ## v11.3 (2026-10-28)
 
 - **Peta Pengaruh penuh untuk parti Sarawak** (sama seperti UMNO): lapisan Sokongan/Kekuatan Parti/Saiz Pemilih, Sentimen Undi, Kawasan Sayap, Kawasan Pemain, panel kawasan (Lobi, Anjur Jelajah), isu dan krisis tempatan (ikon ⚠️ dan bar). Struktur Sarawak: tab **Peta Bahagian = 82 DUN** (dipaparkan "Peta Cawangan" untuk PBB) dan **Peta PDM / Lokaliti = Daerah Mengundi** (Ranting untuk PBB), poligon DOSM sebenar. Kod kawasan N.xx. Peta ringkas lama kekal sebagai sandaran jika gagal.

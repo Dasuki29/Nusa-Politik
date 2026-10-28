@@ -366,6 +366,8 @@
   ["Dakwaan bantuan tidak sampai: {x}", "Claims Aid Did Not Arrive: {x}"],
   ["PSB telah dibubarkan. Keahlian anda dipindahkan ke PDP.", "PSB has been dissolved. Your membership has been transferred to PDP."],
   ["N.{k} {n} — {c} cawangan. Seret untuk alih; Ctrl + roda tetikus atau butang +/− untuk zum.", "N.{k} {n} — {c} branches. Drag to pan; Ctrl + mouse wheel or the +/− buttons to zoom."],
-  ["{n} Daerah Mengundi", "{n} Polling Districts"]
+  ["{n} Daerah Mengundi", "{n} Polling Districts"],
+  ["Hantar Rayuan Pemecatan", "Submit Expulsion Appeal"],
+  ["Tempoh 3 tahun selepas pemecatan telah tamat. Anda kini boleh menghantar rayuan: buka tab Tindakan Pemain dan tekan \"Hantar Rayuan Pemecatan\".", "The 3-year period after your expulsion has ended. You can now appeal: open the Player Actions tab and press \"Submit Expulsion Appeal\"."]
   ]);
 })();
