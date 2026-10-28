@@ -696,7 +696,34 @@
   var NAMA_PEREMPUAN_2 = ['Aisyah', 'Huda', 'Ain', 'Atiqah', 'Batrisyia', 'Husna', 'Izzah', 'Nabilah', 'Nadia', 'Najwa',
     'Sofea', 'Syazwani', 'Zulaikha', 'Amalina', 'Farhana', 'Hanis', 'Dayana', 'Alia', 'Syafiqah', 'Suhana'];
 
-  function janaNama(rng, jantina, tahap) {
+  /* v11.3: nama Dayak (Iban, Bidayuh, Orang Ulu) untuk parti Sarawak: format "<nama> anak <nama bapa>". Gabungan rekaan, bukan individu sebenar. */
+  var DAYAK_L = ['Jimbun', 'Linggang', 'Nyipa', 'Unggang', 'Ambau', 'Saling', 'Empaling', 'Gerinang', 'Kalong', 'Lasah', 'Nyandang', 'Rabong', 'Tedong', 'Uyat', 'Jaul', 'Sanggau', 'Ngelai', 'Belayong', 'Entering', 'Lingka', 'Mawan', 'Ngumbang', 'Sujang', 'Tinggang'];
+  var DAYAK_KRISTIAN_L = ['Robert', 'Peter', 'Joseph', 'Michael', 'Stephen', 'Anthony', 'Gabriel', 'Wilfred', 'Jonathan', 'Dennis', 'Francis', 'Albert', 'Simon', 'Paulus'];
+  var DAYAK_P = ['Inja', 'Sumbang', 'Ingkun', 'Lenggu', 'Senah', 'Mayang', 'Entalai', 'Dimah', 'Lemiding', 'Rinda', 'Jenai', 'Sebaya'];
+  var DAYAK_KRISTIAN_P = ['Rita', 'Mary', 'Agnes', 'Lucy', 'Margaret', 'Christina', 'Doris', 'Jenny', 'Selina', 'Ruth', 'Monica', 'Theresa'];
+  /** Peluang nama Dayak mengikut parti pemain (PBB: ikut komposisi DUN; PRS: majoriti Dayak); 0 untuk parti lain. */
+  function peluangDayak() {
+    var S = globalThis.MyPolitikSave, p = null; try { p = S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { p = null; }
+    if (!p) { return 0; }
+    if (p.parti === 'PRS') { return 0.85; }
+    if (p.parti !== 'PBB' && p.parti !== 'PDP') { return 0; }
+    var e = p.dunInfo && p.dunInfo.e, d = e ? ((e.iban || 0) + (e.bidayuh || 0) + (e.orangUlu || 0)) / 100 : 0.35;
+    return Math.max(0.1, Math.min(0.9, p.parti === 'PDP' ? d * 0.6 : d));
+  }
+  function janaNamaDayak(rng, jantina) {
+    var bapa = pick(rng, DAYAK_L), krist = rng() < 0.55, nama;
+    if (jantina === 'L') { nama = (krist ? pick(rng, DAYAK_KRISTIAN_L) + ' ' + pick(rng, DAYAK_L) : pick(rng, DAYAK_L)); }
+    else { nama = krist ? pick(rng, DAYAK_KRISTIAN_P) : pick(rng, DAYAK_P); }
+    return nama + ' anak ' + bapa;
+  }
+  /** opts.etnik: 'dayak' | 'melayu' | tiada (ikut parti pemain). */
+  function janaNama(rng, jantina, tahap, opts) {
+    var et = opts && opts.etnik, dayak = et === 'dayak' || (!et && rng() < peluangDayak());
+    if (dayak) {
+      var nm = janaNamaDayak(rng, jantina), aw = '';
+      if (tahap) { var G2 = globalThis.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null); if (G2 && G2.awalanNPC) { aw = G2.awalanNPC(rng, tahap, jantina); } }
+      return aw + nm;
+    }
     var bapa = pick(rng, NAMA_LELAKI), nama, awalan = '';
     if (jantina === 'L') {
       nama = pick(rng, NAMA_LELAKI) + ' ' + pick(rng, NAMA_LELAKI_2) + ' bin ' + bapa;

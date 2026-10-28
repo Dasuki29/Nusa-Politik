@@ -47,7 +47,17 @@
 
   function benih(p) { return String((p && (p.benih || p.seed || p.cawanganId || p.cawangan)) || 'nusa') + '|org'; }
 
-  function nama(rng, jantina, tahap) { return D && D.janaNama ? D.janaNama(rng, jantina, tahap) : 'Pemimpin NPC'; }
+  function nama(rng, jantina, tahap, opts) { return D && D.janaNama ? D.janaNama(rng, jantina, tahap, opts) : 'Pemimpin NPC'; }
+  /** v11.3: gelaran Sarawak bagi jawatan Pusat PBB (Pehin Sri > Datuk Patinggi > Datuk Amar > Datuk) dan etnik ikut blok. */
+  function gelaranPBB(j, sayap, ahli) {
+    if (ahli) { return null; }
+    if (sayap) { return /^Ketua (Wanita|Pemuda)$/.test(j) ? 'dato' : 'bahagian'; }
+    if (j === 'Yang Dipertua / Presiden') { return 'pehin'; }
+    if (/^Timbalan Yang Dipertua|^Naib Yang Dipertua Kanan/.test(j)) { return 'patinggi'; }
+    if (/^Naib Yang Dipertua|^Setiausaha Agung$|^Bendahari Agung$|^Pengerusi Tetap$/.test(j)) { return 'amar'; }
+    return 'bahagian';                                    // jawatan lain: sebahagian bergelar Datuk
+  }
+  function etnikPBB(j, rng) { return /\(Pesaka\)|Pesaka\)/.test(j) ? 'dayak' : /Bumiputera\)/.test(j) ? 'melayu' : (rng() < 0.3 ? 'dayak' : 'melayu'); }
   /** v8.24: tahap gelaran NPC: Pusat induk = Tan Sri; Ketua/Naib sayap Pusat = Dato'; Bahagian = sebahagian Dato'; AJK dan Cawangan tiada. */
   function tahapGelaran(peringkat, sayap, slot) {
     if (slot === 'ajk') { return null; }
@@ -105,7 +115,7 @@
       var ada = x.kod && pemegang(p, x.kod), orang = [];
       for (var i = 0; i < x.n; i++) {
         var sendiri = ada && i === 0;
-        orang.push({ nama: sendiri ? (p.nama || 'Anda') : nama(rng, x.jantina || (sayap === 'pemuda' ? 'L' : sayap ? 'P' : (rng() < 0.75 ? 'L' : 'P')), x.ahli ? null : (sayap ? 'dato' : 'tan')), pemain: !!sendiri });
+        orang.push({ nama: sendiri ? (p.nama || 'Anda') : nama(rng, x.jantina || (sayap === 'pemuda' ? 'L' : sayap ? 'P' : (rng() < 0.75 ? 'L' : 'P')), gelaranPBB(x.j, sayap, x.ahli), { etnik: etnikPBB(x.j, rng) }), pemain: !!sendiri });
       }
       return { jawatan: x.j, bil: x.n, ahli: !!x.ahli, orang: orang };
     });

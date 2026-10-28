@@ -113,9 +113,21 @@
      Perempuan: gelaran sendiri (Dato' / Tan Sri) atau gelaran isteri penerima (Datin, Datin Paduka, Puan Sri). */
   var NPC = { BAHAGIAN: 0.4, ISTERI: 0.35, DATIN_PADUKA: 0.4 };
   /** tahap: 'dato' | 'tan' | 'bahagian' | lain (tiada). jantina: 'L' | 'P'. Sentiasa menggunakan 3 nombor rng supaya urutan stabil. Pulang awalan + ruang atau ''. */
+  /* v11.3: gelaran negeri Sarawak untuk NPC parti Sarawak (maklumat pengguna): Datuk -> Datuk Amar -> Datuk Patinggi -> Pehin Sri.
+     Pemegang wanita juga bergelar sama (bukan Datin). tahap tambahan: 'amar' | 'patinggi' | 'pehin'. */
+  function sarawak() {
+    var k = null; try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
+    if (!k) { try { var p = S() && S().loadPlayer(); k = p && p.parti; } catch (e2) { k = null; } }
+    return /^(PBB|PRS|SUPP|PDP|PSB)$/.test(k || '');
+  }
   function awalanNPC(rng, tahap, jantina) {
-    var r1 = rng(), r2 = rng(), r3 = rng(), t = tahap === 'tan' ? 'tan' : tahap === 'dato' ? 'dato' : (tahap === 'bahagian' && r1 < NPC.BAHAGIAN ? 'dato' : null);
+    var r1 = rng(), r2 = rng(), r3 = rng();
+    if (tahap === 'pehin') { return 'Pehin Sri '; }
+    if (tahap === 'patinggi') { return 'Datuk Patinggi '; }
+    if (tahap === 'amar') { return 'Datuk Amar '; }
+    var t = tahap === 'tan' ? 'tan' : tahap === 'dato' ? 'dato' : (tahap === 'bahagian' && r1 < NPC.BAHAGIAN ? 'dato' : null);
     if (!t) { return ''; }
+    if (sarawak()) { return t === 'tan' ? 'Datuk Amar ' : 'Datuk '; }
     if (jantina === 'P' && r2 < NPC.ISTERI) { return t === 'tan' ? 'Puan Sri ' : (r3 < NPC.DATIN_PADUKA ? 'Datin Paduka ' : 'Datin '); }
     return t === 'tan' ? 'Tan Sri ' : "Dato' ";
   }

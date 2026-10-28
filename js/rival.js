@@ -47,6 +47,8 @@
   function G0() { return root.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null); }
   function janaNama(p, lv, siri) {
     var r = rngBenih(p, lv, siri), lelaki = lv === 'sayap' ? p.sayap === 'pemuda' : r() < 0.7;
+    var DT = root.MyPolitikData;                   // v11.3: pencabar parti Sarawak boleh bernama Dayak (ikut komposisi DUN)
+    if (DT && DT.janaNama && /^(PBB|PRS|PDP)$/.test(p.parti || '')) { return DT.janaNama(r, lelaki ? 'L' : 'P', lv === 'bahagian' ? 'bahagian' : null); }
     var a = (lelaki ? NAMA_L : NAMA_P)[Math.floor(r() * (lelaki ? NAMA_L.length : NAMA_P.length))], b = NAMA_2[Math.floor(r() * NAMA_2.length)];
     var G = G0();                                  // v8.24: gelaran NPC (Bahagian: sebahagian sahaja)
     return (lv === 'bahagian' && G && G.awalanNPC ? G.awalanNPC(r, 'bahagian', lelaki ? 'L' : 'P') : '') + a + ' ' + b;

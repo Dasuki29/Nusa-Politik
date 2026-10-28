@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v11.3 (2026-10-28)
+
+- **Peta Pengaruh penuh untuk parti Sarawak** (sama seperti UMNO): lapisan Sokongan/Kekuatan Parti/Saiz Pemilih, Sentimen Undi, Kawasan Sayap, Kawasan Pemain, panel kawasan (Lobi, Anjur Jelajah), isu dan krisis tempatan (ikon ⚠️ dan bar). Struktur Sarawak: tab **Peta Bahagian = 82 DUN** (dipaparkan "Peta Cawangan" untuk PBB) dan **Peta PDM / Lokaliti = Daerah Mengundi** (Ranting untuk PBB), poligon DOSM sebenar. Kod kawasan N.xx. Peta ringkas lama kekal sebagai sandaran jika gagal.
+- **Nama Dayak** untuk NPC parti Sarawak: format "nama anak nama bapa" (gabungan rekaan). Jawatan blok Pesaka sentiasa Dayak; blok Bumiputera Melayu/Melanau; peringkat Ranting/Cawangan dan pencabar ikut komposisi Dayak DUN pemain (PRS ~85%, PDP separa).
+- **Gelaran Sarawak** untuk NPC (maklumat pengguna): Yang Dipertua = **Pehin Sri**; Timbalan / Naib Yang Dipertua Kanan = **Datuk Patinggi**; Naib Yang Dipertua, Pengerusi Tetap, Setiausaha Agung, Bendahari Agung = **Datuk Amar**; Ketua sayap dan sebahagian pemimpin Cawangan = **Datuk**. Tiada Tan Sri/Dato'/Datin untuk parti Sarawak. UMNO tidak berubah.
+- i18n: teks yang sudah dijenamakan tidak ditukar dua kali apabila bahasa ditukar (pembetulan "Ranting Map").
+
+### Andaian dan had
+- ⚠️ Pemegang gelaran wanita guna gelaran sama (Datuk/Datuk Amar), bukan Datin. Gelaran pemain sendiri (js/gelaran.js) belum ditukar kepada gelaran Sarawak.
+- ⚠️ SUPP masih guna nama Melayu (patut nama Cina); belum dibuat.
+- ⚠️ Tab Peta Negeri dan Peta DUN disembunyikan untuk parti Sarawak (Bahagian = DUN).
+
 ## v11.2 (2026-10-28)
 
 Pembetulan daripada ujian pemain PBB:

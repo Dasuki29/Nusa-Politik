@@ -1348,6 +1348,18 @@ ujian('v11.2: tiada Lantikan Badan Perhubungan negeri untuk parti Sarawak', () =
   sama(N.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'tiada peristiwa lantikan_negeri');
 });
 
+ujian('v11.3: nama Dayak (blok Pesaka) dan gelaran Sarawak untuk NPC PBB; UMNO kekal', () => {
+  const OG = require('../js/organisasi.js');
+  const bina = (parti) => S.savePlayer(S.buildPlayerProfile({ parti, nama: 'Uji', demografik: { kod: 'pemuda', label: 'Pemuda', jantina: 'Lelaki', umur: 25 }, cawangan: { id: 'x', nama: 'X', negeri: 'Sarawak', bahagian: 'Y' }, dunInfo: { e: { iban: 60, bidayuh: 5, orangUlu: 5, cina: 10, melayu: 20, india: 0, lain: 0 } } }));
+  bina('PBB'); const st = OG.getStruktur(S.loadPlayer()), pu = st.induk.pusat.senarai, cari = (j) => pu.filter((x) => x.jawatan === j)[0].orang.map((o) => o.nama);
+  betul(/^Pehin Sri /.test(cari('Yang Dipertua / Presiden')[0]), 'Yang Dipertua = Pehin Sri');
+  betul(cari('Timbalan Yang Dipertua').every((n) => /^Datuk Patinggi /.test(n)), 'Timbalan = Datuk Patinggi');
+  betul(cari('Naib Yang Dipertua (Pesaka)').every((n) => /^Datuk Amar .* anak /.test(n)), 'Naib (Pesaka) = Datuk Amar + nama Dayak');
+  { const nb = cari('Naib Yang Dipertua (Bumiputera)'); betul(nb.every((n) => / bin(ti)? /.test(n)), 'Naib (Bumiputera) = nama Melayu: ' + nb.join('; ')); }
+  const semua = JSON.stringify(st); betul(!/Tan Sri|Puan Sri|Dato' |Datin/.test(semua), 'tiada gelaran persekutuan/Semenanjung untuk PBB');
+  bina('UMNO'); const su = JSON.stringify(OG.getStruktur(S.loadPlayer())); betul(/Tan Sri/.test(su) && !/ anak |Datuk Amar|Pehin Sri/.test(su), 'UMNO kekal Tan Sri / Dato\', tiada nama Dayak');
+});
+
 ujian('v10.4: kejutan kempen khusus parti Sarawak mod ringan', () => {
   const D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const K = PRU.KEJUTAN_PARTI, ids = new Set(PRU.KEJUTAN.map((x) => x.id));
