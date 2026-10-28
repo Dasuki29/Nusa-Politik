@@ -487,7 +487,7 @@
     '.mpm-poli:hover:not(.is-kosong){filter:brightness(1.22);stroke:#fff;stroke-width:1.4}',
     '.mpm-poli:focus-visible{outline:none;stroke:var(--mpm-gold);stroke-width:2.4}',
     '.mpm-poli.is-pilih{stroke:#fff;stroke-width:2.6;filter:brightness(1.15)}',
-    '.mpm-poli.is-rumah{stroke:var(--mpm-gold);stroke-width:1.8;stroke-dasharray:5 3}',
+    '.mpm-poli.is-rumah{stroke:var(--mpm-gold);stroke-width:2.2;stroke-linejoin:round;paint-order:stroke}',          // v12.4: garis penuh (garis putus-putus nampak bersepah pada skala kecil)
     '.mpm-poli.is-rumah.is-pilih{stroke:#fff;stroke-dasharray:none}',
     '.mpm-garisdun{fill:none;stroke:#FFD84D;stroke-width:2.4;stroke-linejoin:round;pointer-events:none;paint-order:stroke}','.mpm-garisdun-halo{fill:none;stroke:rgba(0,0,0,.65);stroke-width:4.4;stroke-linejoin:round;pointer-events:none}','.mpm-poli--dm{stroke-width:.35}',
     '.mpm-label{font:700 210px/1 var(--font-body,system-ui);fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.65);stroke-width:46px;text-anchor:middle;pointer-events:none;letter-spacing:.02em}',
@@ -1119,7 +1119,7 @@
     }
 
     function binaSvg(lap, vb) {
-      var dx = dxTimur(), barat = '', timur = '', ln = '', jul = null, nilai = [];
+      var dx = dxTimur(), barat = '', timur = '', baratAtas = '', timurAtas = '', ln = '', jul = null, nilai = [];      // v12.4: kawasan anda / dipilih dilukis terakhir supaya garis dan isi tidak ditindih jiran
       if (st.metrik === 'pemilih') {
         lap.items.forEach(function (it) { var d = demoGeo(it); if (d && d.JUMLAH_PEMILIH) { nilai.push(d.JUMLAH_PEMILIH); } });
         if (nilai.length) { jul = { min: Math.min.apply(null, nilai), max: Math.max.apply(null, nilai) }; }
@@ -1129,8 +1129,10 @@
         var el = '<path class="mpm-poli' + (it.tahap === 'cawangan' ? ' mpm-poli--dm' : '') + (n ? '' : ' is-kosong') + (rm ? ' is-rumah' : '') + (pl ? ' is-pilih' : '') + '" d="' + it.f.d + '" fill="' + warnaItem(it, jul) + '"' +
           ' stroke="#0E0F13"' + (it.tahap === 'cawangan' ? '' : ' stroke-width=".7"') + ' vector-effect="non-scaling-stroke" data-k="' + i + '"' +
           (n ? ' data-act="pilih" data-tahap="' + it.tahap + '" data-id="' + esc(n.id) + '" tabindex="0" role="button" aria-label="' + esc(n.nama + ': ' + nilaiMetrik(n) + '%, ' + tahapNod(n).label + (rm ? ', kawasan anda' : '')) + '"' : ' aria-label="' + esc(it.f.nama) + ' (tiada data)"') + '/>';
-        if (adaTimur(it.f)) { timur += el; } else { barat += el; }
+        if (rm || pl) { if (adaTimur(it.f)) { timurAtas += el; } else { baratAtas += el; } }
+        else if (adaTimur(it.f)) { timur += el; } else { barat += el; }
       });
+      barat += baratAtas; timur += timurAtas;
       lap.garis.forEach(function (f) { var el = '<path class="mpm-garisdun-halo" d="' + f.d + '" vector-effect="non-scaling-stroke"/><path class="mpm-garisdun" d="' + f.d + '" vector-effect="non-scaling-stroke"/>'; if (adaTimur(f)) { timur += el; } else { barat += el; } });
       return '<svg class="mpm-peta" viewBox="' + vb.map(Math.round).join(' ') + '" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Peta poligon ' + esc(lap.tajuk) + '">' +
         '<g>' + barat + '</g><g transform="translate(' + dx + ' 0)">' + timur + '</g>' + ln + '</svg>';

@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v12.4 (2026-10-28)
+
+- Peta Pengaruh: sempadan "Kawasan anda" kini garis kuning penuh (bukan putus-putus) dan kawasan anda / dipilih dilukis paling atas. Garis putus-putus nampak bersepah dan seolah-olah tidak selari dengan sempadan pada skala kecil (maklum balas pengguna).
+
 ## v12.3 (2026-10-28)
 
 - Sidang Media pemain parti Sarawak: soalan berkaitan Sarawak kini muncul dalam kira-kira separuh sidang sahaja, dan maksimum satu soalan setiap sidang (sebelum ini hampir setiap sidang). Separuh lagi diberi kepada soalan portfolio, kawasan, pemilihan dan peristiwa. Pemain UMNO Semenanjung tetap tidak mendapat soalan Sarawak (diuji).
