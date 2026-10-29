@@ -114,7 +114,212 @@
   ];
 
   /* ------------------------------------------------------------------ */
-  var doc = W && W.document, kandungan = null, terbuka = false, pemicu = null;
+  /* v13.1: Perlembagaan MCA (pindaan sehingga 1-12-2019, diterima Pendaftar Pertubuhan 9-2-2021). RINGKASAN untuk rujukan permainan; label 'Perkara'. */
+  var SUMBER_MCA = 'Perlembagaan MCA (pindaan sehingga 1-12-2019)';
+  var FASAL_MCA = [
+ {
+  "no": "6",
+  "tajuk": "Tujuan Parti",
+  "ringkas": "MCA berjuang mempertahankan kemerdekaan negara, Perlembagaan Persekutuan dan demokrasi berparlimen berbilang kaum, serta membela kepentingan sah rakyat Malaysia keturunan Cina dan semua kaum.",
+  "poin": [
+   [
+    "6.5",
+    "Mengiktiraf dan melindungi hak dan kepentingan sah rakyat Malaysia keturunan Cina dan kaum lain seperti dalam Perlembagaan Persekutuan."
+   ],
+   [
+    "6.14",
+    "Bekerjasama dengan parti politik lain yang sehaluan untuk perkembangan politik kepartian yang sihat."
+   ],
+   [
+    "6.15",
+    "Memelihara penggunaan dan pembelajaran bahasa Cina dalam rangka Perkara 152 Perlembagaan Persekutuan."
+   ]
+  ],
+  "permainan": "Latar nilai parti. Ia tidak mempengaruhi pengiraan permainan secara langsung."
+ },
+ {
+  "no": "9",
+  "tajuk": "Keahlian",
+  "ringkas": "Keahlian terbuka kepada warganegara Malaysia keturunan Cina berumur 18 tahun ke atas yang bukan ahli parti politik lain. Bukan Cina boleh menjadi Ahli Bersekutu tanpa hak mengundi.",
+  "poin": [
+   [
+    "7",
+    "Empat kategori: ahli biasa, ahli seumur hidup, ahli kehormat dan ahli bersekutu."
+   ],
+   [
+    "13, 16",
+    "Yuran ahli biasa RM2 setahun. Ahli yang tertunggak yuran hilang hak hadir, mengundi dan memegang jawatan."
+   ]
+  ],
+  "permainan": "Pemain dianggap ahli biasa. Bilangan ahli setiap Cawangan ialah anggaran permainan."
+ },
+ {
+  "no": "20",
+  "tajuk": "Pegawai Parti",
+  "ringkas": "Presiden, Timbalan Presiden, 4 Naib Presiden dan 25 ahli JKP dipilih oleh perwakilan ke Perhimpunan Bahagian. Ketua Pemuda dan Ketua Wanita kebangsaan secara automatik menjadi Naib Presiden.",
+  "poin": [
+   [
+    "21A",
+    "Tiada sesiapa boleh menjadi Presiden lebih daripada 9 tahun."
+   ],
+   [
+    "22, 22A",
+    "Setiausaha Agung, Bendahari Agung, Setiausaha Organisasi Kebangsaan dan timbalan mereka dilantik oleh Presiden."
+   ],
+   [
+    "40",
+    "Jika Presiden berhenti, Timbalan Presiden memangku sehingga pemilihan seterusnya."
+   ]
+  ],
+  "permainan": "Pemilihan Pusat menggunakan sokongan perwakilan Bahagian (Jelajah Bahagian). Had 9 tahun dan kuasa lantikan Presiden dilaksanakan dalam kad MCA di tab Profil."
+ },
+ {
+  "no": "27",
+  "tajuk": "Perhimpunan Agung",
+  "ringkas": "Kuasa tertinggi parti. Bermesyuarat sekurang-kurangnya sekali setahun, paling lewat 31 Ogos.",
+  "poin": [
+   [
+    "30",
+    "Mesyuarat Agung Luar Biasa boleh dipanggil oleh Presiden, satu pertiga ahli JKP atau satu pertiga perwakilan."
+   ],
+   [
+    "35",
+    "Perhimpunan Agung boleh memecat mana-mana pegawai parti dengan dua pertiga undi."
+   ]
+  ],
+  "permainan": "Perhimpunan Agung berlaku pada bulan 8. Jika sokongan AJK anda sebagai Presiden rendah, Mesyuarat Agung Luar Biasa boleh menjatuhkan anda."
+ },
+ {
+  "no": "38",
+  "tajuk": "Jawatankuasa Pusat dan Majlis Presiden",
+  "ringkas": "JKP menjalankan kuasa eksekutif parti. Majlis Presiden (Presiden, Timbalan, Naib Presiden, Setiausaha Agung, Bendahari Agung, Setiausaha Organisasi dan sehingga 10 lantikan) mentadbir urusan harian.",
+  "poin": [
+   [
+    "38.11",
+    "Sehingga 8 ahli JKP dilantik oleh Presiden."
+   ],
+   [
+    "45.12",
+    "JKP memilih calon PRU dan PRN serta membahagikan kawasan."
+   ]
+  ],
+  "permainan": "Kuota kerusi MCA dalam BN (40 Parlimen, 90 DUN) ialah andaian permainan."
+ },
+ {
+  "no": "52",
+  "tajuk": "Jawatankuasa Perhubungan Negeri",
+  "ringkas": "Ditubuhkan oleh JKP di setiap negeri untuk menyelia Bahagian dan Cawangan. Pengerusi Negeri dilantik oleh Presiden.",
+  "poin": [
+   [
+    "54, 55",
+    "Pengerusi Negeri dilantik Presiden; Timbalan, Setiausaha dan Bendahari Negeri dilantik Pengerusi Negeri."
+   ]
+  ],
+  "permainan": "Menggunakan sistem Jawatankuasa Perhubungan Negeri sedia ada (dekati Presiden)."
+ },
+ {
+  "no": "65",
+  "tajuk": "Bahagian dan Perhimpunan Bahagian",
+  "ringkas": "Satu Bahagian bagi setiap kawasan Parlimen, dengan sekurang-kurangnya 100 ahli. Perhimpunan Bahagian diadakan pada bulan Jun.",
+  "poin": [
+   [
+    "67",
+    "Setiap Bahagian memilih sehingga 30 perwakilan ke Perhimpunan Agung, termasuk satu kerusi untuk Wanita berumur 40 tahun ke bawah."
+   ],
+   [
+    "75",
+    "Perhimpunan Bahagian boleh memecat ahli Jawatankuasa Bahagian dengan dua pertiga undi."
+   ]
+  ],
+  "permainan": "Kawasan operasi permainan ialah 61 kawasan Parlimen Semenanjung dengan pengundi Cina 25% ke atas (andaian)."
+ },
+ {
+  "no": "92",
+  "tajuk": "Cawangan dan Perhimpunan Cawangan",
+  "ringkas": "Cawangan boleh ditubuhkan dengan sekurang-kurangnya 50 ahli. Perhimpunan Cawangan diadakan setiap April.",
+  "poin": [
+   [
+    "94",
+    "Setiap Cawangan memilih sehingga 30 perwakilan ke Perhimpunan Bahagian, termasuk satu kerusi Wanita."
+   ],
+   [
+    "101",
+    "Perhimpunan Cawangan boleh memecat ahli Jawatankuasa Cawangan dengan dua pertiga undi."
+   ]
+  ],
+  "permainan": "Cawangan dalam permainan ialah Daerah Mengundi sebenar. Jika sokongan akar umbi bawah 30%, usul pecat boleh dibawa terhadap anda."
+ },
+ {
+  "no": "120",
+  "tajuk": "Calon dan Perwakilan",
+  "ringkas": "Ahli mesti menjadi ahli sekurang-kurangnya 3 tahun untuk bertanding pemilihan parti, PRU atau PRN. Presiden boleh mengecualikan dengan sebab.",
+  "poin": [
+   [
+    "117",
+    "Perwakilan ke Perhimpunan Agung mesti berumur 21 tahun ke atas dan ahli sekurang-kurangnya 3 tahun."
+   ],
+   [
+    "122",
+    "Calon PRU dan PRN perlu sijil pencalonan yang ditandatangani Presiden."
+   ]
+  ],
+  "permainan": "Syarat 3 tahun keahlian dikenakan pada semua pertandingan jawatan dan PRU/PRN."
+ },
+ {
+  "no": "123",
+  "tajuk": "Disiplin Parti",
+  "ringkas": "Lembaga Disiplin (5 ahli) menyiasat dan menasihati Majlis Presiden, yang memutuskan hukuman. Rayuan kepada JKP dalam 14 hari; keputusan JKP muktamad.",
+  "poin": [
+   [
+    "45.24",
+    "Pegawai parti yang dipilih hanya boleh digantung atau dipecat dengan sokongan dua pertiga JKP."
+   ],
+   [
+    "175",
+    "Ahli yang menyaman parti tanpa menggunakan semua saluran dalaman terlebih dahulu terus hilang keahlian."
+   ]
+  ],
+  "permainan": "Menggunakan sistem Tataetika dan disiplin sedia ada."
+ },
+ {
+  "no": "167",
+  "tajuk": "Kitaran Pemilihan dan Peruntukan Am",
+  "ringkas": "Pemilihan parti diadakan sekali bagi setiap PRU, bermula paling lewat 6 bulan selepas PRU atau 36 bulan selepas pemilihan lalu, mengikut mana yang lebih lewat.",
+  "poin": [
+   [
+    "157",
+    "Ahli jawatankuasa yang tidak hadir 3 mesyuarat berturut-turut hilang kerusi, kecuali rayuannya diterima dalam 7 hari."
+   ],
+   [
+    "142",
+    "Ahli Parlimen dan ADUN membayar sumbangan bulanan kepada parti."
+   ],
+   [
+    "168",
+    "Pindaan perlembagaan memerlukan dua pertiga undi Perhimpunan Agung."
+   ]
+  ],
+  "permainan": "Tahun pemilihan MCA dalam permainan dikira daripada tarikh PRU. Tiga bulan tanpa sebarang tindakan dikira tidak hadir 3 mesyuarat. Sumbangan wakil rakyat RM 500 sebulan (andaian)."
+ },
+ {
+  "no": "176",
+  "tajuk": "Sayap dan Sekolah Parti",
+  "ringkas": "MCA mempunyai sayap Pemuda dan Wanita yang ditadbir mengikut peraturan JKP, serta sebuah Sekolah Parti untuk melatih ahli.",
+  "poin": [
+   [
+    "176",
+    "Sayap Pemuda dan Wanita ditubuhkan di bawah peraturan tetap JKP."
+   ],
+   [
+    "178",
+    "Sekolah Parti menyediakan latihan untuk ahli."
+   ]
+  ],
+  "permainan": "Tiada sayap Puteri dalam MCA."
+ }
+];
+  function mcaKini() { try { var P = W && W.MyPolitikParti; return !!(P && P.kini && P.kini() === 'MCA'); } catch (e) { return false; } }
+  var doc = W && W.document, kandungan = null, kandunganMCA = null, terbuka = false, pemicu = null;
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
@@ -159,7 +364,7 @@
     var id = 'plb-f' + f.no;
     return '<section class="plb-fasal" data-fasal="' + f.no + '">' +
       '<h3 style="margin:0"><button type="button" class="plb-fasal__btn" aria-expanded="false" aria-controls="' + id + '" id="' + id + '-btn">' +
-        '<span class="plb-fasal__no">Fasal ' + f.no + '</span><span class="plb-fasal__tajuk">' + esc(f.tajuk) + '</span>' +
+        '<span class="plb-fasal__no">' + (f.label || 'Fasal') + ' ' + f.no + '</span><span class="plb-fasal__tajuk">' + esc(f.tajuk) + '</span>' +
         '<svg class="plb-fasal__ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
       '</button></h3>' +
       '<div class="plb-fasal__badan" id="' + id + '" role="region" aria-labelledby="' + id + '-btn" hidden>' +
@@ -170,17 +375,22 @@
   }
 
   function sediakan() {
+    var mca = mcaKini();                                                         // v13.1: MCA guna Perlembagaan MCA
+    if (kandungan && kandunganMCA !== mca) { if (kandungan.parentNode) { kandungan.parentNode.removeChild(kandungan); } kandungan = null; }
     if (kandungan || !doc) { return kandungan; }
+    kandunganMCA = mca;
+    var SENARAI_F = mca ? FASAL_MCA.map(function (f) { var x = {}; for (var k in f) { x[k] = f[k]; } x.label = 'Perkara'; return x; }) : FASAL, SMB = mca ? SUMBER_MCA : SUMBER;
     kandungan = doc.createElement('div');
     kandungan.className = 'plb'; kandungan.setAttribute('role', 'dialog'); kandungan.setAttribute('aria-modal', 'true'); kandungan.setAttribute('aria-labelledby', 'plb-tajuk');
     kandungan.innerHTML =
       '<div class="plb__kotak">' +
-        '<div class="plb__kepala"><div><h2 id="plb-tajuk">📜 Perlembagaan Parti</h2><p>Ringkasan fasal utama daripada ' + esc(SUMBER) + '. Tekan satu fasal untuk membuka atau menutupnya.</p></div>' +
+        '<div class="plb__kepala"><div><h2 id="plb-tajuk">📜 Perlembagaan Parti</h2><p>' + (mca ? 'Ringkasan perkara utama daripada ' + esc(SMB) + '. Tekan satu perkara untuk membuka atau menutupnya.' : 'Ringkasan fasal utama daripada ' + esc(SMB) + '. Tekan satu fasal untuk membuka atau menutupnya.') + '</p></div>' +
         '<button type="button" class="plb__tutup" data-plb="tutup" aria-label="Tutup">&times;</button></div>' +
         '<div class="plb__alat"><button type="button" data-plb="buka-semua">Buka semua</button><button type="button" data-plb="tutup-semua">Tutup semua</button></div>' +
-        '<div class="plb__isi">' + FASAL.map(binaFasal).join('') + '</div>' +
-        '<div class="plb__kaki">Ini ringkasan untuk rujukan dalam permainan, bukan teks undang-undang penuh. Rujuk dokumen Perlembagaan UMNO yang sah untuk teks lengkap. Permainan ini simulasi dan bukan laman rasmi parti.</div>' +
+        '<div class="plb__isi">' + SENARAI_F.map(binaFasal).join('') + '</div>' +
+        '<div class="plb__kaki">Ini ringkasan untuk rujukan dalam permainan, bukan teks undang-undang penuh. Rujuk dokumen Perlembagaan ' + (mca ? 'MCA' : 'UMNO') + ' yang sah untuk teks lengkap. Permainan ini simulasi dan bukan laman rasmi parti.</div>' +
       '</div>';
+    if (mca) { kandungan.setAttribute('data-jenama-skip', ''); }               // teks sudah dalam istilah MCA
     doc.body.appendChild(kandungan);
 
     kandungan.addEventListener('click', function (e) {

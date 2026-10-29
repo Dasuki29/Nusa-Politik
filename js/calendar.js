@@ -96,12 +96,18 @@
     FASA: [bulanPBB(F0[0], 1, 2), bulanPBB(F0[1], 3, 3), antaraBulan(4, 4), bulanPBB(F0[2], 5, 5), antaraBulan(6, 7), bulanPBB(F0[3], 8, 8), bulanPBB(F0[4], 9, 12)],
     TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 3, 3), cawangan: tt('cawangan', 3, 3), sayap_bahagian: tt('sayap_bahagian', 5, 5), bahagian: tt('bahagian', 5, 5), sayap_pau: tt('sayap_pau', 8, 8), pau: tt('pau', 8, 8) }
   };
+  /* v13.1: kalendar MCA (Perlembagaan MCA): Perhimpunan Cawangan April (Perkara 96), Perhimpunan Bahagian Jun (Perkara 69),
+     Perhimpunan Agung paling lewat 31 Ogos (Perkara 29). Kunci dalaman (cawangan/bahagian/pau) dikekalkan; js/parti.js menukar istilah. */
+  CONFIG.MCA = {
+    FASA: [bulanPBB(F0[0], 1, 3), bulanPBB(F0[1], 4, 4), antaraBulan(5, 5), bulanPBB(F0[2], 6, 6), antaraBulan(7, 7), bulanPBB(F0[3], 8, 8), bulanPBB(F0[4], 9, 12)],
+    TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 4, 4), cawangan: tt('cawangan', 4, 4), sayap_bahagian: tt('sayap_bahagian', 6, 6), bahagian: tt('bahagian', 6, 6), sayap_pau: tt('sayap_pau', 8, 8), pau: tt('pau', 8, 8) }
+  };
   /** Set takwim aktif mengikut parti pemain (PBB atau lalai UMNO). */
   function takwimSet() {
     var k = null;
     try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
     if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
-    return k === 'PBB' ? CONFIG.PBB : CONFIG;
+    return k === 'PBB' ? CONFIG.PBB : k === 'MCA' ? CONFIG.MCA : CONFIG;
   }
 
   /* ------------------------------------------------------------------------
@@ -235,8 +241,14 @@
      ------------------------------------------------------------------------ */
   function mesejMasuk(bulan, tahun, tahunBaharu) {
     var f = getFasa(bulan), nb = namaBulan(bulan), out = [];
-    var pbb = takwimSet() === CONFIG.PBB;
-    if (pbb) {
+    var pbb = takwimSet() === CONFIG.PBB, mca = takwimSet() === CONFIG.MCA;
+    if (mca) {                                                                   // v13.1
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 4).' }); }
+      else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 6) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 6 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat. Hanya bulan ini.' }); }
+      else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+    } else if (pbb) {
       if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
       else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
       else if (bulan === 5) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 5 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
@@ -363,6 +375,9 @@
 
     var RVL = muat('MyPolitikRival', 'rival.js');                                               // v7.28: AI pencabar bergerak pada akhir setiap bulan
     if (RVL && RVL.tick) { peristiwa = peristiwa.concat(RVL.tick().peristiwa || []); }
+
+    var MCAm = muat('MyPolitikMCA', 'mca.js');                                                 // v13.1: peraturan khas MCA (kehadiran, had Presiden, sumbangan, lantikan)
+    if (MCAm && MCAm.prosesBulan) { peristiwa = peristiwa.concat(MCAm.prosesBulan().peristiwa || []); }
 
     var ISU = muat('MyPolitikIsu', 'isu.js');                                                  // v12.2: Isu Semasa
     if (ISU && ISU.prosesBulan) { peristiwa = peristiwa.concat(ISU.prosesBulan().peristiwa || []); }

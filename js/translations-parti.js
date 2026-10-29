@@ -48,10 +48,8 @@
   ["Naib Yang Dipertua Kanan", "Senior Vice Yang Dipertua"],
   ["Naib Yang Dipertua (Pesaka)", "Vice Yang Dipertua (Pesaka)"],
   ["Naib Yang Dipertua (Bumiputera)", "Vice Yang Dipertua (Bumiputera)"],
-  ["Setiausaha Agung", "Secretary-General"],
   ["Timbalan Setiausaha Agung", "Deputy Secretary-General"],
   ["Penolong Setiausaha Agung", "Assistant Secretary-General"],
-  ["Bendahari Agung", "Treasurer-General"],
   ["Timbalan Bendahari Agung", "Deputy Treasurer-General"],
   ["Timbalan Ketua Penerangan", "Deputy Information Chief"],
   ["Penasihat Undang-Undang", "Legal Adviser"],
@@ -379,7 +377,6 @@
   ["Kuota dipenuhi", "Quota met"],
   ["Wakil Borneo mencukupi", "Enough Borneo representation"],
   ["Portfolio", "Portfolio"],
-  
   ["Anda", "You"],
   ["Anggota kabinet persekutuan penggal ini. Jawatan anda diserlahkan. Nama ialah watak rekaan.", "Members of this term's federal cabinet. Your post is highlighted. Names are fictional characters."],
   ["Pilih menteri bagi {n} portfolio utama. Portfolio lain diisi automatik mengikut kuota gabungan. Nama ialah watak rekaan.", "Choose ministers for {n} key portfolios. Other portfolios are filled automatically according to the coalition quota. Names are fictional characters."],

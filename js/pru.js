@@ -248,7 +248,8 @@
   function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
-  function tular() { return modul('MyPolitikTular', 'tular.js'); }                           // v12.9: krisis tular
+  function tular() { return modul('MyPolitikTular', 'tular.js'); }
+  function mca() { var M = modul('MyPolitikMCA', 'mca.js'); return M; }                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -256,6 +257,7 @@
   /** v9.4: tetapkan jadual musim seterusnya selepas pilihan raya tamat. */
   function jadualSeterusnya(p, pru, tahun) {
     var m = musimPBB(p, pru), SWj = m ? sarawak() : null;
+    pru.riwayat = (Array.isArray(pru.riwayat) ? pru.riwayat : []).concat([{ tahun: parseInt(p.tahun, 10), bulan: parseInt(p.bulan, 10), jenis: m || 'PRU' }]).slice(-12);   // v13.1: tarikh PRU/PRN (kitaran pemilihan MCA)
     if (SWj && SWj.jadualBerikut) { var j = SWj.jadualBerikut(p, m); pru.tahunPRU = j.tahun; pru.bulanPRU = j.bulan; pru.jenisPBB = j.jenis; }
     else { pru.tahunPRU = tahun + CONFIG.KITARAN_TAHUN; pru.bulanPRU = parseInt(p.bulan, 10) || CONFIG.BULAN_PRU; }
     pru.mulaIdx = idx(p); pru.krisisSudah = false;
@@ -325,6 +327,12 @@
         if (jenis === 'PARLIMEN' && mp !== 'PRU') { sebab.push(p.parti + ' bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)'); }
         if (jenis === 'DUN' && mp !== 'PRN') { sebab.push(p.parti + ' bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'); }
         var SWk = sarawak(); if (jenis === 'DUN' && mp === 'PRN' && SWk && SWk.ringan && SWk.ringan(p) && !SWk.dalamKuota(p)) { sebab.push('DUN anda di luar kuota ' + p.parti + ' dalam GPS (kuota ' + SWk.kuota(p) + ' kerusi)'); }   // v10.0
+      }
+      var MCk = mca(); if (MCk && MCk.adalah(p) && !lain) {                                         // v13.1: MCA: kuota kerusi dalam BN dan 3 tahun keahlian (Perkara 120)
+        var kw = MCk.kawasan(p);
+        if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push('Kawasan Parlimen anda di luar kuota MCA dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }
+        if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push('DUN anda di luar kuota MCA dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
+        if (!MCk.cukupKeahlian(p)) { sebab.push('Perlu menjadi ahli sekurang-kurangnya 3 tahun (Perkara 120)'); }
       }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
@@ -429,6 +437,7 @@
     }
     var kod = jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun) : ((p.kod && p.kod.parlimen) || p.bahagian);
     a.candidateType = jenis; a.ofsetKerusi = jenis === 'DUN' && !lain && sarawak() ? sarawak().ofset(p) : (jenis === 'PARLIMEN' && !lain && SW(p.parti) && sarawak() ? sarawak().ofsetParlimen(p) : 0);
+    if (!lain && mca() && mca().adalah(p)) { a.ofsetKerusi = mca().ofset(p, jenis); a.lawan = mca().lawan(p, jenis); }      // v13.1: MCA: kekuatan kerusi ikut peratus Cina
     a.kerusi = { jenis: jenis, nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: kod || '' };
     if (jenis === 'PARLIMEN' && !lain && SW(p.parti) && sarawak() && sarawak().maklumatParlimen(p)) { var mpl = sarawak().maklumatParlimen(p); a.kerusi.nama = mpl.nama; a.kerusi.kod = mpl.kod; }   // v9.4
     a.calonImport = null;

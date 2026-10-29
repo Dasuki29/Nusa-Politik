@@ -92,13 +92,23 @@
      ------------------------------------------------------------------------ */
   function nomborTahun(t) { t = parseInt(t, 10); return isFinite(t) ? t : CONFIG.TAHUN_MULA; }
 
+  /* v13.1: MCA: pemilihan parti selepas setiap PRU (Perkara 167), bukan setiap 3 tahun. Fungsi tahun di bawah mengikut pemain semasa jika MCA. */
+  function mcaP() {
+    var g = typeof globalThis !== 'undefined' ? globalThis : null, M = g && g.MyPolitikMCA;
+    if (!M) { try { M = typeof require === 'function' ? require('./mca.js') : null; } catch (e) { M = null; } }
+    if (!M || !S || !S.loadPlayer) { return null; }
+    var p = null; try { p = S.loadPlayer(); } catch (e2) { p = null; }
+    return p && M.adalah(p) ? { M: M, p: p } : null;
+  }
   function adalahTahunPemilihan(tahun) {
+    var mc = mcaP(); if (mc) { return mc.M.adalahTahunPemilihan(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0;
   }
 
   /** Tahun pemilihan terdekat pada atau selepas tahun ini. */
   function tahunPemilihanSeterusnya(tahun) {
+    var mc = mcaP(); if (mc) { return mc.M.tahunSeterusnya(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     if (t <= CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; }
     var baki = (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN;
@@ -106,6 +116,7 @@
   }
 
   function tahunPemilihanLepas(tahun) {
+    var mc = mcaP(); if (mc) { return mc.M.tahunLepas(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     return t < CONFIG.TAHUN_MULA ? null : t - ((t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN);
   }
@@ -287,7 +298,7 @@
         var k = J.semakKelayakan(p, d);
         tambah({
           kod: d.kod, jenis: 'jawatan', jawatan: d.jawatan, peringkat: peringkatPemilihan(d), kumpulan: d.kumpulan, sayap: d.sayap,
-          kerusi: d.kerusi, kesukaran: d.kesukaran, pangkat: d.pangkat, ipPerlu: d.ipMin,
+          kerusi: p.parti === 'MCA' && d.kod === 'naib_presiden' ? 4 : d.kerusi, kesukaran: d.kesukaran, pangkat: d.pangkat, ipPerlu: d.ipMin,
           pertahan: !!k.pertahan, terbuka: k.terbuka, sebab: k.sebab
         });
       });
@@ -388,6 +399,7 @@
     var sm = syMod(); if (sm && sm.bonusWarisan) { v += sm.bonusWarisan(p, d); }              // v6.5: Legacy Loyalty (pertandingan Induk sahaja)
     var Et = etika();
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
+    if (pr === 'pusat' && p && p.parti === 'MCA') { var mc = mcaP(); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     return clamp(v, 0, 100);
   }
 
@@ -429,6 +441,7 @@
     if (peringkat === 'bahagian') {
       return kuotaCawangan(p) * ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN);
     }
+    var mc = p && p.parti === 'MCA' ? mcaP() : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
     return CONFIG.PEMILIH_PUSAT;
   }
 
@@ -467,6 +480,7 @@
 
   function bina(p, st, d, opts) {
     var peringkat = d.peringkat, kerusi = d.kerusi || 1;
+    if (p && p.parti === 'MCA' && d.kod === 'naib_presiden') { kerusi = 4; }      // v13.1: 4 Naib Presiden dipilih (Perkara 21)
     var bil = Math.max(4, kerusi + CONFIG.PESAING_TAMBAHAN);
     var aras = (CONFIG.ARAS_PESAING[String(peringkat).replace(/^sayap_/, '').replace(/^pau$/, 'pusat')] || 0) + (d.kesukaran || 0) * CONFIG.GANDA_KESUKARAN;
     var SWk = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; if (SWk && SWk.ofsetJawatan) { aras += SWk.ofsetJawatan(p, d); }          // v9.0: imbangan blok Bumiputera/Pesaka (PBB)

@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v13.1 (2026-10-29)
+
+- **MCA boleh dimainkan (mod penuh)**, berdasarkan Perlembagaan MCA (pindaan sehingga 1-12-2019) dan mockup v13 yang dipersetujui. Logo daripada pengguna.
+  - Kawasan operasi: 61 kawasan Parlimen Semenanjung dengan pengundi Cina 25% ke atas; Bahagian = kawasan Parlimen, Cawangan = Daerah Mengundi sebenar (data/mca-semenanjung.csv, 2,163 Cawangan; jana semula dengan `node tools/build-mca.js`). Bilangan ahli ialah anggaran (minimum 50, Perkara 92).
+  - Istilah MCA: Pengerusi Cawangan/Bahagian, Jawatankuasa Pusat (JKP), Perhimpunan Cawangan/Bahagian, Perhimpunan Agung MCA, Jawatankuasa Perhubungan Negeri; sayap Pemuda dan Wanita sahaja.
+  - Takwim: Perhimpunan Cawangan bulan 4, Bahagian bulan 6, Perhimpunan Agung bulan 8. **Pemilihan parti selepas setiap PRU** (paling lewat 6 bulan selepas PRU atau 36 bulan selepas pemilihan lalu; Perkara 167).
+  - Pemilihan Pusat oleh perwakilan Bahagian seluruh negara (61 × 30 = 1,830 pengundi; Perkara 21) dengan tindakan **Jelajah Bahagian** (2 AP, RM 2,000, +8%); 4 Naib Presiden dipilih.
+  - **Lantikan Presiden**: Setiausaha Agung, Bendahari Agung, Setiausaha Organisasi Kebangsaan, Ahli JKP lantikan (peluang ikut kedekatan dengan Presiden); pemain Presiden memilih Setiausaha Agung (penyokong setia atau pencabar dalaman).
+  - Peraturan: had Presiden 9 tahun (Perkara 21A); 3 tahun keahlian untuk semua pertandingan dan PRU/PRN (Perkara 120); tidak hadir 3 mesyuarat (3 bulan tanpa tindakan) = hilang kerusi kecuali rayuan 1 AP, 70% (Perkara 157); usul pecat 2/3 apabila akar umbi bawah 30% (Perkara 75, 101); Mesyuarat Agung Luar Biasa apabila sokongan AJK Presiden bawah 35 (Perkara 30); sumbangan bulanan wakil rakyat RM 500 (Perkara 142).
+  - PRU/PRN: kuota MCA dalam BN 40 Parlimen dan 90 DUN (disusun ikut peratus Cina); kerusi Cina sangat tinggi lebih sukar.
+  - Perlembagaan MCA (ringkasan 12 Perkara, BM dan EN) dalam menu; peta, Pindah Cawangan dan tutorial menggunakan data MCA.
+- Penjenamaan parti kini memulihkan teks asal dengan tepat apabila parti ditukar (termasuk tukar terus antara dua parti bukan UMNO).
+
 ## v13.0 (2026-10-29)
 
 Penambahbaikan daripada analisis penuh repo.

@@ -7,6 +7,7 @@ Parti yang boleh dimainkan:
 | Parti | Mod | Ciri khas |
 |---|---|---|
 | UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita) |
+| MCA | Penuh | Komponen BN di Semenanjung: 61 kawasan Parlimen (pengundi Cina 25% ke atas), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
 | PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
 | PRS, SUPP, PDP (Sarawak) | Ringan | Parti rakan GPS dengan kuota kerusi; ciri teras masing-masing (Pengaruh GPS, Sokongan Bandar, Imbangan Kaum) |
 
@@ -33,7 +34,7 @@ PRN Sarawak dan PRU Parlimen berjalan berasingan untuk parti Sarawak. Tab Peta m
 | 8 | PAU dan pemilihan Pusat (WTC KL, Menara Dato' Onn) |
 | 9-12 | Pasca-PAU, bina semula sokongan |
 
-Takwim di atas ialah untuk UMNO. Bagi PBB: mesyuarat dan pemilihan Ranting pada bulan 3, Cawangan pada bulan 5 dan Perhimpunan Agung PBB (PA) pada bulan 8.
+Takwim di atas ialah untuk UMNO. Bagi MCA: Perhimpunan Cawangan bulan 4, Perhimpunan Bahagian bulan 6 dan Perhimpunan Agung bulan 8, dengan pemilihan jawatan hanya pada tahun selepas PRU. Bagi PBB: mesyuarat dan pemilihan Ranting pada bulan 3, Cawangan pada bulan 5 dan Perhimpunan Agung PBB (PA) pada bulan 8.
 
 4. Pemilihan jawatan hanya pada **tahun pemilihan** (2026, 2029, 2032...). Tahun lain ialah tahun pentadbiran, tetapi mandat perwakilan perlu dimenangi semula setiap tahun.
 5. Jaga **Tataetika**. Kempen bersih membina Modal Sosial. Politik wang dan fitnah memberi kelebihan pantas tetapi boleh membawa amaran, gantung, larangan bertanding atau pemecatan.
@@ -81,6 +82,7 @@ Modul utama dalam `js/`:
 | `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan dan pembentukan Jemaah Menteri oleh Perdana Menteri |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
+| `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
 | `i18n.js`, `translations*.js`, `tutorial-en.js` | Dwibahasa BM / EN |
 | `app.js` | Menggabungkan semua modul ke dalam dashboard |
@@ -130,9 +132,10 @@ PARTI=SUPP node tools/ujian-prs.js   # pelayar: parti mod ringan (PRS lalai; SUP
 node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
 node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
+node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 ```
 
-Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak.
+Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, dan `PARTI=MCA` sebagai ahli MCA.
 
 `tools/ujian-bahasa.js` gagal jika ada baris kamus tanpa EN, pemegang tempat `{x}` tidak sepadan, "Wing Wing", atau teks acara, latihan Amir, PRU, Kabinet dan Perlembagaan yang tiada terjemahan. `tools/ujian-pelayar.js` melaporkan ralat JavaScript dan teks BM yang bocor dalam mod EN. Nama misi dan tajuk sumber luar dikecualikan dengan sengaja.
 

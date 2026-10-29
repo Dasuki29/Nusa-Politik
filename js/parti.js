@@ -38,6 +38,27 @@
   SENARAI.PDP = { kod: 'PDP', nama: 'PDP', penuh: 'Parti Demokratik Progresif', logo: 'assets/images/logo-pdp.jpg', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sarawak', data: 'data/pdp-sarawak.csv', bahagianJenis: 'DUN', ringan: true };
   /* v10.3: PSB = parti PEMBANGKANG Sarawak (di luar GPS), mod ringan, ciri teras Naratif Pembangkang. ANDAIAN: kawasan operasi = DUN bukan Melayu/Melanau 60% ke atas (Cina + Dayak) (data/psb-sarawak.csv). Tiada kuota GPS, Premier atau Menteri. */
   SENARAI.PSB = { kod: 'PSB', nama: 'PSB', penuh: 'Parti Sarawak Bersatu', logo: 'assets/images/logo-psb.png', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sarawak', data: 'data/psb-sarawak.csv', bahagianJenis: 'DUN', ringan: true, pembangkang: true };
+  /* v13.1: MCA = parti komponen BN di Semenanjung, MOD PENUH (enjin UMNO: Cawangan, Bahagian = kawasan Parlimen, Pusat).
+     Istilah daripada Perlembagaan MCA: Pengerusi (bukan Ketua) Cawangan/Bahagian, Jawatankuasa Pusat (JKP), Perhimpunan Agung MCA,
+     Jawatankuasa Perhubungan Negeri, Perhimpunan Cawangan (April) dan Bahagian (Jun). Sayap Pemuda dan Wanita sahaja.
+     ANDAIAN: kawasan operasi = 61 Parlimen Semenanjung dengan pengundi Cina 25% ke atas (data/mca-semenanjung.csv, tools/build-mca.js). Logo daripada pengguna. */
+  SENARAI.MCA = { kod: 'MCA', nama: 'MCA', penuh: 'Persatuan Cina Malaysia', logo: 'assets/images/logo-mca.jpg', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/mca-semenanjung.csv', bahagianJenis: 'Parlimen', mca: true,
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (JKP)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'JKP'],
+      [/Perhimpunan Agung MCA \(PAU\)/g, 'Perhimpunan Agung MCA'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung MCA'], [/MCA General Assembly \(PAU\)/g, 'MCA General Assembly'], [/General Assembly \(PAU\)/g, 'MCA General Assembly'], [/\bPAU\b/g, 'PA'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Wisma MCA, Kuala Lumpur'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at Wisma MCA, Kuala Lumpur'], [/\b3 Naib Presiden\b/g, '4 Naib Presiden'], [/\b3 Vice Presidents\b/g, '4 Vice Presidents'],
+      [/Persidangan Tahunan Sayap Cawangan/g, 'Perhimpunan Sayap Cawangan'], [/Persidangan Tahunan Cawangan/g, 'Perhimpunan Cawangan'], [/Mesyuarat Perwakilan Sayap Bahagian/g, 'Perhimpunan Sayap Bahagian'], [/Mesyuarat Perwakilan Bahagian/g, 'Perhimpunan Bahagian'],
+      [/Branch Wing Annual Conference/g, 'Branch Wing Assembly'], [/Branch Annual Conference/g, 'Branch Assembly'], [/Division Wing Delegates' Meeting/g, 'Division Wing Assembly'], [/Division Delegates' Meeting/g, 'Division Assembly'],
+      [/\bTimbalan Ketua (Cawangan|Bahagian)\b/g, 'Timbalan Pengerusi $1'], [/\bNaib Ketua (Cawangan|Bahagian)\b/g, 'Naib Pengerusi $1'], [/\bKetua (Cawangan|Bahagian)\b/g, 'Pengerusi $1'], [/\bketua (cawangan|bahagian)\b/g, 'pengerusi $1'], [/Ketua-Ketua (Cawangan|Bahagian)/g, 'Pengerusi-Pengerusi $1'],
+      [/\b(Branch|Division) Chiefs?\b/g, function (m, a) { return a + ' Chairm' + (/s$/.test(m) ? 'en' : 'an'); }],
+      [/Badan Perhubungan/g, 'Jawatankuasa Perhubungan'], [/State Liaison Body/g, 'State Liaison Committee'], [/Liaison Body/g, 'Liaison Committee'],
+      [/\b([Bb])ulan 4-6\b/g, '$1ulan 4'], [/\b([Bb])ulan 7\b/g, '$1ulan 6'], [/\b([Mm])onths? 4-6\b/g, '$1onth 4'], [/\b([Mm])onth 7\b/g, '$1onth 6']],
+    istilahSongsang: [[/Jawatankuasa Pusat \(JKP\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJKP\b/g, 'MKT'],
+      [/Perhimpunan Agung MCA(?! \()/g, 'Perhimpunan Agung MCA (PAU)'], [/\bPA\b/g, 'PAU'],
+      [/ di Wisma MCA, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/\b4 Naib Presiden\b/g, '3 Naib Presiden'],
+      [/Perhimpunan Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Perhimpunan Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Perhimpunan Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'], [/Perhimpunan Bahagian/g, 'Mesyuarat Perwakilan Bahagian'],
+      [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
+      [/Jawatankuasa Perhubungan/g, 'Badan Perhubungan'],
+      [/\b([Bb])ulan 4\b(?!-)/g, '$1ulan 4-6'], [/\b([Bb])ulan 6\b/g, '$1ulan 7']] };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -65,9 +86,9 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if (k !== 'PBB' || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
-    var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(/\bPBB\b/g, 'UMNO');
+    var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     [d, tanpaBulan].forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });
     });
@@ -81,18 +102,18 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/;
+  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }
     if (n.__npKe === v) { return; }      // v11.1: elak tukar dua kali (Cawangan -> Ranting, Bahagian -> Cawangan)
-    var b = ke(v); n.__npKe = b; if (b !== v) { n.nodeValue = b; }
+    var b = ke(v); n.__npKe = b; if (b !== v) { n.__npAsal = v; n.nodeValue = b; }      // v13.1: simpan teks asal untuk dipulihkan apabila parti ditukar
   }
   function attr(el) {
     for (var j = 0; j < ATTR.length; j++) {
       var a = ATTR[j]; if (!el.hasAttribute || !el.hasAttribute(a)) { continue; }
       if (a === 'content' && el.tagName !== 'META') { continue; }
-      var v = el.getAttribute(a); el.__npKa = el.__npKa || {}; if (v && el.__npKa[a] !== v && RE_PERLU.test(v)) { var kb = ke(v); el.__npKa[a] = kb; el.setAttribute(a, kb); }
+      var v = el.getAttribute(a); el.__npKa = el.__npKa || {}; if (v && el.__npKa[a] !== v && RE_PERLU.test(v)) { var kb = ke(v); el.__npKa[a] = kb; if (kb !== v) { el.__npKaAsal = el.__npKaAsal || {}; el.__npKaAsal[a] = v; } el.setAttribute(a, kb); }
     }
   }
   function imbas(akar) {
@@ -115,25 +136,29 @@
     for (var k = 0; k < im.length; k++) { if (im[k].hasAttribute('data-netral') || (im[k].closest && im[k].closest('[data-jenama-skip]'))) { continue; } if (im[k].getAttribute('src') !== i.logo) { im[k].onerror = null; im[k].setAttribute('src', i.logo); im[k].classList.add('logo-parti'); } }
     gaya();
   }
-  var pernahTukar = false;
+  var pernahTukar = false, partiAktif = 'UMNO';
   /** Pulihkan paparan UMNO (cth. pemain menukar semula pilihan parti di skrin pendaftaran). */
   function pulihUMNO() {
     var w = D.createTreeWalker(D.body, 4), n, v;
     while ((n = w.nextNode())) {
+      if (n.__npAsal !== undefined) { if (n.nodeValue === n.__npKe) { n.nodeValue = n.__npAsal; } n.__npAsal = undefined; n.__npKe = undefined; continue; }   // v13.1: pulih tepat daripada teks asal
       v = n.nodeValue; if (!v || (!/\b(PBB|PRS|SUPP|PDP|PSB)\b/.test(v) && v.indexOf(SENARAI.PBB.penuh) < 0 && v.indexOf(SENARAI.PRS.penuh) < 0 && v.indexOf(SENARAI.SUPP.penuh) < 0 && v.indexOf(SENARAI.PDP.penuh) < 0 && v.indexOf(SENARAI.PSB.penuh) < 0 && !/\bMT\b|\bPA\b|\bRanting\b|Perhimpunan Agung PBB/.test(v))) { continue; }
       if (n.parentElement && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentElement.tagName) || (n.parentElement.closest && n.parentElement.closest('[data-jenama-skip]')))) { continue; }
       n.nodeValue = terap(v, SENARAI.PBB.istilahSongsang).split(SENARAI.PBB.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PRS.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.SUPP.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PDP.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PSB.penuh).join(SENARAI.UMNO.penuh).replace(/\b(PBB|PRS|SUPP|PDP|PSB)\b/g, 'UMNO');
     }
+    var ea = D.querySelectorAll('[title],[aria-label],[placeholder],[alt],meta[name="description"]');
+    for (var e = 0; e < ea.length; e++) { var x = ea[e]; if (x.__npKaAsal) { Object.keys(x.__npKaAsal).forEach(function (a) { if (x.getAttribute(a) === x.__npKa[a]) { x.setAttribute(a, x.__npKaAsal[a]); } }); x.__npKaAsal = null; x.__npKa = {}; } }
     var im = D.querySelectorAll('img.logo-parti'); for (var i = 0; i < im.length; i++) { im[i].setAttribute('src', SENARAI.UMNO.logo); im[i].classList.remove('logo-parti'); }
-    if (D.title) { D.title = D.title.replace(/\b(PBB|PRS|SUPP|PDP|PSB)\b/g, 'UMNO'); }
-    var md = D.querySelector('meta[name="description"]'); if (md) { md.setAttribute('content', (md.getAttribute('content') || '').replace(/\b(PBB|PRS|SUPP|PDP|PSB)\b/g, 'UMNO')); }
+    if (D.title) { D.title = D.title.replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA)\b/g, 'UMNO'); }
+    var md = D.querySelector('meta[name="description"]'); if (md) { md.setAttribute('content', (md.getAttribute('content') || '').replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA)\b/g, 'UMNO')); }
   }
   function terapkan() {
     if (!D || !D.body) { return; }
     var k = kini(); D.documentElement.setAttribute('data-parti', k);
-    var pb = D.querySelectorAll('[data-perlembagaan]'); for (var q = 0; q < pb.length; q++) { pb[q].style.display = k === 'UMNO' ? '' : 'none'; }      // v10.6: Perlembagaan yang dipaparkan ialah Perlembagaan UMNO; disembunyi untuk parti lain
-    if (k === 'UMNO') { if (pernahTukar) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { pernahTukar = false; sambung(); } } return; }
-    pernahTukar = true;
+    var pb = D.querySelectorAll('[data-perlembagaan]'); for (var q = 0; q < pb.length; q++) { pb[q].style.display = k === 'UMNO' || k === 'MCA' ? '' : 'none'; }      // v13.1: MCA ada Perlembagaan MCA sendiri      // v10.6: Perlembagaan yang dipaparkan ialah Perlembagaan UMNO; disembunyi untuk parti lain
+    if (k === 'UMNO') { if (pernahTukar) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { pernahTukar = false; partiAktif = 'UMNO'; sambung(); } } return; }
+    if (pernahTukar && partiAktif !== k) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { sambung(); } }      // v13.1: tukar terus antara dua parti bukan UMNO: pulih dahulu, kemudian jenamakan semula
+    pernahTukar = true; partiAktif = k;
     if (pemerhati) { pemerhati.disconnect(); }
     try { imbas(D.body); imbas(D.head); if (D.title) { D.title = ke(D.title); } logo(); } finally { sambung(); }
   }

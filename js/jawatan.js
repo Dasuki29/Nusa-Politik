@@ -184,8 +184,9 @@
     if (sudahTahunIni) {                                         // v6.8: satu jawatan setiap peringkat (kumpulan sama) dalam satu pemilihan; tiada rantaian MKT -> Timbalan -> Presiden
       return { terbuka: false, sebab: 'Anda sudah memenangi ' + sudahTahunIni.jawatan + ' pada pemilihan ' + p.tahun + '. Hanya satu jawatan bagi setiap peringkat dalam satu pemilihan; jawatan lebih tinggi dibuka pada pemilihan seterusnya.' };
     }
-    if (Et && d.keahlian) {                                    // Fasal 15.5: ahli sekurang-kurangnya 3 tahun
-      var kh = Et.semakKeahlian(p, d.keahlian, d.fasal);
+    var perluAhli = d.keahlian || (p && p.parti === 'MCA' ? 36 : 0);           // v13.1: MCA: semua pemilihan parti perlu 3 tahun keahlian (Perkara 120)
+    if (Et && perluAhli) {                                     // Fasal 15.5: ahli sekurang-kurangnya 3 tahun
+      var kh = Et.semakKeahlian(p, perluAhli, d.fasal);
       if (!kh.sah) { return { terbuka: false, sebab: kh.sebab, tunggu: kh.baki }; }
     }
     if (Et && d.penggal && !(p.parti && p.parti !== 'UMNO')) {                                     // Fasal 9.5: satu penggal AJK Bahagian/MKT

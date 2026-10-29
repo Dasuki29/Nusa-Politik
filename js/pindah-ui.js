@@ -40,6 +40,11 @@
   var cacheTab = {}, senarai = null;
   async function senaraiNegeri() {
     var CFG = W.MYPOLITIK_CONFIG || {};
+    var pM = S.loadPlayer();
+    if (!senarai && pM && pM.parti === 'MCA') {                                   // v13.1: MCA: kawasan operasi MCA sahaja
+      var rM = await fetch(W.MyPolitikParti.info('MCA').data, { cache: 'no-cache' }); if (!rM.ok) { throw new Error('HTTP ' + rM.status); }
+      var hM = D.rowsToHierarchy(D.teksKeBaris(await rM.text())); senarai = { tab: null, data: hM, nama: hM.negeri.map(function (n) { return n.nama; }) };
+    }
     if (!senarai) {
       var sen = null; try { sen = D.loadSenaraiTab ? await D.loadSenaraiTab({ appsScriptUrl: CFG.appsScriptUrl }) : null; } catch (e) { sen = null; }
       if (sen && sen.tab && sen.tab.length) { senarai = { tab: sen.tab, nama: sen.tab.map(function (t) { return D.namaNegeriTab(t); }) }; }
