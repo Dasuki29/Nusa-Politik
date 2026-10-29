@@ -1,3 +1,6 @@
+/* v13.0: fon tempatan dikongsi index.html dan dashboard.html (OFL, assets/fonts). Tiada lagi Google Fonts. */
+@font-face { font-family: 'Plus Jakarta Sans'; src: url(../assets/fonts/plus-jakarta-sans.woff) format('woff'); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'Anton'; src: url(../assets/fonts/anton.woff) format('woff'); font-display: swap; }
 /* ==========================================================================
    Nusa Politik — css/tema.css   (v7.0)
    Gaya "Poster Berani" (sempadan tebal, bayang keras, kuning terang).

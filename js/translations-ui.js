@@ -9,7 +9,6 @@
   if (!T || !T.tambah) { return; }
   T.tambah([
   ["Pertandingan jawatan · Pemilihan perwakilan · Kempen pemilih", "Office contests · Delegate elections · Voter campaign"],
-  ["Menziarahi ahli yang uzur dan keluarga yang ditimpa musibah.", "Visiting ailing members and families struck by misfortune."],
   ["Menziarahi ahli yang uzur dan keluarga yang ditimpa musibah, tanpa meminta undi. Membina Modal Sosial.", "Visiting ailing members and families struck by misfortune, without asking for votes. Builds Social Capital."],
   ["Gotong-royong, klinik bergerak dan kelas tuisyen percuma. Kerja ikhlas yang dikenang akar umbi.", "Community work, mobile clinics and free tuition classes. Sincere work remembered by the grassroots."],
   ["Bina pengaruh di peringkat cawangan untuk membuka kelayakan bertanding.", "Build influence at branch level to unlock eligibility to contest."],
@@ -31,7 +30,6 @@
   ["Perlu memegang jawatan sekurang-kurangnya AJK Cawangan dahulu.", "You must first hold at least a Branch Committee (AJK) post."],
   ["Menangi Perwakilan Cawangan tahun {x} dahulu.", "Win Branch Delegate in {x} first."],
   ["Perlu menjadi ahli sekurang-kurangnya 3 tahun (Fasal 15.5). Anda ahli {x} bulan; {y} bulan lagi.", "You must be a member for at least 3 years (Clause 15.5). You have been a member for {x} months; {y} months to go."],
-  ["Fasal 9.5: calon MKT mesti pernah memegang jawatan MKT atau AJK Bahagian selama satu (1) penggal (3 tahun).", "Clause 9.5: MKT candidates must have held an MKT or Division Committee (AJK) post for one (1) term (3 years)."],
   ["Menjamu ahli dan AJK selepas mesyuarat. Zon kelabu: jamuan bertujuan meraih undi boleh dianggap melanggar Perkara 5.6.", "Hosting members and committee members after a meeting. Gray Area: a feast aimed at winning votes may be deemed a breach of Article 5.6."],
   ["Menjanjikan pangkat atau projek kepada perwakilan sebagai balasan undi. Cepat meraih sokongan, tetapi dilarang Tataetika.", "Promising posts or projects to delegates in exchange for votes. Gains support quickly, but prohibited by the Code of Ethics."],
   ["Menyebar tuduhan dan hantaran memburukkan calon lawan. Melanggar Tataetika Perkara 5.3 dan menjejaskan reputasi parti.", "Spreading accusations and posts that smear opposing candidates. Breaches Code of Ethics Article 5.3 and damages the party's reputation."],
@@ -58,7 +56,6 @@
   ["Belum Tiba", "Not Yet"],
   ["Tidak Layak", "Not Eligible"],
   ["Belum layak", "Not yet eligible"],
-  ["Ahli Biasa", "Ordinary Member"],
   ["Dipecat (Bukan Ahli)", "Dismissed (Non-Member)"],
   ["Pilihan Raya Diisytiharkan", "General Election Declared"],
   ["Pilihan Raya Kecil (PRK)", "By-Election (PRK)"],

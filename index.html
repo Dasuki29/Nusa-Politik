@@ -11,9 +11,6 @@
   <meta name="description" content="Daftar sebagai ahli cawangan parti pilihan anda dan mulakan perjalanan politik anda.">
   <script src="js/fetch-lokal.js"></script>
   <script src="js/tema.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap">
   <!-- CSS disuntik supaya halaman tetap bergaya walaupun folder css/ tiada. Sumber: css/style.css + css/responsive.css. Jana semula: node tools/inline-css.js -->
   <!-- INLINE-CSS:START -->
 <style id="inline-css">
@@ -73,8 +70,8 @@
   --space-7: 3rem;
 
   /* Taip */
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;   /* v13.0: fon tempatan (assets/fonts, css/tema.css) */
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
 
   --header-h: 60px;
   --bottom-nav-h: 64px;
@@ -189,7 +186,6 @@ a:hover { color: var(--gold-light); }
   background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
 }
 
-.field[hidden], #f-blok[hidden], #h-parti[hidden], #h-ahli[hidden] { display: none !important; }
 .brand {
   display: flex;
   align-items: center;
@@ -875,26 +871,6 @@ option { background: var(--bg-elev-2); color: var(--text); }
 .av__saran { display: none; margin-top: 4px; font-size: .68rem; font-weight: 700; color: var(--gold); }
 .av.is-saran .av__saran { display: block; }
 .avatar-hint { margin: var(--space-3) 0 0; font-size: .8rem; color: var(--text-dim); }
-/* ---- Pilihan sayap (v5.9) ---- */
-.sayap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-@media (min-width: 640px) { .sayap-grid { grid-template-columns: repeat(4, 1fr); } }
-.sy { position: relative; display: block; margin: 0; }
-.sy input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
-.sy input:disabled { cursor: not-allowed; }
-.sy__box { display: grid; align-content: start; gap: 4px; height: 100%; padding: 12px 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-elev-2);
-  transition: border-color var(--transition), background var(--transition), transform var(--transition), opacity var(--transition); }
-.sy__ikon { font-size: 1.6rem; line-height: 1; }
-.sy__nama { font-weight: 700; color: var(--white); }
-.sy__desc { font-size: .72rem; color: var(--text-muted); line-height: 1.25; }
-.sy__buff { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: .72rem; color: var(--gold); font-weight: 600; }
-.sy__buff li::before { content: "\2022  "; }
-.sy__syarat { margin-top: 4px; font-size: .68rem; color: var(--text-dim); }
-.sy input:checked + .sy__box { border-color: var(--gold); background: rgba(242,183,5,.12); transform: translateY(-2px); }
-.sy input:focus-visible + .sy__box { outline: 3px solid var(--gold); outline-offset: 2px; }
-.sy input:disabled + .sy__box { opacity: .45; }
-.sy__saran { display: none; margin-top: 4px; font-size: .68rem; font-weight: 700; color: var(--gold); }
-.sy.is-saran .sy__saran { display: block; }
-
 .preview-avatar { display: flex; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-3); }
 .preview-avatar svg { width: 64px; height: 64px; flex: none; }
 .preview-avatar b { color: var(--white); display: block; }
@@ -1083,6 +1059,41 @@ body.menu-aktif { overflow: hidden; }
   background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b1a22' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E"); }
 .kertas__nota-kaki { margin: 0; font-size: .72rem; line-height: 1.5; color: #5a5545; }
 @media (prefers-reduced-motion: reduce) { .baris, .baris__kotak::before, .baris__kotak::after { transition: none; } .kertas { transform: none; } }
+
+/* v7.61: butang bahasa BM | EN */
+.lang-switch { white-space: nowrap; letter-spacing: .02em; }
+.lang-switch [data-lang] { opacity: .55; }
+.lang-switch [data-lang].is-on { opacity: 1; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.lang-switch__sep { opacity: .4; }
+.menu__bahasa { position: fixed; top: 12px; right: 64px; z-index: 60; }
+
+/* ---------- v12.1: Jemaah Menteri (js/jemaah-ui.js) ---------- */
+.jm-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (max-width: 899px) { .jm-imbangan { order: -1; position: sticky; top: 0; z-index: 2; background: var(--bg-elev-1); padding: 8px 0 2px; border-bottom: 2px solid var(--border); } .jm-imbangan .jm-meter { margin-bottom: 6px; } }
+@media (min-width: 900px) { .jm-grid { grid-template-columns: 1.4fr 1fr; align-items: start; } .jm-imbangan { position: sticky; top: 12px; } }
+.jm-slot { border: 2px solid var(--border); border-radius: var(--radius); padding: 8px 10px 4px; margin: 0 0 10px; }
+.jm-slot legend { font-weight: 800; padding: 0 4px; }
+.jm-calon { display: flex; gap: 10px; align-items: flex-start; padding: 6px 4px; border-radius: 6px; cursor: pointer; }
+.jm-calon:hover { background: var(--bg-elev-3); }
+.jm-calon input { margin-top: 4px; accent-color: #5B2A86; width: 18px; height: 18px; flex: none; }
+.jm-calon small { display: block; color: var(--text-muted); font-size: .8rem; }
+.jm-tag { display: inline-block; border: 1.5px solid var(--border); border-radius: 999px; padding: 0 7px; font-size: .72rem; font-weight: 700; margin: 0 3px 0 0; white-space: nowrap; color: #111; }
+.jm-tag--anda { background: #FFD6DD; } .jm-tag--rakan { background: #D6E6FF; } .jm-tag--borneo { background: #D8F2E0; } .jm-tag--pencabar { background: #FFE0B3; }
+.jm-meter { margin: 0 0 10px; }
+.jm-meter__t { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 700; }
+.jm-meter__b { height: 12px; border: 2px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 3px; background: var(--bg-elev-2); }
+.jm-meter__b i { display: block; height: 100%; }
+.jm-meter small { color: var(--text-muted); font-size: .78rem; }
+.jm-senarai { margin-top: 10px; }
+.jm-senarai summary { cursor: pointer; font-weight: 700; }
+.jm-jadual { overflow-x: auto; }
+.jm-jadual table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 560px; }
+.jm-jadual th, .jm-jadual td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+.jm-jadual tr.is-anda td { background: var(--bg-elev-3); font-weight: 700; }
+
+/* ---------- v12.2: Isu Semasa (js/isu-ui.js) ---------- */
+.isu-kad { border-left: 8px solid var(--red); }
+.isu-label { margin: 0 0 4px; font-size: .78rem; font-weight: 800; color: var(--text-muted); }
 
 /* ==========================================================================
    Nusa Politik — responsive.css

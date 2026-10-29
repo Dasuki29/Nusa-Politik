@@ -41,7 +41,8 @@
     '.pru-pilih label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:2px solid var(--garis,var(--border));border-radius:6px;cursor:pointer;background:var(--bg-elev-2)}' +
     '.pru-pilih label small{display:block;color:var(--text-muted)}.pru-pilih input{margin-top:3px;accent-color:var(--red)}' +
     /* v12.7: panel Kaji Selidik */
-    '.pl-kad{border:2px solid var(--garis,var(--border));border-radius:8px;padding:8px 10px;margin:10px 0;background:var(--bg-elev-2)}.pl-kad summary{cursor:pointer;font-weight:800}' +
+    '.pl-kad{border:2px solid var(--garis,var(--border));border-radius:8px;padding:8px 10px;margin:10px 0;background:var(--bg-elev-2)}.pl-kad summary{cursor:pointer;font-weight:800;min-height:32px;display:flex;gap:6px;align-items:flex-start;list-style:none}.pl-kad summary::-webkit-details-marker{display:none}.pl-kad summary::before{content:"▸";flex:none}.pl-kad[open] summary::before{content:"▾"}' +
+    '.pl-sum{display:inline-flex;flex-direction:column;gap:2px;vertical-align:top}.pl-sum__r{font-weight:600;font-size:.78rem;color:var(--text-muted)}.pl-sum__r .pl-st{font-size:.7rem;padding:0 8px}.pl-kad[open] .pl-sum__r{display:none}' +
     '.pl-meta{font-size:.75rem;color:var(--text-muted);margin:2px 0 6px}.pl-atas{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:4px 0}' +
     '.pl-st{display:inline-block;padding:2px 10px;border:2px solid var(--garis,#111);border-radius:999px;font-weight:900;font-size:.78rem;color:#fff}.pl-st--Selamat{background:#14994F}.pl-st--Marginal{background:#C98A00}.pl-st--Ketinggalan{background:#C8102E}' +
     '.pl-bar{display:flex;height:22px;border:2px solid var(--garis,var(--border));border-radius:4px;overflow:hidden;margin:6px 0 2px}.pl-bar i{display:grid;place-items:center;font:800 .68rem/1 system-ui;font-style:normal;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}' +
@@ -82,7 +83,7 @@
     h += '<p class="note">Hari <b>' + ck.hariSemasa + '/14</b> · ' + (a.isThreeCorneredFight ? '<b class="pru-ng">⚠️ Pertandingan 3-penjuru</b>' : 'Pertandingan 1-lawan-1') + ' · Populariti parti ' + a.partiPopulariti + '%</p>';
     h += '<div class="pru-hari" aria-hidden="true">';
     for (var i = 0; i < 14; i++) { h += '<i class="' + (i < ck.hariSemasa ? 'd' : i === ck.hariSemasa ? 'n' : '') + (i >= 12 ? ' f' : '') + '"></i>'; }
-    h += '</div>' + pecahHtml(ck.pecahan) + kadPolling(ck.polling) + kadWarRoom(ck.warRoom, p);
+    h += '</div>' + pecahHtml(ck.pecahan);
     h += bar('Sokongan pengundi', a.voterSupport, a.voterSupport < 30) + bar('Dana kempen', Math.min(100, a.campaignFunds / 100), a.campaignFunds < 1500, 'RM ' + fmt(a.campaignFunds)) + bar('Tenaga jentera', a.jentera, a.jentera < 40) + bar('Stress', p.stress || 0, (p.stress || 0) >= 60);
     h += '<p class="note" style="margin-top:6px">📜 ' + ck.janji.map(function (j) { return esc(j.ikon + ' ' + j.nama); }).join(' · ') + '</p>';
     if (ck.kejutan) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="kejutan">⚡ Kejutan Kempen hari ke-' + ck.kejutan.hari + ': ' + esc(ck.kejutan.tajuk) + '</button>'; }
@@ -92,15 +93,24 @@
       h += '<div class="choice-list">' + ck.biasa.map(btnTindak).join('') + '</div>';
     }
     if (a.log && a.log.length) { h += '<ul class="pru-log">' + a.log.slice(0, 4).map(function (l) { return '<li><b>Hari ' + l.hari + ':</b> ' + esc(l.teks) + '</li>'; }).join('') + '</ul>'; }
+    h += kadPolling(ck.polling) + kadWarRoom(ck.warRoom, p);                   // v13.0: panel analisis selepas butang tindakan (mudah alih)
     return h + '</section>';
   }
+  /* v13.0: Kaji Selidik dan War Room tertutup secara lalai dengan ringkasan satu baris; pilihan buka/tutup diingati dalam sesi. */
+  var panelBuka = (function () { try { return JSON.parse(W.sessionStorage.getItem('nusa_panel_kempen') || '{}') || {}; } catch (e) { return {}; } })();
+  W.document.addEventListener('toggle', function (ev) {
+    var d = ev.target; if (!d || !d.getAttribute || !d.getAttribute('data-panel')) { return; }
+    panelBuka[d.getAttribute('data-panel')] = d.open;
+    try { W.sessionStorage.setItem('nusa_panel_kempen', JSON.stringify(panelBuka)); } catch (e) { /* abaikan */ }
+  }, true);
+  function bukaAttr(kunci) { return panelBuka[kunci] ? ' open' : ''; }
   /** v12.7: panel Kaji Selidik Pilihan Raya (js/polling.js). */
   function kadPolling(k) {
     if (!k) { return ''; }
     var st = k.seatStatus, kls = st.split('/')[0], s = k.semasa, pj = k.projectedVoteShare;
     var seg = function (c, n, t) { return n > 0 ? '<i class="' + c + '" style="width:' + n + '%" title="' + esc(t) + ' ' + n + '%">' + (n >= 9 ? Math.round(n) + '%' : '') + '</i>' : ''; };
     var mx = Math.max.apply(null, k.sejarah.map(function (x) { return x.anda; }).concat([55])), mn = Math.min.apply(null, k.sejarah.map(function (x) { return x.anda; }).concat([45]));
-    var h = '<details class="pl-kad" open><summary>📊 Kaji Selidik Pilihan Raya</summary>' +
+    var h = '<details class="pl-kad" data-panel="polling"' + bukaAttr('polling') + '><summary><span class="pl-sum"><span class="pl-sum__t">📊 Kaji Selidik Pilihan Raya</span><span class="pl-sum__r"><span class="pl-st pl-st--' + kls + '">' + esc(st) + '</span> <span>Anda ' + pj.anda + '%</span> <span>· Atas pagar ' + k.undecidedVoters + '%</span></span></span></summary>' +
       '<p class="pl-meta">' + esc(k.peninjau) + ' (rekaan) · Hari ' + k.hari + ' · margin ralat ±' + k.moe + '</p>' +
       '<div class="pl-atas"><span class="pl-st pl-st--' + kls + '">' + esc(st) + '</span><span><span>Unjuran undi:</span> <b>Anda ' + pj.anda + '%</b>' + (pj.rakan ? ' <span>· Rakan ' + pj.rakan + '%</span>' : '') + ' <span>· Lawan ' + pj.lawan + '%</span></span></div>' +
       '<div class="pl-bar" role="img" aria-label="Tinjauan hari ini">' + seg('a', s.anda, 'Anda') + seg('r', s.rakan, 'Rakan') + seg('u', s.atasPagar, 'Atas pagar') + seg('l', s.lawan, 'Lawan') + '</div>' +
@@ -122,7 +132,8 @@
       namaDiminta = kunci;
       W.MyPolitikWarRoom.cariNama(p, a).then(function (ls) { if (PRU.namakanZon(ls)) { segarkan(); } }, function () { PRU.namakanZon([]); });
     }
-    var h = '<details class="pl-kad" open><summary>🎯 Bilik Gerakan (War Room)</summary>' +
+    var lemah = w.zon.filter(function (z) { return z.machineryPresence < 45; }).length;
+    var h = '<details class="pl-kad" data-panel="warroom"' + bukaAttr('warroom') + '><summary><span class="pl-sum"><span class="pl-sum__t">🎯 Bilik Gerakan (War Room)</span><span class="pl-sum__r"><span>Tenaga ' + w.partyMachineryPoints + '/100</span> <span>· Keletihan ' + w.burnout + '%</span>' + (lemah ? ' <span class="pru-ng">· ' + lemah + ' zon dikuasai lawan</span>' : '') + '</span></span></summary>' +
       '<div class="wr-stat"><div><span>Tenaga jentera</span><b>' + w.partyMachineryPoints + '/100</b></div><div><span>Dana operasi</span><b>RM ' + fmt(w.campaignBudget) + '</b></div>' +
       '<div><span>Keletihan kempen</span><b class="' + (w.burnout >= 30 ? 'pru-ng' : '') + '">' + w.burnout + '%</b></div><div><span>Keberkesanan kempen</span><b class="' + (w.faktor < 1 ? 'pru-ng' : 'pru-ok') + '">' + Math.round(w.faktor * 100) + '%</b></div></div>' +
       '<p class="pl-meta">Hantar jentera: −' + w.kos.jentera + ' tenaga, −RM ' + fmt(w.kos.dana) + ' · baki hari ini ' + Math.max(0, w.hantarBaki) + '. Jika tenaga tidak cukup, keletihan kempen naik.</p>' +

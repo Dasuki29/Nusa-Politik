@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.0 (2026-10-29)
+
+Penambahbaikan daripada analisis penuh repo.
+
+- **Skrin kempen lebih ringkas di telefon:** butang tindakan kempen kini terus di bawah meter kempen. Panel Kaji Selidik dan Bilik Gerakan dipindah ke bawah dan tertutup secara lalai, dengan ringkasan satu baris (status kerusi, undi anda, atas pagar; tenaga, keletihan, zon dikuasai lawan). Pilihan buka/tutup diingati sepanjang sesi. Butang tindakan pertama naik dari kira-kira 2,930 px ke 1,480 px pada skrin 375 px.
+- **Tutorial:** tiga langkah baharu (Kaji Selidik & Bilik Gerakan, Krisis Tular & Pertahanan Digital, Jemaah Menteri & Isu Semasa) dan topik Codex "Kempen, Krisis Tular & Kabinet", dalam BM dan EN. Ayat lapuk tentang peluang kerajaan negeri bagi parti GPS dibetulkan (kini ikut kerusi GPS, v12.6).
+- **README:** parti Sarawak, takwim PBB, senarai modul baharu dan semua fail ujian.
+- **Fon seragam:** index dan dashboard kini guna fon tempatan Plus Jakarta Sans (assets/fonts). Pautan Google Fonts dibuang, jadi tiada lagi permintaan ke pelayan luar untuk fon dan dashboard tidak lagi jatuh ke fon sistem.
+- **Kamus terjemahan:** 109 entri berganda yang tidak pernah dipakai dibuang (entri pertama sentiasa diutamakan; terjemahan yang dipaparkan tidak berubah, disahkan pada 3,629 kunci).
+- Fail sisa dibuang: k_daftar.png, k_modal.png, geo-demo.html.
+
 ## v12.9 (2026-10-29)
 
 - **Krisis Tular & Pertahanan Digital** (js/tular.js, js/tular-ui.js, baharu). 6 senario fitnah rekaan (video disunting, dokumen palsu, petikan separuh, akaun palsu, gambar lama, fitnah keluarga), keterukan 1 hingga 3.

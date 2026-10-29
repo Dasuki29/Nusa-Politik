@@ -126,7 +126,6 @@
   ["Ekonomi Rakyat", "The People’s Economy"],
   ["Kesinambungan dan Pembaharuan", "Continuity and Renewal"],
   ["Parti Dekat dengan Akar Umbi", "A Party Close to the Grassroots"],
-  ["Ahli Biasa", "Ordinary Member"],
   ["Mesyuarat sayap hanya untuk laluan sayap (Pemuda, Puteri atau Wanita). Laluan anda ialah Utama / Induk.", "Wing meetings are only for the wing track (Pemuda, Puteri or Wanita). Your track is Utama / Induk."],
   ["Presiden menyampaikan hala tuju parti. Perwakilan berbahas dan mengundi sokongan terhadap ucapan.", "The President delivers the party’s direction. Delegates debate and vote to support the speech."],
   ["Pengundian dijalankan apabila mesyuarat ditutup. Daftar pencalonan anda melalui tab Pemilihan sebelum itu.", "Voting is held when the meeting closes. Register your nomination through the Elections tab before then."],

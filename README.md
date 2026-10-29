@@ -1,6 +1,16 @@
 # Nusa Politik
 
-Permainan simulasi politik berasaskan struktur parti UMNO. Pemain bermula sebagai **Ahli Biasa** di sebuah Cawangan dan cuba naik ke jawatan Cawangan, Bahagian dan Pusat melalui kitaran pemilihan 3 tahun.
+Permainan simulasi politik Malaysia. Pemain bermula sebagai **Ahli Biasa** di sebuah Cawangan dan cuba naik ke jawatan Cawangan, Bahagian dan Pusat melalui kitaran pemilihan 3 tahun, kemudian bertanding PRU/PRN dan memegang jawatan kerajaan.
+
+Parti yang boleh dimainkan:
+
+| Parti | Mod | Ciri khas |
+|---|---|---|
+| UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita) |
+| PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
+| PRS, SUPP, PDP (Sarawak) | Ringan | Parti rakan GPS dengan kuota kerusi; ciri teras masing-masing (Pengaruh GPS, Sokongan Bandar, Imbangan Kaum) |
+
+PRN Sarawak dan PRU Parlimen berjalan berasingan untuk parti Sarawak. Tab Peta memaparkan 82 DUN dan Daerah Mengundi Sarawak.
 
 > **Penafian:** Ini permainan simulasi, bukan laman rasmi parti. Nombor, kebarangkalian dan nama pesaing ialah rekaan permainan. Kad "Laluan Karier Sebenar" ialah ringkasan fakta awam bersumber dan tidak menilai mana-mana tokoh.
 
@@ -22,6 +32,8 @@ Permainan simulasi politik berasaskan struktur parti UMNO. Pemain bermula sebaga
 | 7 | Mesyuarat dan pemilihan Bahagian |
 | 8 | PAU dan pemilihan Pusat (WTC KL, Menara Dato' Onn) |
 | 9-12 | Pasca-PAU, bina semula sokongan |
+
+Takwim di atas ialah untuk UMNO. Bagi PBB: mesyuarat dan pemilihan Ranting pada bulan 3, Cawangan pada bulan 5 dan Perhimpunan Agung PBB (PA) pada bulan 8.
 
 4. Pemilihan jawatan hanya pada **tahun pemilihan** (2026, 2029, 2032...). Tahun lain ialah tahun pentadbiran, tetapi mandat perwakilan perlu dimenangi semula setiap tahun.
 5. Jaga **Tataetika**. Kempen bersih membina Modal Sosial. Politik wang dan fitnah memberi kelebihan pantas tetapi boleh membawa amaran, gantung, larangan bertanding atau pemecatan.
@@ -62,6 +74,15 @@ Modul utama dalam `js/`:
 | `slot.js`, `slotpanel.js` | Slot simpanan berbilang (5 watak) dan panel Simpanan Permainan pada menu |
 | `stress.js` | Stress, Kesihatan, tindakan Rehat dan kesan kepada risiko tamat kerjaya |
 | `hayat.js` | Umur pemain, risiko kesihatan, Legacy Summary (kerjaya tamat) dan peralihan kategori mengikut umur pada AGM |
+| `parti.js`, `sarawak.js` | Penjenamaan parti (nama, logo, istilah) dan peraturan khas parti Sarawak (GPS, kuota, Premier) |
+| `pru.js`, `pru-ui.js` | PRU/PRN: pencalonan, manifesto, kempen 14 hari, kejutan kempen, keputusan dan status kerajaan |
+| `polling.js` | Kaji Selidik Pilihan Raya: unjuran undi, status kerusi, pengundi atas pagar, demografi |
+| `warroom.js` | Bilik Gerakan (War Room): zon kawasan, penghantaran jentera, pertempuran jentera, keletihan kempen |
+| `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan dan pembentukan Jemaah Menteri oleh Perdana Menteri |
+| `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
+| `tular.js` | Krisis tular media sosial dan pertahanan digital |
+| `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
+| `i18n.js`, `translations*.js`, `tutorial-en.js` | Dwibahasa BM / EN |
 | `app.js` | Menggabungkan semua modul ke dalam dashboard |
 
 Data permainan disimpan dalam pelayar (localStorage). Tiada pelayan atau akaun diperlukan.
@@ -104,7 +125,14 @@ node tools/simulasi.js 30 600 1000   # 30 kerjaya, maksimum 600 bulan, benih raw
 ```
 node tools/ujian-bahasa.js       # ujian dwibahasa tanpa pelayar: kamus dan teks data permainan ada EN (-v untuk senarai penuh)
 node tools/ujian-pelayar.js      # asap pelayar dalam EN (perlu Playwright; dilangkau jika tiada). BULAN=12 untuk lebih lama
+node tools/ujian-pbb.js          # pelayar: daftar sebagai ahli PBB (penjenamaan, peta Sarawak, istilah)
+PARTI=SUPP node tools/ujian-prs.js   # pelayar: parti mod ringan (PRS lalai; SUPP atau PDP)
+node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
+node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
+node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 ```
+
+Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak.
 
 `tools/ujian-bahasa.js` gagal jika ada baris kamus tanpa EN, pemegang tempat `{x}` tidak sepadan, "Wing Wing", atau teks acara, latihan Amir, PRU, Kabinet dan Perlembagaan yang tiada terjemahan. `tools/ujian-pelayar.js` melaporkan ralat JavaScript dan teks BM yang bocor dalam mod EN. Nama misi dan tajuk sumber luar dikecualikan dengan sengaja.
 
