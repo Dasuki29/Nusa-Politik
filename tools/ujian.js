@@ -1428,6 +1428,65 @@ ujian('v13.4: jawatan sayap kekal hingga tamat penggal selepas had umur; Ketua P
   betul(!J.katalogUntuk(p).some((x) => x.kod === 'sayap_bahagian_puteri'), 'jawatan Puteri lain tidak boleh dipertahankan selepas 35');
   S.clearPlayer();
 });
+ujian('v13.5: Fasa B UMNO: takwim 4-5/6/9, Pusat diundi di 191 Bahagian, PAU tanpa undi, calon tidak perlu wakil PAU', () => {
+  const U = g.MyPolitikUMNO, J = g.MyPolitikJawatan, d = (k) => J.KATALOG.find((x) => x.kod === k);
+  P.daftar({}); P.tetap({ ip: 600, keahlian: { sejakTahun: 2010, sejakBulan: 1 }, penggalSelesai: true, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] });
+  sama([K.getTetingkap('cawangan', 1).mula, K.getTetingkap('cawangan', 1).tamat, K.getTetingkap('bahagian', 1).mula, K.getTetingkap('pau', 1).mula].join(), '4,5,6,9', 'takwim UMNO 2025');
+  sama(K.getFasa(7).kod, 'antara'); sama(K.getFasa(10).kod, 'pasca_pau'); sama(K.getFasa(3).kod, 'akar_umbi');
+  let p = S.loadPlayer(); sama(U.ringkasPusat(p).pengundi, 54536, 'perwakilan Bahagian'); sama(U.ringkasPusat(p).bilBahagian, 191);
+  const mkt = J.semakKelayakan(p, d('ahli_mkt')); betul(!/PAU/.test(mkt.sebab || ''), 'MKT tidak perlu wakil PAU: ' + mkt.sebab);
+  const e = E.senaraiPertandingan(p).find((x) => x.kod === 'ahli_mkt'); betul(e && e.tetingkap && e.tetingkap.mula === 6, 'undi MKT bulan 6');
+  P.tetap({ bulan: 6 }); const r = E.daftarBertanding('ahli_mkt'); betul(r.ok, r.ralat);
+  const h = E.jalankanPemilihanPeringkat('bahagian', { rng: () => 0.5 }); betul(h.some((x) => x.ok && /MKT/.test(x.mesej || '')), 'undi MKT dijalankan bersama Bahagian');
+  P.tetap({ bulan: 9 }); const mp = M.mulaMesyuarat('pau'); betul(mp.ok, mp.ralat); betul(!mp.mesyuarat.agenda.some((x) => x.jenis === 'pemilihan'), 'PAU tiada undi jawatan');
+  S.clearPlayer();
+});
+ujian('v13.5: Fasal 10.16: tangguh pemilihan selepas PRU, musim khas, kitaran bermula semula; simpanan lama', () => {
+  const U = g.MyPolitikUMNO, ix = (t, b) => t * 12 + b;
+  sama(JSON.stringify(U.khasDari(ix(2036, 3))), JSON.stringify({ tahun: 2036, c: 5, b: 7, a: 9 })); sama(U.khasDari(ix(2030, 8)).tahun, 2031); sama(U.khasDari(ix(2030, 12)).c, 2);
+  P.daftar({});
+  let p = S.loadPlayer(); betul(E.adalahTahunPemilihan(2026) && E.adalahTahunPemilihan(2029) && !E.adalahTahunPemilihan(2027), 'kitaran asal');
+  sama(E.getKitaran(2029).kitaran, 1, 'indeks kitaran sama seperti asal');
+  P.tetap({ tahun: 2035, bulan: 1, pru: { tahunPRU: 2036, bulanPRU: 3, riwayat: [{ tahun: 2031, bulan: 3, jenis: 'PRU' }] }, umno: { v: 135, kit: { biasa: 2035, lepas: [{ tahun: 2032, i: ix(2032, 6), khas: false }], putus: {} } } });
+  p = S.loadPlayer(); sama(U.statusKitaran(p).tangguh, 2035, 'ditangguh: PRU dalam 12 bulan dan sudah ada pemilihan dalam penggal');
+  betul(!E.adalahTahunPemilihan(2035), '2035 bukan tahun pemilihan'); sama(E.tahunPemilihanSeterusnya(2035), 2036);
+  const ev = U.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /Fasal 10\.16/.test(x.mesej)), 'notis tangguh');
+  P.tetap({ tahun: 2036, bulan: 4, pru: { tahunPRU: 2041, bulanPRU: 3, riwayat: [{ tahun: 2031, bulan: 3, jenis: 'PRU' }, { tahun: 2036, bulan: 3, jenis: 'PRU' }] } });
+  U.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
+  sama(JSON.stringify([U.musim(p).c1, U.musim(p).b, U.musim(p).a, U.musim(p).khas]), '[5,7,9,true]', 'musim khas PRU + 2/4/6');
+  betul(E.adalahTahunPemilihan(2036)); sama(K.getTetingkap('bahagian', 4).mula, 7, 'takwim khas'); sama(U.kunciMesyuarat(p), '2036-khas');
+  P.tetap({ bulan: 10 }); U.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
+  sama(p.umno.kit.biasa, 2039, 'kitaran 3 tahun bermula semula'); betul(E.adalahTahunPemilihan(2039) && !E.adalahTahunPemilihan(2038)); sama(K.getTetingkap('bahagian', 10).mula, 7, 'takwim khas kekal hingga hujung tahun'); P.tetap({ tahun: 2037, bulan: 1 }); sama(K.getTetingkap('bahagian', 1).mula, 6, 'takwim biasa semula');
+  // simpanan lama (tiada p.umno) di tengah musim: takwim lama sehingga tahun berikutnya
+  P.tetap({ tahun: 2026, bulan: 5, umno: undefined, pru: undefined }); p = S.loadPlayer();
+  sama(p.umno.lama, 2026); betul(!U.baharu(p)); sama(K.getTetingkap('bahagian', 5).mula, 7, 'takwim lama'); sama(K.getTetingkap('pau', 5).mula, 8);
+  P.tetap({ tahun: 2027, bulan: 1 }); sama(K.getTetingkap('bahagian', 1).mula, 6, 'takwim baharu tahun berikutnya');
+  S.clearPlayer();
+});
+ujian('v13.5: lantikan Ketua dan Presiden, mohon lantikan, Jelajah, Majlis Penerangan, Perhimpunan Agung Khas, Tempoh Pemilihan', () => {
+  const U = g.MyPolitikUMNO;
+  P.daftar({}); P.tetap({ bulan: 2, ap: 20, myr: 50000, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)], negeriBP: { dekat: 100 } });
+  sama(U.lantikKetua('cawangan', 'setia').ok, false, 'bukan Ketua Cawangan');
+  let r = U.lantikKetua('bahagian', 'muda'); betul(r.ok, r.ralat); sama(U.lantikKetua('bahagian', 'setia').ok, false, 'sekali sepenggal');
+  sama(U.bonusSayap(S.loadPlayer(), { kumpulan: 'sayap' }), 5, 'Sokongan Belia +5');
+  const s0 = U.statusMohon(S.loadPlayer(), 'setiausaha_agung'); sama(s0.peluang, 80, 'kedekatan x 0.8');
+  r = U.mohon('setiausaha_agung', { rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat); const ip0 = S.loadPlayer().ip; U.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().ip, ip0 + 10, 'IP bulanan lantikan');
+  let p = S.loadPlayer(), own = Object.keys(U.sokonganBahagian(p))[0];
+  r = U.jelajah(own); betul(r.ok, r.ralat); sama(U.jelajah(own).ok, false, 'sekali sebulan');
+  const sb0 = U.sokonganBahagian(S.loadPlayer()); r = U.penerangan('1'); betul(r.ok, r.ralat); const sb1 = U.sokonganBahagian(S.loadPlayer());
+  const jhr = Object.keys(sb0).filter((k) => g.MyPolitikUMNOData.bahagian[k].ng === '1'); sama(jhr.length, 26, '26 Bahagian Johor'); betul(jhr.every((k) => Math.abs(sb1[k] - sb0[k] - 3) < 0.01), '+3% di Johor');
+  p = S.loadPlayer(); betul(U.tempohPemilihan(p).aktif, 'Tempoh Pemilihan aktif');
+  const jm = E.senaraiKempen(p).find((x) => x.id === 'lobi_ketua_bahagian'); sama(jm.tahap, 'kelabu', 'Lobi Ketua Bahagian zon kelabu'); sama(U.etikaKempen(p, 'jamuan_mesyuarat', E.KEMPEN.find((x) => x.id === 'jamuan_mesyuarat').etika).risiko, 9, 'jamuan x1.5');
+  P.tetap({ tahun: 2027, bulan: 6 }); betul(!U.tempohPemilihan(S.loadPlayer()).aktif, 'luar Tempoh Pemilihan');
+  // Presiden: lantikan dan Perhimpunan Agung Khas
+  const pres = { kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', sayap: null, pangkat: 12, tahun: 2026 };
+  const pz = {}; Object.keys(g.MyPolitikUMNOData.bahagian).forEach((k) => { pz[k] = 10; });
+  P.tetap({ jawatan: 'Presiden', jawatanList: [pres], umno: Object.assign(S.loadPlayer().umno, { pusat: pz, lantikan: null }) });
+  r = U.lantikPresiden('pencabar'); betul(r.ok, r.ralat); sama(U.lantikPresiden('setia').ok, false);
+  const ev = U.prosesBulan({ rng: () => 0.01 }).peristiwa; betul(ev.some((x) => /Perhimpunan Agung Khas/.test(x.mesej)), 'PA Khas');
+  betul(!g.MyPolitikJawatan.pegang(S.loadPlayer(), 'presiden'), 'Presiden dilucutkan');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
@@ -1544,7 +1603,7 @@ ujian('v11.1: kalendar PBB: Ranting bulan 3, Cawangan bulan 5, Perhimpunan Agung
   sama([win('cawangan'), win('bahagian'), win('pau')].join(), '3-3,5-5,8-8', 'tetingkap PBB');
   sama(K.getFasa(4).kod, 'antara'); sama(K.getFasa(3).kod, 'cawangan'); sama(K.getFasa(5).kod, 'bahagian'); sama(K.getFasa(8).kod, 'pau'); sama(K.getFasa(2).kod, 'akar_umbi');
   bina('UMNO');
-  sama([win('cawangan'), win('bahagian'), win('pau')].join(), '4-6,7-7,8-8', 'tetingkap UMNO kekal'); sama(K.getFasa(3).kod, 'akar_umbi');
+  sama([win('cawangan'), win('bahagian'), win('pau')].join(), '4-5,6-6,9-9', 'tetingkap UMNO (v13.5)'); sama(K.getFasa(3).kod, 'akar_umbi');
 });
 
 ujian('v11.2: Latihan Amir hanya untuk UMNO; parti Sarawak tidak ditawarkan', () => {

@@ -16,7 +16,7 @@
      Ketua Sayap negeri, Tokoh/ADUN dan Naib Ketua Bahagian.
    NEGERI LAIN: 5 jawatan daripada Ketua Bahagian + sehingga 2 lantikan luar pilihan (AJK Tambahan).
 
-   LOBI (pemain Ketua Bahagian sahaja): selepas keputusan pemilihan Bahagian (bulan 7) pop-up menawarkan 4 pendekatan.
+   LOBI (pemain Ketua Bahagian sahaja): selepas keputusan pemilihan Bahagian (bulan 6) pop-up menawarkan 4 pendekatan.
    Kedekatan dengan Presiden (0-100) juga naik dengan tindakan "Dekati Presiden".
    Skor pemain = 45% kedekatan + 20% sokongan (AJK, Perwakilan) + 20% IP + 15% Reputasi (+ penyandang, + laporan prestasi).
    Lantikan: bulan 9 tahun pemilihan. Pertengahan penggal: Pengerusi boleh digugurkan (rawak). Pemain Presiden memilih sendiri.

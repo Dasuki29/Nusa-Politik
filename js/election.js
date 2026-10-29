@@ -2,7 +2,7 @@
    Nusa Politik — js/election.js
    Enjin Kitaran Pemilihan 3 Tahun.
 
-   v3.0: jawatan berbilang peringkat dan mengikut sayap (js/jawatan.js), pusat (bulan 8),
+   v3.0: jawatan berbilang peringkat dan mengikut sayap (js/jawatan.js), pusat (v13.5 UMNO: bulan 6 di Mesyuarat Perwakilan Bahagian),
          mandat perwakilan SETAHUN sahaja (bertanding semula di Cawangan setiap tahun).
          Pertandingan jawatan: tahun pemilihan sahaja. Pertandingan perwakilan: setiap tahun.
 
@@ -106,15 +106,23 @@
     var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : modKhas('MyPolitikMCA', 'mca.js');
     return M && M.adalah(p) ? { M: M, p: p } : null;
   }
+  /* v13.5: UMNO (js/umno.js): kitaran 3 tahun dengan penangguhan selepas PRU (Fasal 10.16); 'baharu' = peraturan Fasa B (Pusat diundi di Bahagian). */
+  function umnoP(p0, baharuSahaja) {
+    if (!S || !S.loadPlayer) { return null; }
+    var p = p0 || null; if (!p) { try { p = S.loadPlayer(); } catch (e2) { p = null; } }
+    var U = p ? modKhas('MyPolitikUMNO', 'umno.js') : null;
+    if (!U || !U.adalah(p) || (baharuSahaja && !U.baharu(p))) { return null; }
+    return { M: U, p: p };
+  }
   function adalahTahunPemilihan(tahun) {
-    var mc = mcaP(); if (mc) { return mc.M.adalahTahunPemilihan(mc.p, nomborTahun(tahun)); }
+    var mc = mcaP() || umnoP(); if (mc) { return mc.M.adalahTahunPemilihan(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0;
   }
 
   /** Tahun pemilihan terdekat pada atau selepas tahun ini. */
   function tahunPemilihanSeterusnya(tahun) {
-    var mc = mcaP(); if (mc) { return mc.M.tahunSeterusnya(mc.p, nomborTahun(tahun)); }
+    var mc = mcaP() || umnoP(); if (mc) { return mc.M.tahunSeterusnya(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     if (t <= CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; }
     var baki = (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN;
@@ -122,22 +130,22 @@
   }
 
   function tahunPemilihanLepas(tahun) {
-    var mc = mcaP(); if (mc) { return mc.M.tahunLepas(mc.p, nomborTahun(tahun)); }
+    var mc = mcaP() || umnoP(); if (mc) { return mc.M.tahunLepas(mc.p, nomborTahun(tahun)); }
     var t = nomborTahun(tahun);
     return t < CONFIG.TAHUN_MULA ? null : t - ((t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN);
   }
 
   function getKitaran(tahun) {
     var t = nomborTahun(tahun), k = CONFIG.KITARAN_TAHUN, d = Math.max(0, t - CONFIG.TAHUN_MULA);
-    var pemilihan = adalahTahunPemilihan(t);
+    var pemilihan = adalahTahunPemilihan(t), up = umnoP();
     return {
       tahun: t,
       pemilihan: pemilihan,
       fasa: pemilihan ? 'pemilihan' : 'pentadbiran',
-      kitaran: Math.floor(d / k),                        // 0 = 2026-2028, 1 = 2029-2031
+      kitaran: up ? up.M.kitaranId(up.p, t) : Math.floor(d / k),       // 0 = 2026-2028, 1 = 2029-2031 (v13.5 UMNO: indeks musim pemilihan, sama jika tiada penangguhan)
       tahunDalamKitaran: (d % k) + 1,                    // 1, 2 atau 3
       tahunPemilihanLepas: tahunPemilihanLepas(t),
-      pemilihanBerikutnya: t + (k - (d % k))             // sentiasa selepas tahun ini
+      pemilihanBerikutnya: up ? up.M.tahunSeterusnya(up.p, t + 1) : t + (k - (d % k))             // sentiasa selepas tahun ini
     };
   }
 
@@ -318,6 +326,7 @@
   function peringkatPemilihan(d) { return d.kumpulan === 'sayap' ? (d.peringkat === 'pusat' ? 'sayap_pau' : 'sayap_' + d.peringkat) : d.peringkat; }
   function tetingkapPeringkat(p, peringkat) {
     var K = kalendar();
+    if (K && umnoP(p, true)) { if (peringkat === 'pusat') { peringkat = 'bahagian'; } else if (peringkat === 'sayap_pau') { peringkat = 'sayap_bahagian'; } }      // v13.5: Pusat diundi di Mesyuarat Perwakilan Bahagian (Fasal 9.3, 9.4)
     return K ? K.getTetingkap(peringkat === 'pusat' ? 'pau' : peringkat, p.bulan) : null;
   }
 
@@ -406,6 +415,7 @@
     var Et = etika();
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
     if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC')) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
+    var um = umnoP(p, true); if (um) { if (pr === 'pusat' && !(d && d.kumpulan === 'sayap')) { v += um.M.bonusPusat(p); } v += um.M.bonusSayap(p, d); }      // v13.5: sokongan perwakilan Bahagian UMNO, lantikan dan pelapis muda
     return clamp(v, 0, 100);
   }
 
@@ -447,7 +457,8 @@
     if (peringkat === 'bahagian') {
       return kuotaCawangan(p) * ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN);
     }
-    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC') ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }      // v13.3: MIC: pegawai Cawangan seluruh negara (Perkara 58.2, 59A)      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
+    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC') ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }
+    if (peringkat === 'pusat' && umnoP(p, true)) { return umnoP(p, true).M.ringkasPusat(p).pengundi; }      // v13.5: perwakilan Mesyuarat Perwakilan Bahagian di 191 Bahagian (Fasal 9.3)      // v13.3: MIC: pegawai Cawangan seluruh negara (Perkara 58.2, 59A)      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
     return CONFIG.PEMILIH_PUSAT;
   }
 
@@ -607,14 +618,16 @@
     return { boleh: true, sebab: '' };
   }
 
+  /** v13.5: takrif etika aktiviti selepas pelarasan Tempoh Pemilihan UMNO (Tataetika 5.5, 5.6). */
+  function etikaDef(p, d) { var um = p ? umnoP(p, true) : null; return um ? um.M.etikaKempen(p, d.id, d.etika) : d.etika; }
   function senaraiKempen(profil) {
     var p = profil || S.loadPlayer(), st = p ? getKeadaanPemilihan(p) : null;
     return KEMPEN.map(function (d) {
       var s = semakKempen(d, p, st || { kempen: { aktiviti: {} } }), kp = S.kesanPapar(p, d.kesan);   // v8.0: kos dipaparkan ikut tahap kesukaran
       return {
         id: d.id, nama: d.nama, penerangan: d.penerangan, perluKod: !!d.perluKod,
-        tahap: d.etika ? d.etika.tahap : 'neutral', modalSosial: d.etika ? d.etika.modal || 0 : 0,
-        peluangLapor: d.etika && d.etika.risiko && p && etika() ? Math.round(etika().peluangLapor(etika().getEtika(p), d.etika)) : 0,
+        tahap: etikaDef(p, d) ? etikaDef(p, d).tahap : 'neutral', modalSosial: etikaDef(p, d) ? etikaDef(p, d).modal || 0 : 0,
+        peluangLapor: etikaDef(p, d) && etikaDef(p, d).risiko && p && etika() ? Math.round(etika().peluangLapor(etika().getEtika(p), etikaDef(p, d))) : 0,
         kos: { ap: Math.abs(d.kesan.ap || 0), myr: Math.abs(kp.myr || 0) },
         ringkas: S.ringkasPerubahan({ ip: kp.ip || 0, myr: kp.myr || 0, ap: kp.ap || 0, reputasi: kp.reputasi || 0, kesetiaan: kp.kesetiaan || {} }) + (d.mata ? ', +' + d.mata + ' mata kempen' : ''),
         kali: st ? (st.kempen.aktiviti[d.id] || 0) : 0, maksKali: d.maksKali,
@@ -645,7 +658,7 @@
 
     st.kempen.aktiviti[def.id] = (st.kempen.aktiviti[def.id] || 0) + 1;
     st.kempen.mata = clamp(st.kempen.mata + def.mata, 0, 100);
-    var Et = etika(), eo = Et && def.etika ? Et.selepasAktiviti(p, def.etika, opts) : null;
+    var Et = etika(), ed = etikaDef(p, def), eo = Et && ed ? Et.selepasAktiviti(p, ed, opts) : null;
     var r = S.applyEffects(salin(def.kesan), {
       patch: eo ? { pemilihan: st, etika: eo.etika } : { pemilihan: st },
       log: { tindakan: def.id, nama: def.nama, peringkat: 'pemilihan' }
@@ -751,6 +764,8 @@
     var st = getKeadaanPemilihan(p);
     var kod = Object.keys(st.daftar).filter(function (k) { return !st.keputusan[k] && st.daftar[k].peringkat === peringkat; });
     var pg = function (k) { var df = J.cariDef(k); return df ? df.pangkat || 0 : 0; };
+    var serta = umnoP(p, true) ? ({ bahagian: 'pusat', sayap_bahagian: 'sayap_pau' })[peringkat] : null;      // v13.5: undi jawatan Pusat dalam Mesyuarat Perwakilan Bahagian
+    if (serta) { kod = kod.concat(Object.keys(st.daftar).filter(function (k) { return !st.keputusan[k] && st.daftar[k].peringkat === serta; })); }
     kod.sort(function (a, b) { var ja = st.daftar[a].jenis === 'perwakilan' ? 0 : 1, jb = st.daftar[b].jenis === 'perwakilan' ? 0 : 1; var ga = (J.cariDef(a) || {}).kumpulan === 'sayap' ? 1 : 0, gb = (J.cariDef(b) || {}).kumpulan === 'sayap' ? 1 : 0; return ja - jb || ga - gb || pg(b) - pg(a); });   // perwakilan dahulu, jawatan utama sebelum sayap, kemudian pangkat tertinggi dahulu (v6.8)
     return kod.map(function (k) { return jalankanPemilihan(k, opts); });
   }

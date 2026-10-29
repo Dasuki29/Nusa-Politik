@@ -159,9 +159,9 @@ ujian('PBB v9.6: istilah MKT -> Majlis Tertinggi (MT), PAU -> Perhimpunan Agung 
     sama2(PT.ke('Ahli MKT dan Perwakilan PAU'), 'Ahli MT dan Perwakilan PA', 'ke ringkas');
     sama2(PT.ke('Majlis Kerja Tertinggi (MKT) dan Perhimpunan Agung UMNO (PAU)'), 'Majlis Tertinggi (MT) dan Perhimpunan Agung PBB', 'ke penuh');
     sama2(PT.dari('Majlis Tertinggi (MT) dan Perhimpunan Agung PBB'), 'Majlis Kerja Tertinggi (MKT) dan Perhimpunan Agung UMNO (PAU)', 'dari penuh');
-    sama2(PT.ke('Cawangan dan Bahagian (bulan 4-6, bulan 7)'), 'Ranting dan Cawangan (bulan 3, bulan 5)', 'ke Ranting/Cawangan/bulan'); sama2(PT.dari('Ranting dan Cawangan (bulan 3, bulan 5)'), 'Cawangan dan Bahagian (bulan 4-6, bulan 7)', 'dari Ranting/Cawangan/bulan');
+    sama2(PT.ke('Cawangan dan Bahagian (bulan 4-5, bulan 6)'), 'Ranting dan Cawangan (bulan 3, bulan 5)', 'ke Ranting/Cawangan/bulan'); sama2(PT.dari('Ranting dan Cawangan (bulan 3, bulan 5)'), 'Cawangan dan Bahagian (bulan 4-5, bulan 6)', 'dari Ranting/Cawangan/bulan');
     sama2(PT.ke('Pemilihan Pusat (PAU)'), 'Pemilihan Pusat (PA)', 'ke pemilihan');
-    ['Pemilihan Cawangan', 'Pemilihan Pusat (PAU)', 'Bulan 7 · Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian, serta Perwakilan ke PAU (jawatan sayap dipilih dalam Mesyuarat Sayap)', 'Persidangan Tahunan Cawangan'].forEach((k) => {
+    ['Pemilihan Cawangan', 'Pemilihan Pusat (PAU)', 'Bulan 6 · Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian, serta Perwakilan ke PAU (jawatan sayap dipilih dalam Mesyuarat Sayap)', 'Persidangan Tahunan Cawangan'].forEach((k) => {
       const kb = PT.ke(k), en = I.terjemah(kb); if (en === null) { r.push('tiada EN untuk: ' + kb); } else if (/Cawangan|Bahagian|PAU|UMNO/.test(en) && !/Ranting|Cawangan|PBB|\bPA\b/.test(en)) { r.push('EN bocor: ' + en); }
     });
     sama2(PT.ke('Majlis Tertinggi memilih calon lain'), 'Majlis Tertinggi memilih calon lain', 'bare Majlis Tertinggi kekal');

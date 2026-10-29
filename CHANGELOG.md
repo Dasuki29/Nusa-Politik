@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v13.5 (2026-10-29)
+
+- **Fasa B: mekanik pemilihan UMNO ikut Perlembagaan UMNO 2025**, mengikut mockup yang dipersetujui. Berkuat kuasa untuk UMNO sahaja; MCA, MIC dan parti Sarawak mengekalkan peraturan sendiri.
+  - **Takwim baharu** (Fasal 14.3, 17.3): Cawangan dan sayap Cawangan bulan 4-5, Mesyuarat Perwakilan Bahagian dan sayap bulan 6, antara musim bulan 7-8, PAU bulan 9, Pasca-PAU bulan 10-12. Teks permainan, tutorial, legenda takwim dan peta penukaran bulan MCA, MIC dan PBB (js/parti.js) dikemas kini.
+  - **Pemilihan Pusat di 191 Bahagian** (Fasal 9.3, 9.4, 14.5.4): Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT diundi dalam Mesyuarat Perwakilan Bahagian bulan 6; Ketua, Naib Ketua dan AJK sayap Pusat diundi dalam Mesyuarat Perwakilan sayap Bahagian. PAU tiada undi jawatan. Calon tidak perlu lagi menjadi wakil ke PAU (syarat Fasal 9.5 kekal). ⚠️ Pengundi = 70 + 6 bagi setiap Daerah Mengundi setiap Bahagian, jumlah 54,536 (`node tools/build-umno.js`).
+  - **Jelajah Bahagian** (2 AP, RM 2,000, +8% satu Bahagian) dan **Majlis Penerangan Badan Perhubungan** (1 AP, RM 500, +3% semua Bahagian satu negeri), perlu Ketua Bahagian atau lebih.
+  - **Tangguh pemilihan** (Fasal 10.16), automatik: jika PRU dijangka dalam 12 bulan selepas musim biasa dan pemilihan sudah diadakan dalam penggal Parlimen semasa. Musim khas selepas PRU (Cawangan PRU + 2, Bahagian dan Pusat PRU + 4, PAU PRU + 6), kitaran 3 tahun bermula semula; penggal pemegang jawatan dilanjutkan. Pengaman: jika PRU tidak berlaku, musim biasa diadakan tahun berikutnya.
+  - **Kuasa lantikan** sekali setiap penggal: Ketua Cawangan / Ketua Bahagian (penyokong setia, wakil semua puak, pelapis muda bagi Bahagian) dan Presiden (penyokong setia atau pencabar dalaman); **mohon lantikan** Presiden (Ahli MKT, Setiausaha Agung, Bendahari Agung, Ketua Penerangan) dengan peluang kedekatan × 0.8.
+  - **Perhimpunan Agung Khas** (Fasal 8.5, 9.12) apabila sokongan perwakilan Bahagian Presiden di bawah 25%.
+  - **Tempoh Pemilihan** Tataetika (Perkara 2.1.2): 6 bulan sebelum musim Cawangan hingga 6 bulan selepas undi Pusat; Jamuan Mesyuarat risiko ×1.5 dan Lobi Ketua Bahagian menjadi zon kelabu (Perkara 5.5, 5.6).
+  - Kad baharu **🗳️ UMNO: Pemilihan & Lantikan** di tab Profil dan banner kitaran pemilihan di tab Pemilihan, dengan terjemahan EN.
+  - **Simpanan lama** yang berada di tengah musim (bulan 4-9) semasa kemas kini meneruskan takwim lama sehingga hujung tahun.
+  - Ujian baharu: 3 ujian unit (tools/ujian.js) dan `tools/ujian-umno.js` (pelayar).
+
 ## v13.4 (2026-10-29)
 
 - **Fasa A: struktur UMNO ikut Perlembagaan UMNO 2025** (buku Perlembagaan, Peraturan Persidangan, Peraturan Wanita, Pemuda, Puteri dan Tataetika), mengikut mockup yang dipersetujui.

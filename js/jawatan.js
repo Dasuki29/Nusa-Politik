@@ -52,7 +52,7 @@
   tambah({ kod: 'timbalan_ketua_bahagian', jawatan: 'Timbalan Ketua Bahagian', peringkat: 'bahagian', pangkat: 6.5, ipMin: 200, pangkatMin: 4, perluBahagian: true, kesukaran: 17, keahlian: 36, fasal: 'Fasal 15.5' });   // v7.39
   tambah({ kod: 'naib_ketua_bahagian', jawatan: 'Naib Ketua Bahagian', peringkat: 'bahagian', pangkat: 6, ipMin: 185, pangkatMin: 4, perluBahagian: true, kesukaran: 14, keahlian: 36, fasal: 'Fasal 15.5' });
   tambah({ kod: 'ketua_bahagian',      jawatan: 'Ketua Bahagian',      peringkat: 'bahagian', pangkat: 7, ipMin: 220, pangkatMin: 4, perluBahagian: true, kesukaran: 20, keahlian: 36, fasal: 'Fasal 15.5' });
-  // Pusat (bulan 8, tahun pemilihan)
+  // Pusat (tahun pemilihan; v13.5 UMNO: diundi di Mesyuarat Perwakilan Bahagian bulan 6, Fasal 9.3)
   tambah({ kod: 'ahli_mkt',          jawatan: 'Ahli MKT',         peringkat: 'pusat', pangkat: 8,  kerusi: 25, ipMin: 250, pangkatMin: 7, perluPAU: true, kesukaran: 14, penggal: true });
   tambah({ kod: 'naib_presiden',     jawatan: 'Naib Presiden',    peringkat: 'pusat', pangkat: 10, kerusi: 3,  ipMin: 300, pangkatMin: 8, perluPAU: true, kesukaran: 24, penggal: true });
   tambah({ kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', peringkat: 'pusat', pangkat: 11, ipMin: 350, pangkatMin: 8, perluPAU: true, kesukaran: 30, penggal: true });
@@ -218,7 +218,8 @@
     if (d.perluBahagian && !(perwakilanSah(p, 'cawangan').layak)) {
       return { terbuka: false, sebab: 'Menangi Perwakilan Cawangan tahun ' + p.tahun + ' dahulu (atau pegang jawatan Ketua Cawangan/Bahagian/Pusat).' };
     }
-    if (d.perluPAU && !(perwakilanSah(p, 'bahagian').layak)) {
+    var UMb = d.perluPAU ? ((typeof globalThis !== 'undefined' && globalThis.MyPolitikUMNO) || (function () { try { return require('./umno.js'); } catch (eU) { return null; } })()) : null;   // v13.5: UMNO: Pusat diundi di Bahagian, calon tidak perlu wakil PAU
+    if (d.perluPAU && !(UMb && UMb.baharu(p)) && !(perwakilanSah(p, 'bahagian').layak)) {
       return { terbuka: false, sebab: 'Perlu Perwakilan Bahagian ke PAU tahun ' + p.tahun + ' (atau Ketua Bahagian/pemegang jawatan Pusat).' };
     }
     // v7.44: jawatan sayap dan utama sama-sama dikira untuk syarat tangga (Ketua Wanita Pusat tidak perlu AJK Cawangan dahulu)
@@ -248,7 +249,11 @@
 
   function kalendarMod() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikCalendar) { return g.MyPolitikCalendar; } try { return typeof require === 'function' ? require('./calendar.js') : null; } catch (e) { return null; } }
   /** v7.48: tetingkap mesyuarat/pemilihan bagi jawatan ini (sayap: mesyuarat sayap; Ketua Sayap Pusat: Pra-PAU; utama pusat: PAU). */
-  function peringkatMusim(j) { return j.kumpulan === 'sayap' ? (j.peringkat === 'pusat' ? 'sayap_pau' : 'sayap_' + j.peringkat) : (j.peringkat === 'pusat' ? 'pau' : j.peringkat); }
+  function peringkatMusim(j, p) {
+    var U = p && j.peringkat === 'pusat' ? ((typeof globalThis !== 'undefined' && globalThis.MyPolitikUMNO) || (function () { try { return require('./umno.js'); } catch (eU) { return null; } })()) : null;
+    if (U && U.baharu(p)) { return j.kumpulan === 'sayap' ? 'sayap_bahagian' : 'bahagian'; }      // v13.5: penggal Pusat UMNO tamat selepas undi di Mesyuarat Perwakilan Bahagian
+    return j.kumpulan === 'sayap' ? (j.peringkat === 'pusat' ? 'sayap_pau' : 'sayap_' + j.peringkat) : (j.peringkat === 'pusat' ? 'pau' : j.peringkat);
+  }
 
   function pemilihanMod() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikElection) { return g.MyPolitikElection; } try { return typeof require === 'function' ? require('./election.js') : null; } catch (e) { return null; } }
 
@@ -268,7 +273,7 @@
       if (lepas && lepas !== tahun && Number(j.tahun) && Number(j.tahun) < lepas) { dibuang.push({ j: j, sebab: 'penggal tamat pada pemilihan ' + lepas + ' dan tidak dipertahankan' }); return; }
       // v7.48: penggal bermula selepas mesyuarat pemilihan dan tamat apabila MUSIM mesyuarat pemilihan seterusnya (peringkat itu) tamat, bukan pada 1 Januari.
       if (lepas && lepas === tahun && Number(j.tahun) && Number(j.tahun) < tahun) {
-        var K = kalendarMod(), w = K && K.getTetingkap ? K.getTetingkap(peringkatMusim(j), p.bulan) : null;
+        var K = kalendarMod(), w = K && K.getTetingkap ? K.getTetingkap(peringkatMusim(j, p), p.bulan) : null;
         if (w && w.status === 'tamat') { dibuang.push({ j: j, sebab: 'penggal tamat selepas ' + w.nama + ' ' + tahun + ' dan tidak dipertahankan' }); }
       }
     });

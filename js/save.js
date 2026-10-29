@@ -105,6 +105,9 @@
       var v = Number(p.kesetiaan[k]);
       p.kesetiaan[k] = isFinite(v) ? clamp(Math.round(v), 0, 100) : KESETIAAN_LALAI[k];
     });
+    if ((!p.parti || p.parti === 'UMNO') && (!p.umno || typeof p.umno !== 'object')) {   // v13.5: simpanan lama di tengah musim pemilihan meneruskan takwim lama sehingga tahun berikutnya (js/umno.js)
+      p.umno = { v: 135 }; var blnL = parseInt(p.bulan, 10) || 1; if (blnL >= 4 && blnL <= 9) { p.umno.lama = parseInt(p.tahun, 10) || DEFAULTS.tahun; }
+    }
     if (!Array.isArray(p.isu)) { p.isu = []; }
     if (!Array.isArray(p.log)) { p.log = []; }
     if (p.cabaran === undefined) { p.cabaran = null; }
@@ -201,6 +204,7 @@
       bulan: DEFAULTS.bulan,
       kesetiaan: salin(KESETIAAN_LALAI),
       keahlian: { sejakTahun: DEFAULTS.tahun - tahunAhli(input.tahunAhli, d.umur), sejakBulan: 1 },
+      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
       dicipta: new Date().toISOString()
     });
   }

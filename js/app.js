@@ -999,7 +999,7 @@
       return '<span class="badge-office badge-office--' + kelasLencana(j.jawatan) + '" title="' + esc(j.label) + '">' + esc(j.jawatan) + ' &middot; ' + esc(j.label) + '</span>'; }).join('') + '</div>'
       : '<p class="empty">Belum memegang sebarang jawatan.</p>';
     h += mandat('Perwakilan Cawangan ke Bahagian', pc) + mandat('Perwakilan Bahagian ke PAU', pb);
-    h += '<p class="note" style="margin-top:8px">Mandat perwakilan hanya sah untuk tahun berjalan. Setiap tahun baharu, bertanding semula di Cawangan (bulan 4-6).</p></section>';
+    h += '<p class="note" style="margin-top:8px">Mandat perwakilan hanya sah untuk tahun berjalan. Setiap tahun baharu, bertanding semula di Cawangan (bulan 4-5).</p></section>';
     return h;
   }
 
@@ -1036,13 +1036,19 @@
   }
 
   var TAJUK_PERINGKAT = {
-    cawangan: ['Pemilihan Cawangan', 'Bulan 4-6 · Ketua, Naib Ketua dan AJK Cawangan, serta Perwakilan ke Bahagian (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
-    bahagian: ['Pemilihan Bahagian', 'Bulan 7 · Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian, serta Perwakilan ke PAU (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
-    sayap_cawangan: ['Pemilihan Sayap Cawangan', 'Bulan 4-6 · Ketua, Naib Ketua dan AJK Sayap Cawangan (tahun pemilihan) dan wakil sayap ke Mesyuarat Perwakilan Sayap Bahagian (laluan sayap sahaja)'],
-    sayap_bahagian: ['Pemilihan Sayap Bahagian', 'Bulan 7 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan), G10 (10 wakil) ke Mesyuarat Perwakilan Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat'],
-    sayap_pau: ['Pemilihan Sayap Pusat', 'Bulan 8 · Ketua, Naib Ketua dan AJK Sayap Pusat, dipilih dalam Perhimpunan Sayap (Pra-PAU), laluan sayap sahaja'],
-    pusat: ['Pemilihan Pusat (PAU)', 'Bulan 8 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT']
+    cawangan: ['Pemilihan Cawangan', 'Bulan 4-5 · Ketua, Naib Ketua dan AJK Cawangan, serta Perwakilan ke Bahagian (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
+    bahagian: ['Pemilihan Bahagian', 'Bulan 6 · Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian, serta Perwakilan ke PAU (jawatan sayap dipilih dalam Mesyuarat Sayap)'],
+    sayap_cawangan: ['Pemilihan Sayap Cawangan', 'Bulan 4-5 · Ketua, Naib Ketua dan AJK Sayap Cawangan (tahun pemilihan) dan wakil sayap ke Mesyuarat Perwakilan Sayap Bahagian (laluan sayap sahaja)'],
+    sayap_bahagian: ['Pemilihan Sayap Bahagian', 'Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan), G10 (10 wakil) ke Mesyuarat Perwakilan Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat'],
+    sayap_pau: ['Pemilihan Sayap Pusat', 'Bulan 9 · Ketua, Naib Ketua dan AJK Sayap Pusat, dipilih dalam Perhimpunan Sayap (Pra-PAU), laluan sayap sahaja'],
+    pusat: ['Pemilihan Pusat (PAU)', 'Bulan 9 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT']
   };
+  /* v13.5: UMNO (Perlembagaan 2025): jawatan Pusat diundi dalam Mesyuarat Perwakilan Bahagian (Fasal 9.3, 9.4). */
+  var TAJUK_UMNO = {
+    sayap_pau: ['Pemilihan Sayap Pusat', 'Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Pusat, diundi dalam Mesyuarat Perwakilan Sayap Bahagian (Fasal 9.4), laluan sayap sahaja'],
+    pusat: ['Pemilihan Pusat', 'Bulan 6 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT, diundi oleh perwakilan Mesyuarat Perwakilan Bahagian di 191 Bahagian (Fasal 9.3)']
+  };
+  function tajukPeringkat(p, lv) { var Um = W.MyPolitikUMNO; return TAJUK_UMNO[lv] && Um && Um.baharu && Um.baharu(p) ? TAJUK_UMNO[lv] : TAJUK_PERINGKAT[lv]; }
 
   /* ---------- v8.30: bahagian boleh dilipat (keadaan disimpan dalam pelayar, ikut pemain) ---------- */
   function kunciLipat() { var p = S && S.loadPlayer(); return 'nusa_lipat_' + (p && p.id ? p.id : 'x'); }
@@ -1173,7 +1179,7 @@
 
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
@@ -1185,7 +1191,7 @@
     state.cabaran = I && I.getCabaranAktif ? I.getCabaranAktif() : null;          // v8.0: untuk lencana "Dicabar" pada pertandingan
     h += '<div class="banner ' + (f.fasa === 'pemilihan' ? 'banner--gold' : '') + '"><strong>' + esc(p.tahun + ': ' + f.tajuk + (K ? ' · Bulan ' + p.bulan : '')) + '</strong>' + esc(f.fokus.join(' · ')) +
       (f.fasa === 'pemilihan' ? '' : '. Pertandingan jawatan seterusnya pada ' + f.pemilihanBerikutnya + '.') + '</div>';
-    h += PUIh(p, 'pemilihan') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '');
+    h += PUIh(p, 'pemilihan') + (W.MyPolitikUMNOUI ? W.MyPolitikUMNOUI.banner(p) : '') + bannerDisiplin(p) + bannerUndiTP(p) + bannerTransisi(p) + kadBlok(p) + (window.MyPolitikRival ? window.MyPolitikRival.htmlKad(p) : '') + (window.MyPolitikNegeri ? window.MyPolitikNegeri.htmlKad(p) + window.MyPolitikNegeri.sayap.htmlKad(p) : '');
     if (f.fasa !== 'pemilihan') {
       h += '<div class="banner"><strong>Pertandingan jawatan ditutup</strong>Tahun pentadbiran: hanya pemilihan perwakilan tahunan yang dibuka. Pertandingan jawatan dan kempen dibuka semula pada tahun ' + f.pemilihanBerikutnya + '.</div>';
     }
@@ -1196,7 +1202,7 @@
     ['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'sayap_pau', 'pusat'].forEach(function (lv) {
       var baris = st.pertandingan.filter(function (e) { return e.peringkat === lv; });
       if (!baris.length) { return; }
-      var cLv = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + TAJUK_PERINGKAT[lv][0] + '</h2><p class="note">' + TAJUK_PERINGKAT[lv][1] + '. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</p>';
+      var cLv = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + tajukPeringkat(p, lv)[0] + '</h2><p class="note">' + tajukPeringkat(p, lv)[1] + '. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</p>';
       baris.forEach(function (e) { cLv += barisPertandingan(e); });
       cLv += '</section>';
       var aktifLv = baris.some(function (e) { return !e.selesai && (e.didaftar || (e.tetingkap && e.tetingkap.status === 'dibuka')); });   // v8.30: hanya peringkat aktif dibuka
@@ -1512,7 +1518,7 @@
       isi: '<p>' + of.teks + '</p>' +
         '<div class="kv"><span>' + NG.tr('Kedekatan dengan Presiden') + ' ' + esc(of.presiden) + '</span><b>' + of.dekat + '%</b></div>' +
         '<p class="note">' + NG.tr('Jika tidak melobi, Reputasi +1 (dilihat tidak gila kuasa). Anda masih boleh menggunakan Dekati Presiden kemudian.') + '</p>', butang: butang.map(function (x) { return x.nilai === 'lobi' ? { label: NG.tr('Lobi Presiden'), nilai: 'lobi', kelas: 'btn--gold' } : x; }) });
-    if (a === null || a === undefined) { return; }                                // ditutup: tawaran kekal sehingga bulan 8
+    if (a === null || a === undefined) { return; }                                // ditutup: tawaran kekal sehingga bulan 9
     var jenis = 'tidak';
     if (a === 'lobi') {
       var senarai = of.pilihan.map(function (c) { var off = c.boleh === false; return '<li><button type="button" class="acara__opsi' + (off ? ' is-off' : '') + '" data-pilih="' + esc(c.id) + '"' + (off ? ' disabled' : '') + '><b>' + esc(c.label) + '</b><br><small>' + esc(c.huraian) + '</small>' + (off ? '<small>' + esc(c.sebab) + '</small>' : '') + '</button></li>'; }).join('');   // v8.0: pilihan tidak mampu dinyahaktifkan

@@ -6,7 +6,7 @@ Parti yang boleh dimainkan:
 
 | Parti | Mod | Ciri khas |
 |---|---|---|
-| UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita) |
+| UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita), ikut Perlembagaan UMNO 2025: jawatan Pusat diundi di Mesyuarat Perwakilan Bahagian (191 Bahagian), penangguhan pemilihan selepas PRU (Fasal 10.16), lantikan Ketua dan Presiden |
 | MCA | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 40 Parlimen / 90 DUN ikut peratus Cina), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
 | MIC | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 10 Parlimen / 20 DUN ikut peratus India), Cawangan = Daerah Mengundi (60 hingga 200 ahli); pemilihan setiap 3 tahun dari 2027; semua jawatan tinggi perlu sedang Pengerusi Cawangan; Presiden dipilih oleh pegawai Cawangan (250 penamaan); Kongres Negeri; sayap Putera; had 3 penggal Pengerusi Bahagian dan Presiden (Perlembagaan MIC) |
 | PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
@@ -30,14 +30,15 @@ PRN Sarawak dan PRU Parlimen berjalan berasingan untuk parti Sarawak. Tab Peta m
 | Bulan | Apa berlaku |
 |---|---|
 | 1-3 | Kerja akar umbi (bonus +25% IP dan kesetiaan) |
-| 4-6 | Mesyuarat dan pemilihan Cawangan serta sayap |
-| 7 | Mesyuarat dan pemilihan Bahagian |
-| 8 | PAU dan pemilihan Pusat (WTC KL, Menara Dato' Onn) |
-| 9-12 | Pasca-PAU, bina semula sokongan |
+| 4-5 | Mesyuarat dan pemilihan Cawangan serta sayap |
+| 6 | Mesyuarat dan pemilihan Bahagian serta sayap; undi jawatan Pusat (Presiden hingga MKT dan Ketua sayap Malaysia) dalam tahun pemilihan |
+| 7-8 | Antara musim |
+| 9 | PAU (WTC KL, Menara Dato' Onn): Ucapan Dasar dan usul, tiada undi jawatan |
+| 10-12 | Pasca-PAU, bina semula sokongan |
 
 Takwim di atas ialah untuk UMNO. Bagi MCA: Perhimpunan Cawangan bulan 4, Perhimpunan Bahagian bulan 6 dan Perhimpunan Agung bulan 8, dengan pemilihan jawatan hanya pada tahun selepas PRU. Bagi PBB: mesyuarat dan pemilihan Ranting pada bulan 3, Cawangan pada bulan 5 dan Perhimpunan Agung PBB (PA) pada bulan 8.
 
-4. Pemilihan jawatan hanya pada **tahun pemilihan** (2026, 2029, 2032...). Tahun lain ialah tahun pentadbiran, tetapi mandat perwakilan perlu dimenangi semula setiap tahun.
+4. Pemilihan jawatan hanya pada **tahun pemilihan** (2026, 2029, 2032...). Bagi UMNO, MKT menangguhkan pemilihan jika PRU dijangka dalam 12 bulan selepas musim pemilihan dan pemilihan sudah diadakan dalam penggal Parlimen semasa; musim pemilihan khas diadakan dalam 6 bulan selepas PRU dan kitaran 3 tahun bermula semula. Tahun lain ialah tahun pentadbiran, tetapi mandat perwakilan perlu dimenangi semula setiap tahun.
 5. Jaga **Tataetika**. Kempen bersih membina Modal Sosial. Politik wang dan fitnah memberi kelebihan pantas tetapi boleh membawa amaran, gantung, larangan bertanding atau pemecatan.
 
 Kesetiaan susut setiap bulan jika tidak dijaga, dan jawatan makin tinggi makin sukar dimenangi. Jika Sokongan Akar Umbi pemegang jawatan jatuh di bawah 40%, seorang **pencabar** boleh muncul. Pencabar bertanding menentang anda apabila jawatan itu dipertahankan, dan berundur jika sokongan pulih ke 55%.
@@ -83,6 +84,7 @@ Modul utama dalam `js/`:
 | `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan dan pembentukan Jemaah Menteri oleh Perdana Menteri |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
+| `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
 | `i18n.js`, `translations*.js`, `tutorial-en.js` | Dwibahasa BM / EN |
@@ -135,6 +137,7 @@ node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)
+node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, tajuk Pusat di Bahagian, tangguh, EN)
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

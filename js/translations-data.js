@@ -131,7 +131,7 @@
   ["Pengundian dijalankan apabila mesyuarat ditutup. Daftar pencalonan anda melalui tab Pemilihan sebelum itu.", "Voting is held when the meeting closes. Register your nomination through the Elections tab before then."],
   ["Pemilihan Pusat: Presiden, Timbalan Presiden, 3 Naib Presiden, MKT dan Ketua Sayap", "Central elections: President, Deputy President, 3 Vice Presidents, MKT and Wing Chiefs"],
   ["Musim tahun ini sudah tamat.", "This year’s season has ended."],
-  ["Perhimpunan Agung tahun {x} selesai. Bulan 9 hingga 12 ialah fasa pasca-PAU. Mandat perwakilan anda tamat pada hujung tahun; bertanding semula di Cawangan tahun depan.", "General Assembly {x} is over. Months 9 to 12 are the post-PAU phase. Your delegate mandate ends at the end of the year; contest again at Branch level next year."],
+  ["Perhimpunan Agung tahun {x} selesai. Bulan 10 hingga 12 ialah fasa pasca-PAU. Mandat perwakilan anda tamat pada hujung tahun; bertanding semula di Cawangan tahun depan.", "General Assembly {x} is over. Months 10 to 12 are the post-PAU phase. Your delegate mandate ends at the end of the year; contest again at Branch level next year."],
   ["Berbahas menyokong atau membantah. Kredit separuh.", "Debate in support or opposition. Half credit."],
   ["Mengundi sahaja. Kesan kecil dan percuma.", "Vote only. Small effect and free."],
   ["Usul ini sudah diputuskan.", "This motion has already been decided."],

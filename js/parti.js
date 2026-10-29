@@ -21,12 +21,13 @@
          Susunan penting: Cawangan -> Ranting dahulu, kemudian Bahagian -> Cawangan (tidak boleh diulang pada teks yang sudah ditukar; lihat pengawal dalam nod/attr). */
       istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Majlis Tertinggi (MT)'], [/Majlis Kerja Tertinggi/g, 'Majlis Tertinggi'], [/\bMKT\b/g, 'MT'],
         [/Perhimpunan Agung PBB \(PAU\)/g, 'Perhimpunan Agung PBB'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung PBB'], [/PBB General Assembly \(PAU\)/g, 'PBB General Assembly'], [/General Assembly \(PAU\)/g, 'PBB General Assembly'], [/\bPAU\b/g, 'PA'],
-        [/\b([Bb])ulan 4-6\b/g, '$1ulan 3'], [/\b([Bb])ulan 7\b/g, '$1ulan 5'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2'], [/\b([Mm])onths? 4-6\b/g, '$1onth 3'], [/\b([Mm])onth 7\b/g, '$1onth 5'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'],
+        [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 5'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 5'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 8'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 8'], [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 9-12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 9 hingga 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onths 9-12'], [/\b([Mm])onths 10 to 12\b/g, '$1onths 9 to 12'],
+        [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'],
         [/Cawangan/g, 'Ranting'], [/cawangan/g, 'ranting'], [/CAWANGAN/g, 'RANTING'], [/\bBranch(es)?\b/g, 'Ranting'], [/\bbranch(es)?\b/g, 'ranting'],
         [/Bahagian/g, 'Cawangan'], [/(peringkat|Peringkat|ketua|Ketua) bahagian/g, '$1 cawangan'], [/\bDivisions?\b/g, 'Cawangan'], [/\bdivisions?\b/g, 'cawangan']],
       istilahSongsang: [[/Majlis Tertinggi \(MT\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Majlis Tertinggi/g, 'Majlis Kerja Tertinggi'], [/\bMT\b/g, 'MKT'],
         [/Perhimpunan Agung PBB(?! \()/g, 'Perhimpunan Agung PBB (PAU)'], [/\bPA\b/g, 'PAU'],
-        [/\b([Bb])ulan 3\b/g, '$1ulan 4-6'], [/\b([Bb])ulan 5\b/g, '$1ulan 7'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3'],
+        [/\b([Bb])ulan 9-12\b/g, '$1ulan 10-12'], [/\b([Bb])ulan 9 hingga 12\b/g, '$1ulan 10 hingga 12'], [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 8\b(?![-–\d])/g, '$1ulan 9'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3'],
         [/Cawangan/g, 'Bahagian'], [/(peringkat|Peringkat|ketua|Ketua) cawangan/g, '$1 bahagian'], [/Ranting/g, 'Cawangan'], [/ranting/g, 'cawangan'], [/RANTING/g, 'CAWANGAN']] }
   };
   /* v10.0: PRS = parti rakan GPS dalam MOD RINGAN (struktur Bahagian = DUN dan Cawangan = DM seperti PBB; tiada blok, Premier atau Majlis Tertinggi penuh).
@@ -51,14 +52,14 @@
       [/\bTimbalan Ketua (Cawangan|Bahagian)\b/g, 'Timbalan Pengerusi $1'], [/\bNaib Ketua (Cawangan|Bahagian)\b/g, 'Naib Pengerusi $1'], [/\bKetua (Cawangan|Bahagian)\b/g, 'Pengerusi $1'], [/\bketua (cawangan|bahagian)\b/g, 'pengerusi $1'], [/Ketua-Ketua (Cawangan|Bahagian)/g, 'Pengerusi-Pengerusi $1'],
       [/\b(Branch|Division) Chiefs?\b/g, function (m, a) { return a + ' Chairm' + (/s$/.test(m) ? 'en' : 'an'); }],
       [/Badan Perhubungan/g, 'Jawatankuasa Perhubungan'], [/State Liaison Body/g, 'State Liaison Committee'], [/Liaison Body/g, 'Liaison Committee'],
-      [/\b([Bb])ulan 4-6\b/g, '$1ulan 4'], [/\b([Bb])ulan 7\b/g, '$1ulan 6'], [/\b([Mm])onths? 4-6\b/g, '$1onth 4'], [/\b([Mm])onth 7\b/g, '$1onth 6']],
+      [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 4'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 4'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 8'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 8'], [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 9-12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 9 hingga 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onths 9-12'], [/\b([Mm])onths 10 to 12\b/g, '$1onths 9 to 12']],
     istilahSongsang: [[/Jawatankuasa Pusat \(JKP\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJKP\b/g, 'MKT'],
       [/Perhimpunan Agung MCA(?! \()/g, 'Perhimpunan Agung MCA (PAU)'], [/\bPA\b/g, 'PAU'],
       [/ di Wisma MCA, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/\b4 Naib Presiden\b/g, '3 Naib Presiden'],
       [/Perhimpunan Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Perhimpunan Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Perhimpunan Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'], [/Perhimpunan Bahagian/g, 'Mesyuarat Perwakilan Bahagian'],
       [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
       [/Jawatankuasa Perhubungan/g, 'Badan Perhubungan'],
-      [/\b([Bb])ulan 4\b(?!-)/g, '$1ulan 4-6'], [/\b([Bb])ulan 6\b/g, '$1ulan 7']] };
+      [/\b([Bb])ulan 9-12\b/g, '$1ulan 10-12'], [/\b([Bb])ulan 9 hingga 12\b/g, '$1ulan 10 hingga 12'], [/\b([Bb])ulan 4\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 8\b(?![-–\d])/g, '$1ulan 9']] };
   /* v13.3: MIC = parti komponen BN di Semenanjung, MOD PENUH (enjin UMNO). Istilah daripada Perlembagaan MIC (2017, berkuat kuasa 18-4-2018):
      Pengerusi Cawangan/Bahagian, Jawatankuasa Kerja Pusat (CWC), Perhimpunan Agung MIC, Kongres Negeri, Mesyuarat Agung Tahunan Cawangan (bulan 3)
      dan Persidangan Perwakilan Bahagian (bulan 5); Perhimpunan Agung bulan 9 (ANDAIAN). Sayap Pemuda, Wanita, Puteri dan Putera.
@@ -72,15 +73,15 @@
       [/\bTimbalan Ketua (Cawangan|Bahagian)\b/g, 'Timbalan Pengerusi $1'], [/\bNaib Ketua (Cawangan|Bahagian)\b/g, 'Naib Pengerusi $1'], [/\bKetua (Cawangan|Bahagian)\b/g, 'Pengerusi $1'], [/\bketua (cawangan|bahagian)\b/g, 'pengerusi $1'], [/Ketua-Ketua (Cawangan|Bahagian)/g, 'Pengerusi-Pengerusi $1'],
       [/\b(Branch|Division) Chiefs?\b/g, function (m, a) { return a + ' Chairm' + (/s$/.test(m) ? 'en' : 'an'); }],
       [/Badan Perhubungan Negeri/g, 'Kongres Negeri'], [/Badan Perhubungan/g, 'Kongres Negeri'], [/State Liaison Body/g, 'State Congress'], [/Liaison Body/g, 'State Congress'],
-      [/\b([Bb])ulan 4-6\b/g, '$1ulan 3'], [/\b([Bb])ulan 7\b(?! \(Julai\))/g, '$1ulan 5'], [/\b([Bb])ulan 8\b(?! \(Ogos\))/g, '$1ulan 9'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
-      [/\b([Mm])onths? 4-6\b/g, '$1onth 3'], [/\b([Mm])onth 7\b(?! \(July\))/g, '$1onth 5'], [/\b([Mm])onth 8\b(?! \(August\))/g, '$1onth 9'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
+      [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 5'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 5'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
+      [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
     istilahSongsang: [[/Jawatankuasa Kerja Pusat \(CWC\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja Pusat/g, 'Majlis Kerja Tertinggi'], [/\bCWC\b/g, 'MKT'],
       [/Perhimpunan Agung MIC(?! \()/g, 'Perhimpunan Agung MIC (PAU)'], [/\bPA\b/g, 'PAU'],
       [/ di Menara Manickavasagam, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"],
       [/Mesyuarat Agung Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Persidangan Perwakilan Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'], [/Persidangan Perwakilan Bahagian/g, 'Mesyuarat Perwakilan Bahagian'],
       [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
       [/Kongres Negeri/g, 'Badan Perhubungan Negeri'],
-      [/\b([Bb])ulan 3\b/g, '$1ulan 4-6'], [/\b([Bb])ulan 5\b/g, '$1ulan 7'], [/\b([Bb])ulan 9\b/g, '$1ulan 8'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
+      [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -125,7 +126,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }
