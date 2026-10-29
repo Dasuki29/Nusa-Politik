@@ -567,6 +567,7 @@ body.has-bottom-nav { padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-i
 
 /* ---------- 11. Borang ---------- */
 .field { display: grid; gap: 6px; margin-bottom: var(--space-4); }
+.field[hidden] { display: none; }                          /* v13.2: medan tersembunyi (cth. Sayap dalaman PBB) tidak lagi muncul untuk parti lain */
 .field label { font-size: .85rem; font-weight: 600; color: var(--text-muted); }
 .input, .select, .textarea {
   width: 100%;

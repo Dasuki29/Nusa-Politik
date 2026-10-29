@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.2 (2026-10-29)
+
+- **MCA dibuka di semua 165 kawasan Parlimen Semenanjung** (sebelum ini 61 kawasan dengan pengundi Cina 25% ke atas), lebih dekat dengan struktur sebenar MCA. Peratus Cina kini menentukan kesukaran, bukan kelayakan mendaftar.
+  - data/mca-semenanjung.csv: 165 Bahagian, 445 DUN, 6,103 Cawangan (Daerah Mengundi). Formula ahli kekal (pemilih × Cina% × 7%, minimum 50).
+  - Kuota kerusi BN kekal 40 Parlimen dan 90 DUN ikut peratus Cina. Kawasan lain ditanda di luar kuota, dan skrin pendaftaran memberi notis sebaik Bahagian dipilih.
+  - Pemilihan Pusat: perwakilan setiap Bahagian ikut saiz keahlian (ahli / 150, antara 5 dan 30; andaian), jumlah sekitar 2,834. Bahagian kecil kurang berpengaruh; senarai Jelajah Bahagian memaparkan bilangan wakil.
+  - Sabah dan Sarawak masih tidak termasuk.
+
 ## v13.1 (2026-10-29)
 
 - **MCA boleh dimainkan (mod penuh)**, berdasarkan Perlembagaan MCA (pindaan sehingga 1-12-2019) dan mockup v13 yang dipersetujui. Logo daripada pengguna.

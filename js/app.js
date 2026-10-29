@@ -154,7 +154,17 @@
     } else if (state.bahagian) {
       isi(el.dun, 'Pilih DUN', state.bahagian.dun, function (d) { return d.nama + ' (N.' + d.kod + ')'; });
     } else { reset(el.dun, 'Pilih bahagian dahulu'); }
+    notaKuotaMCA();
   });
+  /** v13.2: MCA dibuka di semua kawasan Semenanjung; beritahu awal jika kerusi Parlimen Bahagian ini di luar kuota kerusi MCA. */
+  function notaKuotaMCA() {
+    var hp = $('h-parti'); if (!hp || state.parti !== 'MCA') { return; }
+    var d = window.MyPolitikMCAData, b = state.bahagian, x = d && b ? d.parlimen['P.' + String(parseInt(b.kod, 10)).padStart(3, '0')] : null;
+    hp.textContent = HINT_MCA; if (!x) { return; }
+    var n = document.createElement('strong'); n.style.display = 'block'; n.style.marginTop = '4px';            // nod teks sendiri supaya terjemahan EN sepadan
+    n.textContent = x.r <= 40 ? '✅ Bahagian ini dalam kuota kerusi Parlimen MCA (pengundi Cina ' + x.c + '%).' : '⛔ Bahagian ini di luar kuota kerusi Parlimen MCA (pengundi Cina ' + x.c + '%): anda boleh naik dalam parti, tetapi sukar mendapat tiket PRU.';
+    hp.appendChild(n);
+  }
 
   el.dun.addEventListener('change', function () {
     state.dun = state.bahagian ? cari(state.bahagian.dun, el.dun.value) : null;
@@ -327,7 +337,7 @@
   }
 
   /* ---------- v8.32: PBB (Sarawak). Bahagian = DUN, Cawangan = DM; data tempatan data/pbb-sarawak.csv ---------- */
-  var HINT_MCA = 'MCA (mod penuh, komponen BN): keahlian untuk warganegara Malaysia keturunan Cina berumur 18 tahun ke atas (Perkara 9). Kawasan operasi ialah 61 kawasan Parlimen Semenanjung dengan pengundi Cina 25% ke atas; Cawangan ialah Daerah Mengundi. Pemilihan parti diadakan selepas setiap PRU. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
+  var HINT_MCA = 'MCA (mod penuh, komponen BN): keahlian untuk warganegara Malaysia keturunan Cina berumur 18 tahun ke atas (Perkara 9). Kawasan operasi ialah semua 165 kawasan Parlimen Semenanjung; Cawangan ialah Daerah Mengundi. Hanya 40 kerusi Parlimen dan 90 kerusi DUN yang paling ramai pengundi Cina dalam kuota kerusi MCA. Pemilihan parti diadakan selepas setiap PRU. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   var HINT_PBB = null, HINT_SUPP = 'SUPP (mod ringan): kawasan operasi ialah DUN Cina 25% ke atas (bandar dan separa bandar). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Sokongan Bandar. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PDP = 'PDP (mod ringan): kawasan operasi ialah DUN campuran (tiada kumpulan terbesar melebihi 55%). Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Ciri teras: Imbangan Kaum Kawasan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PSB = 'PSB (mod ringan, pembangkang): kawasan operasi ialah DUN yang Melayu/Melanaunya kurang 40%. Parti di luar GPS: tiada Premier, Menteri, kuota atau rundingan GPS. Ciri teras: Naratif Pembangkang. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.', HINT_PRS = 'PRS (mod ringan): kawasan operasi ialah DUN Dayak 60% ke atas. Tiada Premier, imbangan blok atau Majlis Tertinggi penuh. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   function suaikanBorangParti() {
     if (HINT_PBB === null) { var h0 = $('h-parti'); HINT_PBB = h0 ? h0.textContent : ''; }

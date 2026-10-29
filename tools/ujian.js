@@ -1301,7 +1301,7 @@ ujian('v12.9: Krisis tular: muncul bulanan, tiga tindak balas, tidak dijawab = d
 ujian('v13.1: MCA: data, kuota BN, kitaran pemilihan selepas PRU, takwim 4/6/8, Pusat oleh perwakilan Bahagian', () => {
   const M = g.MyPolitikMCA, E = g.MyPolitikElection, K = g.MyPolitikCalendar, D = g.MyPolitikData, J = g.MyPolitikJawatan, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mca-semenanjung.csv'), 'utf8')));
-  sama(h.jumlah.bahagian, 61, '61 Bahagian'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 50)), 'Cawangan minimum 50 ahli (Perkara 92)');
+  sama(h.jumlah.bahagian, 165, '165 Bahagian (semua Semenanjung)'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 50)), 'Cawangan minimum 50 ahli (Perkara 92)');
   const bm = h.bahagian.find((b) => b.nama === 'Bukit Mertajam'), luar = h.bahagian.slice().sort((a, b) => M.kawasan({ kod: { parlimen: b.kod } }).parlimen.r - M.kawasan({ kod: { parlimen: a.kod } }).parlimen.r)[0];
   S.savePlayer(S.buildPlayerProfile({ parti: 'MCA', nama: 'Tan Uji', demografik: D.tentukanDemografi('Perempuan', 30, 'MCA'), cawangan: bm.dun[0].cawangan[0], sayap: 'wanita', avatar: 'wanita', tahunAhli: 5 }));
   let p = S.loadPlayer(); sama(p.parti, 'MCA'); sama(p.sayap, 'wanita', 'perempuan muda masuk Wanita (tiada Puteri)');
@@ -1313,7 +1313,8 @@ ujian('v13.1: MCA: data, kuota BN, kitaran pemilihan selepas PRU, takwim 4/6/8, 
   sama(K.getTetingkap('cawangan', 4).buka !== false, true); betul(/Bahagian/.test(JSON.stringify(K.getFasa(6))), 'bulan 6 musim Bahagian');
   sama(E.bilPemilih ? true : true, true);
   const kel = g.MyPolitikPRU.kelayakan(p); betul(!kel.PARLIMEN.sebab.some((x) => /kuota MCA/.test(x)), 'Parlimen dalam kuota');
-  sama(M.ringkasPusat(p).pengundi, 61 * 30, 'pengundi Pusat = perwakilan Bahagian');
+  const rp = M.ringkasPusat(p); sama(rp.bilBahagian, 165, '165 Bahagian dalam Pemilihan Pusat'); betul(rp.pengundi > 2000 && rp.pengundi < 165 * 30, 'perwakilan ikut saiz Bahagian (' + rp.pengundi + ')');
+  betul(M.perwakilan('P.049') > M.perwakilan('P.001'), 'Bahagian besar (Tanjong) lebih ramai wakil daripada Padang Besar');
   P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }], ap: 20, myr: 50000 });
   const kod = M.ringkasPusat(S.loadPlayer()).senarai[0].kod, sb0 = M.sokonganBahagian(S.loadPlayer())[kod];
   const rj = M.jelajah(kod); betul(rj.ok, rj.ralat); sama(M.sokonganBahagian(S.loadPlayer())[kod], sb0 + M.CONFIG.PUSAT.jelajahNaik); sama(M.jelajah(kod).ok, false, 'sekali sebulan');

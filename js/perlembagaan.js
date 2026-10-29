@@ -231,7 +231,7 @@
     "Perhimpunan Bahagian boleh memecat ahli Jawatankuasa Bahagian dengan dua pertiga undi."
    ]
   ],
-  "permainan": "Kawasan operasi permainan ialah 61 kawasan Parlimen Semenanjung dengan pengundi Cina 25% ke atas (andaian)."
+  "permainan": "Kawasan operasi permainan ialah semua 165 kawasan Parlimen Semenanjung; peratus pengundi Cina menentukan kuota kerusi dan saiz Bahagian (andaian)."
  },
  {
   "no": "92",

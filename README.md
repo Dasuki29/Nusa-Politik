@@ -7,7 +7,7 @@ Parti yang boleh dimainkan:
 | Parti | Mod | Ciri khas |
 |---|---|---|
 | UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita) |
-| MCA | Penuh | Komponen BN di Semenanjung: 61 kawasan Parlimen (pengundi Cina 25% ke atas), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
+| MCA | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 40 Parlimen / 90 DUN ikut peratus Cina), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
 | PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
 | PRS, SUPP, PDP (Sarawak) | Ringan | Parti rakan GPS dengan kuota kerusi; ciri teras masing-masing (Pengaruh GPS, Sokongan Bandar, Imbangan Kaum) |
 

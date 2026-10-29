@@ -37,11 +37,11 @@
       if (wakil) { h += kv('Sumbangan bulanan wakil rakyat', rm(C.SUMBANGAN) + ' (Perkara 142)'); }
       // Pemilihan Pusat
       var r = M.ringkasPusat(p), sj = M.statusJelajah(p);
-      h += '<h3 class="mca-h">Pemilihan Pusat: perwakilan Bahagian</h3><p class="note">Presiden, Timbalan Presiden, 4 Naib Presiden dan 25 ahli JKP dipilih oleh perwakilan ke Perhimpunan Bahagian di seluruh negara (Perkara 21).</p>' +
+      h += '<h3 class="mca-h">Pemilihan Pusat: perwakilan Bahagian</h3><p class="note">Presiden, Timbalan Presiden, 4 Naib Presiden dan 25 ahli JKP dipilih oleh perwakilan ke Perhimpunan Bahagian di seluruh negara (Perkara 21). Bahagian yang lebih besar menghantar lebih ramai perwakilan.</p>' +
         meter('Sokongan perwakilan Bahagian', r.purata, r.sokongUndi + ' / ' + r.pengundi) + kv('Bahagian condong kepada anda', r.condong + ' / ' + r.bilBahagian);
       if (!pilihBhg || !r.senarai.some(function (x) { return x.kod === pilihBhg; })) { pilihBhg = r.senarai[0] && r.senarai[0].kod; }
       h += '<label class="note" for="mca-bhg">Bahagian untuk dijelajah</label><select id="mca-bhg" class="select" style="width:100%;margin:4px 0 6px" data-mca-bhg>' +
-        r.senarai.map(function (x) { return '<option value="' + esc(x.kod) + '"' + (x.kod === pilihBhg ? ' selected' : '') + '>' + esc(x.nama) + ' · ' + x.sokongan + '%</option>'; }).join('') + '</select>' +
+        r.senarai.map(function (x) { return '<option value="' + esc(x.kod) + '"' + (x.kod === pilihBhg ? ' selected' : '') + '>' + esc(x.nama) + ' · ' + x.sokongan + '% · ' + x.wakil + ' wakil</option>'; }).join('') + '</select>' +
         '<button type="button" class="btn btn--sm btn--ghost" data-mca="jelajah"' + (sj.boleh ? '' : ' disabled') + '>🚗 Jelajah Bahagian (' + C.PUSAT.jelajahAP + ' AP, ' + rm(C.PUSAT.jelajahMYR) + ', +' + C.PUSAT.jelajahNaik + '%)</button>' + (sj.boleh ? '' : ' <small class="note">' + esc(sj.sebab) + '</small>');
       // Lantikan
       h += '<h3 class="mca-h">Lantikan Presiden</h3>';

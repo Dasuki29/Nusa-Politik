@@ -26,11 +26,12 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.selectOption('#s-parti', 'MCA'); await pg.waitForTimeout(2500);
   semak(/keturunan Cina/.test(await pg.textContent('#h-parti')), 'nota keahlian MCA pada skrin pendaftaran');
   const negeri = await pg.$$eval('#s-negeri option', (o) => o.map((x) => x.textContent));
-  semak(negeri.length === 10 && negeri.some((n) => /Pulau Pinang/.test(n)), '9 negeri Semenanjung (' + negeri.length + ')');
+  semak(negeri.length === 14 && negeri.some((n) => /Kelantan/.test(n)), 'semua negeri Semenanjung (' + negeri.length + ')');
   await pg.selectOption('#s-negeri', { label: 'Pulau Pinang' }); await pg.waitForTimeout(400);
   const bhg = await pg.$$eval('#s-bahagian option', (o) => o.map((x) => x.textContent));
   semak(bhg.some((b) => /Bukit Mertajam/.test(b)), 'Bahagian Bukit Mertajam tersenarai');
   await pg.selectOption('#s-bahagian', { index: 4 }); await pg.waitForTimeout(300);
+  semak(/kuota kerusi Parlimen MCA/.test(await pg.textContent('#h-parti')), 'notis kuota selepas pilih Bahagian');
   await pg.selectOption('#s-dun', { index: 1 }); await pg.waitForTimeout(300);
   await pg.selectOption('#s-cawangan', { index: 1 }); await pg.waitForTimeout(300);
   await pg.fill('#f-nama', 'Tan Wei Ming'); await pg.fill('#f-umur', '30'); await pg.check('input[name=jantina][value=P]').catch(() => pg.check('input[name=jantina] >> nth=1'));
@@ -48,9 +49,11 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   semak(/MCA: Parti/.test(pf) && /kuota MCA/.test(pf) && /perwakilan Bahagian/.test(pf), 'kad MCA (kuota, Pemilihan Pusat)');
   semak(/Pengerusi Bahagian/.test(pf) && !/Ketua Bahagian/.test(pf), 'istilah Pengerusi Bahagian');
   semak(!/\bUMNO\b/.test(await pg.evaluate(() => document.body.innerText)), 'tiada perkataan UMNO dalam dashboard MCA');
-  const sebelum = await pg.evaluate(() => MyPolitikMCA.ringkasPusat(MyPolitikSave.loadPlayer()).purata);
+  const kodJ = await pg.$eval('[data-mca-bhg]', (x) => x.value);
+  const sebelum = await pg.evaluate((k) => MyPolitikMCA.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ);
+  semak(/wakil/.test(await pg.textContent('[data-mca-bhg]')), 'senarai Bahagian memaparkan bilangan wakil');
   await pg.click('[data-mca="jelajah"]'); await pg.waitForTimeout(500);
-  semak(await pg.evaluate(() => MyPolitikMCA.ringkasPusat(MyPolitikSave.loadPlayer()).purata) > sebelum, 'Jelajah Bahagian menaikkan sokongan perwakilan');
+  semak(await pg.evaluate((k) => MyPolitikMCA.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ) > sebelum, 'Jelajah Bahagian menaikkan sokongan perwakilan');
   await pg.click('[data-mca="mohon"] >> nth=0'); await pg.waitForTimeout(400);
   semak(await pg.evaluate(() => MyPolitikSave.loadPlayer().mca.mohonBulan > 0), 'permohonan lantikan direkod');
   await pg.click('#btn-menu'); await pg.waitForTimeout(300); await pg.click('[data-perlembagaan]'); await pg.waitForTimeout(400);

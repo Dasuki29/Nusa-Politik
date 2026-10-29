@@ -37,6 +37,7 @@
     TAHUN_MULA: 2026, BULAN_PUSAT: 8, SELEPAS_PRU: 6, KITARAN_BULAN: 36,   // Perkara 167
     KEAHLIAN_BULAN: 36,                                      // Perkara 120 (3 tahun)
     PERWAKILAN_BAHAGIAN: 30,                                 // had Perkara 94 / 67
+    PERWAKILAN_MIN: 5, AHLI_SETIAP_WAKIL: 150,               // v13.2 (ANDAIAN): perwakilan Bahagian = ahli Bahagian / 150, antara 5 dan 30
     PUSAT: { sendiri: 60, lain: [30, 45], bonusSkala: 0.3, jelajahAP: 2, jelajahMYR: 2000, jelajahNaik: 8, susut: 0.5 },
     LANTIKAN: [
       { kod: 'setiausaha_agung', jawatan: 'Setiausaha Agung', ip: 10, pusat: 6 },
@@ -115,12 +116,17 @@
     });
     return out;
   }
+  /** v13.2: bilangan perwakilan sesuatu Bahagian ke Pemilihan Pusat ikut saiz keahliannya (Bahagian kecil kurang berpengaruh). */
+  function perwakilan(kod) {
+    var x = DATA().parlimen[kod]; if (!x || !x.a) { return CONFIG.PERWAKILAN_BAHAGIAN; }
+    return Math.max(CONFIG.PERWAKILAN_MIN, Math.min(CONFIG.PERWAKILAN_BAHAGIAN, Math.round(x.a / CONFIG.AHLI_SETIAP_WAKIL)));
+  }
   function ringkasPusat(p) {
-    var sb = sokonganBahagian(p), d = DATA(), ks = Object.keys(sb), jum = 0, condong = 0;
-    ks.forEach(function (k) { jum += sb[k]; if (sb[k] >= 50) { condong++; } });
-    var purata = ks.length ? jum / ks.length : 0, pengundi = ks.length * CONFIG.PERWAKILAN_BAHAGIAN;
+    var sb = sokonganBahagian(p), d = DATA(), ks = Object.keys(sb), jum = 0, condong = 0, pengundi = 0;
+    ks.forEach(function (k) { var w = perwakilan(k); pengundi += w; jum += sb[k] * w; if (sb[k] >= 50) { condong++; } });
+    var purata = pengundi ? jum / pengundi : 0;
     return { purata: Math.round(purata * 10) / 10, condong: condong, bilBahagian: ks.length, pengundi: pengundi, sokongUndi: Math.round(pengundi * purata / 100),
-      senarai: ks.map(function (k) { return { kod: k, nama: d.parlimen[k].n, sokongan: Math.round(sb[k]) }; }).sort(function (a, b) { return a.sokongan - b.sokongan || a.nama.localeCompare(b.nama); }) };
+      senarai: ks.map(function (k) { return { kod: k, nama: d.parlimen[k].n, sokongan: Math.round(sb[k]), wakil: perwakilan(k) }; }).sort(function (a, b) { return a.sokongan - b.sokongan || a.nama.localeCompare(b.nama); }) };
   }
   /** Bonus kekuatan pemain dalam pemilihan Pusat (election.js). */
   function bonusPusat(p) {
@@ -275,6 +281,6 @@
   }
 
   return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, ofset: ofset, lawan: lawan, senaraiTahun: senaraiTahun, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
-    bulanKeahlian: bulanKeahlian, cukupKeahlian: cukupKeahlian, sokonganBahagian: sokonganBahagian, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, statusJelajah: statusJelajah, jelajah: jelajah,
+    bulanKeahlian: bulanKeahlian, cukupKeahlian: cukupKeahlian, sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, statusJelajah: statusJelajah, jelajah: jelajah,
     adalahPresiden: adalahPresiden, lantikanSemasa: lantikanSemasa, dekat: dekat, statusMohon: statusMohon, mohon: mohon, statusLantikPresiden: statusLantikPresiden, lantikPresiden: lantikPresiden, rayuan: rayuan, prosesBulan: prosesBulan };
 });
