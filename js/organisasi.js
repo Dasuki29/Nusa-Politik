@@ -22,7 +22,8 @@
   var D = root.MyPolitikData || (typeof module === 'object' && typeof require === 'function' ? require('./data.js') : null);
   var SY = root.MyPolitikSayap || (typeof module === 'object' && typeof require === 'function' ? require('./sayap.js') : null);
 
-  var CONFIG = { AJK: { cawangan: 7, bahagian: 15, pusat: 25 }, AJK_SAYAP: { cawangan: 5, bahagian: 10, pusat: 15 } };   // v7.39: AJK sayap (andaian)
+  var CONFIG = { AJK: { cawangan: 15, bahagian: 20, pusat: 25 }, AJK_SAYAP: { cawangan: 7, bahagian: 15, pusat: 20 },   // v13.4: ikut Perlembagaan UMNO 2025 (Fasal 9.2.7, 15.1.7, 18.1.7) dan Peraturan sayap (5.1.7, 12.3.7, 17.1.7)
+    LANTIKAN: { cawangan: 6, bahagian: 12, pusat: 13 }, LANTIKAN_SAYAP: { cawangan: 3, bahagian: 3, pusat: 5 } };   // v13.4: AJK lantikan Ketua (Fasal 9.2.8, 15.1.8, 18.1.8; Peraturan sayap 5.1.8, 12.3.8, 17.1.8)
   var PERINGKAT = ['cawangan', 'bahagian', 'pusat'];
   var LABEL = { cawangan: 'Peringkat Cawangan', bahagian: 'Peringkat Bahagian', pusat: 'Peringkat Pusat' };
   var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
@@ -38,7 +39,7 @@
   /** Tajuk jawatan tiga lapis bagi sesuatu peringkat. */
   function tajuk(peringkat, sayap) {
     if (!sayap) {
-      return peringkat === 'cawangan' ? { ketua: 'Ketua Cawangan', naib: 'Naib Ketua Cawangan', ajk: 'AJK Cawangan' }
+      return peringkat === 'cawangan' ? { ketua: 'Ketua Cawangan', naib: 'Timbalan Ketua Cawangan', ajk: 'AJK Cawangan' }      // v13.4: Fasal 18.1.2
         : peringkat === 'bahagian' ? { ketua: 'Ketua Bahagian', timbalan: 'Timbalan Ketua Bahagian', naib: 'Naib Ketua Bahagian', ajk: 'AJK Bahagian' }
         : { ketua: 'Presiden', naib: 'Timbalan Presiden', ajk: 'Ahli MKT' };
     }
@@ -46,6 +47,7 @@
     return { ketua: 'Ketua ' + N + s, naib: 'Naib Ketua ' + N + s, ajk: 'AJK ' + N + (peringkat === 'pusat' ? ' Pusat' : s) };
   }
 
+  function umno(p) { return !p || !p.parti || p.parti === 'UMNO'; }
   function benih(p) { return String((p && (p.benih || p.seed || p.cawanganId || p.cawangan)) || 'nusa') + '|org'; }
 
   function nama(rng, jantina, tahap, opts) { return D && D.janaNama ? D.janaNama(rng, jantina, tahap, opts) : 'Pemimpin NPC'; }
@@ -143,6 +145,19 @@
         out.tambahan.push({ jawatan: 'Naib Presiden ' + n, nama: nm ? (p.nama || 'Anda') : nama(rng, 'L', 'tan'), pemain: nm });
       }
     }
+    // v13.4: Perlembagaan UMNO 2025: Ketua Sayap sebagai Naib Ketua / Naib Presiden ex-officio, dan Ketua Wanita bertaraf Timbalan Presiden (Fasal 9.2, 15.1.3)
+    if (!sayap && umno(p) && (peringkat === 'pusat' || peringkat === 'bahagian')) {
+      [['wanita', 'Wanita'], ['pemuda', 'Pemuda'], ['puteri', 'Puteri']].forEach(function (w) {
+        var kodW = 'sayap_' + peringkat + '_' + w[0], ada = pemegang(p, kodW), lbl = peringkat === 'pusat' ? (w[0] === 'wanita' ? 'Ketua Wanita UMNO (bertaraf Timbalan Presiden)' : 'Ketua ' + w[1] + ' (Naib Presiden)') : 'Naib Ketua Bahagian (Ketua ' + w[1] + ' Bahagian)';
+        out.tambahan.push({ jawatan: lbl, nama: ada ? (p.nama || 'Anda') : nama(rng, jantinaSlot(w[0], rng), peringkat === 'pusat' ? 'tan' : 'bahagian'), pemain: !!ada });
+      });
+    }
+    if (!sayap && umno(p)) {                           // v13.4: pegawai dan AJK lantikan Ketua (NPC)
+      var peg = peringkat === 'pusat' ? ['Setiausaha Agung', 'Bendahari', 'Ketua Penerangan'] : ['Setiausaha', 'Bendahari', 'Ketua Penerangan'].map(function (x) { return x + (peringkat === 'cawangan' ? ' Cawangan' : ' Bahagian'); });
+      peg.forEach(function (j) { out.tambahan.push({ jawatan: j + ' (dilantik)', nama: nama(rng, rng() < 0.7 ? 'L' : 'P', peringkat === 'pusat' ? 'tan' : undefined), pemain: false }); });
+      out.lantikan = { bil: CONFIG.LANTIKAN[peringkat], jawatan: peringkat === 'pusat' ? 'Ahli MKT lantikan Presiden' : 'AJK lantikan Ketua ' + (peringkat === 'cawangan' ? 'Cawangan' : 'Bahagian') };
+    }
+    if (sayap && umno(p)) { out.lantikan = { bil: CONFIG.LANTIKAN_SAYAP[peringkat], jawatan: 'AJK ' + NAMA_SAYAP[sayap] + ' lantikan Ketua' }; }
     if (peringkat === 'pusat' && p && p.parti === 'PBB' && (!sayap || STRUKTUR_PBB[sayap])) { out.senarai = senaraiPBB(p, sayap, D.createRng(benih(p) + '|pbb|' + (sayap || 'induk'))); out.label = 'Peringkat Pusat (Majlis Tertinggi)'; }      // v10.6
     return out;
   }

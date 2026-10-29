@@ -254,7 +254,7 @@
   /* Istilah untuk penggubahan (rentetan bercampur nombor/simbol). Susunan: paling panjang dipadankan dahulu. */
   var ISTILAH = [
     ['Majlis Kerja Tertinggi', 'Majlis Kerja Tertinggi'],
-    ['Timbalan Ketua Bahagian', 'Deputy Division Chief'], ['Naib Ketua Bahagian', 'Vice Division Chief'], ['Naib Ketua Cawangan', 'Vice Branch Chief'],
+    ['Timbalan Ketua Bahagian', 'Deputy Division Chief'], ['Naib Ketua Bahagian', 'Vice Division Chief'], ['Naib Ketua Cawangan', 'Vice Branch Chief'], ['Timbalan Ketua Cawangan', 'Deputy Branch Chief'],
     ['Ketua Sayap Cawangan', 'Branch Wing Chief'], ['Ketua Bahagian', 'Division Chief'], ['Ketua Cawangan', 'Branch Chief'],
     ['Timbalan Presiden', 'Deputy President'], ['Naib Presiden', 'Vice President'], ['Presiden', 'President'],
     ['AJK Bahagian', 'Division Committee (AJK)'], ['AJK Cawangan', 'Branch Committee (AJK)'], ['Perwakilan Bahagian', 'Division Delegate'], ['Perwakilan Cawangan', 'Branch Delegate'],

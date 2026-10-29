@@ -135,6 +135,7 @@ node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)
+node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 
 Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, `PARTI=MCA` sebagai ahli MCA dan `PARTI=MIC` sebagai ahli MIC.

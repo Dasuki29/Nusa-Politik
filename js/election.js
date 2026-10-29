@@ -487,7 +487,7 @@
   function bina(p, st, d, opts) {
     var peringkat = d.peringkat, kerusi = d.kerusi || 1;
     if (p && p.parti === 'MCA' && d.kod === 'naib_presiden') { kerusi = 4; }      // v13.1: 4 Naib Presiden dipilih (Perkara 21)
-    var bil = Math.max(4, kerusi + CONFIG.PESAING_TAMBAHAN);
+    var bil = Math.max(4, kerusi + (d.pesaing || CONFIG.PESAING_TAMBAHAN));      // v13.4: jawatan berkerusi banyak (AJK) ada lebih ramai pesaing supaya peluang menang kekal
     var aras = (CONFIG.ARAS_PESAING[String(peringkat).replace(/^sayap_/, '').replace(/^pau$/, 'pusat')] || 0) + (d.kesukaran || 0) * CONFIG.GANDA_KESUKARAN;
     var SWk = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; if (SWk && SWk.ofsetJawatan) { aras += SWk.ofsetJawatan(p, d); }          // v9.0: imbangan blok Bumiputera/Pesaka (PBB)
     var calon = janaPesaing(p, d.kod, bil - 1, aras);

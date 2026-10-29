@@ -122,28 +122,30 @@
   var LEADERSHIP_STRUCTURE = deepFreeze({
     cawangan: [
       jawatan('ketua',           'Ketua Cawangan', 1),
-      jawatan('naib',            'Naib Ketua Cawangan', 1),
+      jawatan('naib',            'Timbalan Ketua Cawangan', 1),                     // v13.4: Fasal 18.1.2
       jawatan('su',              'Setiausaha Cawangan', 1),
       jawatan('bendahari',       'Bendahari Cawangan', 1),
       jawatan('penerangan',      'Ketua Penerangan Cawangan', 1),
       jawatan('ketua_pemuda',    'Ketua Pemuda Cawangan', 1, { sayap: 'pemuda' }),
       jawatan('ketua_wanita',    'Ketua Wanita Cawangan', 1, { sayap: 'wanita' }),
       jawatan('ketua_puteri',    'Ketua Puteri Cawangan', 1, { sayap: 'puteri' }),
-      jawatan('ajk',             'AJK Cawangan', 7, { kumpulan: 'ajk' }),
+      jawatan('ajk',             'AJK Cawangan', 15, { kumpulan: 'ajk' }),
+      jawatan('ajk_lantikan',    'AJK Cawangan (Lantikan Ketua)', 6, { kumpulan: 'dilantik', dilantik: true }),      // v13.4: Fasal 18.1.8
       jawatan('setiausaha_kerja','Setiausaha Kerja Cawangan (Urus Setia Mesyuarat)', 1, { kumpulan: 'dilantik', dilantik: true }),
       jawatan('ahli',            'Ahli Biasa', null, { kumpulan: 'ahli' })
     ],
     bahagian: [
       jawatan('ketua',           'Ketua Bahagian', 1),
       jawatan('timbalan',        'Timbalan Ketua Bahagian', 1),
-      jawatan('naib',            'Naib Ketua Bahagian', 1),
+      jawatan('naib',            'Naib Ketua Bahagian', 1),                         // v13.4: 3 lagi Naib Ketua ialah Ketua Wanita, Pemuda dan Puteri Bahagian (Fasal 15.1.3)
       jawatan('su',              'Setiausaha Bahagian', 1),
       jawatan('bendahari',       'Bendahari Bahagian', 1),
       jawatan('penerangan',      'Ketua Penerangan Bahagian', 1),
       jawatan('ketua_pemuda',    'Ketua Pemuda Bahagian', 1, { sayap: 'pemuda' }),
       jawatan('ketua_wanita',    'Ketua Wanita Bahagian', 1, { sayap: 'wanita' }),
       jawatan('ketua_puteri',    'Ketua Puteri Bahagian', 1, { sayap: 'puteri' }),
-      jawatan('ajk',             'AJK Bahagian', 15, { kumpulan: 'ajk' }),
+      jawatan('ajk',             'AJK Bahagian', 20, { kumpulan: 'ajk' }),
+      jawatan('ajk_lantikan',    'AJK Bahagian (Lantikan Ketua)', 12, { kumpulan: 'dilantik', dilantik: true }),      // v13.4: Fasal 15.1.8
       jawatan('setiausaha_kerja','Setiausaha Kerja Bahagian', 1, { kumpulan: 'dilantik', dilantik: true })
     ],
     pusat: [
@@ -157,6 +159,7 @@
       jawatan('ketua_wanita',    'Ketua Wanita', 1, { sayap: 'wanita' }),
       jawatan('ketua_puteri',    'Ketua Puteri', 1, { sayap: 'puteri' }),
       jawatan('ahli_mkt',        'Ahli MKT', 25, { kumpulan: 'ajk' }),
+      jawatan('mkt_lantikan',    'Ahli MKT (Lantikan Presiden)', 13, { kumpulan: 'dilantik', dilantik: true }),      // v13.4: Fasal 9.2.8
       jawatan('setiausaha_kerja','Setiausaha Kerja Pusat', 1, { kumpulan: 'dilantik', dilantik: true })
     ]
   });

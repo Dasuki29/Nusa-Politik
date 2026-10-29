@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v13.4 (2026-10-29)
+
+- **Fasa A: struktur UMNO ikut Perlembagaan UMNO 2025** (buku Perlembagaan, Peraturan Persidangan, Peraturan Wanita, Pemuda, Puteri dan Tataetika), mengikut mockup yang dipersetujui.
+  - Cawangan: "Naib Ketua Cawangan" menjadi **Timbalan Ketua Cawangan** (Fasal 18.1.2; simpanan lama ditukar automatik); AJK Cawangan dipilih 7 → **15** (18.1.7).
+  - Bahagian: AJK Bahagian dipilih 15 → **20** (15.1.7); Ketua Wanita, Pemuda dan Puteri Bahagian dipaparkan sebagai Naib Ketua Bahagian ex-officio (15.1.3).
+  - AJK sayap dipilih: Cawangan 5 → **7**, Bahagian 10 → **15**, Pusat 15 → **20** (Peraturan sayap 17.1.7, 12.3.7, 5.1.7).
+  - Calon pesaing ditambah bagi jawatan AJK supaya peluang menang kekal (cth. AJK Cawangan 15 kerusi / 24 calon).
+  - **Ketua Wanita Pusat bertaraf Timbalan Presiden** (pangkat 11) dan **Ketua Pemuda/Puteri Pusat ialah Naib Presiden** (pangkat 10) (Fasal 9.2.2.2, 9.2.3, 9.4).
+  - Struktur Organisasi: pegawai lantikan (Setiausaha, Bendahari, Ketua Penerangan) dan bilangan AJK lantikan (Cawangan 6, Bahagian 12, MKT 13; sayap 3/3/5) sebagai NPC.
+  - Had umur sayap: jawatan sayap kekal sehingga tamat penggal selepas melepasi had umur; **Ketua Puteri Malaysia boleh mempertahankan jawatan sehingga umur 40** (Peraturan Puteri 4.2.1).
+  - Menu Perlembagaan: 16 Fasal (tambah 4, 5, 7, 9, 10, 12, 15, 18, 21, 25) dan **tab baharu** Peraturan Persidangan, Wanita UMNO, Pemuda UMNO, Puteri UMNO dan Tataetika Ahli, dengan terjemahan EN.
+  - Bilangan kerusi baharu terpakai kepada semua parti yang menggunakan enjin yang sama (MCA, MIC dan parti Sarawak).
+
 ## v13.3 (2026-10-29)
 
 - **MIC boleh dimainkan (mod penuh)**, berdasarkan Perlembagaan MIC (diterima Perhimpunan Agung ke-71 pada 24-9-2017, berkuat kuasa 18-4-2018) dan mockup MIC yang dipersetujui. Logo daripada pengguna.

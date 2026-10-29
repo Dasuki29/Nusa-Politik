@@ -82,6 +82,8 @@
   function normalisasi(p) {
     if (!sah(p)) { return p; }
     if (p.parti === 'PSB') { p.parti = 'PDP'; p.dariPSB = true; p.notisPSB = true; }      // v11.0: PSB dibubarkan (2024); ahli menyertai PDP
+    if (p.jawatan === 'Naib Ketua Cawangan') { p.jawatan = 'Timbalan Ketua Cawangan'; }      // v13.4: Perlembagaan UMNO 2025 Fasal 18.1.2
+    if (Array.isArray(p.jawatanList)) { p.jawatanList.forEach(function (j) { if (j && j.kod === 'naib_ketua_cawangan') { j.jawatan = 'Timbalan Ketua Cawangan'; } if (j && /^sayap_pusat_(wanita|pemuda|puteri)$/.test(j.kod)) { j.pangkat = j.kod === 'sayap_pusat_wanita' ? 11 : 10; } }); }      // v13.4: taraf Ketua Sayap Pusat (Fasal 9.2)
     if (KERJAYA_SAH.indexOf(p.careerBackground) < 0) { p.careerBackground = 'korporat'; }          // v8.12: simpanan lama diberi Profesional / Korporat
     if (!avatarSah(p.avatar)) { p.avatar = avatarSah(p.demografik && p.demografik.kategoriKod) ? p.demografik.kategoriKod : 'pemuda'; }
     if (SY && !SY.sah(p.sayap)) { p.sayap = SY.kod(p); }          // v5.9: laluan sayap (simpanan lama mengikut avatar/kategori)

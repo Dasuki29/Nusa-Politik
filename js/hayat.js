@@ -269,10 +269,9 @@
     var transisiRasmi = null;
     if (ikutSayap && SYm && SYm.TRANSISI && SYm.TRANSISI[sayapLama] && patch.sayap !== sayapLama) {       // v6.7: upacara graduasi, jawatan sayap lama dilepaskan
       var semua = Array.isArray(p.jawatanList) ? p.jawatanList : [], lepas = semua.filter(function (j) { return j.kumpulan === 'sayap' && j.sayap === sayapLama; });
-      var baki = semua.filter(function (j) { return lepas.indexOf(j) < 0; }).sort(function (x, y) { return (y.pangkat || 0) - (x.pangkat || 0); });
-      if (lepas.length) { patch.jawatanList = baki; patch.jawatan = baki.length ? baki[0].jawatan : 'Ahli Biasa'; }
+      // v13.4: jawatan sayap TIDAK dilepaskan serta-merta; pemegang boleh menghabiskan penggal (Peraturan Pemuda 5.3, Puteri 4.2.1.2 dan 4.2.3.2). Jawatan tamat pada semakan penggal (jawatan.semakPenggalTamat).
       transisiRasmi = { jenis: 'transisi_rasmi', mesej: 'Upacara Graduasi Sayap ' + NAMA_KATEGORI[sayapLama] + ': anda mencapai had umur ' + SYm.TRANSISI[sayapLama].had + ' tahun dan dengan rasminya bertransisi ke Dewan Induk parti.' +
-        (lepas.length ? ' Jawatan ' + lepas.map(function (j) { return j.jawatan; }).join(', ') + ' dilepaskan kepada penerus sayap.' : '') + ' Anda kini bertanding jawatan Induk bermula di Cawangan.' + (patch.warisan && patch.warisan.bonus > 0 ? ' Legacy Loyalty +' + patch.warisan.bonus + ' dibawa bersama.' : '') };
+        (lepas.length ? ' Jawatan ' + lepas.map(function (j) { return j.jawatan; }).join(', ') + ' kekal sehingga tamat penggal, tetapi tidak boleh dipertahankan.' : '') + ' Anda kini bertanding jawatan Induk bermula di Cawangan.' + (patch.warisan && patch.warisan.bonus > 0 ? ' Legacy Loyalty +' + patch.warisan.bonus + ' dibawa bersama.' : '') };
     }
     var r = s.applyEffects({}, { kiraTindakan: false, patch: patch, log: { tindakan: 'kategori', nama: 'Kategori ' + NAMA_KATEGORI[lama] + ' → ' + NAMA_KATEGORI[baru], peringkat: 'hayat' } });
     if (!r || !r.ok) { return kosong; }

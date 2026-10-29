@@ -1401,6 +1401,33 @@ ujian('v13.3: MIC: tidak hadir (Perkara 37.4), gantung (61), yuran (12), Putera 
   const PD = g.MyPolitikPindah; if (PD && PD.semak) { betul(PD.semak(S.loadPlayer()).sebab.some((x) => /Perkara 10\.5/.test(x)), 'pindah dikunci tahun pemilihan 2027'); }
   S.clearPlayer();
 });
+ujian('v13.4: Fasa A Perlembagaan UMNO 2025: Timbalan Ketua Cawangan, AJK 15/20, sayap 7/15/20, taraf Ketua Sayap Pusat, pesaing', () => {
+  const J = g.MyPolitikJawatan, OG = g.MyPolitikOrganisasi, d = (k) => J.KATALOG.find((x) => x.kod === k);
+  sama(d('naib_ketua_cawangan').jawatan, 'Timbalan Ketua Cawangan', 'Fasal 18.1.2');
+  sama(d('ajk_cawangan').kerusi, 15); sama(d('ajk_bahagian').kerusi, 20);
+  sama(d('sayap_ajk_cawangan_pemuda').kerusi, 7); sama(d('sayap_ajk_bahagian_puteri').kerusi, 15); sama(d('sayap_ajk_pusat_wanita').kerusi, 20);
+  sama(d('sayap_pusat_wanita').pangkat, 11, 'Ketua Wanita bertaraf Timbalan Presiden'); sama(d('sayap_pusat_pemuda').pangkat, 10); sama(d('sayap_pusat_puteri').pangkat, 10);
+  sama(d('ajk_cawangan').pesaing, 9, 'calon 24 bagi 15 kerusi');
+  P.daftar({}); P.tetap({ jawatan: 'Naib Ketua Cawangan', jawatanList: [{ kod: 'naib_ketua_cawangan', jawatan: 'Naib Ketua Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 2.5, tahun: 2026 }, { kod: 'sayap_pusat_wanita', jawatan: 'Ketua Wanita', peringkat: 'pusat', kumpulan: 'sayap', sayap: 'wanita', pangkat: 9, tahun: 2026 }] });
+  const p = S.loadPlayer(); sama(p.jawatan, 'Timbalan Ketua Cawangan', 'simpanan lama ditukar'); sama(p.jawatanList[0].jawatan, 'Timbalan Ketua Cawangan'); sama(p.jawatanList[1].pangkat, 11, 'pangkat lama dinaikkan');
+  const st = OG.getStruktur(p); sama(st.induk.cawangan.bilAjk, 15); sama(st.induk.bahagian.bilAjk, 20); sama(st.sayap.pemuda.peringkat.pusat.bilAjk, 20);
+  sama(st.induk.cawangan.naib.jawatan, 'Timbalan Ketua Cawangan'); betul(st.induk.bahagian.tambahan.filter((x) => /^Naib Ketua Bahagian \(Ketua/.test(x.jawatan)).length === 3, '3 Naib Ketua ex-officio');
+  betul(st.induk.pusat.tambahan.some((x) => /bertaraf Timbalan Presiden/.test(x.jawatan)), 'Ketua Wanita di MKT'); sama(st.induk.bahagian.lantikan.bil, 12); sama(st.induk.cawangan.lantikan.bil, 6);
+  const PL = g.MyPolitikPerlembagaan; sama(PL.FASAL.length, 16, '16 Fasal'); sama(PL.DOK_UMNO.length, 6, '6 dokumen');
+  S.clearPlayer();
+});
+ujian('v13.4: jawatan sayap kekal hingga tamat penggal selepas had umur; Ketua Puteri Pusat sehingga 40', () => {
+  const J = g.MyPolitikJawatan, H = g.MyPolitikHayat;
+  P.daftar({ jantina: 'P', umur: 35, sayap: 'puteri' });
+  P.tetap({ tahun: 2027, jawatan: 'Ketua Puteri', jawatanList: [{ kod: 'sayap_pusat_puteri', jawatan: 'Ketua Puteri', peringkat: 'pusat', kumpulan: 'sayap', sayap: 'puteri', pangkat: 10, tahun: 2026 }] });
+  H.prosesPeralihanKategori(); let p = S.loadPlayer();
+  sama(p.sayap, 'wanita', 'laluan bertukar ke Wanita pada 36'); betul(J.pegang(p, 'sayap_pusat_puteri'), 'Ketua Puteri kekal sehingga tamat penggal');
+  betul(J.katalogUntuk(p).some((x) => x.kod === 'sayap_pusat_puteri'), 'boleh mempertahankan Ketua Puteri Malaysia sebelum 40');
+  P.tetap({ jawatanList: [{ kod: 'sayap_bahagian_puteri', jawatan: 'Ketua Puteri Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: 'puteri', pangkat: 5, tahun: 2026 }] });
+  p = S.loadPlayer(); sama(J.semakPenggalTamat(p), null, 'tidak dibuang serta-merta (dalam penggal)');
+  betul(!J.katalogUntuk(p).some((x) => x.kod === 'sayap_bahagian_puteri'), 'jawatan Puteri lain tidak boleh dipertahankan selepas 35');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

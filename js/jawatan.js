@@ -44,11 +44,11 @@
   function tambah(d) { d.kumpulan = d.kumpulan || 'utama'; d.sayap = d.sayap || null; d.kerusi = d.kerusi || 1; d.kesukaran = d.kesukaran || 0; d.pangkatMin = d.pangkatMin || 0; KATALOG.push(d); }
 
   // Cawangan
-  tambah({ kod: 'ajk_cawangan',   jawatan: 'AJK Cawangan',   peringkat: 'cawangan', pangkat: 1, kerusi: 7, ipMin: 50 });
-  tambah({ kod: 'naib_ketua_cawangan', jawatan: 'Naib Ketua Cawangan', peringkat: 'cawangan', pangkat: 2.5, ipMin: 70, pangkatMin: 1, kesukaran: 4 });   // v7.39 (pangkat pecahan supaya tangga sedia ada tidak berubah)
+  tambah({ kod: 'ajk_cawangan',   jawatan: 'AJK Cawangan',   peringkat: 'cawangan', pangkat: 1, kerusi: 15, pesaing: 9, ipMin: 50 });      // v13.4: 15 AJK dipilih (Perlembagaan UMNO 2025 Fasal 18.1.7); pesaing ditambah supaya peluang menang kekal
+  tambah({ kod: 'naib_ketua_cawangan', jawatan: 'Timbalan Ketua Cawangan', peringkat: 'cawangan', pangkat: 2.5, ipMin: 70, pangkatMin: 1, kesukaran: 4 });   // v7.39 (pangkat pecahan supaya tangga sedia ada tidak berubah); v13.4: Fasal 18.1.2 Timbalan Ketua (tiada Naib Ketua Cawangan; kod dikekalkan untuk simpanan lama)
   tambah({ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', pangkat: 3, ipMin: 95, pangkatMin: 1, kesukaran: 8 });
   // Bahagian
-  tambah({ kod: 'ajk_bahagian',        jawatan: 'AJK Bahagian',        peringkat: 'bahagian', pangkat: 4, kerusi: 15, ipMin: 140, pangkatMin: 1, perluBahagian: true, kesukaran: 6, keahlian: 36, fasal: 'Fasal 15.5' });
+  tambah({ kod: 'ajk_bahagian',        jawatan: 'AJK Bahagian',        peringkat: 'bahagian', pangkat: 4, kerusi: 20, pesaing: 5, ipMin: 140, pangkatMin: 1, perluBahagian: true, kesukaran: 6, keahlian: 36, fasal: 'Fasal 15.5' });
   tambah({ kod: 'timbalan_ketua_bahagian', jawatan: 'Timbalan Ketua Bahagian', peringkat: 'bahagian', pangkat: 6.5, ipMin: 200, pangkatMin: 4, perluBahagian: true, kesukaran: 17, keahlian: 36, fasal: 'Fasal 15.5' });   // v7.39
   tambah({ kod: 'naib_ketua_bahagian', jawatan: 'Naib Ketua Bahagian', peringkat: 'bahagian', pangkat: 6, ipMin: 185, pangkatMin: 4, perluBahagian: true, kesukaran: 14, keahlian: 36, fasal: 'Fasal 15.5' });
   tambah({ kod: 'ketua_bahagian',      jawatan: 'Ketua Bahagian',      peringkat: 'bahagian', pangkat: 7, ipMin: 220, pangkatMin: 4, perluBahagian: true, kesukaran: 20, keahlian: 36, fasal: 'Fasal 15.5' });
@@ -62,17 +62,23 @@
     var N = NAMA_SAYAP[w];
     tambah({ kod: 'sayap_cawangan_' + w, jawatan: 'Ketua ' + N + ' Cawangan', peringkat: 'cawangan', kumpulan: 'sayap', sayap: w, pangkat: 2, ipMin: 50, kesukaran: 3 });
     tambah({ kod: 'sayap_bahagian_' + w, jawatan: 'Ketua ' + N + ' Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 5, ipMin: 160, pangkatMin: 2, perluBahagian: true, perluSayapCawangan: true, kesukaran: 12, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
-    tambah({ kod: 'sayap_pusat_' + w,    jawatan: 'Ketua ' + N,             peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 9, ipMin: 280, pangkatMin: 5, perluPAU: true, kesukaran: 22, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
+    var pkPusat = w === 'wanita' ? 11 : w === 'putera' ? 9 : 10;      // v13.4: Ketua Wanita bertaraf Timbalan Presiden; Ketua Pemuda dan Puteri ialah Naib Presiden (Fasal 9.2.2.2, 9.2.3, 9.4)
+    tambah({ kod: 'sayap_pusat_' + w,    jawatan: 'Ketua ' + N,             peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: pkPusat, ipMin: 280, pangkatMin: 5, perluPAU: true, kesukaran: 22, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
     // v7.39: Naib Ketua dan AJK sayap bagi setiap peringkat (sayap tiada Timbalan)
-    tambah({ kod: 'sayap_ajk_cawangan_' + w,  jawatan: 'AJK ' + N + ' Cawangan',         peringkat: 'cawangan', kumpulan: 'sayap', sayap: w, pangkat: 1,   kerusi: 5,  ipMin: 40,  kesukaran: 0 });
+    tambah({ kod: 'sayap_ajk_cawangan_' + w,  jawatan: 'AJK ' + N + ' Cawangan',         peringkat: 'cawangan', kumpulan: 'sayap', sayap: w, pangkat: 1,   kerusi: 7, pesaing: 5, ipMin: 40,  kesukaran: 0 });
     tambah({ kod: 'sayap_naib_cawangan_' + w, jawatan: 'Naib Ketua ' + N + ' Cawangan', peringkat: 'cawangan', kumpulan: 'sayap', sayap: w, pangkat: 1.5, ipMin: 45, pangkatMin: 1, kesukaran: 2 });
-    tambah({ kod: 'sayap_ajk_bahagian_' + w,  jawatan: 'AJK ' + N + ' Bahagian',         peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 3.5, kerusi: 10, ipMin: 120, pangkatMin: 1, perluBahagian: true, kesukaran: 8, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
+    tambah({ kod: 'sayap_ajk_bahagian_' + w,  jawatan: 'AJK ' + N + ' Bahagian',         peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 3.5, kerusi: 15, pesaing: 6, ipMin: 120, pangkatMin: 1, perluBahagian: true, kesukaran: 8, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
     tambah({ kod: 'sayap_naib_bahagian_' + w, jawatan: 'Naib Ketua ' + N + ' Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 4.5, ipMin: 145, pangkatMin: 1, perluBahagian: true, kesukaran: 10, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
-    tambah({ kod: 'sayap_ajk_pusat_' + w,     jawatan: 'AJK ' + N + ' Pusat',            peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 7.5, kerusi: 15, ipMin: 230, pangkatMin: 4, perluPAU: true, kesukaran: 12, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
+    tambah({ kod: 'sayap_ajk_pusat_' + w,     jawatan: 'AJK ' + N + ' Pusat',            peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 7.5, kerusi: 20, pesaing: 5, ipMin: 230, pangkatMin: 4, perluPAU: true, kesukaran: 12, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
     tambah({ kod: 'sayap_naib_pusat_' + w,    jawatan: 'Naib Ketua ' + N,               peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 8.5, ipMin: 260, pangkatMin: 4, perluPAU: true, kesukaran: 18, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
   });
 
   function cariDef(kod) { for (var i = 0; i < KATALOG.length; i++) { if (KATALOG[i].kod === kod) { return KATALOG[i]; } } return null; }
+  /** v13.4: selaraskan simpanan lama dengan katalog semasa (nama jawatan Timbalan Ketua Cawangan, pangkat baharu Ketua Sayap Pusat). Pulang salinan. */
+  function selaras(j) {
+    var d = j && j.kod ? cariDef(j.kod) : null; if (!d || (j.jawatan === d.jawatan && j.pangkat === d.pangkat)) { return j; }
+    var x = {}; for (var k in j) { x[k] = j[k]; } x.jawatan = d.jawatan; x.pangkat = d.pangkat; return x;
+  }
 
   /* ------------------------------------------------------------------------
      PEGANGAN
@@ -87,7 +93,7 @@
   /** Senarai jawatan dipegang. Profil lama (hanya `jawatan`) disintesis supaya tidak hilang. */
   function getJawatan(p) {
     if (!p) { return []; }
-    if (Array.isArray(p.jawatanList) && p.jawatanList.length) { return p.jawatanList.slice(); }
+    if (Array.isArray(p.jawatanList) && p.jawatanList.length) { return p.jawatanList.map(selaras); }
     if (p.jawatan && p.jawatan !== BIASA) {
       var d = null;
       KATALOG.forEach(function (x) { if (x.jawatan === p.jawatan && !d) { d = x; } });
@@ -159,7 +165,14 @@
   /** Katalog yang berkaitan dengan sayap pemain (jawatan sayap sayap lain disembunyikan). */
   function katalogUntuk(p) {
     var w = sayapPemain(p);
-    return KATALOG.filter(function (d) { return d.kumpulan !== 'sayap' || d.sayap === w; });
+    return KATALOG.filter(function (d) { return d.kumpulan !== 'sayap' || d.sayap === w || (d.kod === 'sayap_pusat_puteri' && bolehKekalKetuaPuteri(p)); });
+  }
+  /** v13.4: Ketua Puteri UMNO Malaysia boleh memegang dan mempertahankan jawatan sehingga umur 40 (Peraturan Puteri 4.2.1.1). */
+  function bolehKekalKetuaPuteri(p) {
+    if (!p || (p.parti && p.parti !== 'UMNO') || !pegang(p, 'sayap_pusat_puteri')) { return false; }
+    var H = (typeof globalThis !== 'undefined' && globalThis.MyPolitikHayat) || null; if (!H) { try { H = require('./hayat.js'); } catch (e) { H = null; } }
+    var u = H && H.umurSemasa ? H.umurSemasa(p) : (p.demografik ? parseInt(p.demografik.umur, 10) : 99);
+    return u < 40;
   }
 
   function semakKelayakan(p, d) {
@@ -251,7 +264,7 @@
     var lepas = E.tahunPemilihanLepas ? E.tahunPemilihanLepas(tahun) : null, sy = sayapPemain(p), dibuang = [];
     senarai.forEach(function (j) {
       if (j.kod === 'lama') { return; }
-      if (j.kumpulan === 'sayap' && j.sayap && j.sayap !== sy) { dibuang.push({ j: j, sebab: 'tidak lagi layak dalam sayap ' + NAMA_SAYAP[j.sayap] }); return; }
+      // v13.4: jawatan sayap selepas melepasi had umur kekal sehingga tamat penggal (Peraturan Pemuda 5.3, Puteri 4.2); peraturan penggal di bawah terpakai
       if (lepas && lepas !== tahun && Number(j.tahun) && Number(j.tahun) < lepas) { dibuang.push({ j: j, sebab: 'penggal tamat pada pemilihan ' + lepas + ' dan tidak dipertahankan' }); return; }
       // v7.48: penggal bermula selepas mesyuarat pemilihan dan tamat apabila MUSIM mesyuarat pemilihan seterusnya (peringkat itu) tamat, bukan pada 1 Januari.
       if (lepas && lepas === tahun && Number(j.tahun) && Number(j.tahun) < tahun) {

@@ -1708,7 +1708,7 @@
       }
       var h = '<div class="org-peringkat"><h3>' + esc(o.label) + '</h3>' + baris(o.ketua) + (o.timbalan ? baris(o.timbalan) : '') + baris(o.naib);
       o.tambahan.forEach(function (x) { h += baris(x); });
-      h += '<details class="org-ajk"><summary>' + esc(o.ajk[0].jawatan.replace(/ 1$/, '')) + ' (' + o.bilAjk + ' orang)</summary>' + o.ajk.map(baris).join('') + '</details></div>';
+      h += '<details class="org-ajk"><summary>' + esc(o.ajk[0].jawatan.replace(/ 1$/, '')) + ' (' + o.bilAjk + ' orang)</summary>' + o.ajk.map(baris).join('') + '</details>' + (o.lantikan ? '<p class="note">' + esc(o.lantikan.jawatan) + ': ' + o.lantikan.bil + ' orang</p>' : '') + '</div>';      // v13.4: AJK lantikan (NPC)
       return h;
     }
     function isi() {
