@@ -373,7 +373,7 @@
     h += '<div class="kv"><span>Majoriti</span><b>' + (kp.menang ? fmt(kp.majoriti) + ' undi' : 'kalah ' + fmt(kp.majoriti) + ' undi') + '</b></div><div class="kv"><span>Isu tempatan</span><b>' + esc(((PRU.JANJI.filter(function (j) { return j.id === kp.isuTempatan; })[0] || {}).nama) || '') + (kp.isuTepat ? ' (manifesto anda tepat)' : '') + '</b></div>';
     if (menang) {
       h += '<h3 style="margin:12px 0 4px">Ganjaran</h3><div class="kv"><span>Pengaruh (IP)</span><b class="pru-ok">+' + kp.bonusIp + '</b></div><div class="kv"><span>Reputasi</span><b class="pru-ok">+3</b></div>';
-      h += '<p style="font-size:.85rem;margin-top:8px">' + (kp.kerajaan ? '🏛️ Parti anda membentuk kerajaan. <b>Lobi Portfolio</b> (' + (a.candidateType === 'DUN' ? (S.loadPlayer().parti === 'PBB' ? 'Menteri Negeri Sarawak' : 'EXCO Negeri') : 'Timbalan Menteri / Menteri') + ') kini dibuka.' : 'Parti anda tidak membentuk kerajaan. Jawatan kerajaan tidak dibuka penggal ini.') + '</p>';
+      h += '<p style="font-size:.85rem;margin-top:8px">' + (kp.kerajaan ? '🏛️ Parti anda membentuk kerajaan. <b>Lobi Portfolio</b> (' + (a.candidateType === 'DUN' ? (SW(S.loadPlayer().parti) ? 'Menteri Negeri Sarawak' : 'EXCO Negeri') : 'Timbalan Menteri / Menteri') + ') kini dibuka.' : 'Parti anda tidak membentuk kerajaan. Jawatan kerajaan tidak dibuka penggal ini.') + '</p>';
     } else if (!kp.petisyen) {
       h += '<h3 style="margin:12px 0 4px">Kesan</h3><div class="kv"><span>Pengaruh (IP)</span><b class="pru-ng">−100</b></div><p style="font-size:.85rem;margin-top:8px">Anda kekal dengan jawatan dalam parti. Boleh bertanding semula pada pilihan raya akan datang.</p>';
     }

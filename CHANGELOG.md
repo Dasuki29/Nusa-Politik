@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v12.6 (2026-10-29)
+
+- **Pepijat: parti rakan GPS (SUPP, PRS, PDP) dan PBB menang DUN tetapi ditanda "bukan kerajaan".** Status kerajaan negeri bagi DUN Sarawak dahulu ditentukan oleh lambungan rawak berasingan (peluang 60-90%), jadi 10-40% pemain yang menang menjadi pembangkang dan Lobi Portfolio tidak dibuka, walaupun GPS memegang 70+ daripada 82 kerusi. Kini status ikut kerusi GPS yang dipaparkan (sama seperti pembetulan v11.4 untuk UMNO). PSB kekal pembangkang.
+- Simpanan lama yang tersekat dibaiki automatik semasa dashboard dibuka: status ADUN ditukar kepada kerajaan dan Lobi Portfolio DUN dibuka semula (jika belum memegang jawatan kerajaan).
+- Kad keputusan pilihan raya: semua parti Sarawak kini disebut "Menteri Negeri Sarawak" (dahulu SUPP/PRS/PDP tertulis "EXCO Negeri").
+
 ## v12.5 (2026-10-28)
 
 - **Garis sempadan DUN dalam Peta PDM / Lokaliti kini mengikut sempadan Daerah Mengundi dengan tepat** (semua negeri, UMNO dan parti Sarawak). Dahulu garis DUN dilukis daripada poligon data/dun.json yang dipermudah secara berasingan (dan bagi Sarawak teranjak kira-kira 7 unit), jadi garis "lari" daripada peta. Kini garis diterbitkan daripada tepi poligon DM sendiri (tepi yang bersempadan dengan DUN lain atau laut), serpihan kecil dibuang, dan hasil dicache bagi setiap Bahagian.

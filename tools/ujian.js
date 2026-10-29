@@ -1212,6 +1212,25 @@ ujian('PBB v9.4: PRN (DUN) dan PRU (Parlimen) berasingan; lobi Premier terbuka u
   const kn = PR.getPRU(S.loadPlayer()).aktif; sama(kn, null);
   S.clearPlayer();
 });
+ujian('v12.6: SUPP menang DUN = ADUN kerajaan (ikut kerusi GPS, bukan lambungan); simpanan lama dibaiki', () => {
+  const SW = g.MyPolitikSarawak, KB = g.MyPolitikKabinet, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
+  const dun = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-dun.json'), 'utf8'));
+  S.savePlayer(S.buildPlayerProfile({ parti: 'SUPP', nama: 'Uji', demografik: D.tentukanDemografi('Lelaki', 40), cawangan: h.bahagian[0].dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa', dunInfo: dun['9'] }));
+  P.tetap({ jawatan: 'Ketua Cawangan', jawatanList: [{ jawatan: 'Ketua Cawangan', pangkat: 7, peringkat: 'bahagian', kumpulan: 'utama' }], ip: 3000, myr: 500000, ap: 50, reputasi: 80, tahun: 2027, bulan: 1 });
+  let pru = PR.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PR.isytihar('tamat_penggal').ok);
+  const lama = Math.random; Math.random = () => 0.01; betul(PR.pilihKerusi('DUN', { rng: () => 0.01 }).ok); Math.random = lama;
+  let a = PR.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PR.runding('abai'); a = PR.getPRU(S.loadPlayer()).aktif; }
+  betul(PR.mulaKempen(PR.JANJI.map((x) => x.id).slice(0, 3), PR.peruntukanPilihan(S.loadPlayer(), a).pilihan[0]).ok);
+  pru = PR.getPRU(S.loadPlayer()); pru.aktif.voterSupport = 95; pru.aktif.isThreeCorneredFight = false; pru.aktif.campaignDaysLeft = 0; P.tetap({ pru: pru });
+  const s = PR.selesaikan({ rng: () => 0.99 }); betul(s.ok, s.ralat); betul(s.keputusan.menang, 'menang');
+  sama(s.keputusan.kerajaan, true, 'rng 0.99 dahulu = bukan kerajaan; kini ikut kerusi GPS ' + SW.kerusiPremier(S.loadPlayer()).gabungan + '/82');
+  sama(KB.getKabinet(S.loadPlayer()).lobi.sumber, 'DUN', 'lobi DUN dibuka'); PR.tutupKeputusan();
+  pru = PR.getPRU(S.loadPlayer()); pru.status.kerajaan = false; P.tetap({ pru: pru }); KB.lepaskanLobi();
+  betul(PR.baikiStatusSarawak(), 'simpanan lama dibaiki'); sama(PR.getPRU(S.loadPlayer()).status.kerajaan, true); sama(KB.getKabinet(S.loadPlayer()).lobi.sumber, 'DUN', 'lobi dibuka semula');
+  sama(PR.baikiStatusSarawak(), false, 'idempoten');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

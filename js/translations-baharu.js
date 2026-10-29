@@ -2632,7 +2632,9 @@
   ["🏛️ Kawasan & Rakyat", "🏛️ Constituency & Public"],
   ["💼 Jawatan & Aset Luar", "💼 Outside Posts & Assets"],
   ["📡 Media & Integriti", "📡 Media & Integrity"],
-  ["{n} keluhan", "{n} complaints"]
+  ["{n} keluhan", "{n} complaints"],
+  ["Status anda dibetulkan: GPS membentuk kerajaan negeri, jadi anda ADUN kerajaan. Lobi Portfolio dibuka di tab Pemilihan.", "Your status has been corrected: GPS forms the state government, so you are a government ADUN. Portfolio Lobbying is open in the Elections tab."],
+  ["Status ADUN dibetulkan: GPS membentuk kerajaan negeri", "ADUN status corrected: GPS forms the state government"]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }

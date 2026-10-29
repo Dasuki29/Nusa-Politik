@@ -257,6 +257,20 @@
     else { pru.tahunPRU = tahun + CONFIG.KITARAN_TAHUN; pru.bulanPRU = parseInt(p.bulan, 10) || CONFIG.BULAN_PRU; }
     pru.mulaIdx = idx(p); pru.krisisSudah = false;
   }
+  /** v12.6: baiki simpanan lama: ADUN parti rakan GPS yang ditanda "bukan kerajaan" oleh lambungan rawak (sebelum v12.6) walaupun GPS memegang 70+ kerusi.
+      Status ditukar kepada kerajaan dan Lobi Portfolio DUN dibuka semula jika belum memegang jawatan kerajaan. Pulang true jika dibaiki. */
+  function baikiStatusSarawak() {
+    var p = S().loadPlayer(); if (!p || !SW(p.parti) || p.parti === 'PSB') { return false; }
+    var pru = getPRU(p), sw = sarawak(), kp = sw && sw.kerusiPremier ? sw.kerusiPremier(p) : null, ubah = false;
+    if (!kp || kp.gabungan < kp.ambang || (pru.aktif && pru.aktif.fasa === 'keputusan')) { return false; }
+    [pru.status, pru.statusKedua].forEach(function (st) { if (st && st.jenis === 'ADUN' && st.kerajaan === false) { st.kerajaan = true; ubah = true; } });
+    if (!ubah) { return false; }
+    var r = simpanPRU(pru, {}, { log: { tindakan: 'pru_baiki', nama: 'Status ADUN dibetulkan: GPS membentuk kerajaan negeri', peringkat: 'ahli' } });
+    if (!r || !r.ok) { return false; }
+    var Kb = modul('MyPolitikKabinet', 'kabinet.js');
+    if (Kb && Kb.getKabinet && Kb.bukaLobi) { var kb = Kb.getKabinet(S().loadPlayer()); if (!kb.hasGovernmentRole && !kb.lobi) { Kb.bukaLobi('DUN'); } }
+    return true;
+  }
   function getPRU(p) {
     var b = dasar(), x = p && p.pru && typeof p.pru === 'object' ? p.pru : {};
     for (var k in b) { if (x[k] === undefined) { x[k] = b[k]; } }
@@ -743,6 +757,7 @@
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
         g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8));
         if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
+        else if (SWg.kerusiPremier) { var kp0 = SWg.kerusiPremier(p); if (kp0) { g.kerajaan = kp0.gabungan >= kp0.ambang; } }   // v12.6: DUN Sarawak: status ikut kerusi GPS yang dipaparkan (70-78/82), bukan lambungan 60-90%
         kk.kerajaan = g.kerajaan;
         if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
         if (!sekunder) {
@@ -940,7 +955,7 @@
     setRng: function (f) { rngLalai = f || Math.random; },
     getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
-    mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
+    baikiStatusSarawak: baikiStatusSarawak, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan
   };
 });
