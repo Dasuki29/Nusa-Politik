@@ -72,7 +72,7 @@
   function salin(o) { return JSON.parse(JSON.stringify(o)); }
   function gagal(kod, ralat) { return { ok: false, kod: kod, ralat: ralat }; }
 
-  var SAYAP_NAMA = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita' };
+  var SAYAP_NAMA = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
 
   /** Sayap yang dipegang pemain sebagai Ketua Sayap Bahagian, atau null. */
   function sayapBahagian(p) {

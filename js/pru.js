@@ -249,7 +249,7 @@
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   function tular() { return modul('MyPolitikTular', 'tular.js'); }
-  function mca() { var M = modul('MyPolitikMCA', 'mca.js'); return M; }                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
+  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -328,11 +328,11 @@
         if (jenis === 'DUN' && mp !== 'PRN') { sebab.push(p.parti + ' bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'); }
         var SWk = sarawak(); if (jenis === 'DUN' && mp === 'PRN' && SWk && SWk.ringan && SWk.ringan(p) && !SWk.dalamKuota(p)) { sebab.push('DUN anda di luar kuota ' + p.parti + ' dalam GPS (kuota ' + SWk.kuota(p) + ' kerusi)'); }   // v10.0
       }
-      var MCk = mca(); if (MCk && MCk.adalah(p) && !lain) {                                         // v13.1: MCA: kuota kerusi dalam BN dan 3 tahun keahlian (Perkara 120)
+      var MCk = mca(p); if (MCk && MCk.adalah(p) && !lain) {                                         // v13.1: MCA: kuota kerusi dalam BN dan 3 tahun keahlian (Perkara 120)
         var kw = MCk.kawasan(p);
-        if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push('Kawasan Parlimen anda di luar kuota MCA dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }
-        if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push('DUN anda di luar kuota MCA dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
-        if (!MCk.cukupKeahlian(p)) { sebab.push('Perlu menjadi ahli sekurang-kurangnya 3 tahun (Perkara 120)'); }
+        if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push('Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }
+        if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push('DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
+        if (p.parti === 'MCA' && !MCk.cukupKeahlian(p)) { sebab.push('Perlu menjadi ahli sekurang-kurangnya 3 tahun (Perkara 120)'); }
       }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
@@ -437,7 +437,7 @@
     }
     var kod = jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun) : ((p.kod && p.kod.parlimen) || p.bahagian);
     a.candidateType = jenis; a.ofsetKerusi = jenis === 'DUN' && !lain && sarawak() ? sarawak().ofset(p) : (jenis === 'PARLIMEN' && !lain && SW(p.parti) && sarawak() ? sarawak().ofsetParlimen(p) : 0);
-    if (!lain && mca() && mca().adalah(p)) { a.ofsetKerusi = mca().ofset(p, jenis); a.lawan = mca().lawan(p, jenis); }      // v13.1: MCA: kekuatan kerusi ikut peratus Cina
+    if (!lain && mca(p) && mca(p).adalah(p)) { a.ofsetKerusi = mca(p).ofset(p, jenis); a.lawan = mca(p).lawan(p, jenis); }      // v13.3: MIC ikut peratus India      // v13.1: MCA: kekuatan kerusi ikut peratus Cina
     a.kerusi = { jenis: jenis, nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: kod || '' };
     if (jenis === 'PARLIMEN' && !lain && SW(p.parti) && sarawak() && sarawak().maklumatParlimen(p)) { var mpl = sarawak().maklumatParlimen(p); a.kerusi.nama = mpl.nama; a.kerusi.kod = mpl.kod; }   // v9.4
     a.calonImport = null;

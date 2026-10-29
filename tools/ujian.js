@@ -1342,6 +1342,65 @@ ujian('v13.1: MCA: tidak hadir 3 mesyuarat, had Presiden 9 tahun, sumbangan waki
   const myr0 = S.loadPlayer().myr; M.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().myr, myr0 - M.CONFIG.SUMBANGAN, 'sumbangan RM 500');
   S.clearPlayer();
 });
+ujian('v13.3: MIC: data, kuota BN, kitaran 3 tahun dari 2027, takwim 3/5/9, Puteri & Putera, syarat Pengerusi Cawangan', () => {
+  const M = g.MyPolitikMIC, E = g.MyPolitikElection, K = g.MyPolitikCalendar, D = g.MyPolitikData, J = g.MyPolitikJawatan, SY = g.MyPolitikSayap, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mic-semenanjung.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 165, '165 Bahagian'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 60 && c.jumlahAhli <= 200)), 'Cawangan 60 hingga 200 ahli (Perkara 17.12)');
+  betul(SY.kelayakan('L', 25, 'MIC').putera.boleh && !SY.kelayakan('L', 25, 'UMNO').putera.boleh && !SY.kelayakan('L', 32, 'MIC').putera.boleh, 'Putera: lelaki bawah 30, MIC sahaja');
+  betul(SY.kelayakan('P', 25, 'MIC').puteri.boleh, 'MIC ada Puteri');
+  const ib = h.bahagian.find((b) => b.nama === 'Ipoh Barat');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'MIC', nama: 'Raj Uji', demografik: D.tentukanDemografi('Lelaki', 25, 'MIC'), cawangan: ib.dun[0].cawangan[0], sayap: 'putera', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'MIC'); sama(p.sayap, 'putera', 'sayap Putera disimpan');
+  betul(J.katalogUntuk(p).some((d) => d.kod === 'sayap_cawangan_putera'), 'jawatan Ketua Putera Cawangan');
+  const kw = M.kawasan(p); betul(kw.kuotaPL, 'Ipoh Barat dalam kuota 10 kerusi');
+  sama(E.adalahTahunPemilihan(2026), false, 'tiada pemilihan 2026'); sama(E.adalahTahunPemilihan(2027), true); sama(E.adalahTahunPemilihan(2030), true); sama(E.tahunPemilihanSeterusnya(2028), 2030);
+  sama(K.getTetingkap('cawangan', 3).status !== 'belum_tiba', true); betul(/Bahagian/.test(JSON.stringify(K.getFasa(5))), 'bulan 5 musim Bahagian'); betul(/PAU|Perhimpunan/.test(JSON.stringify(K.getFasa(9))), 'bulan 9 Perhimpunan Agung');
+  const kb = J.KATALOG.find((d) => d.kod === 'ketua_bahagian'), pres = J.KATALOG.find((d) => d.kod === 'presiden');
+  betul(/Pengerusi Cawangan/.test(J.semakKelayakan(S.loadPlayer(), kb).sebab), 'Pengerusi Bahagian perlu sedang Pengerusi Cawangan (Perkara 34.3)');
+  P.tetap({ ip: 5000, tahun: 2030, jawatan: 'Ketua Cawangan', jawatanList: [{ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 3, tahun: 2027 }], keahlian: { sejakTahun: 2024, sejakBulan: 1 } });
+  betul(/3 tahun sebagai AJK Cawangan/.test(J.semakKelayakan(S.loadPlayer(), kb).sebab), 'perlu 3 tahun AJK Cawangan');
+  let m = S.loadPlayer().mic || {}; m.bulanAJK = 40; m.pusat = m.pusat || {}; P.tetap({ mic: m });
+  betul(!/Perkara 34/.test(J.semakKelayakan(S.loadPlayer(), kb).sebab || ''), 'syarat MIC Bahagian lulus');
+  betul(/10 tahun/.test(J.semakKelayakan(S.loadPlayer(), pres).sebab), 'Presiden perlu 10 tahun keahlian');
+  m = S.loadPlayer().mic; m.bulanKB = 101; P.tetap({ mic: m, jawatanList: S.loadPlayer().jawatanList.concat([{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2027 }]) });
+  betul(/3 penggal/.test(J.semakKelayakan(S.loadPlayer(), kb).sebab || ''), 'had 3 penggal Pengerusi Bahagian (Perkara 34.4)');
+  const rp = M.ringkasPusat(S.loadPlayer()); sama(rp.pengundi, 6103 * 10 + 60, 'pengundi Presiden = 10 pegawai setiap Cawangan + CWC');
+  P.tetap({ ap: 20, myr: 50000 });
+  const kod = M.ringkasPusat(S.loadPlayer()).senarai[0].kod, sb0 = M.sokonganBahagian(S.loadPlayer())[kod];
+  const rj = M.jelajah(kod); betul(rj.ok, rj.ralat); sama(M.sokonganBahagian(S.loadPlayer())[kod], sb0 + M.CONFIG.PUSAT.jelajahNaik); sama(M.jelajah(kod).ok, false, 'sekali sebulan');
+  const rg = M.lantikPegawai('setia'); betul(rg.ok, rg.ralat); sama(M.lantikPegawai('setia').ok, false, 'sekali sepenggal');
+  betul(!M.statusMohon(S.loadPlayer(), 'pengerusi_negeri').boleh, 'Pengerusi Negeri perlu ahli Kongres Negeri');
+  P.tetap({ bulan: 7 }); m = S.loadPlayer().mic; P.tetap({ mic: m, pangkatUtamaLalu: 7 });
+  const sn = M.statusNegeri(S.loadPlayer()); betul(sn.boleh, sn.sebab);
+  const rn = M.bertandingNegeri({ rng: () => 0.01 }); betul(rn.ok && rn.jaya, rn.ralat); betul(M.ahliNegeri(S.loadPlayer()), 'ahli Kongres Negeri');
+  const rm = M.mohon('pengerusi_negeri', { rng: () => 0.01 }); betul(rm.ok && rm.jaya, rm.ralat); sama(M.lantikanSemasa(S.loadPlayer()).jawatan, 'Pengerusi Kongres Negeri');
+  const k2 = g.MyPolitikPRU.kelayakan(S.loadPlayer()); betul(!k2.PARLIMEN.sebab.some((x) => /kuota MIC/.test(x)), 'Parlimen dalam kuota MIC');
+  S.clearPlayer();
+});
+ujian('v13.3: MIC: tidak hadir (Perkara 37.4), gantung (61), yuran (12), Putera ke Pemuda, Pindah dikunci tahun pemilihan', () => {
+  const M = g.MyPolitikMIC, D = g.MyPolitikData, J = g.MyPolitikJawatan, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mic-semenanjung.csv'), 'utf8')));
+  const luar = h.bahagian.find((b) => M.kawasan({ kod: { parlimen: b.kod } }).parlimen.r > 100);
+  S.savePlayer(S.buildPlayerProfile({ parti: 'MIC', nama: 'Siva Uji', demografik: D.tentukanDemografi('Lelaki', 29, 'MIC'), cawangan: luar.dun[0].cawangan[0], sayap: 'putera', avatar: 'pemuda', tahunAhli: 10 }));
+  P.tetap({ ip: 5000, jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }] });
+  const k2 = g.MyPolitikPRU.kelayakan(S.loadPlayer()); betul(k2.PARLIMEN.sebab.some((x) => /kuota MIC/.test(x)), 'luar kuota MIC');
+  P.tetap({ jawatan: 'Ketua Cawangan', jawatanList: [{ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 3, tahun: 2026 }], kesetiaan: Object.assign({}, S.loadPlayer().kesetiaan, { akarUmbi: 80, ajk: 80 }), myr: 10000 });
+  let ev = [];
+  for (let i = 0; i < 4; i++) { ev = ev.concat(M.prosesBulan({ rng: () => 0.99 }).peristiwa); }
+  betul(ev.some((e) => /Perkara 37\.4/.test(e.mesej)), 'notis tidak hadir mesyuarat Bahagian'); sama(S.loadPlayer().mic.rayuan.kod, 'ketua_cawangan');
+  const rr = M.rayuan({ rng: () => 0.99 }); betul(rr.ok && rr.jaya === false, 'rayuan ditolak'); sama(J.pegang(S.loadPlayer(), 'ketua_cawangan'), false, 'hilang Pengerusi Cawangan');
+  // gantung oleh Presiden selepas sidang media silap cakap, kedekatan rendah
+  const p1 = S.loadPlayer(); p1.log.unshift({ tahun: p1.tahun, bulan: p1.bulan, tindakan: 'tular_sidang', nama: 'Krisis tular: Sidang media, silap cakap' }); p1.negeriBP = Object.assign({}, p1.negeriBP || {}, { dekat: 5 }); S.savePlayer(p1);
+  ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa; betul(ev.some((e) => /Perkara 14\.2\.1/.test(e.mesej)), 'digantung'); betul(M.gantungAktif(S.loadPlayer()));
+  betul(/digantung/.test(J.semakKelayakan(S.loadPlayer(), J.KATALOG.find((d) => d.kod === 'ajk_cawangan')).sebab), 'tidak boleh bertanding semasa digantung');
+  const rg = M.rayuanGantung({ rng: () => 0.01 }); betul(rg.ok && rg.jaya, rg.ralat); betul(!M.gantungAktif(S.loadPlayer()));
+  // yuran bulan 11
+  P.tetap({ bulan: 11, myr: 100 }); const myr0 = S.loadPlayer().myr; M.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().myr, myr0 - 4, 'yuran RM 4');
+  // Putera umur 30 ke Pemuda
+  P.tetap({ tahun: 2027, bulan: 2 }); M.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().sayap, 'pemuda', 'Putera bertukar ke Pemuda pada umur 30');
+  const PD = g.MyPolitikPindah; if (PD && PD.semak) { betul(PD.semak(S.loadPlayer()).sebab.some((x) => /Perkara 10\.5/.test(x)), 'pindah dikunci tahun pemilihan 2027'); }
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

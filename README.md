@@ -8,6 +8,7 @@ Parti yang boleh dimainkan:
 |---|---|---|
 | UMNO | Penuh | Struktur asal permainan (Cawangan, Bahagian, Pusat; sayap Pemuda, Puteri, Wanita) |
 | MCA | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 40 Parlimen / 90 DUN ikut peratus Cina), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
+| MIC | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 10 Parlimen / 20 DUN ikut peratus India), Cawangan = Daerah Mengundi (60 hingga 200 ahli); pemilihan setiap 3 tahun dari 2027; semua jawatan tinggi perlu sedang Pengerusi Cawangan; Presiden dipilih oleh pegawai Cawangan (250 penamaan); Kongres Negeri; sayap Putera; had 3 penggal Pengerusi Bahagian dan Presiden (Perlembagaan MIC) |
 | PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
 | PRS, SUPP, PDP (Sarawak) | Ringan | Parti rakan GPS dengan kuota kerusi; ciri teras masing-masing (Pengaruh GPS, Sokongan Bandar, Imbangan Kaum) |
 
@@ -133,9 +134,10 @@ node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
 node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
+node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)
 ```
 
-Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, dan `PARTI=MCA` sebagai ahli MCA.
+Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, `PARTI=MCA` sebagai ahli MCA dan `PARTI=MIC` sebagai ahli MIC.
 
 `tools/ujian-bahasa.js` gagal jika ada baris kamus tanpa EN, pemegang tempat `{x}` tidak sepadan, "Wing Wing", atau teks acara, latihan Amir, PRU, Kabinet dan Perlembagaan yang tiada terjemahan. `tools/ujian-pelayar.js` melaporkan ralat JavaScript dan teks BM yang bocor dalam mod EN. Nama misi dan tajuk sumber luar dikecualikan dengan sengaja.
 

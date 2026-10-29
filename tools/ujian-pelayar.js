@@ -44,7 +44,7 @@ const pelayan = http.createServer((req, res) => {
 /* Kumpul literal rentetan BM daripada kod sumber: nod teks EN yang sama persis dengan literal itu dan tiada terjemahan = bocor. */
 function kumpulLiteral() {
   const set = new Set(), re = /'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"/g;
-  fs.readdirSync(path.join(ROOT, 'js')).filter((f) => /\.js$/.test(f) && !/^(translations|i18n|tutorial|tutorial-en|data|watak|geo|mca-data)/.test(f)).forEach((f) => {
+  fs.readdirSync(path.join(ROOT, 'js')).filter((f) => /\.js$/.test(f) && !/^(translations|i18n|tutorial|tutorial-en|data|watak|geo|mca-data|mic-data)/.test(f)).forEach((f) => {
     const src = fs.readFileSync(path.join(ROOT, 'js', f), 'utf8');
     let m; while ((m = re.exec(src))) {
       const t = (m[1] || m[2] || '').replace(/\\'/g, "'").trim();

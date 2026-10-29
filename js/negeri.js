@@ -47,7 +47,7 @@
   var KEY_NAMA = { johor: 'Johor', kedah: 'Kedah', kelantan: 'Kelantan', melaka: 'Melaka', 'negeri sembilan': 'Negeri Sembilan', pahang: 'Pahang', 'pulau pinang': 'Pulau Pinang', perak: 'Perak', perlis: 'Perlis',
     selangor: 'Selangor', terengganu: 'Terengganu', sabah: 'Sabah', sarawak: 'Sarawak', 'wilayah persekutuan': 'Wilayah Persekutuan' };
   var TIADA_UMNO = ['sarawak'];                                    // UMNO tiada cawangan/bahagian di Sarawak: tiada lantikan Pengerusi/Ketua Negeri
-  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita' };
+  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
   var NAMA_L = ['Ismail', 'Faizal', 'Rosli', 'Hafiz', 'Azman', 'Kamarul', 'Zulkifli', 'Razak', 'Shahrul', 'Mazlan', 'Fadzil', 'Hisham', 'Nasir', 'Amran', 'Jamal', 'Idris'];
   var NAMA_P = ['Norhayati', 'Salmah', 'Rohana', 'Zaleha', 'Aminah', 'Faridah', 'Suraya', 'Marlina', 'Haslinda', 'Rosnah'];
   var NAMA_2 = ['Harun', 'Rahman', 'Hamid', 'Yusof', 'Ahmad', 'Daud', 'Ibrahim', 'Othman', 'Jaafar', 'Salleh', 'Mansor', 'Abdullah', 'Zakaria', 'Hashim'];

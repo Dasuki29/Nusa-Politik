@@ -77,7 +77,7 @@
   var WARNA = ['#353B4A', '#6A2C3E', '#9D1E37', '#D4152F', '#F2B705'];   // kelabu > merah > emas
   var SENTIMEN_LABEL = ['Kubu lawan', 'Cenderung lawan', 'Swing', 'Cenderung sokong', 'Kubu kuat'];
   var SENTIMEN_WARNA = ['#B3261E', '#E8803A', '#F2B705', '#7BC96F', '#1E8E5A'];
-  var SAYAP_WARNA = { pemuda: '#FFD84D', wanita: '#FFC2D1', puteri: '#D9C7FF' };
+  var SAYAP_WARNA = { pemuda: '#FFD84D', wanita: '#FFC2D1', puteri: '#D9C7FF', putera: '#FFB347' };
   var TAHAP_NAMA = { negeri: 'Negeri', bahagian: 'Bahagian', dun: 'DUN', cawangan: 'Cawangan' };
 
   /** 14 negeri; pos = [lajur, baris] pada peta jubin. */

@@ -31,8 +31,8 @@
   function etika() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikEtika) { return g.MyPolitikEtika; } try { return typeof require === 'function' ? require('./etika.js') : null; } catch (e) { return null; } }
 
   var BIASA = 'Ahli Biasa';
-  var SAYAP = ['pemuda', 'puteri', 'wanita'];
-  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita' };
+  var SAYAP = ['pemuda', 'puteri', 'wanita', 'putera'];                          // v13.3: Putera (MIC sahaja; katalogUntuk hanya memaparkan sayap pemain)
+  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
   var LABEL_PERINGKAT = { cawangan: 'Cawangan', bahagian: 'Bahagian', pusat: 'Pusat', sayap_cawangan: 'Sayap Cawangan', sayap_bahagian: 'Sayap Bahagian', sayap_pau: 'Sayap Pusat' };
 
   /* ------------------------------------------------------------------------
@@ -169,6 +169,11 @@
       if (!hak.boleh) { return { terbuka: false, sebab: hak.sebab }; }
     }
     var pertahan = pegang(p, d.kod);
+    if (p && p.parti === 'MIC') {                                                // v13.3: syarat Perlembagaan MIC (sedang Pengerusi Cawangan, tempoh keahlian, penggal, had penggal, gantung)
+      var MIm = (typeof globalThis !== 'undefined' && globalThis.MyPolitikMIC) || null;
+      if (!MIm) { try { MIm = require('./mic.js'); } catch (eM) { MIm = null; } }
+      var ks = MIm && MIm.semakSyarat ? MIm.semakSyarat(p, d, pertahan) : null; if (ks) { return ks; }
+    }
     if (pertahan) { return { terbuka: true, sebab: '', pertahan: true }; }
     var pdh = (typeof globalThis !== 'undefined' && globalThis.MyPolitikPindah) || null;                  // v8.28: tempoh menunggu selepas Pindah Cawangan
     if (!pdh) { try { pdh = require('./pindah.js'); } catch (e) { pdh = null; } }
@@ -184,7 +189,7 @@
     if (sudahTahunIni) {                                         // v6.8: satu jawatan setiap peringkat (kumpulan sama) dalam satu pemilihan; tiada rantaian MKT -> Timbalan -> Presiden
       return { terbuka: false, sebab: 'Anda sudah memenangi ' + sudahTahunIni.jawatan + ' pada pemilihan ' + p.tahun + '. Hanya satu jawatan bagi setiap peringkat dalam satu pemilihan; jawatan lebih tinggi dibuka pada pemilihan seterusnya.' };
     }
-    var perluAhli = d.keahlian || (p && p.parti === 'MCA' ? 36 : 0);           // v13.1: MCA: semua pemilihan parti perlu 3 tahun keahlian (Perkara 120)
+    var perluAhli = d.keahlian || (p && p.parti === 'MCA' ? 36 : 0) || (p && p.parti === 'MIC' && d.kod === 'ketua_cawangan' ? 36 : 0);           // v13.3: MIC Perkara 21.2 (3 tahun untuk Pengerusi Cawangan)           // v13.1: MCA: semua pemilihan parti perlu 3 tahun keahlian (Perkara 120)
     if (Et && perluAhli) {                                     // Fasal 15.5: ahli sekurang-kurangnya 3 tahun
       var kh = Et.semakKeahlian(p, perluAhli, d.fasal);
       if (!kh.sah) { return { terbuka: false, sebab: kh.sebab, tunggu: kh.baki }; }

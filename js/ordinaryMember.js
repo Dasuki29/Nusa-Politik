@@ -205,7 +205,7 @@
     var cukupIP = ip >= min;
     var kekurangan = 'Perlukan ' + min + ' IP (anda ada ' + ip + ').';
     var kodSayap = p && p.demografik ? p.demografik.kategoriKod : null;
-    if (kodSayap === 'puteri' && p && p.parti && p.parti !== 'UMNO') { kodSayap = 'wanita'; }      // v10.6: parti selain UMNO tiada Puteri
+    if (kodSayap === 'puteri' && p && p.parti && p.parti !== 'UMNO' && p.parti !== 'MIC') { kodSayap = 'wanita'; }      // v10.6: parti selain UMNO tiada Puteri
     var jawatanSayap = SAYAP_JAWATAN[kodSayap] || null;
 
     function masuk(kod, jawatan, peringkat, terbuka, sebab, ipPerlu) {

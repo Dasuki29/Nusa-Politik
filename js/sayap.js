@@ -25,28 +25,32 @@
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
-  var SENARAI = ['utama', 'pemuda', 'puteri', 'wanita'];
-  var SAYAP = ['pemuda', 'puteri', 'wanita'];
+  var SENARAI = ['utama', 'pemuda', 'puteri', 'wanita', 'putera'];
+  var SAYAP = ['pemuda', 'puteri', 'wanita', 'putera'];            // v13.3: Putera (lelaki bawah 30) untuk MIC sahaja (Perlembagaan MIC Perkara 4.18.5)
+  function adaPutera(k) { return k === 'MIC'; }
 
   var CONFIG = {
     utama:  { danaMult: 1.10 },
     pemuda: { ipMult: 1.20, bebanStresMult: 1.10 },
     puteri: { kesetiaanMult: { ajk: 1.25, perwakilan: 1.25 }, reputasiMult: 1.25 },
-    wanita: { akarUmbiRugiMult: 0.70, susutAkarUmbiKurang: 1, bebanStresMult: 0.80, pemulihanStresTambah: 1 }
+    wanita: { akarUmbiRugiMult: 0.70, susutAkarUmbiKurang: 1, bebanStresMult: 0.80, pemulihanStresTambah: 1 },
+    putera: { ipMult: 1.20, bebanStresMult: 1.10 }                // v13.3: sama seperti Pemuda (tiada angka baharu)
   };
 
   var INFO = {
     utama:  { kod: 'utama',  nama: 'Utama / Induk', ikon: '🏛️', ringkas: 'Laluan jawatan utama parti', kelebihan: ['+10% Dana masuk'], syarat: 'Terbuka kepada semua.' },
     pemuda: { kod: 'pemuda', nama: 'Pemuda',        ikon: '⚡', ringkas: 'Laju naik, tetapi lebih penat', kelebihan: ['+20% kenaikan IP', 'Beban Stress +10%'], syarat: 'Lelaki berumur 18 hingga 40 tahun.' },
     puteri: { kod: 'puteri', nama: 'Puteri',        ikon: '🌸', ringkas: 'Rangkaian dan nama baik', kelebihan: ['+25% sokongan AJK dan Perwakilan', '+25% Reputasi Parti'], syarat: 'Perempuan berumur 18 hingga 35 tahun.' },
-    wanita: { kod: 'wanita', nama: 'Wanita',        ikon: '🛡️', ringkas: 'Stabil dan tenang', kelebihan: ['Kerugian akar umbi -30%', 'Susutan akar umbi pemegang jawatan -1', 'Beban Stress -20%, pulih +1'], syarat: 'Perempuan berumur 36 hingga 59 tahun.' }
+    wanita: { kod: 'wanita', nama: 'Wanita',        ikon: '🛡️', ringkas: 'Stabil dan tenang', kelebihan: ['Kerugian akar umbi -30%', 'Susutan akar umbi pemegang jawatan -1', 'Beban Stress -20%, pulih +1'], syarat: 'Perempuan berumur 36 hingga 59 tahun.' },
+    putera: { kod: 'putera', nama: 'Putera',        ikon: '🚀', ringkas: 'Sayap paling muda, laju naik', kelebihan: ['+20% kenaikan IP', 'Beban Stress +10%'], syarat: 'Lelaki berumur 18 hingga 29 tahun (MIC sahaja).' }
   };
 
   /** Isu fokus golongan setiap sayap (v6.0). Digunakan pada Struktur Organisasi dan Mesyuarat Sayap (meeting.js). */
   var ISU = {
     pemuda: { golongan: 'lelaki muda', isu: ['Pekerjaan dan gaji permulaan', 'Rumah pertama', 'Kos sara hidup belia', 'Ekonomi gig dan digital'] },
     puteri: { golongan: 'perempuan muda', isu: ['Keselamatan dan gangguan', 'Gaji dan kerjaya setara', 'Usahawan muda', 'Kesihatan mental'] },
-    wanita: { golongan: 'perempuan dewasa dan warga emas', isu: ['Penjagaan keluarga dan warga emas', 'Kos isi rumah', 'Kesihatan wanita', 'Ibu tunggal dan usahawan mikro'] }
+    wanita: { golongan: 'perempuan dewasa dan warga emas', isu: ['Penjagaan keluarga dan warga emas', 'Kos isi rumah', 'Kesihatan wanita', 'Ibu tunggal dan usahawan mikro'] },
+    putera: { golongan: 'lelaki muda bawah 30 tahun', isu: ['Pekerjaan dan gaji permulaan', 'Biasiswa dan latihan kemahiran', 'Ekonomi gig dan digital', 'Sukan dan aktiviti belia'] }
   };
 
   function sah(k) { return SENARAI.indexOf(k) >= 0; }
@@ -70,6 +74,7 @@
   function kelayakan(jantina, umur, parti) {
     var k = katParti(jantina, umur, parti), r = {};
     SENARAI.forEach(function (s) {
+      if (s === 'putera') { var uP = parseInt(umur, 10), bolehP = adaPutera(parti) && k === 'pemuda' && uP <= 29; r[s] = bolehP ? { boleh: true, sebab: '' } : { boleh: false, sebab: !adaPutera(parti) ? 'Sayap Putera hanya dalam MIC.' : (k ? INFO.putera.syarat : 'Isi jantina dan umur dahulu.') }; return; }      // v13.3
       r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: tanpaPuteri(parti) && s === 'puteri' ? (parti === 'MCA' ? 'MCA' : 'PBB') + ' tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
     });
     return r;
@@ -137,6 +142,11 @@
       id: 'skuad_sayang', nama: 'Skuad Sayang / Ziarah Kasih', ikon: '🤝',
       penerangan: 'Skuad Wanita menziarahi ahli dan keluarga yang memerlukan. Sokongan Cawangan dikekalkan dua bulan (tiada susutan akar umbi dan AJK) dan Stress berkurang.',
       kesan: { ap: -2, ip: 6, kesetiaan: { akarUmbi: 10, ajk: 4 } }, stres: { stress: -10, kesihatan: 2 }, khas: 'perisai'
+    },
+    putera: {
+      id: 'kempen_saraf_digital', nama: 'Kempen Saraf Digital', ikon: '📲',
+      penerangan: 'Kempen media sosial besar-besaran: video pendek, siaran langsung dan cabaran tular. IP naik tinggi, tetapi memenatkan.',
+      kesan: { ap: -2, myr: -300, ip: 24, reputasi: 1, kesetiaan: { akarUmbi: 3 } }, stres: { stress: 9 }
     },
     puteri: {
       id: 'kempen_outreach_belia', nama: 'Kempen Outreach Belia', ikon: '🌸',
@@ -220,7 +230,8 @@
   /* ---------- Fasa Transisi ke Dewan Induk ---------- */
   var TRANSISI = {
     pemuda: { had: 40, amaran: 38 },          // lelaki: sayap Pemuda sehingga 40 tahun
-    puteri: { had: 35, amaran: 33 }           // andaian: had Puteri ialah 35 tahun dalam permainan; 'amaran' 2 tahun lebih awal
+    puteri: { had: 35, amaran: 33 },          // andaian: had Puteri ialah 35 tahun dalam permainan; 'amaran' 2 tahun lebih awal
+    putera: { had: 29, amaran: 27 }           // v13.3: MIC Putera bawah 30 tahun; pada umur 30 bertukar ke Pemuda (js/mic.js)
   };
   var WARISAN = { IP_SKALA: 250, BERAT_IP: 7, BERAT_AKAR: 7, MAKS: 14, TAHUN: 6 };
 
@@ -272,7 +283,7 @@
   }
 
   return {
-    SENARAI: SENARAI, SAYAP: SAYAP, CONFIG: CONFIG, INFO: INFO, ISU: ISU, sah: sah, kategori: kategori, cadangan: cadangan, kelayakan: kelayakan, katParti: katParti,
+    SENARAI: SENARAI, SAYAP: SAYAP, adaPutera: adaPutera, CONFIG: CONFIG, INFO: INFO, ISU: ISU, sah: sah, kategori: kategori, cadangan: cadangan, kelayakan: kelayakan, katParti: katParti,
     kod: kod, sayapJawatan: sayapJawatan, info: info, sesuaikan: sesuaikan, bebanStres: bebanStres, pemulihanStres: pemulihanStres, kurangSusutAkarUmbi: kurangSusutAkarUmbi,
     TINDAKAN_SAYAP: TINDAKAN_SAYAP, TS_CONFIG: TS_CONFIG, TRANSISI: TRANSISI, WARISAN: WARISAN, senaraiTindakanSayap: senaraiTindakanSayap, jalankanTindakanSayap: jalankanTindakanSayap,
     bonusKuota: bonusKuota, sokonganDilindungi: sokonganDilindungi, notisTransisi: notisTransisi, bentukWarisan: bentukWarisan, bonusWarisan: bonusWarisan, ringkasWarisan: ringkasWarisan, kiraBonusWarisan: kiraBonusWarisan

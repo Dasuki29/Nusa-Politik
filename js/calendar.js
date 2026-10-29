@@ -102,12 +102,18 @@
     FASA: [bulanPBB(F0[0], 1, 3), bulanPBB(F0[1], 4, 4), antaraBulan(5, 5), bulanPBB(F0[2], 6, 6), antaraBulan(7, 7), bulanPBB(F0[3], 8, 8), bulanPBB(F0[4], 9, 12)],
     TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 4, 4), cawangan: tt('cawangan', 4, 4), sayap_bahagian: tt('sayap_bahagian', 6, 6), bahagian: tt('bahagian', 6, 6), sayap_pau: tt('sayap_pau', 8, 8), pau: tt('pau', 8, 8) }
   };
+  /* v13.3: kalendar MIC (Perlembagaan MIC): Mesyuarat Agung Tahunan Cawangan paling lewat 31 Mac (Perkara 19.1), Persidangan Perwakilan Bahagian
+     paling lewat 31 Mei (Perkara 32.2), Kongres Negeri bulan 7 (ANDAIAN, js/mic.js) dan Perhimpunan Agung bulan 9 (ANDAIAN; tarikh ditetapkan CWC, Perkara 68.1). */
+  CONFIG.MIC = {
+    FASA: [bulanPBB(F0[0], 1, 2), bulanPBB(F0[1], 3, 3), antaraBulan(4, 4), bulanPBB(F0[2], 5, 5), antaraBulan(6, 8), bulanPBB(F0[3], 9, 9), bulanPBB(F0[4], 10, 12)],
+    TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 3, 3), cawangan: tt('cawangan', 3, 3), sayap_bahagian: tt('sayap_bahagian', 5, 5), bahagian: tt('bahagian', 5, 5), sayap_pau: tt('sayap_pau', 9, 9), pau: tt('pau', 9, 9) }
+  };
   /** Set takwim aktif mengikut parti pemain (PBB atau lalai UMNO). */
   function takwimSet() {
     var k = null;
     try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
     if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
-    return k === 'PBB' ? CONFIG.PBB : k === 'MCA' ? CONFIG.MCA : CONFIG;
+    return k === 'PBB' ? CONFIG.PBB : k === 'MCA' ? CONFIG.MCA : k === 'MIC' ? CONFIG.MIC : CONFIG;
   }
 
   /* ------------------------------------------------------------------------
@@ -241,8 +247,16 @@
      ------------------------------------------------------------------------ */
   function mesejMasuk(bulan, tahun, tahunBaharu) {
     var f = getFasa(bulan), nb = namaBulan(bulan), out = [];
-    var pbb = takwimSet() === CONFIG.PBB, mca = takwimSet() === CONFIG.MCA;
-    if (mca) {                                                                   // v13.1
+    var pbb = takwimSet() === CONFIG.PBB, mca = takwimSet() === CONFIG.MCA, mic = takwimSet() === CONFIG.MIC;
+    if (mic) {                                                                   // v13.3: teks bulan sudah dalam bulan MIC; (Julai)/(Ogos) dilindungi daripada penukaran bulan js/parti.js
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
+      else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 5) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 5 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 7) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 7 (Julai): Pemilihan Kongres Negeri dalam tahun pemilihan (kad MIC di tab Profil). Hanya bulan ini.' }); }
+      else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat. Hanya bulan ini.' }); }
+      else if (bulan === 10) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 10 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+      else if (bulan === 11) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 11 (' + nb + '): Yuran keahlian MIC RM 4 setahun mesti dibayar sebelum 30 November (Perkara 12.2).' }); }
+    } else if (mca) {                                                                   // v13.1
       if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 4).' }); }
       else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
       else if (bulan === 6) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 6 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
@@ -376,6 +390,8 @@
     var RVL = muat('MyPolitikRival', 'rival.js');                                               // v7.28: AI pencabar bergerak pada akhir setiap bulan
     if (RVL && RVL.tick) { peristiwa = peristiwa.concat(RVL.tick().peristiwa || []); }
 
+    var MICm = muat('MyPolitikMIC', 'mic.js');                                                 // v13.3: peraturan khas MIC
+    if (MICm && MICm.prosesBulan) { peristiwa = peristiwa.concat(MICm.prosesBulan().peristiwa || []); }
     var MCAm = muat('MyPolitikMCA', 'mca.js');                                                 // v13.1: peraturan khas MCA (kehadiran, had Presiden, sumbangan, lantikan)
     if (MCAm && MCAm.prosesBulan) { peristiwa = peristiwa.concat(MCAm.prosesBulan().peristiwa || []); }
 

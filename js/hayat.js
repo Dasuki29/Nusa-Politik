@@ -221,7 +221,7 @@
      Avatar hanya mengikut jika avatar semasa masih sama dengan kategori lama
      (pilihan avatar yang sengaja ditukar semasa pendaftaran dihormati).
      ------------------------------------------------------------------------ */
-  var NAMA_KATEGORI = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', biasa: 'Biasa', veteran: 'Veteran' };
+  var NAMA_KATEGORI = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', biasa: 'Biasa', veteran: 'Veteran', putera: 'Putera' };
 
   function root_sayap() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikSayap) { return g.MyPolitikSayap; } try { return typeof require === 'function' ? require('./sayap.js') : null; } catch (e) { return null; } }
 

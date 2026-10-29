@@ -74,7 +74,7 @@
         ]
       },
       {
-        id: 'konvensyen_puteri', kategori: 'projek', syarat: function (p) { return !p.parti || p.parti === 'UMNO'; }, ikon: '🎤', tajuk: 'Konvensyen Puteri',
+        id: 'konvensyen_puteri', kategori: 'projek', syarat: function (p) { return !p.parti || p.parti === 'UMNO' || p.parti === 'MIC'; }, ikon: '🎤', tajuk: 'Konvensyen Puteri',
         huraian: 'Puteri UMNO menjemput anda hadir ke Konvensyen Puteri peringkat negeri dan memohon sokongan logistik.',
         pilihan: [
           { id: 'a', label: 'Sumbang penginapan & bas (Dana)', huraian: 'Bantuan logistik.', kesan: { myr: -300, ip: 12, kesetiaan: { akarUmbi: 4, ajk: 4 } }, mesej: 'Delegasi cawangan anda menyerlah di konvensyen.' },
@@ -83,7 +83,7 @@
         ]
       },
       {
-        id: 'konvensyen_wanita', kategori: 'projek', syarat: function (p) { return !!p.parti && p.parti !== 'UMNO'; }, ikon: '🎤', tajuk: 'Konvensyen Wanita',
+        id: 'konvensyen_wanita', kategori: 'projek', syarat: function (p) { return !!p.parti && p.parti !== 'UMNO' && p.parti !== 'MIC'; }, ikon: '🎤', tajuk: 'Konvensyen Wanita',
         huraian: 'Wanita UMNO menjemput anda hadir ke Konvensyen Wanita peringkat pusat dan memohon sokongan logistik.',
         pilihan: [
           { id: 'a', label: 'Sumbang penginapan & bas (Dana)', huraian: 'Bantuan logistik.', kesan: { myr: -300, ip: 12, kesetiaan: { akarUmbi: 4, ajk: 4 } }, mesej: 'Delegasi cawangan anda menyerlah di konvensyen.' },

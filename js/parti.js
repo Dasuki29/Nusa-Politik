@@ -59,6 +59,28 @@
       [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
       [/Jawatankuasa Perhubungan/g, 'Badan Perhubungan'],
       [/\b([Bb])ulan 4\b(?!-)/g, '$1ulan 4-6'], [/\b([Bb])ulan 6\b/g, '$1ulan 7']] };
+  /* v13.3: MIC = parti komponen BN di Semenanjung, MOD PENUH (enjin UMNO). Istilah daripada Perlembagaan MIC (2017, berkuat kuasa 18-4-2018):
+     Pengerusi Cawangan/Bahagian, Jawatankuasa Kerja Pusat (CWC), Perhimpunan Agung MIC, Kongres Negeri, Mesyuarat Agung Tahunan Cawangan (bulan 3)
+     dan Persidangan Perwakilan Bahagian (bulan 5); Perhimpunan Agung bulan 9 (ANDAIAN). Sayap Pemuda, Wanita, Puteri dan Putera.
+     ANDAIAN: kawasan operasi = semua 165 kawasan Parlimen Semenanjung (data/mic-semenanjung.csv, tools/build-mic.js). Logo daripada pengguna. */
+  SENARAI.MIC = { kod: 'MIC', nama: 'MIC', penuh: 'Kongres India Se-Malaysia', logo: 'assets/images/logo-mic.png', sayap: ['pemuda', 'puteri', 'wanita', 'putera'], negeriTetap: null, data: 'data/mic-semenanjung.csv', bahagianJenis: 'Parlimen', mic: true,
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja Pusat (CWC)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja Pusat'], [/\bMKT\b/g, 'CWC'],
+      [/Perhimpunan Agung MIC \(PAU\)/g, 'Perhimpunan Agung MIC'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung MIC'], [/MIC General Assembly \(PAU\)/g, 'MIC General Assembly'], [/General Assembly \(PAU\)/g, 'MIC General Assembly'], [/\bPAU\b/g, 'PA'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Menara Manickavasagam, Kuala Lumpur'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at Menara Manickavasagam, Kuala Lumpur'],
+      [/Persidangan Tahunan Sayap Cawangan/g, 'Mesyuarat Agung Sayap Cawangan'], [/Persidangan Tahunan Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan'], [/Mesyuarat Perwakilan Sayap Bahagian/g, 'Persidangan Perwakilan Sayap Bahagian'], [/Mesyuarat Perwakilan Bahagian/g, 'Persidangan Perwakilan Bahagian'],
+      [/Branch Wing Annual Conference/g, 'Branch Wing General Meeting'], [/Branch Annual Conference/g, 'Branch Annual General Meeting'], [/Division Wing Delegates' Meeting/g, 'Divisional Wing Delegates Conference'], [/Division Delegates' Meeting/g, 'Divisional Delegates Conference'],
+      [/\bTimbalan Ketua (Cawangan|Bahagian)\b/g, 'Timbalan Pengerusi $1'], [/\bNaib Ketua (Cawangan|Bahagian)\b/g, 'Naib Pengerusi $1'], [/\bKetua (Cawangan|Bahagian)\b/g, 'Pengerusi $1'], [/\bketua (cawangan|bahagian)\b/g, 'pengerusi $1'], [/Ketua-Ketua (Cawangan|Bahagian)/g, 'Pengerusi-Pengerusi $1'],
+      [/\b(Branch|Division) Chiefs?\b/g, function (m, a) { return a + ' Chairm' + (/s$/.test(m) ? 'en' : 'an'); }],
+      [/Badan Perhubungan Negeri/g, 'Kongres Negeri'], [/Badan Perhubungan/g, 'Kongres Negeri'], [/State Liaison Body/g, 'State Congress'], [/Liaison Body/g, 'State Congress'],
+      [/\b([Bb])ulan 4-6\b/g, '$1ulan 3'], [/\b([Bb])ulan 7\b(?! \(Julai\))/g, '$1ulan 5'], [/\b([Bb])ulan 8\b(?! \(Ogos\))/g, '$1ulan 9'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
+      [/\b([Mm])onths? 4-6\b/g, '$1onth 3'], [/\b([Mm])onth 7\b(?! \(July\))/g, '$1onth 5'], [/\b([Mm])onth 8\b(?! \(August\))/g, '$1onth 9'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
+    istilahSongsang: [[/Jawatankuasa Kerja Pusat \(CWC\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja Pusat/g, 'Majlis Kerja Tertinggi'], [/\bCWC\b/g, 'MKT'],
+      [/Perhimpunan Agung MIC(?! \()/g, 'Perhimpunan Agung MIC (PAU)'], [/\bPA\b/g, 'PAU'],
+      [/ di Menara Manickavasagam, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/Mesyuarat Agung Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Persidangan Perwakilan Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'], [/Persidangan Perwakilan Bahagian/g, 'Mesyuarat Perwakilan Bahagian'],
+      [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
+      [/Kongres Negeri/g, 'Badan Perhubungan Negeri'],
+      [/\b([Bb])ulan 3\b/g, '$1ulan 4-6'], [/\b([Bb])ulan 5\b/g, '$1ulan 7'], [/\b([Bb])ulan 9\b/g, '$1ulan 8'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -79,14 +101,15 @@
   function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM; if (TU) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
+    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = (k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s);      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
+    if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
     if (i.ringan) { r = r.split(SENARAI.PBB.penuh).join(i.penuh).replace(/\bPBB\b/g, i.nama); }          // v10.0: teks Sarawak yang menyebut PBB dijenamakan semula untuk parti mod ringan
     return r;
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     [d, tanpaBulan].forEach(function (x) {
@@ -102,7 +125,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi/;
+  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }
@@ -149,13 +172,13 @@
     var ea = D.querySelectorAll('[title],[aria-label],[placeholder],[alt],meta[name="description"]');
     for (var e = 0; e < ea.length; e++) { var x = ea[e]; if (x.__npKaAsal) { Object.keys(x.__npKaAsal).forEach(function (a) { if (x.getAttribute(a) === x.__npKa[a]) { x.setAttribute(a, x.__npKaAsal[a]); } }); x.__npKaAsal = null; x.__npKa = {}; } }
     var im = D.querySelectorAll('img.logo-parti'); for (var i = 0; i < im.length; i++) { im[i].setAttribute('src', SENARAI.UMNO.logo); im[i].classList.remove('logo-parti'); }
-    if (D.title) { D.title = D.title.replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA)\b/g, 'UMNO'); }
-    var md = D.querySelector('meta[name="description"]'); if (md) { md.setAttribute('content', (md.getAttribute('content') || '').replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA)\b/g, 'UMNO')); }
+    if (D.title) { D.title = D.title.replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA|MIC)\b/g, 'UMNO'); }
+    var md = D.querySelector('meta[name="description"]'); if (md) { md.setAttribute('content', (md.getAttribute('content') || '').replace(/\b(PBB|PRS|SUPP|PDP|PSB|MCA|MIC)\b/g, 'UMNO')); }
   }
   function terapkan() {
     if (!D || !D.body) { return; }
     var k = kini(); D.documentElement.setAttribute('data-parti', k);
-    var pb = D.querySelectorAll('[data-perlembagaan]'); for (var q = 0; q < pb.length; q++) { pb[q].style.display = k === 'UMNO' || k === 'MCA' ? '' : 'none'; }      // v13.1: MCA ada Perlembagaan MCA sendiri      // v10.6: Perlembagaan yang dipaparkan ialah Perlembagaan UMNO; disembunyi untuk parti lain
+    var pb = D.querySelectorAll('[data-perlembagaan]'); for (var q = 0; q < pb.length; q++) { pb[q].style.display = k === 'UMNO' || k === 'MCA' || k === 'MIC' ? '' : 'none'; }      // v13.1: MCA ada Perlembagaan MCA sendiri      // v10.6: Perlembagaan yang dipaparkan ialah Perlembagaan UMNO; disembunyi untuk parti lain
     if (k === 'UMNO') { if (pernahTukar) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { pernahTukar = false; partiAktif = 'UMNO'; sambung(); } } return; }
     if (pernahTukar && partiAktif !== k) { if (pemerhati) { pemerhati.disconnect(); } try { pulihUMNO(); } finally { sambung(); } }      // v13.1: tukar terus antara dua parti bukan UMNO: pulih dahulu, kemudian jenamakan semula
     pernahTukar = true; partiAktif = k;

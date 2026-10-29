@@ -206,7 +206,7 @@
     if (Sy && Sy.sayapJawatan) { return Sy.sayapJawatan(p); }
     return J && J.sayapPemain ? J.sayapPemain(p) : null;
   }
-  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita' };
+  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
   /** Namakan Mesyuarat Sayap mengikut sayap pemain. */
   function labelSayap(p) {
     var s = sayapPemain(p), N = s ? NAMA_SAYAP[s] : 'Sayap', u = 'Usul Isu Golongan ' + N;
@@ -315,7 +315,7 @@
      ------------------------------------------------------------------------ */
   function janaAgenda(p, peringkat) {
     var rng = S.rngBerbenih(p.id + '|' + p.tahun + '|mesyuarat|' + peringkat);
-    var agenda = [], pool = (adalahSayap(peringkat) ? KOLAM[peringkat + '_' + sayapPemain(p)] : KOLAM[peringkat]).slice(), dipakai = {};
+    var agenda = [], pool = (adalahSayap(peringkat) ? (KOLAM[peringkat + '_' + sayapPemain(p)] || KOLAM[peringkat + '_pemuda']) : KOLAM[peringkat]).slice(), dipakai = {};
 
     // Usul Lokaliti bermula daripada isu tempatan yang dicatat melalui Sembang Warung.
     if (peringkat === 'cawangan') {

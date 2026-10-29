@@ -92,6 +92,7 @@
     var hukum = !!(e && (e.status === 'digantung' || e.status === 'dilarang' || e.status === 'dipecat' || e.hukuman));
     syarat.push({ id: 'disiplin', teks: 'Tiada hukuman disiplin', lulus: !hukum, nota: '' });
     syarat.push({ id: 'pilihan', teks: 'Tiada pilihan raya sedang berjalan', lulus: !pilihanRayaBerjalan(p), nota: '' });
+    if (p && p.parti === 'MIC') { var MIp = (typeof globalThis !== 'undefined' && globalThis.MyPolitikMIC) || null; if (!MIp) { try { MIp = require('./mic.js'); } catch (eM) { MIp = null; } } if (MIp) { syarat.push({ id: 'tahun_pemilihan', teks: 'Bukan Tahun Pemilihan MIC (Perkara 10.5)', lulus: !MIp.adalahTahunPemilihan(p, p.tahun), nota: '' }); } }      // v13.3
     var jarak = g.terakhir ? mutlak(p.tahun, p.bulan) - mutlak(g.terakhir.tahun, g.terakhir.bulan) : 9999;
     syarat.push({ id: 'had', teks: 'Sekali setiap penggal (3 tahun)', lulus: jarak >= CONFIG.JARAK, nota: g.terakhir ? (jarak >= CONFIG.JARAK ? '' : 'Boleh lagi dalam ' + (CONFIG.JARAK - jarak) + ' bulan') : '' });
     var kos = { myr: CONFIG.KOS_MYR, ap: CONFIG.KOS_AP };

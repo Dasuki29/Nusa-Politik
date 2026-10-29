@@ -297,8 +297,8 @@ function pbbData(kod) {
 function daftarBaharu(seed) {
   S.clearPlayer(); EV.reset && EV.reset();
   localStorage.clear();
-  const PBB = process.env.PARTI === 'PBB' || process.env.PARTI === 'PRS', MCA = process.env.PARTI === 'MCA', parti = PBB || MCA ? process.env.PARTI : 'UMNO';   // v10.0: PRS = mod ringan        // v8.32: PARTI=PBB mainkan bot PBB (data/pbb-sarawak.csv)   // v13.1: PARTI=MCA
-  const data = PBB ? pbbData(parti) : MCA ? D.rowsToHierarchy(D.teksKeBaris(require('fs').readFileSync(require('path').join(__dirname, '..', 'data', 'mca-semenanjung.csv'), 'utf8'))) : D.getFallbackData();
+  const PBB = process.env.PARTI === 'PBB' || process.env.PARTI === 'PRS', MCA = process.env.PARTI === 'MCA' || process.env.PARTI === 'MIC', parti = PBB || MCA ? process.env.PARTI : 'UMNO';   // v10.0: PRS = mod ringan        // v8.32: PARTI=PBB mainkan bot PBB (data/pbb-sarawak.csv)   // v13.1: PARTI=MCA
+  const data = PBB ? pbbData(parti) : MCA ? D.rowsToHierarchy(D.teksKeBaris(require('fs').readFileSync(require('path').join(__dirname, '..', 'data', process.env.PARTI === 'MIC' ? 'mic-semenanjung.csv' : 'mca-semenanjung.csv'), 'utf8'))) : D.getFallbackData();
   const negeri = pick(data.negeri), bahagian = pick(negeri.bahagian), dun = pick(bahagian.dun), caw = pick(dun.cawangan);
   const jantina = pick(['Lelaki', 'Perempuan']), umur = 18 + Math.floor(R() * 40);
   const dem = D.tentukanDemografi(jantina, umur);

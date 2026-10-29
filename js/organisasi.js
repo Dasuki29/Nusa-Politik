@@ -25,11 +25,12 @@
   var CONFIG = { AJK: { cawangan: 7, bahagian: 15, pusat: 25 }, AJK_SAYAP: { cawangan: 5, bahagian: 10, pusat: 15 } };   // v7.39: AJK sayap (andaian)
   var PERINGKAT = ['cawangan', 'bahagian', 'pusat'];
   var LABEL = { cawangan: 'Peringkat Cawangan', bahagian: 'Peringkat Bahagian', pusat: 'Peringkat Pusat' };
-  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita' };
+  var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
   var PENERANGAN = {
     pemuda: 'Lelaki muda (sehingga 40 tahun).',
     puteri: 'Perempuan muda (sehingga 35 tahun).',
-    wanita: 'Perempuan dewasa dan warga emas (36 tahun ke atas).'
+    wanita: 'Perempuan dewasa dan warga emas (36 tahun ke atas).',
+    putera: 'Lelaki muda (bawah 30 tahun; MIC sahaja).'
   };
 
   function sufiks(peringkat) { return peringkat === 'pusat' ? '' : ' ' + (peringkat === 'cawangan' ? 'Cawangan' : 'Bahagian'); }
@@ -82,7 +83,7 @@
     return peta[peringkat][slot];
   }
 
-  function jantinaSlot(sayap, rng) { return sayap === 'pemuda' ? 'L' : sayap ? 'P' : (rng() < 0.7 ? 'L' : 'P'); }
+  function jantinaSlot(sayap, rng) { return sayap === 'pemuda' || sayap === 'putera' ? 'L' : sayap ? 'P' : (rng() < 0.7 ? 'L' : 'P'); }
 
 
   /* v10.6: struktur Peringkat Pusat PBB (Majlis Tertinggi, Pergerakan Wanita, Pergerakan Pemuda) mengikut gambar rujukan pengguna.
@@ -152,7 +153,7 @@
     var info = p && p.cawanganInfo ? p.cawanganInfo : null, kg = info && info.kumpulan ? info.kumpulan : (D && D.pecahanKumpulan && info ? D.pecahanKumpulan(info) : null);
     var hasil = { laluan: laluan, induk: {}, sayap: {}, ahli: kg ? { induk: kg.induk, pemuda: kg.pemuda, puteri: kg.puteri, wanita: kg.wanita, langsung: !!kg.langsung } : null };   // v6.3: ahli Cawangan ikut kumpulan
     PERINGKAT.forEach(function (k) { hasil.induk[k] = binaSatu(p, k, null); });
-    Object.keys(NAMA_SAYAP).forEach(function (w) {
+    Object.keys(NAMA_SAYAP).filter(function (w) { return w !== 'putera' || (p && p.parti === 'MIC'); }).forEach(function (w) {      // v13.3: Putera untuk MIC sahaja
       var info = SY && SY.ISU ? SY.ISU[w] : { golongan: '', isu: [] };
       hasil.sayap[w] = { kod: w, nama: NAMA_SAYAP[w], penerangan: PENERANGAN[w], golongan: info.golongan, isu: info.isu.slice(), milikAnda: laluan === w, peringkat: {} };
       PERINGKAT.forEach(function (k) { hasil.sayap[w].peringkat[k] = binaSatu(p, k, w); });

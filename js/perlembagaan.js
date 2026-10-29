@@ -318,7 +318,316 @@
   "permainan": "Tiada sayap Puteri dalam MCA."
  }
 ];
-  function mcaKini() { try { var P = W && W.MyPolitikParti; return !!(P && P.kini && P.kini() === 'MCA'); } catch (e) { return false; } }
+  /* v13.3: Perlembagaan MIC (diterima Perhimpunan Agung ke-71, 24-9-2017; diluluskan ROS 2-1-2018). RINGKASAN untuk rujukan permainan; label 'Perkara'. */
+  var SUMBER_MIC = 'Perlembagaan MIC (pindaan sehingga 24-9-2017)';
+  var FASAL_MIC = [
+ {
+  "no": "6",
+  "tajuk": "Tujuan Parti",
+  "ringkas": "MIC mempertahankan kemerdekaan dan kedaulatan Malaysia, Perlembagaan Persekutuan dan Rukun Negara, serta membela kepentingan politik, ekonomi, pendidikan, budaya dan sosial rakyat Malaysia keturunan India.",
+  "poin": [
+   [
+    "6.3",
+    "Menjaga dan memajukan kepentingan politik, ekonomi, pendidikan, budaya dan sosial kaum India di Malaysia."
+   ],
+   [
+    "6.5",
+    "Memupuk dan mengekalkan keharmonian antara kaum."
+   ],
+   [
+    "6.7",
+    "Bekerjasama dengan pertubuhan lain yang sehaluan."
+   ]
+  ]
+ },
+ {
+  "no": "7",
+  "tajuk": "Keahlian",
+  "ringkas": "Keahlian terbuka kepada warganegara Malaysia keturunan India berumur lebih 18 tahun yang menerima tujuan parti dan mematuhi perlembagaan.",
+  "poin": [
+   [
+    "7.1",
+    "Warganegara Malaysia keturunan India, berumur lebih 18 tahun."
+   ],
+   [
+    "8B",
+    "Keahlian terus melalui Setiausaha Agung, diluluskan CWC dan dipindahkan ke Cawangan tempat bermastautin atau mengundi."
+   ],
+   [
+    "9.4",
+    "Ahli parti politik lain tidak boleh diterima."
+   ],
+   [
+    "10.5",
+    "Ahli yang hadir atau bertanding dalam Mesyuarat Agung Cawangan tahun pemilihan tidak boleh berpindah Cawangan sehingga Perhimpunan Agung tahun itu."
+   ]
+  ],
+  "permainan": "Pindah Cawangan dikunci sepanjang Tahun Pemilihan."
+ },
+ {
+  "no": "12",
+  "tajuk": "Yuran Keahlian",
+  "ringkas": "Yuran tahunan RM 4 dan yuran masuk RM 3. Yuran mesti dibayar sebelum 30 November setiap tahun; jika tidak, keahlian luput.",
+  "poin": [
+   [
+    "12.1",
+    "Yuran tahunan RM 4; yuran masuk RM 3."
+   ],
+   [
+    "12.4",
+    "Ahli seumur hidup: sekurang-kurangnya RM 500."
+   ],
+   [
+    "15.5",
+    "Gagal membayar yuran dalam tempoh = keahlian tamat."
+   ],
+   [
+    "77.4",
+    "Cawangan yang tidak menghantar yuran sebelum 15 Disember tidak boleh menyertai mesyuarat parti."
+   ]
+  ],
+  "permainan": "Yuran RM 4 dipotong automatik pada bulan 11."
+ },
+ {
+  "no": "17",
+  "tajuk": "Penubuhan Cawangan",
+  "ringkas": "Cawangan ditubuhkan di sesuatu lokaliti dengan sekurang-kurangnya 60 ahli; keahlian Cawangan antara 60 dan 200 orang, dengan minimum Wanita, Puteri, Pemuda dan Putera.",
+  "poin": [
+   [
+    "17.1",
+    "Permohonan ditandatangani sekurang-kurangnya 60 penduduk lokaliti."
+   ],
+   [
+    "17.1B",
+    "Minimum 5 Wanita dan 2 Puteri, serta 5 Pemuda dan 2 Putera dalam setiap Cawangan."
+   ],
+   [
+    "17.10",
+    "Tiada Cawangan baharu dari 1 Januari tahun pemilihan sehingga Perhimpunan Agung."
+   ],
+   [
+    "17.12",
+    "Keahlian Cawangan tidak kurang 60 dan tidak lebih 200 orang."
+   ]
+  ],
+  "permainan": "Cawangan ialah Daerah Mengundi sebenar; bilangan ahli ialah anggaran permainan (60 hingga 200)."
+ },
+ {
+  "no": "18",
+  "tajuk": "Cawangan Mati",
+  "ringkas": "Cawangan dianggap mati jika tidak mengadakan Mesyuarat Agung Tahunan, kurang 3 mesyuarat jawatankuasa, tidak diwakili 3 mesyuarat Bahagian berturut-turut, atau Pengerusi dan Timbalan kosong serentak.",
+  "poin": [
+   [
+    "18.1",
+    "Syarat Cawangan dianggap mati."
+   ],
+   [
+    "18.2",
+    "CWC boleh mengarahkan Kongres Negeri menghidupkan semula Cawangan mati."
+   ],
+   [
+    "18.4",
+    "Cawangan mati tidak boleh menjalankan sebarang aktiviti."
+   ]
+  ],
+  "permainan": "Pengerusi Cawangan yang kurang 3 bulan aktif setahun menerima amaran Cawangan mati (Reputasi -3, akar umbi -5)."
+ },
+ {
+  "no": "20",
+  "tajuk": "Mesyuarat Agung Tahunan Cawangan",
+  "ringkas": "Diadakan paling lewat 31 Mac. Setiap 3 tahun memilih Pengerusi, Timbalan Pengerusi, 7 AJK, ketua dan timbalan ketua sayap, juruaudit dan perwakilan ke Bahagian.",
+  "poin": [
+   [
+    "19.1",
+    "Mesyuarat Agung Tahunan Cawangan paling lewat 31 Mac."
+   ],
+   [
+    "20.2.2(a)",
+    "Pengerusi Cawangan melantik Setiausaha, Penolong Setiausaha, Bendahari dan Pegawai Penerangan daripada 7 AJK."
+   ],
+   [
+    "21.2",
+    "Calon Pengerusi Cawangan mesti ahli berterusan Cawangan itu sekurang-kurangnya 3 tahun."
+   ],
+   [
+    "75.1",
+    "Satu perwakilan ke Bahagian bagi setiap 60 ahli; Pengerusi Cawangan perwakilan secara automatik."
+   ]
+  ],
+  "permainan": "Pemilihan Cawangan pada bulan 3. Pengerusi Cawangan memilih pegawai Cawangan dalam kad MIC."
+ },
+ {
+  "no": "34",
+  "tajuk": "Bahagian",
+  "ringkas": "Bahagian ditubuhkan di setiap kawasan Parlimen. Persidangan Perwakilan Bahagian diadakan paling lewat 31 Mei; Pengerusi dan Timbalan Pengerusi Bahagian dipilih setiap 3 tahun.",
+  "poin": [
+   [
+    "31.1",
+    "Satu Bahagian bagi setiap kawasan Parlimen, minimum 5 Cawangan."
+   ],
+   [
+    "32.2",
+    "Persidangan Perwakilan Bahagian paling lewat 31 Mei."
+   ],
+   [
+    "34.3",
+    "Calon Pengerusi atau Timbalan Pengerusi Bahagian mesti sedang menjadi Pengerusi Cawangan, ahli 5 tahun dan 3 tahun AJK Cawangan."
+   ],
+   [
+    "34.4",
+    "Pengerusi Bahagian maksimum 3 penggal berturut-turut; boleh bertanding semula selepas rehat 1 penggal."
+   ],
+   [
+    "37.4",
+    "Pengerusi Cawangan yang tidak hadir 3 mesyuarat Bahagian berturut-turut dianggap meletak jawatan."
+   ]
+  ],
+  "permainan": "Pemilihan Bahagian pada bulan 5. Tiga bulan tanpa sebarang tindakan dikira tidak hadir 3 mesyuarat."
+ },
+ {
+  "no": "42",
+  "tajuk": "Kongres Negeri",
+  "ringkas": "10 ahli Kongres Negeri dipilih setiap 3 tahun oleh 6 pegawai semua Cawangan dan ketua sayap Bahagian di negeri itu. Presiden melantik Pengerusi dan Timbalan Pengerusi Negeri daripada 10 ahli itu.",
+  "poin": [
+   [
+    "42.3",
+    "Pengerusi dan Timbalan Pengerusi Negeri dilantik Presiden daripada 10 ahli yang dipilih."
+   ],
+   [
+    "42.3(B)",
+    "Pengerusi Negeri ialah ahli CWC secara automatik."
+   ],
+   [
+    "42A",
+    "Calon mesti sedang Pengerusi Cawangan, ahli 5 tahun, dan pernah 1 penggal dalam Jawatankuasa Bahagian atau CWC."
+   ]
+  ],
+  "permainan": "Pemilihan Kongres Negeri pada bulan 7 (Julai) tahun pemilihan (andaian)."
+ },
+ {
+  "no": "46",
+  "tajuk": "Jawatankuasa Kerja Pusat (CWC)",
+  "ringkas": "CWC terdiri daripada Presiden, Timbalan Presiden, 3 Naib Presiden, 13 Pengerusi Negeri, 21 ahli dipilih, ketua dan timbalan ketua 4 sayap, 4 wakil sayap dan sehingga 9 ahli lantikan Presiden.",
+  "poin": [
+   [
+    "46.15",
+    "Presiden boleh melantik sehingga 9 ahli CWC."
+   ],
+   [
+    "47",
+    "Timbalan Presiden, 3 Naib Presiden dan 21 ahli CWC dipilih setiap 3 tahun."
+   ],
+   [
+    "49",
+    "Presiden melantik Setiausaha Agung, Bendahari Agung dan Ketua Penerangan daripada ahli CWC."
+   ],
+   [
+    "56.1",
+    "CWC bermesyuarat sekurang-kurangnya sekali setiap 3 bulan."
+   ]
+  ]
+ },
+ {
+  "no": "58",
+  "tajuk": "Pemilihan Presiden",
+  "ringkas": "Presiden dipilih secara undi sulit oleh 6 pegawai semua Cawangan, ketua 4 sayap semua Cawangan dan ahli CWC. Penggal 3 tahun, maksimum 3 penggal berturut-turut.",
+  "poin": [
+   [
+    "58.2",
+    "Pengundi: 6 pegawai Cawangan, ketua Pemuda, Wanita, Putera dan Puteri Cawangan, serta ahli CWC."
+   ],
+   [
+    "58.2.A",
+    "Maksimum 3 penggal berturut-turut."
+   ],
+   [
+    "58.5",
+    "Calon: ahli 10 tahun, sedang Pengerusi Cawangan, 3 penggal Pengerusi Cawangan dan 2 penggal penuh ahli CWC."
+   ],
+   [
+    "58.8",
+    "Calon perlu sekurang-kurangnya 250 penamaan daripada Pengerusi Cawangan atau ahli CWC."
+   ]
+  ],
+  "permainan": "Presiden dipilih bersama jawatan Pusat lain pada Perhimpunan Agung bulan 9 (andaian). Bina penamaan melalui Rangkaian Pengerusi Cawangan."
+ },
+ {
+  "no": "59",
+  "tajuk": "Timbalan Presiden, Naib Presiden dan CWC",
+  "ringkas": "Semua calon mesti sedang menjadi Pengerusi Cawangan. Timbalan Presiden perlu 10 tahun keahlian; Naib Presiden dan ahli CWC perlu 5 tahun. Calon hanya boleh bertanding satu jawatan Pusat.",
+  "poin": [
+   [
+    "59.1",
+    "Timbalan Presiden: ahli 10 tahun, sedang Pengerusi Cawangan dan 2 penggal dalam Jawatankuasa Bahagian atau CWC."
+   ],
+   [
+    "59.1A",
+    "Naib Presiden: ahli 5 tahun, sedang Pengerusi Cawangan dan 1 penggal."
+   ],
+   [
+    "59.3",
+    "Hanya satu jawatan Pusat boleh dipertandingkan."
+   ],
+   [
+    "59A",
+    "Pengundi: 6 pegawai Cawangan, ketua sayap Bahagian dan ahli CWC."
+   ]
+  ]
+ },
+ {
+  "no": "61",
+  "tajuk": "Tindakan Disiplin oleh Presiden",
+  "ringkas": "Presiden boleh menggantung keahlian sehingga 12 bulan, atau memecat ahli selepas berunding dengan Timbalan Presiden. Rayuan ke CWC dalam 14 hari.",
+  "poin": [
+   [
+    "14.2.1",
+    "Ahli tidak boleh membuat kenyataan media yang memudaratkan parti."
+   ],
+   [
+    "61.1",
+    "Gantung keahlian sehingga 12 bulan."
+   ],
+   [
+    "61.3",
+    "Rayuan bertulis ke CWC dalam 14 hari."
+   ],
+   [
+    "73.1",
+    "Perhimpunan Agung Luar Biasa jika diminta oleh sekurang-kurangnya satu perempat Bahagian."
+   ],
+   [
+    "85",
+    "Tidak hadir 3 mesyuarat jawatankuasa berturut-turut tanpa penjelasan dianggap meletak jawatan."
+   ],
+   [
+    "94",
+    "Wakil rakyat dan pemegang jawatan melalui parti membuat sumbangan bulanan."
+   ]
+  ],
+  "permainan": "Gantung 6 bulan jika sidang media silap cakap atau kontra-naratif gagal semasa kedekatan dengan Presiden bawah 20 (andaian). Sumbangan wakil rakyat RM 500 sebulan (andaian)."
+ },
+ {
+  "no": "62",
+  "tajuk": "Sayap",
+  "ringkas": "MIC mempunyai 4 sayap: Pemuda (lelaki bawah 40), Wanita (semua ahli perempuan), Puteri (perempuan bawah 35) dan Putera (lelaki bawah 30). Ketua sayap ialah ahli CWC.",
+  "poin": [
+   [
+    "4.18",
+    "Takrif sayap Pemuda, Wanita, Puteri dan Putera."
+   ],
+   [
+    "70.3",
+    "100 perwakilan setiap satu daripada Pemuda dan Wanita, dan 30 setiap satu daripada Puteri dan Putera, ke Perhimpunan Agung."
+   ],
+   [
+    "86(A)",
+    "Calon yang mendaftar sebelum melepasi had umur boleh menghabiskan penggal."
+   ]
+  ],
+  "permainan": "Pemain Putera bertukar ke Pemuda pada umur 30."
+ }
+];
+  function mcaKini() { try { var P = W && W.MyPolitikParti, k = P && P.kini ? P.kini() : null; return k === 'MCA' || k === 'MIC' ? k : false; } catch (e) { return false; } }      // v13.3: 'MCA' | 'MIC' | false
   var doc = W && W.document, kandungan = null, kandunganMCA = null, terbuka = false, pemicu = null;
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -379,7 +688,7 @@
     if (kandungan && kandunganMCA !== mca) { if (kandungan.parentNode) { kandungan.parentNode.removeChild(kandungan); } kandungan = null; }
     if (kandungan || !doc) { return kandungan; }
     kandunganMCA = mca;
-    var SENARAI_F = mca ? FASAL_MCA.map(function (f) { var x = {}; for (var k in f) { x[k] = f[k]; } x.label = 'Perkara'; return x; }) : FASAL, SMB = mca ? SUMBER_MCA : SUMBER;
+    var SENARAI_F = mca ? (mca === 'MIC' ? FASAL_MIC : FASAL_MCA).map(function (f) { var x = {}; for (var k in f) { x[k] = f[k]; } x.label = 'Perkara'; return x; }) : FASAL, SMB = mca ? (mca === 'MIC' ? SUMBER_MIC : SUMBER_MCA) : SUMBER;
     kandungan = doc.createElement('div');
     kandungan.className = 'plb'; kandungan.setAttribute('role', 'dialog'); kandungan.setAttribute('aria-modal', 'true'); kandungan.setAttribute('aria-labelledby', 'plb-tajuk');
     kandungan.innerHTML =
@@ -388,9 +697,9 @@
         '<button type="button" class="plb__tutup" data-plb="tutup" aria-label="Tutup">&times;</button></div>' +
         '<div class="plb__alat"><button type="button" data-plb="buka-semua">Buka semua</button><button type="button" data-plb="tutup-semua">Tutup semua</button></div>' +
         '<div class="plb__isi">' + SENARAI_F.map(binaFasal).join('') + '</div>' +
-        '<div class="plb__kaki">Ini ringkasan untuk rujukan dalam permainan, bukan teks undang-undang penuh. Rujuk dokumen Perlembagaan ' + (mca ? 'MCA' : 'UMNO') + ' yang sah untuk teks lengkap. Permainan ini simulasi dan bukan laman rasmi parti.</div>' +
+        '<div class="plb__kaki">Ini ringkasan untuk rujukan dalam permainan, bukan teks undang-undang penuh. Rujuk dokumen Perlembagaan ' + (mca || 'UMNO') + ' yang sah untuk teks lengkap. Permainan ini simulasi dan bukan laman rasmi parti.</div>' +
       '</div>';
-    if (mca) { kandungan.setAttribute('data-jenama-skip', ''); }               // teks sudah dalam istilah MCA
+    if (mca) { kandungan.setAttribute('data-jenama-skip', ''); }               // teks sudah dalam istilah MCA / MIC
     doc.body.appendChild(kandungan);
 
     kandungan.addEventListener('click', function (e) {

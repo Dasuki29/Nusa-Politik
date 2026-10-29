@@ -166,7 +166,7 @@
       cawanganInfo: {
         jumlahAhli: c.jumlahAhli, lelaki: c.lelaki, perempuan: c.perempuan,
         bawah40: c.bawah40, atas40: c.atas40,
-        kumpulan: c.kumpulan ? { pemuda: c.kumpulan.pemuda, puteri: c.kumpulan.puteri, wanita: c.kumpulan.wanita, induk: c.kumpulan.induk, langsung: !!c.kumpulan.langsung } : null     // v6.3
+        kumpulan: c.kumpulan ? { pemuda: c.kumpulan.pemuda, puteri: c.kumpulan.puteri, wanita: c.kumpulan.wanita, induk: c.kumpulan.induk, putera: c.kumpulan.putera, langsung: !!c.kumpulan.langsung } : null     // v6.3
       }
     };
   }
@@ -187,10 +187,10 @@
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: SW(input.parti) || input.parti === 'MCA' ? input.parti : 'UMNO',                // v13.1: MCA
+      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' ? input.parti : 'UMNO',                // v13.1: MCA; v13.3: MIC
       blokPBB: input.parti === 'PBB' && (input.blokPBB === 'bumiputera' || input.blokPBB === 'pesaka') ? input.blokPBB : undefined,   // v9.0
       dunInfo: SW(input.parti) && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
-      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA') && input.sayap === 'wanita' && d.kod === 'puteri')) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
+      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA') && input.sayap === 'wanita' && d.kod === 'puteri') || (input.parti === 'MIC' && input.sayap === 'putera' && d.kod === 'pemuda' && parseInt(d.umur, 10) <= 29)) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
       ip: DEFAULTS.ip,
       myr: DEFAULTS.myr,

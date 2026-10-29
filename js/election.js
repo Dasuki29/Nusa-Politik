@@ -93,12 +93,18 @@
   function nomborTahun(t) { t = parseInt(t, 10); return isFinite(t) ? t : CONFIG.TAHUN_MULA; }
 
   /* v13.1: MCA: pemilihan parti selepas setiap PRU (Perkara 167), bukan setiap 3 tahun. Fungsi tahun di bawah mengikut pemain semasa jika MCA. */
-  function mcaP() {
-    var g = typeof globalThis !== 'undefined' ? globalThis : null, M = g && g.MyPolitikMCA;
-    if (!M) { try { M = typeof require === 'function' ? require('./mca.js') : null; } catch (e) { M = null; } }
-    if (!M || !S || !S.loadPlayer) { return null; }
-    var p = null; try { p = S.loadPlayer(); } catch (e2) { p = null; }
-    return p && M.adalah(p) ? { M: M, p: p } : null;
+  /* v13.3: MIC guna antara muka yang sama (js/mic.js): kitaran 3 tahun bermula 2027, pengundi Pusat = pegawai Cawangan. */
+  function modKhas(nama, fail) {
+    var g = typeof globalThis !== 'undefined' ? globalThis : null, M = g && g[nama];
+    if (!M) { try { M = typeof require === 'function' ? require('./' + fail) : null; } catch (e) { M = null; } }
+    return M;
+  }
+  function mcaP(p0) {
+    if (!S || !S.loadPlayer) { return null; }
+    var p = p0 || null; if (!p) { try { p = S.loadPlayer(); } catch (e2) { p = null; } }
+    if (!p || (p.parti !== 'MCA' && p.parti !== 'MIC')) { return null; }
+    var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : modKhas('MyPolitikMCA', 'mca.js');
+    return M && M.adalah(p) ? { M: M, p: p } : null;
   }
   function adalahTahunPemilihan(tahun) {
     var mc = mcaP(); if (mc) { return mc.M.adalahTahunPemilihan(mc.p, nomborTahun(tahun)); }
@@ -399,7 +405,7 @@
     var sm = syMod(); if (sm && sm.bonusWarisan) { v += sm.bonusWarisan(p, d); }              // v6.5: Legacy Loyalty (pertandingan Induk sahaja)
     var Et = etika();
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
-    if (pr === 'pusat' && p && p.parti === 'MCA') { var mc = mcaP(); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
+    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC')) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     return clamp(v, 0, 100);
   }
 
@@ -441,7 +447,7 @@
     if (peringkat === 'bahagian') {
       return kuotaCawangan(p) * ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN);
     }
-    var mc = p && p.parti === 'MCA' ? mcaP() : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
+    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC') ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }      // v13.3: MIC: pegawai Cawangan seluruh negara (Perkara 58.2, 59A)      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
     return CONFIG.PEMILIH_PUSAT;
   }
 
@@ -657,7 +663,7 @@
   /* ------------------------------------------------------------------------
      6. HARI MENGUNDI
      ------------------------------------------------------------------------ */
-  var SAYAP_JAWATAN = { pemuda: 'Ketua Pemuda Cawangan', puteri: 'Ketua Puteri Cawangan', wanita: 'Ketua Wanita Cawangan' };
+  var SAYAP_JAWATAN = { pemuda: 'Ketua Pemuda Cawangan', puteri: 'Ketua Puteri Cawangan', wanita: 'Ketua Wanita Cawangan', putera: 'Ketua Putera Cawangan' };
 
   /**
    * Jalankan pengundian sebenar bagi satu pertandingan yang sudah didaftarkan.

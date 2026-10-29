@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v13.3 (2026-10-29)
+
+- **MIC boleh dimainkan (mod penuh)**, berdasarkan Perlembagaan MIC (diterima Perhimpunan Agung ke-71 pada 24-9-2017, berkuat kuasa 18-4-2018) dan mockup MIC yang dipersetujui. Logo daripada pengguna.
+  - Kawasan: semua 165 kawasan Parlimen Semenanjung (data/mic-semenanjung.csv: 165 Bahagian, 445 DUN, 6,103 Cawangan; jana semula dengan `node tools/build-mic.js`). Ahli Cawangan = pemilih × India% × 8%, antara 60 dan 200 (Perkara 17.12).
+  - Kuota BN: 10 Parlimen dan 20 DUN ikut peratus India (andaian); notis dalam/luar kuota pada skrin pendaftaran.
+  - Istilah: Pengerusi Cawangan/Bahagian, Jawatankuasa Kerja Pusat (CWC), Mesyuarat Agung Tahunan Cawangan, Persidangan Perwakilan Bahagian, Kongres Negeri, Perhimpunan Agung MIC, Menara Manickavasagam.
+  - Takwim: Cawangan bulan 3, Bahagian bulan 5, Kongres Negeri bulan 7, Perhimpunan Agung bulan 9 (andaian); pemilihan setiap 3 tahun bermula 2027.
+  - **Sayap Putera baharu** (lelaki bawah 30; MIC sahaja), bertukar ke Pemuda pada umur 30. MIC juga ada Puteri.
+  - Syarat: semua jawatan Bahagian dan Pusat perlu **sedang Pengerusi Cawangan**; 5 tahun keahlian (Bahagian, CWC, Naib Presiden), 10 tahun (Timbalan Presiden, Presiden); Pengerusi Bahagian perlu 3 tahun AJK Cawangan dan dihadkan 3 penggal berturut-turut; Presiden perlu 3 penggal Pengerusi Cawangan, 2 penggal CWC dan 250 penamaan, had 3 penggal.
+  - Pemilihan Pusat oleh pegawai Cawangan (10 setiap Cawangan + CWC, sekitar 61,090 pengundi); **Rangkaian Pengerusi Cawangan** (2 AP, RM 1,500, +8%); **lantik pegawai Cawangan** (setia atau pencabar).
+  - **Kongres Negeri** (bulan 7 tahun pemilihan) dan lantikan Presiden (Setiausaha Agung, Bendahari Agung, Ketua Penerangan, Ahli CWC, Pengerusi Kongres Negeri).
+  - Peraturan: tidak hadir 3 mesyuarat (Perkara 37.4, 85); gantung 6 bulan oleh Presiden selepas sidang media silap cakap jika kedekatan rendah, rayuan ke CWC (Perkara 61); Perhimpunan Agung Luar Biasa (73.1); yuran RM 4 pada bulan 11 (12, 15.5); amaran Cawangan mati (18); sumbangan wakil rakyat RM 500 (94); tiada Pindah Cawangan dalam tahun pemilihan (10.5).
+  - Perlembagaan MIC dalam menu (13 Perkara, ringkasan), langkah tutorial, terjemahan EN.
+
 ## v13.2 (2026-10-29)
 
 - **MCA dibuka di semua 165 kawasan Parlimen Semenanjung** (sebelum ini 61 kawasan dengan pengundi Cina 25% ke atas), lebih dekat dengan struktur sebenar MCA. Peratus Cina kini menentukan kesukaran, bukan kelayakan mendaftar.
