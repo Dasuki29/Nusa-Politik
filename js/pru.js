@@ -247,6 +247,7 @@
   function pegang(p, jenis) { return semuaStatus(p).some(function (s) { return s.jenis === jenis; }); }
   function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
+  function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -562,6 +563,7 @@
       var i = Math.floor(r() * hariSedia.length), hr = hariSedia.splice(i, 1)[0];
       a.kejutanHari[hr] = pilihKejutan(p, r).id;   // v10.4: kejutan khusus parti
     }
+    var WRm = warRoom(); if (WRm) { WRm.mula(a, p); }                            // v12.8: zon & jentera lapangan
     var PLm = polling(); if (PLm) { PLm.mula(a); }                              // v12.7: atas pagar awal ikut profil, manifesto & jentera
     a.log = [{ hari: 0, teks: 'Kempen bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '; manifesto: ' + ids.map(function (x) { return janjiId(x).nama; }).join(', ') + '.' }];
     var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
@@ -603,7 +605,7 @@
     var lw = a.lawan && a.lawan.length ? a.lawan : lawanPool(a.constituencyType), pk = pecahan(a);
     return { aktif: a, hariSemasa: a.hari, hariBaki: a.campaignDaysLeft, hariFinal: hariFinal(a), biasa: biasa, final: fin, pecahan: pk, lawan: lw,
       profil: a.constituencyType, profilNama: PROFIL[a.constituencyType], ikonProfil: IKON_PROFIL[a.constituencyType], kejutan: a.kejutanAktif ? kejutanPapar(a) : null,
-      janji: a.manifestoChoice.map(janjiId), polling: polling() ? polling().kira(a) : null };
+      janji: a.manifestoChoice.map(janjiId), polling: polling() ? polling().kira(a) : null, warRoom: warRoom() ? warRoom().kira(a) : null };
   }
 
   /** Pecahan undi semasa (anggaran) untuk paparan. */
@@ -620,6 +622,7 @@
     a.campaignFunds -= t.dana; a.jentera = clamp(a.jentera + t.jentera, 0, 100);
     var gain = 0;
     if (t.gain[1] > 0) { gain = antara(r, t.gain[0], t.gain[1]) * m * faktorJentera(a.jentera - t.jentera) * faktorTurun(a.voterSupport) * CONFIG.SKALA_GAIN; }
+    var WRg = warRoom(); if (WRg && gain > 0) { gain *= WRg.faktor(a); }          // v12.8: keletihan kempen (burnout)
     gain = Math.round(gain * 10) / 10;
     a.voterSupport = clamp(Math.round((a.voterSupport + gain) * 10) / 10, 0, 100);
     if (t.id === 'derma') {
@@ -634,6 +637,7 @@
     var r = rng(o), pesan = [];
     a.hari += 1; a.campaignDaysLeft = CONFIG.HARI - a.hari;
     a.voterSupport = clamp(Math.round((a.voterSupport - CONFIG.TEKANAN_LAWAN_HARIAN) * 10) / 10, 0, 100);
+    var WRh = warRoom(); if (WRh) { WRh.selepasHari(a, r); }                     // v12.8: pertempuran jentera di zon
     var PLh = polling(); if (PLh) { PLh.selepasHari(a); }                        // v12.7
     var kid = a.kejutanHari[a.hari];
     if (kid && a.campaignDaysLeft > 0) { a.kejutanAktif = { id: kid, hari: a.hari }; delete a.kejutanHari[a.hari]; pesan.push('Kejutan kempen hari ke-' + a.hari + '!'); }
@@ -649,6 +653,7 @@
     if (!st.boleh) { return { ok: false, ralat: st.sebab }; }
     var hasil = guna(a, t, final, o), pesan = [], patch = {}, kes = {}, ev = [], r = rng(o), risiko = null, PLt = polling(), amaranPoll = null;
     if (PLt) { PLt.selepasTindakan(a, id, t.pengganda ? PENGGANDA[a.constituencyType][t.pengganda] : 1); }   // v12.7: kurangkan atas pagar
+    if (warRoom()) { warRoom().selepasTindakan(a, id); }                          // v12.8: Rehat kurangkan keletihan
     if (final) {
       a.finalDigunakan['h' + a.hari] = id;
       if (t.risiko) {                                      // double jeopardy: risiko bertambah bagi setiap penggunaan jenis risiko yang sama
@@ -673,6 +678,20 @@
     return { ok: true, mesej: hasil.mesej, gain: hasil.gain, risiko: risiko, kejutan: !!a.kejutanAktif, pesan: pesan, tamat: tamat, amaran: amaranPoll };
   }
 
+  /** v12.8: Bilik Gerakan: hantar jentera ke zon i (tidak memajukan hari; had sehari dalam warroom.js). */
+  function hantarJentera(i) {
+    var p = S().loadPlayer(), pru = getPRU(p), a = pru.aktif, W = warRoom();
+    if (!W || !a || a.fasa !== 'kempen') { return { ok: false, ralat: 'Tiada kempen aktif.' }; }
+    var r = W.hantar(a, Number(i)); if (!r.ok) { return r; }
+    var res = simpanPRU(pru, {}, { log: { tindakan: 'pru_jentera', nama: r.mesej, peringkat: 'ahli' } });
+    return res.ok ? r : { ok: false, ralat: res.ralat };
+  }
+  /** v12.8: isi nama zon sebenar (DM / DUN) selepas data peta dimuat. */
+  function namakanZon(senarai) {
+    var p = S().loadPlayer(), pru = getPRU(p), a = pru.aktif, W = warRoom();
+    if (!W || !a || a.fasa !== 'kempen' || !W.namakan(a, senarai)) { return false; }
+    return !!simpanPRU(pru, {}, {}).ok;
+  }
   function kejutanPapar(a) {
     var d = kejutanId(a.kejutanAktif.id);
     if (!d) { return null; }
@@ -960,7 +979,7 @@
     setRng: function (f) { rngLalai = f || Math.random; },
     getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
-    baikiStatusSarawak: baikiStatusSarawak, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
+    baikiStatusSarawak: baikiStatusSarawak, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan
   };
 });

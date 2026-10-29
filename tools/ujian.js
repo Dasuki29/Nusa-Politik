@@ -1250,6 +1250,29 @@ ujian('v12.7: Kaji Selidik: atas pagar berkurang, status ikut margin ralat, amar
   delete ck.aktif.polling; betul(PL.kira(ck.aktif).undecidedVoters > 0, 'kempen lama tanpa polling dibina semula');
   S.clearPlayer();
 });
+ujian('v12.8: War Room: hantar jentera (kos, had sehari), tangkis serangan, burnout, kesan pada sokongan', () => {
+  const WR = g.MyPolitikWarRoom, C = WR.CONFIG;
+  P.daftar(); P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], ip: 3000, myr: 200000, ap: 50 });
+  let pru = PRU.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PRU.isytihar('tamat_penggal').ok);
+  betul(PRU.pilihKerusi('DUN', { rng: sedikit }).ok); let a = PRU.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); a = PRU.getPRU(S.loadPlayer()).aktif; }
+  const pl8 = PRU.peruntukanPilihan(S.loadPlayer(), a).pilihan; betul(PRU.mulaKempen(JANJI3(), pl8[pl8.length - 1]).ok);
+  let w = PRU.keadaanKempen(S.loadPlayer()).warRoom; sama(w.zon.length, C.ZON); betul(w.zon.some((z) => z.hotspotLevel === 3), 'ada zon tentangan Tinggi');
+  const z0 = w.zon[0], a0 = PRU.getPRU(S.loadPlayer()).aktif, j0 = a0.jentera, d0 = a0.campaignFunds;
+  const r = PRU.hantarJentera(0); betul(r.ok, r.ralat); a = PRU.getPRU(S.loadPlayer()).aktif;
+  sama(a.jentera, Math.max(0, j0 - C.HANTAR.jentera)); sama(a.campaignFunds, d0 - C.HANTAR.dana); sama(a.warRoom.zon[0].kehadiran, Math.min(95, z0.machineryPresence + C.HANTAR.kehadiran));
+  const r2 = PRU.hantarJentera(1); betul(r2.ok, r2.ralat); sama(PRU.hantarJentera(2).ok, false, 'had sehari');
+  // pertempuran: zon Tinggi dengan kehadiran tinggi menangkis; rendah = sokongan zon turun
+  const b = JSON.parse(JSON.stringify(a)); b.warRoom.burnout = 0; b.warRoom.zon.forEach((z, i) => { z.hotspot = 3; z.kehadiran = i === 0 ? 80 : C.ASAS[3]; z.berat = 1 / b.warRoom.zon.length; z.ofset = 0; });
+  const vs0 = b.voterSupport, D = WR.selepasHari(b, () => 0.5);
+  betul(b.warRoom.zon[0].ofset > b.warRoom.zon[1].ofset, 'zon berjentera naik berbanding zon lain'); betul(/ditangkis/.test(b.warRoom.log.map((l) => l.teks).join()), 'serangan ditangkis');
+  sama(Math.round((b.voterSupport - vs0) * 10) / 10, Math.round(D * 10) / 10, 'kesan zon masuk ke sokongan keseluruhan');
+  // burnout: jentera habis
+  const c = JSON.parse(JSON.stringify(a)); c.jentera = 3; c.hari = 99; c.warRoom.hantarHari = { hari: 0, n: 0 }; const h = WR.hantar(c, 3); betul(h.ok && h.habis); sama(c.warRoom.burnout, C.BURNOUT.KOSONG);
+  betul(WR.faktor(c) < 1, 'keberkesanan turun'); WR.selepasTindakan(c, 'rehat'); sama(c.warRoom.burnout, C.BURNOUT.KOSONG - C.BURNOUT.REHAT);
+  betul(PRU.namakanZon([{ nama: 'DM Satu', berat: 3 }, { nama: 'DM Dua', berat: 1 }]), 'zon dinamakan');
+  w = PRU.keadaanKempen(S.loadPlayer()).warRoom; sama(w.zon.map((z) => z.zoneName).join(), 'DM Satu,DM Dua'); sama(w.zon[0].berat, 75); sama(PRU.namakanZon([{ nama: 'X' }, { nama: 'Y' }]), false, 'sekali sahaja');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

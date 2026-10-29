@@ -48,6 +48,11 @@
     '.pl-bar .a{background:#14994F}.pl-bar .r{background:#555}.pl-bar .l{background:#C8102E}.pl-bar .u{background:repeating-linear-gradient(45deg,#9AA0AA 0 6px,#B8BDC6 6px 12px);color:#111}' +
     '.pl-swing{font-size:.8rem;margin:2px 0 8px}.pl-spark{display:flex;align-items:flex-end;gap:2px;height:26px;margin:2px 0 8px}.pl-spark i{flex:1;background:#14994F;opacity:.75;border-radius:2px 2px 0 0}' +
     '.pl-demo{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;font-size:.8rem}.pl-demo .pl-m{height:8px;border-radius:4px;background:#C8102E;overflow:hidden}.pl-demo .pl-m b{display:block;height:100%;background:#14994F}.pl-demo .pl-m--u{background:rgba(128,128,128,.25)}.pl-demo .pl-m--u b{background:repeating-linear-gradient(45deg,#9AA0AA 0 6px,#B8BDC6 6px 12px)}' +
+    '.wr-stat{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:6px 0 8px}.wr-stat div{border:2px solid var(--garis,var(--border));border-radius:6px;padding:4px 8px;font-size:.75rem;background:var(--bg-elev-1)}.wr-stat b{display:block;font-size:1rem}' +
+    '.wr-zon{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.wr-z{border:2px solid var(--garis,var(--border));border-radius:8px;padding:8px;background:var(--bg-elev-1)}.wr-z--3{border-color:#C8102E}' +
+    '.wr-z h4{margin:0;font-size:.9rem;display:flex;justify-content:space-between;gap:6px;align-items:center}.wr-hs{font-size:.68rem;font-weight:800;border-radius:999px;padding:1px 8px;color:#fff;white-space:nowrap}.wr-hs--1{background:#14994F}.wr-hs--2{background:#C98A00}.wr-hs--3{background:#C8102E}' +
+    '.wr-kh{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:6px 0 2px;background:#C8102E}.wr-kh b{background:#14994F}.wr-meta{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);margin-bottom:6px}' +
+    '.wr-log{margin:8px 0 0;padding:0;list-style:none;font-size:.75rem}.wr-log li{border-left:3px solid var(--garis,var(--border));padding-left:6px;margin:3px 0;color:var(--text-muted)}' +
     '.pl-demo small{color:var(--text-muted);grid-column:2/4;margin-top:-3px}.pl-amaran{background:#FFF2A8;color:#111;border:2px solid #C98A00;border-radius:6px;padding:6px 8px;font-size:.8rem;margin:8px 0 0;font-weight:700}';
   (function () { var s = W.document.createElement('style'); s.textContent = CSS; W.document.head.appendChild(s); })();
 
@@ -77,7 +82,7 @@
     h += '<p class="note">Hari <b>' + ck.hariSemasa + '/14</b> · ' + (a.isThreeCorneredFight ? '<b class="pru-ng">⚠️ Pertandingan 3-penjuru</b>' : 'Pertandingan 1-lawan-1') + ' · Populariti parti ' + a.partiPopulariti + '%</p>';
     h += '<div class="pru-hari" aria-hidden="true">';
     for (var i = 0; i < 14; i++) { h += '<i class="' + (i < ck.hariSemasa ? 'd' : i === ck.hariSemasa ? 'n' : '') + (i >= 12 ? ' f' : '') + '"></i>'; }
-    h += '</div>' + pecahHtml(ck.pecahan) + kadPolling(ck.polling);
+    h += '</div>' + pecahHtml(ck.pecahan) + kadPolling(ck.polling) + kadWarRoom(ck.warRoom, p);
     h += bar('Sokongan pengundi', a.voterSupport, a.voterSupport < 30) + bar('Dana kempen', Math.min(100, a.campaignFunds / 100), a.campaignFunds < 1500, 'RM ' + fmt(a.campaignFunds)) + bar('Tenaga jentera', a.jentera, a.jentera < 40) + bar('Stress', p.stress || 0, (p.stress || 0) >= 60);
     h += '<p class="note" style="margin-top:6px">📜 ' + ck.janji.map(function (j) { return esc(j.ikon + ' ' + j.nama); }).join(' · ') + '</p>';
     if (ck.kejutan) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="kejutan">⚡ Kejutan Kempen hari ke-' + ck.kejutan.hari + ': ' + esc(ck.kejutan.tajuk) + '</button>'; }
@@ -107,6 +112,35 @@
     }).join('') + '</div>';
     if (st === 'Marginal/Sengit') { h += '<p class="pl-amaran">⚠️ Kerusi sengit. Tumpukan dana dan jentera pada tindakan yang sesuai dengan kawasan ini sebelum Hari Mengundi.</p>'; }
     return h + '<p class="pl-meta" style="margin-top:8px">Anggaran simulasi. Setiap tindakan kempen mengurangkan pengundi atas pagar dan mengecilkan margin ralat.</p></details>';
+  }
+  /** v12.8: Bilik Gerakan (War Room): tenaga jentera, dana operasi, keletihan, zon dan penghantaran jentera (js/warroom.js). */
+  var namaDiminta = null;
+  function kadWarRoom(w, p) {
+    if (!w) { return ''; }
+    var a = PRU.getPRU(p).aktif, kunci = (a && a.kerusi ? a.kerusi.nama : '') + '|' + (a && a.candidateType);
+    if (w.perluNama && namaDiminta !== kunci && W.MyPolitikWarRoom && W.MyPolitikWarRoom.cariNama) {        // nama DM / DUN sebenar (tak segerak)
+      namaDiminta = kunci;
+      W.MyPolitikWarRoom.cariNama(p, a).then(function (ls) { if (PRU.namakanZon(ls)) { segarkan(); } }, function () { PRU.namakanZon([]); });
+    }
+    var h = '<details class="pl-kad" open><summary>🎯 Bilik Gerakan (War Room)</summary>' +
+      '<div class="wr-stat"><div><span>Tenaga jentera</span><b>' + w.partyMachineryPoints + '/100</b></div><div><span>Dana operasi</span><b>RM ' + fmt(w.campaignBudget) + '</b></div>' +
+      '<div><span>Keletihan kempen</span><b class="' + (w.burnout >= 30 ? 'pru-ng' : '') + '">' + w.burnout + '%</b></div><div><span>Keberkesanan kempen</span><b class="' + (w.faktor < 1 ? 'pru-ng' : 'pru-ok') + '">' + Math.round(w.faktor * 100) + '%</b></div></div>' +
+      '<p class="pl-meta">Hantar jentera: −' + w.kos.jentera + ' tenaga, −RM ' + fmt(w.kos.dana) + ' · baki hari ini ' + Math.max(0, w.hantarBaki) + '. Jika tenaga tidak cukup, keletihan kempen naik.</p>' +
+      (w.zon.length && w.zon.every(function (z) { return !z.boleh && z.sebab === w.zon[0].sebab; }) ? '<p class="pl-meta pru-ng">' + esc(w.zon[0].sebab) + '</p>' : '') + '<div class="wr-zon">';
+    w.zon.forEach(function (z) {
+      h += '<div class="wr-z wr-z--' + z.hotspotLevel + '"><h4><span>' + esc(z.zoneName) + '</span><span class="wr-hs wr-hs--' + z.hotspotLevel + '">Tentangan ' + esc(z.hotspotNama) + '</span></h4>' +
+        '<div class="wr-kh" role="img" aria-label="Kehadiran jentera ' + z.machineryPresence + '%"><b style="width:' + z.machineryPresence + '%"></b></div>' +
+        '<div class="wr-meta"><span>Jentera kita ' + z.machineryPresence + '% · ' + esc(z.status) + '</span><span>Sokongan tempatan ' + z.localSupport + '%</span></div>' +
+        '<button type="button" class="btn btn--sm btn--block" data-pru="jentera" data-i="' + z.i + '"' + (z.boleh ? '' : ' disabled title="' + esc(z.sebab) + '"') + '>🚩 Hantar Jentera UMNO</button></div>';
+    });
+    h += '</div>';
+    if (w.log.length) { h += '<ul class="wr-log">' + w.log.map(function (l) { return '<li><b>Hari ' + l.hari + ':</b> ' + esc(l.teks) + '</li>'; }).join('') + '</ul>'; }
+    return h + '<p class="pl-meta" style="margin-top:8px">Zon tentangan Sederhana dan Tinggi diserang lawan setiap hari. Kehadiran jentera 60% ke atas menangkis serangan. Anggaran simulasi.</p></details>';
+  }
+  function hantarJentera(i) {
+    if (sibuk) { return; }
+    var r = PRU.hantarJentera(i);
+    toast(r.ok ? r.mesej : r.ralat, r.ok ? (r.habis ? 'ralat' : 'ok') : 'ralat'); segarkan();
   }
   function btnTindak(t) {
     return '<button type="button" class="choice" data-pru="tindak" data-id="' + esc(t.id) + '"' + (t.boleh ? '' : ' disabled') + '><span class="choice__title">' + t.ikon + ' ' + esc(t.nama) +
@@ -657,7 +691,7 @@
     var t = ev.target.closest ? ev.target.closest('[data-pru]') : null;
     if (!t || t.disabled) { return; }
     var a = t.getAttribute('data-pru');
-    if (a === 'buka') { alir(); } else if (a === 'tindak') { tindak(t.getAttribute('data-id')); } else if (a === 'kejutan') { sibuk = true; kejutan().then(function () { sibuk = false; segarkan(); }, function () { sibuk = false; }); }
+    if (a === 'buka') { alir(); } else if (a === 'tindak') { tindak(t.getAttribute('data-id')); } else if (a === 'jentera') { hantarJentera(t.getAttribute('data-i')); } else if (a === 'kejutan') { sibuk = true; kejutan().then(function () { sibuk = false; segarkan(); }, function () { sibuk = false; }); }
     else if (a === 'selesai') { selesai(); } else if (a === 'nasional') { nasional(); } else if (a === 'keputusan') { keputusan(); } else if (a === 'lobi') { lobi(); } else if (a === 'mb') { menteriBesar(); } else if (a === 'acara') { acara(); } else if (a === 'tarik') { tarikDiriPRU(); } else if (a === 'prk-tarik') { tarikDiriPRK(); } else if (a === 'prk-buka') { alirPRK(); } else if (a === 'prk-tindak') { tindakPRK(t.getAttribute('data-id')); } else if (a === 'prk-selesai') { selesaiPRK(); } else if (a === 'prk-keputusan') { keputusanPRK(); } else if (a === 'cdf') { salurCDF(t.getAttribute('data-jumlah')); } else if (a === 'janji') { majuJanji(t.getAttribute('data-id')); }
   });
 

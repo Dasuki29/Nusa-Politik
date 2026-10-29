@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v12.8 (2026-10-29)
+
+- **Bilik Gerakan (War Room)** (js/warroom.js, baharu): panel dalam kad kempen. Tenaga jentera (`partyMachineryPoints` = Tenaga jentera sedia ada) dan dana operasi (`campaignBudget` = Dana kempen) digunakan untuk menghantar jentera ke 5 zon kawasan bertanding: DM terbesar bagi kerusi DUN, DUN bagi kerusi Parlimen (nama sebenar daripada data peta atau data parti Sarawak; nama generik jika data tidak dapat dimuat).
+- Setiap zon ada kehadiran jentera kita berbanding lawan (`machineryPresence`), tahap tentangan (`hotspotLevel`: Rendah, Sederhana, Tinggi) dan sokongan tempatan (`localSupport`). Hantar jentera: −12 tenaga, −RM 1,200, kehadiran +20, maks 2 kali sehari.
+- Pertempuran jentera setiap hari: sokongan zon berubah (kehadiran − paras asal zon) × 0.05; zon Sederhana/Tinggi diserang lawan (sokongan zon −0.1 × tahap) kecuali kehadiran 60% ke atas (serangan ditangkis). Kesan berwajaran zon masuk ke sokongan pengundi keseluruhan, jadi War Room mengubah keputusan.
+- Keletihan kempen (burnout): +20 jika jentera dihantar ketika tenaga tidak cukup, +6 sehari jika tenaga bawah 20, −4 sehari jika tenaga 50 ke atas, −15 dengan Rehat. Keberkesanan kempen = 1 − keletihan × 0.5.
+
 ## v12.7 (2026-10-29)
 
 - **Kaji Selidik Pilihan Raya** (js/polling.js, baharu): panel dalam kad kempen PRU/PRN. Menunjukkan unjuran undi (`projectedVoteShare`), status kerusi (`seatStatus`: Selamat, Marginal/Sengit, Ketinggalan), pengundi atas pagar (`undecidedVoters`), bar tinjauan hari ini, Swing sejak hari pertama, graf harian dan kecenderungan mengikut demografi (Bandar, Luar Bandar/Pedalaman, Belia, Atas Pagar).
