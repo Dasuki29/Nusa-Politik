@@ -246,6 +246,7 @@
   function negeriADUN(p) { var st = p ? semuaStatus(p).filter(function (s) { return s.jenis === 'ADUN'; })[0] : null; return (st && st.negeri) || (p && p.negeri) || ''; }
   function pegang(p, jenis) { return semuaStatus(p).some(function (s) { return s.jenis === jenis; }); }
   function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
+  function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -561,6 +562,7 @@
       var i = Math.floor(r() * hariSedia.length), hr = hariSedia.splice(i, 1)[0];
       a.kejutanHari[hr] = pilihKejutan(p, r).id;   // v10.4: kejutan khusus parti
     }
+    var PLm = polling(); if (PLm) { PLm.mula(a); }                              // v12.7: atas pagar awal ikut profil, manifesto & jentera
     a.log = [{ hari: 0, teks: 'Kempen bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '; manifesto: ' + ids.map(function (x) { return janjiId(x).nama; }).join(', ') + '.' }];
     var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
@@ -601,7 +603,7 @@
     var lw = a.lawan && a.lawan.length ? a.lawan : lawanPool(a.constituencyType), pk = pecahan(a);
     return { aktif: a, hariSemasa: a.hari, hariBaki: a.campaignDaysLeft, hariFinal: hariFinal(a), biasa: biasa, final: fin, pecahan: pk, lawan: lw,
       profil: a.constituencyType, profilNama: PROFIL[a.constituencyType], ikonProfil: IKON_PROFIL[a.constituencyType], kejutan: a.kejutanAktif ? kejutanPapar(a) : null,
-      janji: a.manifestoChoice.map(janjiId) };
+      janji: a.manifestoChoice.map(janjiId), polling: polling() ? polling().kira(a) : null };
   }
 
   /** Pecahan undi semasa (anggaran) untuk paparan. */
@@ -632,6 +634,7 @@
     var r = rng(o), pesan = [];
     a.hari += 1; a.campaignDaysLeft = CONFIG.HARI - a.hari;
     a.voterSupport = clamp(Math.round((a.voterSupport - CONFIG.TEKANAN_LAWAN_HARIAN) * 10) / 10, 0, 100);
+    var PLh = polling(); if (PLh) { PLh.selepasHari(a); }                        // v12.7
     var kid = a.kejutanHari[a.hari];
     if (kid && a.campaignDaysLeft > 0) { a.kejutanAktif = { id: kid, hari: a.hari }; delete a.kejutanHari[a.hari]; pesan.push('Kejutan kempen hari ke-' + a.hari + '!'); }
     return pesan;
@@ -644,7 +647,8 @@
     if (!t) { return { ok: false, ralat: 'Tindakan tidak dikenali.' }; }
     var st = statusTindakan(a, t, final);
     if (!st.boleh) { return { ok: false, ralat: st.sebab }; }
-    var hasil = guna(a, t, final, o), pesan = [], patch = {}, kes = {}, ev = [], r = rng(o), risiko = null;
+    var hasil = guna(a, t, final, o), pesan = [], patch = {}, kes = {}, ev = [], r = rng(o), risiko = null, PLt = polling(), amaranPoll = null;
+    if (PLt) { PLt.selepasTindakan(a, id, t.pengganda ? PENGGANDA[a.constituencyType][t.pengganda] : 1); }   // v12.7: kurangkan atas pagar
     if (final) {
       a.finalDigunakan['h' + a.hari] = id;
       if (t.risiko) {                                      // double jeopardy: risiko bertambah bagi setiap penggunaan jenis risiko yang sama
@@ -661,11 +665,12 @@
     a.log.unshift({ hari: a.hari, teks: hasil.mesej + (risiko ? (risiko === 'sprm' ? ' Risiko: pihak berkuasa mula memerhati edaran ini.' : ' Risiko: dakwaan fitnah dibuat terhadap anda.') : '') });
     a.log = a.log.slice(0, 20);
     pesan = lanjutHari(pru, a, kes, null, o);
+    if (PLt) { amaranPoll = PLt.amaran(a); }                                       // v12.7: amaran Marginal (sekali sehari)
     var res = simpanPRU(pru, kes, { patch: patch, log: { tindakan: 'pru_hari', nama: t.nama + ' (hari ' + a.hari + ')', peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (t.stress) { laras({ stress: t.stress }); }
     var tamat = a.campaignDaysLeft <= 0 && !a.kejutanAktif;
-    return { ok: true, mesej: hasil.mesej, gain: hasil.gain, risiko: risiko, kejutan: !!a.kejutanAktif, pesan: pesan, tamat: tamat };
+    return { ok: true, mesej: hasil.mesej, gain: hasil.gain, risiko: risiko, kejutan: !!a.kejutanAktif, pesan: pesan, tamat: tamat, amaran: amaranPoll };
   }
 
   function kejutanPapar(a) {

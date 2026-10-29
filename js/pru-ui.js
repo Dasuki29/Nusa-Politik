@@ -39,7 +39,16 @@
     '.pru-kalah{background:#555}.pru-ok{color:#14994F;font-weight:800}.pru-ng{color:#D3162F;font-weight:800}' +
     '.pru-jns{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}.pru-pilih{display:grid;gap:8px;margin:8px 0}' +
     '.pru-pilih label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:2px solid var(--garis,var(--border));border-radius:6px;cursor:pointer;background:var(--bg-elev-2)}' +
-    '.pru-pilih label small{display:block;color:var(--text-muted)}.pru-pilih input{margin-top:3px;accent-color:var(--red)}';
+    '.pru-pilih label small{display:block;color:var(--text-muted)}.pru-pilih input{margin-top:3px;accent-color:var(--red)}' +
+    /* v12.7: panel Kaji Selidik */
+    '.pl-kad{border:2px solid var(--garis,var(--border));border-radius:8px;padding:8px 10px;margin:10px 0;background:var(--bg-elev-2)}.pl-kad summary{cursor:pointer;font-weight:800}' +
+    '.pl-meta{font-size:.75rem;color:var(--text-muted);margin:2px 0 6px}.pl-atas{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:4px 0}' +
+    '.pl-st{display:inline-block;padding:2px 10px;border:2px solid var(--garis,#111);border-radius:999px;font-weight:900;font-size:.78rem;color:#fff}.pl-st--Selamat{background:#14994F}.pl-st--Marginal{background:#C98A00}.pl-st--Ketinggalan{background:#C8102E}' +
+    '.pl-bar{display:flex;height:22px;border:2px solid var(--garis,var(--border));border-radius:4px;overflow:hidden;margin:6px 0 2px}.pl-bar i{display:grid;place-items:center;font:800 .68rem/1 system-ui;font-style:normal;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}' +
+    '.pl-bar .a{background:#14994F}.pl-bar .r{background:#555}.pl-bar .l{background:#C8102E}.pl-bar .u{background:repeating-linear-gradient(45deg,#9AA0AA 0 6px,#B8BDC6 6px 12px);color:#111}' +
+    '.pl-swing{font-size:.8rem;margin:2px 0 8px}.pl-spark{display:flex;align-items:flex-end;gap:2px;height:26px;margin:2px 0 8px}.pl-spark i{flex:1;background:#14994F;opacity:.75;border-radius:2px 2px 0 0}' +
+    '.pl-demo{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;font-size:.8rem}.pl-demo .pl-m{height:8px;border-radius:4px;background:#C8102E;overflow:hidden}.pl-demo .pl-m b{display:block;height:100%;background:#14994F}.pl-demo .pl-m--u{background:rgba(128,128,128,.25)}.pl-demo .pl-m--u b{background:repeating-linear-gradient(45deg,#9AA0AA 0 6px,#B8BDC6 6px 12px)}' +
+    '.pl-demo small{color:var(--text-muted);grid-column:2/4;margin-top:-3px}.pl-amaran{background:#FFF2A8;color:#111;border:2px solid #C98A00;border-radius:6px;padding:6px 8px;font-size:.8rem;margin:8px 0 0;font-weight:700}';
   (function () { var s = W.document.createElement('style'); s.textContent = CSS; W.document.head.appendChild(s); })();
 
   function bar(label, nilai, bahaya, teks) {
@@ -68,7 +77,7 @@
     h += '<p class="note">Hari <b>' + ck.hariSemasa + '/14</b> · ' + (a.isThreeCorneredFight ? '<b class="pru-ng">⚠️ Pertandingan 3-penjuru</b>' : 'Pertandingan 1-lawan-1') + ' · Populariti parti ' + a.partiPopulariti + '%</p>';
     h += '<div class="pru-hari" aria-hidden="true">';
     for (var i = 0; i < 14; i++) { h += '<i class="' + (i < ck.hariSemasa ? 'd' : i === ck.hariSemasa ? 'n' : '') + (i >= 12 ? ' f' : '') + '"></i>'; }
-    h += '</div>' + pecahHtml(ck.pecahan);
+    h += '</div>' + pecahHtml(ck.pecahan) + kadPolling(ck.polling);
     h += bar('Sokongan pengundi', a.voterSupport, a.voterSupport < 30) + bar('Dana kempen', Math.min(100, a.campaignFunds / 100), a.campaignFunds < 1500, 'RM ' + fmt(a.campaignFunds)) + bar('Tenaga jentera', a.jentera, a.jentera < 40) + bar('Stress', p.stress || 0, (p.stress || 0) >= 60);
     h += '<p class="note" style="margin-top:6px">📜 ' + ck.janji.map(function (j) { return esc(j.ikon + ' ' + j.nama); }).join(' · ') + '</p>';
     if (ck.kejutan) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="kejutan">⚡ Kejutan Kempen hari ke-' + ck.kejutan.hari + ': ' + esc(ck.kejutan.tajuk) + '</button>'; }
@@ -79,6 +88,25 @@
     }
     if (a.log && a.log.length) { h += '<ul class="pru-log">' + a.log.slice(0, 4).map(function (l) { return '<li><b>Hari ' + l.hari + ':</b> ' + esc(l.teks) + '</li>'; }).join('') + '</ul>'; }
     return h + '</section>';
+  }
+  /** v12.7: panel Kaji Selidik Pilihan Raya (js/polling.js). */
+  function kadPolling(k) {
+    if (!k) { return ''; }
+    var st = k.seatStatus, kls = st.split('/')[0], s = k.semasa, pj = k.projectedVoteShare;
+    var seg = function (c, n, t) { return n > 0 ? '<i class="' + c + '" style="width:' + n + '%" title="' + esc(t) + ' ' + n + '%">' + (n >= 9 ? Math.round(n) + '%' : '') + '</i>' : ''; };
+    var mx = Math.max.apply(null, k.sejarah.map(function (x) { return x.anda; }).concat([55])), mn = Math.min.apply(null, k.sejarah.map(function (x) { return x.anda; }).concat([45]));
+    var h = '<details class="pl-kad" open><summary>📊 Kaji Selidik Pilihan Raya</summary>' +
+      '<p class="pl-meta">' + esc(k.peninjau) + ' (rekaan) · Hari ' + k.hari + ' · margin ralat ±' + k.moe + '</p>' +
+      '<div class="pl-atas"><span class="pl-st pl-st--' + kls + '">' + esc(st) + '</span><span><span>Unjuran undi:</span> <b>Anda ' + pj.anda + '%</b>' + (pj.rakan ? ' <span>· Rakan ' + pj.rakan + '%</span>' : '') + ' <span>· Lawan ' + pj.lawan + '%</span></span></div>' +
+      '<div class="pl-bar" role="img" aria-label="Tinjauan hari ini">' + seg('a', s.anda, 'Anda') + seg('r', s.rakan, 'Rakan') + seg('u', s.atasPagar, 'Atas pagar') + seg('l', s.lawan, 'Lawan') + '</div>' +
+      '<p class="pl-swing"><span>Swing sejak hari pertama:</span> <b class="' + (k.swing >= 0 ? 'pru-ok' : 'pru-ng') + '">' + (k.swing >= 0 ? '▲ +' : '▼ ') + k.swing + ' mata</b> <span>· Atas pagar</span> <b>' + k.undecidedVoters + '%</b></p>';
+    if (k.sejarah.length > 2) { h += '<div class="pl-spark" aria-hidden="true">' + k.sejarah.map(function (x) { return '<i style="height:' + Math.max(8, (x.anda - mn) / Math.max(1, mx - mn) * 100) + '%" title="Hari ' + x.hari + ': ' + x.anda + '%"></i>'; }).join('') + '</div>'; }
+    h += '<div class="pl-demo">' + k.demografi.map(function (d) {
+      var nilai = d.kod === 'pagar' ? d.atasPagar + '%' : Math.round(d.anda) + '%';
+      return '<span><span aria-hidden="true">' + d.ikon + '</span> <span>' + esc(d.nama) + '</span></span>' + (d.kod === 'pagar' ? '<span class="pl-m pl-m--u"><b style="width:' + d.atasPagar + '%"></b></span>' : '<span class="pl-m" title="Anda ' + d.anda + '% lawan ' + Math.round((100 - d.anda) * 10) / 10 + '%"><b style="width:' + d.anda + '%"></b></span>') + '<b>' + nilai + '</b><small>' + esc(d.cenderung) + '</small>';
+    }).join('') + '</div>';
+    if (st === 'Marginal/Sengit') { h += '<p class="pl-amaran">⚠️ Kerusi sengit. Tumpukan dana dan jentera pada tindakan yang sesuai dengan kawasan ini sebelum Hari Mengundi.</p>'; }
+    return h + '<p class="pl-meta" style="margin-top:8px">Anggaran simulasi. Setiap tindakan kempen mengurangkan pengundi atas pagar dan mengecilkan margin ralat.</p></details>';
   }
   function btnTindak(t) {
     return '<button type="button" class="choice" data-pru="tindak" data-id="' + esc(t.id) + '"' + (t.boleh ? '' : ' disabled') + '><span class="choice__title">' + t.ikon + ' ' + esc(t.nama) +
@@ -444,6 +472,7 @@
     var r = PRU.tindakanKempen(id);
     if (!r.ok) { toast(r.ralat, 'ralat'); segarkan(); return; }
     toast(r.mesej + (r.risiko ? (r.risiko === 'sprm' ? ' ⚠️ Pihak berkuasa mula memerhati.' : ' ⚠️ Dakwaan fitnah dibuat.') : ''), r.risiko ? 'ralat' : 'ok');
+    if (r.amaran) { toast('📊 ' + r.amaran, 'ralat'); }                     // v12.7: amaran kerusi Marginal
     segarkan();
     sibuk = true;
     try { if (r.kejutan) { await kejutan(); } else if (r.tamat) { await selesai(); } } finally { sibuk = false; segarkan(); }

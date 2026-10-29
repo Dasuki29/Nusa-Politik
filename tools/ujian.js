@@ -1231,6 +1231,25 @@ ujian('v12.6: SUPP menang DUN = ADUN kerajaan (ikut kerusi GPS, bukan lambungan)
   sama(PR.baikiStatusSarawak(), false, 'idempoten');
   S.clearPlayer();
 });
+ujian('v12.7: Kaji Selidik: atas pagar berkurang, status ikut margin ralat, amaran Marginal sekali sehari', () => {
+  const PL = g.MyPolitikPolling;
+  P.daftar(); P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], ip: 3000, myr: 200000, ap: 50 });
+  let pru = PRU.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PRU.isytihar('tamat_penggal').ok);
+  betul(PRU.pilihKerusi('DUN', { rng: sedikit }).ok); let a = PRU.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); a = PRU.getPRU(S.loadPlayer()).aktif; }
+  betul(PRU.mulaKempen(JANJI3(), PRU.peruntukanPilihan(S.loadPlayer(), a).pilihan[0]).ok);
+  let ck = PRU.keadaanKempen(S.loadPlayer()); betul(ck.polling && ck.polling.undecidedVoters >= 4, 'polling ada');
+  const u0 = ck.polling.undecidedVoters, t = ck.biasa.filter((x) => x.boleh && x.id !== 'rehat' && x.id !== 'derma')[0];
+  betul(PRU.tindakanKempen(t.id, { rng: () => 0.5 }).ok); ck = PRU.keadaanKempen(S.loadPlayer());
+  betul(ck.polling.undecidedVoters < u0 - PL.CONFIG.HARIAN, 'atas pagar turun lebih daripada susut harian (' + u0 + ' -> ' + ck.polling.undecidedVoters + ')');
+  sama(ck.polling.projectedVoteShare.anda, PL.unjuran(ck.aktif).anda, 'unjuran = formula keputusan tanpa rawak');
+  sama(ck.polling.demografi.map((d) => d.kod).join(), 'bandar,luar,belia,pagar');
+  const uji = (vs) => { const b = Object.assign({}, ck.aktif, { voterSupport: vs, isThreeCorneredFight: false, polling: Object.assign({}, ck.aktif.polling, { atasPagar: 10, amaranHari: null }) }); return { k: PL.kira(b), b }; };
+  sama(uji(80).k.seatStatus, 'Selamat'); sama(uji(20).k.seatStatus, 'Ketinggalan');
+  const m = uji(50 - (ck.aktif.ofsetKerusi || 0) * 2.5 - (ck.aktif.manifestoChoice.indexOf(ck.aktif.isuTempatan) >= 0 ? 2.5 : -1.25));
+  sama(m.k.seatStatus, 'Marginal/Sengit'); betul(/Marginal\/Sengit/.test(PL.amaran(m.b)), 'amaran pertama'); sama(PL.amaran(m.b), null, 'tidak berulang hari sama');
+  delete ck.aktif.polling; betul(PL.kira(ck.aktif).undecidedVoters > 0, 'kempen lama tanpa polling dibina semula');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

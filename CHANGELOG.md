@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v12.7 (2026-10-29)
+
+- **Kaji Selidik Pilihan Raya** (js/polling.js, baharu): panel dalam kad kempen PRU/PRN. Menunjukkan unjuran undi (`projectedVoteShare`), status kerusi (`seatStatus`: Selamat, Marginal/Sengit, Ketinggalan), pengundi atas pagar (`undecidedVoters`), bar tinjauan hari ini, Swing sejak hari pertama, graf harian dan kecenderungan mengikut demografi (Bandar, Luar Bandar/Pedalaman, Belia, Atas Pagar).
+- Unjuran diambil daripada formula keputusan sebenar tanpa unsur rawak; status ikut margin ralat (2 + 0.15 × atas pagar). Atas pagar bermula 22-30% ikut profil kawasan, berkurang dengan manifesto yang kena isu tempatan, jentera tinggi, setiap tindakan kempen (× pengganda kawasan) dan 0.5% sehari.
+- Amaran khas (toast) apabila kerusi Marginal/Sengit, sekali sehari, supaya pemain menumpukan sumber sebelum Hari Mengundi.
+- Badan tinjauan ialah rekaan (Pusat Kajian Pendapat Nusa). Semua angka ialah andaian permainan.
+
 ## v12.6 (2026-10-29)
 
 - **Pepijat: parti rakan GPS (SUPP, PRS, PDP) dan PBB menang DUN tetapi ditanda "bukan kerajaan".** Status kerajaan negeri bagi DUN Sarawak dahulu ditentukan oleh lambungan rawak berasingan (peluang 60-90%), jadi 10-40% pemain yang menang menjadi pembangkang dan Lobi Portfolio tidak dibuka, walaupun GPS memegang 70+ daripada 82 kerusi. Kini status ikut kerusi GPS yang dipaparkan (sama seperti pembetulan v11.4 untuk UMNO). PSB kekal pembangkang.

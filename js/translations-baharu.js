@@ -2634,7 +2634,18 @@
   ["📡 Media & Integriti", "📡 Media & Integrity"],
   ["{n} keluhan", "{n} complaints"],
   ["Status anda dibetulkan: GPS membentuk kerajaan negeri, jadi anda ADUN kerajaan. Lobi Portfolio dibuka di tab Pemilihan.", "Your status has been corrected: GPS forms the state government, so you are a government ADUN. Portfolio Lobbying is open in the Elections tab."],
-  ["Status ADUN dibetulkan: GPS membentuk kerajaan negeri", "ADUN status corrected: GPS forms the state government"]
+  ["Status ADUN dibetulkan: GPS membentuk kerajaan negeri", "ADUN status corrected: GPS forms the state government"],
+  ["📊 Kaji Selidik Pilihan Raya", "📊 Election Poll"],
+  ["Pusat Kajian Pendapat Nusa", "Nusa Opinion Research Centre"],
+  ["{a} (rekaan) · Hari {n} · margin ralat ±{m}", "{a} (fictional) · Day {n} · margin of error ±{m}"],
+  ["Marginal/Sengit", "Marginal/Tight"], ["Ketinggalan", "Trailing"],
+  ["Unjuran undi:", "Projected vote:"], ["Anda {n}%", "You {n}%"], ["· Rakan {n}%", "· Partner {n}%"], ["· Lawan {n}%", "· Opponent {n}%"],
+  ["Tinjauan hari ini", "Today's poll"], ["Swing sejak hari pertama:", "Swing since day one:"], ["▲ +{n} mata", "▲ +{n} pts"], ["▼ {n} mata", "▼ {n} pts"], ["· Atas pagar", "· Undecided"],
+  ["Pengundi Bandar", "Urban Voters"], ["Luar Bandar / Pedalaman", "Rural / Interior"], ["Belia (18-30)", "Youth (18-30)"],
+  ["Condong kepada anda", "Leaning towards you"], ["Berbelah bahagi", "Split"], ["Condong kepada lawan", "Leaning towards your opponent"], ["Kebanyakan sudah membuat keputusan", "Most have made up their minds"],
+  ["⚠️ Kerusi sengit. Tumpukan dana dan jentera pada tindakan yang sesuai dengan kawasan ini sebelum Hari Mengundi.", "⚠️ Tight seat. Focus funds and machinery on actions that suit this area before Polling Day."],
+  ["Anggaran simulasi. Setiap tindakan kempen mengurangkan pengundi atas pagar dan mengecilkan margin ralat.", "Simulation estimate. Every campaign action reduces undecided voters and narrows the margin of error."],
+  ["📊 Kaji selidik: kerusi anda Marginal/Sengit (beza {a} mata, margin ralat ±{m}). {n} hari lagi sebelum Hari Mengundi. Tumpukan sumber kempen di sini.", "📊 Poll: your seat is Marginal/Tight (gap {a} pts, margin of error ±{m}). {n} days left before Polling Day. Focus your campaign resources here."]
   ]);
   /* Peraturan: tajuk ringkasan mesyuarat "Ringkasan <nama> <tahun>" (tahun berubah, jadi tidak boleh jadi templat tetap). */
   if (T.PERATURAN) { T.PERATURAN.push([/^((?:Menang|Kalah) perwakilan \(kedudukan \d+\)(?:; )?)+\.$/, function (m, tr) { return m[0].slice(0, -1).split('; ').map(function (x) { return tr(x); }).join('; ') + '.'; }]); }
