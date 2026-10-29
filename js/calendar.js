@@ -367,6 +367,9 @@
     var ISU = muat('MyPolitikIsu', 'isu.js');                                                  // v12.2: Isu Semasa
     if (ISU && ISU.prosesBulan) { peristiwa = peristiwa.concat(ISU.prosesBulan().peristiwa || []); }
 
+    var TUL = muat('MyPolitikTular', 'tular.js');                                              // v12.9: krisis tular media sosial
+    if (TUL && TUL.prosesBulan) { peristiwa = peristiwa.concat(TUL.prosesBulan().peristiwa || []); }
+
     var JMH = muat('MyPolitikJemaah', 'jemaah.js');                                            // v12.1: kesetiaan Jemaah Menteri melaras Tekanan Politik PM
     if (JMH && JMH.prosesBulan) { peristiwa = peristiwa.concat(JMH.prosesBulan().peristiwa || []); }
 

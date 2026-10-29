@@ -215,9 +215,9 @@
    */
   function kad(p, jenis) {
     try {
-      if (jenis === 'pilihanraya') { return musim(p) ? kadPRK(p) + (PRU.getPRU(p).aktif ? kadPRU(p) : '') : '<div class="banner"><strong>Bukan musim pilihan raya</strong>Tab ini hanya aktif semasa PRU/PRN atau PRK.</div>'; }
+      if (jenis === 'pilihanraya') { return musim(p) ? kadPRK(p) + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p, 'pilihanraya') : '') + (PRU.getPRU(p).aktif ? kadPRU(p) : '') : '<div class="banner"><strong>Bukan musim pilihan raya</strong>Tab ini hanya aktif semasa PRU/PRN atau PRK.</div>'; }
       if (jenis === 'pemilihan') { return musim(p) ? bannerMusim(p) : kadPRU(p); }
-      return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
+      return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
     } catch (e) { return ''; }
   }
   function bannerNasional(p) {      // v7.22: keputusan nasional menunggu Presiden (cth. pemain memuat semula halaman)
@@ -506,7 +506,8 @@
     var r = PRU.tindakanKempen(id);
     if (!r.ok) { toast(r.ralat, 'ralat'); segarkan(); return; }
     toast(r.mesej + (r.risiko ? (r.risiko === 'sprm' ? ' ⚠️ Pihak berkuasa mula memerhati.' : ' ⚠️ Dakwaan fitnah dibuat.') : ''), r.risiko ? 'ralat' : 'ok');
-    if (r.amaran) { toast('📊 ' + r.amaran, 'ralat'); }                     // v12.7: amaran kerusi Marginal
+    if (r.amaran) { toast('📊 ' + r.amaran, 'ralat'); }
+    if (r.tular && r.tular.mesej) { toast(r.tular.mesej, 'ralat'); }                // v12.9: krisis tular semasa kempen                     // v12.7: amaran kerusi Marginal
     segarkan();
     sibuk = true;
     try { if (r.kejutan) { await kejutan(); } else if (r.tamat) { await selesai(); } } finally { sibuk = false; segarkan(); }

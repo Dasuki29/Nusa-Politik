@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v12.9 (2026-10-29)
+
+- **Krisis Tular & Pertahanan Digital** (js/tular.js, js/tular-ui.js, baharu). 6 senario fitnah rekaan (video disunting, dokumen palsu, petikan separuh, akaun palsu, gambar lama, fitnah keluarga), keterukan 1 hingga 3.
+- Krisis muncul bulanan bagi pemegang jawatan atau wakil rakyat (peluang 10%, naik dengan persepsi negatif dan etika buruk, turun dengan pertahanan digital; jeda 3 bulan), atau sekali semasa kempen PRU/PRN (6% sehari). Popup muncul serta-merta; kad di tab Tindakan.
+- Tindak balas: Kontra-Naratif (RM 3,000 × keterukan, atau dana kempen RM 1,500 × keterukan; berjaya 65% + pertahanan × 0.3%), Sidang Media Terbuka (1 AP; berjaya 45% + Integriti × 0.4%; silap cakap memburukkan), Diam (persepsi negatif +8 × keterukan, Sokongan Belia −6 × keterukan, sokongan pengundi −2 × keterukan semasa kempen). Tidak dijawab sebelum bulan depan = Diam. Krisis kempen yang belum dijawab menjejas sokongan pengundi setiap hari.
+- Pertahanan digital (`cyberDefenseScore`, mula 20, susut 2 sebulan) mengurangkan kerosakan sehingga separuh; dilatih dengan RM 3,000 (+10, jeda 2 bulan) atau naik +5 bila kontra-naratif berjaya.
+- Disambung kepada meter sedia ada: `publicPerception` = 100 − Persepsi Negatif, pengundi muda = Sokongan Belia (js/media.js).
+
 ## v12.8 (2026-10-29)
 
 - **Bilik Gerakan (War Room)** (js/warroom.js, baharu): panel dalam kad kempen. Tenaga jentera (`partyMachineryPoints` = Tenaga jentera sedia ada) dan dana operasi (`campaignBudget` = Dana kempen) digunakan untuk menghantar jentera ke 5 zon kawasan bertanding: DM terbesar bagi kerusi DUN, DUN bagi kerusi Parlimen (nama sebenar daripada data peta atau data parti Sarawak; nama generik jika data tidak dapat dimuat).

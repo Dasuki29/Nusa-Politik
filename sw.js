@@ -4,7 +4,7 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v12.8';
+var VERSI = 'nusa-v12.9';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
@@ -15,7 +15,7 @@ var ASAS = [
   'js/organisasi.js', 'js/stress.js', 'js/hayat.js', 'js/polling.js', 'js/warroom.js', 'js/pru.js', 'js/kabinet-data.js', 'js/kabinet.js', 'js/prk.js',
   'js/ElectionEngine.js', 'js/CabinetEngine.js', 'js/WingEngine.js', 'js/pru-ui.js', 'js/jemaah.js', 'js/jemaah-ui.js', 'js/isu.js', 'js/isu-ui.js', 'js/dewan.js', 'js/dun.js', 'js/dewan-ui.js', 'js/pencapaian.js', 'js/pencapaian-ui.js',
   'js/paparan.js', 'js/app.js',
-  'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js', 'js/glc.js', 'js/glc-ui.js', 'js/komuniti.js', 'js/komuniti-ui.js',
+  'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/tular.js', 'js/tular-ui.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js', 'js/glc.js', 'js/glc-ui.js', 'js/komuniti.js', 'js/komuniti-ui.js',
   'js/parti.js', 'js/sarawak.js', 'js/translations-parti.js',
   'js/pindah.js',
   'js/pindah-ui.js',

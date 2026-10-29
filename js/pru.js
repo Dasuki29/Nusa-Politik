@@ -248,6 +248,7 @@
   function sarawak() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
+  function tular() { return modul('MyPolitikTular', 'tular.js'); }                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -674,8 +675,8 @@
     var res = simpanPRU(pru, kes, { patch: patch, log: { tindakan: 'pru_hari', nama: t.nama + ' (hari ' + a.hari + ')', peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (t.stress) { laras({ stress: t.stress }); }
-    var tamat = a.campaignDaysLeft <= 0 && !a.kejutanAktif;
-    return { ok: true, mesej: hasil.mesej, gain: hasil.gain, risiko: risiko, kejutan: !!a.kejutanAktif, pesan: pesan, tamat: tamat, amaran: amaranPoll };
+    var tamat = a.campaignDaysLeft <= 0 && !a.kejutanAktif, TLk = tular(), tl = TLk && TLk.hariKempen ? TLk.hariKempen({ rng: o && o.rng }) : null;   // v12.9
+    return { ok: true, tular: tl, mesej: hasil.mesej, gain: hasil.gain, risiko: risiko, kejutan: !!a.kejutanAktif, pesan: pesan, tamat: tamat, amaran: amaranPoll };
   }
 
   /** v12.8: Bilik Gerakan: hantar jentera ke zon i (tidak memajukan hari; had sehari dalam warroom.js). */

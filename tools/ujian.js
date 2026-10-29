@@ -1273,6 +1273,31 @@ ujian('v12.8: War Room: hantar jentera (kos, had sehari), tangkis serangan, burn
   w = PRU.keadaanKempen(S.loadPlayer()).warRoom; sama(w.zon.map((z) => z.zoneName).join(), 'DM Satu,DM Dua'); sama(w.zon[0].berat, 75); sama(PRU.namakanZon([{ nama: 'X' }, { nama: 'Y' }]), false, 'sekali sahaja');
   S.clearPlayer();
 });
+ujian('v12.9: Krisis tular: muncul bulanan, tiga tindak balas, tidak dijawab = diam, krisis kempen, latih pertahanan', () => {
+  const T = g.MyPolitikTular, MD = g.MyPolitikMedia || require('../js/media.js'), C = T.CONFIG;
+  P.daftar(); P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')], ip: 3000, myr: 200000, ap: 50 });
+  let ev = T.prosesBulan({ rng: () => 0.001 }); betul(ev.peristiwa.some((e) => e.jenis === 'tular'), 'krisis bulanan muncul');
+  let k = T.keadaan(S.loadPlayer()); betul(k.mediaCrisisActive && k.krisis.pilihan.length === 3, 'tiga pilihan');
+  const kk = k.krisis.keterukan, def0 = k.cyberDefenseScore, per0 = MD.getMedia(S.loadPlayer()).persepsi, myr0 = S.loadPlayer().myr;
+  let r = T.jawab('kontra', { rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat);
+  sama(S.loadPlayer().myr, myr0 - C.KONTRA.dana * kk, 'kos kontra'); sama(MD.getMedia(S.loadPlayer()).persepsi, Math.max(0, per0 + C.KONTRA.persepsi * kk)); sama(T.keadaan(S.loadPlayer()).cyberDefenseScore, def0 + C.KONTRA.pertahananNaik);
+  T._cipta('bulanan', { rng: () => 0.5 }); const ap0 = S.loadPlayer().ap;
+  r = T.jawab('sidang', { rng: () => 0.99 }); betul(r.ok && r.jaya === false, 'silap cakap'); sama(S.loadPlayer().ap, ap0 - C.SIDANG.ap);
+  T._cipta('bulanan', { rng: () => 0.5 }); const m0 = MD.getMedia(S.loadPlayer());
+  r = T.jawab('diam'); betul(r.ok); const m1 = MD.getMedia(S.loadPlayer()); betul(m1.persepsi > m0.persepsi && m1.belia < m0.belia, 'diam: persepsi naik, belia turun');
+  T._cipta('bulanan', { rng: () => 0.5 }); P.tetap({ bulan: (S.loadPlayer().bulan % 12) + 1 });
+  ev = T.prosesBulan({ rng: () => 0.99 }); betul(ev.peristiwa.some((e) => /tidak dijawab/.test(e.mesej)), 'tidak dijawab = diam'); sama(T.keadaan(S.loadPlayer()).mediaCrisisActive, false);
+  const L0 = T.keadaan(S.loadPlayer()).cyberDefenseScore; r = T.latih(); betul(r.ok, r.ralat); sama(T.keadaan(S.loadPlayer()).cyberDefenseScore, L0 + C.LATIH.pertahanan); sama(T.latih().ok, false, 'jeda latih');
+  // kempen
+  let pru = PRU.getPRU(S.loadPlayer()); P.tetap({ tahun: pru.tahunPRU, bulan: pru.bulanPRU }); betul(PRU.isytihar('tamat_penggal').ok);
+  betul(PRU.pilihKerusi('DUN', { rng: sedikit }).ok); let a = PRU.getPRU(S.loadPlayer()).aktif; if (a.fasa === 'runding') { PRU.runding('abai', { rng: sedikit }); a = PRU.getPRU(S.loadPlayer()).aktif; }
+  const pl = PRU.peruntukanPilihan(S.loadPlayer(), a).pilihan; betul(PRU.mulaKempen(JANJI3(), pl[pl.length - 1]).ok);
+  const h = T.hariKempen({ rng: () => 0.001 }); betul(h && h.baru, 'krisis kempen'); sama(T.hariKempen({ rng: () => 0.001 }).baru, false, 'kerosakan harian, bukan krisis baharu');
+  const vs0 = PRU.getPRU(S.loadPlayer()).aktif.voterSupport, f0 = PRU.getPRU(S.loadPlayer()).aktif.campaignFunds, k2 = T.keadaan(S.loadPlayer()).krisis.keterukan;
+  r = T.jawab('kontra', { rng: () => 0.01 }); betul(r.ok, r.ralat); sama(PRU.getPRU(S.loadPlayer()).aktif.campaignFunds, f0 - C.KONTRA.danaKempen * k2, 'kontra kempen guna dana kempen'); sama(PRU.getPRU(S.loadPlayer()).aktif.voterSupport, vs0);
+  sama(T.hariKempen({ rng: () => 0.001 }), null, 'sekali sekempen');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));
