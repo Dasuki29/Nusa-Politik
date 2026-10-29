@@ -65,6 +65,12 @@
       var sp = document.getElementById('s-parti');
       if (sp && menu.hidden) { try { sessionStorage.removeItem('nusa_parti_mula'); } catch (eR) { /* abaikan */ } if (sp.value !== kp) { sp.value = kp; sp.dispatchEvent(new Event('change')); } }
     }
+    else if (a === 'gabungan') {                                               // v13.6: buka/tutup panel parti bagi gabungan (satu panel pada satu masa)
+      var g = b.getAttribute('data-gab'), buka = b.getAttribute('aria-expanded') !== 'true';
+      menu.querySelectorAll('[data-menu="gabungan"]').forEach(function (x) { x.setAttribute('aria-expanded', String(buka && x === b)); });
+      menu.querySelectorAll('[data-gab-panel]').forEach(function (pn) { pn.hidden = !(buka && pn.getAttribute('data-gab-panel') === g); });
+      var nt = menu.querySelector('[data-gab-nota]'); if (nt) { nt.textContent = buka ? 'Tekan parti untuk terus mendaftar sebagai ahli parti itu.' : 'Pilih gabungan untuk melihat partinya.'; }
+    }
     else if (a === 'slot' && window.MyPolitikSlotPanel) { window.MyPolitikSlotPanel.buka(); }
     else if (a === 'lagu') { tunjukBorang('kad-lagu'); }
     else if (a === 'bantuan' && bantuan) {

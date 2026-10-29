@@ -138,6 +138,7 @@ node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)
 node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, tajuk Pusat di Bahagian, tangguh, EN)
+node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), panel parti, EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

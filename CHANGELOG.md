@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.6 (2026-10-29)
+
+- **Menu utama: parti disusun ikut gabungan.** Tujuh butang parti diganti dengan dua butang gabungan, **BN** (Barisan Nasional · 3 parti) dan **GPS** (Gabungan Parti Sarawak · 4 parti), dengan logo gabungan daripada pengguna (`assets/images/logo-bn.png`, `logo-gps.png`). Tekan gabungan untuk membuka panel partinya (BN: UMNO, MCA, MIC; GPS: PBB, PRS, SUPP, PDP); satu panel pada satu masa, tekan semula untuk menutup. Cip parti terus ke pendaftaran seperti dahulu. Terjemahan EN dan ujian pelayar baharu `tools/ujian-gabungan.js`.
+
 ## v13.5 (2026-10-29)
 
 - **Fasa B: mekanik pemilihan UMNO ikut Perlembagaan UMNO 2025**, mengikut mockup yang dipersetujui. Berkuat kuasa untuk UMNO sahaja; MCA, MIC dan parti Sarawak mengekalkan peraturan sendiri.
