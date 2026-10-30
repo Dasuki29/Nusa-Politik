@@ -8,7 +8,7 @@
 (function (W) {
   'use strict';
   var CONFIG = {
-    VERSI: 'v13.18',                                            // v13.18: mesti sama dengan sw.js VERSI (diuji dalam tools/ujian.js)
+    VERSI: 'v13.19',                                            // v13.18: mesti sama dengan sw.js VERSI (diuji dalam tools/ujian.js)
     URL: 'https://docs.google.com/forms/d/e/1FAIpQLSdMYHB_QE3WRwJk5NhWVjbsprlpAOURtiT-LXsXHuEYNTgD5g/viewform',   // pautan borang (viewform)
     ENTRY: 'entry.624898804'   // kod soalan "Maklumat permainan", cth. 'entry.123456789'
   };

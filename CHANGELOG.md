@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.19 (2026-10-30)
+
+- **Letak jawatan parti (maklum balas pemain di borang, 2 kali: "Presiden, Ketua Bahagian, ADUN dan EXCO Kanan, stress melampau")**, ikut mockup yang dipersetujui.
+  - Kad di tab Profil dinamakan semula **🏛️ Jawatan & Letak Jawatan**: jumlah beban Stress sebulan, bahagian **Jawatan parti** (setiap jawatan dengan beban Stress dan butang Letak Jawatan) dan bahagian Wakil rakyat & kerajaan (v13.12).
+  - Kesan ⚠️: Stress −2 × beban jawatan serta-merta, beban bulanan hilang; Reputasi 0 (Cawangan), −1 (Bahagian), −2 (Pusat), −3 (Presiden). Pengganti NPC; boleh bertanding semula pada pemilihan seterusnya; tangga kerjaya kekal.
+  - Presiden: Timbalan Presiden (NPC) menjadi Presiden. Jika pemain PM, PM kekal hingga PRU seterusnya dengan tekanan politik +10 ⚠️.
+  - Dikunci semasa musim pemilihan parti (tahun pemilihan, bulan tetingkap dibuka) dan semasa PRU / PRK.
+- Terjemahan EN, ujian unit dan ujian pelayar `tools/ujian-letak.js` dikemas kini. Cache `nusa-v13.19`.
+
 ## v13.18 (2026-10-30)
 
 - **Baiki (maklum balas pemain, borang): tidak dapat mengimport watak dari fon ke laptop.** Import kod simpanan hanya ada dalam Menu di dalam permainan, jadi peranti baharu yang belum ada watak tidak boleh mengimport. Kini menu utama → **Simpanan permainan** ada bahagian **📲 Import watak dari peranti lain** (tampal kod NUSA1 atau pilih fail JSON, pratonton watak, kemudian terus ke dashboard).

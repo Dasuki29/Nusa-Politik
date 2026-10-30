@@ -8,6 +8,11 @@
      - PRK bulan depan dengan calon parti (NPC); jika parti kalah, Reputasi −3 lagi.
        Tiada PRK jika 12 bulan atau kurang sebelum PRU / PRN yang mempertandingkan kerusi itu.
      - Dikunci semasa PRU / PRN atau PRK sedang berjalan.
+   v13.19 (mockup "Letak Jawatan Parti", dipersetujui; maklum balas pemain di borang):
+     - Letak jawatan parti: Stress −2 × beban jawatan serta-merta dan beban bulanan hilang; Reputasi 0 (Cawangan), −1 (Bahagian),
+       −2 (Pusat), −3 (Presiden). Pengganti NPC; boleh bertanding semula pada pemilihan seterusnya. Tangga kerjaya kekal.
+     - Presiden: Timbalan Presiden (NPC) menjadi Presiden; jika pemain PM, PM kekal hingga PRU dengan tekanan politik +10.
+     - Dikunci semasa musim pemilihan parti (tahun pemilihan, bulan tetingkap dibuka) dan semasa PRU / PRK.
    ANDAIAN: peluang calon parti dalam PRK ikut Reputasi dan sentimen nasional (formula permainan, bukan ramalan).
    State: p.letak = { kabinetSehingga, prk:[{ jenis, nama, i }], sejarah:[] }.
    ========================================================================== */
@@ -28,6 +33,9 @@
   function PRU() { return modul('MyPolitikPRU', 'pru.js'); }
   function PRK() { return modul('MyPolitikPRK', 'prk.js'); }
   function KB() { return modul('MyPolitikKabinet', 'kabinet.js'); }
+  function ST() { return modul('MyPolitikStres', 'stress.js'); }
+  function E() { return modul('MyPolitikElection', 'election.js'); }
+  function CAL() { return modul('MyPolitikCalendar', 'calendar.js'); }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
   function idx(p) { return (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1); }
   var rngLalai = Math.random;
@@ -39,6 +47,7 @@
   var CONFIG = {
     KERAJAAN: { reputasi: -2, bertenang: 6 },
     KERUSI: { reputasi: -3, akarUmbi: -5 },
+    PARTI: { stressKali: 2, presiden: -3, pusat: -2, bahagian: -1, cawangan: 0, pmTekanan: 10 },
     PRK: { bulanDepan: 1, tanpaPRK: 12, kalahReputasi: -3, asas: 0.55, rep: 0.008, sentimen: 0.012, min: 0.2, maks: 0.85 }
   };
   var PERSEKUTUAN = ['TIMBALAN_MENTERI', 'MENTERI_PENUH', 'TIMBALAN_PM', 'PERDANA_MENTERI'];
@@ -95,6 +104,45 @@
     return h;
   }
   function status(p) { var s = kunci(p); return { boleh: !s, sebab: s }; }
+
+  /* ---------- v13.19: jawatan parti ---------- */
+  /** Musim pemilihan parti: tahun pemilihan dan bulan semasa dalam mana-mana tetingkap pencalonan / undi. */
+  function musimPemilihan(p) {
+    var Ee = E(), C = CAL();
+    if (!Ee || !Ee.adalahTahunPemilihan || !Ee.adalahTahunPemilihan(p.tahun) || !C || !C.getTetingkap) { return false; }
+    return ['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'pau'].some(function (k) { var w = null; try { w = C.getTetingkap(k, parseInt(p.bulan, 10)); } catch (e) { w = null; } return !!(w && w.status === 'dibuka'); });
+  }
+  function kunciParti(p) { var s = kunci(p); if (s) { return s; } return musimPemilihan(p) ? 'Musim pemilihan parti sedang berjalan.' : ''; }
+  function statusParti(p) { var s = kunciParti(p); return { boleh: !s, sebab: s }; }
+  function presidenJ(x) { return /^Presiden$/i.test(String(x && x.jawatan || '')); }
+  function reputasiParti(x) { var C = CONFIG.PARTI, pg = Number(x.pangkat) || 0; return presidenJ(x) ? C.presiden : pg >= 8 ? C.pusat : pg >= 4 ? C.bahagian : C.cawangan; }
+  function peringkatNama(x) { var pg = Number(x.pangkat) || 0; return presidenJ(x) || pg >= 8 ? 'Pusat' : pg >= 4 ? 'Bahagian' : 'Cawangan'; }
+  /** Jawatan parti: [{ kod, jawatan, peringkat, pangkat, beban, reputasi, presiden }]. */
+  function senaraiParti(p) {
+    var Sx = ST(); if (!Sx || !Sx.pecahanBeban) { return []; }
+    return Sx.pecahanBeban(p).map(function (x) { return { kod: x.kod, jawatan: x.jawatan, peringkat: peringkatNama(x), pangkat: x.pangkat, beban: x.beban, reputasi: reputasiParti(x), presiden: presidenJ(x) }; });
+  }
+  function bebanSebulan(p) { var Sx = ST(); return Sx && Sx.bebanEfektif ? Sx.bebanEfektif(p) : 0; }
+  /** Letak jawatan parti mengikut kod. */
+  function letakParti(kod) {
+    var p = S().loadPlayer(), Sx = ST(); if (!p || !Sx) { return { ok: false, ralat: 'Tiada profil.' }; }
+    var s = kunciParti(p); if (s) { return { ok: false, ralat: s }; }
+    var x = senaraiParti(p).filter(function (y) { return y.kod === kod; })[0];
+    if (!x) { return { ok: false, ralat: 'Anda tidak memegang jawatan ini.' }; }
+    var r = Sx.lepasJawatan(kod); if (!r || !r.ok) { return { ok: false, ralat: 'Gagal meletak jawatan.' }; }
+    var turun = CONFIG.PARTI.stressKali * x.beban, mesej = ['Anda meletak jawatan ' + x.jawatan + '.'];
+    if (turun && Sx.laras) { Sx.laras({ stress: -turun }); mesej.push('Stress −' + turun + ', beban bulanan −' + x.beban + '.'); }
+    p = S().loadPlayer();
+    var l = getLetak(p); rekod(l, p, 'Letak jawatan parti: ' + x.jawatan);
+    var K = KB(), kb = K && K.getKabinet ? K.getKabinet(p) : null;
+    if (x.presiden) {
+      mesej.push('Timbalan Presiden mengambil alih sebagai Presiden.');
+      if (kb && kb.hasGovernmentRole && kb.roleLevel === 'PERDANA_MENTERI' && K.laras) { K.laras({ tekanan: CONFIG.PARTI.pmTekanan }); mesej.push('Anda kekal Perdana Menteri hingga PRU, tetapi tekanan politik +' + CONFIG.PARTI.pmTekanan + '.'); }
+    }
+    if (x.reputasi) { mesej.push('Reputasi ' + neg(x.reputasi) + '.'); }
+    simpan(l, x.reputasi ? { reputasi: x.reputasi } : {}, { tindakan: 'letak_parti', nama: 'Letak jawatan parti: ' + x.jawatan, peringkat: 'ahli' });
+    return { ok: true, mesej: mesej.join(' ') };
+  }
   /** Tempoh bertenang lobi jawatan kerajaan selepas letak jawatan. */
   function bertenang(p) { var l = getLetak(p); return l.kabinetSehingga && idx(p) < l.kabinetSehingga ? l.kabinetSehingga : 0; }
 
@@ -166,5 +214,5 @@
   }
 
   return { CONFIG: CONFIG, setRng: function (f) { rngLalai = f || Math.random; }, getLetak: getLetak, senarai: senarai, status: status, kunci: kunci, adaPRK: adaPRK, bulanKePilihanRaya: bulanKePilihanRaya,
-    bertenang: bertenang, letakKerajaan: letakKerajaan, letakKerusi: letakKerusi, peluangPRK: peluangPRK, prosesBulan: prosesBulan, tb: tb, neg: neg };
+    bertenang: bertenang, senaraiParti: senaraiParti, statusParti: statusParti, musimPemilihan: musimPemilihan, bebanSebulan: bebanSebulan, letakParti: letakParti, letakKerajaan: letakKerajaan, letakKerusi: letakKerusi, peluangPRK: peluangPRK, prosesBulan: prosesBulan, tb: tb, neg: neg };
 });

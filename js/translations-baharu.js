@@ -3467,4 +3467,34 @@
   ["Parti anda menjadi pembangkang. Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.", "Your party is in opposition. Your party forms the state government: the state government lobby is open."],
   ["Anda menolak gabungan. Parti menjadi pembangkang. Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.", "You rejected the coalition. The party is in opposition. Your party forms the state government: the state government lobby is open."]
   ]);
+  /* v13.19: Letak jawatan parti */
+  T.tambah([
+  ["🏛️ Jawatan & Letak Jawatan", "🏛️ Posts & Resignation"],
+  ["Jawatan & Letak Jawatan", "Posts & Resignation"],
+  ["Beban Stress sebulan (semua jawatan)", "Monthly Stress load (all posts)"],
+  ["Jawatan parti", "Party posts"],
+  ["Wakil rakyat & kerajaan", "Elected office & government"],
+  ["Pusat · beban Stress +{n} sebulan", "Central · Stress load +{n} a month"],
+  ["Bahagian · beban Stress +{n} sebulan", "Division · Stress load +{n} a month"],
+  ["Cawangan · beban Stress +{n} sebulan", "Branch · Stress load +{n} a month"],
+  ["Butang dikunci semasa musim pemilihan parti, pilihan raya atau PRK.", "Buttons are locked during the party election season, a general election or a by-election."],
+  ["🔒 {x} Jawatan parti dikunci buat sementara.", "🔒 {x} Party posts are locked for now."],
+  ["Musim pemilihan parti sedang berjalan.", "The party election season is under way."],
+  ["Letak jawatan {x}?", "Resign as {x}?"],
+  ["Beban Stress −{a} sebulan mulai bulan depan; Stress −{b} serta-merta.", "Stress load −{a} a month from next month; Stress −{b} immediately."],
+  ["Tiada kesan Reputasi.", "No Reputation effect."],
+  ["Reputasi {n}.", "Reputation {n}."],
+  ["Timbalan Presiden (NPC) menjadi Presiden. Rundingan kerajaan selepas PRU tidak lagi dibuat oleh anda.", "The Deputy President (NPC) becomes President. You no longer lead government negotiations after the general election."],
+  ["Pengganti NPC mengambil alih sehingga pemilihan seterusnya; anda boleh bertanding semula ketika itu.", "An NPC replacement takes over until the next party election; you can contest again then."],
+  ["Anda kekal Perdana Menteri hingga PRU seterusnya, tetapi tekanan politik +{n}.", "You remain Prime Minister until the next general election, but political pressure +{n}."],
+  ["Jawatan lain kekal.", "Your other posts remain."],
+  ["Anda meletak jawatan {x}.", "You resigned as {x}."],
+  ["Anda meletak jawatan {x}. {y}", "You resigned as {x}. {y}"],
+  ["Stress −{a}, beban bulanan −{b}.", "Stress −{a}, monthly load −{b}."],
+  ["Timbalan Presiden mengambil alih sebagai Presiden.", "The Deputy President takes over as President."],
+  ["Anda kekal Perdana Menteri hingga PRU, tetapi tekanan politik +{n}.", "You remain Prime Minister until the general election, but political pressure +{n}."],
+  ["Anda tidak memegang jawatan ini.", "You do not hold this post."],
+  ["Gagal meletak jawatan.", "Could not resign."],
+  ["Letak jawatan parti: {x}", "Resigned party post: {x}"]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

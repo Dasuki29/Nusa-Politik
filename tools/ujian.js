@@ -1743,6 +1743,26 @@ ujian('v13.18: versi maklum balas sama dengan versi cache (sw.js)', () => {
   const vSw = (fs.readFileSync(path.join(R, 'sw.js'), 'utf8').match(/VERSI = 'nusa-(v[\d.]+)'/) || [])[1], vMb = (fs.readFileSync(path.join(R, 'js', 'maklumbalas.js'), 'utf8').match(/VERSI: '(v[\d.]+)'/) || [])[1];
   betul(vSw && vSw === vMb, 'sw.js ' + vSw + ' vs maklumbalas.js ' + vMb);
 });
+ujian('v13.19: letak jawatan parti (Stress, Reputasi ikut peringkat, Presiden & PM, kunci musim pemilihan)', () => {
+  const LT = g.MyPolitikLetak, ST = g.MyPolitikStres;
+  P.daftar({});
+  P.tetap({ tahun: 2027, bulan: 12, stress: 80, reputasi: 60, jawatan: 'Presiden', jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 12, tahun: 2026 }, pegang('ketua_bahagian')],
+    kabinet: { hasGovernmentRole: true, roleLevel: 'PERDANA_MENTERI', portfolioName: 'Perdana Menteri', tekananPolitik: 30 } });
+  let p = S.loadPlayer(), sp = LT.senaraiParti(p);
+  sama(sp.length, 2); sama(sp[0].jawatan, 'Presiden'); sama(sp[0].reputasi, -3); sama(cari(sp, 'ketua_bahagian', 'kod').reputasi, -1);
+  const kb = cari(sp, 'ketua_bahagian', 'kod'), st0 = ST.nilai ? ST.nilai(p).stress : p.stress;
+  let r = LT.letakParti('ketua_bahagian'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.jawatanList.length, 1); sama(p.reputasi, 59); betul((ST.nilai ? ST.nilai(p).stress : p.stress) === st0 - 2 * kb.beban, 'Stress -2 x beban');
+  r = LT.letakParti('presiden'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.jawatan, 'Ahli Biasa'); sama(p.reputasi, 56); betul(/Timbalan Presiden/.test(r.mesej) && /kekal Perdana Menteri/.test(r.mesej));
+  sama(KB.getKabinet(p).roleLevel, 'PERDANA_MENTERI', 'PM kekal'); sama(KB.getKabinet(p).tekananPolitik, 40, 'tekanan +10');
+  // kunci semasa musim pemilihan parti
+  const E = g.MyPolitikElection, K = g.MyPolitikCalendar; let tahun = 2027; while (!E.adalahTahunPemilihan(tahun)) { tahun++; }
+  const bulan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].find((b) => K.getTetingkap('cawangan', b) && K.getTetingkap('cawangan', b).status === 'dibuka');
+  P.tetap({ tahun: tahun, bulan: bulan, jawatanList: [pegang('ketua_cawangan')], jawatan: 'Ketua Cawangan' });
+  betul(LT.musimPemilihan(S.loadPlayer()), 'musim pemilihan ' + tahun + '/' + bulan); betul(!LT.letakParti('ketua_cawangan').ok, 'dikunci semasa musim pemilihan');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

@@ -38,7 +38,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
     kabinet: Object.assign(MyPolitikKabinet.getKabinet(MyPolitikSave.loadPlayer()), { hasGovernmentRole: true, roleLevel: 'TIMBALAN_MENTERI', portfolioName: 'Timbalan Menteri Pendidikan' }) } }); NusaUI.render(); });
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(500);
   const kd = await pg.textContent('#panel-profil').catch(() => '');
-  semak(/Wakil Rakyat & Kerajaan/.test(kd) && /Ahli Parlimen Kangar/.test(kd) && /ADUN Kuala Perlis/.test(kd) && /Timbalan Menteri Pendidikan/.test(kd), 'kad Wakil Rakyat & Kerajaan (' + kd.slice(0, 120) + ')');
+  semak(/Jawatan & Letak Jawatan/.test(kd) && /Wakil rakyat & kerajaan/.test(kd) && /Ahli Parlimen Kangar/.test(kd) && /ADUN Kuala Perlis/.test(kd) && /Timbalan Menteri Pendidikan/.test(kd), 'kad Wakil Rakyat & Kerajaan (' + kd.slice(0, 120) + ')');
   semak(await pg.$$eval('.letak-kad [data-letak]', (l) => l.length) === 3, '3 butang Letak Jawatan');
   if (process.env.SKRIN) { await (await pg.$('.letak-kad')).screenshot({ path: process.env.SKRIN }).catch(() => {}); }
   await pg.click('.letak-kad [data-letak="MP"]'); await pg.waitForTimeout(400);
@@ -48,11 +48,21 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('#modal-kaki button:has-text("Ya, letak jawatan")'); await pg.waitForTimeout(600);
   semak(await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); return MyPolitikPRU.semuaStatus(p).length === 1 && !MyPolitikKabinet.getKabinet(p).hasGovernmentRole && MyPolitikLetak.getLetak(p).prk.length === 1; }), 'MP dilepaskan, jawatan tamat, PRK dijadualkan');
   semak(await pg.$$eval('.letak-kad [data-letak]', (l) => l.length) === 1, 'tinggal butang ADUN');
+  // v13.19: jawatan parti
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { tahun: 2027, bulan: 12, jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }] } }); NusaUI.render(); });
+  await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
+  semak(/Jawatan parti/.test(await pg.textContent('.letak-kad')) && /beban Stress \+\d+ sebulan/.test(await pg.textContent('.letak-kad')), 'bahagian jawatan parti');
+  await pg.click('[data-letak-parti="ketua_bahagian"]'); await pg.waitForTimeout(400);
+  semak(/Letak jawatan Ketua Bahagian\?/.test(await pg.textContent('#modal')) && /Reputasi −1/.test(await pg.textContent('#modal')), 'skrin pengesahan jawatan parti');
+  if (process.env.SKRIN3) { await (await pg.$('#modal .modal__kotak, #modal > *')).screenshot({ path: process.env.SKRIN3 }).catch(() => {}); }
+  await pg.click('#modal-kaki button:has-text("Ya, letak jawatan")'); await pg.waitForTimeout(500);
+  semak(await pg.evaluate(() => MyPolitikSave.loadPlayer().jawatan === 'Ahli Biasa'), 'jawatan parti dilepaskan');
   // senarai semak MB di tab Tindakan
   await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(500);
   const tk = await pg.evaluate(() => document.body.innerText);
   semak(/Anda ADUN di negeri ini/.test(tk) && /Pengerusi Badan Perhubungan Negeri/.test(tk), 'senarai semak MB');
   // EN
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }] } }); NusaUI.render(); });
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(700);
   await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(500);
   const bocor = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll('.letak-kad').forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, BM.source);
