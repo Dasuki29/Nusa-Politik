@@ -1564,6 +1564,16 @@ ujian('v13.9: PBRS: data 7 Parlimen/20 DUN, kuota 1+2, Kesetiaan BN & Muhibah GR
   M.prosesBulan(); sama(M.meter(S.loadPlayer()).setiaBN, 31, 'meter susut ke arah 50');
   S.clearPlayer();
 });
+ujian('v13.11: rundingan PM: parti terbesar dalam gabungan hampir pasti PM (65% + (bahagian - 50%) x 1.5, maks 97%)', () => {
+  const P0 = PRU; P.daftar({}); P.tetap({ reputasi: 50, pru: { hubunganGabungan: 50 } });
+  const N = (parti, rakan) => { const kongsi = parti / (parti + rakan); return kongsi >= 0.5 ? Math.round(Math.min(0.97, Math.max(0.5, 0.65 + (kongsi - 0.5) * 1.5)) * 100) : null; };
+  sama(N(100, 43), 95, 'kongsi 70% -> 95%'); sama(N(60, 40), 80, 'kongsi 60% -> 80%'); sama(N(150, 30), 97, 'maksimum 97%');
+  // keputusan sebenar janaNasional: setiap GABUNGAN dengan parti terbesar mendapat peluang >= 65%
+  let semak = 0;
+  for (let s = 1; s <= 60; s++) { P.benih(s); const n = P0.janaNasionalUji ? P0.janaNasionalUji(S.loadPlayer()) : null; if (n && n.status === 'GABUNGAN' && n.parti >= n.rakan) { semak++; betul(n.peluangPM >= 65, 'peluang ' + n.peluangPM + ' bagi ' + n.parti + ' vs ' + n.rakan); } }
+  betul(semak > 0, 'ada senario gabungan diuji (' + semak + ')');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

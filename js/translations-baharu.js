@@ -3140,4 +3140,8 @@
   ["Bulan 9 (September): Perhimpunan Agung PBRS dan Pemilihan Pusat. Hanya bulan ini.", "Month 9 (September): PBRS General Assembly and Central Election. This month only."],
   ["Parti PBRS (Sabah)", "PBRS Party (Sabah)"]
   ]);
+  /* v13.11: rundingan PM (maklum balas pemain) */
+  T.tambah([
+  ["Rakan gabungan enggan melepaskan jawatan Perdana Menteri walaupun peluang anda {n}%. Hubungan gabungan {a}. Anda menerima jawatan Timbalan Perdana Menteri.", "Coalition partners refuse to give up the Prime Minister's post even though your chance was {n}%. Coalition relations {a}. You accept the post of Deputy Prime Minister."]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

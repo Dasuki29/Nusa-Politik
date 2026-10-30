@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.11 (2026-10-30)
+
+- **Rundingan PM selepas PRU (maklum balas pemain):** parti yang menang banyak kerusi tetapi memerlukan rakan gabungan kerap hanya mendapat TPM, kerana peluang PM sekitar 63% walaupun parti itu jauh lebih besar daripada rakan. Kini, jika parti pemain ialah parti terbesar dalam gabungan, peluang PM = 65% + (bahagian kerusi dalam gabungan − 50%) × 1.5, campur hubungan gabungan dan reputasi, maksimum 97% (cth. 60% → 80%, 70% → 95%). Parti yang lebih kecil daripada rakan kekal dengan formula asal. Mesej kegagalan kini menyebut peluang yang tidak dicapai.
+
 ## v13.10 (2026-10-30)
 
 - **Baiki (maklum balas pemain): halaman tidak boleh digesel kembali ke kanan di telefon.** Lencana jawatan yang panjang (cth. "Menteri Pembangunan Sosial & Perbandaran Sarawak") tidak dibalut, jadi seluruh halaman melebar melebihi skrin. Lencana kini dibalut ke baris seterusnya, dan halaman tidak lagi boleh tergelincir ke sisi.

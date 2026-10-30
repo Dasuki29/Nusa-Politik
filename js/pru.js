@@ -895,7 +895,9 @@
     var rakan = Math.min(N.JUMLAH - parti, bulat(N.JUMLAH * antara(r, 0.14, 0.26)));
     var status = parti >= N.MAJORITI ? 'MAJORITI' : (parti + rakan >= N.MAJORITI ? 'GABUNGAN' : 'PEMBANGKANG');
     var kongsi = rakan > 0 ? parti / (parti + rakan) : 1;
-    var peluangPM = status === 'GABUNGAN' && adaMP ? clamp(0.4 + (kongsi - 0.5) * 1.2 + ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002, 0.1, 0.9) : 0;
+    var adjPM = ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002;
+    // v13.11 (maklum balas pemain): parti terbesar dalam gabungan hampir pasti mendapat PM: 65% + (bahagian - 50%) x 1.5, maksimum 97%. Parti lebih kecil: formula asal (10% hingga 90%).
+    var peluangPM = status === 'GABUNGAN' && adaMP ? (kongsi >= 0.5 ? clamp(0.65 + (kongsi - 0.5) * 1.5 + adjPM, 0.5, 0.97) : clamp(0.4 + (kongsi - 0.5) * 1.2 + adjPM, 0.1, 0.9)) : 0;
     return { tahun: p.tahun, bulan: p.bulan, jumlah: N.JUMLAH, majoriti: N.MAJORITI, parti: parti, rakan: rakan, pembangkang: N.JUMLAH - parti - rakan,
       status: status, bolehPM: !!adaMP, peluangPM: Math.round(peluangPM * 100), hubungan: Number(pru.hubunganGabungan) || 50, selesai: false, hasil: null };
   }
@@ -915,7 +917,7 @@
       if (n.status === 'PEMBANGKANG') { return { ok: false, ralat: 'Parti anda tidak membentuk kerajaan.' }; }
       var lulus = n.status === 'MAJORITI' || r() * 100 < n.peluangPM;
       if (lulus) { K.lantikKanan('PERDANA_MENTERI'); hasil = 'PM'; mesej = 'Anda dilantik sebagai Perdana Menteri.'; kes.reputasi = 3; }
-      else { pru.hubunganGabungan = clamp(pru.hubunganGabungan + CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN, 0, 100); K.lantikKanan('TIMBALAN_PM'); hasil = 'TPM'; mesej = 'Rakan gabungan enggan melepaskan jawatan Perdana Menteri. Hubungan gabungan ' + CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN + '. Anda menerima jawatan Timbalan Perdana Menteri.'; }
+      else { pru.hubunganGabungan = clamp(pru.hubunganGabungan + CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN, 0, 100); K.lantikKanan('TIMBALAN_PM'); hasil = 'TPM'; mesej = 'Rakan gabungan enggan melepaskan jawatan Perdana Menteri walaupun peluang anda ' + n.peluangPM + '%. Hubungan gabungan ' + CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN + '. Anda menerima jawatan Timbalan Perdana Menteri.'; }
     } else if (pilihan === 'TPM') {
       if (n.status === 'PEMBANGKANG') { return { ok: false, ralat: 'Parti anda tidak membentuk kerajaan.' }; }
       K.lantikKanan('TIMBALAN_PM'); hasil = 'TPM'; mesej = 'Anda menerima jawatan Timbalan Perdana Menteri.';
@@ -999,6 +1001,7 @@
   return {
     CONFIG: CONFIG, PROFIL: PROFIL, IKON_PROFIL: IKON_PROFIL, PENGGANDA: PENGGANDA, JANJI: JANJI, TINDAKAN: TINDAKAN, FINAL: FINAL, KEJUTAN: KEJUTAN, KEJUTAN_PARTI: KEJUTAN_PARTI, KEJUTAN_PARTI_PELUANG: KEJUTAN_PARTI_PELUANG, pilihKejutan: pilihKejutan, KOS_RUNDING: KOS_RUNDING,
     setRng: function (f) { rngLalai = f || Math.random; },
+    janaNasionalUji: function (p) { return janaNasional(p, getPRU(p), null, null, true); },      // v13.11: untuk ujian
     getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
     baikiStatusSarawak: baikiStatusSarawak, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
