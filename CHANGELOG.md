@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.10 (2026-10-30)
+
+- **Baiki (maklum balas pemain): halaman tidak boleh digesel kembali ke kanan di telefon.** Lencana jawatan yang panjang (cth. "Menteri Pembangunan Sosial & Perbandaran Sarawak") tidak dibalut, jadi seluruh halaman melebar melebihi skrin. Lencana kini dibalut ke baris seterusnya, dan halaman tidak lagi boleh tergelincir ke sisi.
+
 ## v13.9 (2026-10-30)
 
 - **PRN Sabah**: kerusi DUN Sabah dipertandingkan dalam PRN berasingan daripada PRU, untuk semua pemain di Sabah (UMNO Sabah dan PBRS), mengikut mockup yang dipersetujui (`js/sabah.js`).

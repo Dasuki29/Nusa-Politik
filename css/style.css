@@ -1082,3 +1082,11 @@ body.menu-aktif { overflow: hidden; }
 
 /* v13.7: butang maklum balas disembunyikan sehingga pautan borang ditetapkan (js/maklumbalas.js) */
 [data-maklumbalas][hidden] { display: none !important; }
+
+/* v13.10: lencana jawatan yang panjang (cth. portfolio Menteri) dibalut ke baris seterusnya supaya halaman tidak melebar ke kanan di telefon */
+.badge-office { white-space: normal; max-width: 100%; text-align: left; line-height: 1.25; overflow-wrap: anywhere; }
+.badge-office::before { flex: none; }
+.dash-profile__info, #p-jawatan-lain { min-width: 0; max-width: 100%; }
+#p-jawatan-lain { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+#p-jawatan-lain[hidden] { display: none; }
+html, body { overflow-x: clip; }
