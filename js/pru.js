@@ -249,14 +249,20 @@
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   function tular() { return modul('MyPolitikTular', 'tular.js'); }
-  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
+  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } if (p && p.parti === 'PBRS') { return modul('MyPolitikPBRS', 'pbrs.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
-  function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
+  function sabah() { return modul('MyPolitikSabah', 'sabah.js'); }                           // v13.9: PRN Sabah (UMNO Sabah, PBRS)
+  function diSabah(p) { var B = sabah(); return !!(B && B.adalah && B.adalah(p)); }
+  function bermusim(p) { return !!p && (SW(p.parti) || diSabah(p)); }
+  /** v13.9: tiada keputusan nasional: parti serantau (Sarawak, PBRS) atau PRN Sabah. */
+  function tanpaNasional(p, pru) { return SW(p.parti) || p.parti === 'PBRS' || (diSabah(p) && musimPBB(p, pru) === 'PRN'); }
+  function namaPRN(p) { return SW(p && p.parti) ? 'PRN Sarawak' : 'PRN Sabah'; }
+  function musimPBB(p, pru) { if (!p || !bermusim(p)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
   function statusKekal(p, pru) { var m = musimPBB(p, pru); if (!m) { return []; } var lawanJenis = m === 'PRU' ? 'MP' : 'ADUN'; return semuaStatus(p).filter(function (s) { return s.jenis !== lawanJenis; }); }
   /** v9.4: tetapkan jadual musim seterusnya selepas pilihan raya tamat. */
   function jadualSeterusnya(p, pru, tahun) {
-    var m = musimPBB(p, pru), SWj = m ? sarawak() : null;
+    var m = musimPBB(p, pru), SWj = m ? (SW(p.parti) ? sarawak() : sabah()) : null;
     pru.riwayat = (Array.isArray(pru.riwayat) ? pru.riwayat : []).concat([{ tahun: parseInt(p.tahun, 10), bulan: parseInt(p.bulan, 10), jenis: m || 'PRU' }]).slice(-12);   // v13.1: tarikh PRU/PRN (kitaran pemilihan MCA)
     if (SWj && SWj.jadualBerikut) { var j = SWj.jadualBerikut(p, m); pru.tahunPRU = j.tahun; pru.bulanPRU = j.bulan; pru.jenisPBB = j.jenis; }
     else { pru.tahunPRU = tahun + CONFIG.KITARAN_TAHUN; pru.bulanPRU = parseInt(p.bulan, 10) || CONFIG.BULAN_PRU; }
@@ -281,6 +287,9 @@
     for (var k in b) { if (x[k] === undefined) { x[k] = b[k]; } }
     if (p && SW(p.parti) && !x.jadualPBB && !x.sejarah.length && !x.aktif && sarawak()) {          // v8.33: PRN Sarawak (jadual sendiri)
       var j = sarawak().jadual(p); x.tahunPRU = j.tahun; x.bulanPRU = j.bulan; x.jadualPBB = true; x.jenisPBB = 'PRN';
+    }
+    if (p && !x.jadualPBB && diSabah(p)) {                                                          // v13.9: PRN Sabah (jadual sendiri); simpanan lama meneruskan PRU sedia ada dahulu
+      var jb = sabah().jadualAwal(p, x); x.tahunPRU = jb.tahun; x.bulanPRU = jb.bulan; x.jadualPBB = true; x.jenisPBB = jb.jenis;
     }
     return x;
   }
@@ -322,10 +331,10 @@
       if (ip < c.ipMin) { sebab.push('Perlu IP ' + c.ipMin + ' (anda ' + ip + ')'); }
       if (jenis === 'DUN' && !p.dun && !lain) { sebab.push('Wilayah Persekutuan tiada DUN'); }
       if (jenis === 'DUN' && !ada) { sebab.push('Perlu pegang jawatan Cawangan atau lebih'); }
-      if (SW(p.parti) && !lain) {                                                                   // v9.4: PRN = kerusi DUN, PRU = kerusi Parlimen
+      if (bermusim(p) && !lain) {                                                                   // v9.4: PRN = kerusi DUN, PRU = kerusi Parlimen; v13.9: Sabah juga
         var mp = musimPBB(p);
-        if (jenis === 'PARLIMEN' && mp !== 'PRU') { sebab.push(p.parti + ' bertanding kerusi Parlimen dalam PRU (bukan PRN Sarawak)'); }
-        if (jenis === 'DUN' && mp !== 'PRN') { sebab.push(p.parti + ' bertanding kerusi DUN dalam PRN Sarawak (bukan PRU)'); }
+        if (jenis === 'PARLIMEN' && mp !== 'PRU') { sebab.push(p.parti + ' bertanding kerusi Parlimen dalam PRU (bukan ' + namaPRN(p) + ')'); }
+        if (jenis === 'DUN' && mp !== 'PRN') { sebab.push(p.parti + ' bertanding kerusi DUN dalam ' + namaPRN(p) + ' (bukan PRU)'); }
         var SWk = sarawak(); if (jenis === 'DUN' && mp === 'PRN' && SWk && SWk.ringan && SWk.ringan(p) && !SWk.dalamKuota(p)) { sebab.push('DUN anda di luar kuota ' + p.parti + ' dalam GPS (kuota ' + SWk.kuota(p) + ' kerusi)'); }   // v10.0
       }
       var MCk = mca(p); if (MCk && MCk.adalah(p) && !lain) {                                         // v13.1: MCA: kuota kerusi dalam BN dan 3 tahun keahlian (Perkara 120)
@@ -382,7 +391,7 @@
       campaignDaysLeft: CONFIG.HARI, hari: 0, voterSupport: 0, campaignFunds: 0, jentera: 70,
       isThreeCorneredFight: false, manifestoChoice: [], partiPopulariti: partiPopulariti(p, o), isuTempatan: isu,
       perluRunding: false, runding: null, kerusi: null, kejutanHari: {}, kejutanAktif: null, finalDigunakan: {},
-      dermaGuna: 0, risikoSprm: 0, risikoFitnah: 0, log: [], lawan: (SW(p.parti) && sarawak() && sarawak().maklumat(p) ? (mPBB === 'PRU' ? sarawak().maklumatParlimen(p) : sarawak().maklumat(p)).lawan : lawanPool(profil)), ditolak: {}, baki3: false
+      dermaGuna: 0, risikoSprm: 0, risikoFitnah: 0, log: [], lawan: (SW(p.parti) && sarawak() && sarawak().maklumat(p) ? (mPBB === 'PRU' ? sarawak().maklumatParlimen(p) : sarawak().maklumat(p)).lawan : diSabah(p) ? sabah().lawan(p, mPBB === 'PRU' ? 'PARLIMEN' : 'DUN') : lawanPool(profil)), ditolak: {}, baki3: false
     };
     pru.krisisSudah = true;
     var tamatKab = null;
@@ -403,7 +412,7 @@
     if (!p || p.tamat) { return { peristiwa: [] }; }
     var pru = getPRU(p), ev = [], now = idx(p), r = rng(o);
     var sj = pru.sejarah && pru.sejarah[pru.sejarah.length - 1];                // v7.49: baiki simpanan lama: status ADUN/MP yang kekal selepas tidak bertanding
-    if (pru.status && !SW(p.parti) && sj && sj.hasil === 'tidak_bertanding' && (sj.tahun * 12 + sj.bulan) >= ((Number(pru.status.sejakTahun) || 0) * 12 + (Number(pru.status.sejakBulan) || 0)) && !pru.aktif) { pru.status = null; pru.statusKedua = null; simpanPRU(pru, {}, {}); p = S().loadPlayer(); pru = getPRU(p); }
+    if (pru.status && !bermusim(p) && sj && sj.hasil === 'tidak_bertanding' && (sj.tahun * 12 + sj.bulan) >= ((Number(pru.status.sejakTahun) || 0) * 12 + (Number(pru.status.sejakBulan) || 0)) && !pru.aktif) { pru.status = null; pru.statusKedua = null; simpanPRU(pru, {}, {}); p = S().loadPlayer(); pru = getPRU(p); }
     var ev2 = prosesJanji(p, pru, o);
     if (ev2.length) { ev = ev.concat(ev2); p = S().loadPlayer(); pru = getPRU(p); }
     if (pru.aktif) { return { peristiwa: ev }; }
@@ -491,7 +500,7 @@
     var jadi = tamatMusim(pru, p, { jenis: a.candidateType === 'NONE' ? 'NONE' : a.candidateType, hasil: 'tidak_bertanding', kerusi: a.kerusi ? a.kerusi.nama : '' });
     if (tarik) { S().applyEffects({ reputasi: -3 }, { kiraTindakan: false, log: { tindakan: 'pru_tarik', nama: 'Menarik diri selepas dicalonkan', peringkat: 'ahli' } }); }
     var nas = null;
-    if (adalahPresiden(p) && !SW(p.parti)) { var p2 = S().loadPlayer(), pr2 = getPRU(p2); pr2.nasional = janaNasional(p2, pr2, a, null, false); simpanPRU(pr2, {}, {}); nas = true; }   // v7.22
+    if (adalahPresiden(p) && !tanpaNasional(p, pru)) { var p2 = S().loadPlayer(), pr2 = getPRU(p2); pr2.nasional = janaNasional(p2, pr2, a, null, false); simpanPRU(pr2, {}, {}); nas = true; }   // v7.22
     return { ok: true, tarik: tarik, nasional: nas, mesej: tarik ? 'Anda menarik diri daripada pilihan raya. Reputasi Parti -3 kerana menarik diri selepas dicalonkan.' : 'Anda tidak bertanding pada pilihan raya kali ini. Fokus pada jawatan parti.', hasil: jadi };
   }
 
@@ -790,7 +799,9 @@
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
         g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8));
-        if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
+        var SBk = !SWg && jenis === 'DUN' ? a.sabahPRN : null;                                     // v13.9: kerajaan negeri Sabah (GRS + BN jika BN >= 3 kerusi)
+        if (SBk) { g.kerajaan = SBk.kerajaanBN; }
+        else if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
         else if (SWg.kerusiPremier) { var kp0 = SWg.kerusiPremier(p); if (kp0) { g.kerajaan = kp0.gabungan >= kp0.ambang; } }   // v12.6: DUN Sarawak: status ikut kerusi GPS yang dipaparkan (70-78/82), bukan lambungan 60-90%
         kk.kerajaan = g.kerajaan;
         if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
@@ -817,6 +828,7 @@
       var dn = kerusiAnggar.dun; if (!dn || (sekunder && a.kerusi && a.kerusi.lain && a.candidateType !== 'DUN')) { return null; }
       return dn.kerajaan >= Math.floor(dn.jumlah / 2) + 1;
     }
+    if (diSabah(p) && musimPBB(p, pru) === 'PRN') { a.sabahPRN = sabah().kerusiPRN(p, a.partiPopulariti); pru.sabahPRN = a.sabahPRN; }      // v13.9: anggaran 73 DUN Sabah (dipaparkan walaupun pemain kalah)
     var g1 = ganjaran(k, a.candidateType, false), wins = [], rekods = [];
     ipD = g1.ip; kes.reputasi = g1.rep; siasatMsg = g1.msg;
     function rekodDari(kk, jenis, kerusi, g) {
@@ -845,7 +857,7 @@
       pru.manifesto = { ids: a.manifestoChoice.slice(), sejakIdx: idx(p), kemajuan: {}, dinilai: false };
       a.manifestoChoice.forEach(function (id) { pru.manifesto.kemajuan[id] = 0; });
     }
-    if (adalahPresiden(p) && !SW(p.parti)) {                              // v9.4: PBB (regional) tiada keputusan nasional
+    if (adalahPresiden(p) && !tanpaNasional(p, pru)) {                              // v9.4: PBB (regional) tiada keputusan nasional
       // v7.22: Presiden melihat keputusan nasional; kerajaan ditentukan di sana (bukan lambungan syiling)
       pru.nasional = janaNasional(p, pru, a, o, wins.some(function (w) { return w.jenis === 'PARLIMEN'; })); kabinetBuka = false; k.nasional = true;
     }
@@ -853,7 +865,7 @@
     k.siasatMsg = siasatMsg; k.kabinetBuka = kabinetBuka;
     a.fasa = 'keputusan'; a.keputusan = k; a.campaignFunds = 0; a.finalDigunakan = a.finalDigunakan || {};
     var menangP = k.menang && !g1.petisyen;
-    var res = simpanPRU(pru, kes, { pindahan: true, patch: kerusiAnggar && !(adalahPresiden(p) && !SW(p.parti)) ? { ip: Math.max(0, (Number(p.ip) || 0) + ipD), kerusiNasional: kerusiAnggar } : { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
+    var res = simpanPRU(pru, kes, { pindahan: true, patch: kerusiAnggar && !(adalahPresiden(p) && !tanpaNasional(p, pru)) ? { ip: Math.max(0, (Number(p.ip) || 0) + ipD), kerusiNasional: kerusiAnggar } : { ip: Math.max(0, (Number(p.ip) || 0) + ipD) }, log: { tindakan: 'pru_keputusan', nama: (menangP ? 'MENANG ' : 'KALAH ') + (a.kerusi ? a.kerusi.nama : '') + (a.kerusi2 ? ' + ' + a.kerusi2.nama : ''), peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     if (!k.menang) { laras({ stress: CONFIG.KALAH.stress }); }
     if (kabinetBuka) { var Kb = modul('MyPolitikKabinet', 'kabinet.js'); if (Kb && Kb.bukaLobi) { Kb.bukaLobi(lobiJenis); } }

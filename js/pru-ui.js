@@ -164,7 +164,7 @@
       var bl = r.bulanKePRU;
       var tek = (r.semuaStatus || []).map(function (s) { return '<b>' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + ' ' + esc(s.kerusi) + '</b>'; }).join(' + ');
       tek = tek ? tek + ' · ' : '';
-      h = '<div class="banner' + (bl <= 12 && bl >= 0 ? ' banner--gold' : '') + '"><strong>🗳️ ' + (r.jenisPBB === 'PRU' ? 'PRU' : r.jenisPBB === 'PRN' ? 'PRN Sarawak' : 'PRU/PRN') + ': ' + BULAN[(r.bulanPRU || 1) - 1] + ' ' + r.tahunPRU + '</strong>' + tek +
+      h = '<div class="banner' + (bl <= 12 && bl >= 0 ? ' banner--gold' : '') + '"><strong>🗳️ ' + (r.jenisPBB === 'PRU' ? 'PRU' : r.jenisPBB === 'PRN' ? (SW(p.parti) ? 'PRN Sarawak' : 'PRN Sabah') : 'PRU/PRN') + ': ' + BULAN[(r.bulanPRU || 1) - 1] + ' ' + r.tahunPRU + '</strong>' + tek +
         (bl > 0 ? bl + ' bulan lagi' : 'Bila-bila masa') + ' · kawasan ' + r.ikonProfil + ' ' + esc(r.profilNama) + '. Kelayakan: DUN ' + (r.kelayakan.DUN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.DUN.ipMin + ' + jawatan)') + ', Parlimen ' + (r.kelayakan.PARLIMEN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.PARLIMEN.ipMin + ' + Ketua Bahagian)') + '.</div>';
       return h;
     }
@@ -444,6 +444,7 @@
     h += '<p style="text-align:center"><b>' + (menang ? (a.candidateType === 'DUN' ? 'ADUN ' : 'Ahli Parlimen ') : 'Kerusi ') + esc(a.kerusi ? a.kerusi.nama : '') + '</b>' + (kp.penjuru3 ? ' · pertandingan 3-penjuru' : '') + '</p>';
     h += pecahHtml(kp.pecah);
     h += '<div class="kv"><span>Majoriti</span><b>' + (kp.menang ? fmt(kp.majoriti) + ' undi' : 'kalah ' + fmt(kp.majoriti) + ' undi') + '</b></div><div class="kv"><span>Isu tempatan</span><b>' + esc(((PRU.JANJI.filter(function (j) { return j.id === kp.isuTempatan; })[0] || {}).nama) || '') + (kp.isuTepat ? ' (manifesto anda tepat)' : '') + '</b></div>';
+    if (a.sabahPRN) { var sb = a.sabahPRN; h += '<div class="kv"><span>DUN Sabah (73 kerusi, anggaran)</span><b>GRS ' + sb.GRS + ' · Warisan ' + sb.Warisan + ' · BN ' + sb.BN + ' · UPKO ' + sb.UPKO + ' · Lain ' + sb.lain + '</b></div><p class="note" style="font-size:.78rem">' + (sb.kerajaanBN ? 'GRS membentuk kerajaan negeri dan BN menyertainya sebagai rakan.' : 'GRS membentuk kerajaan negeri tanpa BN (BN menang kurang daripada 3 kerusi).') + '</p>'; }   // v13.9
     if (menang) {
       h += '<h3 style="margin:12px 0 4px">Ganjaran</h3><div class="kv"><span>Pengaruh (IP)</span><b class="pru-ok">+' + kp.bonusIp + '</b></div><div class="kv"><span>Reputasi</span><b class="pru-ok">+3</b></div>';
       h += '<p style="font-size:.85rem;margin-top:8px">' + (kp.kerajaan ? '🏛️ Parti anda membentuk kerajaan. <b>Lobi Portfolio</b> (' + (a.candidateType === 'DUN' ? (SW(S.loadPlayer().parti) ? 'Menteri Negeri Sarawak' : 'EXCO Negeri') : 'Timbalan Menteri / Menteri') + ') kini dibuka.' : 'Parti anda tidak membentuk kerajaan. Jawatan kerajaan tidak dibuka penggal ini.') + '</p>';

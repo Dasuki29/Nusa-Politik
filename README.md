@@ -10,10 +10,11 @@ Parti yang boleh dimainkan:
 | MCA | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 40 Parlimen / 90 DUN ikut peratus Cina), Cawangan = Daerah Mengundi; pemilihan parti selepas setiap PRU, Pusat dipilih oleh perwakilan Bahagian, lantikan Presiden, had Presiden 9 tahun, 3 tahun keahlian untuk bertanding (Perlembagaan MCA) |
 | MIC | Penuh | Komponen BN di Semenanjung: semua 165 kawasan Parlimen (kuota kerusi 10 Parlimen / 20 DUN ikut peratus India), Cawangan = Daerah Mengundi (60 hingga 200 ahli); pemilihan setiap 3 tahun dari 2027; semua jawatan tinggi perlu sedang Pengerusi Cawangan; Presiden dipilih oleh pegawai Cawangan (250 penamaan); Kongres Negeri; sayap Putera; had 3 penggal Pengerusi Bahagian dan Presiden (Perlembagaan MIC) |
 | PPP | Ringan | Komponen BN di Semenanjung, berbilang kaum: 39 kawasan Parlimen campuran, Cawangan = Daerah Mengundi; tiada kerusi tetap (Tuntut Kerusi BN melalui Pengaruh dalam BN); krisis kepimpinan dan pembekuan ROS; sayap Putera dan Puteri (andaian; tiada perlembagaan awam) |
+| PBRS (Sabah) | Ringan | Komponen BN di pedalaman Sabah: 7 kawasan Parlimen (20 DUN), kuota Pensiangan + Sook dan Bingkor; Dua Gabungan BN & GRS (kuota DUN dan pertembungan GRS); DUN dipilih dalam PRN Sabah (andaian; tiada perlembagaan awam) |
 | PBB (Sarawak) | Penuh | Ranting, Cawangan (= DUN) dan Pusat; Majlis Tertinggi, Perhimpunan Agung PBB, imbangan blok Bumiputera & Pesaka, tuntutan Premier |
 | PRS, SUPP, PDP (Sarawak) | Ringan | Parti rakan GPS dengan kuota kerusi; ciri teras masing-masing (Pengaruh GPS, Sokongan Bandar, Imbangan Kaum) |
 
-PRN Sarawak dan PRU Parlimen berjalan berasingan untuk parti Sarawak. Tab Peta memaparkan 82 DUN dan Daerah Mengundi Sarawak.
+PRN Sarawak dan PRU Parlimen berjalan berasingan untuk parti Sarawak. Sejak v13.9, PRN Sabah (November 2030, kemudian setiap 5 tahun) juga berasingan untuk pemain di Sabah (UMNO Sabah dan PBRS). Tab Peta memaparkan 82 DUN dan Daerah Mengundi Sarawak.
 
 > **Penafian:** Ini permainan simulasi, bukan laman rasmi parti. Nombor, kebarangkalian dan nama pesaing ialah rekaan permainan. Kad "Laluan Karier Sebenar" ialah ringkasan fakta awam bersumber dan tidak menilai mana-mana tokoh.
 
@@ -86,6 +87,8 @@ Modul utama dalam `js/`:
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
+| `sabah.js` | PRN Sabah: jadual berasingan, anggaran kerusi DUN Sabah dan kerajaan negeri |
+| `pbrs.js`, `pbrs-ui.js`, `pbrs-data.js` | Peraturan PBRS mod ringan (kuota BN, Kesetiaan BN dan Muhibah GRS) dan data kawasan (`node tools/build-pbrs.js`) |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
@@ -143,10 +146,11 @@ node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, 
 node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), panel parti, EN
 node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pautan Google Form isi automatik, EN
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
+node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 
-Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, `PARTI=MCA` sebagai ahli MCA, `PARTI=MIC` sebagai ahli MIC dan `PARTI=PPP` sebagai ahli PPP.
+Ujian pelayar memerlukan Playwright dan Chromium; ia dilangkau (kod keluar 0) jika tiada. `tools/simulasi.js` mengambil kira-kira setengah saat bagi setiap bulan permainan, jadi untuk semakan pantas guna bilangan kecil, contohnya `node tools/simulasi.js 3 120`. `PARTI=PBB` atau `PARTI=PRS` memainkan bot sebagai parti Sarawak, `PARTI=MCA` sebagai ahli MCA, `PARTI=MIC` sebagai ahli MIC, `PARTI=PPP` sebagai ahli PPP dan `PARTI=PBRS` sebagai ahli PBRS.
 
 `tools/ujian-bahasa.js` gagal jika ada baris kamus tanpa EN, pemegang tempat `{x}` tidak sepadan, "Wing Wing", atau teks acara, latihan Amir, PRU, Kabinet dan Perlembagaan yang tiada terjemahan. `tools/ujian-pelayar.js` melaporkan ralat JavaScript dan teks BM yang bocor dalam mod EN. Nama misi dan tajuk sumber luar dikecualikan dengan sengaja.
 

@@ -1528,6 +1528,42 @@ ujian('v13.8: PPP: krisis kepimpinan dan pembekuan ROS', () => {
   S.clearPlayer();
   function M2() { return g.MyPolitikMeeting; }
 });
+ujian('v13.9: PRN Sabah: UMNO Sabah bertanding DUN dalam PRN (Nov 2030) dan Parlimen dalam PRU (Mac 2031); BN masuk kerajaan jika >= 3 kerusi', () => {
+  const SB = g.MyPolitikSabah;
+  P.daftar({}); P.tetap({ negeri: 'Sabah', ip: 900, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] });
+  let r = PRU.getPRU(S.loadPlayer()); sama([r.tahunPRU, r.bulanPRU, r.jenisPBB].join(), '2030,11,PRN', 'PRN Sabah dahulu');
+  let k = PRU.kelayakan(S.loadPlayer()); betul(k.PARLIMEN.sebab.some((x) => /bukan PRN Sabah/.test(x)) && !k.DUN.sebab.some((x) => /PRN/.test(x)), 'DUN dalam PRN, Parlimen dalam PRU');
+  sama(JSON.stringify(SB.jadualBerikut({ tahun: 2030 }, 'PRN')), JSON.stringify({ jenis: 'PRU', tahun: 2031, bulan: 3 })); sama(SB.jadualBerikut({ tahun: 2031 }, 'PRU').tahun, 2035);
+  const kp = SB.kerusiPRN({ id: 'x', tahun: 2030 }, 45); sama(kp.GRS + kp.Warisan + kp.BN + kp.UPKO + kp.lain, 73, '73 DUN'); sama(kp.kerajaanBN, kp.BN >= 3);
+  // simpanan lama yang sudah melepasi PRU: PRU sedia ada diteruskan dahulu
+  P.tetap({ tahun: 2032, bulan: 1, pru: { tahunPRU: 2036, bulanPRU: 3, sejarah: [{ jenis: 'DUN', hasil: 'menang', tahun: 2031, bulan: 3 }] } });
+  r = PRU.getPRU(S.loadPlayer()); sama([r.tahunPRU, r.jenisPBB].join(), '2036,PRU', 'simpanan lama: PRU dahulu');
+  // pemain Semenanjung tidak terjejas
+  P.tetap({ negeri: 'Perlis', pru: undefined }); r = PRU.getPRU(S.loadPlayer()); sama(r.jenisPBB, undefined, 'Semenanjung tiada PRN');
+  S.clearPlayer();
+});
+ujian('v13.9: PBRS: data 7 Parlimen/20 DUN, kuota 1+2, Kesetiaan BN & Muhibah GRS, rundingan kuota, GRS 3 penjuru', () => {
+  const M = g.MyPolitikPBRS, D = g.MyPolitikData, SY = g.MyPolitikSayap, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbrs-sabah.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 7); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 30 && c.jumlahAhli <= 150)), 'Cawangan 30 hingga 150 ahli');
+  betul(!SY.kelayakan('P', 25, 'PBRS').puteri.boleh && !SY.kelayakan('L', 25, 'PBRS').putera.boleh, 'PBRS tiada Puteri dan Putera');
+  const pen = h.bahagian.find((b) => b.nama === 'Pensiangan'), dSook = pen.dun.find((d) => d.nama === 'Sook');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PBRS', nama: 'Uji PBRS', demografik: D.tentukanDemografi('Lelaki', 40, 'PBRS'), cawangan: dSook.cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 5 }));
+  let p = S.loadPlayer(); sama(p.parti, 'PBRS'); sama(p.negeri, 'Sabah'); sama(PRU.getPRU(p).jenisPBB, 'PRN', 'PBRS ikut PRN Sabah');
+  sama(E.adalahTahunPemilihan(2026), true); sama(E.adalahTahunPemilihan(2027), false); sama(K.getTetingkap('bahagian', 1).mula, 5);
+  let kw = M.kawasan(p); betul(kw.kuotaPL && kw.kuotaDUN, 'Pensiangan dan Sook dalam kuota');
+  sama(M.ofset(p), -8, 'Muhibah GRS 45: GRS bertembung'); sama(M.lawan(p, 'DUN')[1], 'GRS');
+  P.tetap({ ap: 20, myr: 50000, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] });
+  let r = M.muhibah(); betul(r.ok, r.ralat); sama(M.meter(S.loadPlayer()).muhibahGRS, 51); sama(M.meter(S.loadPlayer()).setiaBN, 58); sama(M.ofset(S.loadPlayer()), 0, 'GRS tidak bertembung');
+  r = M.lobi(); betul(r.ok, r.ralat); sama(M.meter(S.loadPlayer()).setiaBN, 64); r = M.ma63(); betul(r.ok, r.ralat); sama(M.ma63().ok, false, 'sekali sebulan');
+  // rundingan 12 bulan sebelum PRN Sabah (Nov 2030): Kesetiaan BN 80 -> 3 DUN (tambah Nabawan)
+  P.tetap({ tahun: 2029, bulan: 11, pbrs: Object.assign(S.loadPlayer().pbrs, { setiaBN: 80 }) });
+  const ev = M.prosesBulan().peristiwa; betul(ev.some((x) => /Rundingan kerusi BN untuk PRN Sabah/.test(x.mesej)), 'rundingan');
+  p = S.loadPlayer(); sama(M.kuotaDUN(p).length, 3, 'kuota DUN +1'); betul(M.kuotaDUN(p).indexOf('12_N.46') >= 0, 'Nabawan');
+  P.tetap({ tahun: 2026, bulan: 2, pbrs: { setiaBN: 30, muhibahGRS: 45 }, pru: undefined }); sama(M.kuotaDUN(S.loadPlayer()).join(), '12_N.45', 'Kesetiaan rendah: Sook sahaja');
+  M.prosesBulan(); sama(M.meter(S.loadPlayer()).setiaBN, 31, 'meter susut ke arah 50');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

@@ -66,7 +66,7 @@
 
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
   /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
-  function tanpaPuteri(k) { return SW(k) || k === 'MCA'; }                  // v13.1: MCA (Pemuda dan Wanita sahaja)
+  function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS'; }      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
   function katParti(jantina, umur, parti) { var k = kategori(jantina, umur); return tanpaPuteri(parti) && k === 'puteri' ? 'wanita' : k; }
   function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
@@ -74,8 +74,8 @@
   function kelayakan(jantina, umur, parti) {
     var k = katParti(jantina, umur, parti), r = {};
     SENARAI.forEach(function (s) {
-      if (s === 'putera') { var uP = parseInt(umur, 10), bolehP = adaPutera(parti) && k === 'pemuda' && uP <= 29; r[s] = bolehP ? { boleh: true, sebab: '' } : { boleh: false, sebab: !adaPutera(parti) ? 'Sayap Putera hanya dalam MIC.' : (k ? INFO.putera.syarat : 'Isi jantina dan umur dahulu.') }; return; }      // v13.3
-      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: tanpaPuteri(parti) && s === 'puteri' ? (parti === 'MCA' ? 'MCA' : 'PBB') + ' tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
+      if (s === 'putera') { var uP = parseInt(umur, 10), bolehP = adaPutera(parti) && k === 'pemuda' && uP <= 29; r[s] = bolehP ? { boleh: true, sebab: '' } : { boleh: false, sebab: !adaPutera(parti) ? 'Sayap Putera hanya dalam MIC dan PPP.' : (k ? INFO.putera.syarat : 'Isi jantina dan umur dahulu.') }; return; }      // v13.3
+      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: tanpaPuteri(parti) && s === 'puteri' ? (parti === 'MCA' || parti === 'PBRS' ? parti : 'PBB') + ' tiada sayap Puteri.' : (k ? INFO[s].syarat : 'Isi jantina dan umur dahulu.') };
     });
     return r;
   }

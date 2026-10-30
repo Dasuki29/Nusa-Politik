@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.9 (2026-10-30)
+
+- **PRN Sabah**: kerusi DUN Sabah dipertandingkan dalam PRN berasingan daripada PRU, untuk semua pemain di Sabah (UMNO Sabah dan PBRS), mengikut mockup yang dipersetujui (`js/sabah.js`).
+  - Jadual ⚠️: PRN Sabah November 2030 (PRN terakhir 29 November 2025), PRU Mac 2031, kemudian setiap 5 tahun. DUN dalam PRN sahaja, Parlimen dalam PRU sahaja; status ADUN kekal semasa PRU dan status MP kekal semasa PRN. Simpanan lama yang sudah melepasi PRU meneruskan PRU sedia ada dahulu.
+  - Keputusan PRN memaparkan anggaran 73 DUN (GRS, Warisan, BN, UPKO, lain-lain); kerajaan negeri diketuai GRS, dan BN menyertainya jika menang sekurang-kurangnya 3 kerusi ⚠️. Tiada keputusan nasional dalam PRN.
+- **PBRS (Parti Bersatu Rakyat Sabah) boleh dimainkan dalam mod ringan.** Logo daripada pengguna.
+  - Kawasan ⚠️: 7 kawasan Parlimen pedalaman Sabah (Kota Marudu, Tuaran, Penampang, Ranau, Keningau, Tenom, Pensiangan; 20 DUN). Cawangan = Daerah Mengundi, 30 hingga 150 ahli (`node tools/build-pbrs.js`). Sayap Pemuda dan Wanita. Takwim ⚠️ bulan 3/5/9; pemilihan setiap 3 tahun dari 2026.
+  - Kuota BN ⚠️: Parlimen Pensiangan; DUN Sook dan Bingkor.
+  - **Dua Gabungan: BN & GRS**: Kesetiaan BN (mula 60) dan Muhibah GRS (mula 45). Lobi BN Sabah (2 AP, RM 1,500, +6), Majlis Muhibah GRS (1 AP, RM 800, +6, BN −2), Kempen Hak Orang Asal & MA63 (1 AP, akar umbi +5). Rundingan 12 bulan sebelum PRN: Kesetiaan BN ≥ 70 → kuota DUN +1 (Nabawan), < 35 → −1 (Sook sahaja). Muhibah GRS < 50 → GRS bertanding juga (3 penjuru, kekuatan kerusi −8).
+  - Kad **🌾 PBRS: Dua Gabungan BN & GRS** di tab Profil, PBRS dalam panel BN menu utama (5 parti), langkah tutorial, terjemahan EN, 2 ujian unit dan `tools/ujian-pbrs.js` (pelayar). `PARTI=PBRS node tools/simulasi.js` disokong.
+
 ## v13.8 (2026-10-30)
 
 - **PPP (Parti Progresif Penduduk / myPPP) boleh dimainkan dalam mod ringan**, mengikut mockup yang dipersetujui. Perlembagaan PPP tidak tersedia, jadi PPP menggunakan enjin yang sama seperti MIC (Cawangan, Bahagian = kawasan Parlimen, Pusat) tanpa peraturan perlembagaan khas. Logo daripada pengguna.

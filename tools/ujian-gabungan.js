@@ -25,7 +25,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   semak(await nampak() === '', 'tiada cip parti sebelum gabungan dipilih');
   semak(await pg.$$eval('.gab__btn img', (l) => l.every((i) => i.complete && i.naturalWidth > 0)), 'logo BN dan GPS dimuat');
   await pg.click('[data-gab="BN"]'); await pg.waitForTimeout(200);
-  semak(await nampak() === 'UMNO,MCA,MIC,PPP', 'BN: UMNO, MCA, MIC, PPP (' + await nampak() + ')');
+  semak(await nampak() === 'UMNO,MCA,MIC,PPP,PBRS', 'BN: 5 parti (' + await nampak() + ')');
   semak(await pg.getAttribute('[data-gab="BN"]', 'aria-expanded') === 'true', 'aria-expanded BN');
   await pg.click('[data-gab="GPS"]'); await pg.waitForTimeout(200);
   semak(await nampak() === 'PBB,PRS,SUPP,PDP', 'GPS: PBB, PRS, SUPP, PDP (' + await nampak() + ')');
@@ -35,7 +35,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(400);
   await pg.click('[data-gab="BN"]'); await pg.waitForTimeout(400);
   const t = await pg.textContent('.poster');
-  semak(/Barisan Nasional parties/.test(t) && /PPP is in light mode/.test(t) && /Tap a party/.test(t) && /4 parties/.test(t), 'EN gabungan: ' + t.replace(/\s+/g, ' ').slice(0, 200));
+  semak(/Barisan Nasional parties/.test(t) && /PPP and PBRS are in light mode/.test(t) && /Tap a party/.test(t) && /5 parties/.test(t), 'EN gabungan: ' + t.replace(/\s+/g, ' ').slice(0, 200));
   await pg.evaluate(() => MyPolitikI18n.setLanguage('BM')); await pg.waitForTimeout(300);
   await pg.click('.poster__chip[data-parti="MCA"]'); await pg.waitForTimeout(2500);
   semak(await pg.$eval('#s-parti', (x) => x.value) === 'MCA', 'cip MCA terus ke pendaftaran MCA');

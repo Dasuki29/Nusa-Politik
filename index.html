@@ -1269,13 +1269,13 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
         <p class="poster__lead">Simulasi politik Malaysia. Menangi pemilihan cawangan, berkempen untuk PRU, bina gabungan dan jaga integriti anda, satu bulan pada satu masa.</p>
         <!-- v13.6: parti disusun ikut gabungan; tekan gabungan untuk memaparkan partinya -->
         <div class="gab" role="group" aria-label="Pilih gabungan untuk permainan baharu">
-          <button type="button" class="gab__btn" data-menu="gabungan" data-gab="BN" aria-expanded="false" aria-controls="gab-bn"><img src="assets/images/logo-bn.png" alt="" width="36" height="36"><span class="gab__teks"><b>BN</b><small>Barisan Nasional · 4 parti</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
+          <button type="button" class="gab__btn" data-menu="gabungan" data-gab="BN" aria-expanded="false" aria-controls="gab-bn"><img src="assets/images/logo-bn.png" alt="" width="36" height="36"><span class="gab__teks"><b>BN</b><small>Barisan Nasional · 5 parti</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
           <button type="button" class="gab__btn" data-menu="gabungan" data-gab="GPS" aria-expanded="false" aria-controls="gab-gps"><img src="assets/images/logo-gps.png" alt="" width="36" height="36"><span class="gab__teks"><b>GPS</b><small>Gabungan Parti Sarawak · 4 parti</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
         </div>
         <div class="gab__panel" id="gab-bn" data-gab-panel="BN" hidden>
-          <h4>Parti dalam Barisan Nasional · Semenanjung</h4>
-          <div class="poster__parti" role="group" aria-label="Parti Barisan Nasional"><button type="button" class="poster__chip" data-menu="parti" data-parti="UMNO"><img src="assets/images/logo.png" alt="" width="22" height="22">UMNO</button><button type="button" class="poster__chip" data-menu="parti" data-parti="MCA"><img src="assets/images/logo-mca.jpg" alt="" width="22" height="22">MCA</button><button type="button" class="poster__chip" data-menu="parti" data-parti="MIC"><img src="assets/images/logo-mic.png" alt="" width="22" height="22">MIC</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PPP"><img src="assets/images/logo-ppp.jpg" alt="" width="22" height="22">PPP</button></div>
-          <p class="gab__kaki">UMNO, MCA dan MIC mod penuh; PPP mod ringan.</p>
+          <h4>Parti dalam Barisan Nasional · Semenanjung &amp; Sabah</h4>
+          <div class="poster__parti" role="group" aria-label="Parti Barisan Nasional"><button type="button" class="poster__chip" data-menu="parti" data-parti="UMNO"><img src="assets/images/logo.png" alt="" width="22" height="22">UMNO</button><button type="button" class="poster__chip" data-menu="parti" data-parti="MCA"><img src="assets/images/logo-mca.jpg" alt="" width="22" height="22">MCA</button><button type="button" class="poster__chip" data-menu="parti" data-parti="MIC"><img src="assets/images/logo-mic.png" alt="" width="22" height="22">MIC</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PPP"><img src="assets/images/logo-ppp.jpg" alt="" width="22" height="22">PPP</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PBRS"><img src="assets/images/logo-pbrs.jpg" alt="" width="22" height="22">PBRS</button></div>
+          <p class="gab__kaki">UMNO, MCA dan MIC mod penuh; PPP dan PBRS mod ringan.</p>
         </div>
         <div class="gab__panel" id="gab-gps" data-gab-panel="GPS" hidden>
           <h4>Parti dalam GPS · Sarawak</h4>
@@ -1449,6 +1449,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                   <option value="MCA">MCA (Semenanjung, BN, mod penuh)</option>
                   <option value="MIC">MIC (Semenanjung, BN, mod penuh)</option>
                   <option value="PPP">PPP (Semenanjung, BN, mod ringan)</option>
+                  <option value="PBRS">PBRS (Sabah, BN, mod ringan)</option>
                   <option value="PBB">PBB (Sarawak, GPS, mod penuh)</option>
                   <option value="PRS">PRS (Sarawak, GPS, mod ringan)</option>
                   <option value="SUPP">SUPP (Sarawak, GPS, mod ringan)</option>
@@ -1656,6 +1657,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   <script src="js/mca-data.js"></script>
   <script src="js/mic-data.js"></script>
   <script src="js/ppp-data.js"></script>
+  <script src="js/pbrs-data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/perlembagaan.js"></script>
   <script src="js/slotpanel.js"></script>

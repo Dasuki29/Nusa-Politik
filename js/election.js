@@ -102,8 +102,8 @@
   function mcaP(p0) {
     if (!S || !S.loadPlayer) { return null; }
     var p = p0 || null; if (!p) { try { p = S.loadPlayer(); } catch (e2) { p = null; } }
-    if (!p || (p.parti !== 'MCA' && p.parti !== 'MIC' && p.parti !== 'PPP')) { return null; }
-    var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : p.parti === 'PPP' ? modKhas('MyPolitikPPP', 'ppp.js') : modKhas('MyPolitikMCA', 'mca.js');      // v13.8: PPP
+    if (!p || (p.parti !== 'MCA' && p.parti !== 'MIC' && p.parti !== 'PPP' && p.parti !== 'PBRS')) { return null; }
+    var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : p.parti === 'PPP' ? modKhas('MyPolitikPPP', 'ppp.js') : p.parti === 'PBRS' ? modKhas('MyPolitikPBRS', 'pbrs.js') : modKhas('MyPolitikMCA', 'mca.js');      // v13.8: PPP
     return M && M.adalah(p) ? { M: M, p: p } : null;
   }
   /* v13.5: UMNO (js/umno.js): kitaran 3 tahun dengan penangguhan selepas PRU (Fasal 10.16); 'baharu' = peraturan Fasa B (Pusat diundi di Bahagian). */
@@ -414,7 +414,7 @@
     var sm = syMod(); if (sm && sm.bonusWarisan) { v += sm.bonusWarisan(p, d); }              // v6.5: Legacy Loyalty (pertandingan Induk sahaja)
     var Et = etika();
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
-    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP')) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
+    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS')) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     var um = umnoP(p, true); if (um) { if (pr === 'pusat' && !(d && d.kumpulan === 'sayap')) { v += um.M.bonusPusat(p); } v += um.M.bonusSayap(p, d); }      // v13.5: sokongan perwakilan Bahagian UMNO, lantikan dan pelapis muda
     return clamp(v, 0, 100);
   }
@@ -457,7 +457,7 @@
     if (peringkat === 'bahagian') {
       return kuotaCawangan(p) * ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN);
     }
-    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP') ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }
+    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS') ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }
     if (peringkat === 'pusat' && umnoP(p, true)) { return umnoP(p, true).M.ringkasPusat(p).pengundi; }      // v13.5: perwakilan Mesyuarat Perwakilan Bahagian di 191 Bahagian (Fasal 9.3)      // v13.3: MIC: pegawai Cawangan seluruh negara (Perkara 58.2, 59A)      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
     return CONFIG.PEMILIH_PUSAT;
   }
