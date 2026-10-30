@@ -195,7 +195,21 @@
 
   function pilih(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 
-  function janaPenentang(rng) {
+  /** v13.20: penentang diambil daripada Struktur (Timbalan / Naib bagi jawatan tertinggi pemain). */
+  function penentangStruktur(p) {
+    var OG = (typeof globalThis !== 'undefined' && globalThis.MyPolitikOrganisasi) || null; if (!OG || !OG.slotDariKod || !p) { return null; }
+    var l = (Array.isArray(p.jawatanList) ? p.jawatanList : []).slice().sort(function (a, b) { return (b.pangkat || 0) - (a.pangkat || 0); });
+    for (var i = 0; i < l.length; i++) {
+      var s = OG.slotDariKod(l[i].kod); if (!s || s.slot === 'ajk') { continue; }
+      var b = OG.blok(p, s.peringkat, s.sayap), c = [b.timbalan, b.naib].filter(function (x) { return x && !x.pemain; })[0];
+      if (c) { return c.nama; }
+    }
+    return null;
+  }
+  function janaPenentang(rng, p) {
+    var nmS = penentangStruktur(p); if (nmS) { return { nama: nmS, peranan: pilih(rng, PENENTANG_PERANAN) }; }
+    var DTn = (typeof globalThis !== 'undefined' && globalThis.MyPolitikData);
+    if (DTn && DTn.janaNama && p && p.parti && p.parti !== 'UMNO') { return { nama: DTn.janaNama(rng, rng() < 0.75 ? 'L' : 'P', null), peranan: pilih(rng, PENENTANG_PERANAN) }; }   // v13.20
     var nama = pilih(rng, PENENTANG_GELARAN) + ' ' + pilih(rng, PENENTANG_NAMA) + ' bin ' + pilih(rng, PENENTANG_BIN);
     return { nama: nama, peranan: pilih(rng, PENENTANG_PERANAN) };
   }
@@ -266,7 +280,7 @@
     };
 
     if (!aktif && (opts.paksa || (!sejuk && rng() < kemungkinan))) {
-      var lawan = janaPenentang(rng);
+      var lawan = janaPenentang(rng, p);
       var cabaran = {
         id: 'cabaran-' + Date.now().toString(36),
         jenis: 'cabaran_jawatan',

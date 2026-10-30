@@ -3497,4 +3497,31 @@
   ["Gagal meletak jawatan.", "Could not resign."],
   ["Letak jawatan parti: {x}", "Resigned party post: {x}"]
   ]);
+  /* v13.20: Lantikan Kekalkan / Ubah */
+  T.tambah([
+  ["📋 Lantikan: Kekalkan atau Ubah", "📋 Appointments: Keep or Change"],
+  ["Anda menang sebagai Ketua. Kekalkan pegawai sedia ada atau lantik penyokong anda. Yang belum dipilih dikekalkan pada akhir bulan.", "You won as Chief. Keep the current officers or appoint your supporters. Anyone not decided is kept at the end of the month."],
+  ["Kekalkan", "Keep"],
+  ["Kekalkan semua yang belum dipilih", "Keep everyone not yet decided"],
+  ["{x} · ✅ dikekalkan", "{x} · ✅ kept"],
+  ["{x} · 🔄 baharu", "{x} · 🔄 new"],
+  ["Kekalkan: sokongan AJK +{a}. Ubah: sokongan AJK {b}, kesetiaan Ketua Cawangan +{c}.", "Keep: AJK support +{a}. Change: AJK support {b}, Branch Chief loyalty +{c}."],
+  ["{x} dikekalkan sebagai {y}. Sokongan AJK +{n}.", "{x} is kept as {y}. AJK support +{n}."],
+  ["{x} dilantik sebagai {y}. Sokongan AJK {a}, kesetiaan Ketua Cawangan +{b}.", "{x} is appointed as {y}. AJK support {a}, Branch Chief loyalty +{b}."],
+  ["{n} pegawai dikekalkan. Sokongan AJK +{a}.", "{n} officers kept. AJK support +{a}."],
+  ["Lantikan selesai.", "Appointments done."],
+  ["Tiada lantikan dibuka.", "No appointments open."],
+  ["Sudah diputuskan.", "Already decided."],
+  ["Pilihan tidak sah.", "Invalid choice."],
+  ["Pegawai dilantik yang belum diputuskan dikekalkan secara automatik ({n}).", "Appointed officers not yet decided were kept automatically ({n})."],
+  ["Setiausaha Cawangan", "Branch Secretary"],
+  ["Bendahari Cawangan", "Branch Treasurer"],
+  ["Ketua Penerangan Cawangan", "Branch Information Chief"],
+  ["Setiausaha Bahagian", "Division Secretary"],
+  ["Bendahari Bahagian", "Division Treasurer"],
+  ["Ketua Penerangan Bahagian", "Division Information Chief"],
+  ["Setiausaha Agung", "Secretary-General"],
+  ["Bendahari", "Treasurer"],
+  ["Ketua Penerangan", "Information Chief"]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

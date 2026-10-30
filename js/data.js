@@ -719,9 +719,42 @@
     else { nama = krist ? pick(rng, DAYAK_KRISTIAN_P) : pick(rng, DAYAK_P); }
     return nama + ' anak ' + bapa;
   }
-  /** opts.etnik: 'dayak' | 'melayu' | tiada (ikut parti pemain). */
+  /* v13.20 (maklum balas pengguna): nama NPC ikut kaum majoriti parti. Gabungan rekaan, bukan individu sebenar.
+     Cina: "<nama keluarga> <nama> <nama>" (sebahagian dengan nama Inggeris); India: "<nama> a/l | a/p <nama bapa>"; KDM (Kadazan-Dusun-Murut): "<nama Kristian> <nama asli>". */
+  var CINA_KELUARGA = ['Tan', 'Lim', 'Lee', 'Wong', 'Ng', 'Chong', 'Chan', 'Ong', 'Teo', 'Goh', 'Chua', 'Yap', 'Leong', 'Liew', 'Chin', 'Koh', 'Low', 'Kok', 'Loh', 'Hew', 'Chew', 'Foo', 'Lau', 'Yeoh'];
+  var CINA_L = ['Kok', 'Wei', 'Seng', 'Chee', 'Keong', 'Hock', 'Boon', 'Kian', 'Meng', 'Chun', 'Hong', 'Yong', 'Kah', 'Tiong', 'Kean', 'Choon', 'Siang', 'Wah'];
+  var CINA_P = ['Siew', 'Mei', 'Ling', 'Hui', 'Yee', 'Lay', 'Peng', 'Choo', 'Pei', 'Yin', 'Kim', 'Fong', 'Wan', 'Li', 'Suan', 'Geok'];
+  var INGGERIS_L = ['David', 'Jason', 'Michael', 'Kenneth', 'Steven', 'Andrew', 'Daniel', 'Vincent', 'Alan', 'Richard'];
+  var INGGERIS_P = ['Jessica', 'Angela', 'Michelle', 'Grace', 'Irene', 'Jenny', 'Vivian', 'Elaine', 'Karen', 'Shirley'];
+  var INDIA_L = ['Saravanan', 'Murugan', 'Ganesan', 'Ramesh', 'Suresh', 'Vijay', 'Kumar', 'Rajendran', 'Subramaniam', 'Krishnan', 'Sivakumar', 'Mahendran', 'Prakash', 'Rajan', 'Selvam', 'Arumugam', 'Kannan', 'Muthu', 'Ravi', 'Balakrishnan'];
+  var INDIA_P = ['Kavitha', 'Saraswathy', 'Devi', 'Shanthi', 'Malar', 'Revathi', 'Uma', 'Vasantha', 'Thilaga', 'Priya', 'Kalaivani', 'Mangai', 'Sumathi', 'Jayanthi'];
+  var KDM_ASLI = ['Gontili', 'Sondoh', 'Majalan', 'Lojungin', 'Ansibin', 'Sintoh', 'Moujing', 'Gaanin', 'Kinsun', 'Gimbang', 'Sapadan', 'Lingkapo', 'Tingkalor', 'Mojinun', 'Gunsalam', 'Ambotang'];
+  /** Pemberat kaum nama NPC bagi parti bukan Sarawak (andaian ikut kaum majoriti ahli). */
+  var KAUM_PARTI = { MCA: { cina: 1 }, MIC: { india: 1 }, PPP: { india: 0.6, cina: 0.25, melayu: 0.15 }, PBRS: { kdm: 0.9, cina: 0.1 }, SUPP: { cina: 0.75, dayak: 0.25 } };
+  function partiPemain() { var S = globalThis.MyPolitikSave, p = null; try { p = S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { p = null; } return p ? p.parti : null; }
+  function namaCina(rng, jantina) {
+    var kel = pick(rng, CINA_KELUARGA), a = pick(rng, jantina === 'L' ? CINA_L : CINA_P), b = pick(rng, jantina === 'L' ? CINA_L : CINA_P), ing = rng() < 0.25 ? pick(rng, jantina === 'L' ? INGGERIS_L : INGGERIS_P) + ' ' : '';
+    return ing + kel + ' ' + a + ' ' + b;
+  }
+  function namaIndia(rng, jantina) { return pick(rng, jantina === 'L' ? INDIA_L : INDIA_P) + (jantina === 'L' ? ' a/l ' : ' a/p ') + pick(rng, INDIA_L); }
+  function namaKDM(rng, jantina) { var a = pick(rng, jantina === 'L' ? DAYAK_KRISTIAN_L : DAYAK_KRISTIAN_P), tengah = rng() < 0.3 ? pick(rng, KDM_ASLI) + ' ' : ''; return a + ' ' + tengah + pick(rng, KDM_ASLI); }
+  function awalanTahap(rng, tahap, jantina) {
+    if (!tahap) { return ''; }
+    var G = globalThis.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null);
+    return G && G.awalanNPC ? G.awalanNPC(rng, tahap, jantina) : '';
+  }
+  /** Kaum nama NPC: opts.etnik ('dayak' | 'melayu' | 'cina' | 'india' | 'kdm'), atau ikut parti pemain (satu nombor rawak, sama seperti sebelum v13.20). */
+  function kaumNama(rng, opts) {
+    var et = opts && opts.etnik; if (et) { return et; }
+    var r0 = rng(), parti = partiPemain(), w = parti ? KAUM_PARTI[parti] : null;
+    if (!w) { return r0 < peluangDayak() ? 'dayak' : 'melayu'; }
+    var c = 0, k; for (k in w) { c += w[k]; if (r0 < c) { return k; } }
+    return 'melayu';
+  }
+  /** opts.etnik: 'dayak' | 'melayu' | 'cina' | 'india' | 'kdm' | tiada (ikut parti pemain). */
   function janaNama(rng, jantina, tahap, opts) {
-    var et = opts && opts.etnik, dayak = et === 'dayak' || (!et && rng() < peluangDayak());
+    var kaum = kaumNama(rng, opts), dayak = kaum === 'dayak';
+    if (kaum === 'cina' || kaum === 'india' || kaum === 'kdm') { var nk = kaum === 'cina' ? namaCina(rng, jantina) : kaum === 'india' ? namaIndia(rng, jantina) : namaKDM(rng, jantina); return awalanTahap(rng, tahap, jantina) + nk; }
     if (dayak) {
       var nm = janaNamaDayak(rng, jantina), aw = '';
       if (tahap) { var G2 = globalThis.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null); if (G2 && G2.awalanNPC) { aw = G2.awalanNPC(rng, tahap, jantina); } }
@@ -1047,7 +1080,7 @@
 
     // penjana
     createRng: createRng,
-    janaNama: janaNama,
+    janaNama: janaNama, KAUM_PARTI: KAUM_PARTI,
     createGameSeed: createGameSeed,
     generateAhliCawangan: generateAhliCawangan,
 

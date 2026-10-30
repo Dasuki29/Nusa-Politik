@@ -1763,6 +1763,34 @@ ujian('v13.19: letak jawatan parti (Stress, Reputasi ikut peringkat, Presiden & 
   betul(LT.musimPemilihan(S.loadPlayer()), 'musim pemilihan ' + tahun + '/' + bulan); betul(!LT.letakParti('ketua_cawangan').ok, 'dikunci semasa musim pemilihan');
   S.clearPlayer();
 });
+ujian('v13.20: nama NPC ikut kaum majoriti parti (MCA Cina, MIC India, PBRS KDM, UMNO Melayu)', () => {
+  const O = g.MyPolitikOrganisasi;
+  const semua = (p) => { const s = O.getStruktur(p), n = []; Object.keys(s.induk).forEach((k) => { const b = s.induk[k]; [b.ketua, b.naib].concat(b.ajk).forEach((x) => { if (x && !x.pemain) { n.push(x.nama); } }); }); return n; };
+  P.daftar({}); let n = semua(S.loadPlayer()); betul(n.every((x) => / bin | binti | anak /.test(x)), 'UMNO: nama Melayu');
+  P.tetap({ parti: 'MCA' }); n = semua(S.loadPlayer()); betul(!n.some((x) => / bin | binti /.test(x)), 'MCA: tiada bin/binti: ' + n.find((x) => / bin | binti /.test(x)));
+  P.tetap({ parti: 'MIC' }); n = semua(S.loadPlayer()); betul(n.every((x) => / a\/[lp] /.test(x)), 'MIC: a/l, a/p');
+  P.tetap({ parti: 'PBRS' }); n = semua(S.loadPlayer()); betul(n.filter((x) => !/ bin | binti | a\/[lp] /.test(x)).length === n.length, 'PBRS: KDM / Cina');
+  P.tetap({ parti: 'MCA' }); const R = g.MyPolitikRival; betul(!/ bin | binti /.test(S.loadPlayer().nama === 'x' ? '' : (g.MyPolitikData.janaNama(g.MyPolitikData.createRng('z'), 'L', null))), 'janaNama ikut parti');
+  S.clearPlayer();
+});
+ujian('v13.20: daftar nama NPC: penyandang dalam Struktur bertanding, pemenang dikemas kini, lantikan Kekalkan / Ubah', () => {
+  const O = g.MyPolitikOrganisasi, N = g.MyPolitikNPC;
+  P.daftar({}); P.tetap({ bulan: 4, ip: 5000, jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan', 2023)] });
+  const pny = O.calonStruktur(S.loadPlayer(), 'ketua_cawangan').penyandang; betul(pny, 'penyandang Ketua Cawangan');
+  betul(E.daftarBertanding('ketua_cawangan').ok, 'daftar');
+  let r = E.jalankanPemilihan('ketua_cawangan', { rng: () => 0.99 }); betul(r.ok, r.ralat);
+  betul(r.keputusan.jadual.some((j) => j.nama === pny), 'penyandang dalam senarai calon');
+  let p = S.loadPlayer(), b = O.blok(p, 'cawangan', null), pemenang = r.keputusan.jadual.filter((j) => j.menang)[0];
+  if (pemenang.pemain) { betul(b.ketua.pemain, 'pemain dalam Struktur'); } else { sama(b.ketua.nama, pemenang.nama, 'pemenang NPC dalam Struktur'); }
+  // paksa menang untuk menguji lantikan
+  let menang = false; for (let s = 0; s < 80 && !menang; s++) { P.tetap({ pemilihan: null, npc: null, ip: 99999, kesetiaan: { ketuaCawangan: 95, ajk: 60, akarUmbi: 95, perwakilan: 90, penentang: 5 }, jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan', 2023)] }); E.daftarBertanding('ketua_cawangan'); r = E.jalankanPemilihan('ketua_cawangan', { rng: Math.random }); menang = r.ok && r.keputusan.menang; }
+  betul(menang, 'pemain menang Ketua Cawangan');
+  p = S.loadPlayer(); betul(N.lantikanAktif(p), 'lantikan dibuka'); const sen = N.senarai(p); sama(sen.length, 3, '3 pegawai dilantik (UMNO)'); betul(sen[0].pilihan.length === 3);
+  const ajk0 = p.kesetiaan.ajk; let x = N.kekal(0); betul(x.ok, x.ralat); sama(S.loadPlayer().kesetiaan.ajk, Math.min(100, ajk0 + 2));
+  const baru = sen[1].pilihan[0]; x = N.ubah(1, baru); betul(x.ok, x.ralat); sama(O.pemegangSlot(S.loadPlayer(), 'cawangan', null, 'peg', 1).nama, baru, 'pegawai baharu dalam Struktur');
+  P.tetap({ bulan: 5 }); const ev = N.prosesBulan().peristiwa; sama(ev.length, 1, 'baki dikekalkan automatik'); sama(S.loadPlayer().npc.lantikan, null);
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

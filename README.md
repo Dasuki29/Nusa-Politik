@@ -93,6 +93,7 @@ Modul utama dalam `js/`:
 | `pendidikan.js`, `pendidikan-ui.js` | Pendidikan pemain (tahap, sambung belajar separuh masa, Dr. untuk PhD, Doktor Kehormat) dan kad Pendidikan |
 | `friends-bn.js`, `friends-bn-ui.js` | Friends of BN sebagai NPC (kuota kerusi PRU, Jemput berkempen, usul Majlis Tertinggi BN) |
 | `sabah-bn.js`, `sabah-bn-ui.js` | MCA & MIC Sabah (Pemulihan Sabah, kuota MCA Sabah, Senator MIC Sabah) |
+| `npc.js`, `npc-ui.js` | Lantikan pegawai (Kekalkan / Ubah) selepas menang Ketua; daftar nama NPC dalam `organisasi.js` |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
@@ -156,6 +157,7 @@ node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidi
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN
 node tools/ujian-import.js       # pelayar: import kod simpanan dari menu utama (peranti baharu tanpa watak)
+node tools/ujian-npc.js          # pelayar: kad Lantikan (Kekalkan / Ubah), nama Struktur MCA bukan Melayu, EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

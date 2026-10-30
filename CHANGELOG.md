@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.20 (2026-10-31)
+
+- **Satu senarai nama NPC (maklum balas di borang, baris 5)**, ikut mockup yang dipersetujui. Sebelum ini nama NPC dijana oleh 5 modul berasingan, jadi Ketua Bahagian dalam Struktur bukan orang yang dilawan dalam pemilihan, dan Struktur tidak berubah selepas pemilihan.
+  - Daftar pemegang jawatan (`p.npc.nama`) dibaca oleh Struktur Organisasi, calon pemilihan, Pencabar Utama dan pencabar jawatan. Simpanan lama mengekalkan nama Struktur sedia ada.
+  - Pemilihan parti: penyandang NPC dalam Struktur sentiasa bertanding (+5 kekuatan ⚠️); calon lain diambil daripada Naib, Timbalan dan AJK dalam Struktur. Pemenang (pemain atau NPC) terus dikemas kini dalam Struktur.
+  - Kad baharu **📋 Lantikan: Kekalkan atau Ubah** (tab Tindakan) selepas menang Ketua Cawangan / Ketua Bahagian / Presiden (UMNO): Setiausaha, Bendahari dan Ketua Penerangan. Kekalkan: sokongan AJK +2 ⚠️; Ubah (pilih daripada 3 AJK): sokongan AJK −2, kesetiaan Ketua Cawangan +1 ⚠️. Yang belum dipilih dikekalkan pada akhir bulan (`js/npc.js`, `js/npc-ui.js`).
+- **Nama NPC ikut kaum majoriti parti (maklum balas pengguna)**: sebelum ini semua parti selain parti Sarawak memakai nama Melayu. Kini MCA = nama Cina, MIC = nama India (a/l, a/p), PPP = kebanyakan India dengan sebahagian Cina dan Melayu ⚠️, PBRS = nama Kadazan-Dusun-Murut dengan sebahagian Cina ⚠️, SUPP = kebanyakan Cina dengan sebahagian Dayak ⚠️. UMNO kekal Melayu; PBB, PRS dan PDP kekal Melayu/Dayak. Terpakai pada Struktur, calon pemilihan, pencabar, Badan Perhubungan dan blok. Nama ialah gabungan rekaan.
+- Ujian unit baharu dan `tools/ujian-npc.js` (pelayar). Cache `nusa-v13.20`.
+
 ## v13.19 (2026-10-30)
 
 - **Letak jawatan parti (maklum balas pemain di borang, 2 kali: "Presiden, Ketua Bahagian, ADUN dan EXCO Kanan, stress melampau")**, ikut mockup yang dipersetujui.

@@ -68,6 +68,7 @@
     PEMILIH_PUSAT: 1500,                 // pengundi simulasi peringkat pusat
     KERUSI_AJK_CAWANGAN: 7,
     PESAING_TAMBAHAN: 4,                 // bilangan calon = kerusi + nilai ini
+    BONUS_PENYANDANG: 5,                                      // v13.20: penyandang NPC (Struktur) mempertahankan jawatan
     PENYEBARAN_PESAING: { min: 44, sd: 12 },
     // v3.8 (kesukaran): pesaing lebih kuat pada peringkat tinggi; IP pemain dinilai mengikut skala peringkat
     ARAS_PESAING: { cawangan: -5, bahagian: 4, pusat: 7 },   // tambahan kekuatan purata pesaing
@@ -469,7 +470,8 @@
     for (var i = 0; i < bilangan; i++) {
       var nama, cuba = 0;
       do {
-        var lelaki = rng() < 0.55;
+        var lelaki = rng() < 0.55, DTn = (typeof globalThis !== 'undefined' && globalThis.MyPolitikData);
+        if (DTn && DTn.janaNama && p.parti && p.parti !== 'UMNO') { nama = DTn.janaNama(rng, lelaki ? 'L' : 'P', null); continue; }   // v13.20: nama ikut kaum majoriti parti
         var senaraiNama = lelaki ? NAMA_L : NAMA_P;
         nama = senaraiNama[Math.floor(rng() * senaraiNama.length)] + ' ' + NAMA_2[Math.floor(rng() * NAMA_2.length)] +
                (lelaki ? ' bin ' : ' binti ') + NAMA_L[Math.floor(rng() * NAMA_L.length)];
@@ -502,11 +504,23 @@
     var aras = (CONFIG.ARAS_PESAING[String(peringkat).replace(/^sayap_/, '').replace(/^pau$/, 'pusat')] || 0) + (d.kesukaran || 0) * CONFIG.GANDA_KESUKARAN;
     var SWk = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; if (SWk && SWk.ofsetJawatan) { aras += SWk.ofsetJawatan(p, d); }          // v9.0: imbangan blok Bumiputera/Pesaka (PBB)
     var calon = janaPesaing(p, d.kod, bil - 1, aras);
-    var gR = typeof globalThis !== 'undefined' ? globalThis : null, RVL = gR && gR.MyPolitikRival, bp = RVL && RVL.bonusPesaing ? RVL.bonusPesaing(p, peringkat, d.jenis) : null;      // v7.28: pencabar utama menguatkan calon lawan terkuat
-    if (bp && calon.length) { var kuat = calon[0]; calon.forEach(function (c) { if (c.kekuatan > kuat.kekuatan) { kuat = c; } }); kuat.kekuatan = clamp(kuat.kekuatan + bp.bonus, 8, 99); kuat.nama = bp.nama; }
+    var gR = typeof globalThis !== 'undefined' ? globalThis : null, OGn = gR && gR.MyPolitikOrganisasi, cs = OGn && OGn.calonStruktur && d.jenis !== 'perwakilan' ? OGn.calonStruktur(p, d.kod) : null;
+    if (cs && calon.length) {                                                    // v13.20: calon = orang dalam Struktur; penyandang NPC sentiasa bertanding (+5)
+      var iN = 0;
+      calon.forEach(function (c, i) {
+        if (i === 0 && cs.penyandang) { c.nama = cs.penyandang; c.penyandang = true; c.kekuatan = clamp(c.kekuatan + CONFIG.BONUS_PENYANDANG, 8, 99); return; }
+        if (iN < cs.lain.length) { c.nama = cs.lain[iN++]; }
+      });
+    }
+    var RVL = gR && gR.MyPolitikRival, bp = RVL && RVL.bonusPesaing ? RVL.bonusPesaing(p, peringkat, d.jenis) : null;      // v7.28: pencabar utama menguatkan calon lawan terkuat
+    if (bp && calon.length) {
+      var bukanP = calon.filter(function (c) { return !c.penyandang; }), kuat = bukanP[0] || calon[0], adaBp = calon.filter(function (c) { return c.nama === bp.nama; })[0];
+      if (adaBp) { kuat = adaBp; } else { bukanP.forEach(function (c) { if (c.kekuatan > kuat.kekuatan) { kuat = c; } }); kuat.nama = bp.nama; }
+      kuat.kekuatan = clamp(kuat.kekuatan + bp.bonus, 8, 99);
+    }
     var cb = cabaranUntuk(p, d);                                                 // v8.0: pencabar jawatan (incumbent.js) bertanding menentang anda
     if (cb && calon.length) {
-      var sasar = calon.filter(function (c) { return !bp || c.nama !== bp.nama; }).sort(function (a, b) { return b.kekuatan - a.kekuatan; })[0] || calon[0];
+      var sasar = calon.filter(function (c) { return c.nama === cb.penentang.nama; })[0] || calon.filter(function (c) { return (!bp || c.nama !== bp.nama) && !c.penyandang; }).sort(function (a, b) { return b.kekuatan - a.kekuatan; })[0] || calon[0];
       sasar.kekuatan = clamp(sasar.kekuatan + (cb.tahap === 'kritikal' ? CONFIG.BONUS_PENCABAR.kritikal : CONFIG.BONUS_PENCABAR.amaran), 8, 99); sasar.nama = cb.penentang.nama; sasar.pencabar = true;
     }
     calon.push({ nama: p.nama, pemain: true, kekuatan: kekuatanPemain(p, st, peringkat, d) });
@@ -718,6 +732,8 @@
     st.keputusan[kod] = keputusan;
 
     var patch = { pemilihan: st }, peristiwa = [];
+    var OGk = typeof globalThis !== 'undefined' ? globalThis.MyPolitikOrganisasi : null;          // v13.20: pemenang dikemas kini dalam Struktur
+    if (OGk && OGk.kemasKeputusan && d.jenis !== 'perwakilan') { var npcB = OGk.kemasKeputusan(p, kod, h.jadual); if (npcB) { if (menang && OGk.slotDariKod(kod) && OGk.slotDariKod(kod).slot === 'ketua' && !OGk.slotDariKod(kod).sayap) { npcB.lantikan = { peringkat: OGk.slotDariKod(kod).peringkat, tahun: p.tahun, bulan: p.bulan, keputusan: {} }; } patch.npc = npcB; } }
     if (jenis === 'perwakilan') {
       var aras = KUNCI_PERWAKILAN[kod] || 'bahagian', pw = salin(p.perwakilan || { cawangan: 0, bahagian: 0 });
       pw[aras] = menang ? p.tahun : 0;

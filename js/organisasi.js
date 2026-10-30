@@ -10,6 +10,9 @@
         dalam permainan ialah 25. Tukar CONFIG.AJK.pusat untuk 22 - hanya paparan.)
      - Sayap meniru struktur Induk (bilangan AJK sama).
      - Jawatan Ketua sayap sahaja boleh dipegang pemain; Naib Ketua dan AJK sayap ialah NPC.
+   v13.20 (mockup "Satu Senarai Nama NPC", dipersetujui): daftar pemegang jawatan p.npc.nama[kunci] mengatasi nama berbenih.
+     Kunci: "<peringkat>|<induk|sayap>|<ketua|timbalan|naib|ajk|peg|tambahan>[|indeks]". Pemilihan (election.js) membaca dan mengemas kini daftar ini,
+     supaya Struktur, calon pemilihan, pencabar dan lantikan memakai nama yang sama.
    ========================================================================== */
 (function (root, factory) {
   'use strict';
@@ -124,19 +127,22 @@
     });
   }
 
+  /* ---------- v13.20: daftar nama NPC ---------- */
+  function kunciNPC(peringkat, sayap, slot, i) { return peringkat + '|' + (sayap || 'induk') + '|' + slot + (i === undefined || i === null ? '' : '|' + i); }
+  function ganti(p, kunci, asal) { var d = p && p.npc && p.npc.nama; return d && typeof d[kunci] === 'string' && d[kunci] ? d[kunci] : asal; }
   function binaSatu(p, peringkat, sayap) {
     var t = tajuk(peringkat, sayap), rng = D.createRng(benih(p) + '|' + peringkat + '|' + (sayap || 'induk'));
     var bil = (sayap ? CONFIG.AJK_SAYAP : CONFIG.AJK)[peringkat];
     function slot(kunci) {
-      var kod = kodSlot(peringkat, sayap, kunci), ada = kod && pemegang(p, kod);
-      return { jawatan: t[kunci], nama: ada ? (p.nama || 'Anda') : nama(rng, jantinaSlot(sayap, rng), tahapGelaran(peringkat, sayap, kunci)), pemain: !!ada };
+      var kod = kodSlot(peringkat, sayap, kunci), ada = kod && pemegang(p, kod), asal = nama(rng, jantinaSlot(sayap, rng), tahapGelaran(peringkat, sayap, kunci));   // nama berbenih sentiasa dijana (urutan rawak stabil)
+      return { jawatan: t[kunci], nama: ada ? (p.nama || 'Anda') : ganti(p, kunciNPC(peringkat, sayap, kunci), asal), pemain: !!ada, kunci: kunciNPC(peringkat, sayap, kunci), kod: kod };
     }
     var ketua = slot('ketua'), naib = slot('naib'), timbalan = t.timbalan ? slot('timbalan') : null;
     var kodAjk = kodSlot(peringkat, sayap, 'ajk'), pAjk = kodAjk && pemegang(p, kodAjk);
     var ajk = [];
     for (var i = 0; i < bil; i++) {
-      var sendiri = pAjk && i === 0;
-      ajk.push({ jawatan: t.ajk + ' ' + (i + 1), nama: sendiri ? (p.nama || 'Anda') : nama(rng, jantinaSlot(sayap, rng)), pemain: !!sendiri });
+      var sendiri = pAjk && i === 0, asalA = nama(rng, jantinaSlot(sayap, rng));
+      ajk.push({ jawatan: t.ajk + ' ' + (i + 1), nama: sendiri ? (p.nama || 'Anda') : ganti(p, kunciNPC(peringkat, sayap, 'ajk', i), asalA), pemain: !!sendiri, kunci: kunciNPC(peringkat, sayap, 'ajk', i) });
     }
     var out = { peringkat: peringkat, label: LABEL[peringkat], ketua: ketua, timbalan: timbalan, naib: naib, ajk: ajk, bilAjk: bil, tambahan: [] };
     if (!sayap && peringkat === 'pusat') {            // Naib Presiden (3) ialah jawatan tambahan Induk di Pusat
@@ -154,7 +160,7 @@
     }
     if (!sayap && umno(p)) {                           // v13.4: pegawai dan AJK lantikan Ketua (NPC)
       var peg = peringkat === 'pusat' ? ['Setiausaha Agung', 'Bendahari', 'Ketua Penerangan'] : ['Setiausaha', 'Bendahari', 'Ketua Penerangan'].map(function (x) { return x + (peringkat === 'cawangan' ? ' Cawangan' : ' Bahagian'); });
-      peg.forEach(function (j) { out.tambahan.push({ jawatan: j + ' (dilantik)', nama: nama(rng, rng() < 0.7 ? 'L' : 'P', peringkat === 'pusat' ? 'tan' : undefined), pemain: false }); });
+      peg.forEach(function (j, iP) { var asalP = nama(rng, rng() < 0.7 ? 'L' : 'P', peringkat === 'pusat' ? 'tan' : undefined); out.tambahan.push({ jawatan: j + ' (dilantik)', nama: ganti(p, kunciNPC(peringkat, null, 'peg', iP), asalP), pemain: false, dilantik: true, kunci: kunciNPC(peringkat, null, 'peg', iP) }); });
       out.lantikan = { bil: CONFIG.LANTIKAN[peringkat], jawatan: peringkat === 'pusat' ? 'Ahli MKT lantikan Presiden' : 'AJK lantikan Ketua ' + (peringkat === 'cawangan' ? 'Cawangan' : 'Bahagian') };
     }
     if (sayap && umno(p)) { out.lantikan = { bil: CONFIG.LANTIKAN_SAYAP[peringkat], jawatan: 'AJK ' + NAMA_SAYAP[sayap] + ' lantikan Ketua' }; }
@@ -176,5 +182,49 @@
     return hasil;
   }
 
-  return { STRUKTUR_PBB: STRUKTUR_PBB, CONFIG: CONFIG, PERINGKAT: PERINGKAT, LABEL: LABEL, tajuk: tajuk, getStruktur: getStruktur };
+  /** v13.20: kod jawatan katalog -> slot Struktur { peringkat, sayap, slot } (null jika tiada). */
+  function slotDariKod(kod) {
+    var k = String(kod || ''), m;
+    var induk = { ketua_cawangan: ['cawangan', 'ketua'], naib_ketua_cawangan: ['cawangan', 'naib'], timbalan_ketua_cawangan: ['cawangan', 'naib'], ajk_cawangan: ['cawangan', 'ajk'],
+      ketua_bahagian: ['bahagian', 'ketua'], timbalan_ketua_bahagian: ['bahagian', 'timbalan'], naib_ketua_bahagian: ['bahagian', 'naib'], ajk_bahagian: ['bahagian', 'ajk'],
+      presiden: ['pusat', 'ketua'], timbalan_presiden: ['pusat', 'naib'], ahli_mkt: ['pusat', 'ajk'] };
+    if (induk[k]) { return { peringkat: induk[k][0], sayap: null, slot: induk[k][1] }; }
+    if ((m = /^sayap_(naib|ajk)_(cawangan|bahagian|pusat)_(\w+)$/.exec(k))) { return { peringkat: m[2], sayap: m[3], slot: m[1] }; }
+    if ((m = /^sayap_(cawangan|bahagian|pusat)_(\w+)$/.exec(k))) { return { peringkat: m[1], sayap: m[2], slot: 'ketua' }; }
+    return null;
+  }
+  /** Blok Struktur satu peringkat (Induk atau sayap). */
+  function blok(p, peringkat, sayap) { return binaSatu(p, peringkat, sayap || null); }
+  /** Pemegang NPC semasa sesuatu slot: { nama, pemain, kunci } atau null. */
+  function pemegangSlot(p, peringkat, sayap, slot, i) {
+    var b = binaSatu(p, peringkat, sayap || null);
+    if (slot === 'ajk') { return b.ajk[i || 0] || null; }
+    if (slot === 'peg') { return b.tambahan.filter(function (x) { return x.dilantik; })[i || 0] || null; }
+    return b[slot] || null;
+  }
+  /** Calon NPC daripada Struktur bagi jawatan kod: { penyandang, lain:[nama] } (penyandang null jika pemain memegangnya). */
+  function calonStruktur(p, kod) {
+    var s = slotDariKod(kod); if (!s) { return null; }
+    var b = binaSatu(p, s.peringkat, s.sayap), sasar = s.slot === 'ajk' ? null : b[s.slot], lain = [];
+    var penyandang = sasar && !sasar.pemain ? sasar.nama : null;
+    [b.timbalan, b.naib, b.ketua].concat(b.ajk).forEach(function (x) { if (x && !x.pemain && x.nama !== penyandang && lain.indexOf(x.nama) < 0) { lain.push(x.nama); } });
+    if (s.slot === 'ajk') { lain = b.ajk.filter(function (x) { return !x.pemain; }).map(function (x) { return x.nama; }).concat(lain.filter(function (n) { return !b.ajk.some(function (x) { return x.nama === n; }); })); }
+    return { slot: s, penyandang: penyandang, lain: lain };
+  }
+  /** Kemas kini daftar selepas keputusan pemilihan. jadual = [{nama, pemain, menang}]. Pulang objek npc baharu (untuk patch) atau null. */
+  function kemasKeputusan(p, kod, jadual) {
+    var s = slotDariKod(kod); if (!s || !Array.isArray(jadual)) { return null; }
+    var npc = p.npc && typeof p.npc === 'object' ? JSON.parse(JSON.stringify(p.npc)) : {}; npc.nama = npc.nama || {};
+    var menang = jadual.filter(function (j) { return j.menang; });
+    if (s.slot === 'ajk') {
+      var pemainMenang = menang.some(function (j) { return j.pemain; }), i = pemainMenang ? 1 : 0;
+      menang.filter(function (j) { return !j.pemain; }).forEach(function (j) { npc.nama[kunciNPC(s.peringkat, s.sayap, 'ajk', i)] = j.nama; i++; });
+    } else if (menang[0]) {
+      var k = kunciNPC(s.peringkat, s.sayap, s.slot);
+      if (menang[0].pemain) { delete npc.nama[k]; } else { npc.nama[k] = menang[0].nama; }
+    }
+    return npc;
+  }
+  return { STRUKTUR_PBB: STRUKTUR_PBB, CONFIG: CONFIG, PERINGKAT: PERINGKAT, LABEL: LABEL, tajuk: tajuk, getStruktur: getStruktur,
+    kunciNPC: kunciNPC, slotDariKod: slotDariKod, blok: blok, pemegangSlot: pemegangSlot, calonStruktur: calonStruktur, kemasKeputusan: kemasKeputusan };
 });

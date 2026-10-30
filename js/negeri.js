@@ -150,6 +150,8 @@
   }
   function wanitaCtx() { return !!ctx.sayap && WN() !== 'Pemuda'; }                  // v7.41: Puteri/Wanita = nama perempuan
   function janaNama(rng, wanita, tahap) {                                           // v8.24: gelaran mengikut tahap (dato | bahagian | tiada), lelaki dan perempuan
+    var DTn = root.MyPolitikData, pp = null; try { pp = S().loadPlayer(); } catch (e0) { pp = null; }
+    if (DTn && DTn.janaNama && pp && pp.parti && pp.parti !== 'UMNO') { return DTn.janaNama(rng, wanita ? 'P' : 'L', tahap || null); }   // v13.20: nama ikut kaum majoriti parti
     var a = wanita ? NAMA_P[Math.floor(rng() * NAMA_P.length)] : NAMA_L[Math.floor(rng() * NAMA_L.length)], b = NAMA_2[Math.floor(rng() * NAMA_2.length)];
     var G = root.MyPolitikGelaran || (typeof require === 'function' ? (function () { try { return require('./gelaran.js'); } catch (e) { return null; } })() : null);
     return (G && G.awalanNPC ? G.awalanNPC(rng, tahap, wanita ? 'P' : 'L') : '') + a + ' ' + b;

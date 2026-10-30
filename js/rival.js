@@ -48,12 +48,21 @@
   function janaNama(p, lv, siri) {
     var r = rngBenih(p, lv, siri), lelaki = lv === 'sayap' ? p.sayap === 'pemuda' : r() < 0.7;
     var DT = root.MyPolitikData;                   // v11.3: pencabar parti Sarawak boleh bernama Dayak (ikut komposisi DUN)
-    if (DT && DT.janaNama && /^(PBB|PRS|PDP)$/.test(p.parti || '')) { return DT.janaNama(r, lelaki ? 'L' : 'P', lv === 'bahagian' ? 'bahagian' : null); }
+    if (DT && DT.janaNama && p.parti && p.parti !== 'UMNO') { return DT.janaNama(r, lelaki ? 'L' : 'P', lv === 'bahagian' ? 'bahagian' : null); }      // v13.20: semua parti bukan UMNO ikut kaum majoriti parti
     var a = (lelaki ? NAMA_L : NAMA_P)[Math.floor(r() * (lelaki ? NAMA_L.length : NAMA_P.length))], b = NAMA_2[Math.floor(r() * NAMA_2.length)];
     var G = G0();                                  // v8.24: gelaran NPC (Bahagian: sebahagian sahaja)
     return (lv === 'bahagian' && G && G.awalanNPC ? G.awalanNPC(r, 'bahagian', lelaki ? 'L' : 'P') : '') + a + ' ' + b;
   }
-  function baru(p, lv, siri) { return { nama: janaNama(p, lv, siri), kuasa: cfg(p).mula, tren: 0, serang: null }; }
+  /** v13.20: pencabar diambil daripada Struktur (Naib di peringkat itu; siri seterusnya: AJK). null jika tiada. */
+  function namaStruktur(p, lv, siri) {
+    var OG = root.MyPolitikOrganisasi; if (!OG || !OG.pemegangSlot) { return null; }
+    try {
+      var sy = lv === 'sayap' ? (p.sayap && p.sayap !== 'utama' ? p.sayap : null) : null; if (lv === 'sayap' && !sy) { return null; }
+      var pr = lv === 'bahagian' ? 'bahagian' : 'cawangan', n = Number(siri) || 0, x = n === 0 ? OG.pemegangSlot(p, pr, sy, 'naib') : OG.pemegangSlot(p, pr, sy, 'ajk', n - 1);
+      return x && !x.pemain ? x.nama : null;
+    } catch (e) { return null; }
+  }
+  function baru(p, lv, siri) { return { nama: namaStruktur(p, lv, siri) || janaNama(p, lv, siri), kuasa: cfg(p).mula, tren: 0, serang: null }; }
 
   function pastikan(p) {
     var r = p.rival && typeof p.rival === 'object' ? p.rival : { siri: 1, tahunReset: p.tahun, senaraiPencabar: {}, amaran: [] };
