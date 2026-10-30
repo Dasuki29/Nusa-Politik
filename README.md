@@ -89,6 +89,7 @@ Modul utama dalam `js/`:
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
 | `sabah.js` | PRN Sabah: jadual berasingan, anggaran kerusi DUN Sabah dan kerajaan negeri |
 | `pbrs.js`, `pbrs-ui.js`, `pbrs-data.js` | Peraturan PBRS mod ringan (kuota BN, Kesetiaan BN dan Muhibah GRS) dan data kawasan (`node tools/build-pbrs.js`) |
+| `letak.js`, `letak-ui.js` | Letak Jawatan MP / ADUN / jawatan kerajaan (penalti, PRK calon parti, tempoh bertenang lobi) dan kad Wakil Rakyat & Kerajaan |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
@@ -147,6 +148,7 @@ node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), 
 node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pautan Google Form isi automatik, EN
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
+node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

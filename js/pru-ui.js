@@ -194,16 +194,25 @@
       (ada ? 'Peluang lobi penggal ini telah digunakan. Lobi dibuka semula selepas pilihan raya akan datang jika parti membentuk kerajaan.'
            : 'Tiada lobi penggal ini: parti anda tidak membentuk kerajaan pada pilihan raya terakhir. Lobi dibuka selepas pilihan raya akan datang jika parti membentuk kerajaan (peluang bergantung pada populariti parti).') + '</p></section>';
   }
+  /** v13.12: senarai semak syarat Menteri Besar / Ketua Menteri / Premier untuk ADUN. */
+  function kadSemakMB(p) {
+    var m = KB && KB.semakMB ? KB.semakMB(p) : null;
+    if (!m || m.sedia) { return ''; }
+    var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">👑 ' + esc(m.label) + (m.negeri ? ' ' + esc(m.negeri) : '') + '</h2><p class="note">Syarat menuntut jawatan ' + esc(m.label) + ' selepas PRU atau PRN:</p><ul class="mbsemak">' +
+      m.item.map(function (x) { return '<li>' + (x.ok ? '✅ ' : '⛔ ') + esc(x.teks) + '</li>'; }).join('') +
+      '<li>ℹ️ Peluang: 100% jika parti menang majoriti sendiri; jika gabungan, ikut bahagian kerusi parti dan hubungan gabungan.</li></ul>';
+    return h + (m.semua ? '<p class="note">Semua syarat dipenuhi. Tuntutan dibuka selepas pilihan raya akan datang jika parti membentuk kerajaan negeri.</p>' : '') + '</section>';
+  }
   function kadKabinet(p) {
     if (!KB) { return ''; }
-    var k = KB.ringkasan(p), h = '';
+    var k = KB.ringkasan(p), h = '', smb = kadSemakMB(p);
     if (k.lobi && !k.hasGovernmentRole) {
       var mb = k.mb && k.mb.boleh ? k.mb : null;
       var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
-      return bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem;margin-top:8px">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '') + '</section>';
+      return smb + bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem;margin-top:8px">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '') + '</section>';
     }
-    if (!k.hasGovernmentRole) { return kadTiadaLobi(p); }
-    h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
+    if (!k.hasGovernmentRole) { return smb + kadTiadaLobi(p); }
+    h = smb + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
     var arah = k.arah > 0 ? ' ▲ +' + k.arah : k.arah < 0 ? ' ▼ ' + k.arah : ' ▬';
     h += bar('KPI Portfolio · ' + k.kpiLabel + arah, k.governanceRating, k.governanceRating < 30) + bar('Tekanan politik', k.tekananPolitik, k.tekananPolitik >= 70) +
       bar('Populariti nasional', k.popularitiNasional, k.popularitiNasional < 30) + bar('Risiko rombakan kabinet', k.risikoRombak, k.risikoRombak >= 60);

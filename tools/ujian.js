@@ -1574,6 +1574,43 @@ ujian('v13.11: rundingan PM: parti terbesar dalam gabungan hampir pasti PM (65% 
   betul(semak > 0, 'ada senario gabungan diuji (' + semak + ')');
   S.clearPlayer();
 });
+ujian('v13.12: Letak Jawatan: kerusi MP (jawatan persekutuan tamat, PRK calon parti), jawatan kerajaan (bertenang 6 bulan), kunci & tiada PRK dekat PRU', () => {
+  const LT = g.MyPolitikLetak, PD = g.MyPolitikPindah;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 1, reputasi: 60, pru: { status: { jenis: 'MP', kerusi: 'Kangar', sejakTahun: 2026, sejakBulan: 3, kerajaan: true }, statusKedua: { jenis: 'ADUN', kerusi: 'Kuala Perlis', sejakTahun: 2026, sejakBulan: 3, kerajaan: true } },
+    kabinet: { hasGovernmentRole: true, roleLevel: 'TIMBALAN_MENTERI', portfolioName: 'Timbalan Menteri Pendidikan' } });
+  let p = S.loadPlayer(), s = LT.senarai(p);
+  sama(s.length, 3, 'MP + ADUN + jawatan kerajaan'); sama(cari(s, 'MP').ikut, 'Timbalan Menteri Pendidikan', 'jawatan persekutuan bergantung pada kerusi MP'); sama(cari(s, 'ADUN').ikut, '', 'ADUN tidak menjejas jawatan persekutuan');
+  betul(cari(s, 'MP').prk, 'PRK diadakan (jauh dari PRU)');
+  const au = p.kesetiaan.akarUmbi, rep = p.reputasi;
+  let r = LT.letakKerusi('MP'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.reputasi, rep - 3); sama(p.kesetiaan.akarUmbi, au - 5); sama(KB.getKabinet(p).hasGovernmentRole, false, 'jawatan Timbalan Menteri tamat');
+  sama(PRU.semuaStatus(p).length, 1); sama(PRU.semuaStatus(p)[0].jenis, 'ADUN', 'status ADUN kekal');
+  sama(LT.getLetak(p).prk.length, 1); sama(LT.getLetak(p).prk[0].i, 2027 * 12 + 2, 'PRK bulan depan');
+  betul(LT.bertenang(p) > 0, 'bertenang selepas jawatan tamat'); betul(!KB.bukaLobi('PARLIMEN').ok, 'lobi disekat semasa bertenang');
+  P.tetap({ bulan: 2 }); let ev = LT.prosesBulan({ rng: () => 0.99 }).peristiwa; p = S.loadPlayer();
+  sama(ev.length, 1); sama(ev[0].jenis, 'letak_prk_kalah'); sama(p.reputasi, rep - 6, 'parti kalah PRK: Reputasi -3 lagi'); sama(LT.getLetak(p).prk.length, 0);
+  // letak jawatan kerajaan (EXCO): kerusi kekal, Reputasi -2, bertenang 6 bulan
+  P.tetap({ kabinet: { hasGovernmentRole: true, roleLevel: 'EXCO_NEGERI', portfolioName: 'EXCO Pertanian' }, letak: { kabinetSehingga: 0, prk: [], sejarah: [] } });
+  const rep2 = S.loadPlayer().reputasi; r = LT.letakKerajaan(); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.reputasi, rep2 - 2); sama(PRU.semuaStatus(p).length, 1, 'kerusi kekal'); sama(LT.bertenang(p), 2027 * 12 + 2 + 6);
+  P.tetap({ bulan: 9 }); betul(!LT.bertenang(S.loadPlayer()), 'bertenang tamat selepas 6 bulan');
+  // 12 bulan atau kurang sebelum PRU: tiada PRK
+  P.tetap({ tahun: 2030, bulan: 6 }); p = S.loadPlayer(); sama(cari(LT.senarai(p), 'ADUN').prk, false, '9 bulan sebelum PRU 2031');
+  r = LT.letakKerusi('ADUN'); betul(r.ok && !r.prk, r.ralat); p = S.loadPlayer(); sama(PRU.semuaStatus(p).length, 0); sama(LT.getLetak(p).prk.length, 0);
+  sama(cari(PD.semak(p).syarat, 'jawatan').lulus, true, 'Pindah: syarat jawatan lulus selepas tiada kerusi');
+  // dikunci semasa PRK berjalan
+  P.tetap({ pru: { status: { jenis: 'MP', kerusi: 'Kangar', sejakTahun: 2026, sejakBulan: 3, kerajaan: true } }, prk: { sentimen: 0, aktif: { jenis: 'DUN', nama: 'X' }, sejarah: [] } });
+  betul(!LT.status(S.loadPlayer()).boleh); betul(!LT.letakKerusi('MP').ok, 'dikunci semasa PRK');
+  S.clearPlayer();
+});
+ujian('v13.12: senarai semak Menteri Besar untuk ADUN', () => {
+  P.daftar({}); P.tetap({ pru: { status: { jenis: 'ADUN', kerusi: 'Kuala Perlis', sejakTahun: 2026, sejakBulan: 3, kerajaan: true } } });
+  let m = KB.semakMB(S.loadPlayer()); betul(m, 'ADUN ada senarai semak'); sama(m.item.length, 3); betul(m.item[0].ok && m.item[1].ok, 'ADUN di negeri ini + kerajaan');
+  sama(m.item[2].ok, false, 'belum Pengerusi Badan Perhubungan'); betul(/Badan Perhubungan/.test(m.item[2].teks)); sama(m.sedia, false);
+  P.tetap({ pru: { status: { jenis: 'ADUN', kerusi: 'Kuala Perlis', kerajaan: false } } }); sama(KB.semakMB(S.loadPlayer()).item[1].ok, false, 'pembangkang');
+  P.tetap({ pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: true } } }); sama(KB.semakMB(S.loadPlayer()), null, 'bukan ADUN');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

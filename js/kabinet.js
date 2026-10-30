@@ -193,6 +193,8 @@
   function bukaLobi(sumber) {
     var p = S().loadPlayer(), k = getKabinet(p);
     if (k.hasGovernmentRole) { return { ok: false, ralat: 'Sudah memegang jawatan kerajaan.' }; }
+    var LT = modul('MyPolitikLetak', 'letak.js'), bt = LT && LT.bertenang ? LT.bertenang(p) : 0;          // v13.12: tempoh bertenang selepas letak jawatan
+    if (bt) { return { ok: false, ralat: 'Tempoh bertenang selepas letak jawatan (sehingga ' + LT.tb(bt) + ').' }; }
     k.lobi = { sumber: sumber === 'DUN' ? 'DUN' : 'PARLIMEN', baki: CONFIG.LOBI_PERCUBAAN };
     var r = simpan(k, {}, { log: { tindakan: 'lobi_buka', nama: 'Lobi Portfolio Kerajaan dibuka', peringkat: 'ahli' } });
     return { ok: !!(r && r.ok) };
@@ -309,6 +311,25 @@
     var sy = syaratMB(p), k = kerusiMB(p);
     return { boleh: sy.boleh, sebab: sy.sebab, label: labelKetua(p), negeri: p.negeri || '', sendiri: !!(k && k.sendiri), parti: k ? k.parti : 0, rakan: k ? k.rakan : 0, gabungan: k ? k.gabungan : 0, jumlah: k ? k.jumlah : 0, ambang: k ? k.ambang : 0,
       kongsi: k ? Math.round(k.kongsi * 100) : 100, peluang: Math.round(peluangMB(p) * 100) };
+  }
+  /** v13.12: senarai semak syarat MB / Ketua Menteri / Premier untuk ADUN (dipaparkan dalam kad Kabinet). null = bukan ADUN atau sudah MB. */
+  function semakMB(p) {
+    var PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), k = getKabinet(p);
+    if (!p || !PR || !PR.getPRU || k.roleLevel === 'MENTERI_BESAR') { return null; }
+    var pru = PR.getPRU(p), st = [pru.status, pru.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN'; })[0];
+    if (!st) { return null; }
+    var sw = SW(p.parti), label = labelKetua(p), item = [];
+    item.push({ ok: !(st.lain && !st.negeriSama) && !(!sw && String(p.negeri || '').toLowerCase() === 'sarawak'), teks: 'Anda ADUN di negeri ini' });
+    item.push({ ok: !!st.kerajaan, teks: 'Parti / gabungan anda membentuk kerajaan negeri selepas PRU atau PRN' });
+    if (sw) {
+      var W9 = SWk(), sb = W9 && W9.sebabPremier ? W9.sebabPremier(p) : '';
+      item.push({ ok: !sb, teks: sb ? sb : 'Anda Presiden PBB' });
+    } else {
+      var ada = false; try { var s0 = NG && NG.status ? NG.status(p) : null; ada = !!(s0 && s0.bp && s0.bp.pengerusi && s0.bp.pengerusi.pemain); } catch (e) { ada = false; }
+      item.push({ ok: ada, teks: ada ? 'Anda Pengerusi Badan Perhubungan Negeri' : 'Anda Pengerusi Badan Perhubungan Negeri: lobi di kad Negeri (tab Profil) selepas pemilihan Pusat' });
+    }
+    var semua = item.every(function (x) { return x.ok; }), mb = k.lobi && k.lobi.sumber === 'DUN' && !k.hasGovernmentRole ? maklumatMB(p) : null;
+    return { label: label, negeri: p.negeri || '', item: item, semua: semua, sedia: !!(mb && mb.boleh), peluang: mb ? mb.peluang : null, sendiri: !!(mb && mb.sendiri) };
   }
   function lantikDi(p, k, tahap, nama, log) {
     k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = ''; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
@@ -515,7 +536,7 @@
   return {
     CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getKabinet: getKabinet, lantikKanan: lantikKanan, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
+    getKabinet: getKabinet, lantikKanan: lantikKanan, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
     laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
   };
 });

@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.12 (2026-10-30)
+
+- **Letak Jawatan (maklum balas pemain):** pemain kini boleh melepaskan kerusi atau jawatan kerajaan tanpa bersara, contohnya untuk Pindah Cawangan. Ikut mockup yang dipersetujui (`js/letak.js`, `js/letak-ui.js`).
+  - Kad baharu **🏛️ Wakil Rakyat & Kerajaan** di tab Profil: setiap kerusi MP / ADUN dan jawatan kerajaan, masing-masing dengan butang Letak Jawatan dan skrin pengesahan. Dikunci semasa PRU / PRN atau PRK.
+  - Letak jawatan kerajaan (Menteri / EXCO / MB / TPM / PM): kerusi kekal, elaun dan CDF tamat, Reputasi −2, tidak boleh dilobi untuk jawatan kerajaan selama 6 bulan ⚠️. Jika PM, TPM (NPC) mengambil alih.
+  - Letak kerusi MP / ADUN: Reputasi −3, akar umbi −5 ⚠️. Jawatan yang bergantung pada kerusi itu turut tamat (MP → jawatan persekutuan; ADUN → EXCO / MB / Menteri Negeri). PRK bulan depan dengan calon parti (NPC); jika parti kalah, Reputasi −3 lagi ⚠️. Tiada PRK jika 12 bulan atau kurang sebelum PRU / PRN yang mempertandingkan kerusi itu.
+  - Peluang calon parti dalam PRK ⚠️: 55% + (Reputasi − 50) × 0.8% + sentimen nasional × 1.2%, antara 20% dan 85%.
+  - Selepas tiada kerusi dan jawatan kerajaan, syarat Pindah Cawangan "tiada kerusi / jawatan" dipenuhi (syarat lain kekal).
+- **Syarat Menteri Besar dipaparkan (maklum balas pemain "tak boleh jadi MB"):** kad **👑 Menteri Besar / Ketua Menteri / Premier** dalam tab Tindakan untuk setiap ADUN, dengan senarai semak ✅/⛔ (ADUN di negeri ini, parti / gabungan membentuk kerajaan negeri, Pengerusi Badan Perhubungan Negeri atau Presiden PBB) dan cara peluang dikira.
+- Terjemahan EN, 2 ujian unit dan `tools/ujian-letak.js` (pelayar). Cache `nusa-v13.12`.
+
 ## v13.11 (2026-10-30)
 
 - **Rundingan PM selepas PRU (maklum balas pemain):** parti yang menang banyak kerusi tetapi memerlukan rakan gabungan kerap hanya mendapat TPM, kerana peluang PM sekitar 63% walaupun parti itu jauh lebih besar daripada rakan. Kini, jika parti pemain ialah parti terbesar dalam gabungan, peluang PM = 65% + (bahagian kerusi dalam gabungan − 50%) × 1.5, campur hubungan gabungan dan reputasi, maksimum 97% (cth. 60% → 80%, 70% → 95%). Parti yang lebih kecil daripada rakan kekal dengan formula asal. Mesej kegagalan kini menyebut peluang yang tidak dicapai.
