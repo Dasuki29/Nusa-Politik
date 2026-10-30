@@ -90,6 +90,7 @@ Modul utama dalam `js/`:
 | `sabah.js` | PRN Sabah: jadual berasingan, anggaran kerusi DUN Sabah dan kerajaan negeri |
 | `pbrs.js`, `pbrs-ui.js`, `pbrs-data.js` | Peraturan PBRS mod ringan (kuota BN, Kesetiaan BN dan Muhibah GRS) dan data kawasan (`node tools/build-pbrs.js`) |
 | `letak.js`, `letak-ui.js` | Letak Jawatan MP / ADUN / jawatan kerajaan (penalti, PRK calon parti, tempoh bertenang lobi) dan kad Wakil Rakyat & Kerajaan |
+| `pendidikan.js`, `pendidikan-ui.js` | Pendidikan pemain (tahap, sambung belajar separuh masa, Dr. untuk PhD, Doktor Kehormat) dan kad Pendidikan |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
@@ -149,6 +150,7 @@ node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pau
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
+node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

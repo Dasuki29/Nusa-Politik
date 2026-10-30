@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v13.13 (2026-10-30)
+
+- **Gelaran (maklum balas pemain):** ikut mockup "Gelaran & Pendidikan" yang dipersetujui (`js/gelaran.js`).
+  - Gelaran persekutuan pemain kini dieja **Datuk** (bukan Dato'), seperti dipinta pengguna.
+  - **Tun** ⚠️: sudah Tan Sri, pernah Perdana Menteri sekurang-kurangnya 36 bulan (jumlah), Integriti ≥ 75, tiada hukuman disiplin. Reputasi +3.
+  - **Gelaran negeri** ⚠️ daripada negeri cawangan: tahap 1 (ADUN / EXCO 36 bulan, Integriti ≥ 60) dan tahap 2 (MB / KM 36 bulan, Integriti ≥ 70). Dato' / Dato' Seri; Pahang Dato' Sri; Melaka dan Pulau Pinang Datuk / Datuk Seri; Sabah Datuk / Datuk Seri Panglima. Sarawak 4 tahap: Datuk → Datuk Amar (Menteri Kanan / Premier 36 bulan) → **Datuk Patinggi** (Premier 24 bulan) → Pehin Sri (Premier 60 bulan). Reputasi +2 setiap satu.
+  - Awalan nama: persekutuan → negeri → Dr. (cth. "Tan Sri Dato' Seri Dr.", "Tun Dr."). Datuk persekutuan tidak diulang jika ada gelaran negeri; di Sarawak Datuk Patinggi / Pehin Sri didahulukan.
+- **Pendidikan (baharu, `js/pendidikan.js`):**
+  - Medan **Pendidikan tertinggi** semasa mendaftar (SPM, Diploma, Ijazah Sarjana Muda, Sarjana, PhD); simpanan lama = Ijazah Sarjana Muda ⚠️.
+  - Kad **🎓 Pendidikan** di tab Profil: sambung belajar separuh masa ⚠️ (Diploma RM 8,000 / 18 bulan; Ijazah RM 20,000 / 36 bulan; Sarjana RM 25,000 / 24 bulan; PhD RM 40,000 / 36 bulan). AP bulanan −1 dan Stress +2 sebulan; boleh ditangguh (yuran tidak dipulangkan).
+  - Kesan bila tamat: Reputasi +1 / +1 / +2 / +3; peluang lobi portfolio +2% (Ijazah), +4% (Sarjana), +6% (PhD). PhD sahaja memberi awalan **"Dr."**.
+  - **Doktor Kehormat** selepas 24 bulan sebagai Menteri / MB / TPM / PM: Reputasi +1, tanpa awalan "Dr.".
+- Kad Anugerah & Gelaran (tab Tindakan) dan Rumusan Kerjaya menyenaraikan gelaran negeri, Tun dan pendidikan. Terjemahan EN, 3 ujian unit dan `tools/ujian-gelaran.js` (pelayar). Cache `nusa-v13.13`.
+
 ## v13.12 (2026-10-30)
 
 - **Letak Jawatan (maklum balas pemain):** pemain kini boleh melepaskan kerusi atau jawatan kerajaan tanpa bersara, contohnya untuk Pindah Cawangan. Ikut mockup yang dipersetujui (`js/letak.js`, `js/letak-ui.js`).

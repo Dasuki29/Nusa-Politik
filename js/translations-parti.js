@@ -9,6 +9,10 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["Pendidikan tertinggi", "Highest education"],
+  ["Ijazah Sarjana Muda", "Bachelor's Degree"],
+  ["Sarjana", "Master's Degree"],
+  ['PhD memberi awalan "Dr.". Boleh sambung belajar secara separuh masa dalam permainan.', 'A PhD gives the "Dr." prefix. You can continue studying part-time in the game.'],
   ["Arahan Pusat: Pimpin Cawangan Kawasan Pembangkang", "Central Directive: Lead a Branch in an Opposition Area"],
   ["Anda Ahli Parlimen tanpa jawatan Pusat. Jawatankuasa Pusat meminta anda memimpin cawangan di sebuah kawasan pembangkang bagi memperkukuh parti di sana.", "You are an MP without a Central post. The Central Committee asks you to lead a branch in an opposition area to strengthen the party there."],
   ["Terima arahan Pusat", "Accept the Central directive"], ["Kerja berat, tetapi Pusat menghargai anda. Stress +4.", "Heavy work, but the Central leadership values you. Stress +4."],

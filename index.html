@@ -1482,6 +1482,17 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                 <p class="note" id="h-umur" style="margin:4px 0 0;font-size:.78rem">Umur bertambah 1 tahun setiap tahun permainan. Risiko kesihatan meningkat selepas 45 tahun, dan kerjaya tamat pada usia 100 tahun.</p>
                 <p class="field__error" id="e-umur" role="alert"></p>
               </div>
+              <div class="field">
+                <label for="s-pendidikan">Pendidikan tertinggi</label>
+                <select class="select" id="s-pendidikan" name="pendidikan" aria-describedby="h-pendidikan">
+                  <option value="spm">SPM</option>
+                  <option value="diploma">Diploma</option>
+                  <option value="ijazah" selected>Ijazah Sarjana Muda</option>
+                  <option value="sarjana">Sarjana</option>
+                  <option value="phd">PhD</option>
+                </select>
+                <p class="note" id="h-pendidikan" style="margin:4px 0 0;font-size:.78rem">PhD memberi awalan "Dr.". Boleh sambung belajar secara separuh masa dalam permainan.</p>
+              </div>
               <div class="field" style="grid-column:1/-1">
                 <label for="s-ahli" id="l-ahli">Menjadi ahli UMNO sejak</label>
                 <select class="select" id="s-ahli" name="tahunAhli" aria-describedby="h-ahli">

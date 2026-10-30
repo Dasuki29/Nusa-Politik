@@ -190,6 +190,7 @@
       demografik: { jantina: d.jantina, umur: d.umur, kategori: d.label, kategoriKod: d.kod },
       cawanganInfo: ik.cawanganInfo,
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
+      pendidikan: { tahap: ['spm', 'diploma', 'ijazah', 'sarjana', 'phd'].indexOf(input.pendidikan) >= 0 ? input.pendidikan : 'ijazah' },   // v13.13: pendidikan tertinggi
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
       parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' ? input.parti : 'UMNO',                // v13.8: PPP                // v13.1: MCA; v13.3: MIC

@@ -1611,6 +1611,55 @@ ujian('v13.12: senarai semak Menteri Besar untuk ADUN', () => {
   P.tetap({ pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: true } } }); sama(KB.semakMB(S.loadPlayer()), null, 'bukan ADUN');
   S.clearPlayer();
 });
+ujian('v13.13: awalan nama: Datuk (persekutuan), gelaran negeri, Tan Sri, Tun dan Dr.', () => {
+  const GL = g.MyPolitikGelaran || require('../js/gelaran.js'), x = { tahun: 2030, bulan: 1 };
+  P.daftar({}); const ng = S.loadPlayer().negeri;
+  P.tetap({ gelaran: { dato: x }, pendidikan: { tahap: 'ijazah' } }); sama(GL.awalan(S.loadPlayer()), 'Datuk ', 'Datuk persekutuan (bukan Dato\')');
+  const t2 = GL.tanggaNegeri(S.loadPlayer())[1].nama;
+  P.tetap({ gelaran: { dato: x, negeri: { t1: x, t2: x } } }); sama(GL.awalan(S.loadPlayer()), t2 + ' ', 'Datuk tidak diulang jika ada gelaran negeri (' + ng + ')');
+  P.tetap({ gelaran: { dato: x, tansri: x, negeri: { t1: x, t2: x } }, pendidikan: { tahap: 'phd' } }); sama(GL.awalan(S.loadPlayer()), 'Tan Sri ' + t2 + ' Dr. ');
+  P.tetap({ gelaran: { dato: x, tansri: x, tun: x, negeri: { t1: x } } }); sama(GL.awalan(S.loadPlayer()), 'Tun Dr. ', 'Tun memadai');
+  P.tetap({ gelaran: { dato: x }, pendidikan: { tahap: 'sarjana' } }); sama(GL.awalan(S.loadPlayer()), 'Datuk ');
+  P.tetap({ gelaran: {}, pendidikan: { tahap: 'phd' } }); sama(GL.awalan(S.loadPlayer()), 'Dr. ');
+  P.tetap({ gelaran: {}, pendidikan: undefined }); sama(g.MyPolitikPendidikan.getPendidikan(S.loadPlayer()).tahap, 'ijazah', 'simpanan lama = Ijazah');
+  // nama negeri ikut negeri cawangan; Sarawak 4 tahap
+  sama(GL.tanggaNegeri({ negeri: 'Sabah', parti: 'UMNO' })[1].nama, 'Datuk Seri Panglima'); sama(GL.tanggaNegeri({ negeri: 'Pahang', parti: 'UMNO' })[1].nama, "Dato' Sri");
+  sama(GL.tanggaNegeri({ negeri: 'Melaka', parti: 'UMNO' })[0].nama, 'Datuk'); sama(GL.tanggaNegeri({ negeri: 'Johor', parti: 'UMNO' })[1].nama, "Dato' Seri");
+  sama(GL.tanggaNegeri({ negeri: 'Sarawak', parti: 'PBB' }).map((y) => y.nama).join(), 'Datuk,Datuk Amar,Datuk Patinggi,Pehin Sri');
+  P.tetap({ parti: 'PBB', negeri: 'Sarawak', gelaran: { dato: x, tansri: x, negeri: { t1: x, amar: x, patinggi: x } }, pendidikan: { tahap: 'ijazah' } });
+  sama(GL.awalan(S.loadPlayer()), 'Datuk Patinggi Tan Sri ', 'Sarawak: Datuk Patinggi didahulukan');
+  S.clearPlayer();
+});
+ujian('v13.13: kurniaan Tun (PM 36 bulan, Integriti >= 75) dan gelaran negeri (ADUN 36 bulan)', () => {
+  const GL = g.MyPolitikGelaran || require('../js/gelaran.js');
+  P.daftar({}); P.tetap({ tahun: 2035, bulan: 1, integriti: { skor: 80 }, gelaran: { dato: { tahun: 2030 }, tansri: { tahun: 2032 }, bulanPM: 35, bulanN1: 35 },
+    kabinet: { hasGovernmentRole: true, roleLevel: 'PERDANA_MENTERI', portfolioName: 'Perdana Menteri' }, pru: { status: { jenis: 'ADUN', kerusi: 'X', kerajaan: true } } });
+  const rep = S.loadPlayer().reputasi, ev = GL.prosesBulan().peristiwa, d = GL.getGelaran(S.loadPlayer());
+  betul(d.tun, 'Tun dikurniakan'); betul(d.negeri.t1, 'gelaran negeri tahap 1'); betul(ev.some((e) => /Tun/.test(e.mesej)) && ev.some((e) => /gelaran negeri/.test(e.mesej)));
+  betul(S.loadPlayer().reputasi >= rep + 5, 'Reputasi +3 (Tun) +2 (negeri)');
+  // tanpa integriti cukup: tiada Tun
+  P.tetap({ integriti: { skor: 70 }, gelaran: { dato: { tahun: 2030 }, tansri: { tahun: 2032 }, bulanPM: 50 } }); GL.prosesBulan(); sama(GL.getGelaran(S.loadPlayer()).tun, null, 'Integriti 70: tiada Tun');
+  S.clearPlayer();
+});
+ujian('v13.13: pendidikan: daftar, sambung Sarjana 24 bulan, tangguh, bonus lobi dan Doktor Kehormat', () => {
+  const PD = g.MyPolitikPendidikan, D = g.MyPolitikData;
+  const c = D.getFallbackData().negeri[0].bahagian[0].dun[0].cawangan[0], dem = D.tentukanDemografi('L', 30);
+  sama(S.buildPlayerProfile({ nama: 'A', demografik: dem, cawangan: c, pendidikan: 'phd' }).pendidikan.tahap, 'phd');
+  sama(S.buildPlayerProfile({ nama: 'A', demografik: dem, cawangan: c, pendidikan: 'xx' }).pendidikan.tahap, 'ijazah', 'tahap tidak sah = Ijazah');
+  P.daftar({}); P.tetap({ myr: 100000, ap: 20, reputasi: 50 });
+  sama(PD.seterusnya(S.loadPlayer()).kod, 'sarjana'); sama(Math.round(PD.bonusLobi(S.loadPlayer()) * 100), 2);
+  let r = PD.sambung(); betul(r.ok, r.ralat); sama(S.loadPlayer().myr, 75000, 'yuran Sarjana RM 25,000');
+  betul(!PD.sambung().ok, 'satu tahap pada satu masa');
+  const ap0 = S.loadPlayer().ap; PD.prosesBulan(); sama(S.loadPlayer().ap, ap0 - 1, 'AP -1 sebulan');
+  for (let i = 1; i < 24; i++) { PD.prosesBulan(); }
+  let p = S.loadPlayer(); sama(PD.getPendidikan(p).tahap, 'sarjana'); sama(p.reputasi, 52, 'Reputasi +2'); sama(Math.round(PD.bonusLobi(p) * 100), 4);
+  r = PD.sambung(); betul(r.ok, r.ralat); r = PD.tangguh(); betul(r.ok); sama(PD.getPendidikan(S.loadPlayer()).belajar, null, 'ditangguh');
+  P.tetap({ pendidikan: { tahap: 'sarjana', belajar: { ke: 'phd', bulan: 35 } } }); const ev = PD.prosesBulan().peristiwa; betul(PD.dr(S.loadPlayer()) && /Dr\./.test(ev[0].mesej), 'PhD = Dr.');
+  sama(PD.seterusnya(S.loadPlayer()), null);
+  P.tetap({ kabinet: { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri X' }, pendidikan: { tahap: 'ijazah', bulanKanan: 23 } });
+  PD.prosesBulan(); p = S.loadPlayer(); betul(PD.getPendidikan(p).kehormat, 'Doktor Kehormat'); sama(PD.dr(p), false, 'tanpa Dr.');
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

@@ -481,7 +481,8 @@
     if (!demografik) { setError('umur', 'Umur dan jantina tidak sah.'); el.umur.focus(); return; }
 
     var ahliEl = document.getElementById('s-ahli');
-    var profil = S.buildPlayerProfile({ parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var pdEl = document.getElementById('s-pendidikan');                                          // v13.13
+    var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -1186,6 +1187,7 @@
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
     return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+      (W.MyPolitikPendidikanUI ? lipatKad('pf-pendidikan', W.MyPolitikPendidikanUI.kad(p), { buka: true }) : '') +   // v13.13: Pendidikan
       (W.MyPolitikLetakUI ? lipatKad('pf-letak', W.MyPolitikLetakUI.kad(p), { buka: true }) : '') +   // v13.12: Letak Jawatan
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
@@ -1450,6 +1452,13 @@
       ['Sokongan akar umbi (akhir)', (t.kesetiaanAkarUmbi === undefined ? '\u2013' : t.kesetiaanAkarUmbi + '%')],
       ['Status disiplin', (DISIPLIN[t.statusDisiplin] || 'Baik') + (t.hukumanDisiplin ? ' \u00B7 ' + t.hukumanDisiplin + ' hukuman' : '')],
       ['Gaya kepimpinan', t.gaya || '\u2013'], ['Pengaruh (IP)', fmt(t.ip)], ['Reputasi Parti', t.reputasi + '%']];
+    try {                                                                     // v13.13: gelaran kurniaan & pendidikan
+      var gk = W.MyPolitikGelaran ? W.MyPolitikGelaran.ringkasan(p) : null, sen = [];
+      if (gk) { if (gk.tun) { sen.push('Tun'); } if (gk.tansri) { sen.push('Tan Sri'); } if (gk.dato) { sen.push('Datuk'); } gk.negeri.forEach(function (x) { if (x.diperoleh) { sen.push(x.nama + ' (' + gk.negeriNama + ')'); } }); }
+      if (sen.length) { baris.push(['Gelaran kurniaan', sen.join('; ')]); }
+      var pdk = W.MyPolitikPendidikan ? W.MyPolitikPendidikan.ringkasan(p) : null;
+      if (pdk) { baris.push(['Pendidikan', pdk.nama + (pdk.kehormat ? '; Doktor Kehormat' : '')]); }
+    } catch (eG) { /* abaikan */ }
     var pr = t.pilihanRaya;                                                   // v7.11: rekod pilihan raya & jawatan kerajaan
     if (pr) {
       baris.push(['Rekod pilihan raya', pr.bertanding ? pr.bertanding + ' kali bertanding \u00B7 ' + pr.menang + ' menang \u00B7 ' + pr.kalah + ' kalah' + (pr.prkBertanding ? ' (termasuk ' + pr.prkBertanding + ' PRK)' : '') : 'Tidak pernah bertanding']);
