@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.8 (2026-10-30)
+
+- **PPP (Parti Progresif Penduduk / myPPP) boleh dimainkan dalam mod ringan**, mengikut mockup yang dipersetujui. Perlembagaan PPP tidak tersedia, jadi PPP menggunakan enjin yang sama seperti MIC (Cawangan, Bahagian = kawasan Parlimen, Pusat) tanpa peraturan perlembagaan khas. Logo daripada pengguna.
+  - Kawasan ⚠️: 39 kawasan Parlimen Semenanjung yang campuran (tiada kaum melebihi 60%; Perak 10, Johor 10, Selangor 7, KL 6, P. Pinang 3, N. Sembilan 2, Melaka 1). Cawangan = Daerah Mengundi, 27 hingga 120 ahli (`node tools/build-ppp.js`).
+  - Istilah: Majlis Tertinggi (MT), Perhimpunan Agung PPP, Wisma PPP. Sayap Pemuda, Wanita, Puteri dan Putera (bawah 30 ⚠️). Takwim ⚠️ bulan 3/5/9; pemilihan setiap 3 tahun dari 2027.
+  - **Tuntut Kerusi BN**: tiada kerusi tetap; Pengaruh dalam BN (awal 20) melalui Lobi pimpinan BN (2 AP, RM 2,000, +6; Ketua Bahagian ke atas) dan Jentera untuk calon BN (musim PRU; +10 jika calon BN menang, +3 jika kalah). Rundingan 12 bulan sebelum PRU: Parlimen = Pengaruh − 30 (maks 60%), DUN = Pengaruh − 15 (maks 75%).
+  - **Krisis Kepimpinan & ROS**: peluang 15% dalam tahun pemilihan; sokong Presiden, sokong pencabar atau berkecuali; 20% berlarutan menjadi pembekuan ROS 6 bulan (tiada mesyuarat, pemilihan atau Tuntut Kerusi BN), rayuan ke Kementerian Dalam Negeri (1 AP, 60%).
+  - Kad **⭐ PPP: Tuntut Kerusi BN** di tab Profil, PPP dalam panel BN menu utama (4 parti), langkah tutorial, terjemahan EN, 2 ujian unit dan `tools/ujian-ppp.js` (pelayar). `PARTI=PPP node tools/simulasi.js` disokong.
+  - Logo PBRS disimpan untuk fasa seterusnya (perlu PRN Sabah).
+
 ## v13.7 (2026-10-30)
 
 - **Butang Maklum balas tanpa nama** ke Google Form: baris ke-4 pada kertas undi di menu utama dan butang "💬 Hantar Maklum Balas (tanpa nama)" dalam Menu dashboard. Skrin pengesahan menerangkan bahawa borang dibuka dalam tab baharu, tanpa akaun dan tanpa emel. Soalan "Maklumat permainan" diisi automatik (versi, parti, tahun dan bulan, jawatan, bahasa, jenis peranti); nama watak dan simpanan tidak dihantar. Pautan dalam `js/maklumbalas.js` (CONFIG.URL, CONFIG.ENTRY); butang disembunyikan jika pautan kosong. Terjemahan EN dan ujian pelayar `tools/ujian-maklumbalas.js`.

@@ -249,7 +249,7 @@
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   function tular() { return modul('MyPolitikTular', 'tular.js'); }
-  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
+  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function musimPBB(p, pru) { if (!p || !SW(p.parti)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -330,8 +330,8 @@
       }
       var MCk = mca(p); if (MCk && MCk.adalah(p) && !lain) {                                         // v13.1: MCA: kuota kerusi dalam BN dan 3 tahun keahlian (Perkara 120)
         var kw = MCk.kawasan(p);
-        if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push('Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }
-        if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push('DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
+        if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push(MCk.sebabKuota ? MCk.sebabKuota(p, 'PARLIMEN') : 'Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }      // v13.8: PPP: Tuntut Kerusi BN
+        if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push(MCk.sebabKuota ? MCk.sebabKuota(p, 'DUN') : 'DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
         if (p.parti === 'MCA' && !MCk.cukupKeahlian(p)) { sebab.push('Perlu menjadi ahli sekurang-kurangnya 3 tahun (Perkara 120)'); }
       }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }

@@ -1487,6 +1487,47 @@ ujian('v13.5: lantikan Ketua dan Presiden, mohon lantikan, Jelajah, Majlis Pener
   betul(!g.MyPolitikJawatan.pegang(S.loadPlayer(), 'presiden'), 'Presiden dilucutkan');
   S.clearPlayer();
 });
+ujian('v13.8: PPP: data 39 kawasan campuran, takwim 3/5/9, Putera, tiada kerusi tetap, Tuntut Kerusi BN', () => {
+  const M = g.MyPolitikPPP, D = g.MyPolitikData, J = g.MyPolitikJawatan, SY = g.MyPolitikSayap, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'ppp-semenanjung.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 39, '39 Bahagian campuran'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 27 && c.jumlahAhli <= 120)), 'Cawangan 27 hingga 120 ahli');
+  betul(SY.kelayakan('L', 25, 'PPP').putera.boleh && SY.kelayakan('P', 25, 'PPP').puteri.boleh, 'PPP ada Putera dan Puteri');
+  const ib = h.bahagian.find((b) => b.nama === 'Ipoh Barat');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PPP', nama: 'Uji PPP', demografik: D.tentukanDemografi('Lelaki', 25, 'PPP'), cawangan: ib.dun[0].cawangan[0], sayap: 'putera', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'PPP'); sama(p.sayap, 'putera'); sama(p.umno, undefined, 'tiada penanda UMNO');
+  betul(J.katalogUntuk(p).some((d) => d.kod === 'sayap_cawangan_putera'), 'jawatan Ketua Putera Cawangan');
+  sama(E.adalahTahunPemilihan(2026), false); sama(E.adalahTahunPemilihan(2027), true); sama(K.getTetingkap('cawangan', 1).mula, 3); sama(K.getTetingkap('bahagian', 1).mula, 5); sama(K.getTetingkap('pau', 1).mula, 9);
+  const kw = M.kawasan(p); sama(kw.parlimen.n, 'Ipoh Barat'); betul(!kw.kuotaPL && !kw.kuotaDUN, 'tiada kerusi tetap');
+  const kl = PRU.kelayakan ? PRU.kelayakan(S.loadPlayer()) : null; if (kl) { betul(kl.PARLIMEN.sebab.some((x) => /Tuntut Kerusi BN/.test(x)), 'PRU: perlu Tuntut Kerusi BN'); }
+  sama(M.pengaruh(p), 20, 'Pengaruh awal'); sama(M.statusLobi(p).boleh, false, 'lobi perlu Ketua Bahagian');
+  P.tetap({ ap: 20, myr: 50000, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] });
+  let r = M.lobi(); betul(r.ok, r.ralat); sama(M.pengaruh(S.loadPlayer()), 26); sama(M.lobi().ok, false, 'sekali sebulan');
+  // rundingan 12 bulan sebelum PRU (PRU 2031/3): Pengaruh 90 => Parlimen 60%, DUN 75%
+  P.tetap({ tahun: 2030, bulan: 3, ppp: Object.assign(S.loadPlayer().ppp, { pengaruh: 90, krisisTahun: 2030 }) });
+  const ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa; betul(ev.some((x) => /Rundingan kerusi BN/.test(x.mesej)), 'rundingan berlaku');
+  p = S.loadPlayer(); betul(M.kawasan(p).kuotaPL, 'kerusi Parlimen diberi di kawasan Ketua Bahagian'); betul(M.kerusiSah(p).pemainDUN, 'kerusi DUN di kawasan pemain');
+  // jentera dalam musim PRU, keputusan selepas PRU
+  P.tetap({ tahun: 2031, bulan: 1, ppp: Object.assign(S.loadPlayer().ppp, { pengaruh: 50 }) }); r = M.jentera(); betul(r.ok, r.ralat);
+  const pru = S.loadPlayer().pru || {}; pru.riwayat = [{ tahun: 2031, bulan: 3, jenis: 'PRU' }]; pru.tahunPRU = 2036;
+  P.tetap({ tahun: 2031, bulan: 4, pru: pru }); const g0 = M.pengaruh(S.loadPlayer()); M.prosesBulan({ rng: () => 0.01 });
+  betul(M.pengaruh(S.loadPlayer()) >= g0 + 9, 'jentera: calon BN menang, Pengaruh +10 (' + g0 + ' -> ' + M.pengaruh(S.loadPlayer()) + ')'); sama(M.kerusiSah(S.loadPlayer()), null, 'kerusi tamat selepas PRU');
+  S.clearPlayer();
+});
+ujian('v13.8: PPP: krisis kepimpinan dan pembekuan ROS', () => {
+  const M = g.MyPolitikPPP, D = g.MyPolitikData, J = g.MyPolitikJawatan, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'ppp-semenanjung.csv'), 'utf8')));
+  S.savePlayer(S.buildPlayerProfile({ parti: 'PPP', nama: 'Uji PPP', demografik: D.tentukanDemografi('Lelaki', 40, 'PPP'), cawangan: h.bahagian[0].dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 5 }));
+  P.tetap({ tahun: 2027, bulan: 1, ap: 10 });
+  let ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa; betul(ev.some((x) => /Krisis kepimpinan PPP/.test(x.mesej)), 'krisis bermula dalam tahun pemilihan');
+  let r = M.pilihKrisis('pencabar'); betul(r.ok, r.ralat);
+  P.tetap({ bulan: 3 }); ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa;      // Presiden menang (0.01 < 0.6) -> penyokong pencabar digantung; ROS beku (0.01 < 0.2)
+  let p = S.loadPlayer(); betul(M.gantungAktif(p), 'digantung 6 bulan'); betul(M.beku(p), 'ROS membekukan PPP');
+  betul(/dibekukan/.test(J.semakKelayakan(p, J.KATALOG.find((d) => d.kod === 'ajk_cawangan')).sebab), 'tidak boleh bertanding semasa dibekukan');
+  P.tetap({ bulan: 4 }); const mm = M2().mulaMesyuarat('cawangan'); sama(mm.ok, false, 'tiada mesyuarat semasa dibekukan');
+  r = M.rayuanBeku({ rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat); betul(!M.beku(S.loadPlayer()), 'rayuan diterima');
+  S.clearPlayer();
+  function M2() { return g.MyPolitikMeeting; }
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

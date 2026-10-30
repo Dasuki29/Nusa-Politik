@@ -182,6 +182,11 @@
       if (!hak.boleh) { return { terbuka: false, sebab: hak.sebab }; }
     }
     var pertahan = pegang(p, d.kod);
+    if (p && p.parti === 'PPP') {                                                // v13.8: PPP dibekukan ROS / keahlian digantung selepas krisis kepimpinan
+      var PPm = (typeof globalThis !== 'undefined' && globalThis.MyPolitikPPP) || null;
+      if (!PPm) { try { PPm = require('./ppp.js'); } catch (eP) { PPm = null; } }
+      var hP = PPm && PPm.halangan ? PPm.halangan(p) : null; if (hP) { return { terbuka: false, sebab: hP }; }
+    }
     if (p && p.parti === 'MIC') {                                                // v13.3: syarat Perlembagaan MIC (sedang Pengerusi Cawangan, tempoh keahlian, penggal, had penggal, gantung)
       var MIm = (typeof globalThis !== 'undefined' && globalThis.MyPolitikMIC) || null;
       if (!MIm) { try { MIm = require('./mic.js'); } catch (eM) { MIm = null; } }

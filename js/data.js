@@ -88,7 +88,7 @@
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < 18) { return null; }
     if (umur >= 60) { return 'veteran'; }
     if (j === 'L') { return umur <= 40 ? 'pemuda' : 'biasa'; }
-    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
+    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
   }
 
   /** Tentukan kategori demografi pemain. jantina: 'L' | 'P'. Pulang null jika tidak sah. */

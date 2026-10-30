@@ -41,7 +41,7 @@
   async function senaraiNegeri() {
     var CFG = W.MYPOLITIK_CONFIG || {};
     var pM = S.loadPlayer();
-    if (!senarai && pM && (pM.parti === 'MCA' || pM.parti === 'MIC')) {                                   // v13.1: MCA: kawasan operasi MCA sahaja; v13.3: MIC
+    if (!senarai && pM && (pM.parti === 'MCA' || pM.parti === 'MIC' || pM.parti === 'PPP')) {                                   // v13.1: MCA: kawasan operasi MCA sahaja; v13.3: MIC
       var rM = await fetch(W.MyPolitikParti.info(pM.parti).data, { cache: 'no-cache' }); if (!rM.ok) { throw new Error('HTTP ' + rM.status); }
       var hM = D.rowsToHierarchy(D.teksKeBaris(await rM.text())); senarai = { tab: null, data: hM, nama: hM.negeri.map(function (n) { return n.nama; }) };
     }

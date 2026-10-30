@@ -22,7 +22,7 @@ const JS = path.join(__dirname, '..', 'js');
 /* Susunan sama seperti dashboard.html, tanpa modul yang bergantung pada DOM (app, pru-ui, dewan-ui, lagu, pwa, menu, slotpanel, tema, map). */
 const SUSUNAN = ['data', 'parti', 'sarawak', 'sayap', 'blok', 'misi', 'save', 'pencapaian', 'sfx', 'krisis-peta', 'kerjaya', 'harta', 'kawasan', 'glc', 'komuniti', 'pindah', 'undo', 'infra', 'calendar', 'avatar', 'ordinaryMember', 'incumbent', 'jawatan', 'etika',
   'election', 'rival', 'negeri', 'meeting', 'EventDatabase', 'events', 'geo', 'slot', 'latihan', 'tutorial', 'watak', 'perlembagaan',
-  'organisasi', 'stress', 'hayat', 'polling', 'warroom', 'pru', 'kabinet-data', 'kabinet', 'jemaah', 'isu', 'prk', 'ElectionEngine', 'CabinetEngine', 'WingEngine', 'dewan', 'dun', 'paparan', 'tular', 'mca-data', 'mca', 'mic-data', 'mic', 'umno-data', 'umno'];
+  'organisasi', 'stress', 'hayat', 'polling', 'warroom', 'pru', 'kabinet-data', 'kabinet', 'jemaah', 'isu', 'prk', 'ElectionEngine', 'CabinetEngine', 'WingEngine', 'dewan', 'dun', 'paparan', 'tular', 'mca-data', 'mca', 'mic-data', 'mic', 'umno-data', 'umno', 'ppp-data', 'ppp'];
 
 function storanBaharu() {
   const m = new Map();

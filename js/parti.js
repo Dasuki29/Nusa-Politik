@@ -82,6 +82,19 @@
       [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'],
       [/Kongres Negeri/g, 'Badan Perhubungan Negeri'],
       [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
+  /* v13.8: PPP (myPPP) = parti komponen BN di Semenanjung, MOD RINGAN (enjin yang sama seperti MIC, tanpa perlembagaan khas; perlembagaan PPP tidak tersedia).
+     Istilah: Majlis Tertinggi (MT), Perhimpunan Agung Tahunan PPP, Wisma PPP, Kuala Lumpur. Sayap Pemuda, Wanita, Putera dan Puteri.
+     ANDAIAN: kawasan operasi = 39 kawasan Parlimen Semenanjung campuran (data/ppp-semenanjung.csv, tools/build-ppp.js); takwim bulan 3/5/9. Logo daripada pengguna. */
+  SENARAI.PPP = { kod: 'PPP', nama: 'PPP', penuh: 'Parti Progresif Penduduk', logo: 'assets/images/logo-ppp.jpg', sayap: ['pemuda', 'puteri', 'wanita', 'putera'], negeriTetap: null, data: 'data/ppp-semenanjung.csv', bahagianJenis: 'Parlimen', ppp: true,
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Majlis Tertinggi (MT)'], [/Majlis Kerja Tertinggi/g, 'Majlis Tertinggi'], [/\bMKT\b/g, 'MT'],
+      [/Perhimpunan Agung PPP \(PAU\)/g, 'Perhimpunan Agung PPP'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Perhimpunan Agung PPP'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung PPP'], [/PPP General Assembly \(PAU\)/g, 'PPP General Assembly'], [/General Assembly \(PAU\)/g, 'PPP General Assembly'], [/\bPAU\b/g, 'PA'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Wisma PPP, Kuala Lumpur'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at Wisma PPP, Kuala Lumpur'],
+      [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 5'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 5'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
+      [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
+    istilahSongsang: [[/Majlis Tertinggi \(MT\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Majlis Tertinggi/g, 'Majlis Kerja Tertinggi'], [/\bMT\b/g, 'MKT'],
+      [/Perhimpunan Agung PPP(?! \()/g, 'Perhimpunan Agung PPP (PAU)'], [/\bPA\b/g, 'PAU'],
+      [/ di Wisma PPP, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -110,7 +123,7 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     [d, tanpaBulan].forEach(function (x) {

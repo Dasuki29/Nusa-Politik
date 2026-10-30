@@ -27,7 +27,7 @@
 
   var SENARAI = ['utama', 'pemuda', 'puteri', 'wanita', 'putera'];
   var SAYAP = ['pemuda', 'puteri', 'wanita', 'putera'];            // v13.3: Putera (lelaki bawah 30) untuk MIC sahaja (Perlembagaan MIC Perkara 4.18.5)
-  function adaPutera(k) { return k === 'MIC'; }
+  function adaPutera(k) { return k === 'MIC' || k === 'PPP'; }      // v13.8: PPP juga ada Putera (andaian bawah 30 tahun)
 
   var CONFIG = {
     utama:  { danaMult: 1.10 },
@@ -42,7 +42,7 @@
     pemuda: { kod: 'pemuda', nama: 'Pemuda',        ikon: '⚡', ringkas: 'Laju naik, tetapi lebih penat', kelebihan: ['+20% kenaikan IP', 'Beban Stress +10%'], syarat: 'Lelaki berumur 18 hingga 40 tahun.' },
     puteri: { kod: 'puteri', nama: 'Puteri',        ikon: '🌸', ringkas: 'Rangkaian dan nama baik', kelebihan: ['+25% sokongan AJK dan Perwakilan', '+25% Reputasi Parti'], syarat: 'Perempuan berumur 18 hingga 35 tahun.' },
     wanita: { kod: 'wanita', nama: 'Wanita',        ikon: '🛡️', ringkas: 'Stabil dan tenang', kelebihan: ['Kerugian akar umbi -30%', 'Susutan akar umbi pemegang jawatan -1', 'Beban Stress -20%, pulih +1'], syarat: 'Perempuan berumur 36 hingga 59 tahun.' },
-    putera: { kod: 'putera', nama: 'Putera',        ikon: '🚀', ringkas: 'Sayap paling muda, laju naik', kelebihan: ['+20% kenaikan IP', 'Beban Stress +10%'], syarat: 'Lelaki berumur 18 hingga 29 tahun (MIC sahaja).' }
+    putera: { kod: 'putera', nama: 'Putera',        ikon: '🚀', ringkas: 'Sayap paling muda, laju naik', kelebihan: ['+20% kenaikan IP', 'Beban Stress +10%'], syarat: 'Lelaki berumur 18 hingga 29 tahun (MIC dan PPP sahaja).' }
   };
 
   /** Isu fokus golongan setiap sayap (v6.0). Digunakan pada Struktur Organisasi dan Mesyuarat Sayap (meeting.js). */

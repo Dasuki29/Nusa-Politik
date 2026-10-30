@@ -31,7 +31,7 @@
     pemuda: 'Lelaki muda (sehingga 40 tahun).',
     puteri: 'Perempuan muda (sehingga 35 tahun).',
     wanita: 'Perempuan dewasa dan warga emas (36 tahun ke atas).',
-    putera: 'Lelaki muda (bawah 30 tahun; MIC sahaja).'
+    putera: 'Lelaki muda (bawah 30 tahun; MIC dan PPP sahaja).'
   };
 
   function sufiks(peringkat) { return peringkat === 'pusat' ? '' : ' ' + (peringkat === 'cawangan' ? 'Cawangan' : 'Bahagian'); }
@@ -168,7 +168,7 @@
     var info = p && p.cawanganInfo ? p.cawanganInfo : null, kg = info && info.kumpulan ? info.kumpulan : (D && D.pecahanKumpulan && info ? D.pecahanKumpulan(info) : null);
     var hasil = { laluan: laluan, induk: {}, sayap: {}, ahli: kg ? { induk: kg.induk, pemuda: kg.pemuda, puteri: kg.puteri, wanita: kg.wanita, langsung: !!kg.langsung } : null };   // v6.3: ahli Cawangan ikut kumpulan
     PERINGKAT.forEach(function (k) { hasil.induk[k] = binaSatu(p, k, null); });
-    Object.keys(NAMA_SAYAP).filter(function (w) { return w !== 'putera' || (p && p.parti === 'MIC'); }).forEach(function (w) {      // v13.3: Putera untuk MIC sahaja
+    Object.keys(NAMA_SAYAP).filter(function (w) { return w !== 'putera' || (p && (p.parti === 'MIC' || p.parti === 'PPP')); }).forEach(function (w) {      // v13.3: Putera untuk MIC sahaja
       var info = SY && SY.ISU ? SY.ISU[w] : { golongan: '', isu: [] };
       hasil.sayap[w] = { kod: w, nama: NAMA_SAYAP[w], penerangan: PENERANGAN[w], golongan: info.golongan, isu: info.isu.slice(), milikAnda: laluan === w, peringkat: {} };
       PERINGKAT.forEach(function (k) { hasil.sayap[w].peringkat[k] = binaSatu(p, k, w); });

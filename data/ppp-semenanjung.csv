@@ -1,0 +1,1456 @@
+ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan,Bawah 40,Atas 40
+046/016/001,Pulau Pinang,"Batu Kawan","Perai","Taman Indrawasih",120,61,59,36,84
+046/016/002,Pulau Pinang,"Batu Kawan","Perai","Taman Chai Leng",113,58,55,34,79
+046/016/003,Pulau Pinang,"Batu Kawan","Perai","Perai",82,42,40,25,57
+046/016/004,Pulau Pinang,"Batu Kawan","Perai","Taman Perai",37,19,18,11,26
+046/016/005,Pulau Pinang,"Batu Kawan","Perai","Taman Supreme",109,56,53,33,76
+046/016/006,Pulau Pinang,"Batu Kawan","Perai","Taman Kimsar",85,43,42,26,59
+046/017/001,Pulau Pinang,"Batu Kawan","Bukit Tengah","Kampong Jawa",35,18,17,11,24
+046/017/002,Pulau Pinang,"Batu Kawan","Bukit Tengah","Jalan Pengkalan",72,37,35,22,50
+046/017/003,Pulau Pinang,"Batu Kawan","Bukit Tengah","Kebun Sireh",109,56,53,33,76
+046/017/004,Pulau Pinang,"Batu Kawan","Bukit Tengah","Bukit Tengah",120,61,59,36,84
+046/017/005,Pulau Pinang,"Batu Kawan","Bukit Tengah","Kuala Juru",120,61,59,36,84
+046/017/006,Pulau Pinang,"Batu Kawan","Bukit Tengah","Juru",120,61,59,36,84
+046/017/007,Pulau Pinang,"Batu Kawan","Bukit Tengah","Taman Perwira",49,25,24,15,34
+046/017/008,Pulau Pinang,"Batu Kawan","Bukit Tengah","Taman Sejati",61,31,30,18,43
+046/017/009,Pulau Pinang,"Batu Kawan","Bukit Tengah","Taman Sentul Jaya",120,61,59,36,84
+046/018/001,Pulau Pinang,"Batu Kawan","Bukit Tambun","Pulau Aman",27,14,13,8,19
+046/018/002,Pulau Pinang,"Batu Kawan","Bukit Tambun","Batu Kawan",120,61,59,36,84
+046/018/003,Pulau Pinang,"Batu Kawan","Bukit Tambun","Bukit Tambun",99,50,49,30,69
+046/018/004,Pulau Pinang,"Batu Kawan","Bukit Tambun","Taman Merak",120,61,59,36,84
+046/018/005,Pulau Pinang,"Batu Kawan","Bukit Tambun","Kampong Baharu",120,61,59,36,84
+046/018/006,Pulau Pinang,"Batu Kawan","Bukit Tambun","Ladang Valdor",35,18,17,11,24
+046/018/007,Pulau Pinang,"Batu Kawan","Bukit Tambun","Perkampungan Valdor",97,49,48,29,68
+046/018/008,Pulau Pinang,"Batu Kawan","Bukit Tambun","Badak Mati",120,61,59,36,84
+046/018/009,Pulau Pinang,"Batu Kawan","Bukit Tambun","Rumah Murah Valdor",66,34,32,20,46
+047/019/001,Pulau Pinang,"Nibong Tebal","Jawi","Changkat",97,49,48,29,68
+047/019/002,Pulau Pinang,"Nibong Tebal","Jawi","Perkampungan Jawi",83,42,41,25,58
+047/019/003,Pulau Pinang,"Nibong Tebal","Jawi","Taman Desa Jawi",120,61,59,36,84
+047/019/004,Pulau Pinang,"Nibong Tebal","Jawi","Ladang Caledonia",120,61,59,36,84
+047/019/005,Pulau Pinang,"Nibong Tebal","Jawi","Ladang Byram",27,14,13,8,19
+047/019/006,Pulau Pinang,"Nibong Tebal","Jawi","Ladang Victoria",49,25,24,15,34
+047/019/007,Pulau Pinang,"Nibong Tebal","Jawi","Taman Sentosa",116,59,57,35,81
+047/019/008,Pulau Pinang,"Nibong Tebal","Jawi","Nibong Tebal",38,19,19,11,27
+047/019/009,Pulau Pinang,"Nibong Tebal","Jawi","Jalan Bukit Panchor",39,20,19,12,27
+047/019/010,Pulau Pinang,"Nibong Tebal","Jawi","Taman Helang Jaya",120,61,59,36,84
+047/020/001,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Padang Lalang",114,58,56,34,80
+047/020/002,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Puteri Gunong",120,61,59,36,84
+047/020/003,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Tasek Junjong",83,42,41,25,58
+047/020/004,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Sungai Duri",120,61,59,36,84
+047/020/005,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Sungai Bakap",120,61,59,36,84
+047/020/006,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Ladang Sempah",45,23,22,14,31
+047/020/007,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Sungai Kechil",72,37,35,22,50
+047/020/008,Pulau Pinang,"Nibong Tebal","Sungai Bakap","Kampung Besar",51,26,25,15,36
+047/021/001,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Sungai Udang",99,50,49,30,69
+047/021/002,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Sungai Setar",60,31,29,18,42
+047/021/003,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Sungai Acheh",120,61,59,36,84
+047/021/004,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Sungai Bakau",57,29,28,17,40
+047/021/005,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Tanjong Berembang",44,22,22,13,31
+047/021/006,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Permatang To'Mahat",120,61,59,36,84
+047/021/007,Pulau Pinang,"Nibong Tebal","Sungai Acheh","Taman Transkrian",120,61,59,36,84
+052/035/001,Pulau Pinang,"Bayan Baru","Batu Uban","Minden Heights",120,61,59,36,84
+052/035/002,Pulau Pinang,"Bayan Baru","Batu Uban","Universiti Sains",27,14,13,8,19
+052/035/003,Pulau Pinang,"Bayan Baru","Batu Uban","Batu Uban",120,61,59,36,84
+052/035/004,Pulau Pinang,"Bayan Baru","Batu Uban","Sungai Dua",74,38,36,22,52
+052/035/005,Pulau Pinang,"Bayan Baru","Batu Uban","Bukit Jambol",120,61,59,36,84
+052/035/006,Pulau Pinang,"Bayan Baru","Batu Uban","Bukit Gambir",120,61,59,36,84
+052/035/007,Pulau Pinang,"Bayan Baru","Batu Uban","Taman Jubilee",120,61,59,36,84
+052/035/008,Pulau Pinang,"Bayan Baru","Batu Uban","Taman Pekaka",120,61,59,36,84
+052/036/001,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Pantai Jerejak",120,61,59,36,84
+052/036/002,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Taman Seri Nibong",120,61,59,36,84
+052/036/003,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Pintasan Bahagia",82,42,40,25,57
+052/036/004,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Jalan Mahsuri",113,58,55,34,79
+052/036/005,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Bandar Bayan Baru",118,60,58,35,83
+052/036/006,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Jalan Tengah",58,30,28,17,41
+052/036/007,Pulau Pinang,"Bayan Baru","Pantai Jerejak","Lebuh Mahsuri",120,61,59,36,84
+052/037/001,Pulau Pinang,"Bayan Baru","Batu Maung","Kampong Sungai Ara",120,61,59,36,84
+052/037/002,Pulau Pinang,"Bayan Baru","Batu Maung","Taman Desa Ara",120,61,59,36,84
+052/037/003,Pulau Pinang,"Bayan Baru","Batu Maung","Sungai Tiram",67,34,33,20,47
+052/037/004,Pulau Pinang,"Bayan Baru","Batu Maung","Sungai Kluang",39,20,19,12,27
+052/037/005,Pulau Pinang,"Bayan Baru","Batu Maung","Kampong Naran",53,27,26,16,37
+052/037/006,Pulau Pinang,"Bayan Baru","Batu Maung","Permatang Damar Laut",120,61,59,36,84
+052/037/007,Pulau Pinang,"Bayan Baru","Batu Maung","Batu Maung",120,61,59,36,84
+052/037/008,Pulau Pinang,"Bayan Baru","Batu Maung","Taman Sri Bayan",119,61,58,36,83
+052/037/009,Pulau Pinang,"Bayan Baru","Batu Maung","Taman Bukit Gedung",120,61,59,36,84
+052/037/010,Pulau Pinang,"Bayan Baru","Batu Maung","Teluk Tempoyak",48,24,24,14,34
+060/016/001,Perak,"Taiping","Kamunting","Sungai Relong",104,53,51,31,73
+060/016/002,Perak,"Taiping","Kamunting","Expo",120,61,59,36,84
+060/016/003,Perak,"Taiping","Kamunting","Kamunting Baru",120,61,59,36,84
+060/016/004,Perak,"Taiping","Kamunting","Kamunting",67,34,33,20,47
+060/016/005,Perak,"Taiping","Kamunting","Kampong Pinang Utara",114,58,56,34,80
+060/016/006,Perak,"Taiping","Kamunting","Kampong Pinang Timor",52,27,25,16,36
+060/016/007,Perak,"Taiping","Kamunting","Kampong Pinang Selatan",73,37,36,22,51
+060/016/008,Perak,"Taiping","Kamunting","Kamunting Road",120,61,59,36,84
+060/016/009,Perak,"Taiping","Kamunting","Bukit Jana",120,61,59,36,84
+060/016/010,Perak,"Taiping","Kamunting","Waterfall Road",27,14,13,8,19
+060/017/001,Perak,"Taiping","Pokok Assam","Pokok Assam",120,61,59,36,84
+060/017/002,Perak,"Taiping","Pokok Assam","Kampong Aman",86,44,42,26,60
+060/017/003,Perak,"Taiping","Pokok Assam","Sekolah",40,20,20,12,28
+060/017/004,Perak,"Taiping","Pokok Assam","Jalan Raja Muda",33,17,16,10,23
+060/017/005,Perak,"Taiping","Pokok Assam","Pasar",35,18,17,11,24
+060/017/006,Perak,"Taiping","Pokok Assam","Sungai Tupai",27,14,13,8,19
+060/017/007,Perak,"Taiping","Pokok Assam","Simpang Road",101,52,49,30,71
+060/017/008,Perak,"Taiping","Pokok Assam","Kota Road",31,16,15,9,22
+060/017/009,Perak,"Taiping","Pokok Assam","Market Street",32,16,16,10,22
+060/017/010,Perak,"Taiping","Pokok Assam","Theatre Road",27,14,13,8,19
+060/017/011,Perak,"Taiping","Pokok Assam","Tupai Lane",27,14,13,8,19
+060/017/012,Perak,"Taiping","Pokok Assam","Tupai",120,61,59,36,84
+060/017/013,Perak,"Taiping","Pokok Assam","Coronation Road",72,37,35,22,50
+060/017/014,Perak,"Taiping","Pokok Assam","Birch Village",34,17,17,10,24
+060/017/015,Perak,"Taiping","Pokok Assam","Eastern Road",27,14,13,8,19
+060/017/016,Perak,"Taiping","Pokok Assam","Museum",120,61,59,36,84
+060/018/001,Perak,"Taiping","Aulong","Batu Dua",36,18,18,11,25
+060/018/002,Perak,"Taiping","Aulong","Assam Kumbang",120,61,59,36,84
+060/018/003,Perak,"Taiping","Aulong","Barrack Road",27,14,13,8,19
+060/018/004,Perak,"Taiping","Aulong","Station",120,61,59,36,84
+060/018/005,Perak,"Taiping","Aulong","Aulong",120,61,59,36,84
+060/018/006,Perak,"Taiping","Aulong","Aulong Timor",43,22,21,13,30
+060/018/007,Perak,"Taiping","Aulong","Aulong Tengah",27,14,13,8,19
+060/018/008,Perak,"Taiping","Aulong","Aulong Barat",49,25,24,15,34
+060/018/009,Perak,"Taiping","Aulong","Aulong Selatan",54,28,26,16,38
+060/018/010,Perak,"Taiping","Aulong","Aulong Lama",65,33,32,20,45
+060/018/011,Perak,"Taiping","Aulong","Kampong Boyan",120,61,59,36,84
+060/018/012,Perak,"Taiping","Aulong","Taman Sening",59,30,29,18,41
+060/018/013,Perak,"Taiping","Aulong","Taman Marisa",27,14,13,8,19
+060/018/014,Perak,"Taiping","Aulong","Kota Lama",27,14,13,8,19
+060/018/015,Perak,"Taiping","Aulong","Pengkalan Aor",120,61,59,36,84
+060/018/016,Perak,"Taiping","Aulong","Simpang Baru",120,61,59,36,84
+062/021/001,Perak,"Sungai Siput","Lintang","Kampong Kandang Hulu",27,14,13,8,19
+062/021/002,Perak,"Sungai Siput","Lintang","Kampong Batang Kulim",36,18,18,11,25
+062/021/003,Perak,"Sungai Siput","Lintang","Salak North",75,38,37,23,52
+062/021/004,Perak,"Sungai Siput","Lintang","Kampong Enggor",27,14,13,8,19
+062/021/005,Perak,"Sungai Siput","Lintang","Karai Luar",27,14,13,8,19
+062/021/006,Perak,"Sungai Siput","Lintang","Pekan Karai",27,14,13,8,19
+062/021/007,Perak,"Sungai Siput","Lintang","Kampong Karai",27,14,13,8,19
+062/021/008,Perak,"Sungai Siput","Lintang","Kampong Jawang",27,14,13,8,19
+062/021/009,Perak,"Sungai Siput","Lintang","Changkat Salak",27,14,13,8,19
+062/021/010,Perak,"Sungai Siput","Lintang","Salak Timor",48,24,24,14,34
+062/021/011,Perak,"Sungai Siput","Lintang","Kamuning Barat",40,20,20,12,28
+062/021/012,Perak,"Sungai Siput","Lintang","Kamuning Timor",85,43,42,26,59
+062/021/013,Perak,"Sungai Siput","Lintang","Kampong Temin",56,29,27,17,39
+062/021/014,Perak,"Sungai Siput","Lintang","Sungai Pelus",43,22,21,13,30
+062/021/015,Perak,"Sungai Siput","Lintang","Trosor",27,14,13,8,19
+062/021/016,Perak,"Sungai Siput","Lintang","Kampong Mor",44,22,22,13,31
+062/021/017,Perak,"Sungai Siput","Lintang","LKTP Lasah",70,36,34,21,49
+062/021/018,Perak,"Sungai Siput","Lintang","Lintang",42,21,21,13,29
+062/021/019,Perak,"Sungai Siput","Lintang","Ladang Elphil",27,14,13,8,19
+062/021/020,Perak,"Sungai Siput","Lintang","Rancangan Belia Khas Perlop",62,32,30,19,43
+062/021/021,Perak,"Sungai Siput","Lintang","Chior Lasah",44,22,22,13,31
+062/021/022,Perak,"Sungai Siput","Lintang","Chenein",27,14,13,8,19
+062/021/023,Perak,"Sungai Siput","Lintang","Pos Piah",39,20,19,12,27
+062/021/024,Perak,"Sungai Siput","Lintang","Pos Perwor",27,14,13,8,19
+062/021/025,Perak,"Sungai Siput","Lintang","Pos Legap",59,30,29,18,41
+062/021/026,Perak,"Sungai Siput","Lintang","Pos Kuala Mu",27,14,13,8,19
+062/022/001,Perak,"Sungai Siput","Jalong","Jalong Timor",96,49,47,29,67
+062/022/002,Perak,"Sungai Siput","Jalong","Jalong Barat",120,61,59,36,84
+062/022/003,Perak,"Sungai Siput","Jalong","Jalan Lintang",62,32,30,19,43
+062/022/004,Perak,"Sungai Siput","Jalong","Lintang Road Barat",40,20,20,12,28
+062/022/005,Perak,"Sungai Siput","Jalong","Kampong Bahagia",120,61,59,36,84
+062/022/006,Perak,"Sungai Siput","Jalong","Rimba Panjang Utara",78,40,38,23,55
+062/022/007,Perak,"Sungai Siput","Jalong","Kampong Muhibbah",120,61,59,36,84
+062/022/008,Perak,"Sungai Siput","Jalong","Simpang Tiga",120,61,59,36,84
+062/022/009,Perak,"Sungai Siput","Jalong","Main Road",27,14,13,8,19
+062/022/010,Perak,"Sungai Siput","Jalong","Mahkamah",27,14,13,8,19
+062/022/011,Perak,"Sungai Siput","Jalong","Sungai Buloh Selatan",94,48,46,28,66
+062/022/012,Perak,"Sungai Siput","Jalong","Sungai Pelang",33,17,16,10,23
+064/025/001,Perak,"Ipoh Timor","Canning","Taman Ipoh Timor",120,61,59,36,84
+064/025/002,Perak,"Ipoh Timor","Canning","Taman Ipoh Selatan",87,44,43,26,61
+064/025/003,Perak,"Ipoh Timor","Canning","Taman Wah Keong",120,61,59,36,84
+064/025/004,Perak,"Ipoh Timor","Canning","Simee Barat",105,54,51,32,73
+064/025/005,Perak,"Ipoh Timor","Canning","Simee Timor",40,20,20,12,28
+064/025/006,Perak,"Ipoh Timor","Canning","Taman Ipoh",107,55,52,32,75
+064/025/007,Perak,"Ipoh Timor","Canning","Taman Ipoh Barat",97,49,48,29,68
+064/025/008,Perak,"Ipoh Timor","Canning","Canning Garden Barat",103,53,50,31,72
+064/025/009,Perak,"Ipoh Timor","Canning","Canning Garden Timor",63,32,31,19,44
+064/025/010,Perak,"Ipoh Timor","Canning","Lumba Kuda",77,39,38,23,54
+064/025/011,Perak,"Ipoh Timor","Canning","Taman Cempaka",119,61,58,36,83
+064/025/012,Perak,"Ipoh Timor","Canning","Desa Cempaka",83,42,41,25,58
+064/026/001,Perak,"Ipoh Timor","Tebing Tinggi","Jalan Dato Maharaja Lela",76,39,37,23,53
+064/026/002,Perak,"Ipoh Timor","Tebing Tinggi","Jalan Sultan Yusof",27,14,13,8,19
+064/026/003,Perak,"Ipoh Timor","Tebing Tinggi","Jalan Tun Perak",27,14,13,8,19
+064/026/004,Perak,"Ipoh Timor","Tebing Tinggi","Sungai Kinta",27,14,13,8,19
+064/026/005,Perak,"Ipoh Timor","Tebing Tinggi","Tebing Sungai Kinta",27,14,13,8,19
+064/026/006,Perak,"Ipoh Timor","Tebing Tinggi","Kampong Paloh",32,16,16,10,22
+064/026/007,Perak,"Ipoh Timor","Tebing Tinggi","Tebing Tinggi",78,40,38,23,55
+064/026/008,Perak,"Ipoh Timor","Tebing Tinggi","Kuala Pari Hilir",27,14,13,8,19
+064/026/009,Perak,"Ipoh Timor","Tebing Tinggi","Kampong Seri Kinta",120,61,59,36,84
+064/026/010,Perak,"Ipoh Timor","Tebing Tinggi","Pengkalan Barat",120,61,59,36,84
+064/026/011,Perak,"Ipoh Timor","Tebing Tinggi","Pengkalan Gate",113,58,55,34,79
+064/026/012,Perak,"Ipoh Timor","Tebing Tinggi","Pengkalan Pegoh",120,61,59,36,84
+064/027/001,Perak,"Ipoh Timor","Pasir Pinji","Jalan Bendahara",38,19,19,11,27
+064/027/002,Perak,"Ipoh Timor","Pasir Pinji","Kampar Road",110,56,54,33,77
+064/027/003,Perak,"Ipoh Timor","Pasir Pinji","Housing Trust",120,61,59,36,84
+064/027/004,Perak,"Ipoh Timor","Pasir Pinji","Pasir Pinji Utara",120,61,59,36,84
+064/027/005,Perak,"Ipoh Timor","Pasir Pinji","Pasir Pinji Selatan",84,43,41,25,59
+064/027/006,Perak,"Ipoh Timor","Pasir Pinji","Pinji Lane Utara",53,27,26,16,37
+064/027/007,Perak,"Ipoh Timor","Pasir Pinji","Pasir Puteh Utara",79,40,39,24,55
+064/027/008,Perak,"Ipoh Timor","Pasir Pinji","Pasir Puteh Baru",58,30,28,17,41
+064/027/009,Perak,"Ipoh Timor","Pasir Pinji","Pinji Lane Selatan",120,61,59,36,84
+064/027/010,Perak,"Ipoh Timor","Pasir Pinji","Pasir Puteh Selatan",120,61,59,36,84
+064/027/011,Perak,"Ipoh Timor","Pasir Pinji","Taman Pengkalan Jaya",120,61,59,36,84
+065/028/001,Perak,"Ipoh Barat","Bercham","Bercham Timor",120,61,59,36,84
+065/028/002,Perak,"Ipoh Barat","Bercham","Kampong Bercham",120,61,59,36,84
+065/028/003,Perak,"Ipoh Barat","Bercham","Dermawan Utara",120,61,59,36,84
+065/028/004,Perak,"Ipoh Barat","Bercham","Bercham Selatan",120,61,59,36,84
+065/028/005,Perak,"Ipoh Barat","Bercham","Tasek Dermawan",120,61,59,36,84
+065/028/006,Perak,"Ipoh Barat","Bercham","Tasek",120,61,59,36,84
+065/028/007,Perak,"Ipoh Barat","Bercham","Kampong Tawas Utara",120,61,59,36,84
+065/028/008,Perak,"Ipoh Barat","Bercham","Kampong Tawas",120,61,59,36,84
+065/029/001,Perak,"Ipoh Barat","Kepayang","Taman Che Wan",93,47,46,28,65
+065/029/002,Perak,"Ipoh Barat","Kepayang","Gurap",68,35,33,20,48
+065/029/003,Perak,"Ipoh Barat","Kepayang","Gunong Lang",31,16,15,9,22
+065/029/004,Perak,"Ipoh Barat","Kepayang","Kepayang Mesjid",36,18,18,11,25
+065/029/005,Perak,"Ipoh Barat","Kepayang","Star Park",71,36,35,21,50
+065/029/006,Perak,"Ipoh Barat","Kepayang","Fair Park",87,44,43,26,61
+065/029/007,Perak,"Ipoh Barat","Kepayang","Kampong Pisang",36,18,18,11,25
+065/029/008,Perak,"Ipoh Barat","Kepayang","Jalan Bijih Timah",51,26,25,15,36
+065/029/009,Perak,"Ipoh Barat","Kepayang","Jalan Datuk Onn Jaafar",59,30,29,18,41
+065/029/010,Perak,"Ipoh Barat","Kepayang","Waller Court",40,20,20,12,28
+065/029/011,Perak,"Ipoh Barat","Kepayang","Green Town",66,34,32,20,46
+065/029/012,Perak,"Ipoh Barat","Kepayang","Jalan Raja Ekram",47,24,23,14,33
+065/029/013,Perak,"Ipoh Barat","Kepayang","Jalan C.M. Yusof",45,23,22,14,31
+065/030/001,Perak,"Ipoh Barat","Buntong","Taman Lim",110,56,54,33,77
+065/030/002,Perak,"Ipoh Barat","Buntong","Jalan Tun Abdul Razak",73,37,36,22,51
+065/030/003,Perak,"Ipoh Barat","Buntong","Jalan Silibin",102,52,50,31,71
+065/030/004,Perak,"Ipoh Barat","Buntong","Jalan Klian Intan",98,50,48,29,69
+065/030/005,Perak,"Ipoh Barat","Buntong","Kampong Baru Buntong",105,54,51,32,73
+065/030/006,Perak,"Ipoh Barat","Buntong","Jalan Sungai Pari",59,30,29,18,41
+065/030/007,Perak,"Ipoh Barat","Buntong","Falim",120,61,59,36,84
+065/030/008,Perak,"Ipoh Barat","Buntong","Kampong Kacang Puteh",120,61,59,36,84
+065/030/009,Perak,"Ipoh Barat","Buntong","Desa Rishah",66,34,32,20,46
+066/031/001,Perak,"Batu Gajah","Jelapang","Jelapang Timor",27,14,13,8,19
+066/031/002,Perak,"Batu Gajah","Jelapang","Jelapang Utara",57,29,28,17,40
+066/031/003,Perak,"Batu Gajah","Jelapang","Jelapang Selatan",27,14,13,8,19
+066/031/004,Perak,"Batu Gajah","Jelapang","Jelapang Barat",27,14,13,8,19
+066/031/005,Perak,"Batu Gajah","Jelapang","Jelapang",120,61,59,36,84
+066/031/006,Perak,"Batu Gajah","Jelapang","Silibin",79,40,39,24,55
+066/031/007,Perak,"Batu Gajah","Jelapang","Taman Pertama",120,61,59,36,84
+066/031/008,Perak,"Batu Gajah","Jelapang","Taman Rishah",115,59,56,35,80
+066/031/009,Perak,"Batu Gajah","Jelapang","Jelapang Tengah",56,29,27,17,39
+066/031/010,Perak,"Batu Gajah","Jelapang","Bukit Kledang",120,61,59,36,84
+066/031/011,Perak,"Batu Gajah","Jelapang","Papan",61,31,30,18,43
+066/032/001,Perak,"Batu Gajah","Menglembu","Bandar Baru Menglembu",120,61,59,36,84
+066/032/002,Perak,"Batu Gajah","Menglembu","Menglembu Lama",120,61,59,36,84
+066/032/003,Perak,"Batu Gajah","Menglembu","Awana",120,61,59,36,84
+066/032/004,Perak,"Batu Gajah","Menglembu","Menglembu Barat",108,55,53,32,76
+066/032/005,Perak,"Batu Gajah","Menglembu","Menglembu Selatan",120,61,59,36,84
+066/032/006,Perak,"Batu Gajah","Menglembu","Bukit Merah Timor",37,19,18,11,26
+066/032/007,Perak,"Batu Gajah","Menglembu","Bukit Merah Barat",42,21,21,13,29
+066/032/008,Perak,"Batu Gajah","Menglembu","Bukit Merah Tengah",33,17,16,10,23
+066/032/009,Perak,"Batu Gajah","Menglembu","Bukit Merah Barat Daya",34,17,17,10,24
+066/032/010,Perak,"Batu Gajah","Menglembu","Bukit Merah Selatan",29,15,14,9,20
+066/032/011,Perak,"Batu Gajah","Menglembu","Lahat",115,59,56,35,80
+066/033/001,Perak,"Batu Gajah","Tronoh","Gunong Hijau",75,38,37,23,52
+066/033/002,Perak,"Batu Gajah","Tronoh","Jalan Lahat",27,14,13,8,19
+066/033/003,Perak,"Batu Gajah","Tronoh","Jalan Siputeh",64,33,31,19,45
+066/033/004,Perak,"Batu Gajah","Tronoh","Pekan Pusing",120,61,59,36,84
+066/033/005,Perak,"Batu Gajah","Tronoh","Batu Gajah Utara",70,36,34,21,49
+066/033/006,Perak,"Batu Gajah","Tronoh","Batu Gajah Selatan",120,61,59,36,84
+066/033/007,Perak,"Batu Gajah","Tronoh","Penempatan India",83,42,41,25,58
+066/033/008,Perak,"Batu Gajah","Tronoh","Bemban",120,61,59,36,84
+066/033/009,Perak,"Batu Gajah","Tronoh","Siputeh",78,40,38,23,55
+066/033/010,Perak,"Batu Gajah","Tronoh","Tronoh",96,49,47,29,67
+066/033/011,Perak,"Batu Gajah","Tronoh","Nalla",73,37,36,22,51
+066/033/012,Perak,"Batu Gajah","Tronoh","Kampong Bali",94,48,46,28,66
+068/036/001,Perak,"Beruas","Pengkalan Baharu","Kampong Pintu Gerbang",27,14,13,8,19
+068/036/002,Perak,"Beruas","Pengkalan Baharu","Dendang",27,14,13,8,19
+068/036/003,Perak,"Beruas","Pengkalan Baharu","Paya Ara",29,15,14,9,20
+068/036/004,Perak,"Beruas","Pengkalan Baharu","Bruas",63,32,31,19,44
+068/036/005,Perak,"Beruas","Pengkalan Baharu","Bruas Timor",36,18,18,11,25
+068/036/006,Perak,"Beruas","Pengkalan Baharu","Bruas Barat",27,14,13,8,19
+068/036/007,Perak,"Beruas","Pengkalan Baharu","Ladang Bruas",27,14,13,8,19
+068/036/008,Perak,"Beruas","Pengkalan Baharu","Ulu Bruas",27,14,13,8,19
+068/036/009,Perak,"Beruas","Pengkalan Baharu","Panchor",51,26,25,15,36
+068/036/010,Perak,"Beruas","Pengkalan Baharu","Pengkalan Baharu",105,54,51,32,73
+068/036/011,Perak,"Beruas","Pengkalan Baharu","Kampong Baharu Sungai Batu",29,15,14,9,20
+068/036/012,Perak,"Beruas","Pengkalan Baharu","Ladang Huntly",27,14,13,8,19
+068/036/013,Perak,"Beruas","Pengkalan Baharu","Kampong Kota",27,14,13,8,19
+068/036/014,Perak,"Beruas","Pengkalan Baharu","Kampong Tengah",34,17,17,10,24
+068/036/015,Perak,"Beruas","Pengkalan Baharu","Gelong Gajah",30,15,15,9,21
+068/036/016,Perak,"Beruas","Pengkalan Baharu","Kampong Banjar",27,14,13,8,19
+068/036/017,Perak,"Beruas","Pengkalan Baharu","Kampong Jering New Village",53,27,26,16,37
+068/036/018,Perak,"Beruas","Pengkalan Baharu","Jalan Ayer Tawar",41,21,20,12,29
+068/036/019,Perak,"Beruas","Pengkalan Baharu","Changkat Chermin",27,14,13,8,19
+068/036/020,Perak,"Beruas","Pengkalan Baharu","Paya Nibong",27,14,13,8,19
+068/037/001,Perak,"Beruas","Pantai Remis","Pantai Remis",109,56,53,33,76
+068/037/002,Perak,"Beruas","Pantai Remis","Taman Bintang",120,61,59,36,84
+068/037/003,Perak,"Beruas","Pantai Remis","Kampong Indah",94,48,46,28,66
+068/037/004,Perak,"Beruas","Pantai Remis","Kampong Sungai Batu",120,61,59,36,84
+068/037/005,Perak,"Beruas","Pantai Remis","Ladang Segari",66,34,32,20,46
+068/037/006,Perak,"Beruas","Pantai Remis","Segari",27,14,13,8,19
+068/037/007,Perak,"Beruas","Pantai Remis","Changkat Keruing",120,61,59,36,84
+068/037/008,Perak,"Beruas","Pantai Remis","Ladang Cashwood",27,14,13,8,19
+068/037/009,Perak,"Beruas","Pantai Remis","Kampong Merbau",36,18,18,11,25
+068/037/010,Perak,"Beruas","Pantai Remis","Kampong Raja Hitam",39,20,19,12,27
+068/037/011,Perak,"Beruas","Pantai Remis","Bunga Raya",101,52,49,30,71
+068/037/012,Perak,"Beruas","Pantai Remis","Taman Sri Ayer Tawar",118,60,58,35,83
+068/037/013,Perak,"Beruas","Pantai Remis","Ayer Tawar Baharu",97,49,48,29,68
+068/037/014,Perak,"Beruas","Pantai Remis","Taman Dinding",120,61,59,36,84
+068/037/015,Perak,"Beruas","Pantai Remis","Ayer Tawar Selatan",46,23,23,14,32
+068/037/016,Perak,"Beruas","Pantai Remis","Ayer Tawar Tengah",27,14,13,8,19
+068/038/001,Perak,"Beruas","Astaka","Simpang Lima",30,15,15,9,21
+068/038/002,Perak,"Beruas","Astaka","Pekan Gurney",120,61,59,36,84
+068/038/003,Perak,"Beruas","Astaka","Simpang Dua",66,34,32,20,46
+068/038/004,Perak,"Beruas","Astaka","Astaka",113,58,55,34,79
+068/038/005,Perak,"Beruas","Astaka","Sitiawan",120,61,59,36,84
+068/038/006,Perak,"Beruas","Astaka","Taman Pegawai",120,61,59,36,84
+068/038/007,Perak,"Beruas","Astaka","Kampong China Utara",114,58,56,34,80
+068/038/008,Perak,"Beruas","Astaka","Kampong China Selatan",46,23,23,14,32
+068/038/009,Perak,"Beruas","Astaka","Kampong Koh Utara",120,61,59,36,84
+068/038/010,Perak,"Beruas","Astaka","Kampong Koh Selatan",120,61,59,36,84
+070/041/001,Perak,"Kampar","Malim Nawar","Malim Nawar Utara",41,21,20,12,29
+070/041/002,Perak,"Kampar","Malim Nawar","Malim Nawar Tengah",27,14,13,8,19
+070/041/003,Perak,"Kampar","Malim Nawar","Malim Nawar Lama",27,14,13,8,19
+070/041/004,Perak,"Kampar","Malim Nawar","Malim Nawar Selatan",27,14,13,8,19
+070/041/005,Perak,"Kampar","Malim Nawar","Malim Nawar Baharu",27,14,13,8,19
+070/041/006,Perak,"Kampar","Malim Nawar","Malim Nawar",51,26,25,15,36
+070/041/007,Perak,"Kampar","Malim Nawar","Kampar Barat",27,14,13,8,19
+070/041/008,Perak,"Kampar","Malim Nawar","Mambang Diawan Utara",71,36,35,21,50
+070/041/009,Perak,"Kampar","Malim Nawar","Mambang Diawan Selatan",46,23,23,14,32
+070/041/010,Perak,"Kampar","Malim Nawar","Mambang Diawan Barat",120,61,59,36,84
+070/041/011,Perak,"Kampar","Malim Nawar","Kampong Ayer Hitam",27,14,13,8,19
+070/041/012,Perak,"Kampar","Malim Nawar","Tronoh Mines",62,32,30,19,43
+070/041/013,Perak,"Kampar","Malim Nawar","Kampong Ayer Papan",86,44,42,26,60
+070/041/014,Perak,"Kampar","Malim Nawar","Pekan Tanjong Tualang",59,30,29,18,41
+070/041/015,Perak,"Kampar","Malim Nawar","Sungai Durian",57,29,28,17,40
+070/041/016,Perak,"Kampar","Malim Nawar","Kampong Timah",54,28,26,16,38
+070/041/017,Perak,"Kampar","Malim Nawar","Changkat Tin",34,17,17,10,24
+070/042/001,Perak,"Kampar","Keranji","Kampar Utara",81,41,40,24,57
+070/042/002,Perak,"Kampar","Keranji","Wah Loong Road",110,56,54,33,77
+070/042/003,Perak,"Kampar","Keranji","Kampong Aston",30,15,15,9,21
+070/042/004,Perak,"Kampar","Keranji","Taman Bandar Baru",120,61,59,36,84
+070/042/005,Perak,"Kampar","Keranji","Jalan Kuala Dipang",77,39,38,23,54
+070/042/006,Perak,"Kampar","Keranji","Jalan Gopeng",27,14,13,8,19
+070/042/007,Perak,"Kampar","Keranji","Simpang Lima",27,14,13,8,19
+070/042/008,Perak,"Kampar","Keranji","Kampong Changkat",27,14,13,8,19
+070/042/009,Perak,"Kampar","Keranji","Jalan Keranji",27,14,13,8,19
+070/042/010,Perak,"Kampar","Keranji","Jalan Baharu",27,14,13,8,19
+070/042/011,Perak,"Kampar","Keranji","Jalan Labu",64,33,31,19,45
+070/042/012,Perak,"Kampar","Keranji","Wah Loong Tengah",35,18,17,11,24
+070/042/013,Perak,"Kampar","Keranji","Wah Loong Selatan",30,15,15,9,21
+070/042/014,Perak,"Kampar","Keranji","Jalan Post Office",27,14,13,8,19
+070/042/015,Perak,"Kampar","Keranji","Jalan Iskandar",120,61,59,36,84
+070/043/001,Perak,"Kampar","Tualang Sekah","Ayer Denak",27,14,13,8,19
+070/043/002,Perak,"Kampar","Tualang Sekah","Kampong Batu Tujoh",41,21,20,12,29
+070/043/003,Perak,"Kampar","Tualang Sekah","Ladang Lembah Kinta",31,16,15,9,22
+070/043/004,Perak,"Kampar","Tualang Sekah","Kampong Chenderong",120,61,59,36,84
+070/043/005,Perak,"Kampar","Tualang Sekah","Kampong Ayer Mati",120,61,59,36,84
+070/043/006,Perak,"Kampar","Tualang Sekah","Changkat Tualang",27,14,13,8,19
+070/043/007,Perak,"Kampar","Tualang Sekah","Ladang Kinta Kellas",27,14,13,8,19
+070/043/008,Perak,"Kampar","Tualang Sekah","Ladang Kota Bharu",27,14,13,8,19
+070/043/009,Perak,"Kampar","Tualang Sekah","Kota Bharu",35,18,17,11,24
+070/043/010,Perak,"Kampar","Tualang Sekah","Changkat Bharu",27,14,13,8,19
+070/043/011,Perak,"Kampar","Tualang Sekah","Tualang Sekah",120,61,59,36,84
+070/043/012,Perak,"Kampar","Tualang Sekah","Kuala Dipang",71,36,35,21,50
+070/043/013,Perak,"Kampar","Tualang Sekah","Jeram Selatan",27,14,13,8,19
+070/043/014,Perak,"Kampar","Tualang Sekah","Jeram Timor",51,26,25,15,36
+070/043/015,Perak,"Kampar","Tualang Sekah","Jeram Barat",27,14,13,8,19
+070/043/016,Perak,"Kampar","Tualang Sekah","Kampong Pisang",41,21,20,12,29
+070/043/017,Perak,"Kampar","Tualang Sekah","Gunong Mesah",77,39,38,23,54
+070/043/018,Perak,"Kampar","Tualang Sekah","Sungai Siput Selatan",27,14,13,8,19
+070/043/019,Perak,"Kampar","Tualang Sekah","Kampong Sahum",47,24,23,14,33
+071/044/001,Perak,"Gopeng","Sungai Rapat","Ara Payong",120,61,59,36,84
+071/044/002,Perak,"Gopeng","Sungai Rapat","Kampong Pisang",71,36,35,21,50
+071/044/003,Perak,"Gopeng","Sungai Rapat","Sri Jaya",42,21,21,13,29
+071/044/004,Perak,"Gopeng","Sungai Rapat","Sri Rahmat",49,25,24,15,34
+071/044/005,Perak,"Gopeng","Sungai Rapat","Desa Pelancongan",120,61,59,36,84
+071/044/006,Perak,"Gopeng","Sungai Rapat","Desa Pakatan",120,61,59,36,84
+071/044/007,Perak,"Gopeng","Sungai Rapat","Rapat Jaya",120,61,59,36,84
+071/044/008,Perak,"Gopeng","Sungai Rapat","Sungai Rapat",120,61,59,36,84
+071/044/009,Perak,"Gopeng","Sungai Rapat","Sungai Rokam",105,54,51,32,73
+071/045/001,Perak,"Gopeng","Simpang Pulai","Pekan Razaki",120,61,59,36,84
+071/045/002,Perak,"Gopeng","Simpang Pulai","Ampang Baharu",89,45,44,27,62
+071/045/003,Perak,"Gopeng","Simpang Pulai","Taman Ampang",113,58,55,34,79
+071/045/004,Perak,"Gopeng","Simpang Pulai","Kampong Seri Ampang",98,50,48,29,69
+071/045/005,Perak,"Gopeng","Simpang Pulai","Taman Ipoh Jaya",120,61,59,36,84
+071/045/006,Perak,"Gopeng","Simpang Pulai","Rapat Setia Baru",120,61,59,36,84
+071/045/007,Perak,"Gopeng","Simpang Pulai","Rapat Setia",111,57,54,33,78
+071/045/008,Perak,"Gopeng","Simpang Pulai","Gunong Rapat Utara",102,52,50,31,71
+071/045/009,Perak,"Gopeng","Simpang Pulai","Gunung Rapat Selatan",99,50,49,30,69
+071/045/010,Perak,"Gopeng","Simpang Pulai","Taman Taufik",120,61,59,36,84
+071/045/011,Perak,"Gopeng","Simpang Pulai","Kampong Sengat",120,61,59,36,84
+071/045/012,Perak,"Gopeng","Simpang Pulai","Taman Bersatu",120,61,59,36,84
+071/045/013,Perak,"Gopeng","Simpang Pulai","Simpang Pulai",81,41,40,24,57
+071/046/001,Perak,"Gopeng","Teja","Pos Raya",29,15,14,9,20
+071/046/002,Perak,"Gopeng","Teja","Kampong Kepayang",120,61,59,36,84
+071/046/003,Perak,"Gopeng","Teja","Kampong Tekkah Baharu",120,61,59,36,84
+071/046/004,Perak,"Gopeng","Teja","Kampong Bharu Kopisan",120,61,59,36,84
+071/046/005,Perak,"Gopeng","Teja","Lawan Kuda Barat",120,61,59,36,84
+071/046/006,Perak,"Gopeng","Teja","Lawan Kuda Timor",37,19,18,11,26
+071/046/007,Perak,"Gopeng","Teja","Lawan Kuda Selatan",44,22,22,13,31
+071/046/008,Perak,"Gopeng","Teja","Kampong Pulai",27,14,13,8,19
+071/046/009,Perak,"Gopeng","Teja","Kampong Rawa",105,54,51,32,73
+071/046/010,Perak,"Gopeng","Teja","Gopeng",58,30,28,17,41
+071/046/011,Perak,"Gopeng","Teja","Kampong Sungai Itek",94,48,46,28,66
+075/053/001,Perak,"Bagan Datuk","Rungkup","Melintang Estate",27,14,13,8,19
+075/053/002,Perak,"Bagan Datuk","Rungkup","Sungai Pergam",27,14,13,8,19
+075/053/003,Perak,"Bagan Datuk","Rungkup","Bagan Datok",72,37,35,22,50
+075/053/004,Perak,"Bagan Datuk","Rungkup","Pasang Api",27,14,13,8,19
+075/053/005,Perak,"Bagan Datuk","Rungkup","Sungai Balai Baroh",27,14,13,8,19
+075/053/006,Perak,"Bagan Datuk","Rungkup","Sungai Betul",30,15,15,9,21
+075/053/007,Perak,"Bagan Datuk","Rungkup","Rungkup",31,16,15,9,22
+075/053/008,Perak,"Bagan Datuk","Rungkup","Sungai Balai Darat",27,14,13,8,19
+075/053/009,Perak,"Bagan Datuk","Rungkup","Sungai Nipah Darat",32,16,16,10,22
+075/053/010,Perak,"Bagan Datuk","Rungkup","Simpang Tiga Rungkup",39,20,19,12,27
+075/053/011,Perak,"Bagan Datuk","Rungkup","Kuala Perak Estate",27,14,13,8,19
+075/053/012,Perak,"Bagan Datuk","Rungkup","Tebok Bengkang",27,14,13,8,19
+075/053/013,Perak,"Bagan Datuk","Rungkup","Sungai Batang",32,16,16,10,22
+075/053/014,Perak,"Bagan Datuk","Rungkup","Sungai Haji Mohamad",47,24,23,14,33
+075/053/015,Perak,"Bagan Datuk","Rungkup","Selekoh",27,14,13,8,19
+075/053/016,Perak,"Bagan Datuk","Rungkup","Sungai Che Maja",49,25,24,15,34
+075/053/017,Perak,"Bagan Datuk","Rungkup","Sungai Lancang",27,14,13,8,19
+075/053/018,Perak,"Bagan Datuk","Rungkup","Sungai Tiang",77,39,38,23,54
+075/053/019,Perak,"Bagan Datuk","Rungkup","Bagan Sungai Belukang",27,14,13,8,19
+075/054/001,Perak,"Bagan Datuk","Hutan Melintang","Tanah Lalang",27,14,13,8,19
+075/054/002,Perak,"Bagan Datuk","Hutan Melintang","Sungai Dulang",42,21,21,13,29
+075/054/003,Perak,"Bagan Datuk","Hutan Melintang","Kampong Sungai Buloh",59,30,29,18,41
+075/054/004,Perak,"Bagan Datuk","Hutan Melintang","Simpang Ampat",120,61,59,36,84
+075/054/005,Perak,"Bagan Datuk","Hutan Melintang","Kampong Baharu Batu 16",41,21,20,12,29
+075/054/006,Perak,"Bagan Datuk","Hutan Melintang","Kuala Bernam Estate",58,30,28,17,41
+075/054/007,Perak,"Bagan Datuk","Hutan Melintang","Batu Dua Puloh",46,23,23,14,32
+075/054/008,Perak,"Bagan Datuk","Hutan Melintang","Bagan Pasir",38,19,19,11,27
+075/054/009,Perak,"Bagan Datuk","Hutan Melintang","Parit 4",30,15,15,9,21
+075/054/010,Perak,"Bagan Datuk","Hutan Melintang","Parit 7",36,18,18,11,25
+075/054/011,Perak,"Bagan Datuk","Hutan Melintang","Sungai Sumun",27,14,13,8,19
+075/054/012,Perak,"Bagan Datuk","Hutan Melintang","Parit 13",27,14,13,8,19
+075/054/013,Perak,"Bagan Datuk","Hutan Melintang","Parit 21",70,36,34,21,49
+075/054/014,Perak,"Bagan Datuk","Hutan Melintang","Hutan Melintang",120,61,59,36,84
+075/054/015,Perak,"Bagan Datuk","Hutan Melintang","Batu Dua Belas",27,14,13,8,19
+075/054/016,Perak,"Bagan Datuk","Hutan Melintang","Jalan Feri",102,52,50,31,71
+075/054/017,Perak,"Bagan Datuk","Hutan Melintang","Kampong Baharu Jendarata",27,14,13,8,19
+075/054/018,Perak,"Bagan Datuk","Hutan Melintang","Jenderata",27,14,13,8,19
+075/054/019,Perak,"Bagan Datuk","Hutan Melintang","Jenderata Estate Div. 3",27,14,13,8,19
+075/054/020,Perak,"Bagan Datuk","Hutan Melintang","Kampong Kebun Baru",60,31,29,18,42
+075/054/021,Perak,"Bagan Datuk","Hutan Melintang","Kampong Telok Buloh",27,14,13,8,19
+075/054/022,Perak,"Bagan Datuk","Hutan Melintang","Kampong Kota",27,14,13,8,19
+076/055/001,Perak,"Teluk Intan","Pasir Bedamar","Sungai Suli",27,14,13,8,19
+076/055/002,Perak,"Teluk Intan","Pasir Bedamar","Sungai Temah",27,14,13,8,19
+076/055/003,Perak,"Teluk Intan","Pasir Bedamar","Pasir Bedamar Barat",29,15,14,9,20
+076/055/004,Perak,"Teluk Intan","Pasir Bedamar","Pasir Bedamar Utara",63,32,31,19,44
+076/055/005,Perak,"Teluk Intan","Pasir Bedamar","Pasir Bedamar Tengah",70,36,34,21,49
+076/055/006,Perak,"Teluk Intan","Pasir Bedamar","Pasir Bedamar Selatan",35,18,17,11,24
+076/055/007,Perak,"Teluk Intan","Pasir Bedamar","Jalan Market Barat",57,29,28,17,40
+076/055/008,Perak,"Teluk Intan","Pasir Bedamar","Jalan Market Timor",27,14,13,8,19
+076/055/009,Perak,"Teluk Intan","Pasir Bedamar","Jalan Anson",35,18,17,11,24
+076/055/010,Perak,"Teluk Intan","Pasir Bedamar","Jalan Canal",38,19,19,11,27
+076/055/011,Perak,"Teluk Intan","Pasir Bedamar","Jalan Speedy",59,30,29,18,41
+076/055/012,Perak,"Teluk Intan","Pasir Bedamar","Jalan Sungai Nibong",41,21,20,12,29
+076/055/013,Perak,"Teluk Intan","Pasir Bedamar","Eastern Garden",57,29,28,17,40
+076/055/014,Perak,"Teluk Intan","Pasir Bedamar","Jalan Laxamana",63,32,31,19,44
+076/055/015,Perak,"Teluk Intan","Pasir Bedamar","Kampong Guru",90,46,44,27,63
+076/055/016,Perak,"Teluk Intan","Pasir Bedamar","Jalan Batak Rabit Utara",120,61,59,36,84
+076/055/017,Perak,"Teluk Intan","Pasir Bedamar","Jalan Batak Rabit Selatan",48,24,24,14,34
+076/055/018,Perak,"Teluk Intan","Pasir Bedamar","Taman Seri Setia",120,61,59,36,84
+076/055/019,Perak,"Teluk Intan","Pasir Bedamar","Pekan Baru",89,45,44,27,62
+076/056/001,Perak,"Teluk Intan","Changkat Jong","Sungai Tunku",30,15,15,9,21
+076/056/002,Perak,"Teluk Intan","Changkat Jong","Kampong Bahagia",120,61,59,36,84
+076/056/003,Perak,"Teluk Intan","Changkat Jong","Sungai Kerawai",74,38,36,22,52
+076/056/004,Perak,"Teluk Intan","Changkat Jong","Ladang Sussex",27,14,13,8,19
+076/056/005,Perak,"Teluk Intan","Changkat Jong","Ladang Selaba",27,14,13,8,19
+076/056/006,Perak,"Teluk Intan","Changkat Jong","Taman Cecily",107,55,52,32,75
+076/056/007,Perak,"Teluk Intan","Changkat Jong","Kampong Padang Tembak",120,61,59,36,84
+076/056/008,Perak,"Teluk Intan","Changkat Jong","Kampong Banjar",120,61,59,36,84
+076/056/009,Perak,"Teluk Intan","Changkat Jong","Batak Rabit",120,61,59,36,84
+076/056/010,Perak,"Teluk Intan","Changkat Jong","Nova Scotia",96,49,47,29,67
+076/056/011,Perak,"Teluk Intan","Changkat Jong","Kampong Selaba",84,43,41,25,59
+076/056/012,Perak,"Teluk Intan","Changkat Jong","Batu Dua Belas Utara",72,37,35,22,50
+076/056/013,Perak,"Teluk Intan","Changkat Jong","Kampong Baru Ayer Hitam",50,26,24,15,35
+076/056/014,Perak,"Teluk Intan","Changkat Jong","Kampong Changkat Jong",68,35,33,20,48
+076/056/015,Perak,"Teluk Intan","Changkat Jong","Kampong Sungai Samak",35,18,17,11,24
+076/056/016,Perak,"Teluk Intan","Changkat Jong","Sungai Bugis",27,14,13,8,19
+076/056/017,Perak,"Teluk Intan","Changkat Jong","Ladang Sungai Samak",27,14,13,8,19
+076/056/018,Perak,"Teluk Intan","Changkat Jong","Ladang Ulu Bernam",30,15,15,9,21
+100/021/001,Selangor,"Pandan","Pandan Indah","Taman Nirwana",90,46,44,27,63
+100/021/002,Selangor,"Pandan","Pandan Indah","Angsana Hilir",94,48,46,28,66
+100/021/003,Selangor,"Pandan","Pandan Indah","Kampung Pandan Dalam Kiri",120,61,59,36,84
+100/021/004,Selangor,"Pandan","Pandan Indah","Lorong Raya Kampung Pandan",35,18,17,11,24
+100/021/005,Selangor,"Pandan","Pandan Indah","Pandan Jaya Utara",120,61,59,36,84
+100/021/006,Selangor,"Pandan","Pandan Indah","Taman Chempaka",120,61,59,36,84
+100/021/007,Selangor,"Pandan","Pandan Indah","Pandan Indah Jalan 1, 4 Dan 6",120,61,59,36,84
+100/021/008,Selangor,"Pandan","Pandan Indah","Lorong Molek Kampung Pandan",58,30,28,17,41
+100/021/009,Selangor,"Pandan","Pandan Indah","Lorong Bersih Kampung Pandan",95,48,47,29,66
+100/021/010,Selangor,"Pandan","Pandan Indah","Pandan Jaya Selatan",120,61,59,36,84
+100/021/011,Selangor,"Pandan","Pandan Indah","Taman Bakti",60,31,29,18,42
+100/021/012,Selangor,"Pandan","Pandan Indah","Pandan Indah Jalan 2 & 3",120,61,59,36,84
+100/021/013,Selangor,"Pandan","Pandan Indah","Ampang Hilir",120,61,59,36,84
+100/021/014,Selangor,"Pandan","Pandan Indah","Cheras Indah",114,58,56,34,80
+100/021/015,Selangor,"Pandan","Pandan Indah","Taman Maju Jaya",65,33,32,20,45
+100/021/016,Selangor,"Pandan","Pandan Indah","Taman Kenchana",61,31,30,18,43
+100/021/017,Selangor,"Pandan","Pandan Indah","Kampung Cheras Baharu Timur",99,50,49,30,69
+100/021/018,Selangor,"Pandan","Pandan Indah","Desa Nirwana",27,14,13,8,19
+100/022/001,Selangor,"Pandan","Teratai","Pandan Perdana Timur",120,61,59,36,84
+100/022/002,Selangor,"Pandan","Teratai","Taman Muda Timur",65,33,32,20,45
+100/022/003,Selangor,"Pandan","Teratai","Taman Putra",120,61,59,36,84
+100/022/004,Selangor,"Pandan","Teratai","Taman Seraya",120,61,59,36,84
+100/022/005,Selangor,"Pandan","Teratai","Taman Melor",88,45,43,26,62
+100/022/006,Selangor,"Pandan","Teratai","Taman Mega Jaya",37,19,18,11,26
+100/022/007,Selangor,"Pandan","Teratai","Taman Mawar",66,34,32,20,46
+100/022/008,Selangor,"Pandan","Teratai","Taman Bukit Teratai",120,61,59,36,84
+100/022/009,Selangor,"Pandan","Teratai","Pandan Perdana Barat",120,61,59,36,84
+100/022/010,Selangor,"Pandan","Teratai","Kampung Cheras Baharu Barat",87,44,43,26,61
+100/022/011,Selangor,"Pandan","Teratai","Taman Muda Barat",120,61,59,36,84
+100/022/012,Selangor,"Pandan","Teratai","Taman Saga",120,61,59,36,84
+100/022/013,Selangor,"Pandan","Teratai","Cheras Hartamas",106,54,52,32,74
+100/022/014,Selangor,"Pandan","Teratai","Tasik Permai",120,61,59,36,84
+100/022/015,Selangor,"Pandan","Teratai","Pandan Indah Jalan 5",120,61,59,36,84
+100/022/016,Selangor,"Pandan","Teratai","Pandan Mewah",120,61,59,36,84
+103/028/001,Selangor,"Puchong","Seri Kembangan","Serdang Lama",44,22,22,13,31
+103/028/002,Selangor,"Puchong","Seri Kembangan","Serdang Utama",27,14,13,8,19
+103/028/003,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 2",79,40,39,24,55
+103/028/004,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 1",94,48,46,28,66
+103/028/005,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 4",35,18,17,11,24
+103/028/006,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 5",45,23,22,14,31
+103/028/007,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 9",28,14,14,8,20
+103/028/008,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 11",59,30,29,18,41
+103/028/009,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 8",29,15,14,9,20
+103/028/010,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 10",27,14,13,8,19
+103/028/011,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 12",27,14,13,8,19
+103/028/012,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 7",51,26,25,15,36
+103/028/013,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 6",35,18,17,11,24
+103/028/014,Selangor,"Puchong","Seri Kembangan","Seri Kembangan 3",41,21,20,12,29
+103/028/015,Selangor,"Puchong","Seri Kembangan","Bukit Serdang",120,61,59,36,84
+103/028/016,Selangor,"Puchong","Seri Kembangan","Taman Universiti Indah",120,61,59,36,84
+103/028/017,Selangor,"Puchong","Seri Kembangan","Desa Serdang",76,39,37,23,53
+103/028/018,Selangor,"Puchong","Seri Kembangan","Taman Muhibbah",60,31,29,18,42
+103/028/019,Selangor,"Puchong","Seri Kembangan","Sungai Besi Indah",120,61,59,36,84
+103/028/020,Selangor,"Puchong","Seri Kembangan","Serdang Raya",120,61,59,36,84
+103/028/021,Selangor,"Puchong","Seri Kembangan","Taman Bukit Belimbing",116,59,57,35,81
+103/029/001,Selangor,"Puchong","Seri Serdang","Serdang Jaya 1",111,57,54,33,78
+103/029/002,Selangor,"Puchong","Seri Serdang","Seri Serdang Utara",120,61,59,36,84
+103/029/003,Selangor,"Puchong","Seri Serdang","Kawasan UPM",62,32,30,19,43
+103/029/004,Selangor,"Puchong","Seri Serdang","Kampung Sri Aman",120,61,59,36,84
+103/029/005,Selangor,"Puchong","Seri Serdang","Batu 14 Puchong",120,61,59,36,84
+103/029/006,Selangor,"Puchong","Seri Serdang","Seri Serdang Selatan 1",84,43,41,25,59
+103/029/007,Selangor,"Puchong","Seri Serdang","Bandar Bukit Puchong",120,61,59,36,84
+103/029/008,Selangor,"Puchong","Seri Serdang","Taman Puchong Utama",120,61,59,36,84
+103/029/009,Selangor,"Puchong","Seri Serdang","Taman Pinggiran Putra",120,61,59,36,84
+103/029/010,Selangor,"Puchong","Seri Serdang","Serdang Jaya 2",120,61,59,36,84
+103/029/011,Selangor,"Puchong","Seri Serdang","Puchong Permai",120,61,59,36,84
+103/029/012,Selangor,"Puchong","Seri Serdang","Seri Indah",27,14,13,8,19
+103/029/013,Selangor,"Puchong","Seri Serdang","Seri Serdang Selatan 2",58,30,28,17,41
+103/029/014,Selangor,"Puchong","Seri Serdang","Kampung Batu 13",120,61,59,36,84
+104/030/001,Selangor,"Subang","Kinrara","Kinrara Seksyen 4,5 & 6",120,61,59,36,84
+104/030/002,Selangor,"Subang","Kinrara","Kinrara Seksyen 2",78,40,38,23,55
+104/030/003,Selangor,"Subang","Kinrara","Kinrara Seksyen 1",120,61,59,36,84
+104/030/004,Selangor,"Subang","Kinrara","Kinrara Seksyen 7",99,50,49,30,69
+104/030/005,Selangor,"Subang","Kinrara","Kinrara Seksyen 3",120,61,59,36,84
+104/030/006,Selangor,"Subang","Kinrara","Puchong Jaya Timur",120,61,59,36,84
+104/030/007,Selangor,"Subang","Kinrara","Puchong Jaya Utara",120,61,59,36,84
+104/030/008,Selangor,"Subang","Kinrara","Puchong Jaya Barat",120,61,59,36,84
+104/030/009,Selangor,"Subang","Kinrara","Batu 12 Puchong",120,61,59,36,84
+104/030/010,Selangor,"Subang","Kinrara","Batu 7 Jalan Puchong",42,21,21,13,29
+104/030/011,Selangor,"Subang","Kinrara","Batu 13 Puchong",120,61,59,36,84
+104/030/012,Selangor,"Subang","Kinrara","Bandar Kinrara Seksyen 1",73,37,36,22,51
+104/030/013,Selangor,"Subang","Kinrara","Pusat Bandar Puchong",120,61,59,36,84
+104/030/014,Selangor,"Subang","Kinrara","Bandar Kinrara Seksyen 2",80,41,39,24,56
+104/030/015,Selangor,"Subang","Kinrara","Bandar Kinrara Seksyen 3",67,34,33,20,47
+104/030/016,Selangor,"Subang","Kinrara","Bandar Kinrara Seksyen 4",120,61,59,36,84
+104/030/017,Selangor,"Subang","Kinrara","Bandar Kinrara Seksyen 5",120,61,59,36,84
+104/030/018,Selangor,"Subang","Kinrara","Bandar Puteri",120,61,59,36,84
+104/030/019,Selangor,"Subang","Kinrara","Puchong Indah 1",120,61,59,36,84
+104/030/020,Selangor,"Subang","Kinrara","Puchong Perdana 1",92,47,45,28,64
+104/030/021,Selangor,"Subang","Kinrara","Puchong Perdana 2",120,61,59,36,84
+104/030/022,Selangor,"Subang","Kinrara","Puchong Indah 2",76,39,37,23,53
+104/030/023,Selangor,"Subang","Kinrara","Puchong Intan",120,61,59,36,84
+104/031/001,Selangor,"Subang","Subang Jaya","PJS 7 Bandar Sunway",120,61,59,36,84
+104/031/002,Selangor,"Subang","Subang Jaya","SS 12",110,56,54,33,77
+104/031/003,Selangor,"Subang","Subang Jaya","SS 15",103,53,50,31,72
+104/031/004,Selangor,"Subang","Subang Jaya","SS 16 & SS 17",120,61,59,36,84
+104/031/005,Selangor,"Subang","Subang Jaya","SS 19/1",75,38,37,23,52
+104/031/006,Selangor,"Subang","Subang Jaya","SS 18",120,61,59,36,84
+104/031/007,Selangor,"Subang","Subang Jaya","SS 14/1-4",87,44,43,26,61
+104/031/008,Selangor,"Subang","Subang Jaya","SS 13",37,19,18,11,26
+104/031/009,Selangor,"Subang","Subang Jaya","USJ 1",120,61,59,36,84
+104/031/010,Selangor,"Subang","Subang Jaya","USJ 2/1-4",120,61,59,36,84
+104/031/011,Selangor,"Subang","Subang Jaya","USJ 3",120,61,59,36,84
+104/031/012,Selangor,"Subang","Subang Jaya","USJ 4",120,61,59,36,84
+104/031/013,Selangor,"Subang","Subang Jaya","USJ 5",87,44,43,26,61
+104/031/014,Selangor,"Subang","Subang Jaya","USJ 6",120,61,59,36,84
+104/031/015,Selangor,"Subang","Subang Jaya","USJ 7 & 8",120,61,59,36,84
+104/031/016,Selangor,"Subang","Subang Jaya","USJ 9 & USJ 10",117,60,57,35,82
+104/031/017,Selangor,"Subang","Subang Jaya","USJ 11",120,61,59,36,84
+104/031/018,Selangor,"Subang","Subang Jaya","USJ 12",98,50,48,29,69
+104/031/019,Selangor,"Subang","Subang Jaya","USJ 13",79,40,39,24,55
+104/031/020,Selangor,"Subang","Subang Jaya","USJ 14 & 15",120,61,59,36,84
+104/031/021,Selangor,"Subang","Subang Jaya","SS 19/2-SS 19/5",90,46,44,27,63
+104/031/022,Selangor,"Subang","Subang Jaya","SS 19/6-SS 19/19",89,45,44,27,62
+104/031/023,Selangor,"Subang","Subang Jaya","PJS 9 & 11 Bandar Sunway",120,61,59,36,84
+104/031/024,Selangor,"Subang","Subang Jaya","SS 14/5-8",85,43,42,26,59
+104/031/025,Selangor,"Subang","Subang Jaya","USJ 2/5-7",93,47,46,28,65
+104/031/026,Selangor,"Subang","Subang Jaya","USJ 16 Hingga 22",120,61,59,36,84
+105/032/001,Selangor,"Petaling Jaya","Seri Setia","Glenmarie",81,41,40,24,57
+105/032/002,Selangor,"Petaling Jaya","Seri Setia","SS 6",76,39,37,23,53
+105/032/003,Selangor,"Petaling Jaya","Seri Setia","SS 5D",64,33,31,19,45
+105/032/004,Selangor,"Petaling Jaya","Seri Setia","SS 5B & 5C",119,61,58,36,83
+105/032/005,Selangor,"Petaling Jaya","Seri Setia","SS 5A",101,52,49,30,71
+105/032/006,Selangor,"Petaling Jaya","Seri Setia","Seri Setia",75,38,37,23,52
+105/032/007,Selangor,"Petaling Jaya","Seri Setia","PJS 5 Kampung Penaga",43,22,21,13,30
+105/032/008,Selangor,"Petaling Jaya","Seri Setia","PJS 6/4-PJS 6/6",120,61,59,36,84
+105/032/009,Selangor,"Petaling Jaya","Seri Setia","PJS 10/1-PJS 10/16",120,61,59,36,84
+105/032/010,Selangor,"Petaling Jaya","Seri Setia","Rumah Pangsa Sungai Way",39,20,19,12,27
+105/032/011,Selangor,"Petaling Jaya","Seri Setia","PJS 5/1-PJS 5/12",120,61,59,36,84
+105/032/012,Selangor,"Petaling Jaya","Seri Setia","PJS 6/1-PJS 6/3",93,47,46,28,65
+105/032/013,Selangor,"Petaling Jaya","Seri Setia","PJS 8",120,61,59,36,84
+105/032/014,Selangor,"Petaling Jaya","Seri Setia","PJS 10/17-PJS 10/34",88,45,43,26,62
+105/032/015,Selangor,"Petaling Jaya","Seri Setia","SS 7",120,61,59,36,84
+105/032/016,Selangor,"Petaling Jaya","Seri Setia","Kampung Lindungan",51,26,25,15,36
+105/032/017,Selangor,"Petaling Jaya","Seri Setia","PJS 5/13-PJS 5/30",49,25,24,15,34
+105/032/018,Selangor,"Petaling Jaya","Seri Setia","Taman TTDI Jaya",120,61,59,36,84
+105/032/019,Selangor,"Petaling Jaya","Seri Setia","Ara Damansara",120,61,59,36,84
+105/032/020,Selangor,"Petaling Jaya","Seri Setia","Taman Glenmarie",34,17,17,10,24
+105/033/001,Selangor,"Petaling Jaya","Taman Medan","Seksyen 51",27,14,13,8,19
+105/033/002,Selangor,"Petaling Jaya","Taman Medan","Seksyen 4 Petaling Jaya",120,61,59,36,84
+105/033/003,Selangor,"Petaling Jaya","Taman Medan","Kawasan Melayu",63,32,31,19,44
+105/033/004,Selangor,"Petaling Jaya","Taman Medan","PJS 1",120,61,59,36,84
+105/033/005,Selangor,"Petaling Jaya","Taman Medan","Medan Pejasa",120,61,59,36,84
+105/033/006,Selangor,"Petaling Jaya","Taman Medan","Taman Dato Harun 1",60,31,29,18,42
+105/033/007,Selangor,"Petaling Jaya","Taman Medan","Taman Dato Harun 2",120,61,59,36,84
+105/033/008,Selangor,"Petaling Jaya","Taman Medan","PJS 3",120,61,59,36,84
+105/033/009,Selangor,"Petaling Jaya","Taman Medan","PJS 4",120,61,59,36,84
+105/033/010,Selangor,"Petaling Jaya","Taman Medan","Baiduri",120,61,59,36,84
+105/033/011,Selangor,"Petaling Jaya","Taman Medan","Petaling Utama",48,24,24,14,34
+105/033/012,Selangor,"Petaling Jaya","Taman Medan","PJS 2",120,61,59,36,84
+105/033/013,Selangor,"Petaling Jaya","Taman Medan","PJS 2C/12",93,47,46,28,65
+105/033/014,Selangor,"Petaling Jaya","Taman Medan","PJS 2D",104,53,51,31,73
+105/033/015,Selangor,"Petaling Jaya","Taman Medan","Kampung Medan",39,20,19,12,27
+105/033/016,Selangor,"Petaling Jaya","Taman Medan","PJS 2C",96,49,47,29,67
+105/034/001,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 17 Utara",96,49,47,29,67
+105/034/002,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 17 Barat",59,30,29,18,41
+105/034/003,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 17 Tengah",91,46,45,27,64
+105/034/004,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 17 Selatan",72,37,35,22,50
+105/034/005,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 16",55,28,27,17,38
+105/034/006,Selangor,"Petaling Jaya","Bukit Gasing","Jalan Bukit",120,61,59,36,84
+105/034/007,Selangor,"Petaling Jaya","Bukit Gasing","Jalan Semangat",105,54,51,32,73
+105/034/008,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 5 Utara",89,45,44,27,62
+105/034/009,Selangor,"Petaling Jaya","Bukit Gasing","Taman Jaya",42,21,21,13,29
+105/034/010,Selangor,"Petaling Jaya","Bukit Gasing","Kawasan Assunta Convent",71,36,35,21,50
+105/034/011,Selangor,"Petaling Jaya","Bukit Gasing","Kawasan Bandar Baharu",68,35,33,20,48
+105/034/012,Selangor,"Petaling Jaya","Bukit Gasing","Jalan Sungai Jernih",84,43,41,25,59
+105/034/013,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen Satu Petaling Jaya",113,58,55,34,79
+105/034/014,Selangor,"Petaling Jaya","Bukit Gasing","Kawasan Bangunan K.K.P.L",55,28,27,17,38
+105/034/015,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 5 Selatan",120,61,59,36,84
+105/034/016,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 17 A",51,26,25,15,36
+105/034/017,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 19",75,38,37,23,52
+105/034/018,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 14 Utara",82,42,40,25,57
+105/034/019,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 14 Selatan",66,34,32,20,46
+105/034/020,Selangor,"Petaling Jaya","Bukit Gasing","Seksyen 2 Petaling Jaya",60,31,29,18,42
+106/035/001,Selangor,"Damansara","Kampung Tunku","Seksyen 21 Timur",83,42,41,25,58
+106/035/002,Selangor,"Damansara","Kampung Tunku","Seksyen 20 Utara",98,50,48,29,69
+106/035/003,Selangor,"Damansara","Kampung Tunku","Seksyen 20 Selatan",55,28,27,17,38
+106/035/004,Selangor,"Damansara","Kampung Tunku","Seksyen 22",74,38,36,22,52
+106/035/005,Selangor,"Damansara","Kampung Tunku","Kampung Tunku Utara",94,48,46,28,66
+106/035/006,Selangor,"Damansara","Kampung Tunku","Kampung Tunku Selatan",114,58,56,34,80
+106/035/007,Selangor,"Damansara","Kampung Tunku","SS 3 Utara",110,56,54,33,77
+106/035/008,Selangor,"Damansara","Kampung Tunku","SS 3 Barat",104,53,51,31,73
+106/035/009,Selangor,"Damansara","Kampung Tunku","SS 3 Timur",118,60,58,35,83
+106/035/010,Selangor,"Damansara","Kampung Tunku","Sungai Way Utara",110,56,54,33,77
+106/035/011,Selangor,"Damansara","Kampung Tunku","Sungai Way Tengah Dua",33,17,16,10,23
+106/035/012,Selangor,"Damansara","Kampung Tunku","Sungai Way Tengah Satu",29,15,14,9,20
+106/035/013,Selangor,"Damansara","Kampung Tunku","Sungai Way Selatan Dua",27,14,13,8,19
+106/035/014,Selangor,"Damansara","Kampung Tunku","Sungai Way Selatan Satu",50,26,24,15,35
+106/035/015,Selangor,"Damansara","Kampung Tunku","SS 2 Utara",120,61,59,36,84
+106/035/016,Selangor,"Damansara","Kampung Tunku","SS 2 Tengah",120,61,59,36,84
+106/035/017,Selangor,"Damansara","Kampung Tunku","SS 2 Selatan",120,61,59,36,84
+106/035/018,Selangor,"Damansara","Kampung Tunku","Seksyen 21 Barat",59,30,29,18,41
+106/036/001,Selangor,"Damansara","Bandar Utama","SS 21 Utara",109,56,53,33,76
+106/036/002,Selangor,"Damansara","Bandar Utama","SS 20",106,54,52,32,74
+106/036/003,Selangor,"Damansara","Bandar Utama","Damansara Jaya Utara",120,61,59,36,84
+106/036/004,Selangor,"Damansara","Bandar Utama","SS 23",120,61,59,36,84
+106/036/005,Selangor,"Damansara","Bandar Utama","SS 24",93,47,46,28,65
+106/036/006,Selangor,"Damansara","Bandar Utama","SS 26",95,48,47,29,66
+106/036/007,Selangor,"Damansara","Bandar Utama","Kampung Chempaka",120,61,59,36,84
+106/036/008,Selangor,"Damansara","Bandar Utama","SS 25",89,45,44,27,62
+106/036/009,Selangor,"Damansara","Bandar Utama","SS 4",120,61,59,36,84
+106/036/010,Selangor,"Damansara","Bandar Utama","SS 21 Selatan",86,44,42,26,60
+106/036/011,Selangor,"Damansara","Bandar Utama","Damansara Jaya Selatan",101,52,49,30,71
+106/036/012,Selangor,"Damansara","Bandar Utama","Bandar Utama BU 1 & BU 2",107,55,52,32,75
+106/036/013,Selangor,"Damansara","Bandar Utama","Sungai Kayu Ara Utara",120,61,59,36,84
+106/036/014,Selangor,"Damansara","Bandar Utama","Bandar Utama BU 3-BU 10",120,61,59,36,84
+106/036/015,Selangor,"Damansara","Bandar Utama","Bandar Utama BU 11-BU 12",120,61,59,36,84
+106/036/016,Selangor,"Damansara","Bandar Utama","Sungai Kayu Ara Selatan",75,38,37,23,52
+106/036/017,Selangor,"Damansara","Bandar Utama","Kayu Ara Indah",58,30,28,17,41
+106/036/018,Selangor,"Damansara","Bandar Utama","Sunway Damansara PJU 3",120,61,59,36,84
+106/037/001,Selangor,"Damansara","Bukit Lanjan","Desa Jaya Jalan 1-Jalan 19",97,49,48,29,68
+106/037/002,Selangor,"Damansara","Bukit Lanjan","Sri Damansara Jalan SD 1-SD 5",120,61,59,36,84
+106/037/003,Selangor,"Damansara","Bukit Lanjan","Sri Damansara Jalan SD7-Jalan SD9",120,61,59,36,84
+106/037/004,Selangor,"Damansara","Bukit Lanjan","Bukit Lanjan",120,61,59,36,84
+106/037/005,Selangor,"Damansara","Bukit Lanjan","Desa Jaya Jalan 20-Jalan 38",99,50,49,30,69
+106/037/006,Selangor,"Damansara","Bukit Lanjan","Desa Jaya Jalan 39-Jalan 56",94,48,46,28,66
+106/037/007,Selangor,"Damansara","Bukit Lanjan","Damansara Damai PJU 10",120,61,59,36,84
+106/037/008,Selangor,"Damansara","Bukit Lanjan","Sri Damansara Jalan SD 10",120,61,59,36,84
+106/037/009,Selangor,"Damansara","Bukit Lanjan","Sri Damansara Jalan SD12",52,27,25,16,36
+106/037/010,Selangor,"Damansara","Bukit Lanjan","Saujana Damansara PJU 10",120,61,59,36,84
+106/037/011,Selangor,"Damansara","Bukit Lanjan","Taman Ehsan Jalan 5",109,56,53,33,76
+106/037/012,Selangor,"Damansara","Bukit Lanjan","Taman Ehsan Jalan 2",101,52,49,30,71
+106/037/013,Selangor,"Damansara","Bukit Lanjan","Desa Aman Puri",120,61,59,36,84
+106/037/014,Selangor,"Damansara","Bukit Lanjan","Taman Ehsan Jalan 4",100,51,49,30,70
+106/037/015,Selangor,"Damansara","Bukit Lanjan","Sungai Buloh",120,61,59,36,84
+106/037/016,Selangor,"Damansara","Bukit Lanjan","Selayang Utama",120,61,59,36,84
+106/037/017,Selangor,"Damansara","Bukit Lanjan","Kepong Utara",74,38,36,22,52
+106/037/018,Selangor,"Damansara","Bukit Lanjan","Selayang Jaya",120,61,59,36,84
+106/037/019,Selangor,"Damansara","Bukit Lanjan","Taman Daya",118,60,58,35,83
+106/037/020,Selangor,"Damansara","Bukit Lanjan","Taman Indah Perdana",79,40,39,24,55
+106/037/021,Selangor,"Damansara","Bukit Lanjan","Taman Bidara",120,61,59,36,84
+110/045/001,Selangor,"Klang","Bandar Baru Klang","Taman Eng Ann 1",97,49,48,29,68
+110/045/002,Selangor,"Klang","Bandar Baru Klang","Persiaran Sultan Ibrahim 2",87,44,43,26,61
+110/045/003,Selangor,"Klang","Bandar Baru Klang","Bandar Klang",97,49,48,29,68
+110/045/004,Selangor,"Klang","Bandar Baru Klang","Sungai Pinang Selatan",27,14,13,8,19
+110/045/005,Selangor,"Klang","Bandar Baru Klang","Pasar Jawa",67,34,33,20,47
+110/045/006,Selangor,"Klang","Bandar Baru Klang","Jalan Goh Hock Huat",46,23,23,14,32
+110/045/007,Selangor,"Klang","Bandar Baru Klang","Persiaran Sultan Ibrahim 1",90,46,44,27,63
+110/045/008,Selangor,"Klang","Bandar Baru Klang","Taman Eng Ann 2",50,26,24,15,35
+110/045/009,Selangor,"Klang","Bandar Baru Klang","Taman Berkeley",120,61,59,36,84
+110/045/010,Selangor,"Klang","Bandar Baru Klang","Bandar Baru Klang",62,32,30,19,43
+110/045/011,Selangor,"Klang","Bandar Baru Klang","Bukit Kuda",120,61,59,36,84
+110/045/012,Selangor,"Klang","Bandar Baru Klang","Kampung Batu Belah",120,61,59,36,84
+110/045/013,Selangor,"Klang","Bandar Baru Klang","Taman Klang",78,40,38,23,55
+110/045/014,Selangor,"Klang","Bandar Baru Klang","Jalan Meru",74,38,36,22,52
+110/045/015,Selangor,"Klang","Bandar Baru Klang","Klang Kawasan 19",120,61,59,36,84
+110/045/016,Selangor,"Klang","Bandar Baru Klang","Taman Klang Utama 1",120,61,59,36,84
+110/045/017,Selangor,"Klang","Bandar Baru Klang","Taman Klang Utama 2",120,61,59,36,84
+110/045/018,Selangor,"Klang","Bandar Baru Klang","Sungai Bertih Selatan",120,61,59,36,84
+110/045/019,Selangor,"Klang","Bandar Baru Klang","Sungai Bertih Utara",120,61,59,36,84
+110/046/001,Selangor,"Klang","Pelabuhan Klang","Kampung Pendamar",120,61,59,36,84
+110/046/002,Selangor,"Klang","Pelabuhan Klang","Kampung Idaman",120,61,59,36,84
+110/046/003,Selangor,"Klang","Pelabuhan Klang","Jalan Padang",27,14,13,8,19
+110/046/004,Selangor,"Klang","Pelabuhan Klang","Kawasan Pelabuhan",120,61,59,36,84
+110/046/005,Selangor,"Klang","Pelabuhan Klang","Jalan Kem",91,46,45,27,64
+110/046/006,Selangor,"Klang","Pelabuhan Klang","Teluk Gong Utara",62,32,30,19,43
+110/046/007,Selangor,"Klang","Pelabuhan Klang","Pulau Indah Utara",120,61,59,36,84
+110/046/008,Selangor,"Klang","Pelabuhan Klang","Pulau Indah Selatan",83,42,41,25,58
+110/046/009,Selangor,"Klang","Pelabuhan Klang","Pandamaran Jaya Jalan 1-12",118,60,58,35,83
+110/046/010,Selangor,"Klang","Pelabuhan Klang","Teluk Gong Selatan",120,61,59,36,84
+110/046/011,Selangor,"Klang","Pelabuhan Klang","Pandamaran Jaya Jalan 13-100",120,61,59,36,84
+110/046/012,Selangor,"Klang","Pelabuhan Klang","Seri Pendamar",32,16,16,10,22
+110/046/013,Selangor,"Klang","Pelabuhan Klang","Pandamaran Jaya Apartment",103,53,50,31,72
+110/046/014,Selangor,"Klang","Pelabuhan Klang","Selat Selatan",120,61,59,36,84
+110/047/001,Selangor,"Klang","Pandamaran","Kompleks Sukan Pandamaran",73,37,36,22,51
+110/047/002,Selangor,"Klang","Pandamaran","Kawasan Sekolah Cina 'B'",120,61,59,36,84
+110/047/003,Selangor,"Klang","Pandamaran","Kawasan Sekolah Cina 'A'",120,61,59,36,84
+110/047/004,Selangor,"Klang","Pandamaran","Pandamaran",102,52,50,31,71
+110/047/005,Selangor,"Klang","Pandamaran","Jalan Tengku Badar Utara",120,61,59,36,84
+110/047/006,Selangor,"Klang","Pandamaran","Jalan Tengku Badar Selatan",27,14,13,8,19
+110/047/007,Selangor,"Klang","Pandamaran","Jalan Kastam",94,48,46,28,66
+110/047/008,Selangor,"Klang","Pandamaran","Tengku Bendahara Azman",94,48,46,28,66
+110/047/009,Selangor,"Klang","Pandamaran","Raja Lumu",80,41,39,24,56
+110/047/010,Selangor,"Klang","Pandamaran","Sungai Aur",72,37,35,22,50
+110/047/011,Selangor,"Klang","Pandamaran","Teluk Pulai Utara",86,44,42,26,60
+110/047/012,Selangor,"Klang","Pandamaran","Kampung Attap",36,18,18,11,25
+110/047/013,Selangor,"Klang","Pandamaran","Jalan Tengku Kelana",38,19,19,11,27
+110/047/014,Selangor,"Klang","Pandamaran","Bukit Istana",55,28,27,17,38
+110/047/015,Selangor,"Klang","Pandamaran","Simpang Tujuh",82,42,40,25,57
+110/047/016,Selangor,"Klang","Pandamaran","Taman Gembira 1",120,61,59,36,84
+110/047/017,Selangor,"Klang","Pandamaran","Taman Selatan 1",99,50,49,30,69
+110/047/018,Selangor,"Klang","Pandamaran","Teluk Gadung Besar",118,60,58,35,83
+110/047/019,Selangor,"Klang","Pandamaran","Taman Chi Liung",120,61,59,36,84
+110/047/020,Selangor,"Klang","Pandamaran","Teluk Pulai Selatan",64,33,31,19,45
+110/047/021,Selangor,"Klang","Pandamaran","Taman Selatan 2",89,45,44,27,62
+110/047/022,Selangor,"Klang","Pandamaran","Taman Bayu Perdana",120,61,59,36,84
+110/047/023,Selangor,"Klang","Pandamaran","Taman Gembira 2",109,56,53,33,76
+111/048/001,Selangor,"Kota Raja","Sentosa","Taman Klang Jaya 1",120,61,59,36,84
+111/048/002,Selangor,"Kota Raja","Sentosa","Sentosa Dato Yusof Shahbuddin",120,61,59,36,84
+111/048/003,Selangor,"Kota Raja","Sentosa","Taman Desawan",106,54,52,32,74
+111/048/004,Selangor,"Kota Raja","Sentosa","Sentosa Dato Abdul Hamid 1",120,61,59,36,84
+111/048/005,Selangor,"Kota Raja","Sentosa","Sentosa Dato Dagang",120,61,59,36,84
+111/048/006,Selangor,"Kota Raja","Sentosa","Taman Klang Jaya 2",104,53,51,31,73
+111/048/007,Selangor,"Kota Raja","Sentosa","Sentosa Dato Abdul Hamid 2",62,32,30,19,43
+111/048/008,Selangor,"Kota Raja","Sentosa","Bandar Bukit Tinggi 1",120,61,59,36,84
+111/048/009,Selangor,"Kota Raja","Sentosa","Taman Maznah",120,61,59,36,84
+111/048/010,Selangor,"Kota Raja","Sentosa","Batu 4 Jalan Kebun",43,22,21,13,30
+111/048/011,Selangor,"Kota Raja","Sentosa","Taman Menara Maju",120,61,59,36,84
+111/048/012,Selangor,"Kota Raja","Sentosa","Bandar Bukit Tinggi 2",120,61,59,36,84
+111/048/013,Selangor,"Kota Raja","Sentosa","Bandar Botanic",120,61,59,36,84
+111/049/001,Selangor,"Kota Raja","Sungai Kandis","Seksyen 34 Shah Alam",102,52,50,31,71
+111/049/002,Selangor,"Kota Raja","Sungai Kandis","Sungai Kandis",94,48,46,28,66
+111/049/003,Selangor,"Kota Raja","Sungai Kandis","Teluk Menegun",104,53,51,31,73
+111/049/004,Selangor,"Kota Raja","Sungai Kandis","LLN Connought Bridge",86,44,42,26,60
+111/049/005,Selangor,"Kota Raja","Sungai Kandis","Kampung Pandan",39,20,19,12,27
+111/049/006,Selangor,"Kota Raja","Sungai Kandis","Kampung Jawa",120,61,59,36,84
+111/049/007,Selangor,"Kota Raja","Sungai Kandis","Kota Raja",120,61,59,36,84
+111/049/008,Selangor,"Kota Raja","Sungai Kandis","Taman Seri Andalas 1",120,61,59,36,84
+111/049/009,Selangor,"Kota Raja","Sungai Kandis","Taman Seri Andalas 2",120,61,59,36,84
+111/049/010,Selangor,"Kota Raja","Sungai Kandis","Bukit Jati",99,50,49,30,69
+111/049/011,Selangor,"Kota Raja","Sungai Kandis","Taman Seri Andalas 3",120,61,59,36,84
+111/049/012,Selangor,"Kota Raja","Sungai Kandis","Jalan Raya Timur",27,14,13,8,19
+111/049/013,Selangor,"Kota Raja","Sungai Kandis","Bandar Puteri Klang",120,61,59,36,84
+111/049/014,Selangor,"Kota Raja","Sungai Kandis","Jalan Kebun",120,61,59,36,84
+111/049/015,Selangor,"Kota Raja","Sungai Kandis","Johan Setia",120,61,59,36,84
+111/049/016,Selangor,"Kota Raja","Sungai Kandis","Seri Gambut",60,31,29,18,42
+111/049/017,Selangor,"Kota Raja","Sungai Kandis","Kampung Bukit Naga",102,52,50,31,71
+111/049/018,Selangor,"Kota Raja","Sungai Kandis","Haji Husin Jalan Kebun",120,61,59,36,84
+111/049/019,Selangor,"Kota Raja","Sungai Kandis","Taman Berjaya",120,61,59,36,84
+111/050/001,Selangor,"Kota Raja","Kota Kemuning","Shah Alam S27 A",120,61,59,36,84
+111/050/002,Selangor,"Kota Raja","Kota Kemuning","Shah Alam S28",120,61,59,36,84
+111/050/003,Selangor,"Kota Raja","Kota Kemuning","Sri Muda 1",120,61,59,36,84
+111/050/004,Selangor,"Kota Raja","Kota Kemuning","Sri Muda 2 Utara",120,61,59,36,84
+111/050/005,Selangor,"Kota Raja","Kota Kemuning","Bukit Kemuning",120,61,59,36,84
+111/050/006,Selangor,"Kota Raja","Kota Kemuning","Kampung Baru HICOM",59,30,29,18,41
+111/050/007,Selangor,"Kota Raja","Kota Kemuning","Putra Height",120,61,59,36,84
+111/050/008,Selangor,"Kota Raja","Kota Kemuning","Sri Muda 2 Selatan",120,61,59,36,84
+111/050/009,Selangor,"Kota Raja","Kota Kemuning","Kota Kemuning Jalan 31/1-31/80",120,61,59,36,84
+111/050/010,Selangor,"Kota Raja","Kota Kemuning","Bukit Rimau",120,61,59,36,84
+111/050/011,Selangor,"Kota Raja","Kota Kemuning","Shah Alam S27 B",120,61,59,36,84
+111/050/012,Selangor,"Kota Raja","Kota Kemuning","Apartment S28",84,43,41,25,59
+111/050/013,Selangor,"Kota Raja","Kota Kemuning","Kota Kemuning Jalan 31/81-31/170",120,61,59,36,84
+111/050/014,Selangor,"Kota Raja","Kota Kemuning","Shah Alam S26",74,38,36,22,52
+115/000/001,WP Kuala Lumpur,"Batu","","Kampung Selayang Lama",41,21,20,12,29
+115/000/002,WP Kuala Lumpur,"Batu","","Taman Sri Murni",120,61,59,36,84
+115/000/003,WP Kuala Lumpur,"Batu","","Taman Intan Baiduri",120,61,59,36,84
+115/000/004,WP Kuala Lumpur,"Batu","","Taman Beringin",120,61,59,36,84
+115/000/005,WP Kuala Lumpur,"Batu","","Taman Wahyu",120,61,59,36,84
+115/000/006,WP Kuala Lumpur,"Batu","","Taman Batu Permai",120,61,59,36,84
+115/000/007,WP Kuala Lumpur,"Batu","","Taman Batu Muda",120,61,59,36,84
+115/000/008,WP Kuala Lumpur,"Batu","","Batu Muda",120,61,59,36,84
+115/000/009,WP Kuala Lumpur,"Batu","","Taman Koperasi Polis Fasa Ii",120,61,59,36,84
+115/000/010,WP Kuala Lumpur,"Batu","","Batu Kantomen",120,61,59,36,84
+115/000/011,WP Kuala Lumpur,"Batu","","Pekan Batu",120,61,59,36,84
+115/000/012,WP Kuala Lumpur,"Batu","","Taman Rainbow",120,61,59,36,84
+115/000/013,WP Kuala Lumpur,"Batu","","Taman Million",63,32,31,19,44
+115/000/014,WP Kuala Lumpur,"Batu","","Sentul Pasar",65,33,32,20,45
+115/000/015,WP Kuala Lumpur,"Batu","","Sentul Jaya",81,41,40,24,57
+115/000/016,WP Kuala Lumpur,"Batu","","Sentul Utara",120,61,59,36,84
+115/000/017,WP Kuala Lumpur,"Batu","","Pekan Setapak",44,22,22,13,31
+115/000/018,WP Kuala Lumpur,"Batu","","Rumah Pangsa Sri Perak",120,61,59,36,84
+115/000/019,WP Kuala Lumpur,"Batu","","Bandar Baru Sentul",120,61,59,36,84
+115/000/020,WP Kuala Lumpur,"Batu","","Sentul Tengah",120,61,59,36,84
+115/000/021,WP Kuala Lumpur,"Batu","","Kampung Kovil Utara",67,34,33,20,47
+115/000/022,WP Kuala Lumpur,"Batu","","Kampung Kovil Selatan",88,45,43,26,62
+115/000/023,WP Kuala Lumpur,"Batu","","Sentul Selatan",107,55,52,32,75
+117/000/001,WP Kuala Lumpur,"Segambut","","Taman Bukit Maluri Utara",120,61,59,36,84
+117/000/002,WP Kuala Lumpur,"Segambut","","Taman Bukit Maluri Selatan",120,61,59,36,84
+117/000/003,WP Kuala Lumpur,"Segambut","","Bandar Manjalara",120,61,59,36,84
+117/000/004,WP Kuala Lumpur,"Segambut","","Desa Park City",120,61,59,36,84
+117/000/005,WP Kuala Lumpur,"Segambut","","Taman Sri Sinar",120,61,59,36,84
+117/000/006,WP Kuala Lumpur,"Segambut","","Sri Segambut",120,61,59,36,84
+117/000/007,WP Kuala Lumpur,"Segambut","","Kampung Sungai Udang",92,47,45,28,64
+117/000/008,WP Kuala Lumpur,"Segambut","","Taman Kok Doh",120,61,59,36,84
+117/000/009,WP Kuala Lumpur,"Segambut","","Taman City Kanan",120,61,59,36,84
+117/000/010,WP Kuala Lumpur,"Segambut","","Taman Segambut",74,38,36,22,52
+117/000/011,WP Kuala Lumpur,"Segambut","","Dutamas",120,61,59,36,84
+117/000/012,WP Kuala Lumpur,"Segambut","","Sri Hartamas",120,61,59,36,84
+117/000/013,WP Kuala Lumpur,"Segambut","","Segambut",120,61,59,36,84
+117/000/014,WP Kuala Lumpur,"Segambut","","Bukit Lanjan",33,17,16,10,23
+117/000/015,WP Kuala Lumpur,"Segambut","","Kampung Sungai Penchala",115,59,56,35,80
+117/000/016,WP Kuala Lumpur,"Segambut","","Taman Tun Dr Ismail Utara",120,61,59,36,84
+117/000/017,WP Kuala Lumpur,"Segambut","","Taman Tun Dr Ismail Tengah",120,61,59,36,84
+117/000/018,WP Kuala Lumpur,"Segambut","","Taman Tun Dr Ismail Selatan",113,58,55,34,79
+117/000/019,WP Kuala Lumpur,"Segambut","","Taman Tun Dr Ismail Timur",120,61,59,36,84
+117/000/020,WP Kuala Lumpur,"Segambut","","Medan Damansara",120,61,59,36,84
+117/000/021,WP Kuala Lumpur,"Segambut","","Bukit Damansara",120,61,59,36,84
+117/000/022,WP Kuala Lumpur,"Segambut","","Bukit Tunku",79,40,39,24,55
+117/000/023,WP Kuala Lumpur,"Segambut","","Kampung Kasipillay",95,48,47,29,66
+117/000/024,WP Kuala Lumpur,"Segambut","","Kolam Ayer",94,48,46,28,66
+120/000/001,WP Kuala Lumpur,"Bukit Bintang","","Tiong Nam",108,55,53,32,76
+120/000/002,WP Kuala Lumpur,"Bukit Bintang","","Kampung Semarang",61,31,30,18,43
+120/000/003,WP Kuala Lumpur,"Bukit Bintang","","Jalan Tuanku Abdul Rahman",28,14,14,8,20
+120/000/004,WP Kuala Lumpur,"Bukit Bintang","","Jalan Melayu",84,43,41,25,59
+120/000/005,WP Kuala Lumpur,"Bukit Bintang","","Medan Pasar",27,14,13,8,19
+120/000/006,WP Kuala Lumpur,"Bukit Bintang","","Bukit Nanas",47,24,23,14,33
+120/000/007,WP Kuala Lumpur,"Bukit Bintang","","Imbi Pasar",64,33,31,19,45
+120/000/008,WP Kuala Lumpur,"Bukit Bintang","","Changkat Raja Chulan",51,26,25,15,36
+120/000/009,WP Kuala Lumpur,"Bukit Bintang","","Bukit Weld",86,44,42,26,60
+120/000/010,WP Kuala Lumpur,"Bukit Bintang","","Medan Imbi",52,27,25,16,36
+120/000/011,WP Kuala Lumpur,"Bukit Bintang","","Kampung Loke Yuen",90,46,44,27,63
+120/000/012,WP Kuala Lumpur,"Bukit Bintang","","Pudu Kanan",27,14,13,8,19
+120/000/013,WP Kuala Lumpur,"Bukit Bintang","","Jalan Hang Tuah",120,61,59,36,84
+120/000/014,WP Kuala Lumpur,"Bukit Bintang","","Lebuhraya Foch",28,14,14,8,20
+120/000/015,WP Kuala Lumpur,"Bukit Bintang","","Jalan Sultan",97,49,48,29,68
+120/000/016,WP Kuala Lumpur,"Bukit Bintang","","Jalan Tun Sambanthan",71,36,35,21,50
+120/000/017,WP Kuala Lumpur,"Bukit Bintang","","Brickfields Utara",60,31,29,18,42
+120/000/018,WP Kuala Lumpur,"Bukit Bintang","","Brickfields Selatan",83,42,41,25,58
+120/000/019,WP Kuala Lumpur,"Bukit Bintang","","Bukit Petaling",65,33,32,20,45
+120/000/020,WP Kuala Lumpur,"Bukit Bintang","","Persiaran Syed Putra",120,61,59,36,84
+120/000/021,WP Kuala Lumpur,"Bukit Bintang","","Lapangan Terbang",33,17,16,10,23
+120/000/022,WP Kuala Lumpur,"Bukit Bintang","","Razak Mansion",90,46,44,27,63
+120/000/023,WP Kuala Lumpur,"Bukit Bintang","","Salak Selatan",91,46,45,27,64
+120/000/024,WP Kuala Lumpur,"Bukit Bintang","","Taman Sungai Besi",114,58,56,34,80
+120/000/025,WP Kuala Lumpur,"Bukit Bintang","","Salak Tempatan Bukit",66,34,32,20,46
+120/000/026,WP Kuala Lumpur,"Bukit Bintang","","Salak Tempatan Changkat",81,41,40,24,57
+120/000/027,WP Kuala Lumpur,"Bukit Bintang","","Salak Tempatan Dalam",120,61,59,36,84
+120/000/028,WP Kuala Lumpur,"Bukit Bintang","","Desa Petaling",120,61,59,36,84
+121/000/001,WP Kuala Lumpur,"Lembah Pantai","","Tasik Perdana",120,61,59,36,84
+121/000/002,WP Kuala Lumpur,"Lembah Pantai","","Bukit Travers",85,43,42,26,59
+121/000/003,WP Kuala Lumpur,"Lembah Pantai","","Jalan Maarof",120,61,59,36,84
+121/000/004,WP Kuala Lumpur,"Lembah Pantai","","Bukit Bangsar",120,61,59,36,84
+121/000/005,WP Kuala Lumpur,"Lembah Pantai","","Bangsar Baru",120,61,59,36,84
+121/000/006,WP Kuala Lumpur,"Lembah Pantai","","Taman Lucky",118,60,58,35,83
+121/000/007,WP Kuala Lumpur,"Lembah Pantai","","Kawasan Universiti",27,14,13,8,19
+121/000/008,WP Kuala Lumpur,"Lembah Pantai","","Pantai Baharu",93,47,46,28,65
+121/000/009,WP Kuala Lumpur,"Lembah Pantai","","Bukit Kerinchi",120,61,59,36,84
+121/000/010,WP Kuala Lumpur,"Lembah Pantai","","Kampung Haji Abdullah Hukum",120,61,59,36,84
+121/000/011,WP Kuala Lumpur,"Lembah Pantai","","Kampung Pantai Halt",120,61,59,36,84
+121/000/012,WP Kuala Lumpur,"Lembah Pantai","","Taman Bukit Angkasa",120,61,59,36,84
+121/000/013,WP Kuala Lumpur,"Lembah Pantai","","Pantai Hill Park",120,61,59,36,84
+121/000/014,WP Kuala Lumpur,"Lembah Pantai","","Pantai Dalam",120,61,59,36,84
+121/000/015,WP Kuala Lumpur,"Lembah Pantai","","Kampung Pasir",76,39,37,23,53
+121/000/016,WP Kuala Lumpur,"Lembah Pantai","","Petaling Selatan",114,58,56,34,80
+121/000/017,WP Kuala Lumpur,"Lembah Pantai","","Taman Sri Sentosa Utara",120,61,59,36,84
+121/000/018,WP Kuala Lumpur,"Lembah Pantai","","Taman Sri Sentosa Selatan",120,61,59,36,84
+122/000/001,WP Kuala Lumpur,"Seputeh","","Kampung Penghulu Mat",92,47,45,28,64
+122/000/002,WP Kuala Lumpur,"Seputeh","","Seputeh",120,61,59,36,84
+122/000/003,WP Kuala Lumpur,"Seputeh","","Taman Desa",120,61,59,36,84
+122/000/004,WP Kuala Lumpur,"Seputeh","","Kuchai",49,25,24,15,34
+122/000/005,WP Kuala Lumpur,"Seputeh","","Taman United",120,61,59,36,84
+122/000/006,WP Kuala Lumpur,"Seputeh","","Taman Happy Utara",120,61,59,36,84
+122/000/007,WP Kuala Lumpur,"Seputeh","","Taman Happy Tengah",70,36,34,21,49
+122/000/008,WP Kuala Lumpur,"Seputeh","","Taman Happy Selatan",120,61,59,36,84
+122/000/009,WP Kuala Lumpur,"Seputeh","","Kuchai Entrepreneurs Park",120,61,59,36,84
+122/000/010,WP Kuala Lumpur,"Seputeh","","Taman Salak South Utara",75,38,37,23,52
+122/000/011,WP Kuala Lumpur,"Seputeh","","Taman Salak South",120,61,59,36,84
+122/000/012,WP Kuala Lumpur,"Seputeh","","Taman Sri Petaling Timur",120,61,59,36,84
+122/000/013,WP Kuala Lumpur,"Seputeh","","Taman Sri Petaling",120,61,59,36,84
+122/000/014,WP Kuala Lumpur,"Seputeh","","Bandar Sri Petaling",120,61,59,36,84
+122/000/015,WP Kuala Lumpur,"Seputeh","","Taman Overseas Union Selatan",120,61,59,36,84
+122/000/016,WP Kuala Lumpur,"Seputeh","","Taman Overseas Union Utara",120,61,59,36,84
+122/000/017,WP Kuala Lumpur,"Seputeh","","Taman Yarl",120,61,59,36,84
+122/000/018,WP Kuala Lumpur,"Seputeh","","Kampung Bahagia",120,61,59,36,84
+122/000/019,WP Kuala Lumpur,"Seputeh","","Kampung Bohol",51,26,25,15,36
+122/000/020,WP Kuala Lumpur,"Seputeh","","PPR Muhibbah",120,61,59,36,84
+122/000/021,WP Kuala Lumpur,"Seputeh","","Bukit Jalil",120,61,59,36,84
+122/000/022,WP Kuala Lumpur,"Seputeh","","Kampung Sungai Besi",120,61,59,36,84
+123/000/001,WP Kuala Lumpur,"Cheras","","Jalan Pasar",76,39,37,23,53
+123/000/002,WP Kuala Lumpur,"Cheras","","Jalan San Peng",120,61,59,36,84
+123/000/003,WP Kuala Lumpur,"Cheras","","Rumah Pangsa Loke Yew",120,61,59,36,84
+123/000/004,WP Kuala Lumpur,"Cheras","","Jalan Loke Yew",78,40,38,23,55
+123/000/005,WP Kuala Lumpur,"Cheras","","Kampung Loke Yew",62,32,30,19,43
+123/000/006,WP Kuala Lumpur,"Cheras","","Jalan Sungai Besi",120,61,59,36,84
+123/000/007,WP Kuala Lumpur,"Cheras","","Jalan Chan Sow Lin",54,28,26,16,38
+123/000/008,WP Kuala Lumpur,"Cheras","","Pudu Hujung",41,21,20,12,29
+123/000/009,WP Kuala Lumpur,"Cheras","","Jalan Cheras",38,19,19,11,27
+123/000/010,WP Kuala Lumpur,"Cheras","","Pudu Ulu",97,49,48,29,68
+123/000/011,WP Kuala Lumpur,"Cheras","","Taman Miharja",120,61,59,36,84
+123/000/012,WP Kuala Lumpur,"Cheras","","Batu 3-4 Jalan Cheras",34,17,17,10,24
+123/000/013,WP Kuala Lumpur,"Cheras","","Taman Shamelin Perkasa",120,61,59,36,84
+123/000/014,WP Kuala Lumpur,"Cheras","","Kampung Cheras Batu 4",120,61,59,36,84
+123/000/015,WP Kuala Lumpur,"Cheras","","Bukit A Cheras Baru",112,57,55,34,78
+123/000/016,WP Kuala Lumpur,"Cheras","","Cheras Baru",120,61,59,36,84
+123/000/017,WP Kuala Lumpur,"Cheras","","Taman Cheras",120,61,59,36,84
+123/000/018,WP Kuala Lumpur,"Cheras","","Taman Midah Kanan",120,61,59,36,84
+123/000/019,WP Kuala Lumpur,"Cheras","","Taman Midah Kiri",120,61,59,36,84
+123/000/020,WP Kuala Lumpur,"Cheras","","Taman Mutiara Barat",103,53,50,31,72
+123/000/021,WP Kuala Lumpur,"Cheras","","Taman Segar",120,61,59,36,84
+123/000/022,WP Kuala Lumpur,"Cheras","","Taynton View",115,59,56,35,80
+123/000/023,WP Kuala Lumpur,"Cheras","","Taman Connaught Utara",109,56,53,33,76
+123/000/024,WP Kuala Lumpur,"Cheras","","Taman Connaught Selatan",93,47,46,28,65
+130/020/001,Negeri Sembilan,"Rasah","Labu","Jijan",120,61,59,36,84
+130/020/002,Negeri Sembilan,"Rasah","Labu","Kampong Kondok",69,35,34,21,48
+130/020/003,Negeri Sembilan,"Rasah","Labu","Tiroi",120,61,59,36,84
+130/020/004,Negeri Sembilan,"Rasah","Labu","Labu",111,57,54,33,78
+130/020/005,Negeri Sembilan,"Rasah","Labu","Labu Jaya",110,56,54,33,77
+130/020/006,Negeri Sembilan,"Rasah","Labu","Kampung Gadong Jaya",120,61,59,36,84
+130/021/001,Negeri Sembilan,"Rasah","Bukit Kepayang","Bukit Kepayang",120,61,59,36,84
+130/021/002,Negeri Sembilan,"Rasah","Bukit Kepayang","Taman Permai",120,61,59,36,84
+130/021/003,Negeri Sembilan,"Rasah","Bukit Kepayang","Jalan Kong Sang",27,14,13,8,19
+130/021/004,Negeri Sembilan,"Rasah","Bukit Kepayang","Jalan Dato Bandar Tunggal",27,14,13,8,19
+130/021/005,Negeri Sembilan,"Rasah","Bukit Kepayang","Jalan Yam Tuan",30,15,15,9,21
+130/021/006,Negeri Sembilan,"Rasah","Bukit Kepayang","Jalan Lee Sam",27,14,13,8,19
+130/021/007,Negeri Sembilan,"Rasah","Bukit Kepayang","Jalan Tuanku Munawir",27,14,13,8,19
+130/021/008,Negeri Sembilan,"Rasah","Bukit Kepayang","Bukit Tembok",31,16,15,9,22
+130/021/009,Negeri Sembilan,"Rasah","Bukit Kepayang","Taman Bukit Kaya",103,53,50,31,72
+130/021/010,Negeri Sembilan,"Rasah","Bukit Kepayang","Seremban 2",120,61,59,36,84
+130/022/001,Negeri Sembilan,"Rasah","Rahang","Rahang",30,15,15,9,21
+130/022/002,Negeri Sembilan,"Rasah","Rahang","Rahang Timor",27,14,13,8,19
+130/022/003,Negeri Sembilan,"Rasah","Rahang","Pekan Rahang",27,14,13,8,19
+130/022/004,Negeri Sembilan,"Rasah","Rahang","Pekan Rasah",91,46,45,27,64
+130/022/005,Negeri Sembilan,"Rasah","Rahang","Kampong Bahru Rasah",104,53,51,31,73
+130/022/006,Negeri Sembilan,"Rasah","Rahang","Taman Bukit Chedang",94,48,46,28,66
+130/022/007,Negeri Sembilan,"Rasah","Rahang","Kampong Pondok",31,16,15,9,22
+130/022/008,Negeri Sembilan,"Rasah","Rahang","Jalan Tok Ungku",66,34,32,20,46
+130/022/009,Negeri Sembilan,"Rasah","Rahang","Kampong Datok Mansor",120,61,59,36,84
+130/023/001,Negeri Sembilan,"Rasah","Mambau","Desa Sri Mambau",120,61,59,36,84
+130/023/002,Negeri Sembilan,"Rasah","Mambau","Taman Sungai Ujong",90,46,44,27,63
+130/023/003,Negeri Sembilan,"Rasah","Mambau","Pekan Mambau",30,15,15,9,21
+130/023/004,Negeri Sembilan,"Rasah","Mambau","Rasah Jaya",120,61,59,36,84
+130/023/005,Negeri Sembilan,"Rasah","Mambau","Bukit Blossom",120,61,59,36,84
+130/024/001,Negeri Sembilan,"Rasah","Seremban Jaya","Taman Rahang",80,41,39,24,56
+130/024/002,Negeri Sembilan,"Rasah","Seremban Jaya","Taman Seremban",108,55,53,32,76
+130/024/003,Negeri Sembilan,"Rasah","Seremban Jaya","Kampong Bahru Rahang",81,41,40,24,57
+130/024/004,Negeri Sembilan,"Rasah","Seremban Jaya","Senawang",103,53,50,31,72
+130/024/005,Negeri Sembilan,"Rasah","Seremban Jaya","Taman Seremban Jaya",120,61,59,36,84
+132/029/001,Negeri Sembilan,"Port Dickson","Chuah","Tanah Merah",120,61,59,36,84
+132/029/002,Negeri Sembilan,"Port Dickson","Chuah","Kampong Pachitan",89,45,44,27,62
+132/029/003,Negeri Sembilan,"Port Dickson","Chuah","Bukit Pelandok",97,49,48,29,68
+132/029/004,Negeri Sembilan,"Port Dickson","Chuah","Sungai Nipah",35,18,17,11,24
+132/029/005,Negeri Sembilan,"Port Dickson","Chuah","Chuah",97,49,48,29,68
+132/030/001,Negeri Sembilan,"Port Dickson","Lukut","Kampong Jimah Baru",39,20,19,12,27
+132/030/002,Negeri Sembilan,"Port Dickson","Lukut","Bandar Spring Hill",120,61,59,36,84
+132/030/003,Negeri Sembilan,"Port Dickson","Lukut","Taman Indah Jaya",100,51,49,30,70
+132/030/004,Negeri Sembilan,"Port Dickson","Lukut","Kuala Lukut",120,61,59,36,84
+132/030/005,Negeri Sembilan,"Port Dickson","Lukut","Lukut",114,58,56,34,80
+132/030/006,Negeri Sembilan,"Port Dickson","Lukut","Sri Parit",120,61,59,36,84
+132/030/007,Negeri Sembilan,"Port Dickson","Lukut","Tanjong Gemok",120,61,59,36,84
+132/031/001,Negeri Sembilan,"Port Dickson","Bagan Pinang","Ladang Atherton",27,14,13,8,19
+132/031/002,Negeri Sembilan,"Port Dickson","Bagan Pinang","Pekan Siliau",27,14,13,8,19
+132/031/003,Negeri Sembilan,"Port Dickson","Bagan Pinang","Ladang Bradwall",27,14,13,8,19
+132/031/004,Negeri Sembilan,"Port Dickson","Bagan Pinang","Sua Betong",28,14,14,8,20
+132/031/005,Negeri Sembilan,"Port Dickson","Bagan Pinang","Sunggala",120,61,59,36,84
+132/031/006,Negeri Sembilan,"Port Dickson","Bagan Pinang","Kampong Bagan Pinang",117,60,57,35,82
+132/031/007,Negeri Sembilan,"Port Dickson","Bagan Pinang","Si Rusa",120,61,59,36,84
+132/031/008,Negeri Sembilan,"Port Dickson","Bagan Pinang","Telok Kemang",120,61,59,36,84
+132/032/001,Negeri Sembilan,"Port Dickson","Linggi","Ayer Kuning",30,15,15,9,21
+132/032/002,Negeri Sembilan,"Port Dickson","Linggi","Linggi",63,32,31,19,44
+132/032/003,Negeri Sembilan,"Port Dickson","Linggi","Kampong Pengkalan Durian",46,23,23,14,32
+132/032/004,Negeri Sembilan,"Port Dickson","Linggi","Pengkalan Kempas",45,23,22,14,31
+132/032/005,Negeri Sembilan,"Port Dickson","Linggi","Ladang Sengkang",27,14,13,8,19
+132/032/006,Negeri Sembilan,"Port Dickson","Linggi","Kampong Sungai Raya",67,34,33,20,47
+132/032/007,Negeri Sembilan,"Port Dickson","Linggi","Pasir Panjang",106,54,52,32,74
+132/032/008,Negeri Sembilan,"Port Dickson","Linggi","Bandar Baru Sunggala",120,61,59,36,84
+132/033/001,Negeri Sembilan,"Port Dickson","Sri Tanjung","Kampong Paya",120,61,59,36,84
+132/033/002,Negeri Sembilan,"Port Dickson","Sri Tanjung","Kampong Arab",74,38,36,22,52
+132/033/003,Negeri Sembilan,"Port Dickson","Sri Tanjung","Kampong Chokra",116,59,57,35,81
+132/033/004,Negeri Sembilan,"Port Dickson","Sri Tanjung","Pekan Port Dickson",120,61,59,36,84
+138/019/001,Melaka,"Kota Melaka","Kesidang","Taman Merdeka",120,61,59,36,84
+138/019/002,Melaka,"Kota Melaka","Kesidang","Batu Berendam",120,61,59,36,84
+138/019/003,Melaka,"Kota Melaka","Kesidang","Taman Melaka Baru",120,61,59,36,84
+138/019/004,Melaka,"Kota Melaka","Kesidang","Malim Jaya",120,61,59,36,84
+138/019/005,Melaka,"Kota Melaka","Kesidang","Bertam",120,61,59,36,84
+138/019/006,Melaka,"Kota Melaka","Kesidang","Taman Asean",120,61,59,36,84
+138/019/007,Melaka,"Kota Melaka","Kesidang","Kampung Padang",74,38,36,22,52
+138/019/008,Melaka,"Kota Melaka","Kesidang","Bakar Batu",97,49,48,29,68
+138/019/009,Melaka,"Kota Melaka","Kesidang","Limbongan",120,61,59,36,84
+138/020/001,Melaka,"Kota Melaka","Kota Laksamana","Kesidang Indah",120,61,59,36,84
+138/020/002,Melaka,"Kota Melaka","Kota Laksamana","Tun Perak",42,21,21,13,29
+138/020/003,Melaka,"Kota Melaka","Kota Laksamana","Kampung Enam",33,17,16,10,23
+138/020/004,Melaka,"Kota Melaka","Kota Laksamana","Pengkalan Rama Pantai",81,41,40,24,57
+138/020/005,Melaka,"Kota Melaka","Kota Laksamana","Kenanga Seksyen 1",53,27,26,16,37
+138/020/006,Melaka,"Kota Melaka","Kota Laksamana","Kenanga Seksyen 2",70,36,34,21,49
+138/020/007,Melaka,"Kota Melaka","Kota Laksamana","Kenanga Seksyen 3",113,58,55,34,79
+138/020/008,Melaka,"Kota Melaka","Kota Laksamana","Tengkera Pantai",60,31,29,18,42
+138/020/009,Melaka,"Kota Melaka","Kota Laksamana","Tengkera",85,43,42,26,59
+138/020/010,Melaka,"Kota Melaka","Kota Laksamana","Kubu",72,37,35,22,50
+138/020/011,Melaka,"Kota Melaka","Kota Laksamana","Kampung Morten",31,16,15,9,22
+138/020/012,Melaka,"Kota Melaka","Kota Laksamana","Pengkalan Rama",38,19,19,11,27
+138/020/013,Melaka,"Kota Melaka","Kota Laksamana","Kampung Hulu",70,36,34,21,49
+138/020/014,Melaka,"Kota Melaka","Kota Laksamana","Kampung Belanda",31,16,15,9,22
+138/020/015,Melaka,"Kota Melaka","Kota Laksamana","Taman Kota Laksamana",115,59,56,35,80
+138/021/001,Melaka,"Kota Melaka","Duyong","Pengkalan Rama Tengah",61,31,30,18,43
+138/021/002,Melaka,"Kota Melaka","Duyong","Durian Daun",74,38,36,22,52
+138/021/003,Melaka,"Kota Melaka","Duyong","Kg Padang Semabok",78,40,38,23,55
+138/021/004,Melaka,"Kota Melaka","Duyong","Semabok",120,61,59,36,84
+138/021/005,Melaka,"Kota Melaka","Duyong","Perigi Hang Tuah",120,61,59,36,84
+138/021/006,Melaka,"Kota Melaka","Duyong","Seri Duyong",120,61,59,36,84
+138/022/001,Melaka,"Kota Melaka","Bandar Hilir","Bunga Raya",54,28,26,16,38
+138/022/002,Melaka,"Kota Melaka","Bandar Hilir","Bukit China",79,40,39,24,55
+138/022/003,Melaka,"Kota Melaka","Bandar Hilir","Bukit Gedong",81,41,40,24,57
+138/022/004,Melaka,"Kota Melaka","Bandar Hilir","Bandar Kaba",63,32,31,19,44
+138/022/005,Melaka,"Kota Melaka","Bandar Hilir","Bandar Hilir Tengah",58,30,28,17,41
+138/022/006,Melaka,"Kota Melaka","Bandar Hilir","Lorong Panjang",86,44,42,26,60
+138/022/007,Melaka,"Kota Melaka","Bandar Hilir","Kg Bandar Hilir",81,41,40,24,57
+138/022/008,Melaka,"Kota Melaka","Bandar Hilir","Melaka Raya",27,14,13,8,19
+138/022/009,Melaka,"Kota Melaka","Bandar Hilir","Perkampungan Portugis",76,39,37,23,53
+138/022/010,Melaka,"Kota Melaka","Bandar Hilir","Ujong Pasir Pantai",109,56,53,33,76
+138/023/001,Melaka,"Kota Melaka","Telok Mas","Ujong Pasir Darat",89,45,44,27,62
+138/023/002,Melaka,"Kota Melaka","Telok Mas","Kampung Ujong Pasir",81,41,40,24,57
+138/023/003,Melaka,"Kota Melaka","Telok Mas","Padang Temu",120,61,59,36,84
+138/023/004,Melaka,"Kota Melaka","Telok Mas","Alai",120,61,59,36,84
+138/023/005,Melaka,"Kota Melaka","Telok Mas","Kg Telok Mas",120,61,59,36,84
+138/023/006,Melaka,"Kota Melaka","Telok Mas","Pernu",120,61,59,36,84
+140/001/001,Johor,"Segamat","Buloh Kasap","Mensudot Lama",27,14,13,8,19
+140/001/002,Johor,"Segamat","Buloh Kasap","Balai Badang",33,17,16,10,23
+140/001/003,Johor,"Segamat","Buloh Kasap","Palong Timor",120,61,59,36,84
+140/001/004,Johor,"Segamat","Buloh Kasap","Sepang Loi",31,16,15,9,22
+140/001/005,Johor,"Segamat","Buloh Kasap","Mensudot Pindah",27,14,13,8,19
+140/001/006,Johor,"Segamat","Buloh Kasap","Awat",27,14,13,8,19
+140/001/007,Johor,"Segamat","Buloh Kasap","Pekan Gemas Bahru",106,54,52,32,74
+140/001/008,Johor,"Segamat","Buloh Kasap","Gomali",27,14,13,8,19
+140/001/009,Johor,"Segamat","Buloh Kasap","Tambang",27,14,13,8,19
+140/001/010,Johor,"Segamat","Buloh Kasap","Paya Lang",33,17,16,10,23
+140/001/011,Johor,"Segamat","Buloh Kasap","Ladang Sungai Muar",27,14,13,8,19
+140/001/012,Johor,"Segamat","Buloh Kasap","Kuala Paya",34,17,17,10,24
+140/001/013,Johor,"Segamat","Buloh Kasap","Bandar Buloh Kasap Utara",27,14,13,8,19
+140/001/014,Johor,"Segamat","Buloh Kasap","Bandar Buloh Kasap Selatan",76,39,37,23,53
+140/001/015,Johor,"Segamat","Buloh Kasap","Buloh Kasap",120,61,59,36,84
+140/001/016,Johor,"Segamat","Buloh Kasap","Gelang Chinchin",28,14,14,8,20
+140/001/017,Johor,"Segamat","Buloh Kasap","Sepinang",27,14,13,8,19
+140/002/001,Johor,"Segamat","Jementah","Gemas Baru",27,14,13,8,19
+140/002/002,Johor,"Segamat","Jementah","Fortrose",27,14,13,8,19
+140/002/003,Johor,"Segamat","Jementah","Sungai Senarut",27,14,13,8,19
+140/002/004,Johor,"Segamat","Jementah","Bandar Batu Anam",120,61,59,36,84
+140/002/005,Johor,"Segamat","Jementah","Batu Anam",109,56,53,33,76
+140/002/006,Johor,"Segamat","Jementah","Bandan",27,14,13,8,19
+140/002/007,Johor,"Segamat","Jementah","Welch",27,14,13,8,19
+140/002/008,Johor,"Segamat","Jementah","Paya Jakas",27,14,13,8,19
+140/002/009,Johor,"Segamat","Jementah","Bandar Jementah Barat",120,61,59,36,84
+140/002/010,Johor,"Segamat","Jementah","Bandar Jementah Timor",102,52,50,31,71
+140/002/011,Johor,"Segamat","Jementah","Bandar Jementah Tengah",27,14,13,8,19
+140/002/012,Johor,"Segamat","Jementah","Bandar Jementah Selatan",39,20,19,12,27
+140/002/013,Johor,"Segamat","Jementah","Jementah",27,14,13,8,19
+140/002/014,Johor,"Segamat","Jementah","Sungai Siput",27,14,13,8,19
+140/002/015,Johor,"Segamat","Jementah","Kampong Bukit Tunggal",27,14,13,8,19
+140/002/016,Johor,"Segamat","Jementah","Tebing Tinggi",27,14,13,8,19
+140/002/017,Johor,"Segamat","Jementah","Gemereh",84,43,41,25,59
+140/002/018,Johor,"Segamat","Jementah","Berata",70,36,34,21,49
+140/002/019,Johor,"Segamat","Jementah","Jalan Kolam Air",31,16,15,9,22
+140/002/020,Johor,"Segamat","Jementah","Sungai Kapeh",33,17,16,10,23
+140/002/021,Johor,"Segamat","Jementah","Pasar",27,14,13,8,19
+140/002/022,Johor,"Segamat","Jementah","Bandar",28,14,14,8,20
+140/002/023,Johor,"Segamat","Jementah","Jalan Gemereh",48,24,24,14,34
+140/002/024,Johor,"Segamat","Jementah","Genuang",27,14,13,8,19
+140/002/025,Johor,"Segamat","Jementah","Genuang Selatan",70,36,34,21,49
+140/002/026,Johor,"Segamat","Jementah","Kampong Abdullah Utara",120,61,59,36,84
+142/005/001,Johor,"Labis","Tenang","Kampong Redong",29,15,14,9,20
+142/005/002,Johor,"Labis","Tenang","Pekan Ayer Panas",42,21,21,13,29
+142/005/003,Johor,"Labis","Tenang","Ladang Labis Utara",27,14,13,8,19
+142/005/004,Johor,"Labis","Tenang","Bandar Labis Timor",55,28,27,17,38
+142/005/005,Johor,"Labis","Tenang","Bandar Labis Tengah",56,29,27,17,39
+142/005/006,Johor,"Labis","Tenang","Labis",120,61,59,36,84
+142/005/007,Johor,"Labis","Tenang","FELDA Tenang",63,32,31,19,44
+142/005/008,Johor,"Labis","Tenang","Sawah Bahru",27,14,13,8,19
+142/005/009,Johor,"Labis","Tenang","Tenang Station",99,50,49,30,69
+142/005/010,Johor,"Labis","Tenang","Ladang Bukit Dato",27,14,13,8,19
+142/005/011,Johor,"Labis","Tenang","Chemplak Barat",62,32,30,19,43
+142/005/012,Johor,"Labis","Tenang","Chemplak",67,34,33,20,47
+142/006/001,Johor,"Labis","Bekok","Bandar Labis Selatan",101,52,49,30,71
+142/006/002,Johor,"Labis","Bekok","Bandar Labis Barat",53,27,26,16,37
+142/006/003,Johor,"Labis","Bekok","Sungai Karas",40,20,20,12,28
+142/006/004,Johor,"Labis","Bekok","Kampong Panchajaya",27,14,13,8,19
+142/006/005,Johor,"Labis","Bekok","Kampong Kudong",27,14,13,8,19
+142/006/006,Johor,"Labis","Bekok","Ladang Kempas",27,14,13,8,19
+142/006/007,Johor,"Labis","Bekok","Kampong Bahru Bekok Barat",47,24,23,14,33
+142/006/008,Johor,"Labis","Bekok","Kampong Bahru Bekok Tengah",27,14,13,8,19
+142/006/009,Johor,"Labis","Bekok","Kampong Bahru Bekok Timor",45,23,22,14,31
+142/006/010,Johor,"Labis","Bekok","Bandar Bekok",27,14,13,8,19
+142/006/011,Johor,"Labis","Bekok","Ladang Getah Eldred Bekok",27,14,13,8,19
+142/006/012,Johor,"Labis","Bekok","Johor Labis 'A'",27,14,13,8,19
+142/006/013,Johor,"Labis","Bekok","Chaah Barat",27,14,13,8,19
+142/006/014,Johor,"Labis","Bekok","Bandar Chaah Utara",55,28,27,17,38
+142/006/015,Johor,"Labis","Bekok","Bandar Chaah Tengah",44,22,22,13,31
+142/006/016,Johor,"Labis","Bekok","Bandar Chaah Selatan",27,14,13,8,19
+142/006/017,Johor,"Labis","Bekok","Kampong Jawa Chaah",120,61,59,36,84
+142/006/018,Johor,"Labis","Bekok","Chaah Timor",27,14,13,8,19
+142/006/019,Johor,"Labis","Bekok","Chan Wing",27,14,13,8,19
+142/006/020,Johor,"Labis","Bekok","Ladang Gerchang",27,14,13,8,19
+142/006/021,Johor,"Labis","Bekok","Desa Temu Jodoh",48,24,24,14,34
+142/006/022,Johor,"Labis","Bekok","Perling",32,16,16,10,22
+145/012/001,Johor,"Bakri","Bentayan","Jalan Ismail",70,36,34,21,49
+145/012/002,Johor,"Bakri","Bentayan","Parit Beting",120,61,59,36,84
+145/012/003,Johor,"Bakri","Bentayan","Sabak Awor",47,24,23,14,33
+145/012/004,Johor,"Bakri","Bentayan","Parit Tiram",81,41,40,24,57
+145/012/005,Johor,"Bakri","Bentayan","Bentayan",56,29,27,17,39
+145/012/006,Johor,"Bakri","Bentayan","Pasar",27,14,13,8,19
+145/012/007,Johor,"Bakri","Bentayan","Bandar Timor",36,18,18,11,25
+145/012/008,Johor,"Bakri","Bentayan","Jalan Daud Timor",114,58,56,34,80
+145/012/009,Johor,"Bakri","Bentayan","Jalan Daud Barat",27,14,13,8,19
+145/012/010,Johor,"Bakri","Bentayan","Taman Orkid",93,47,46,28,65
+145/012/011,Johor,"Bakri","Bentayan","Sungai Abong Tengah",103,53,50,31,72
+145/012/012,Johor,"Bakri","Bentayan","Sungai Abong Baru",117,60,57,35,82
+145/012/013,Johor,"Bakri","Bentayan","Bandar Barat",61,31,30,18,43
+145/013/001,Johor,"Bakri","Simpang Jeram","Jalan Sakeh",120,61,59,36,84
+145/013/002,Johor,"Bakri","Simpang Jeram","Temenggong Ahmad Dalam",108,55,53,32,76
+145/013/003,Johor,"Bakri","Simpang Jeram","Sungai Abong",71,36,35,21,50
+145/013/004,Johor,"Bakri","Simpang Jeram","Jalan Haji Abdullah",87,44,43,26,61
+145/013/005,Johor,"Bakri","Simpang Jeram","Haji Abdullah Selatan",62,32,30,19,43
+145/013/006,Johor,"Bakri","Simpang Jeram","Jeram Tengah",54,28,26,16,38
+145/013/007,Johor,"Bakri","Simpang Jeram","Bukit Batu",52,27,25,16,36
+145/013/008,Johor,"Bakri","Simpang Jeram","Kampong Ulu",120,61,59,36,84
+145/013/009,Johor,"Bakri","Simpang Jeram","Simpang Jeram",120,61,59,36,84
+145/013/010,Johor,"Bakri","Simpang Jeram","Sri Tanjong",58,30,28,17,41
+145/013/011,Johor,"Bakri","Simpang Jeram","Kampong Sungai Abong",120,61,59,36,84
+145/014/001,Johor,"Bakri","Bukit Naning","Pekan Bukit Bakri Timor",91,46,45,27,64
+145/014/002,Johor,"Bakri","Bukit Naning","Pekan Bukit Bakri Barat",120,61,59,36,84
+145/014/003,Johor,"Bakri","Bukit Naning","Bakri",27,14,13,8,19
+145/014/004,Johor,"Bakri","Bukit Naning","Parit Zain",119,61,58,36,83
+145/014/005,Johor,"Bakri","Bukit Naning","Ayer Manis",27,14,13,8,19
+145/014/006,Johor,"Bakri","Bukit Naning","Bukit Naning",81,41,40,24,57
+145/014/007,Johor,"Bakri","Bukit Naning","Ayer Hitam",102,52,50,31,71
+145/014/008,Johor,"Bakri","Bukit Naning","Kampong Parit Tengah",69,35,34,21,48
+145/014/009,Johor,"Bakri","Bukit Naning","Parit No 5",27,14,13,8,19
+145/014/010,Johor,"Bakri","Bukit Naning","Parit No 3",27,14,13,8,19
+150/023/001,Johor,"Batu Pahat","Penggaram","Parit Bilal",120,61,59,36,84
+150/023/002,Johor,"Batu Pahat","Penggaram","Linau",50,26,24,15,35
+150/023/003,Johor,"Batu Pahat","Penggaram","Bakau Chondong",120,61,59,36,84
+150/023/004,Johor,"Batu Pahat","Penggaram","Bukit Pasir",94,48,46,28,66
+150/023/005,Johor,"Batu Pahat","Penggaram","Bakau Chondong Barat",120,61,59,36,84
+150/023/006,Johor,"Batu Pahat","Penggaram","Kampong Kenangan Dato' Onn",120,61,59,36,84
+150/023/007,Johor,"Batu Pahat","Penggaram","Gunong Soga",120,61,59,36,84
+150/023/008,Johor,"Batu Pahat","Penggaram","Kampong Merdeka Timor",34,17,17,10,24
+150/023/009,Johor,"Batu Pahat","Penggaram","Kampong Merdeka Barat",44,22,22,13,31
+150/023/010,Johor,"Batu Pahat","Penggaram","Jalan Zabedah Barat",53,27,26,16,37
+150/023/011,Johor,"Batu Pahat","Penggaram","Jalan Abu Bakar",49,25,24,15,34
+150/023/012,Johor,"Batu Pahat","Penggaram","Jalan Zabedah Timor",88,45,43,26,62
+150/023/013,Johor,"Batu Pahat","Penggaram","Simpang Rantai",41,21,20,12,29
+150/023/014,Johor,"Batu Pahat","Penggaram","Bentara Luar",120,61,59,36,84
+150/023/015,Johor,"Batu Pahat","Penggaram","Bukit Bendera",111,57,54,33,78
+150/023/016,Johor,"Batu Pahat","Penggaram","Taman Soga",120,61,59,36,84
+150/023/017,Johor,"Batu Pahat","Penggaram","Kampung Istana",37,19,18,11,26
+150/023/018,Johor,"Batu Pahat","Penggaram","Taman Murni",109,56,53,33,76
+150/024/001,Johor,"Batu Pahat","Senggarang","Minyak Beku",108,55,53,32,76
+150/024/002,Johor,"Batu Pahat","Senggarang","Petani Kechik",57,29,28,17,40
+150/024/003,Johor,"Batu Pahat","Senggarang","Banang",120,61,59,36,84
+150/024/004,Johor,"Batu Pahat","Senggarang","Sungai Ayam",55,28,27,17,38
+150/024/005,Johor,"Batu Pahat","Senggarang","Sungai Suloh",77,39,38,23,54
+150/024/006,Johor,"Batu Pahat","Senggarang","Koris",68,35,33,20,48
+150/024/007,Johor,"Batu Pahat","Senggarang","Parit Tariman",46,23,23,14,32
+150/024/008,Johor,"Batu Pahat","Senggarang","Parit Kadir",73,37,36,22,51
+150/024/009,Johor,"Batu Pahat","Senggarang","Parit Kemang",74,38,36,22,52
+150/024/010,Johor,"Batu Pahat","Senggarang","Sungai Lurus",54,28,26,16,38
+150/024/011,Johor,"Batu Pahat","Senggarang","Bandar Senggarang Barat",35,18,17,11,24
+150/024/012,Johor,"Batu Pahat","Senggarang","Bandar Senggarang Timor",44,22,22,13,31
+150/024/013,Johor,"Batu Pahat","Senggarang","Senggarang",30,15,15,9,21
+150/024/014,Johor,"Batu Pahat","Senggarang","Kampong Bahru",120,61,59,36,84
+150/024/015,Johor,"Batu Pahat","Senggarang","Taman Senggarang",95,48,47,29,66
+150/025/001,Johor,"Batu Pahat","Rengit","Rejo Sari",66,34,32,20,46
+150/025/002,Johor,"Batu Pahat","Rengit","Perpat",84,43,41,25,59
+150/025/003,Johor,"Batu Pahat","Rengit","Sri Ladang",92,47,45,28,64
+150/025/004,Johor,"Batu Pahat","Rengit","Sri Merlong",91,46,45,27,64
+150/025/005,Johor,"Batu Pahat","Rengit","Belahan Tampok",46,23,23,14,32
+150/025/006,Johor,"Batu Pahat","Rengit","Sungai Merlong",36,18,18,11,25
+150/025/007,Johor,"Batu Pahat","Rengit","Sungai Kluang",120,61,59,36,84
+150/025/008,Johor,"Batu Pahat","Rengit","Bandar Rengit Selatan",41,21,20,12,29
+150/025/009,Johor,"Batu Pahat","Rengit","Bandar Rengit Utara",58,30,28,17,41
+150/025/010,Johor,"Batu Pahat","Rengit","Rengit",94,48,46,28,66
+150/025/011,Johor,"Batu Pahat","Rengit","Punggor",91,46,45,27,64
+152/028/001,Johor,"Kluang","Mengkibol","Ladang Bukit Benut",27,14,13,8,19
+152/028/002,Johor,"Kluang","Mengkibol","Ladang Coronation",120,61,59,36,84
+152/028/003,Johor,"Kluang","Mengkibol","Pekan Sri Lalang Barat",65,33,32,20,45
+152/028/004,Johor,"Kluang","Mengkibol","Pekan Sri Lalang Timor",50,26,24,15,35
+152/028/005,Johor,"Kluang","Mengkibol","Ladang Mengkibol",120,61,59,36,84
+152/028/006,Johor,"Kluang","Mengkibol","Mengkibol Barat",120,61,59,36,84
+152/028/007,Johor,"Kluang","Mengkibol","Mengkibol Timor",120,61,59,36,84
+152/028/008,Johor,"Kluang","Mengkibol","Taman Kurnia",48,24,24,14,34
+152/028/009,Johor,"Kluang","Mengkibol","Bakar Sampah",60,31,29,18,42
+152/028/010,Johor,"Kluang","Mengkibol","Lambak",32,16,16,10,22
+152/028/011,Johor,"Kluang","Mengkibol","Yap Tau Sah",120,61,59,36,84
+152/028/012,Johor,"Kluang","Mengkibol","Yap Tau Sah Timor",41,21,20,12,29
+152/028/013,Johor,"Kluang","Mengkibol","Jalan Mersing",106,54,52,32,74
+152/028/014,Johor,"Kluang","Mengkibol","Jalan Johor Tenggara",120,61,59,36,84
+152/028/015,Johor,"Kluang","Mengkibol","Kluang Layang",27,14,13,8,19
+152/028/016,Johor,"Kluang","Mengkibol","Ladang Lambak",32,16,16,10,22
+152/028/017,Johor,"Kluang","Mengkibol","Ladang Elaeis",27,14,13,8,19
+152/028/018,Johor,"Kluang","Mengkibol","Kampung Gunung Lambak",57,29,28,17,40
+152/028/019,Johor,"Kluang","Mengkibol","Taman Megah",115,59,56,35,80
+152/028/020,Johor,"Kluang","Mengkibol","Kampong Paya Timor",40,20,20,12,28
+152/028/021,Johor,"Kluang","Mengkibol","Kampong Paya Barat",35,18,17,11,24
+152/028/022,Johor,"Kluang","Mengkibol","Kampong Melayu Timor",67,34,33,20,47
+152/029/001,Johor,"Kluang","Mahkota","Padang Tembak",62,32,30,19,43
+152/029/002,Johor,"Kluang","Mahkota","Kampong Melayu Timor Ii",120,61,59,36,84
+152/029/003,Johor,"Kluang","Mahkota","Kampung Tengah",82,42,40,25,57
+152/029/004,Johor,"Kluang","Mahkota","Kampong Melayu I",85,43,42,26,59
+152/029/005,Johor,"Kluang","Mahkota","Kampong Melayu Ii",53,27,26,16,37
+152/029/006,Johor,"Kluang","Mahkota","Taman Lian Seng",108,55,53,32,76
+152/029/007,Johor,"Kluang","Mahkota","Haji Manan",32,16,16,10,22
+152/029/008,Johor,"Kluang","Mahkota","Mesjid Lama",29,15,14,9,20
+152/029/009,Johor,"Kluang","Mahkota","Bandar Tengah",81,41,40,24,57
+152/029/010,Johor,"Kluang","Mahkota","Taman Ilham",104,53,51,31,73
+152/029/011,Johor,"Kluang","Mahkota","Dorset",120,61,59,36,84
+152/029/012,Johor,"Kluang","Mahkota","Taman Berlian",63,32,31,19,44
+152/029/013,Johor,"Kluang","Mahkota","Jalan Hospital",37,19,18,11,26
+152/029/014,Johor,"Kluang","Mahkota","Taman Kerjasama",66,34,32,20,46
+152/029/015,Johor,"Kluang","Mahkota","Kampung Baru",99,50,49,30,69
+152/029/016,Johor,"Kluang","Mahkota","Taman Suria",120,61,59,36,84
+152/029/017,Johor,"Kluang","Mahkota","Indah Jaya",120,61,59,36,84
+152/029/018,Johor,"Kluang","Mahkota","Sri Tengah",120,61,59,36,84
+158/040/001,Johor,"Tebrau","Tiram","Ulu Tiram Barat",120,61,59,36,84
+158/040/002,Johor,"Tebrau","Tiram","Bandar Ulu Tiram Barat",120,61,59,36,84
+158/040/003,Johor,"Tebrau","Tiram","Bandar Ulu Tiram Tengah",27,14,13,8,19
+158/040/004,Johor,"Tebrau","Tiram","Bandar Ulu Tiram Utara",65,33,32,20,45
+158/040/005,Johor,"Tebrau","Tiram","Bandar Ulu Tiram Selatan",120,61,59,36,84
+158/040/006,Johor,"Tebrau","Tiram","Ara Cemerlang",82,42,40,25,57
+158/040/007,Johor,"Tebrau","Tiram","Ulu Tiram Timor",120,61,59,36,84
+158/040/008,Johor,"Tebrau","Tiram","Nam Heng",29,15,14,9,20
+158/040/009,Johor,"Tebrau","Tiram","Sungai Tiram",120,61,59,36,84
+158/040/010,Johor,"Tebrau","Tiram","Kong Kong",39,20,19,12,27
+158/040/011,Johor,"Tebrau","Tiram","Kampung Cahaya Baru",120,61,59,36,84
+158/040/012,Johor,"Tebrau","Tiram","Kota Masai",120,61,59,36,84
+158/040/013,Johor,"Tebrau","Tiram","Kota Delima",120,61,59,36,84
+158/040/014,Johor,"Tebrau","Tiram","Tanjong Langsat",27,14,13,8,19
+158/040/015,Johor,"Tebrau","Tiram","Tanjong Kopok",27,14,13,8,19
+158/040/016,Johor,"Tebrau","Tiram","Pasir Puteh",120,61,59,36,84
+158/040/017,Johor,"Tebrau","Tiram","Taman Pasir Puteh",120,61,59,36,84
+158/040/018,Johor,"Tebrau","Tiram","Desa Jaya",120,61,59,36,84
+158/040/019,Johor,"Tebrau","Tiram","Cahaya Masai",120,61,59,36,84
+158/040/020,Johor,"Tebrau","Tiram","Lembah Ehsan",120,61,59,36,84
+158/040/021,Johor,"Tebrau","Tiram","Lanjut Cemerlang",94,48,46,28,66
+158/040/022,Johor,"Tebrau","Tiram","Cemerlang Tropika",120,61,59,36,84
+158/040/023,Johor,"Tebrau","Tiram","Kampung Sentosa",55,28,27,17,38
+158/040/024,Johor,"Tebrau","Tiram","Kota Pulasan",120,61,59,36,84
+158/041/001,Johor,"Tebrau","Puteri Wangsa","FELDA Ulu Tebrau",120,61,59,36,84
+158/041/002,Johor,"Tebrau","Puteri Wangsa","Maju Jaya",120,61,59,36,84
+158/041/003,Johor,"Tebrau","Puteri Wangsa","Nipah Delima",73,37,36,22,51
+158/041/004,Johor,"Tebrau","Puteri Wangsa","Puteri Wangsa 1",120,61,59,36,84
+158/041/005,Johor,"Tebrau","Puteri Wangsa","Mount Austin",120,61,59,36,84
+158/041/006,Johor,"Tebrau","Puteri Wangsa","Bertam Delima",78,40,38,23,55
+158/041/007,Johor,"Tebrau","Puteri Wangsa","Pekan Pandan",104,53,51,31,73
+158/041/008,Johor,"Tebrau","Puteri Wangsa","Kangkar Tebrau Baru",55,28,27,17,38
+158/041/009,Johor,"Tebrau","Puteri Wangsa","Kangkar Tebrau",50,26,24,15,35
+158/041/010,Johor,"Tebrau","Puteri Wangsa","Ladang Tebrau",120,61,59,36,84
+158/041/011,Johor,"Tebrau","Puteri Wangsa","Taman Gembira",66,34,32,20,46
+158/041/012,Johor,"Tebrau","Puteri Wangsa","Bukit Jaya",120,61,59,36,84
+158/041/013,Johor,"Tebrau","Puteri Wangsa","Rumbia Daya",120,61,59,36,84
+158/041/014,Johor,"Tebrau","Puteri Wangsa","Nibong Daya",120,61,59,36,84
+158/041/015,Johor,"Tebrau","Puteri Wangsa","Puteri Wangsa 2",120,61,59,36,84
+158/041/016,Johor,"Tebrau","Puteri Wangsa","Pelangi Gaya",120,61,59,36,84
+158/041/017,Johor,"Tebrau","Puteri Wangsa","Pinang Sagu",120,61,59,36,84
+158/041/018,Johor,"Tebrau","Puteri Wangsa","Setia Enau",120,61,59,36,84
+158/041/019,Johor,"Tebrau","Puteri Wangsa","Bukit Mutiara",120,61,59,36,84
+158/041/020,Johor,"Tebrau","Puteri Wangsa","Desa Tebrau",120,61,59,36,84
+160/044/001,Johor,"Johor Bahru","Larkin","Bandar Baru Uda",110,56,54,33,77
+160/044/002,Johor,"Johor Bahru","Larkin","Uda Malinja",120,61,59,36,84
+160/044/003,Johor,"Johor Bahru","Larkin","Jalan Datin Halimah",89,45,44,27,62
+160/044/004,Johor,"Johor Bahru","Larkin","Kampong Ungku Mohsin",99,50,49,30,69
+160/044/005,Johor,"Johor Bahru","Larkin","Kampong Melayu Majedee I",120,61,59,36,84
+160/044/006,Johor,"Johor Bahru","Larkin","Kampong Melayu Majedee Ii",79,40,39,24,55
+160/044/007,Johor,"Johor Bahru","Larkin","Stulang Baru",120,61,59,36,84
+160/044/008,Johor,"Johor Bahru","Larkin","Sepakat",111,57,54,33,78
+160/044/009,Johor,"Johor Bahru","Larkin","Taman Baru",94,48,46,28,66
+160/044/010,Johor,"Johor Bahru","Larkin","Rumah Pangsa Larkin",120,61,59,36,84
+160/044/011,Johor,"Johor Bahru","Larkin","Larkin Jaya",66,34,32,20,46
+160/044/012,Johor,"Johor Bahru","Larkin","Larkin",120,61,59,36,84
+160/044/013,Johor,"Johor Bahru","Larkin","Taman Majedee",108,55,53,32,76
+160/044/014,Johor,"Johor Bahru","Larkin","Taman Kebun Teh",120,61,59,36,84
+160/044/015,Johor,"Johor Bahru","Larkin","Taman Melodies",74,38,36,22,52
+160/044/016,Johor,"Johor Bahru","Larkin","Taman Abad",68,35,33,20,48
+160/044/017,Johor,"Johor Bahru","Larkin","Abad Jaya 1",59,30,29,18,41
+160/044/018,Johor,"Johor Bahru","Larkin","Taman Skudai Kanan",89,45,44,27,62
+160/044/019,Johor,"Johor Bahru","Larkin","Kampong Larkin Jaya",67,34,33,20,47
+160/044/020,Johor,"Johor Bahru","Larkin","Abad Jaya 2",60,31,29,18,42
+160/044/021,Johor,"Johor Bahru","Larkin","Uda Mahsuri",116,59,57,35,81
+160/044/022,Johor,"Johor Bahru","Larkin","Ulu Ayer Molek",33,17,16,10,23
+160/044/023,Johor,"Johor Bahru","Larkin","Kebun Teh",33,17,16,10,23
+160/045/001,Johor,"Johor Bahru","Stulang","Majedee Bahru",58,30,28,17,41
+160/045/002,Johor,"Johor Bahru","Stulang","Sulaiman Menteri",120,61,59,36,84
+160/045/003,Johor,"Johor Bahru","Stulang","Setanggi",85,43,42,26,59
+160/045/004,Johor,"Johor Bahru","Stulang","Sentosa",120,61,59,36,84
+160/045/005,Johor,"Johor Bahru","Stulang","Sri Tebrau (1)",120,61,59,36,84
+160/045/006,Johor,"Johor Bahru","Stulang","Bakar Batu",120,61,59,36,84
+160/045/007,Johor,"Johor Bahru","Stulang","Pelangi",99,50,49,30,69
+160/045/008,Johor,"Johor Bahru","Stulang","Taman Maju Jaya",120,61,59,36,84
+160/045/009,Johor,"Johor Bahru","Stulang","Kampong Wadi Hana",72,37,35,22,50
+160/045/010,Johor,"Johor Bahru","Stulang","Bukit Senyum",95,48,47,29,66
+160/045/011,Johor,"Johor Bahru","Stulang","Sri Pelangi",120,61,59,36,84
+160/045/012,Johor,"Johor Bahru","Stulang","Stulang",114,58,56,34,80
+160/045/013,Johor,"Johor Bahru","Stulang","Taman Sri Setia",43,22,21,13,30
+160/045/014,Johor,"Johor Bahru","Stulang","Lumba Kuda",72,37,35,22,50
+160/045/015,Johor,"Johor Bahru","Stulang","Bukit Chagar",55,28,27,17,38
+160/045/016,Johor,"Johor Bahru","Stulang","Desa Majidi",59,30,29,18,41
+160/045/017,Johor,"Johor Bahru","Stulang","Sri Tebrau (2)",41,21,20,12,29
+161/046/001,Johor,"Pulai","Perling","Belibis Perling",120,61,59,36,84
+161/046/002,Johor,"Pulai","Perling","Sri Jaya",120,61,59,36,84
+161/046/003,Johor,"Pulai","Perling","Kampong Pasir",120,61,59,36,84
+161/046/004,Johor,"Pulai","Perling","Pengkalan Rinting",72,37,35,22,50
+161/046/005,Johor,"Pulai","Perling","Skudai Kiri",105,54,51,32,73
+161/046/006,Johor,"Pulai","Perling","Sungai Danga",83,42,41,25,58
+161/046/007,Johor,"Pulai","Perling","Taman Sutera",120,61,59,36,84
+161/046/008,Johor,"Pulai","Perling","Bukit Serene",61,31,30,18,43
+161/046/009,Johor,"Pulai","Perling","Tarom",37,19,18,11,26
+161/046/010,Johor,"Pulai","Perling","Nong Chik",71,36,35,21,50
+161/046/011,Johor,"Pulai","Perling","Tambatan",90,46,44,27,63
+161/046/012,Johor,"Pulai","Perling","Gertak Merah",63,32,31,19,44
+161/046/013,Johor,"Pulai","Perling","Kampong Bahru",35,18,17,11,24
+161/046/014,Johor,"Pulai","Perling","Yahya Awal",79,40,39,24,55
+161/046/015,Johor,"Pulai","Perling","Ngee Heng",40,20,20,12,28
+161/046/016,Johor,"Pulai","Perling","Ayer Molek",28,14,14,8,20
+161/046/017,Johor,"Pulai","Perling","Kampong Pahang",27,14,13,8,19
+161/046/018,Johor,"Pulai","Perling","Bandar",41,21,20,12,29
+161/046/019,Johor,"Pulai","Perling","Camar Perling",120,61,59,36,84
+161/046/020,Johor,"Pulai","Perling","Pekaka Perling",111,57,54,33,78
+161/046/021,Johor,"Pulai","Perling","Rawa Perling",120,61,59,36,84
+161/046/022,Johor,"Pulai","Perling","Bukit Indah",120,61,59,36,84
+161/046/023,Johor,"Pulai","Perling","Nusa Indah",120,61,59,36,84
+161/046/024,Johor,"Pulai","Perling","Tampoi Indah",120,61,59,36,84
+161/046/025,Johor,"Pulai","Perling","Simbang Perling",120,61,59,36,84
+161/046/026,Johor,"Pulai","Perling","Uda Bestari",120,61,59,36,84
+161/047/001,Johor,"Pulai","Kempas","Kempas",120,61,59,36,84
+161/047/002,Johor,"Pulai","Kempas","Permatang",58,30,28,17,41
+161/047/003,Johor,"Pulai","Kempas","Lembah Kempas",120,61,59,36,84
+161/047/004,Johor,"Pulai","Kempas","Jalan Tampoi",113,58,55,34,79
+161/047/005,Johor,"Pulai","Kempas","Denai",120,61,59,36,84
+161/047/006,Johor,"Pulai","Kempas","Taman Siantan",120,61,59,36,84
+161/047/007,Johor,"Pulai","Kempas","Taman Johor",120,61,59,36,84
+161/047/008,Johor,"Pulai","Kempas","Taman Cempaka",120,61,59,36,84
+161/047/009,Johor,"Pulai","Kempas","Taman Dahlia",120,61,59,36,84
+161/047/010,Johor,"Pulai","Kempas","Taman Kobena",56,29,27,17,39
+161/047/011,Johor,"Pulai","Kempas","Desa Rahmat",96,49,47,29,67
+161/047/012,Johor,"Pulai","Kempas","Pekan Tampoi",96,49,47,29,67
+161/047/013,Johor,"Pulai","Kempas","Bukit Mewah",120,61,59,36,84
+161/047/014,Johor,"Pulai","Kempas","Bukit Kempas",120,61,59,36,84
+162/048/001,Johor,"Iskandar Puteri","Skudai","Jaya Mas",120,61,59,36,84
+162/048/002,Johor,"Iskandar Puteri","Skudai","Selesa Jaya",120,61,59,36,84
+162/048/003,Johor,"Iskandar Puteri","Skudai","Sri Sinding",120,61,59,36,84
+162/048/004,Johor,"Iskandar Puteri","Skudai","Impian Emas",120,61,59,36,84
+162/048/005,Johor,"Iskandar Puteri","Skudai","Sri Skudai",120,61,59,36,84
+162/048/006,Johor,"Iskandar Puteri","Skudai","Bandar Skudai Barat",57,29,28,17,40
+162/048/007,Johor,"Iskandar Puteri","Skudai","Bandar Skudai Tengah",72,37,35,22,50
+162/048/008,Johor,"Iskandar Puteri","Skudai","Bandar Skudai Timor",27,14,13,8,19
+162/048/009,Johor,"Iskandar Puteri","Skudai","Hang Tuah",120,61,59,36,84
+162/048/010,Johor,"Iskandar Puteri","Skudai","Laksamana Tuta",120,61,59,36,84
+162/048/011,Johor,"Iskandar Puteri","Skudai","Nakhoda Tuta",120,61,59,36,84
+162/048/012,Johor,"Iskandar Puteri","Skudai","Flat Perkasa 'A' Tuta",114,58,56,34,80
+162/048/013,Johor,"Iskandar Puteri","Skudai","Taman Damai Jaya",120,61,59,36,84
+162/048/014,Johor,"Iskandar Puteri","Skudai","Desa Skudai",120,61,59,36,84
+162/048/015,Johor,"Iskandar Puteri","Skudai","Hang Jebat",120,61,59,36,84
+162/048/016,Johor,"Iskandar Puteri","Skudai","Perwira Tuta",120,61,59,36,84
+162/048/017,Johor,"Iskandar Puteri","Skudai","Hulubalang Tuta",120,61,59,36,84
+162/048/018,Johor,"Iskandar Puteri","Skudai","Skudai Utara",69,35,34,21,48
+162/048/019,Johor,"Iskandar Puteri","Skudai","Flat Perkasa 'B' Tuta",120,61,59,36,84
+162/048/020,Johor,"Iskandar Puteri","Skudai","Taman Jaya",96,49,47,29,67
+162/048/021,Johor,"Iskandar Puteri","Skudai","Bukit Impian",57,29,28,17,40
+162/049/001,Johor,"Iskandar Puteri","Kota Iskandar","Mutiara Rini",120,61,59,36,84
+162/049/002,Johor,"Iskandar Puteri","Kota Iskandar","Kangkar Pulai",120,61,59,36,84
+162/049/003,Johor,"Iskandar Puteri","Kota Iskandar","Pertanian",120,61,59,36,84
+162/049/004,Johor,"Iskandar Puteri","Kota Iskandar","Kebangsaan",120,61,59,36,84
+162/049/005,Johor,"Iskandar Puteri","Kota Iskandar","Lima Kedai",106,54,52,32,74
+162/049/006,Johor,"Iskandar Puteri","Kota Iskandar","Gelang Patah Utara",120,61,59,36,84
+162/049/007,Johor,"Iskandar Puteri","Kota Iskandar","Kampong Pulai",27,14,13,8,19
+162/049/008,Johor,"Iskandar Puteri","Kota Iskandar","Sungai Melayu",47,24,23,14,33
+162/049/009,Johor,"Iskandar Puteri","Kota Iskandar","Tebing Runtoh",27,14,13,8,19
+162/049/010,Johor,"Iskandar Puteri","Kota Iskandar","Kampong Pendas",27,14,13,8,19
+162/049/011,Johor,"Iskandar Puteri","Kota Iskandar","Gelang Patah Selatan",50,26,24,15,35
+162/049/012,Johor,"Iskandar Puteri","Kota Iskandar","Tiram Duku",95,48,47,29,66
+162/049/013,Johor,"Iskandar Puteri","Kota Iskandar","Tanjong Kupang",34,17,17,10,24
+162/049/014,Johor,"Iskandar Puteri","Kota Iskandar","Kampong Pok Besar",27,14,13,8,19
+162/049/015,Johor,"Iskandar Puteri","Kota Iskandar","Tanjong Adang",49,25,24,15,34
+162/049/016,Johor,"Iskandar Puteri","Kota Iskandar","Penyiaran",120,61,59,36,84
+162/049/017,Johor,"Iskandar Puteri","Kota Iskandar","Kemuliaan",120,61,59,36,84
+162/049/018,Johor,"Iskandar Puteri","Kota Iskandar","Perubatan",119,61,58,36,83
+162/049/019,Johor,"Iskandar Puteri","Kota Iskandar","Pulai Indah",120,61,59,36,84
+162/049/020,Johor,"Iskandar Puteri","Kota Iskandar","Pulai Utama",120,61,59,36,84
+162/049/021,Johor,"Iskandar Puteri","Kota Iskandar","Sri Pulai Perdana",120,61,59,36,84
+162/049/022,Johor,"Iskandar Puteri","Kota Iskandar","Pulai",120,61,59,36,84
+162/049/023,Johor,"Iskandar Puteri","Kota Iskandar","Sri Pulai",120,61,59,36,84
+162/049/024,Johor,"Iskandar Puteri","Kota Iskandar","Teratai",120,61,59,36,84
+162/049/025,Johor,"Iskandar Puteri","Kota Iskandar","Nusa Perintis",120,61,59,36,84
+163/050/001,Johor,"Kulai","Bukit Permai","Murni Jaya",40,20,20,12,28
+163/050/002,Johor,"Kulai","Bukit Permai","Bukit Permai",42,21,21,13,29
+163/050/003,Johor,"Kulai","Bukit Permai","Inas",50,26,24,15,35
+163/050/004,Johor,"Kulai","Bukit Permai","Sedenak Utara",29,15,14,9,20
+163/050/005,Johor,"Kulai","Bukit Permai","Sedenak Selatan",43,22,21,13,30
+163/050/006,Johor,"Kulai","Bukit Permai","Ladang Fraser",27,14,13,8,19
+163/050/007,Johor,"Kulai","Bukit Permai","Pekan Sengkang",64,33,31,19,45
+163/050/008,Johor,"Kulai","Bukit Permai","FELDA Taib Andak",120,61,59,36,84
+163/050/009,Johor,"Kulai","Bukit Permai","Ladang Swee Lam",120,61,59,36,84
+163/050/010,Johor,"Kulai","Bukit Permai","Ladang Kelan",27,14,13,8,19
+163/050/011,Johor,"Kulai","Bukit Permai","Bandar Kulai Utara",120,61,59,36,84
+163/050/012,Johor,"Kulai","Bukit Permai","Kampong Pertanian",35,18,17,11,24
+163/051/001,Johor,"Kulai","Bukit Batu","Ulu Choh",27,14,13,8,19
+163/051/002,Johor,"Kulai","Bukit Batu","Bandar Ulu Choh",50,26,24,15,35
+163/051/003,Johor,"Kulai","Bukit Batu","Kampong Rahmat",120,61,59,36,84
+163/051/004,Johor,"Kulai","Bukit Batu","Bukit Batu",120,61,59,36,84
+163/051/005,Johor,"Kulai","Bukit Batu","Ayer Manis",38,19,19,11,27
+163/051/006,Johor,"Kulai","Bukit Batu","FELDA Bukit Batu",73,37,36,22,51
+163/051/007,Johor,"Kulai","Bukit Batu","Ayer Bemban",58,30,28,17,41
+163/051/008,Johor,"Kulai","Bukit Batu","Midland Kulai Young",27,14,13,8,19
+163/051/009,Johor,"Kulai","Bukit Batu","Pekan Kelapa Sawit Barat",72,37,35,22,50
+163/051/010,Johor,"Kulai","Bukit Batu","Pekan Kelapa Sawit Tengah",90,46,44,27,63
+163/051/011,Johor,"Kulai","Bukit Batu","Pekan Kelapa Sawit Timor",51,26,25,15,36
+163/051/012,Johor,"Kulai","Bukit Batu","Kampong Sri Paya",120,61,59,36,84
+163/051/013,Johor,"Kulai","Bukit Batu","Kota Kulai",120,61,59,36,84
+163/051/014,Johor,"Kulai","Bukit Batu","Taman Putri",120,61,59,36,84
+163/051/015,Johor,"Kulai","Bukit Batu","Taman Permai",120,61,59,36,84
+163/052/001,Johor,"Kulai","Senai","Senai Baru",120,61,59,36,84
+163/052/002,Johor,"Kulai","Senai","Seelong",51,26,25,15,36
+163/052/003,Johor,"Kulai","Senai","UTM",27,14,13,8,19
+163/052/004,Johor,"Kulai","Senai","Bandar Kulai Barat",120,61,59,36,84
+163/052/005,Johor,"Kulai","Senai","Bandar Kulai Tengah",58,30,28,17,41
+163/052/006,Johor,"Kulai","Senai","Bandar Kulai Timor",69,35,34,21,48
+163/052/007,Johor,"Kulai","Senai","Kulai",120,61,59,36,84
+163/052/008,Johor,"Kulai","Senai","Ladang Kulai Besar",27,14,13,8,19
+163/052/009,Johor,"Kulai","Senai","Saleng",120,61,59,36,84
+163/052/010,Johor,"Kulai","Senai","Taman Aman",119,61,58,36,83
+163/052/011,Johor,"Kulai","Senai","Bandar Senai Utara",120,61,59,36,84
+163/052/012,Johor,"Kulai","Senai","Bandar Senai Tengah",53,27,26,16,37
+163/052/013,Johor,"Kulai","Senai","Bandar Senai Selatan",120,61,59,36,84
+163/052/014,Johor,"Kulai","Senai","Taman Muhibbah",120,61,59,36,84
+163/052/015,Johor,"Kulai","Senai","Lengkongan",49,25,24,15,34
+163/052/016,Johor,"Kulai","Senai","Taman Selatan",120,61,59,36,84
+163/052/017,Johor,"Kulai","Senai","Dawani",99,50,49,30,69

@@ -192,10 +192,10 @@
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' ? input.parti : 'UMNO',                // v13.1: MCA; v13.3: MIC
+      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' ? input.parti : 'UMNO',                // v13.8: PPP                // v13.1: MCA; v13.3: MIC
       blokPBB: input.parti === 'PBB' && (input.blokPBB === 'bumiputera' || input.blokPBB === 'pesaka') ? input.blokPBB : undefined,   // v9.0
       dunInfo: SW(input.parti) && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
-      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA') && input.sayap === 'wanita' && d.kod === 'puteri') || (input.parti === 'MIC' && input.sayap === 'putera' && d.kod === 'pemuda' && parseInt(d.umur, 10) <= 29)) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
+      sayap: SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA') && input.sayap === 'wanita' && d.kod === 'puteri') || ((input.parti === 'MIC' || input.parti === 'PPP') && input.sayap === 'putera' && d.kod === 'pemuda' && parseInt(d.umur, 10) <= 29)) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
       ip: DEFAULTS.ip,
       myr: DEFAULTS.myr,
@@ -204,7 +204,7 @@
       bulan: DEFAULTS.bulan,
       kesetiaan: salin(KESETIAAN_LALAI),
       keahlian: { sejakTahun: DEFAULTS.tahun - tahunAhli(input.tahunAhli, d.umur), sejakBulan: 1 },
-      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
+      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
       dicipta: new Date().toISOString()
     });
   }

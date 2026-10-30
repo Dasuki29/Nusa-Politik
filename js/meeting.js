@@ -543,6 +543,8 @@
     labelSayap(p);
     var Et = typeof globalThis !== 'undefined' ? globalThis.MyPolitikEtika : null;     // hak keahlian (Fasal 20.10)
     if (Et) { var hak = Et.semakHak(p, 'perwakilan'); if (!hak.boleh) { return gagal('hak_dicabut', hak.sebab); } }
+    var PPm = typeof globalThis !== 'undefined' ? globalThis.MyPolitikPPP : null, hP = PPm && PPm.halangan ? PPm.halangan(p) : null;      // v13.8: PPP dibekukan ROS
+    if (hP) { return gagal('dibekukan', hP); }
     var ms = keadaanMesyuarat(p), st = statusPeringkat(p, ms, peringkat);
     if (st.status === 'selesai') { return gagal('selesai', PERINGKAT[peringkat].nama + ' tahun ' + p.tahun + ' sudah selesai.'); }
     if (st.status === 'sedang') { return gagal('sedang', PERINGKAT[peringkat].nama + ' sedang berjalan.'); }
