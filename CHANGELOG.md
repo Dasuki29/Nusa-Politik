@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.7 (2026-10-30)
+
+- **Butang Maklum balas tanpa nama** ke Google Form: baris ke-4 pada kertas undi di menu utama dan butang "💬 Hantar Maklum Balas (tanpa nama)" dalam Menu dashboard. Skrin pengesahan menerangkan bahawa borang dibuka dalam tab baharu, tanpa akaun dan tanpa emel. Soalan "Maklumat permainan" diisi automatik (versi, parti, tahun dan bulan, jawatan, bahasa, jenis peranti); nama watak dan simpanan tidak dihantar. Pautan dalam `js/maklumbalas.js` (CONFIG.URL, CONFIG.ENTRY); butang disembunyikan jika pautan kosong. Terjemahan EN dan ujian pelayar `tools/ujian-maklumbalas.js`.
+
 ## v13.6 (2026-10-29)
 
 - **Menu utama: parti disusun ikut gabungan.** Tujuh butang parti diganti dengan dua butang gabungan, **BN** (Barisan Nasional · 3 parti) dan **GPS** (Gabungan Parti Sarawak · 4 parti), dengan logo gabungan daripada pengguna (`assets/images/logo-bn.png`, `logo-gps.png`). Tekan gabungan untuk membuka panel partinya (BN: UMNO, MCA, MIC; GPS: PBB, PRS, SUPP, PDP); satu panel pada satu masa, tekan semula untuk menutup. Cip parti terus ke pendaftaran seperti dahulu. Terjemahan EN dan ujian pelayar baharu `tools/ujian-gabungan.js`.

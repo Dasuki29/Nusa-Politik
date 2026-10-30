@@ -1079,3 +1079,6 @@ body.menu-aktif { overflow: hidden; }
 /* ---------- v12.2: Isu Semasa (js/isu-ui.js) ---------- */
 .isu-kad { border-left: 8px solid var(--red); }
 .isu-label { margin: 0 0 4px; font-size: .78rem; font-weight: 800; color: var(--text-muted); }
+
+/* v13.7: butang maklum balas disembunyikan sehingga pautan borang ditetapkan (js/maklumbalas.js) */
+[data-maklumbalas][hidden] { display: none !important; }

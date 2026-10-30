@@ -86,3 +86,6 @@ html[data-tema="poster"] #menu .menu__bahasa { position: relative; margin: 8px 0
 .gab__panel .poster__parti { gap: 8px; }
 .gab__kaki { margin: 8px 0 0; font-size: .76rem; color: var(--text-muted); }
 @media (prefers-reduced-motion: reduce) { .gab__btn:active { transform: none; } .gab__panah { transition: none; } }
+
+/* v13.7: butang maklum balas disembunyikan sehingga pautan borang ditetapkan (js/maklumbalas.js) */
+[data-maklumbalas][hidden] { display: none !important; }
