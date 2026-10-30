@@ -1719,6 +1719,25 @@ ujian('v13.16: MCA & MIC Sabah: data, kuota ikut Pemulihan, ofset, tindakan, PRN
   betul(ev.some((e) => e.jenis === 'sbn_senator') && B.senatorAktif(p), 'dilantik Senator'); betul(p.ip >= ip0 + 10, 'IP Senator');
   S.clearPlayer();
 });
+ujian('v13.17: MB boleh dituntut selepas menang Parlimen + DUN serentak (lobi Parlimen), dan Presiden pembangkang dapat lobi DUN', () => {
+  const NG = g.MyPolitikNegeri, asal = NG.status;
+  NG.status = () => ({ bp: { pengerusi: { pemain: true } } });
+  try {
+    P.daftar({}); P.tetap({ ap: 10, pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: true }, statusKedua: { jenis: 'ADUN', kerusi: 'Kuala Perlis', kerajaan: true } } });
+    betul(KB.bukaLobi('PARLIMEN').ok);
+    let m = KB.maklumatMB(S.loadPlayer()); betul(m.boleh, 'lobi Parlimen tidak lagi menghalang MB: ' + m.sebab);
+    betul(KB.semakMB(S.loadPlayer()).sedia, 'senarai semak: sedia');
+    P.tetap({ pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: true }, statusKedua: { jenis: 'ADUN', kerusi: 'Kuala Perlis', kerajaan: false } } });
+    m = KB.maklumatMB(S.loadPlayer()); sama(m.boleh, false); betul(/tidak membentuk kerajaan negeri/.test(m.sebab), m.sebab);
+    // Pengerusi BP tanpa kerusi DUN: senarai semak dipapar dengan ⛔ ADUN
+    P.tetap({ kabinet: {}, pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: true } } });
+    const sm = KB.semakMB(S.loadPlayer()); betul(sm && !sm.item[0].ok && /mesti ADUN/.test(sm.item[0].teks), 'Pengerusi BP tanpa DUN');
+    // Presiden: pembangkang di Parlimen, kerajaan negeri -> lobi DUN
+    P.tetap({ kabinet: {}, jawatan: 'Presiden', pru: { status: { jenis: 'ADUN', kerusi: 'Kuala Perlis', kerajaan: true }, nasional: { status: 'PEMBANGKANG', tahun: 2031, bulan: 3, parti: 20, rakan: 10 } } });
+    const r = PRU.rundingKerajaan('PEMBANGKANG'); betul(r.ok && r.bukaLobi, r.mesej); sama(KB.getKabinet(S.loadPlayer()).lobi.sumber, 'DUN');
+    betul(KB.maklumatMB(S.loadPlayer()).boleh, 'Presiden boleh menuntut MB');
+  } finally { NG.status = asal; S.clearPlayer(); }
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

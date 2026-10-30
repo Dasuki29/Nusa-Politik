@@ -272,18 +272,26 @@
   function SWk() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function labelKetua(p) { if (p && SW(p.parti)) { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
   /** Syarat: lobi DUN dibuka (parti membentuk kerajaan negeri), pemain ADUN, Pengerusi Badan Perhubungan Negeri (induk), bukan Sarawak. */
+  /** v13.17: status ADUN pemain (atau null). */
+  function statusADUN(p) { var PR = modul('MyPolitikPRU', 'pru.js'); if (!PR || !PR.getPRU) { return null; } var pr = PR.getPRU(p); return [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN'; })[0] || null; }
+  /** v13.17 (maklum balas pemain): tetingkap tuntutan = mana-mana lobi selepas pilihan raya (bukan hanya lobi DUN). Pemain yang menang
+      Parlimen + DUN serentak sebelum ini mendapat lobi Parlimen sahaja, jadi MB tidak pernah dibuka walaupun parti menang besar di DUN. */
   function syaratMB(p) {
-    var k = getKabinet(p), PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), sebab = '';
+    var k = getKabinet(p), PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), sebab = '', sa = statusADUN(p);
     if (p && SW(p.parti)) {                                                // v9.1: Premier Sarawak: ADUN dan Presiden PBB
       var W9 = SWk();
-      if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
-      else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
+      if (k.hasGovernmentRole) { sebab = 'Sudah memegang jawatan kerajaan.'; }
+      else if (!k.lobi) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
+      else if (!sa) { sebab = 'Anda mesti ADUN.'; }
+      else if (sa.kerajaan === false) { sebab = 'Parti anda tidak membentuk kerajaan negeri.'; }
       else if (W9 && W9.sebabPremier) { sebab = W9.sebabPremier(p); }
       return { boleh: !sebab, sebab: sebab };
     }
-    if (!k.lobi || k.lobi.sumber !== 'DUN' || k.hasGovernmentRole) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
+    if (k.hasGovernmentRole) { sebab = 'Sudah memegang jawatan kerajaan.'; }
+    else if (!k.lobi) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
     else if (String(p.negeri || '').toLowerCase() === 'sarawak') { sebab = 'UMNO tiada cawangan di Sarawak.'; }
-    else if (!(PR && PR.pegang && PR.pegang(p, 'ADUN'))) { sebab = 'Anda mesti ADUN.'; }
+    else if (!sa) { sebab = 'Anda mesti ADUN.'; }
+    else if (sa.kerajaan === false) { sebab = 'Parti anda tidak membentuk kerajaan negeri.'; }
     else if (PR.getPRU && [PR.getPRU(p).status, PR.getPRU(p).statusKedua].some(function (x) { return x && x.jenis === 'ADUN' && x.lain && !x.negeriSama; })) { sebab = 'Kerusi DUN anda bukan di negeri ini.'; }   // v8.17: calon kerusi negeri lain
     else {
       var ada = false; try { var st = NG && NG.status ? NG.status(p) : null; ada = !!(st && st.bp && st.bp.pengerusi && st.bp.pengerusi.pemain); } catch (e) { ada = false; }
@@ -318,10 +326,11 @@
     var PR = modul('MyPolitikPRU', 'pru.js'), NG = modul('MyPolitikNegeri', 'negeri.js'), k = getKabinet(p);
     if (!p || !PR || !PR.getPRU || k.roleLevel === 'MENTERI_BESAR') { return null; }
     var pru = PR.getPRU(p), st = [pru.status, pru.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN'; })[0];
-    if (!st) { return null; }
+    var bp = false; try { var sB = NG && NG.status ? NG.status(p) : null; bp = !!(sB && sB.bp && sB.bp.pengerusi && sB.bp.pengerusi.pemain); } catch (eB) { bp = false; }
+    if (!st && !bp) { return null; }                                                                 // v13.17: Pengerusi Badan Perhubungan tanpa kerusi DUN juga melihat senarai semak
     var sw = SW(p.parti), label = labelKetua(p), item = [];
-    item.push({ ok: !(st.lain && !st.negeriSama) && !(!sw && String(p.negeri || '').toLowerCase() === 'sarawak'), teks: 'Anda ADUN di negeri ini' });
-    item.push({ ok: !!st.kerajaan, teks: 'Parti / gabungan anda membentuk kerajaan negeri selepas PRU atau PRN' });
+    item.push({ ok: !!st && !(st.lain && !st.negeriSama) && !(!sw && String(p.negeri || '').toLowerCase() === 'sarawak'), teks: st ? 'Anda ADUN di negeri ini' : 'Anda mesti ADUN: bertanding kerusi DUN (atau Parlimen + DUN serentak) dalam PRU' });
+    item.push({ ok: !!(st && st.kerajaan), teks: 'Parti / gabungan anda membentuk kerajaan negeri selepas PRU atau PRN' });
     if (sw) {
       var W9 = SWk(), sb = W9 && W9.sebabPremier ? W9.sebabPremier(p) : '';
       item.push({ ok: !sb, teks: sb ? sb : 'Anda Presiden PBB' });
@@ -329,7 +338,7 @@
       var ada = false; try { var s0 = NG && NG.status ? NG.status(p) : null; ada = !!(s0 && s0.bp && s0.bp.pengerusi && s0.bp.pengerusi.pemain); } catch (e) { ada = false; }
       item.push({ ok: ada, teks: ada ? 'Anda Pengerusi Badan Perhubungan Negeri' : 'Anda Pengerusi Badan Perhubungan Negeri: lobi di kad Negeri (tab Profil) selepas pemilihan Pusat' });
     }
-    var semua = item.every(function (x) { return x.ok; }), mb = k.lobi && k.lobi.sumber === 'DUN' && !k.hasGovernmentRole ? maklumatMB(p) : null;
+    var semua = item.every(function (x) { return x.ok; }), mb = k.lobi && !k.hasGovernmentRole ? maklumatMB(p) : null;
     return { label: label, negeri: p.negeri || '', item: item, semua: semua, sedia: !!(mb && mb.boleh), peluang: mb ? mb.peluang : null, sendiri: !!(mb && mb.sendiri) };
   }
   function lantikDi(p, k, tahap, nama, log) {

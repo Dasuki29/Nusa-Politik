@@ -928,6 +928,10 @@
     } else {
       hasil = 'PEMBANGKANG'; mesej = n.status === 'PEMBANGKANG' ? 'Parti anda menjadi pembangkang.' : 'Anda menolak gabungan. Parti menjadi pembangkang.';
     }
+    if (hasil === 'PEMBANGKANG') {                                                          // v13.17: pembangkang di Parlimen tetapi parti membentuk kerajaan negeri: lobi DUN (MB / EXCO)
+      var stA = [pru.status, pru.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN' && x.kerajaan; })[0];
+      if (stA && K && K.bukaLobi) { var rL = K.bukaLobi('DUN'); if (rL && rL.ok) { buka = true; mesej += ' Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.'; } }
+    }
     n.selesai = true; n.hasil = hasil;
     pru.nasional = n;
     pru.sejarahNasional = (pru.sejarahNasional || []).concat([{ tahun: n.tahun, bulan: n.bulan, parti: n.parti, rakan: n.rakan, status: n.status, hasil: hasil }]).slice(-5);

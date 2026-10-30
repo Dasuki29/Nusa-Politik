@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v13.17 (2026-10-30)
+
+- **Baiki (maklum balas pemain): tidak boleh menjadi Menteri Besar walaupun BN menang besar di DUN (cth. Selangor 41/56) dan pemain Pengerusi Badan Perhubungan.** Punca: pemain yang bertanding Parlimen + DUN serentak dan menang kedua-duanya hanya mendapat lobi portfolio Parlimen, sedangkan tuntutan MB memerlukan lobi DUN. Kini MB / Ketua Menteri / Premier boleh dituntut dalam mana-mana tetingkap lobi selepas pilihan raya, asalkan pemain ADUN, partinya membentuk kerajaan negeri dan syarat lain dipenuhi.
+- Presiden parti yang menjadi pembangkang di Parlimen tetapi partinya membentuk kerajaan negeri kini mendapat lobi kerajaan negeri (MB / EXCO).
+- Senarai semak MB juga dipaparkan kepada Pengerusi Badan Perhubungan yang belum ADUN, dengan nota supaya bertanding kerusi DUN. Sebab penolakan lebih jelas ("Sudah memegang jawatan kerajaan", "Parti anda tidak membentuk kerajaan negeri").
+- Ujian unit baharu. Cache `nusa-v13.17`.
+
 ## v13.16 (2026-10-30)
 
 - **MCA & MIC Sabah**, ikut mockup yang dipersetujui (`js/sabah-bn.js`, `js/sabah-bn-ui.js`). Kedudukan kedua-dua parti di Sabah lemah selepas 2018: MCA kalah 4 kerusi DUN pada PRN 2020 dan 2 kerusi pada PRN 2025; MIC Sabah ada 25 cawangan dan tidak bertanding.

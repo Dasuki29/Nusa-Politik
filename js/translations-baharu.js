@@ -3458,4 +3458,13 @@
   ["MCA Sabah: kedudukan MCA lemah di Sabah selepas 2018 (kalah semua kerusi yang ditandingi pada PRN 2020 dan 2025). Anda bermula dengan Pemulihan Sabah yang rendah; kuota BN 2 hingga 4 kerusi DUN ikut Pemulihan. Ikut jadual PRN Sabah.", "MCA Sabah: MCA has been weak in Sabah since 2018 (it lost every seat it contested in the 2020 and 2025 state elections). You start with low Sabah Recovery; the BN quota is 2 to 4 state seats depending on Recovery. Follows the Sabah state election schedule."],
   ["MIC Sabah: 25 cawangan di bandar Sabah dan tiada kuota kerusi (pengundi India kecil). Bantu calon BN, bina Pemulihan Sabah dan berpeluang dilantik Senator. Ikut jadual PRN Sabah.", "MIC Sabah: 25 branches in Sabah's towns and no seat quota (few Indian voters). Help BN candidates, build Sabah Recovery and you may be appointed a Senator. Follows the Sabah state election schedule."]
   ]);
+  /* v13.17: syarat MB selepas menang Parlimen + DUN */
+  T.tambah([
+  ["Parti anda tidak membentuk kerajaan negeri.", "Your party does not form the state government."],
+  ["Sudah memegang jawatan kerajaan.", "Already holds a government post."],
+  ["Anda mesti ADUN: bertanding kerusi DUN (atau Parlimen + DUN serentak) dalam PRU", "You must be a State Assemblyman: contest a state seat (or Parliament + state seat together) in the election"],
+  ["⛔ Anda mesti ADUN: bertanding kerusi DUN (atau Parlimen + DUN serentak) dalam PRU", "⛔ You must be a State Assemblyman: contest a state seat (or Parliament + state seat together) in the election"],
+  ["Parti anda menjadi pembangkang. Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.", "Your party is in opposition. Your party forms the state government: the state government lobby is open."],
+  ["Anda menolak gabungan. Parti menjadi pembangkang. Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.", "You rejected the coalition. The party is in opposition. Your party forms the state government: the state government lobby is open."]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));
