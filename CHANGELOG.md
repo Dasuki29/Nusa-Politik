@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v13.18 (2026-10-30)
+
+- **Baiki (maklum balas pemain, borang): tidak dapat mengimport watak dari fon ke laptop.** Import kod simpanan hanya ada dalam Menu di dalam permainan, jadi peranti baharu yang belum ada watak tidak boleh mengimport. Kini menu utama → **Simpanan permainan** ada bahagian **📲 Import watak dari peranti lain** (tampal kod NUSA1 atau pilih fail JSON, pratonton watak, kemudian terus ke dashboard).
+- Baiki: maklum balas pemain sentiasa melaporkan versi "v13.7". Versi kini v13.18 dan ujian unit memastikan ia sama dengan versi cache.
+- `tools/ujian-import.js` (pelayar). Cache `nusa-v13.18`.
+
 ## v13.17 (2026-10-30)
 
 - **Baiki (maklum balas pemain): tidak boleh menjadi Menteri Besar walaupun BN menang besar di DUN (cth. Selangor 41/56) dan pemain Pengerusi Badan Perhubungan.** Punca: pemain yang bertanding Parlimen + DUN serentak dan menang kedua-duanya hanya mendapat lobi portfolio Parlimen, sedangkan tuntutan MB memerlukan lobi DUN. Kini MB / Ketua Menteri / Premier boleh dituntut dalam mana-mana tetingkap lobi selepas pilihan raya, asalkan pemain ADUN, partinya membentuk kerajaan negeri dan syarat lain dipenuhi.

@@ -1738,6 +1738,11 @@ ujian('v13.17: MB boleh dituntut selepas menang Parlimen + DUN serentak (lobi Pa
     betul(KB.maklumatMB(S.loadPlayer()).boleh, 'Presiden boleh menuntut MB');
   } finally { NG.status = asal; S.clearPlayer(); }
 });
+ujian('v13.18: versi maklum balas sama dengan versi cache (sw.js)', () => {
+  const fs = require('fs'), path = require('path'), R = path.join(__dirname, '..');
+  const vSw = (fs.readFileSync(path.join(R, 'sw.js'), 'utf8').match(/VERSI = 'nusa-(v[\d.]+)'/) || [])[1], vMb = (fs.readFileSync(path.join(R, 'js', 'maklumbalas.js'), 'utf8').match(/VERSI: '(v[\d.]+)'/) || [])[1];
+  betul(vSw && vSw === vMb, 'sw.js ' + vSw + ' vs maklumbalas.js ' + vMb);
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

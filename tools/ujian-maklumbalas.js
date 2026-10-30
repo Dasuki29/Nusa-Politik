@@ -40,7 +40,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   semak(await pg.isVisible('#menu-win [data-maklumbalas]'), 'butang Maklum Balas dalam Menu dashboard');
   await pg.click('#menu-win [data-maklumbalas]'); await pg.waitForTimeout(400);
   const info = await pg.textContent('#mb-win');
-  semak(/v13\.7 · UMNO · 2026, bulan 1/.test(info) && !/Rahsia Nama/.test(info), 'maklumat permainan tanpa nama watak: ' + info.replace(/\s+/g, ' ').slice(0, 200));
+  semak(/v\d+\.\d+ · UMNO · 2026, bulan 1/.test(info) && !/Rahsia Nama/.test(info), 'maklumat permainan tanpa nama watak: ' + info.replace(/\s+/g, ' ').slice(0, 200));
   semak(!/Rahsia/.test(await pg.evaluate(() => MyPolitikMaklumBalas.pautan())), 'pautan tidak mengandungi nama watak');
   await pg.keyboard.press('Escape'); await pg.waitForTimeout(200);
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(500);

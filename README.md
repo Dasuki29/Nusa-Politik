@@ -155,6 +155,7 @@ node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin L
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN
+node tools/ujian-import.js       # pelayar: import kod simpanan dari menu utama (peranti baharu tanpa watak)
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

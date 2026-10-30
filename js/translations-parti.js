@@ -9,6 +9,18 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["📲 Import watak dari peranti lain", "📲 Import a character from another device"],
+  ["Di peranti lama: Menu → Pindah Career ke Peranti Lain → Salin Kod Simpanan atau Muat Turun Fail. Tampal kod di sini atau pilih fail.", "On the old device: Menu → Move Career to Another Device → Copy Save Code or Download File. Paste the code here or choose the file."],
+  ["📄 Pilih fail", "📄 Choose file"],
+  ["Import", "Import"],
+  ["✔ {x} · {y} · {a}, bulan {b}", "✔ {x} · {y} · {a}, month {b}"],
+  ["⚠️ Semua slot penuh. Padam satu watak dahulu, kemudian import semula.", "⚠️ All slots are full. Delete a character first, then import again."],
+  ["⚠️ Gagal membaca fail.", "⚠️ Could not read the file."],
+  ["⚠️ Kod simpanan tidak sah atau rosak.", "⚠️ The save code is invalid or damaged."],
+  ["⚠️ Ini bukan fail simpanan Nusa Politik.", "⚠️ This is not a Nusa Politik save file."],
+  ["⚠️ Versi simpanan tidak disokong. Kemas kini permainan dahulu.", "⚠️ This save version is not supported. Update the game first."],
+  ["⚠️ Data watak tiada atau rosak.", "⚠️ Character data is missing or damaged."],
+  ["⚠️ Import gagal.", "⚠️ Import failed."],
   ["Data MCA Semenanjung dan Sabah ({x}). Bilangan ahli ialah anggaran permainan.", "MCA Peninsula and Sabah data ({x}). Member numbers are game estimates."],
   ["Data MIC Semenanjung dan Sabah ({x}). Bilangan ahli ialah anggaran permainan.", "MIC Peninsula and Sabah data ({x}). Member numbers are game estimates."],
   ["MCA Sabah: kedudukan MCA lemah di Sabah selepas 2018 (kalah semua kerusi yang ditandingi pada PRN 2020 dan 2025). Anda bermula dengan Pemulihan Sabah yang rendah; kuota BN 2 hingga 4 kerusi DUN ikut Pemulihan. Ikut jadual PRN Sabah.", "MCA Sabah: MCA has been weak in Sabah since 2018 (it lost every seat it contested in the 2020 and 2025 state elections). You start with low Sabah Recovery; the BN quota is 2 to 4 state seats depending on Recovery. Follows the Sabah state election schedule."],
