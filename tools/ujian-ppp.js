@@ -23,7 +23,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.route('**/*', (rt) => { if (rt.request().url().startsWith(base)) { rt.continue(); } else { rt.abort(); } });
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('[data-gab="BN"]'); await pg.waitForTimeout(200);
-  semak(await pg.$$eval('#gab-bn .poster__chip', (l) => l.map((x) => x.dataset.parti).join()) === 'UMNO,MCA,MIC,PPP,PBRS', 'panel BN: UMNO, MCA, MIC, PPP, PBRS');
+  semak(await pg.$$eval('#gab-bn .poster__chip[data-parti]', (l) => l.map((x) => x.dataset.parti).join()) === 'UMNO,MCA,MIC,PPP,PBRS', 'panel BN: UMNO, MCA, MIC, PPP, PBRS');
   await pg.click('.poster__chip[data-parti="PPP"]'); await pg.waitForTimeout(2500);
   semak(await pg.$eval('#s-parti', (x) => x.value) === 'PPP', 'pendaftaran PPP dipilih');
   semak(/berbilang kaum/.test(await pg.textContent('#h-parti')), 'nota PPP pada skrin pendaftaran');

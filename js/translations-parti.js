@@ -9,6 +9,8 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["(rakan, bukan komponen):", "(partners, not components):"],
+  ["Makkal Sakti", "Makkal Sakti"],
   ["Pendidikan tertinggi", "Highest education"],
   ["Ijazah Sarjana Muda", "Bachelor's Degree"],
   ["Sarjana", "Master's Degree"],

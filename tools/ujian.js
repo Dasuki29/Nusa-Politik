@@ -1660,6 +1660,32 @@ ujian('v13.13: pendidikan: daftar, sambung Sarjana 24 bulan, tangguh, bonus lobi
   PD.prosesBulan(); p = S.loadPlayer(); betul(PD.getPendidikan(p).kehormat, 'Doktor Kehormat'); sama(PD.dr(p), false, 'tanpa Dr.');
   S.clearPlayer();
 });
+ujian('v13.15: Friends of BN (NPC): kuota, jemput berkempen, usul Majlis Tertinggi BN', () => {
+  const F = g.MyPolitikFBN;
+  P.daftar({}); let p = S.loadPlayer();
+  betul(F.adalahBN(p)); sama(F.kuota(p), 3); sama(F.ringkasKuota(p).parti.join(), 'KIMMA,Makkal Sakti,IPF');
+  sama(F.adalahBN({ parti: 'PBB' }), false, 'GPS bukan BN');
+  // jemput: perlu kerusi India >= 10% (data MIC) dan kempen aktif
+  const D = g.MyPolitikMICData || require('../js/mic-data.js'), kp = Object.keys(D.parlimen).find((k) => D.parlimen[k].i >= 15), kl = Object.keys(D.parlimen).find((k) => !D.parlimen[k].i);
+  P.tetap({ kod: Object.assign({}, p.kod, { parlimen: String(parseInt(kp.slice(2), 10)) }), ap: 5, pru: { aktif: { fasa: 'kempen', voterSupport: 40, hari: 3, log: [] } } });
+  p = S.loadPlayer(); let st = F.statusJemput(p); betul(st.tunjuk && st.boleh, JSON.stringify(st));
+  let r = F.jemput(); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(PRU.getPRU(p).aktif.voterSupport, 42); sama(p.ap, 4); sama(F.statusJemput(p).boleh, false, 'sekali setiap kempen');
+  P.tetap({ kod: Object.assign({}, p.kod, { parlimen: String(parseInt(kl.slice(2), 10)) }) }); sama(F.statusJemput(S.loadPlayer()).tunjuk, false, 'kerusi tanpa pengundi India');
+  // usul MT: bukan Presiden = NPC (25%)
+  P.tetap({ tahun: 2027, bulan: 1, pru: {} }); let ev = F.prosesBulan({ rng: () => 0.9 }).peristiwa;
+  sama(ev[0].jenis, 'fbn_tolak'); sama(F.getFBN(S.loadPlayer()).tahunMT, 2027); sama(F.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'sekali setahun');
+  // Presiden: usul menunggu, sokong (25% + 20% = 45%)
+  P.tetap({ tahun: 2028, bulan: 1, jawatan: 'Presiden', pru: { hubunganGabungan: 50 } }); ev = F.prosesBulan().peristiwa; sama(ev[0].jenis, 'fbn_usul'); betul(F.getFBN(S.loadPlayer()).menunggu);
+  r = F.undi('sokong', { rng: () => 0.4 }); betul(r.ok && r.terima, r.mesej); p = S.loadPlayer();
+  sama(PRU.getPRU(p).hubunganGabungan, 53); betul(F.getFBN(p).komponen); sama(F.kuota(p), 5); sama(F.getFBN(p).bonusIndia, 1);
+  // bonus India pada kempen
+  p.kod = Object.assign({}, p.kod, { parlimen: String(parseInt(kp.slice(2), 10)) });
+  const a = { voterSupport: 30 }; sama(F.bonusKempen(p, a), 1); sama(a.voterSupport, 31);
+  // tidak dijawab: berkecuali pada bulan berikut
+  P.tetap({ tahun: 2029, bulan: 1, fbn: { komponen: false, tahunMT: 0 } }); F.prosesBulan(); P.tetap({ bulan: 2 }); ev = F.prosesBulan({ rng: () => 0.9 }).peristiwa;
+  betul(ev.some((e) => e.jenis === 'fbn_tolak'), 'usul diselesaikan sebagai berkecuali'); sama(F.getFBN(S.loadPlayer()).menunggu, 0);
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

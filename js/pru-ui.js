@@ -90,7 +90,7 @@
     else if (ck.hariBaki <= 0) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="selesai">🗳️ Hari Mengundi: Lihat Keputusan</button>'; }
     else {
       if (ck.hariFinal) { h += '<div class="pru-final">🚨 War Room · Hari ' + (ck.hariSemasa + 1) + ' · Final Push dibuka (satu sehari, risiko berganda jika diulang)</div><div class="choice-list">' + ck.final.map(btnTindak).join('') + '</div><p class="note" style="margin:10px 0 4px">Tindakan biasa:</p>'; }
-      h += '<div class="choice-list">' + ck.biasa.map(btnTindak).join('') + '</div>';
+      h += '<div class="choice-list">' + ck.biasa.map(btnTindak).join('') + (W.MyPolitikFBNUI ? W.MyPolitikFBNUI.butangKempen(p) : '') + '</div>';   // v13.15: Friends of BN
     }
     if (a.log && a.log.length) { h += '<ul class="pru-log">' + a.log.slice(0, 4).map(function (l) { return '<li><b>Hari ' + l.hari + ':</b> ' + esc(l.teks) + '</li>'; }).join('') + '</ul>'; }
     h += kadPolling(ck.polling) + kadWarRoom(ck.warRoom, p);                   // v13.0: panel analisis selepas butang tindakan (mudah alih)
@@ -166,6 +166,7 @@
       tek = tek ? tek + ' · ' : '';
       h = '<div class="banner' + (bl <= 12 && bl >= 0 ? ' banner--gold' : '') + '"><strong>🗳️ ' + (r.jenisPBB === 'PRU' ? 'PRU' : r.jenisPBB === 'PRN' ? (SW(p.parti) ? 'PRN Sarawak' : 'PRN Sabah') : 'PRU/PRN') + ': ' + BULAN[(r.bulanPRU || 1) - 1] + ' ' + r.tahunPRU + '</strong>' + tek +
         (bl > 0 ? bl + ' bulan lagi' : 'Bila-bila masa') + ' · kawasan ' + r.ikonProfil + ' ' + esc(r.profilNama) + '. Kelayakan: DUN ' + (r.kelayakan.DUN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.DUN.ipMin + ' + jawatan)') + ', Parlimen ' + (r.kelayakan.PARLIMEN.boleh ? '✓' : '✗ (IP ' + r.kelayakan.PARLIMEN.ipMin + ' + Ketua Bahagian)') + '.</div>';
+      h += W.MyPolitikFBNUI ? W.MyPolitikFBNUI.notaKuota(p) : '';                     // v13.15: kuota Friends of BN
       return h;
     }
     if (a.fasa === 'kempen') { return kadKempen(p, PRU.keadaanKempen(p)); }
@@ -237,7 +238,7 @@
     try {
       if (jenis === 'pilihanraya') { return musim(p) ? kadPRK(p) + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p, 'pilihanraya') : '') + (PRU.getPRU(p).aktif ? kadPRU(p) : '') : '<div class="banner"><strong>Bukan musim pilihan raya</strong>Tab ini hanya aktif semasa PRU/PRN atau PRK.</div>'; }
       if (jenis === 'pemilihan') { return musim(p) ? bannerMusim(p) : kadPRU(p); }
-      return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
+      return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '') + (W.MyPolitikFBNUI ? W.MyPolitikFBNUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
     } catch (e) { return ''; }
   }
   function bannerNasional(p) {      // v7.22: keputusan nasional menunggu Presiden (cth. pemain memuat semula halaman)

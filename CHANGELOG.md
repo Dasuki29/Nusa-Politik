@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.15 (2026-10-30)
+
+- **Friends of BN sebagai NPC** (KIMMA, Makkal Sakti, IPF, MIUP), ikut mockup yang dipersetujui (`js/friends-bn.js`, `js/friends-bn-ui.js`). Parti rakan BN yang belum menjadi komponen penuh (berita Jan-Apr 2026); tidak boleh dimainkan dan tiada nama pemimpin sebenar. Logo daripada pengguna.
+  - Panel BN di menu utama: baris cip "Friends of BN (rakan, bukan komponen)" yang tidak boleh diklik.
+  - Rundingan kerusi PRU ⚠️: 3 kerusi Parlimen (5 jika diterima sebagai komponen), tidak pernah kerusi pemain; dipaparkan di tab Pemilihan. Kerusi yang dimenangi dikira dalam kerusi BN (kad Kerusi Parlimen).
+  - Kempen ⚠️: "Jemput Friends of BN berkempen" (calon BN, kerusi dengan pengundi India 10% ke atas): 1 AP, sokongan +2%, sekali setiap kempen.
+  - Majlis Tertinggi BN ⚠️: setiap Januari, Presiden parti komponen BN mengundi Sokong / Tolak / Berkecuali. Peluang diterima 25% asas, +20% jika menyokong, −15% jika menolak. Sokong: hubungan gabungan +3 dan sokongan pengundi India +1% pada PRU seterusnya; Tolak: hubungan gabungan −3. Tidak dijawab = berkecuali. Pemain bukan Presiden: berita sahaja.
+  - MIC: kuota kerusi tidak berubah; jika Friends of BN diterima, hubungan gabungan MIC −5 sekali ⚠️.
+- Terjemahan EN, ujian unit dan `tools/ujian-fbn.js` (pelayar). Cache `nusa-v13.15`.
+
 ## v13.14 (2026-10-30)
 
 - **Baiki (maklum balas pemain): kad Laluan Kerjaya (Sayap) di borang pendaftaran tidak bergaya.** Gaya kad sayap terpadam secara tidak sengaja dalam v13.0, jadi pilihan sayap kelihatan seperti senarai radio mentah yang bercampur. Gaya kad dipulihkan (grid 2 lajur di telefon, 4 di desktop), termasuk peraturan `[hidden]` untuk medan borang. Senarai sayap ikut parti tidak berubah (cth. PBB, MCA, PBRS: Utama, Pemuda, Wanita sahaja).

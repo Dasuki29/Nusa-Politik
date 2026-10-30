@@ -21,11 +21,13 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   const ralat = []; pg.on('pageerror', (e) => ralat.push(e.message));
   await pg.route('**/*', (rt) => { if (rt.request().url().startsWith(base)) { rt.continue(); } else { rt.abort(); } });
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
-  const nampak = () => pg.$$eval('.poster .poster__chip', (l) => l.filter((x) => x.offsetParent).map((x) => x.dataset.parti).join());
+  const nampak = () => pg.$$eval('.poster .poster__chip[data-parti]', (l) => l.filter((x) => x.offsetParent).map((x) => x.dataset.parti).join());
   semak(await nampak() === '', 'tiada cip parti sebelum gabungan dipilih');
   semak(await pg.$$eval('.gab__btn img', (l) => l.every((i) => i.complete && i.naturalWidth > 0)), 'logo BN dan GPS dimuat');
   await pg.click('[data-gab="BN"]'); await pg.waitForTimeout(200);
   semak(await nampak() === 'UMNO,MCA,MIC,PPP,PBRS', 'BN: 5 parti (' + await nampak() + ')');
+  semak(await pg.$$eval('#gab-bn .poster__chip--rakan', (l) => l.filter((x) => x.offsetParent).map((x) => x.textContent).join()) === 'KIMMA,Makkal Sakti,IPF,MIUP', 'v13.15: baris Friends of BN (NPC)');
+  semak(await pg.$$eval('#gab-bn .poster__chip--rakan img', (l) => l.length === 4 && l.every((i) => i.complete && i.naturalWidth > 0)), 'logo Friends of BN dimuat');
   semak(await pg.getAttribute('[data-gab="BN"]', 'aria-expanded') === 'true', 'aria-expanded BN');
   await pg.click('[data-gab="GPS"]'); await pg.waitForTimeout(200);
   semak(await nampak() === 'PBB,PRS,SUPP,PDP', 'GPS: PBB, PRS, SUPP, PDP (' + await nampak() + ')');

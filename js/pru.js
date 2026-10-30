@@ -575,6 +575,7 @@
     }
     if (a.kerusi2) { a.voterSupport = clamp(a.voterSupport - 3, 10, 70); a.jentera = clamp(a.jentera - 8, 25, 85); }   // v7.55: tumpuan terbahagi dua kerusi
     a.hari = 0; a.campaignDaysLeft = CONFIG.HARI; a.fasa = 'kempen';
+    var FBNm = modul('MyPolitikFBN', 'friends-bn.js'); if (FBNm && FBNm.bonusKempen) { FBNm.bonusKempen(p, a); }          // v13.15: sokongan India +1% (BN terima sokongan pemain)
     var n = CONFIG.KEJUTAN_BILANGAN[0] + Math.floor(r() * (CONFIG.KEJUTAN_BILANGAN[1] - CONFIG.KEJUTAN_BILANGAN[0] + 1)), hariSedia = [], h;
     for (h = 2; h <= CONFIG.HARI - CONFIG.HARI_FINAL - 1; h++) { hariSedia.push(h); }
     a.kejutanHari = {};
@@ -585,7 +586,7 @@
     var WRm = warRoom(); if (WRm) { WRm.mula(a, p); }                            // v12.8: zon & jentera lapangan
     var PLm = polling(); if (PLm) { PLm.mula(a); }                              // v12.7: atas pagar awal ikut profil, manifesto & jentera
     a.log = [{ hari: 0, teks: 'Kempen bermula. Peruntukan RM ' + dana.toLocaleString('ms-MY') + '; manifesto: ' + ids.map(function (x) { return janjiId(x).nama; }).join(', ') + '.' }];
-    var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
+    var res = simpanPRU(pru, { myr: -dana }, { pindahan: true, patch: p.fbn ? { fbn: p.fbn } : undefined, log: { tindakan: 'pru_kempen', nama: 'Kempen bermula (peruntukan RM ' + dana + ')', peringkat: 'ahli' } });   // v8.0: peruntukan = pindahan dana (tidak didarab pengali kesukaran)
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     return { ok: true, mesej: 'Kempen 14 hari bermula.' };
   }

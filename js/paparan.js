@@ -325,13 +325,15 @@
     }
     return o;
   }
+  /** v13.15: kerusi Friends of BN dalam kiraan BN (pemain BN sahaja). */
+  function fbnNota(p) { var F = root.MyPolitikFBN, n = F && F.kerusiMenang ? F.kerusiMenang(p) : 0; return n ? ' BN termasuk Friends of BN ' + n + ' kerusi.' : ''; }
   function htmlKerusi(p) {
     var k = p.kerusiNasional, r = kunciRekod(p);
     if (!k || !r) { return '<p class="pp-nota">Belum ada keputusan PRU. Anggaran kerusi muncul selepas pilihan raya pertama.</p>'; }
     var gabung = k.parti + k.rakan, pp = pecahPembangkang(p, k, k.pembangkang, k.kerajaan, 'parlimen');
     var np = { BN: gabung, PH: pp.PH, PN: pp.PN, LAIN: k.bebas }, seg = segGabungan(np, labelBN(p, false));
     var h = '<h4>Kerusi Parlimen <small>PRU ' + esc(k.tahun) + ' · anggaran</small></h4>' + bar(seg, CONFIG.MAJORITI) + legend(seg) +
-      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, labelBN(p, false)) + ' Garis putus = majoriti.</p>';
+      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, labelBN(p, false)) + fbnNota(p) + ' Garis putus = majoriti.</p>';
     if (k.dun) {
       var amb = Math.floor(k.dun.jumlah / 2) + 1, pd = pecahPembangkang(p, k, k.dun.pembangkang, k.dun.kerajaan >= amb, 'dun'), nd = { BN: k.dun.kerajaan, PH: pd.PH, PN: pd.PN, LAIN: k.dun.bebas }, jumDun = k.dun.jumlah;
       var SWp = SW(p.parti) ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN

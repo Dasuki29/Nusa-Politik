@@ -489,6 +489,8 @@
     if (DUNS && DUNS.prosesBulan) { peristiwa = peristiwa.concat(DUNS.prosesBulan().peristiwa || []); }
     var PRU = muat('MyPolitikPRU', 'pru.js');                                                   // v7.3: pengisytiharan PRU/PRN & penilaian manifesto
     if (PRU && PRU.prosesBulan) { peristiwa = peristiwa.concat(PRU.prosesBulan().peristiwa || []); }
+    var FBN = muat('MyPolitikFBN', 'friends-bn.js');                                            // v13.15: Friends of BN (usul Majlis Tertinggi BN)
+    if (FBN && FBN.prosesBulan) { peristiwa = peristiwa.concat(FBN.prosesBulan().peristiwa || []); }
     var PDK = muat('MyPolitikPendidikan', 'pendidikan.js');                                    // v13.13: pengajian separuh masa & Doktor Kehormat
     if (PDK && PDK.prosesBulan) { peristiwa = peristiwa.concat(PDK.prosesBulan().peristiwa || []); }
     var GLN = muat('MyPolitikGelaran', 'gelaran.js');                                           // v7.64: Anugerah & Gelaran Kurniaan

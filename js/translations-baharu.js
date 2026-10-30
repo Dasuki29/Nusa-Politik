@@ -3374,4 +3374,37 @@
   ["BN (pembangkang)", "BN (opposition)"],
   ["Perpaduan (pembangkang)", "Unity (opposition)"]
   ]);
+  /* v13.15: Friends of BN (NPC) */
+  T.tambah([
+  ["🤝 Friends of BN memohon menjadi komponen penuh", "🤝 Friends of BN apply to become full components"],
+  ["KIMMA, Makkal Sakti, IPF dan MIUP mahu diterima tanpa syarat. Pendirian parti anda dalam Majlis Tertinggi BN? Jika tidak dijawab bulan ini, parti anda dikira berkecuali.", "KIMMA, Makkal Sakti, IPF and MIUP want to be admitted unconditionally. What is your party's stance in the BN Supreme Council? If you do not answer this month, your party is counted as abstaining."],
+  ["👍 Sokong", "👍 Support"],
+  ["✋ Tolak", "✋ Reject"],
+  ["⚖️ Berkecuali", "⚖️ Abstain"],
+  ["Tiada kesan", "No effect"],
+  ["Hubungan gabungan +{a} · sokongan pengundi India +{b}% pada PRU seterusnya", "Coalition relations +{a} · Indian voter support +{b}% at the next general election"],
+  ["Hubungan gabungan −{a}", "Coalition relations −{a}"],
+  ["Peluang diterima: {a}% asas, +{b}% jika anda menyokong, −{c}% jika menolak.", "Chance of admission: {a}% base, +{b}% if you support, −{c}% if you reject."],
+  ["🤝 Jemput Friends of BN berkempen", "🤝 Invite Friends of BN to campaign"],
+  ["{a} AP · sokongan +{b}% · pengundi India {c}%", "{a} AP · support +{b}% · Indian voters {c}%"],
+  ["Sudah dijemput dalam kempen ini.", "Already invited in this campaign."],
+  ["AP tidak mencukupi.", "Not enough AP."],
+  ["🤝 Friends of BN: {n} kerusi Parlimen ({x}). Tidak melibatkan kerusi anda.", "🤝 Friends of BN: {n} parliamentary seats ({x}). Your seat is not affected."],
+  ["🤝 Friends of BN: {n} kerusi Parlimen ({x}) · kini komponen BN. Tidak melibatkan kerusi anda.", "🤝 Friends of BN: {n} parliamentary seats ({x}) · now BN components. Your seat is not affected."],
+  ["Friends of BN turun berkempen di kawasan anda. Sokongan +{n}%.", "Friends of BN campaign in your constituency. Support +{n}%."],
+  ["Friends of BN berkempen bersama anda: sokongan +{n}%.", "Friends of BN campaigned with you: support +{n}%."],
+  ["Jemput Friends of BN berkempen", "Invite Friends of BN to campaign"],
+  ["Majlis Tertinggi BN menerima KIMMA, Makkal Sakti, IPF dan MIUP sebagai parti komponen penuh. Kuota mereka naik kepada {n} kerusi Parlimen.", "The BN Supreme Council admits KIMMA, Makkal Sakti, IPF and MIUP as full component parties. Their quota rises to {n} parliamentary seats."],
+  ["MIC kini bersaing dengan komponen baharu dalam Majlis Tertinggi BN. Hubungan gabungan {n}.", "MIC now competes with new components in the BN Supreme Council. Coalition relations {n}."],
+  ["Majlis Tertinggi BN menangguhkan permohonan Friends of BN menjadi komponen penuh. Mereka kekal sebagai rakan BN.", "The BN Supreme Council defers the Friends of BN application for full component status. They remain BN partners."],
+  ["Majlis Tertinggi BN: Friends of BN memohon menjadi komponen penuh. Tentukan pendirian parti anda di tab Tindakan bulan ini.", "BN Supreme Council: Friends of BN apply to become full components. Decide your party's stance in the Actions tab this month."],
+  ["Tiada usul Friends of BN.", "No Friends of BN motion."],
+  ["Pilihan tidak sah.", "Invalid choice."],
+  ["{x} BN termasuk Friends of BN {n} kerusi.", "{x} BN includes {n} Friends of BN seats."],
+  ["BN termasuk Friends of BN {n} kerusi.", "BN includes {n} Friends of BN seats."],
+  ["(rakan, bukan komponen):", "(partners, not components):"],
+  ["Makkal Sakti", "Makkal Sakti"],
+  ["KIMMA", "KIMMA"],
+  ["MIUP", "MIUP"]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));
