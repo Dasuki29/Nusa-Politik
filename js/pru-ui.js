@@ -248,6 +248,7 @@
     var h = '', pru = PRU.getPRU(p), kb = KB ? KB.getKabinet(p) : null;
     PRU.semuaStatus(p).forEach(function (s) { h += '<span class="badge-office badge-office--menteri" title="Kerusi ' + esc(s.kerusi) + '">' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + '</span> '; });    // v7.55: dua jawatan wakil rakyat dipapar serentak
     if (kb && kb.hasGovernmentRole) { h += '<span class="badge-office badge-office--menteri">' + esc(kb.portfolioName) + '</span>'; }
+    if (W.MyPolitikSabahBN && W.MyPolitikSabahBN.adalah(p) && W.MyPolitikSabahBN.senatorAktif(p)) { h += ' <span class="badge-office badge-office--menteri">Senator</span>'; }   // v13.16: MIC Sabah
     return h;
   }
 

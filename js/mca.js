@@ -63,19 +63,29 @@
 
   /* ---------- Kawasan & kuota ---------- */
   function kodPL(p) { var k = p && p.kod && p.kod.parlimen; return k ? 'P.' + String(parseInt(k, 10)).padStart(3, '0') : null; }
-  function kawasan(p) {
+  function kawasanAsas(p) {
     var d = DATA(), kp = kodPL(p), pl = kp ? d.parlimen[kp] : null, dn = null;
     if (pl && p.kod && p.kod.dun && parseInt(p.kod.dun, 10) > 0) { var kd = pl.ng + '_N.' + String(parseInt(p.kod.dun, 10)).padStart(2, '0'); dn = d.dun[kd] ? Object.assign({ kod: kd }, d.dun[kd]) : null; }
     return { parlimen: pl ? Object.assign({ kod: kp }, pl) : null, dun: dn,
-      kuotaPL: !!(pl && pl.r <= CONFIG.KUOTA_PARLIMEN), kuotaDUN: !!(dn && dn.r <= CONFIG.KUOTA_DUN), bilBahagian: Object.keys(d.parlimen).length };
+      kuotaPL: !!(pl && pl.r <= CONFIG.KUOTA_PARLIMEN), kuotaDUN: !!(dn && dn.r <= CONFIG.KUOTA_DUN), bilBahagian: Object.keys(d.parlimen).length, sabah: !!(pl && pl.sb) };
   }
+  /** v13.16: MCA/MIC Sabah: kuota ikut Pemulihan Sabah (js/sabah-bn.js). */
+  function SBN() { var m = (typeof globalThis !== 'undefined' && globalThis.MyPolitikSabahBN) || null; if (!m) { try { m = require('./sabah-bn.js'); } catch (e) { m = null; } } return m; }
+  function kawasan(p) {
+    var k = kawasanAsas(p), B = k.sabah ? SBN() : null;
+    if (B) { var q = B.kuota(p); k.kuotaPL = q.pl; k.kuotaDUN = q.dun; k.kuotaSabah = q; }
+    return k;
+  }
+  function sebabKuotaSabah(p, jenis) { var B = SBN(); return B ? B.sebabKuota(p, jenis) : ''; }
+  function sebabKuota(p, jenis) { if (kawasanAsas(p).sabah && SBN()) { return sebabKuotaSabah(p, jenis); } return jenis === 'PARLIMEN' ? 'Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + CONFIG.KUOTA_PARLIMEN + ' kerusi)' : 'DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + CONFIG.KUOTA_DUN + ' kerusi)'; }
   /** Ofset kekuatan kerusi PRU (ANDAIAN): kerusi Cina sangat tinggi lebih sukar (lawan kuat), kerusi campuran lebih seimbang. */
   function ofset(p, jenis) {
+    if (kawasanAsas(p).sabah && SBN()) { return SBN().ofset(p); }          // v13.16
     var k = kawasan(p), c = jenis === 'DUN' ? (k.dun && k.dun.c) : (k.parlimen && k.parlimen.c);
     if (!c) { return 0; }
     return c >= 60 ? -6 : c >= 45 ? -3 : c >= 35 ? 0 : 2;
   }
-  function lawan(p, jenis) { var k = kawasan(p), c = jenis === 'DUN' ? (k.dun && k.dun.c) : (k.parlimen && k.parlimen.c); return c >= 40 ? ['DAP', 'PKR'] : ['PKR', 'DAP']; }
+  function lawan(p, jenis) { if (kawasanAsas(p).sabah && SBN()) { return SBN().lawan(); } var k = kawasan(p), c = jenis === 'DUN' ? (k.dun && k.dun.c) : (k.parlimen && k.parlimen.c); return c >= 40 ? ['DAP', 'PKR'] : ['PKR', 'DAP']; }
 
   /* ---------- Kitaran pemilihan (Perkara 167) ---------- */
   /** Senarai tahun pemilihan parti (tahun pertama 2026), dikira daripada tarikh PRU yang telah berlaku (p.pru.riwayat). */
@@ -280,7 +290,7 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, ofset: ofset, lawan: lawan, senaraiTahun: senaraiTahun, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
+  return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, senaraiTahun: senaraiTahun, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
     bulanKeahlian: bulanKeahlian, cukupKeahlian: cukupKeahlian, sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, statusJelajah: statusJelajah, jelajah: jelajah,
     adalahPresiden: adalahPresiden, lantikanSemasa: lantikanSemasa, dekat: dekat, statusMohon: statusMohon, mohon: mohon, statusLantikPresiden: statusLantikPresiden, lantikPresiden: lantikPresiden, rayuan: rayuan, prosesBulan: prosesBulan };
 });

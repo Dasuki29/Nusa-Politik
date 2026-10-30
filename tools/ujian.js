@@ -1301,8 +1301,8 @@ ujian('v12.9: Krisis tular: muncul bulanan, tiga tindak balas, tidak dijawab = d
 ujian('v13.1: MCA: data, kuota BN, kitaran pemilihan selepas PRU, takwim 4/6/8, Pusat oleh perwakilan Bahagian', () => {
   const M = g.MyPolitikMCA, E = g.MyPolitikElection, K = g.MyPolitikCalendar, D = g.MyPolitikData, J = g.MyPolitikJawatan, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mca-semenanjung.csv'), 'utf8')));
-  sama(h.jumlah.bahagian, 165, '165 Bahagian (semua Semenanjung)'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 50)), 'Cawangan minimum 50 ahli (Perkara 92)');
-  const bm = h.bahagian.find((b) => b.nama === 'Bukit Mertajam'), luar = h.bahagian.slice().sort((a, b) => M.kawasan({ kod: { parlimen: b.kod } }).parlimen.r - M.kawasan({ kod: { parlimen: a.kod } }).parlimen.r)[0];
+  sama(h.jumlah.bahagian, 172, '165 Bahagian Semenanjung + 7 Sabah (v13.16)'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 50)), 'Cawangan minimum 50 ahli (Perkara 92)');
+  const bm = h.bahagian.find((b) => b.nama === 'Bukit Mertajam'), luar = h.bahagian.filter((b) => !M.kawasan({ kod: { parlimen: b.kod } }).sabah).sort((a, b) => M.kawasan({ kod: { parlimen: b.kod } }).parlimen.r - M.kawasan({ kod: { parlimen: a.kod } }).parlimen.r)[0];
   S.savePlayer(S.buildPlayerProfile({ parti: 'MCA', nama: 'Tan Uji', demografik: D.tentukanDemografi('Perempuan', 30, 'MCA'), cawangan: bm.dun[0].cawangan[0], sayap: 'wanita', avatar: 'wanita', tahunAhli: 5 }));
   let p = S.loadPlayer(); sama(p.parti, 'MCA'); sama(p.sayap, 'wanita', 'perempuan muda masuk Wanita (tiada Puteri)');
   const kw = M.kawasan(p); betul(kw.kuotaPL && kw.kuotaDUN, 'Bukit Mertajam dalam kuota');
@@ -1313,7 +1313,7 @@ ujian('v13.1: MCA: data, kuota BN, kitaran pemilihan selepas PRU, takwim 4/6/8, 
   sama(K.getTetingkap('cawangan', 4).buka !== false, true); betul(/Bahagian/.test(JSON.stringify(K.getFasa(6))), 'bulan 6 musim Bahagian');
   sama(E.bilPemilih ? true : true, true);
   const kel = g.MyPolitikPRU.kelayakan(p); betul(!kel.PARLIMEN.sebab.some((x) => /kuota MCA/.test(x)), 'Parlimen dalam kuota');
-  const rp = M.ringkasPusat(p); sama(rp.bilBahagian, 165, '165 Bahagian dalam Pemilihan Pusat'); betul(rp.pengundi > 2000 && rp.pengundi < 165 * 30, 'perwakilan ikut saiz Bahagian (' + rp.pengundi + ')');
+  const rp = M.ringkasPusat(p); sama(rp.bilBahagian, 172, '172 Bahagian dalam Pemilihan Pusat'); betul(rp.pengundi > 2000 && rp.pengundi < 172 * 30, 'perwakilan ikut saiz Bahagian (' + rp.pengundi + ')');
   betul(M.perwakilan('P.049') > M.perwakilan('P.001'), 'Bahagian besar (Tanjong) lebih ramai wakil daripada Padang Besar');
   P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }], ap: 20, myr: 50000 });
   const kod = M.ringkasPusat(S.loadPlayer()).senarai[0].kod, sb0 = M.sokonganBahagian(S.loadPlayer())[kod];
@@ -1345,7 +1345,7 @@ ujian('v13.1: MCA: tidak hadir 3 mesyuarat, had Presiden 9 tahun, sumbangan waki
 ujian('v13.3: MIC: data, kuota BN, kitaran 3 tahun dari 2027, takwim 3/5/9, Puteri & Putera, syarat Pengerusi Cawangan', () => {
   const M = g.MyPolitikMIC, E = g.MyPolitikElection, K = g.MyPolitikCalendar, D = g.MyPolitikData, J = g.MyPolitikJawatan, SY = g.MyPolitikSayap, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mic-semenanjung.csv'), 'utf8')));
-  sama(h.jumlah.bahagian, 165, '165 Bahagian'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 60 && c.jumlahAhli <= 200)), 'Cawangan 60 hingga 200 ahli (Perkara 17.12)');
+  sama(h.jumlah.bahagian, 169, '165 Bahagian + 4 Sabah (v13.16)'); betul(h.bahagian.every((b) => b.cawangan.every((c) => c.jumlahAhli >= 60 && c.jumlahAhli <= 200)), 'Cawangan 60 hingga 200 ahli (Perkara 17.12)');
   betul(SY.kelayakan('L', 25, 'MIC').putera.boleh && !SY.kelayakan('L', 25, 'UMNO').putera.boleh && !SY.kelayakan('L', 32, 'MIC').putera.boleh, 'Putera: lelaki bawah 30, MIC sahaja');
   betul(SY.kelayakan('P', 25, 'MIC').puteri.boleh, 'MIC ada Puteri');
   const ib = h.bahagian.find((b) => b.nama === 'Ipoh Barat');
@@ -1364,7 +1364,7 @@ ujian('v13.3: MIC: data, kuota BN, kitaran 3 tahun dari 2027, takwim 3/5/9, Pute
   betul(/10 tahun/.test(J.semakKelayakan(S.loadPlayer(), pres).sebab), 'Presiden perlu 10 tahun keahlian');
   m = S.loadPlayer().mic; m.bulanKB = 101; P.tetap({ mic: m, jawatanList: S.loadPlayer().jawatanList.concat([{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2027 }]) });
   betul(/3 penggal/.test(J.semakKelayakan(S.loadPlayer(), kb).sebab || ''), 'had 3 penggal Pengerusi Bahagian (Perkara 34.4)');
-  const rp = M.ringkasPusat(S.loadPlayer()); sama(rp.pengundi, 6103 * 10 + 60, 'pengundi Presiden = 10 pegawai setiap Cawangan + CWC');
+  const rp = M.ringkasPusat(S.loadPlayer()); sama(rp.pengundi, 6128 * 10 + 60, 'pengundi Presiden = 10 pegawai setiap Cawangan + CWC');
   P.tetap({ ap: 20, myr: 50000 });
   const kod = M.ringkasPusat(S.loadPlayer()).senarai[0].kod, sb0 = M.sokonganBahagian(S.loadPlayer())[kod];
   const rj = M.jelajah(kod); betul(rj.ok, rj.ralat); sama(M.sokonganBahagian(S.loadPlayer())[kod], sb0 + M.CONFIG.PUSAT.jelajahNaik); sama(M.jelajah(kod).ok, false, 'sekali sebulan');
@@ -1684,6 +1684,39 @@ ujian('v13.15: Friends of BN (NPC): kuota, jemput berkempen, usul Majlis Terting
   // tidak dijawab: berkecuali pada bulan berikut
   P.tetap({ tahun: 2029, bulan: 1, fbn: { komponen: false, tahunMT: 0 } }); F.prosesBulan(); P.tetap({ bulan: 2 }); ev = F.prosesBulan({ rng: () => 0.9 }).peristiwa;
   betul(ev.some((e) => e.jenis === 'fbn_tolak'), 'usul diselesaikan sebagai berkecuali'); sama(F.getFBN(S.loadPlayer()).menunggu, 0);
+  S.clearPlayer();
+});
+ujian('v13.16: MCA & MIC Sabah: data, kuota ikut Pemulihan, ofset, tindakan, PRN dan Senator', () => {
+  const B = g.MyPolitikSabahBN, MC = g.MyPolitikMCA, MI = g.MyPolitikMIC, PR = g.MyPolitikPRU, D = g.MyPolitikData, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mca-semenanjung.csv'), 'utf8')));
+  const sb = h.bahagian.filter((x) => /Sabah/i.test(x.negeri || '') || ['Kota Kinabalu', 'Sepanggar', 'Batu Sapi', 'Kudat', 'Penampang', 'Sandakan', 'Lahad Datu'].indexOf(x.nama) >= 0);
+  sama(sb.length, 7, '7 Bahagian MCA Sabah');
+  const bLikas = sb.find((x) => x.nama === 'Kota Kinabalu'), dLikas = bLikas.dun.find((d) => /Likas/i.test(d.nama));
+  const dem = D.tentukanDemografi('Lelaki', 40, 'MCA');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'MCA', nama: 'Lim Sabah', demografik: dem, cawangan: dLikas.cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 5 }));
+  let p = S.loadPlayer(); betul(B.adalah(p), 'pemain MCA Sabah ' + p.negeri);
+  let k = MC.kawasan(p); betul(k.sabah && k.kuotaDUN && !k.kuotaPL, 'Likas dalam kuota DUN (Pemulihan 20), tiada Parlimen');
+  sama(B.kuota(p).bilDUN, 2); sama(MC.ofset(p, 'DUN'), -12); sama(MC.lawan(p, 'DUN')[0], 'Warisan');
+  betul(/Pemulihan Sabah mencapai 70/.test(MC.sebabKuota(p, 'PARLIMEN')));
+  sama(PR.getPRU(p).jenisPBB, 'PRN', 'ikut jadual PRN Sabah');
+  P.tetap({ sbn: { pemulihan: 72 } }); p = S.loadPlayer(); k = MC.kawasan(p); betul(k.kuotaPL, 'Pemulihan 72: 1 kerusi Parlimen'); sama(B.kuota(p).bilDUN, 4); sama(MC.ofset(p, 'DUN'), -7);
+  // tindakan
+  P.tetap({ sbn: { pemulihan: 20 }, ap: 10, myr: 20000 }); let r = B.khidmat(); betul(r.ok, r.ralat); sama(B.getSBN(S.loadPlayer()).pemulihan, 25); sama(B.khidmat().ok, false, 'sekali sebulan');
+  betul(!B.jentera().ok, 'jentera hanya musim PRN');
+  P.tetap({ tahun: 2030, bulan: 7 }); r = B.jentera(); betul(r.ok, r.ralat); sama(B.getSBN(S.loadPlayer()).pemulihan, 31);
+  // susut dan PRN
+  B.prosesBulan(); sama(B.getSBN(S.loadPlayer()).pemulihan, 30, 'susut 1');
+  const pru = PR.getPRU(S.loadPlayer()); pru.riwayat = [{ tahun: 2030, bulan: 11, jenis: 'PRN' }]; pru.sejarah = [{ jenis: 'DUN', kerusi: 'Likas', hasil: 'kalah', tahun: 2030, bulan: 11 }];
+  P.tetap({ pru: pru, tahun: 2030, bulan: 12 }); let ev = B.prosesBulan().peristiwa; sama(B.getSBN(S.loadPlayer()).pemulihan, 19, 'kalah PRN -10 (selepas susut)'); betul(ev.some((e) => e.jenis === 'sbn_prn'));
+  // MIC Sabah: tiada kuota, Senator
+  const hm = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'mic-semenanjung.csv'), 'utf8')));
+  const tawau = hm.bahagian.find((x) => x.nama === 'Tawau'); sama(['Kota Kinabalu', 'Sandakan', 'Lahad Datu', 'Tawau'].reduce((n, nm) => n + hm.bahagian.find((x) => x.nama === nm).dun.reduce((m, d) => m + d.cawangan.length, 0), 0), 25, '25 cawangan MIC Sabah');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'MIC', nama: 'Raj Sabah', demografik: D.tentukanDemografi('Lelaki', 40, 'MIC'), cawangan: tawau.dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 5 }));
+  p = S.loadPlayer(); k = MI.kawasan(p); betul(B.adalah(p) && k.sabah && !k.kuotaPL && !k.kuotaDUN, 'MIC Sabah tiada kuota'); betul(/MIC Sabah/.test(MI.sebabKuota(p, 'DUN')));
+  const pr2 = PR.getPRU(p); pr2.riwayat = [{ tahun: 2030, bulan: 11, jenis: 'PRN' }];
+  P.tetap({ pru: pr2, tahun: 2030, bulan: 12, sbn: { pemulihan: 70 }, jawatan: 'Ketua Bahagian', jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2026 }] });
+  const ip0 = S.loadPlayer().ip; ev = B.prosesBulan({ rng: () => 0.1 }).peristiwa; p = S.loadPlayer();
+  betul(ev.some((e) => e.jenis === 'sbn_senator') && B.senatorAktif(p), 'dilantik Senator'); betul(p.ip >= ip0 + 10, 'IP Senator');
   S.clearPlayer();
 });
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {

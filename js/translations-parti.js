@@ -9,6 +9,10 @@
   var T = typeof window !== 'undefined' ? window.MyPolitikTranslations : (typeof globalThis !== 'undefined' ? globalThis.MyPolitikTranslations : null);
   if (!T || !T.tambah) { return; }
   T.tambah([
+  ["Data MCA Semenanjung dan Sabah ({x}). Bilangan ahli ialah anggaran permainan.", "MCA Peninsula and Sabah data ({x}). Member numbers are game estimates."],
+  ["Data MIC Semenanjung dan Sabah ({x}). Bilangan ahli ialah anggaran permainan.", "MIC Peninsula and Sabah data ({x}). Member numbers are game estimates."],
+  ["MCA Sabah: kedudukan MCA lemah di Sabah selepas 2018 (kalah semua kerusi yang ditandingi pada PRN 2020 dan 2025). Anda bermula dengan Pemulihan Sabah yang rendah; kuota BN 2 hingga 4 kerusi DUN ikut Pemulihan. Ikut jadual PRN Sabah.", "MCA Sabah: MCA has been weak in Sabah since 2018 (it lost every seat it contested in the 2020 and 2025 state elections). You start with low Sabah Recovery; the BN quota is 2 to 4 state seats depending on Recovery. Follows the Sabah state election schedule."],
+  ["MIC Sabah: 25 cawangan di bandar Sabah dan tiada kuota kerusi (pengundi India kecil). Bantu calon BN, bina Pemulihan Sabah dan berpeluang dilantik Senator. Ikut jadual PRN Sabah.", "MIC Sabah: 25 branches in Sabah's towns and no seat quota (few Indian voters). Help BN candidates, build Sabah Recovery and you may be appointed a Senator. Follows the Sabah state election schedule."],
   ["(rakan, bukan komponen):", "(partners, not components):"],
   ["Makkal Sakti", "Makkal Sakti"],
   ["Pendidikan tertinggi", "Highest education"],

@@ -26,8 +26,8 @@
       h += '<h3 class="mca-h">Kawasan &amp; kuota BN</h3>';
       if (k.parlimen) {
         h += kv('Bahagian ' + esc(k.parlimen.n), 'Pengundi Cina ' + k.parlimen.c + '% · kedudukan ' + k.parlimen.r + '/' + k.bilBahagian) +
-          kv('Kerusi Parlimen', k.kuotaPL ? '✅ dalam kuota MCA (' + C.KUOTA_PARLIMEN + ')' : '⛔ di luar kuota MCA (' + C.KUOTA_PARLIMEN + ')') +
-          kv('Kerusi DUN', k.dun ? esc(k.dun.n) + ' · ' + (k.kuotaDUN ? '✅ dalam kuota (' + C.KUOTA_DUN + ')' : '⛔ di luar kuota (' + C.KUOTA_DUN + ')') : 'Tiada DUN');
+          kv('Kerusi Parlimen', k.sabah ? (k.kuotaPL ? '✅ dalam kuota MCA Sabah' : '⛔ di luar kuota MCA Sabah') : k.kuotaPL ? '✅ dalam kuota MCA (' + C.KUOTA_PARLIMEN + ')' : '⛔ di luar kuota MCA (' + C.KUOTA_PARLIMEN + ')') +
+          kv('Kerusi DUN', k.dun ? esc(k.dun.n) + ' · ' + (k.sabah ? (k.kuotaDUN ? '✅ dalam kuota MCA Sabah' : '⛔ di luar kuota MCA Sabah') : k.kuotaDUN ? '✅ dalam kuota (' + C.KUOTA_DUN + ')' : '⛔ di luar kuota (' + C.KUOTA_DUN + ')') : 'Tiada DUN');
       }
       var seterus = M.tahunSeterusnya(p, p.tahun), kini = M.adalahTahunPemilihan(p, p.tahun);
       h += kv('Pemilihan parti', kini ? '🗳️ Tahun ini (' + p.tahun + ')' : 'Seterusnya ' + seterus + ' (selepas PRU; Perkara 167)');

@@ -7,6 +7,8 @@
    ANDAIAN (mockup MIC v13, dipersetujui): kawasan operasi = semua 165 kawasan Parlimen Semenanjung. Kedudukan kuota kerusi BN
    mengikut peratus India (tertinggi = 1). Bilangan ahli setiap Cawangan ialah anggaran permainan:
    pemilih DM x peratus India kawasan x 8%, minimum 60 dan maksimum 200 (Perkara 17.12).
+   v13.16 (mockup MCA & MIC Sabah, dipersetujui): MIC Sabah = 25 Cawangan (andaian) di 4 kawasan Parlimen bandar Sabah
+   (Kota Kinabalu, Sandakan, Lahad Datu, Tawau); DM dengan pemilih terbanyak. sb = 1, r = 900+ (tiada kuota kerusi).
    Guna: node tools/build-mic.js   (kemudian node tools/bina-data-lokal.js untuk salinan data/js)
    ========================================================================== */
 'use strict';
@@ -23,15 +25,22 @@ pl.forEach((x, i) => { kawasan.parlimen[x.kod] = { n: x.nama, i: x.india, c: x.c
 const namaDun = {}; dun.fitur.forEach((f) => { namaDun[f.id] = f.nama; });
 const duns = Object.values(demo.dun).filter((d) => kawasan.parlimen[d.parlimen]).sort((a, b) => b.india - a.india || a.kod.localeCompare(b.kod));
 duns.forEach((d, i) => { kawasan.dun[d.kod] = { n: d.nama, i: d.india, c: d.cina, r: i + 1, p: d.parlimen }; });
+const SABAH_PL = ['P.172', 'P.186', 'P.188', 'P.190'], SABAH_CAW = { 'P.172': 7, 'P.186': 6, 'P.188': 6, 'P.190': 6 };
+const plSabah = SABAH_PL.map((k) => Object.values(demo.parlimen).find((x) => x.kod === k)).filter(Boolean);
+plSabah.forEach((x, i) => { kawasan.parlimen[x.kod] = { n: x.nama, i: x.india, c: x.cina, r: 900 + i, ng: String(x.negeri), b: 0, sb: 1 }; });
+Object.values(demo.dun).filter((d) => SABAH_PL.indexOf(d.parlimen) >= 0).sort((a, b) => a.kod.localeCompare(b.kod)).forEach((d, i) => {
+  kawasan.dun[d.kod] = { n: d.nama, i: d.india, c: d.cina, r: 900 + i, p: d.parlimen, sb: 1 };
+});
 
 const dmCache = {};
 function dmNegeri(ng) { if (!dmCache[ng]) { dmCache[ng] = rd('data/dm-' + ng + '.json'); } return dmCache[ng]; }
 const baris = ['ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan,Bawah 40,Atas 40'];
 const q = (s) => '"' + String(s || '').replace(/"/g, '""') + '"';
 let bil = 0;
-pl.slice().sort((a, b) => a.kod.localeCompare(b.kod)).forEach((x) => {
+pl.concat(plSabah).sort((a, b) => a.kod.localeCompare(b.kod)).forEach((x) => {
   const no = parseInt(x.kod.replace('P.', ''), 10), kodP = String(no).padStart(3, '0'), j = dmNegeri(String(x.negeri)), dmd = j.demografi || {};
-  const dms = j.fitur.filter((f) => f.parlimen === x.kod), kumpulan = {};
+  let dms = j.fitur.filter((f) => f.parlimen === x.kod); const kumpulan = {};
+  if (SABAH_CAW[x.kod]) { dms = dms.slice().sort((a, b) => ((dmd[b.id] && dmd[b.id].pemilih) || 0) - ((dmd[a.id] && dmd[a.id].pemilih) || 0) || a.id.localeCompare(b.id)).slice(0, SABAH_CAW[x.kod]); }
   dms.forEach((f) => { const k = f.dun || '_'; (kumpulan[k] = kumpulan[k] || []).push(f); });
   Object.keys(kumpulan).sort().forEach((kd) => {
     const noD = kd === '_' ? 0 : parseInt(kd.split('_N.')[1], 10), kodD = String(noD).padStart(3, '0');

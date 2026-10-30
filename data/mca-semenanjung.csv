@@ -6102,3 +6102,181 @@ ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan
 165/056/014,Johor,"Tanjung Piai","Kukup","Sungai Durian",50,26,24,15,35
 165/056/015,Johor,"Tanjung Piai","Kukup","Serkat",50,26,24,15,35
 165/056/016,Johor,"Tanjung Piai","Kukup","Andek Mori",50,26,24,15,35
+167/001/001,Sabah,"Kudat","Banggi","Limbuak",50,26,24,15,35
+167/001/002,Sabah,"Kudat","Banggi","Kapitangan",50,26,24,15,35
+167/001/003,Sabah,"Kudat","Banggi","Sabur",50,26,24,15,35
+167/001/004,Sabah,"Kudat","Banggi","Karakit",50,26,24,15,35
+167/001/005,Sabah,"Kudat","Banggi","Malawali",50,26,24,15,35
+167/001/006,Sabah,"Kudat","Banggi","Balambangan",50,26,24,15,35
+167/001/007,Sabah,"Kudat","Banggi","Maliu",50,26,24,15,35
+167/001/008,Sabah,"Kudat","Banggi","Dagotan",50,26,24,15,35
+167/001/009,Sabah,"Kudat","Banggi","Lok Agong",50,26,24,15,35
+167/001/010,Sabah,"Kudat","Banggi","Sebogoh",50,26,24,15,35
+167/001/011,Sabah,"Kudat","Banggi","Loktohog",50,26,24,15,35
+167/001/012,Sabah,"Kudat","Banggi","Laksian",50,26,24,15,35
+167/001/013,Sabah,"Kudat","Banggi","Palak",50,26,24,15,35
+167/001/014,Sabah,"Kudat","Banggi","Tigabu",50,26,24,15,35
+167/002/001,Sabah,"Kudat","Bengkoka","Mengkubau",50,26,24,15,35
+167/002/002,Sabah,"Kudat","Bengkoka","Tanjung Piring",50,26,24,15,35
+167/002/003,Sabah,"Kudat","Bengkoka","Mangkapon",50,26,24,15,35
+167/002/004,Sabah,"Kudat","Bengkoka","Kanibongan",50,26,24,15,35
+167/002/005,Sabah,"Kudat","Bengkoka","Pantai",50,26,24,15,35
+167/002/006,Sabah,"Kudat","Bengkoka","Kebatasan",50,26,24,15,35
+167/002/007,Sabah,"Kudat","Bengkoka","Penapak",50,26,24,15,35
+167/002/008,Sabah,"Kudat","Bengkoka","Dandun",50,26,24,15,35
+167/002/009,Sabah,"Kudat","Bengkoka","Senaja",50,26,24,15,35
+167/002/010,Sabah,"Kudat","Bengkoka","Pandan",50,26,24,15,35
+167/003/001,Sabah,"Kudat","Pitas","Telaga",50,26,24,15,35
+167/003/002,Sabah,"Kudat","Pitas","Kalumpang",50,26,24,15,35
+167/003/003,Sabah,"Kudat","Pitas","Salimpodon",50,26,24,15,35
+167/003/004,Sabah,"Kudat","Pitas","Pitas",50,26,24,15,35
+167/003/005,Sabah,"Kudat","Pitas","Liu",50,26,24,15,35
+167/003/006,Sabah,"Kudat","Pitas","Malubang",50,26,24,15,35
+167/003/007,Sabah,"Kudat","Pitas","Rosob",50,26,24,15,35
+167/003/008,Sabah,"Kudat","Pitas","Pinggan-Pinggan",50,26,24,15,35
+167/003/009,Sabah,"Kudat","Pitas","Sungai Eloi",50,26,24,15,35
+167/003/010,Sabah,"Kudat","Pitas","Sanitan",50,26,24,15,35
+167/004/001,Sabah,"Kudat","Tanjong Kapor","Tiga Papan",50,26,24,15,35
+167/004/002,Sabah,"Kudat","Tanjong Kapor","Suangpai",50,26,24,15,35
+167/004/003,Sabah,"Kudat","Tanjong Kapor","Pengaraban",50,26,24,15,35
+167/004/004,Sabah,"Kudat","Tanjong Kapor","Tanjung Kapor",50,26,24,15,35
+167/004/005,Sabah,"Kudat","Tanjong Kapor","Pakka",50,26,24,15,35
+167/004/006,Sabah,"Kudat","Tanjong Kapor","Bangau",50,26,24,15,35
+167/004/007,Sabah,"Kudat","Tanjong Kapor","Tamalang",50,26,24,15,35
+167/004/008,Sabah,"Kudat","Tanjong Kapor","Dampirit",50,26,24,15,35
+167/004/009,Sabah,"Kudat","Tanjong Kapor","Kudat Bandar",50,26,24,15,35
+167/004/010,Sabah,"Kudat","Tanjong Kapor","Milau",50,26,24,15,35
+167/004/011,Sabah,"Kudat","Tanjong Kapor","Landong Ayang",50,26,24,15,35
+167/004/012,Sabah,"Kudat","Tanjong Kapor","Loro",50,26,24,15,35
+167/004/013,Sabah,"Kudat","Tanjong Kapor","Tajau",50,26,24,15,35
+167/004/014,Sabah,"Kudat","Tanjong Kapor","Limau-Limauan",50,26,24,15,35
+167/004/015,Sabah,"Kudat","Tanjong Kapor","Pantai Bahagia",50,26,24,15,35
+171/016/001,Sabah,"Sepanggar","Karambunai","Karambunai",59,30,29,18,41
+171/016/002,Sabah,"Sepanggar","Karambunai","Gudon",50,26,24,15,35
+171/016/003,Sabah,"Sepanggar","Karambunai","Taman Indah Permai",106,54,52,32,74
+171/016/004,Sabah,"Sepanggar","Karambunai","Kibagu",51,26,25,15,36
+171/016/005,Sabah,"Sepanggar","Karambunai","Telipok Laut",50,26,24,15,35
+171/016/006,Sabah,"Sepanggar","Karambunai","Telipok Darat",64,33,31,19,45
+171/016/007,Sabah,"Sepanggar","Karambunai","Pulau Sepanggar",50,26,24,15,35
+171/017/001,Sabah,"Sepanggar","Darau","Likas Baru",51,26,25,15,36
+171/017/002,Sabah,"Sepanggar","Darau","Likas Darat",50,26,24,15,35
+171/017/003,Sabah,"Sepanggar","Darau","Kampong Likas",50,26,24,15,35
+171/017/004,Sabah,"Sepanggar","Darau","Bangka-Bangka",50,26,24,15,35
+171/017/005,Sabah,"Sepanggar","Darau","Kurol Melangi",50,26,24,15,35
+171/017/006,Sabah,"Sepanggar","Darau","Darau",50,26,24,15,35
+171/017/007,Sabah,"Sepanggar","Darau","Warisan",61,31,30,18,43
+171/017/008,Sabah,"Sepanggar","Darau","Rampayan",50,26,24,15,35
+171/018/001,Sabah,"Sepanggar","Inanam","Inanam Laut",50,26,24,15,35
+171/018/002,Sabah,"Sepanggar","Inanam","Tobobon",56,29,27,17,39
+171/018/003,Sabah,"Sepanggar","Inanam","Kokol",50,26,24,15,35
+171/018/004,Sabah,"Sepanggar","Inanam","Menggatal",50,26,24,15,35
+171/018/005,Sabah,"Sepanggar","Inanam","Pulutan",50,26,24,15,35
+171/018/006,Sabah,"Sepanggar","Inanam","Inanam Darat",53,27,26,16,37
+171/018/007,Sabah,"Sepanggar","Inanam","Poring-Poring",50,26,24,15,35
+171/018/008,Sabah,"Sepanggar","Inanam","Kolam Ayer",50,26,24,15,35
+171/018/009,Sabah,"Sepanggar","Inanam","Cenderakasih",62,32,30,19,43
+171/018/010,Sabah,"Sepanggar","Inanam","Pekan Inanam",53,27,26,16,37
+171/018/011,Sabah,"Sepanggar","Inanam","Bantayan",50,26,24,15,35
+172/019/001,Sabah,"Kota Kinabalu","Likas","Bandar Utara",50,26,24,15,35
+172/019/002,Sabah,"Kota Kinabalu","Likas","Bandar Selatan",50,26,24,15,35
+172/019/003,Sabah,"Kota Kinabalu","Likas","Likas Barat",65,33,32,20,45
+172/019/004,Sabah,"Kota Kinabalu","Likas","Likas",65,33,32,20,45
+172/019/005,Sabah,"Kota Kinabalu","Likas","Likas Tengah",50,26,24,15,35
+172/019/006,Sabah,"Kota Kinabalu","Likas","Likas Selatan",50,26,24,15,35
+172/019/007,Sabah,"Kota Kinabalu","Likas","Likas Park",75,38,37,23,52
+172/019/008,Sabah,"Kota Kinabalu","Likas","Dah Yeh Villa",130,66,64,39,91
+172/020/001,Sabah,"Kota Kinabalu","Api-Api","Kampong Ayer",100,51,49,30,70
+172/020/002,Sabah,"Kota Kinabalu","Api-Api","Jalan Istana",52,27,25,16,36
+172/020/003,Sabah,"Kota Kinabalu","Api-Api","Jalan Kebajikan",89,45,44,27,62
+172/020/004,Sabah,"Kota Kinabalu","Api-Api","Sunny Garden",98,50,48,29,69
+172/020/005,Sabah,"Kota Kinabalu","Api-Api","Jalan Bandaran",112,57,55,34,78
+172/021/001,Sabah,"Kota Kinabalu","Luyang","Jalan Rumah Sakit",69,35,34,21,48
+172/021/002,Sabah,"Kota Kinabalu","Luyang","Luyang",74,38,36,22,52
+172/021/003,Sabah,"Kota Kinabalu","Luyang","Foh Sang",160,82,78,48,112
+172/021/004,Sabah,"Kota Kinabalu","Luyang","Jindo",95,48,47,29,66
+172/021/005,Sabah,"Kota Kinabalu","Luyang","Bukit Padang",85,43,42,26,59
+172/021/006,Sabah,"Kota Kinabalu","Luyang","Kepayan Ridge",122,62,60,37,85
+172/021/007,Sabah,"Kota Kinabalu","Luyang","Taman Fu Yun",92,47,45,28,64
+172/021/008,Sabah,"Kota Kinabalu","Luyang","Jalan Penampang",50,26,24,15,35
+172/021/009,Sabah,"Kota Kinabalu","Luyang","Lido",159,81,78,48,111
+174/025/001,Sabah,"Penampang","Kapayan","Kapayan Barat",50,26,24,15,35
+174/025/002,Sabah,"Penampang","Kapayan","Kapayan",158,81,77,47,111
+174/025/003,Sabah,"Penampang","Kapayan","Kapayan Timor",137,70,67,41,96
+174/025/004,Sabah,"Penampang","Kapayan","Kobusak",138,70,68,41,97
+174/025/005,Sabah,"Penampang","Kapayan","Nosob",204,104,100,61,143
+174/025/006,Sabah,"Penampang","Kapayan","Donggongon",100,51,49,30,70
+174/025/007,Sabah,"Penampang","Kapayan","Hungab",83,42,41,25,58
+174/026/001,Sabah,"Penampang","Moyog","Buit",50,26,24,15,35
+174/026/002,Sabah,"Penampang","Moyog","Guunsing",50,26,24,15,35
+174/026/003,Sabah,"Penampang","Moyog","Penampang Utara",88,45,43,26,62
+174/026/004,Sabah,"Penampang","Moyog","Nambazan",50,26,24,15,35
+174/026/005,Sabah,"Penampang","Moyog","Kurai",50,26,24,15,35
+174/026/006,Sabah,"Penampang","Moyog","Limbanak",71,36,35,21,50
+174/026/007,Sabah,"Penampang","Moyog","Terian",50,26,24,15,35
+174/026/008,Sabah,"Penampang","Moyog","Moyog",50,26,24,15,35
+174/026/009,Sabah,"Penampang","Moyog","Inobong",113,58,55,34,79
+174/026/010,Sabah,"Penampang","Moyog","Tanaki",50,26,24,15,35
+174/026/011,Sabah,"Penampang","Moyog","Buayan",50,26,24,15,35
+174/026/012,Sabah,"Penampang","Moyog","Longkogungan",50,26,24,15,35
+174/026/013,Sabah,"Penampang","Moyog","Babagon",50,26,24,15,35
+185/053/001,Sabah,"Batu Sapi","Sekong","Jalan Sibuga",164,84,80,49,115
+185/053/002,Sabah,"Batu Sapi","Sekong","Kampung Gas",67,34,33,20,47
+185/053/003,Sabah,"Batu Sapi","Sekong","Jalan Batu Sapi",64,33,31,19,45
+185/053/004,Sabah,"Batu Sapi","Sekong","Tronglit",50,26,24,15,35
+185/053/005,Sabah,"Batu Sapi","Sekong","Sekong",50,26,24,15,35
+185/053/006,Sabah,"Batu Sapi","Sekong","Lupak Meluas",85,43,42,26,59
+185/053/007,Sabah,"Batu Sapi","Sekong","Pulau Sanghai",50,26,24,15,35
+185/054/001,Sabah,"Batu Sapi","Karamunting","Cecily",50,26,24,15,35
+185/054/002,Sabah,"Batu Sapi","Karamunting","Tanah Merah",50,26,24,15,35
+185/054/003,Sabah,"Batu Sapi","Karamunting","Jalan Leila",50,26,24,15,35
+185/054/004,Sabah,"Batu Sapi","Karamunting","Kampung Gelam",50,26,24,15,35
+185/054/005,Sabah,"Batu Sapi","Karamunting","Karamunting",82,42,40,25,57
+185/054/006,Sabah,"Batu Sapi","Karamunting","Bokara",56,29,27,17,39
+186/055/001,Sabah,"Sandakan","Elopura","Taman Indah Jaya",181,92,89,54,127
+186/055/002,Sabah,"Sandakan","Elopura","Beatrice",50,26,24,15,35
+186/055/003,Sabah,"Sandakan","Elopura","Batu 1 Jalan Utara",50,26,24,15,35
+186/055/004,Sabah,"Sandakan","Elopura","Batu 2 Jalan Utara",69,35,34,21,48
+186/055/005,Sabah,"Sandakan","Elopura","Trig Hill",50,26,24,15,35
+186/055/006,Sabah,"Sandakan","Elopura","Jalan Utara",94,48,46,28,66
+186/055/007,Sabah,"Sandakan","Elopura","Pecky Valley",50,26,24,15,35
+186/055/008,Sabah,"Sandakan","Elopura","Sungai Anip",54,28,26,16,38
+186/055/009,Sabah,"Sandakan","Elopura","Batu 3 Jalan Utara",61,31,30,18,43
+186/055/010,Sabah,"Sandakan","Elopura","Batu 5 Jalan Utara",53,27,26,16,37
+186/056/001,Sabah,"Sandakan","Tanjong Papat","Happy Valley",50,26,24,15,35
+186/056/002,Sabah,"Sandakan","Tanjong Papat","Sandakan Pekan",56,29,27,17,39
+186/056/003,Sabah,"Sandakan","Tanjong Papat","Cathay",50,26,24,15,35
+186/056/004,Sabah,"Sandakan","Tanjong Papat","Pasar",50,26,24,15,35
+186/056/005,Sabah,"Sandakan","Tanjong Papat","Sim-Sim",86,44,42,26,60
+186/056/006,Sabah,"Sandakan","Tanjong Papat","Pulau Berhala",77,39,38,23,54
+186/056/007,Sabah,"Sandakan","Tanjong Papat","Jalan Dua",50,26,24,15,35
+188/060/001,Sabah,"Lahad Datu","Tungku","Segangan",50,26,24,15,35
+188/060/002,Sabah,"Lahad Datu","Tungku","Silabukan",50,26,24,15,35
+188/060/003,Sabah,"Lahad Datu","Tungku","Ulu Tungku",50,26,24,15,35
+188/060/004,Sabah,"Lahad Datu","Tungku","Tungku",50,26,24,15,35
+188/060/005,Sabah,"Lahad Datu","Tungku","FELDA Sahabat",50,26,24,15,35
+188/060/006,Sabah,"Lahad Datu","Tungku","Tambisan",50,26,24,15,35
+188/060/007,Sabah,"Lahad Datu","Tungku","Tanjung Labian",50,26,24,15,35
+188/061/001,Sabah,"Lahad Datu","Segama","Belacon",50,26,24,15,35
+188/061/002,Sabah,"Lahad Datu","Segama","Dam Road",50,26,24,15,35
+188/061/003,Sabah,"Lahad Datu","Segama","North Road",50,26,24,15,35
+188/061/004,Sabah,"Lahad Datu","Segama","Tengah Nipah",50,26,24,15,35
+188/061/005,Sabah,"Lahad Datu","Segama","Ulu Segama",50,26,24,15,35
+188/061/006,Sabah,"Lahad Datu","Segama","Segama",50,26,24,15,35
+188/061/007,Sabah,"Lahad Datu","Segama","Tabanac",50,26,24,15,35
+188/061/008,Sabah,"Lahad Datu","Segama","Singgahmata",50,26,24,15,35
+188/061/009,Sabah,"Lahad Datu","Segama","Jalan Segama",50,26,24,15,35
+188/062/001,Sabah,"Lahad Datu","Silam","Sepagaya",50,26,24,15,35
+188/062/002,Sabah,"Lahad Datu","Silam","Sakar",50,26,24,15,35
+188/062/003,Sabah,"Lahad Datu","Silam","Bandar Lahad Datu",50,26,24,15,35
+188/062/004,Sabah,"Lahad Datu","Silam","Lapangan Terbang",50,26,24,15,35
+188/062/005,Sabah,"Lahad Datu","Silam","Panji Baru",50,26,24,15,35
+188/062/006,Sabah,"Lahad Datu","Silam","Taman Fajar",50,26,24,15,35
+188/062/007,Sabah,"Lahad Datu","Silam","Silam",50,26,24,15,35
+188/063/001,Sabah,"Lahad Datu","Kunak","Mostyn",50,26,24,15,35
+188/063/002,Sabah,"Lahad Datu","Kunak","Madai",50,26,24,15,35
+188/063/003,Sabah,"Lahad Datu","Kunak","Kampung Kunak",50,26,24,15,35
+188/063/004,Sabah,"Lahad Datu","Kunak","Giram",50,26,24,15,35
+188/063/005,Sabah,"Lahad Datu","Kunak","Pengkalan Kunak",50,26,24,15,35
+188/063/006,Sabah,"Lahad Datu","Kunak","Kunak Jaya",50,26,24,15,35
+188/063/007,Sabah,"Lahad Datu","Kunak","Pangi",50,26,24,15,35
+188/063/008,Sabah,"Lahad Datu","Kunak","Pekan Kunak",50,26,24,15,35

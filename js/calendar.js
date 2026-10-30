@@ -489,6 +489,8 @@
     if (DUNS && DUNS.prosesBulan) { peristiwa = peristiwa.concat(DUNS.prosesBulan().peristiwa || []); }
     var PRU = muat('MyPolitikPRU', 'pru.js');                                                   // v7.3: pengisytiharan PRU/PRN & penilaian manifesto
     if (PRU && PRU.prosesBulan) { peristiwa = peristiwa.concat(PRU.prosesBulan().peristiwa || []); }
+    var SBNm = muat('MyPolitikSabahBN', 'sabah-bn.js');                                         // v13.16: MCA & MIC Sabah (Pemulihan Sabah, Senator)
+    if (SBNm && SBNm.prosesBulan) { peristiwa = peristiwa.concat(SBNm.prosesBulan().peristiwa || []); }
     var FBN = muat('MyPolitikFBN', 'friends-bn.js');                                            // v13.15: Friends of BN (usul Majlis Tertinggi BN)
     if (FBN && FBN.prosesBulan) { peristiwa = peristiwa.concat(FBN.prosesBulan().peristiwa || []); }
     var PDK = muat('MyPolitikPendidikan', 'pendidikan.js');                                    // v13.13: pengajian separuh masa & Doktor Kehormat

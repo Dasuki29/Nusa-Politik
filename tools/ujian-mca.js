@@ -26,7 +26,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.selectOption('#s-parti', 'MCA'); await pg.waitForTimeout(2500);
   semak(/keturunan Cina/.test(await pg.textContent('#h-parti')), 'nota keahlian MCA pada skrin pendaftaran');
   const negeri = await pg.$$eval('#s-negeri option', (o) => o.map((x) => x.textContent));
-  semak(negeri.length === 14 && negeri.some((n) => /Kelantan/.test(n)), 'semua negeri Semenanjung (' + negeri.length + ')');
+  semak(negeri.length === 15 && negeri.some((n) => /Kelantan/.test(n)) && negeri.some((n) => /Sabah/.test(n)), 'semua negeri Semenanjung + Sabah (' + negeri.length + ')');
   await pg.selectOption('#s-negeri', { label: 'Pulau Pinang' }); await pg.waitForTimeout(400);
   const bhg = await pg.$$eval('#s-bahagian option', (o) => o.map((x) => x.textContent));
   semak(bhg.some((b) => /Bukit Mertajam/.test(b)), 'Bahagian Bukit Mertajam tersenarai');

@@ -34,8 +34,8 @@
       h += '<h3 class="mic-h">Kawasan &amp; kuota BN</h3>';
       if (k.parlimen) {
         h += kv('Bahagian ' + esc(k.parlimen.n), 'Pengundi India ' + k.parlimen.i + '% · kedudukan ' + k.parlimen.r + '/' + k.bilBahagian) +
-          kv('Kerusi Parlimen', k.kuotaPL ? '✅ dalam kuota MIC (' + C.KUOTA_PARLIMEN + ')' : '⛔ di luar kuota MIC (' + C.KUOTA_PARLIMEN + ')') +
-          kv('Kerusi DUN', k.dun ? esc(k.dun.n) + ' · ' + (k.kuotaDUN ? '✅ dalam kuota (' + C.KUOTA_DUN + ')' : '⛔ di luar kuota (' + C.KUOTA_DUN + ')') : 'Tiada DUN');
+          kv('Kerusi Parlimen', k.sabah ? '⛔ MIC Sabah tiada kuota kerusi' : k.kuotaPL ? '✅ dalam kuota MIC (' + C.KUOTA_PARLIMEN + ')' : '⛔ di luar kuota MIC (' + C.KUOTA_PARLIMEN + ')') +
+          kv('Kerusi DUN', k.dun ? esc(k.dun.n) + ' · ' + (k.sabah ? '⛔ tiada kuota' : k.kuotaDUN ? '✅ dalam kuota (' + C.KUOTA_DUN + ')' : '⛔ di luar kuota (' + C.KUOTA_DUN + ')') : 'Tiada DUN');
       }
       var seterus = M.tahunSeterusnya(p, p.tahun), kini = M.adalahTahunPemilihan(p, p.tahun);
       h += kv('Pemilihan parti', kini ? '🗳️ Tahun ini (' + p.tahun + ')' : 'Seterusnya ' + seterus + ' (setiap 3 tahun)');

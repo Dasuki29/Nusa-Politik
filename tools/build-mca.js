@@ -8,6 +8,9 @@
    Peratus Cina menentukan kesukaran, bukan kelayakan: kedudukan kuota kerusi BN mengikut peratus Cina (tertinggi = 1),
    dan saiz keahlian Bahagian (medan a) menentukan bilangan perwakilan Bahagian dalam Pemilihan Pusat (js/mca.js). Bilangan ahli setiap Cawangan ialah anggaran permainan:
    pemilih DM x peratus Cina kawasan x 7%, minimum 50 (Perkara 92: Cawangan minimum 50 ahli), maksimum 900.
+   v13.16 (mockup MCA & MIC Sabah, dipersetujui): tambah 7 kawasan Parlimen Sabah (Bahagian MCA Sabah yang diketahui: Kota Kinabalu, Sepanggar, Batu Sapi; selebihnya mengandungi 6 DUN sasaran MCA Sabah)
+   (Kapayan, Likas, Karamunting, Elopura, Segama, Tanjong Kapor). Sabah: sb = 1, r = 900+ (di luar kedudukan kuota Semenanjung),
+   s = 1 bagi DUN sasaran. Kuota Sabah ditentukan oleh js/sabah-bn.js (Pemulihan Sabah).
    Guna: node tools/build-mca.js   (kemudian node tools/bina-data-lokal.js untuk salinan data/js)
    ========================================================================== */
 'use strict';
@@ -24,13 +27,20 @@ pl.forEach((x, i) => { kawasan.parlimen[x.kod] = { n: x.nama, c: x.cina, r: i + 
 const namaDun = {}; dun.fitur.forEach((f) => { namaDun[f.id] = f.nama; });
 const duns = Object.values(demo.dun).filter((d) => kawasan.parlimen[d.parlimen]).sort((a, b) => b.cina - a.cina || a.kod.localeCompare(b.kod));
 duns.forEach((d, i) => { kawasan.dun[d.kod] = { n: d.nama, c: d.cina, r: i + 1, p: d.parlimen }; });
+const SABAH_PL = ['P.167', 'P.171', 'P.172', 'P.174', 'P.185', 'P.186', 'P.188'], SASARAN = ['12_N.19', '12_N.25', '12_N.55', '12_N.54', '12_N.04', '12_N.61'];
+const plSabah = SABAH_PL.map((k) => demo.parlimen[k] || Object.values(demo.parlimen).find((x) => x.kod === k)).filter(Boolean);
+plSabah.forEach((x, i) => { kawasan.parlimen[x.kod] = { n: x.nama, c: x.cina, r: 900 + i, ng: String(x.negeri), sb: 1 }; });
+Object.values(demo.dun).filter((d) => SABAH_PL.indexOf(d.parlimen) >= 0).sort((a, b) => a.kod.localeCompare(b.kod)).forEach((d, i) => {
+  kawasan.dun[d.kod] = { n: d.nama, c: d.cina, r: 900 + i, p: d.parlimen, sb: 1, s: SASARAN.indexOf(d.kod) >= 0 ? 1 : 0 };
+});
+kawasan.sasaranSabah = SASARAN;
 
 const dmCache = {};
 function dmNegeri(ng) { if (!dmCache[ng]) { dmCache[ng] = rd('data/dm-' + ng + '.json'); } return dmCache[ng]; }
 const baris = ['ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan,Bawah 40,Atas 40'];
 const q = (s) => '"' + String(s || '').replace(/"/g, '""') + '"';
 let bil = 0;
-pl.slice().sort((a, b) => a.kod.localeCompare(b.kod)).forEach((x) => {
+pl.concat(plSabah).sort((a, b) => a.kod.localeCompare(b.kod)).forEach((x) => {
   const no = parseInt(x.kod.replace('P.', ''), 10), kodP = String(no).padStart(3, '0'), j = dmNegeri(String(x.negeri)), dmd = j.demografi || {};
   const dms = j.fitur.filter((f) => f.parlimen === x.kod), kumpulan = {};
   dms.forEach((f) => { const k = f.dun || '_'; (kumpulan[k] = kumpulan[k] || []).push(f); });

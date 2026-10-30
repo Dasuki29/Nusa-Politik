@@ -76,19 +76,29 @@
 
   /* ---------- Kawasan & kuota ---------- */
   function kodPL(p) { var k = p && p.kod && p.kod.parlimen; return k ? 'P.' + String(parseInt(k, 10)).padStart(3, '0') : null; }
-  function kawasan(p) {
+  function kawasanAsas(p) {
     var d = DATA(), kp = kodPL(p), pl = kp ? d.parlimen[kp] : null, dn = null;
     if (pl && p.kod && p.kod.dun && parseInt(p.kod.dun, 10) > 0) { var kd = pl.ng + '_N.' + String(parseInt(p.kod.dun, 10)).padStart(2, '0'); dn = d.dun[kd] ? Object.assign({ kod: kd }, d.dun[kd]) : null; }
     return { parlimen: pl ? Object.assign({ kod: kp }, pl) : null, dun: dn,
-      kuotaPL: !!(pl && pl.r <= CONFIG.KUOTA_PARLIMEN), kuotaDUN: !!(dn && dn.r <= CONFIG.KUOTA_DUN), bilBahagian: Object.keys(d.parlimen).length };
+      kuotaPL: !!(pl && pl.r <= CONFIG.KUOTA_PARLIMEN), kuotaDUN: !!(dn && dn.r <= CONFIG.KUOTA_DUN), bilBahagian: Object.keys(d.parlimen).length, sabah: !!(pl && pl.sb) };
   }
+  /** v13.16: MCA/MIC Sabah: kuota ikut Pemulihan Sabah (js/sabah-bn.js). */
+  function SBN() { var m = (typeof globalThis !== 'undefined' && globalThis.MyPolitikSabahBN) || null; if (!m) { try { m = require('./sabah-bn.js'); } catch (e) { m = null; } } return m; }
+  function kawasan(p) {
+    var k = kawasanAsas(p), B = k.sabah ? SBN() : null;
+    if (B) { var q = B.kuota(p); k.kuotaPL = q.pl; k.kuotaDUN = q.dun; k.kuotaSabah = q; }
+    return k;
+  }
+  function sebabKuotaSabah(p, jenis) { var B = SBN(); return B ? B.sebabKuota(p, jenis) : ''; }
+  function sebabKuota(p, jenis) { if (kawasanAsas(p).sabah && SBN()) { return sebabKuotaSabah(p, jenis); } return jenis === 'PARLIMEN' ? 'Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + CONFIG.KUOTA_PARLIMEN + ' kerusi)' : 'DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + CONFIG.KUOTA_DUN + ' kerusi)'; }
   /** Ofset kekuatan kerusi PRU (ANDAIAN): kerusi MIC sentiasa campuran; semakin rendah peratus India, semakin bergantung pada undi BN kaum lain. */
   function ofset(p, jenis) {
+    if (kawasanAsas(p).sabah && SBN()) { return SBN().ofset(p); }          // v13.16
     var k = kawasan(p), x = jenis === 'DUN' ? k.dun : k.parlimen;
     if (!x) { return 0; }
     return x.i >= 20 ? 0 : x.i >= 15 ? -1 : x.i >= 10 ? -2 : -4;
   }
-  function lawan(p, jenis) { var k = kawasan(p), x = jenis === 'DUN' ? k.dun : k.parlimen; return x && x.c >= 40 ? ['DAP', 'PKR'] : ['PKR', 'DAP']; }
+  function lawan(p, jenis) { if (kawasanAsas(p).sabah && SBN()) { return SBN().lawan(); } var k = kawasan(p), x = jenis === 'DUN' ? k.dun : k.parlimen; return x && x.c >= 40 ? ['DAP', 'PKR'] : ['PKR', 'DAP']; }
 
   /* ---------- Kitaran pemilihan 3 tahun (Perkara 4.9, 4.20A) ---------- */
   function adalahTahunPemilihan(p, tahun) { var t = parseInt(tahun, 10); return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0; }
@@ -391,7 +401,7 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, ofset: ofset, lawan: lawan, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
+  return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
     bulanKeahlian: bulanKeahlian, semakSyarat: semakSyarat, gantungAktif: gantungAktif, sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, penamaan: penamaan, bonusPusat: bonusPusat,
     statusJelajah: statusJelajah, jelajah: jelajah, statusPegawai: statusPegawai, lantikPegawai: lantikPegawai, sokonganNegeri: sokonganNegeri, ahliNegeri: ahliNegeri, statusNegeri: statusNegeri, bertandingNegeri: bertandingNegeri,
     adalahPresiden: adalahPresiden, lantikanSemasa: lantikanSemasa, dekat: dekat, statusMohon: statusMohon, mohon: mohon, statusLantikPresiden: statusLantikPresiden, lantikPresiden: lantikPresiden,

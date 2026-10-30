@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.16 (2026-10-30)
+
+- **MCA & MIC Sabah**, ikut mockup yang dipersetujui (`js/sabah-bn.js`, `js/sabah-bn-ui.js`). Kedudukan kedua-dua parti di Sabah lemah selepas 2018: MCA kalah 4 kerusi DUN pada PRN 2020 dan 2 kerusi pada PRN 2025; MIC Sabah ada 25 cawangan dan tidak bertanding.
+  - Pendaftaran: MCA dan MIC boleh memilih Sabah. MCA Sabah: 7 Bahagian ⚠️ (Kota Kinabalu, Sepanggar, Batu Sapi dan Parlimen yang mengandungi 6 DUN sasaran: Kudat, Penampang, Sandakan, Lahad Datu). MIC Sabah: 4 Bahagian (Kota Kinabalu, Sandakan, Lahad Datu/Silam, Tawau; Labuan ialah Wilayah Persekutuan), 25 Cawangan ⚠️. Ikut jadual PRN Sabah. Nota borang khas Sabah.
+  - **Pemulihan Sabah** ⚠️: mula 20, susut 1 sebulan ke arah 20. Khidmat Masyarakat Bandar (1 AP, RM 1,000, +5), Jentera untuk calon BN Sabah (musim PRN; 2 AP, +6, hubungan gabungan +2). Selepas PRN: kalah −10, menang +15.
+  - MCA Sabah ⚠️: kuota DUN 2 / 3 / 4 dan Parlimen 0 / 0 / 1 ikut Pemulihan (<50 / 50-69 / ≥70) daripada 6 DUN sasaran (Likas, Kapayan, Elopura, Karamunting, Tanjong Kapor, Segama). Kekuatan kerusi −12, berkurang 1 bagi setiap 10 Pemulihan melebihi 20. Lawan: Warisan, DAP, GRS.
+  - MIC Sabah: tiada kuota kerusi. **Senator** ⚠️: selepas PRN Sabah, Ketua Bahagian ke atas dengan Pemulihan ≥ 60, peluang 30%; 36 bulan, IP +10 dan RM 2,000 sebulan, lencana "Senator".
+  - Kad **MCA Sabah / MIC Sabah: Membina Semula** di tab Profil. Kad MCA/MIC menunjukkan kuota Sabah.
+- Data MCA dan MIC dijana semula (`node tools/build-mca.js`, `node tools/build-mic.js`); salinan data tempatan PPP dan PBRS turut dijana (sebelum ini tertinggal).
+- Baiki: teks "BN termasuk Friends of BN" dalam kad Kerusi Parlimen kini ada terjemahan EN.
+- Terjemahan EN, ujian unit dan `tools/ujian-sabah-bn.js` (pelayar). Cache `nusa-v13.16`.
+
 ## v13.15 (2026-10-30)
 
 - **Friends of BN sebagai NPC** (KIMMA, Makkal Sakti, IPF, MIUP), ikut mockup yang dipersetujui (`js/friends-bn.js`, `js/friends-bn-ui.js`). Parti rakan BN yang belum menjadi komponen penuh (berita Jan-Apr 2026); tidak boleh dimainkan dan tiada nama pemimpin sebenar. Logo daripada pengguna.
