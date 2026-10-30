@@ -31,6 +31,7 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.fill('#f-nama', 'Awang Uji'); await pg.fill('#f-umur', '25'); await pg.check('input[name=jantina][value=P]').catch(() => pg.check('input[name=jantina] >> nth=1'));
   const sy = await pg.$$eval('#sayap-grid .sy', (l) => l.map((x) => x.dataset.kod + ':' + (getComputedStyle(x).display === 'none' ? 'x' : 'o') + (x.querySelector('input').disabled ? '-' : '+')).join());
   semak(/puteri:x/.test(sy) && /wanita:o\+/.test(sy), 'sayap PBB: tiada Puteri, Wanita dibuka (' + sy + ')');
+  semak(await pg.$eval('#sayap-grid', (g) => getComputedStyle(g).display === 'grid' && getComputedStyle(g.querySelector('.sy input')).opacity === '0'), 'v13.14: grid sayap bergaya (kad, bukan senarai radio)');
   await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
@@ -82,6 +83,12 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   if (bz) { await bz.evaluate((e) => e.click()); await pg.waitForTimeout(800); }
   const tst = await pg.evaluate(() => document.body.innerText);
   semak(!/tidak dikenali/i.test(tst) && !/\bnull\b/.test(tst), 'tiada "Tindakan tidak dikenali: null" selepas Ziarah di peta');
+  // v13.14: bar kerusi DUN Sarawak berlabel GPS (bukan BN); GPS kalah = pembangkang
+  await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(), pru = MyPolitikPRU.getPRU(p); pru.status = { jenis: 'ADUN', kerusi: 'Uji', sejakTahun: 2026, sejakBulan: 6, kerajaan: false };
+    MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { pru: pru } }); NusaUI.render(); });
+  await pg.click('[data-tab="dewan"]').catch(() => {}); await pg.waitForTimeout(500);
+  const dw = await pg.evaluate(() => { const b = document.querySelector('.dw-bar'); return b ? b.textContent + ' | ' + b.parentNode.textContent : ''; });
+  semak(/GPS \d+/.test(dw) && !/BN \d+/.test(dw) && /GPS \(pembangkang\)/.test(dw), 'bar kerusi DUN berlabel GPS (' + dw.slice(0, 160) + ')');
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

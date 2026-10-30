@@ -3368,4 +3368,10 @@
   ["Dana tidak mencukupi (perlu RM {x}).", "Insufficient funds (needs RM {x})."],
   ["Tiada pengajian.", "No studies in progress."]
   ]);
+  /* v13.14: label gabungan dalam bar kerusi Dewan */
+  T.tambah([
+  ["GPS (pembangkang)", "GPS (opposition)"],
+  ["BN (pembangkang)", "BN (opposition)"],
+  ["Perpaduan (pembangkang)", "Unity (opposition)"]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

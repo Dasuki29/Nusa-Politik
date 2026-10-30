@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v13.14 (2026-10-30)
+
+- **Baiki (maklum balas pemain): kad Laluan Kerjaya (Sayap) di borang pendaftaran tidak bergaya.** Gaya kad sayap terpadam secara tidak sengaja dalam v13.0, jadi pilihan sayap kelihatan seperti senarai radio mentah yang bercampur. Gaya kad dipulihkan (grid 2 lajur di telefon, 4 di desktop), termasuk peraturan `[hidden]` untuk medan borang. Senarai sayap ikut parti tidak berubah (cth. PBB, MCA, PBRS: Utama, Pemuda, Wanita sahaja).
+- **Baiki (maklum balas pemain): bar kerusi di tab DUN / Dewan berlabel "BN" untuk pemain Sarawak.** Kini berlabel GPS (DUN Sarawak) atau Perpaduan (Dewan Rakyat, parti Sarawak), sama dengan kad Kerusi DUN di tab Mesyuarat. Jika gabungan pemain kalah, ringkasan menulis "GPS (pembangkang)", bukan "Kerajaan (GPS)".
+- Ujian pelayar PBB menyemak kedua-dua pembaikan. Cache `nusa-v13.14`.
+
 ## v13.13 (2026-10-30)
 
 - **Gelaran (maklum balas pemain):** ikut mockup "Gelaran & Pendidikan" yang dipersetujui (`js/gelaran.js`).

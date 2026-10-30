@@ -186,6 +186,7 @@ a:hover { color: var(--gold-light); }
   background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
 }
 
+.field[hidden], #f-blok[hidden], #h-parti[hidden], #h-ahli[hidden] { display: none !important; }   /* v13.14: dipulihkan */
 .brand {
   display: flex;
   align-items: center;
@@ -872,6 +873,26 @@ option { background: var(--bg-elev-2); color: var(--text); }
 .av__saran { display: none; margin-top: 4px; font-size: .68rem; font-weight: 700; color: var(--gold); }
 .av.is-saran .av__saran { display: block; }
 .avatar-hint { margin: var(--space-3) 0 0; font-size: .8rem; color: var(--text-dim); }
+/* ---- Pilihan sayap (v5.9; v13.14: dipulihkan selepas terpadam dalam v13.0) ---- */
+.sayap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+@media (min-width: 640px) { .sayap-grid { grid-template-columns: repeat(4, 1fr); } }
+.sy { position: relative; display: block; margin: 0; }
+.sy input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.sy input:disabled { cursor: not-allowed; }
+.sy__box { display: grid; align-content: start; gap: 4px; height: 100%; padding: 12px 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-elev-2);
+  transition: border-color var(--transition), background var(--transition), transform var(--transition), opacity var(--transition); }
+.sy__ikon { font-size: 1.6rem; line-height: 1; }
+.sy__nama { font-weight: 700; color: var(--white); }
+.sy__desc { font-size: .72rem; color: var(--text-muted); line-height: 1.25; }
+.sy__buff { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: .72rem; color: var(--gold); font-weight: 600; }
+.sy__buff li::before { content: "\2022  "; }
+.sy__syarat { margin-top: 4px; font-size: .68rem; color: var(--text-dim); }
+.sy__syarat:empty { display: none; }
+.sy input:checked + .sy__box { border-color: var(--gold); background: rgba(242,183,5,.12); transform: translateY(-2px); }
+.sy input:focus-visible + .sy__box { outline: 3px solid var(--gold); outline-offset: 2px; }
+.sy input:disabled + .sy__box { opacity: .45; }
+.sy__saran { display: none; margin-top: 4px; font-size: .68rem; font-weight: 700; color: var(--gold); }
+.sy.is-saran .sy__saran { display: block; }
 .preview-avatar { display: flex; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-3); }
 .preview-avatar svg { width: 64px; height: 64px; flex: none; }
 .preview-avatar b { color: var(--white); display: block; }
