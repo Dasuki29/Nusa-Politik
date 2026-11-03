@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.24 (2026-11-04)
+
+- **Penjelasan kempen Pemilihan Pusat (maklum balas di borang: "Apakah fungsi ini?")**. Kad UMNO: Pemilihan & Lantikan kini ada nota ringkas: Jelajah +8% di satu Bahagian pilihan, Majlis Penerangan +3% di semua Bahagian dalam satu negeri, setiap satu sekali sebulan. Nota serupa di kad MCA (Jelajah sahaja). Angka tidak berubah. Cache `nusa-v13.24`.
+
 ## v13.23 (2026-11-04)
 
 - **Selesaikan keluhan rakyat dengan dana peribadi (maklum balas di borang)**, ikut mockup yang dipersetujui. Pemain pembangkang yang hanya mendapat 40% peruntukan kini boleh menyelesaikan keluhan tanpa membawa usul ke mesyuarat.

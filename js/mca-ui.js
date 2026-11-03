@@ -38,6 +38,7 @@
       // Pemilihan Pusat
       var r = M.ringkasPusat(p), sj = M.statusJelajah(p);
       h += '<h3 class="mca-h">Pemilihan Pusat: perwakilan Bahagian</h3><p class="note">Presiden, Timbalan Presiden, 4 Naib Presiden dan 25 ahli JKP dipilih oleh perwakilan ke Perhimpunan Bahagian di seluruh negara (Perkara 21). Bahagian yang lebih besar menghantar lebih ramai perwakilan.</p>' +
+        '<p class="note mca-panduan">Naikkan sokongan perwakilan sebelum Perhimpunan Agung. Jelajah: +' + C.PUSAT.jelajahNaik + '% di satu Bahagian pilihan, sekali sebulan.</p>' +
         meter('Sokongan perwakilan Bahagian', r.purata, r.sokongUndi + ' / ' + r.pengundi) + kv('Bahagian condong kepada anda', r.condong + ' / ' + r.bilBahagian);
       if (!pilihBhg || !r.senarai.some(function (x) { return x.kod === pilihBhg; })) { pilihBhg = r.senarai[0] && r.senarai[0].kod; }
       h += '<label class="note" for="mca-bhg">Bahagian untuk dijelajah</label><select id="mca-bhg" class="select" style="width:100%;margin:4px 0 6px" data-mca-bhg>' +

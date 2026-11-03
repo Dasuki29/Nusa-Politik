@@ -50,6 +50,7 @@
       // Pemilihan Pusat
       var r = M.ringkasPusat(p), sj = M.statusJelajah(p), sp = M.statusPenerangan(p);
       h += '<h3 class="umno-h">Pemilihan Pusat: perwakilan Bahagian</h3><p class="note">Presiden, Timbalan Presiden, 3 Naib Presiden dan 25 ahli MKT diundi oleh semua perwakilan Mesyuarat Perwakilan Bahagian di ' + r.bilBahagian + ' Bahagian (Fasal 9.3). Ketua sayap Malaysia diundi oleh Mesyuarat Perwakilan sayap Bahagian (Fasal 9.4).</p>' +
+        '<p class="note umno-panduan">Naikkan sokongan perwakilan sebelum PAU. Jelajah: +' + C.PUSAT.jelajahNaik + '% di satu Bahagian pilihan. Majlis Penerangan: +' + C.PUSAT.penerangNaik + '% di semua Bahagian dalam satu negeri. Setiap satu sekali sebulan.</p>' +
         meter('Sokongan perwakilan Bahagian', r.purata, fmt(r.sokongUndi) + ' / ' + fmt(r.pengundi)) + kv('Bahagian condong kepada anda', r.condong + ' / ' + r.bilBahagian);
       if (!pilihBhg || !r.senarai.some(function (x) { return x.kod === pilihBhg; })) { pilihBhg = r.senarai[0] && r.senarai[0].kod; }
       h += '<label class="note" for="umno-bhg">Bahagian untuk jelajah</label><select id="umno-bhg" class="select" style="width:100%;margin:4px 0 6px" data-umno-bhg>' +

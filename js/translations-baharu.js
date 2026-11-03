@@ -3569,6 +3569,8 @@
   ["{a} diselesaikan dengan dana peribadi ({b}): +{c} IP, +{d} sokongan akar umbi, Reputasi +{e}.", "{a} resolved with personal funds ({b}): +{c} IP, +{d} grassroots support, Reputation +{e}."],
   ["Keluhan diselesaikan dengan dana peribadi: {x}", "Complaint resolved with personal funds: {x}"],
   ["Isu Tempatan diselesaikan dengan dana peribadi: {x}", "Local issue resolved with personal funds: {x}"],
-  ["Isu tidak ditemui atau sudah selesai.", "Issue not found or already resolved."]
+  ["Isu tidak ditemui atau sudah selesai.", "Issue not found or already resolved."],
+  ["Naikkan sokongan perwakilan sebelum PAU. Jelajah: +{a}% di satu Bahagian pilihan. Majlis Penerangan: +{b}% di semua Bahagian dalam satu negeri. Setiap satu sekali sebulan.", "Raise delegate support before the General Assembly. Division Tour: +{a}% in one chosen Division. State Liaison Body Briefing: +{b}% in every Division in one state. Each once a month."],
+  ["Naikkan sokongan perwakilan sebelum Perhimpunan Agung. Jelajah: +{a}% di satu Bahagian pilihan, sekali sebulan.", "Raise delegate support before the General Assembly. Division Tour: +{a}% in one chosen Division, once a month."]
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));
