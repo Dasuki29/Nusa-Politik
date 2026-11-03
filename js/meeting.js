@@ -180,6 +180,17 @@
   };
 
   var TEMA_UCAPAN = ['Perpaduan dan Pembangunan', 'Ekonomi Rakyat', 'Kesinambungan dan Pembaharuan', 'Parti Dekat dengan Akar Umbi'];
+  /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
+     Kos 2 AP; perwakilan mengundi sokongan (>= 50% diterima: kesan penuh + IP 20; < 50%: Reputasi separuh, penentang +5). Angka ialah andaian. */
+  var TEMA_PRESIDEN = [
+    { kod: 'perpaduan', ikon: '🤝', nama: 'Perpaduan dan Pembangunan', ringkas: 'Reputasi +3 · hubungan gabungan +3', reputasi: 3, hubungan: 3, mod: 5 },
+    { kod: 'ekonomi', ikon: '💰', nama: 'Ekonomi Rakyat', ringkas: 'Reputasi +2 · akar umbi +4 · sentimen nasional +1', reputasi: 2, kesetiaan: { akarUmbi: 4 }, sentimen: 1, mod: 5 },
+    { kod: 'kesinambungan', ikon: '🔄', nama: 'Kesinambungan dan Pembaharuan', ringkas: 'Reputasi +2 · sokongan perwakilan +5', reputasi: 2, kesetiaan: { perwakilan: 5 }, mod: 5 },
+    { kod: 'akar_umbi', ikon: '🌾', nama: 'Parti Dekat dengan Akar Umbi', ringkas: 'Reputasi +1 · akar umbi +6 · kesetiaan Ketua Cawangan +3', reputasi: 1, kesetiaan: { akarUmbi: 6, ketuaCawangan: 3 }, mod: 5 },
+    { kod: 'serang', ikon: '⚔️', nama: 'Serang Pembangkang', ringkas: 'Berisiko: 60% Reputasi +5; 40% Reputasi −3 dan tular negatif', reputasi: 5, gagal: { peluang: 0.4, reputasi: -3, tular: true }, mod: -5 },
+    { kod: 'reformasi', ikon: '🧹', nama: 'Reformasi Dalaman', ringkas: 'Reputasi +5 · penentang dalam parti +8 · sokongan AJK −3', reputasi: 5, kesetiaan: { penentang: 8, ajk: -3 }, mod: -5 }
+  ];
+  var UCAPAN = { ap: 2, ip: 20, ambang: 50, penentangKurang: 5 };
 
   /* ------------------------------------------------------------------------
      2. PEMBANTU
@@ -621,6 +632,41 @@
     return { ok: true, mesej: mesej, keputusan: usul.keputusan, usul: usul, perubahan: r.perubahan, profil: r.profil };
   }
 
+  function presidenPemain(p) { var l = Array.isArray(p && p.jawatanList) ? p.jawatanList : []; return /^Presiden$/i.test(String((p && p.jawatan) || '')) || l.some(function (j) { return /^Presiden$/i.test(String(j && j.jawatan || '')); }); }
+  /** v13.22: Presiden menyampaikan Ucapan Dasar dengan tema pilihan. */
+  function ucapanPresiden(peringkat, usulId, kodTema, opts) {
+    opts = opts || {};
+    var p = S.loadPlayer(); if (!p) { return gagal('tiada_profil', 'Tiada profil pemain.'); }
+    if (!presidenPemain(p)) { return gagal('bukan_presiden', 'Hanya Presiden menyampaikan Ucapan Dasar.'); }
+    labelSayap(p);
+    var ms = keadaanMesyuarat(p), m = ms[peringkat];
+    if (!m || m.status !== 'sedang') { return gagal('belum_mula', 'Mulakan mesyuarat dahulu.'); }
+    var usul = null; m.agenda.forEach(function (a) { if (a.id === usulId) { usul = a; } });
+    if (!usul || usul.jenis !== 'ucapan_dasar') { return gagal('tiada_usul', 'Ucapan Dasar tidak ditemui.'); }
+    if (usul.status === 'selesai') { return gagal('sudah_selesai', 'Ucapan Dasar sudah disampaikan.'); }
+    var tm = TEMA_PRESIDEN.filter(function (x) { return x.kod === kodTema; })[0]; if (!tm) { return gagal('tema', 'Tema tidak sah.'); }
+    if ((Number(p.ap) || 0) < UCAPAN.ap) { return gagal('ap', 'AP tidak mencukupi (perlu ' + UCAPAN.ap + ').'); }
+    var rng = opts.rng || Math.random, kes = p.kesetiaan || {};
+    var sok = clamp(Math.round(55 + ((Number(p.reputasi) || 50) - 50) * 0.6 + ((Number(kes.perwakilan) || 40) - 40) * 0.3 + tm.mod + (rng() * 20 - 10)), 5, 95);
+    var terima = sok >= UCAPAN.ambang, rep = tm.reputasi, gagalRisiko = false, kset = {}, k;
+    if (tm.gagal && rng() < tm.gagal.peluang) { gagalRisiko = true; rep = tm.gagal.reputasi; }
+    if (!terima && rep > 0) { rep = Math.round(rep / 2); }
+    if (tm.kesetiaan && !gagalRisiko) { for (k in tm.kesetiaan) { kset[k] = tm.kesetiaan[k]; } }
+    if (!terima) { kset.penentang = (kset.penentang || 0) + UCAPAN.penentangKurang; }
+    var patch = { mesyuarat: ms }, R = typeof globalThis !== 'undefined' ? globalThis.MyPolitikPRU : null, PK = typeof globalThis !== 'undefined' ? globalThis.MyPolitikPRK : null;
+    if (tm.hubungan && R && R.getPRU) { var pru = R.getPRU(p); pru.hubunganGabungan = clamp((Number(pru.hubunganGabungan) || 50) + tm.hubungan, 0, 100); patch.pru = pru; }
+    if (tm.sentimen && PK && PK.getPRK) { var prk = PK.getPRK(p); prk.sentimen = clamp((Number(prk.sentimen) || 0) + tm.sentimen, -20, 20); patch.prk = prk; }
+    usul.status = 'selesai'; usul.pilihan = { peranan: 'presiden', pendirian: tm.kod };
+    usul.keputusan = { lulus: terima, sokongan: sok, tema: tm.nama, reputasi: rep, ip: terima ? UCAPAN.ip : 0, gagalRisiko: gagalRisiko };
+    usul.tajuk = 'Ucapan Dasar Presiden: ' + tm.nama;
+    var kesan = { ap: -UCAPAN.ap, reputasi: rep, ip: terima ? UCAPAN.ip : 0 }; if (Object.keys(kset).length) { kesan.kesetiaan = kset; }
+    var r = S.applyEffects(kesan, { patch: patch, log: { tindakan: 'ucapan_presiden', nama: 'Ucapan Dasar Presiden: ' + tm.nama + ' (' + sok + '% sokongan)', peringkat: peringkat } });
+    if (!r.ok) { return r; }
+    if (gagalRisiko && tm.gagal.tular) { try { var TL = globalThis.MyPolitikTular; if (TL && TL._cipta) { TL._cipta('bulanan', { rng: rng }); } } catch (eT) { /* abaikan */ } }
+    var mesej = 'Ucapan Dasar "' + tm.nama + '": ' + sok + '% perwakilan menyokong (' + (terima ? 'diterima' : 'kurang sambutan') + ').' + (gagalRisiko ? ' Serangan anda dikritik dan menjadi tular.' : '') + ' ' + S.ringkasPerubahan(r.perubahan) + '.';
+    return { ok: true, mesej: mesej, keputusan: usul.keputusan, usul: usul, perubahan: r.perubahan, profil: r.profil };
+  }
+
   /**
    * Tutup mesyuarat: usul yang tidak disertai diputuskan tanpa kesan pada pemain,
    * kemudian pemilihan perwakilan peringkat itu dijalankan (tahun pemilihan sahaja).
@@ -722,6 +768,7 @@
 
   return {
     CONFIG: CONFIG,
+    TEMA_PRESIDEN: TEMA_PRESIDEN, UCAPAN: UCAPAN, presidenPemain: presidenPemain, ucapanPresiden: ucapanPresiden,
     PERINGKAT: PERINGKAT,
     KOLAM: KOLAM,
     senaraiPeranan: senaraiPeranan,

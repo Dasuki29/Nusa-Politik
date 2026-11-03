@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.22 (2026-11-04)
+
+- **Ucapan Dasar Presiden (maklum balas di borang, 3 pemain)**, ikut mockup yang dipersetujui. Jika pemain ialah Presiden, usul Ucapan Dasar di Perhimpunan Agung (semua parti) kini menjadi **🎤 pilihan tema ucapan** (2 AP ⚠️), bukan sokong / bantah:
+  - Perpaduan dan Pembangunan (Reputasi +3, hubungan gabungan +3); Ekonomi Rakyat (Reputasi +2, akar umbi +4, sentimen nasional +1); Kesinambungan dan Pembaharuan (Reputasi +2, sokongan perwakilan +5); Parti Dekat dengan Akar Umbi (Reputasi +1, akar umbi +6, Ketua Cawangan +3).
+  - Berisiko: Serang Pembangkang (60% Reputasi +5; 40% Reputasi −3 dan krisis tular); Reformasi Dalaman (Reputasi +5, penentang +8, AJK −3) ⚠️.
+  - Perwakilan mengundi sokongan: ≥ 50% diterima (kesan penuh, IP +20); < 50% kurang sambutan (Reputasi separuh, penentang +5) ⚠️.
+  - Pemain bukan Presiden kekal sokong / bantah / berkecuali.
+- Ujian unit baharu dan `tools/ujian-ucapan.js` (pelayar). Cache `nusa-v13.22`.
+
 ## v13.21 (2026-11-04)
 
 - **Baiki besar (maklum balas di borang, beberapa pemain): status kerajaan/pembangkang tidak sama dengan kerusi yang dipaparkan.** Punca: dalam pelayar, `pru.js` memanggil modul anggaran kerusi dengan nama global yang salah (`MyPolitikPaparan`, sepatutnya `NusaPaparan`), jadi pembaikan v11.4 tidak pernah berjalan dalam permainan sebenar: status kerajaan kerusi pemain dilambung secara rawak, berasingan daripada kad Kerusi Parlimen / DUN. Kini status ikut anggaran kerusi yang sama dengan kad (ujian unit memastikan nama modul betul).

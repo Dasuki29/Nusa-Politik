@@ -1255,6 +1255,11 @@
       return '<button type="button" class="btn btn--sm ' + (id === 'pembawa' ? 'btn--primary' : id === 'pembahas' ? 'btn--gold' : 'btn--ghost') + '" data-act="peranan" data-lvl="' + lvl + '" data-u="' + esc(u.id) + '" data-r="' + id + '" data-p="' + pend + '"' +
         ' data-fk="m:' + esc(u.id) + ':' + id + ':' + pend + '"' + (cukup ? '' : ' disabled title="AP tidak mencukupi"') + '>' + label + (kos ? ' (-' + kos + ' AP)' : '') + '</button>';
     }
+    if (u.jenis === 'ucapan_dasar' && M.presidenPemain && M.presidenPemain(S.loadPlayer())) {          // v13.22: Presiden menyampaikan Ucapan Dasar sendiri
+      var cukupU = ap >= M.UCAPAN.ap;
+      return '<div class="roles ucapan-presiden" role="group" aria-label="Tema Ucapan Dasar"><p class="note" style="width:100%;margin:0 0 4px">🎤 Anda Presiden: pilih tema Ucapan Dasar (−' + M.UCAPAN.ap + ' AP). Perwakilan mengundi sokongan selepas ucapan.</p>' +
+        M.TEMA_PRESIDEN.map(function (x) { return '<button type="button" class="opsi-ucapan" data-act="ucapan" data-lvl="' + lvl + '" data-u="' + esc(u.id) + '" data-tema="' + x.kod + '"' + (cukupU ? '' : ' disabled title="AP tidak mencukupi"') + '><b>' + x.ikon + ' ' + esc(x.nama) + '</b><small>' + esc(x.ringkas) + '</small></button>'; }).join('') + '</div>';
+    }
     if (u.jenis !== 'ucapan_dasar') { h += b('pembawa', 'sokong', 'Bawa Usul'); }
     h += b('pembahas', 'sokong', 'Bahas: Sokong') + b('pembahas', 'bantah', 'Bahas: Bantah') +
          b('undi', 'sokong', 'Undi Sokong') + b('undi', 'bantah', 'Undi Bantah') + b('undi', 'berkecuali', 'Berkecuali');
@@ -1291,7 +1296,8 @@
           if (u.jenis === 'pemilihan') { hk += '<p class="item__desc">Keputusan pemilihan dikira apabila mesyuarat ditutup. Pastikan anda sudah mendaftar bertanding di tab Pemilihan.</p>'; }
           else if (u.status === 'selesai' && u.keputusan) {
             var kp = u.keputusan, pil = u.pilihan;
-            hk += '<p class="result ' + (kp.padan ? 'is-good' : pil ? 'is-bad' : '') + '">' + (kp.lulus ? 'LULUS' : 'DITOLAK') + ': ' + fmt(kp.undiSokong) + ' sokong, ' + fmt(kp.undiBantah) + ' bantah' +
+            if (pil && pil.peranan === 'presiden') { hk += '<p class="result ' + (kp.lulus ? 'is-good' : 'is-bad') + '">' + (kp.lulus ? 'DITERIMA' : 'KURANG SAMBUTAN') + ': ' + kp.sokongan + '% perwakilan menyokong · ' + (kp.ip >= 0 ? '+' : '') + kp.ip + ' IP, ' + (kp.reputasi >= 0 ? '+' : '') + kp.reputasi + ' Reputasi' + (kp.gagalRisiko ? ' · serangan menjadi tular' : '') + '</p>'; }
+            else hk += '<p class="result ' + (kp.padan ? 'is-good' : pil ? 'is-bad' : '') + '">' + (kp.lulus ? 'LULUS' : 'DITOLAK') + ': ' + fmt(kp.undiSokong) + ' sokong, ' + fmt(kp.undiBantah) + ' bantah' +
               (pil ? ' · anda: ' + esc(pil.peranan) + ' (' + esc(pil.pendirian) + '): ' + (kp.ip >= 0 ? '+' : '') + kp.ip + ' IP, ' + (kp.reputasi >= 0 ? '+' : '') + kp.reputasi + ' Reputasi' : ' · tiada penyertaan') + '</p>';
           } else if (lv.status === 'sedang') { hk += butangPeranan(lv.kod, u, p.ap); }
           hk += '</div>';
@@ -1842,6 +1848,7 @@
       if (!ry.ok) { toast(ry.ralat, 'ralat'); } else { modal({ tajuk: 'Rayuan Diterima', isi: '<p>' + esc(ry.mesej) + '</p>' }); }
     }
     else if (act === 'mula') { var m = M.mulaMesyuarat(lvl); if (!m.ok) { toast(m.ralat, 'ralat'); } else { toast('Mesyuarat dimulakan.', 'ok'); } render(); }
+    else if (act === 'ucapan') { var uc = M.ucapanPresiden(lvl, t.getAttribute('data-u'), t.getAttribute('data-tema')); render(); lapor(uc); }   // v13.22
     else if (act === 'peranan') {
       var pr = M.pilihPeranan(lvl, t.getAttribute('data-u'), t.getAttribute('data-r'), t.getAttribute('data-p'));
       render(); lapor(pr);

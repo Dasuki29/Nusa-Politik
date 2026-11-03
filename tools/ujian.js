@@ -1802,6 +1802,20 @@ ujian('v13.21: GPS sentiasa dalam kerajaan persekutuan; status MP Presiden ikut 
   betul(S.loadPlayer().kerusiNasional && S.loadPlayer().kerusiNasional.parti === 80, 'kad kerusi dijana daripada keputusan rundingan');
   S.clearPlayer();
 });
+ujian('v13.22: Presiden menyampaikan Ucapan Dasar dengan tema pilihan (bukan sokong / bantah)', () => {
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 9, ap: 10, reputasi: 60, ip: 600, keahlian: { sejakTahun: 2010, sejakBulan: 1 }, penggalSelesai: true, jawatan: 'Presiden',
+    jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 12, tahun: 2026 }], pru: { hubunganGabungan: 50 } });
+  const mp = M.mulaMesyuarat('pau'); betul(mp.ok, mp.ralat);
+  const u = mp.mesyuarat.agenda.find((x) => x.jenis === 'ucapan_dasar'); betul(u, 'Ucapan Dasar dalam agenda');
+  betul(M.presidenPemain(S.loadPlayer()));
+  const rep0 = S.loadPlayer().reputasi, ap0 = S.loadPlayer().ap;
+  const r = M.ucapanPresiden('pau', u.id, 'perpaduan', { rng: () => 0.5 }); betul(r.ok, r.ralat);
+  const p = S.loadPlayer(); sama(p.ap, ap0 - 2); betul(r.keputusan.lulus, 'diterima (' + r.keputusan.sokongan + '%)'); sama(p.reputasi, rep0 + 3); sama(PRU.getPRU(p).hubunganGabungan, 53);
+  betul(!M.ucapanPresiden('pau', u.id, 'ekonomi').ok, 'sekali setiap PAU');
+  // bukan Presiden: ditolak
+  P.tetap({ jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] }); betul(!M.ucapanPresiden('pau', u.id, 'ekonomi').ok);
+  S.clearPlayer();
+});
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {
   const PD = g.MyPolitikPindah, SW = g.MyPolitikSarawak, D = g.MyPolitikData, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'pbb-sarawak.csv'), 'utf8')));

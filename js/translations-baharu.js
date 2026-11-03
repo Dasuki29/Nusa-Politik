@@ -3527,4 +3527,39 @@
   ["Bendahari", "Treasurer"],
   ["Ketua Penerangan", "Information Chief"]
   ]);
+  /* v13.22: Ucapan Dasar Presiden */
+  T.tambah([
+  ["🎤 Anda Presiden: pilih tema Ucapan Dasar (−{n} AP). Perwakilan mengundi sokongan selepas ucapan.", "🎤 You are President: choose the theme of your Policy Speech (−{n} AP). Delegates vote on their support after the speech."],
+  ["🤝 Perpaduan dan Pembangunan", "🤝 Unity and Development"],
+  ["💰 Ekonomi Rakyat", "💰 People's Economy"],
+  ["🔄 Kesinambungan dan Pembaharuan", "🔄 Continuity and Renewal"],
+  ["🌾 Parti Dekat dengan Akar Umbi", "🌾 A Party Close to the Grassroots"],
+  ["⚔️ Serang Pembangkang", "⚔️ Attack the Opposition"],
+  ["🧹 Reformasi Dalaman", "🧹 Internal Reform"],
+  ["Perpaduan dan Pembangunan", "Unity and Development"],
+  ["Ekonomi Rakyat", "People's Economy"],
+  ["Kesinambungan dan Pembaharuan", "Continuity and Renewal"],
+  ["Parti Dekat dengan Akar Umbi", "A Party Close to the Grassroots"],
+  ["Serang Pembangkang", "Attack the Opposition"],
+  ["Reformasi Dalaman", "Internal Reform"],
+  ["Reputasi +3 · hubungan gabungan +3", "Reputation +3 · coalition relations +3"],
+  ["Reputasi +2 · akar umbi +4 · sentimen nasional +1", "Reputation +2 · grassroots +4 · national sentiment +1"],
+  ["Reputasi +2 · sokongan perwakilan +5", "Reputation +2 · delegate support +5"],
+  ["Reputasi +1 · akar umbi +6 · kesetiaan Ketua Cawangan +3", "Reputation +1 · grassroots +6 · Branch Chief loyalty +3"],
+  ["Berisiko: 60% Reputasi +5; 40% Reputasi −3 dan tular negatif", "Risky: 60% Reputation +5; 40% Reputation −3 and a negative viral story"],
+  ["Reputasi +5 · penentang dalam parti +8 · sokongan AJK −3", "Reputation +5 · internal opponents +8 · AJK support −3"],
+  ["Ucapan Dasar Presiden: {x}", "President's Policy Speech: {x}"],
+  ["DITERIMA: {n}% perwakilan menyokong · {a} IP, {b} Reputasi", "ACCEPTED: {n}% of delegates in support · {a} IP, {b} Reputation"],
+  ["KURANG SAMBUTAN: {n}% perwakilan menyokong · {a} IP, {b} Reputasi", "LUKEWARM: {n}% of delegates in support · {a} IP, {b} Reputation"],
+  ["DITERIMA: {n}% perwakilan menyokong · {a} IP, {b} Reputasi · serangan menjadi tular", "ACCEPTED: {n}% of delegates in support · {a} IP, {b} Reputation · the attack went viral"],
+  ["KURANG SAMBUTAN: {n}% perwakilan menyokong · {a} IP, {b} Reputasi · serangan menjadi tular", "LUKEWARM: {n}% of delegates in support · {a} IP, {b} Reputation · the attack went viral"],
+  ["Ucapan Dasar \"{x}\": {n}% perwakilan menyokong (diterima). {y}", "Policy Speech \"{x}\": {n}% of delegates in support (accepted). {y}"],
+  ["Ucapan Dasar \"{x}\": {n}% perwakilan menyokong (kurang sambutan). {y}", "Policy Speech \"{x}\": {n}% of delegates in support (lukewarm). {y}"],
+  ["Ucapan Dasar \"{x}\": {n}% perwakilan menyokong (diterima). Serangan anda dikritik dan menjadi tular. {y}", "Policy Speech \"{x}\": {n}% of delegates in support (accepted). Your attack was criticised and went viral. {y}"],
+  ["Ucapan Dasar \"{x}\": {n}% perwakilan menyokong (kurang sambutan). Serangan anda dikritik dan menjadi tular. {y}", "Policy Speech \"{x}\": {n}% of delegates in support (lukewarm). Your attack was criticised and went viral. {y}"],
+  ["Hanya Presiden menyampaikan Ucapan Dasar.", "Only the President delivers the Policy Speech."],
+  ["Ucapan Dasar sudah disampaikan.", "The Policy Speech has already been delivered."],
+  ["Ucapan Dasar tidak ditemui.", "Policy Speech not found."],
+  ["Tema tidak sah.", "Invalid theme."]
+  ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

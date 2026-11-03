@@ -173,6 +173,8 @@
     .item__row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
     .item select { min-height: 40px; background: var(--bg-elev-1); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: .3rem .6rem; font: inherit; max-width: 100%; }
     .roles { display: flex; flex-wrap: wrap; gap: 6px; }
+    .opsi-ucapan { display: block; width: 100%; text-align: left; border: 2px solid var(--border); border-radius: 8px; padding: 8px 10px; background: var(--bg-elev-2, #fff); color: inherit; font: inherit; cursor: pointer; }   /* v13.22 */
+    .opsi-ucapan b { display: block; } .opsi-ucapan small { color: var(--text-muted); font-size: .8rem; } .opsi-ucapan:hover:not(:disabled) { border-color: var(--gold); } .opsi-ucapan:disabled { opacity: .5; cursor: not-allowed; }
     .result { font-size: .85rem; padding: .5rem .75rem; border-radius: 8px; background: var(--bg-elev-1); border-left: 3px solid var(--gold); color: var(--text-muted); }
     .result.is-good { border-left-color: var(--success); }
     .result.is-bad { border-left-color: var(--danger); }
