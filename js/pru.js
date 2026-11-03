@@ -821,7 +821,7 @@
     }
     /* v11.4: anggaran kerusi Parlimen/DUN dijana sekali di sini dan disimpan (p.kerusiNasional), supaya "kerajaan/pembangkang" pemain
        sama dengan kad Kerusi Parlimen / DUN. Sebelum ini kedua-duanya rawak berasingan, jadi pemain boleh menjadi pembangkang walaupun parti majoriti. */
-    var PPk = modul('MyPolitikPaparan', 'paparan.js'), kerusiAnggar = null;
+    var PPk = modul('NusaPaparan', 'paparan.js'), kerusiAnggar = null;
     try { if (PPk && PPk.anggarKerusi) { kerusiAnggar = PPk.anggarKerusi(p, { tahun: p.tahun, bulan: p.bulan }, { negeri: a.kerusi && a.kerusi.lain && a.kerusi.negeri && a.candidateType === 'DUN' ? a.kerusi.negeri : null, pop: a.partiPopulariti }); } } catch (eK) { kerusiAnggar = null; }
     function kerajaanDariKerusi(jenis, sekunder) {
       if (!kerusiAnggar) { return null; }
@@ -928,14 +928,24 @@
     } else {
       hasil = 'PEMBANGKANG'; mesej = n.status === 'PEMBANGKANG' ? 'Parti anda menjadi pembangkang.' : 'Anda menolak gabungan. Parti menjadi pembangkang.';
     }
+    n.selesai = true; n.hasil = hasil;
+    pru.nasional = n;
+    /* v13.21 (maklum balas pemain): status kerajaan/pembangkang kerusi pemain ikut keputusan rundingan (sebelum ini dikira daripada anggaran
+       kerusi berasingan sebelum rundingan, jadi Presiden boleh menjadi PM tetapi dengan peruntukan pembangkang). Kad kerusi dijana semula daripada keputusan ini. */
+    var PPn = modul('NusaPaparan', 'paparan.js'), kaN = null, patchN = {};
+    try { if (PPn && PPn.anggarKerusi) { kaN = PPn.anggarKerusi(p, { tahun: n.tahun, bulan: n.bulan }, {}); } } catch (eN) { kaN = null; }
+    [pru.status, pru.statusKedua].forEach(function (st) {
+      if (!st) { return; }
+      if (st.jenis === 'MP') { st.kerajaan = hasil !== 'PEMBANGKANG'; }
+      else if (st.jenis === 'ADUN' && !st.lain && kaN && kaN.dun) { st.kerajaan = kaN.dun.kerajaan >= Math.floor(kaN.dun.jumlah / 2) + 1; }
+    });
+    if (kaN) { patchN.kerusiNasional = kaN; }
     if (hasil === 'PEMBANGKANG') {                                                          // v13.17: pembangkang di Parlimen tetapi parti membentuk kerajaan negeri: lobi DUN (MB / EXCO)
       var stA = [pru.status, pru.statusKedua].filter(function (x) { return x && x.jenis === 'ADUN' && x.kerajaan; })[0];
       if (stA && K && K.bukaLobi) { var rL = K.bukaLobi('DUN'); if (rL && rL.ok) { buka = true; mesej += ' Parti anda membentuk kerajaan negeri: lobi kerajaan negeri dibuka.'; } }
     }
-    n.selesai = true; n.hasil = hasil;
-    pru.nasional = n;
     pru.sejarahNasional = (pru.sejarahNasional || []).concat([{ tahun: n.tahun, bulan: n.bulan, parti: n.parti, rakan: n.rakan, status: n.status, hasil: hasil }]).slice(-5);
-    var res = simpanPRU(pru, kes, { log: { tindakan: 'pru_kerajaan', nama: 'Rundingan kerajaan: ' + hasil, peringkat: 'ahli' } });
+    var res = simpanPRU(pru, kes, { patch: patchN, log: { tindakan: 'pru_kerajaan', nama: 'Rundingan kerajaan: ' + hasil, peringkat: 'ahli' } });
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
     return { ok: true, hasil: hasil, mesej: mesej, bukaLobi: buka };
   }

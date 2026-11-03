@@ -3499,6 +3499,9 @@
   ]);
   /* v13.20: Lantikan Kekalkan / Ubah */
   T.tambah([
+  ["Cawangan: {x}", "Branch: {x}"],
+  ["Bahagian: {x}", "Division: {x}"],
+  ["Sayap: {x}", "Wing: {x}"],
   ["📋 Lantikan: Kekalkan atau Ubah", "📋 Appointments: Keep or Change"],
   ["Anda menang sebagai Ketua. Kekalkan pegawai sedia ada atau lantik penyokong anda. Yang belum dipilih dikekalkan pada akhir bulan.", "You won as Chief. Keep the current officers or appoint your supporters. Anyone not decided is kept at the end of the month."],
   ["Kekalkan", "Keep"],

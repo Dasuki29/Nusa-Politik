@@ -506,7 +506,7 @@
     if (!r.ok) { toast(r.ralat, 'ralat'); segarkan(); return; }
     segarkan();
     await modal({ tajuk: r.hasil === 'PM' ? '👑 Perdana Menteri Malaysia' : r.hasil === 'TPM' ? '🤝 Timbalan Perdana Menteri' : r.hasil === 'KABINET' ? '🗂️ Kabinet' : '🪧 Pembangkang', isi: '<p>' + esc(r.mesej) + '</p>' + (r.hasil === 'PM' || r.hasil === 'TPM' ? '<p style="font-size:.85rem">Elaun bulanan, isu kementerian dan risiko rombakan berjalan seperti jawatan kabinet lain.</p>' : '') });
-    if (r.bukaLobi) { await lobi(); }
+    if (r.bukaLobi) { var mbN = KB && KB.maklumatMB ? KB.maklumatMB(S.loadPlayer()) : null; if (mbN && mbN.boleh) { await menteriBesar(); } else { await lobi(); } }   // v13.21: MB dahulu jika layak (pilihan Lobi portfolio biasa kekal)
     segarkan();
   }
   async function keputusan() {

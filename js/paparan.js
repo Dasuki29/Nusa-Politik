@@ -248,6 +248,9 @@
       var pop = clamp((opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3) + (rng() * 12 - 6), 30, 70);      // v11.4: populariti parti semasa PRU jika ada
       parti = clamp(Math.round(J * (0.18 + (pop - 30) / 40 * 0.42) + (rng() * 16 - 8)), 30, 150);
       rakan = Math.min(J - parti, Math.round(J * (0.14 + rng() * 0.12)));
+      if (p && SW(p.parti) && p.parti !== 'PSB') {                                      // v13.21 (maklum balas pemain): GPS = blok Sarawak dalam Kerajaan Perpaduan (andaian: sentiasa dalam kerajaan persekutuan)
+        parti = 23 + Math.floor(rng() * 6); rakan = Math.min(J - parti, CONFIG.MAJORITI - parti + 8 + Math.floor(rng() * 30));
+      }
     }
     bebas = Math.min(bebas, J - parti - rakan);
     var lawan = J - parti - rakan - bebas, gabung = parti + rakan, kerajaan = gabung >= CONFIG.MAJORITI;

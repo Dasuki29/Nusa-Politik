@@ -1734,7 +1734,9 @@ ujian('v13.17: MB boleh dituntut selepas menang Parlimen + DUN serentak (lobi Pa
     const sm = KB.semakMB(S.loadPlayer()); betul(sm && !sm.item[0].ok && /mesti ADUN/.test(sm.item[0].teks), 'Pengerusi BP tanpa DUN');
     // Presiden: pembangkang di Parlimen, kerajaan negeri -> lobi DUN
     P.tetap({ kabinet: {}, jawatan: 'Presiden', pru: { status: { jenis: 'ADUN', kerusi: 'Kuala Perlis', kerajaan: true }, nasional: { status: 'PEMBANGKANG', tahun: 2031, bulan: 3, parti: 20, rakan: 10 } } });
-    const r = PRU.rundingKerajaan('PEMBANGKANG'); betul(r.ok && r.bukaLobi, r.mesej); sama(KB.getKabinet(S.loadPlayer()).lobi.sumber, 'DUN');
+    const PPx = g.MyPolitikPaparan || g.NusaPaparan, asalA = PPx.anggarKerusi; PPx.anggarKerusi = () => ({ tahun: 2031, bulan: 3, parti: 20, rakan: 10, pembangkang: 190, bebas: 2, kerajaan: false, dun: { jumlah: 15, kerajaan: 12, bebas: 0, pembangkang: 3 } });
+    let r; try { r = PRU.rundingKerajaan('PEMBANGKANG'); } finally { PPx.anggarKerusi = asalA; }
+    betul(r.ok && r.bukaLobi, r.mesej); sama(PRU.getPRU(S.loadPlayer()).status.kerajaan, true, 'ADUN kerajaan ikut kerusi DUN'); sama(KB.getKabinet(S.loadPlayer()).lobi.sumber, 'DUN');
     betul(KB.maklumatMB(S.loadPlayer()).boleh, 'Presiden boleh menuntut MB');
   } finally { NG.status = asal; S.clearPlayer(); }
 });
@@ -1789,6 +1791,15 @@ ujian('v13.20: daftar nama NPC: penyandang dalam Struktur bertanding, pemenang d
   const ajk0 = p.kesetiaan.ajk; let x = N.kekal(0); betul(x.ok, x.ralat); sama(S.loadPlayer().kesetiaan.ajk, Math.min(100, ajk0 + 2));
   const baru = sen[1].pilihan[0]; x = N.ubah(1, baru); betul(x.ok, x.ralat); sama(O.pemegangSlot(S.loadPlayer(), 'cawangan', null, 'peg', 1).nama, baru, 'pegawai baharu dalam Struktur');
   P.tetap({ bulan: 5 }); const ev = N.prosesBulan().peristiwa; sama(ev.length, 1, 'baki dikekalkan automatik'); sama(S.loadPlayer().npc.lantikan, null);
+  S.clearPlayer();
+});
+ujian('v13.21: GPS sentiasa dalam kerajaan persekutuan; status MP Presiden ikut rundingan; pru.js guna NusaPaparan', () => {
+  const PP = g.NusaPaparan, fs = require('fs'), path = require('path');
+  betul(!/modul\('MyPolitikPaparan'/.test(fs.readFileSync(path.join(__dirname, '..', 'js', 'pru.js'), 'utf8')), 'pru.js memanggil modul paparan dengan nama global yang betul');
+  for (let i = 0; i < 20; i++) { const k = PP.anggarKerusi({ id: 'sw' + i, parti: 'PBB', reputasi: 30 + i * 3, pru: {} }, { tahun: 2031 + i, bulan: 3 }, {}); betul(k.kerajaan, 'GPS kerajaan ' + i); }
+  P.daftar({}); P.tetap({ jawatan: 'Presiden', pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: false }, nasional: { status: 'GABUNGAN', tahun: 2031, bulan: 3, parti: 80, rakan: 50, bolehPM: true, peluangPM: 90 } } });
+  const r = PRU.rundingKerajaan('KABINET'); betul(r.ok, r.ralat); sama(PRU.getPRU(S.loadPlayer()).status.kerajaan, true, 'MP kerajaan selepas memilih Kabinet');
+  betul(S.loadPlayer().kerusiNasional && S.loadPlayer().kerusiNasional.parti === 80, 'kad kerusi dijana daripada keputusan rundingan');
   S.clearPlayer();
 });
 ujian('PBB v9.5: Pindah Cawangan PBB (dalam Sarawak sahaja, dunInfo ikut DUN baharu); UMNO tidak ke Sarawak', () => {

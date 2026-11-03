@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.21 (2026-11-04)
+
+- **Baiki besar (maklum balas di borang, beberapa pemain): status kerajaan/pembangkang tidak sama dengan kerusi yang dipaparkan.** Punca: dalam pelayar, `pru.js` memanggil modul anggaran kerusi dengan nama global yang salah (`MyPolitikPaparan`, sepatutnya `NusaPaparan`), jadi pembaikan v11.4 tidak pernah berjalan dalam permainan sebenar: status kerajaan kerusi pemain dilambung secara rawak, berasingan daripada kad Kerusi Parlimen / DUN. Kini status ikut anggaran kerusi yang sama dengan kad (ujian unit memastikan nama modul betul).
+- **Presiden:** selepas rundingan kerajaan (PM / TPM / Kabinet / Pembangkang), status kerusi MP ikut keputusan rundingan dan kad kerusi dijana daripada keputusan itu. Sebelum ini Presiden boleh menjadi PM tetapi dengan peruntukan pembangkang. Jika layak menjadi MB, tetingkap Menteri Besar dibuka dahulu selepas memilih Kabinet (pilihan lobi portfolio biasa kekal).
+- **Parti Sarawak (GPS)**: kerusi Parlimen kini dikira sebagai blok GPS (23 hingga 28 kerusi) dalam Kerajaan Perpaduan, jadi ahli parlimen GPS tidak lagi menjadi pembangkang secara rawak ⚠️ (andaian: GPS sentiasa dalam kerajaan persekutuan; PSB kekal pembangkang).
+- Baiki: label kad Pencabar Utama ("Cawangan: …") dalam EN selepas nama NPC baharu v13.20.
+- Ujian unit baharu. Cache `nusa-v13.21`.
+
 ## v13.20 (2026-10-31)
 
 - **Satu senarai nama NPC (maklum balas di borang, baris 5)**, ikut mockup yang dipersetujui. Sebelum ini nama NPC dijana oleh 5 modul berasingan, jadi Ketua Bahagian dalam Struktur bukan orang yang dilawan dalam pemilihan, dan Struktur tidak berubah selepas pemilihan.
