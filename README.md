@@ -159,6 +159,7 @@ node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: 
 node tools/ujian-import.js       # pelayar: import kod simpanan dari menu utama (peranti baharu tanpa watak)
 node tools/ujian-npc.js          # pelayar: kad Lantikan (Kekalkan / Ubah), nama Struktur MCA bukan Melayu, EN
 node tools/ujian-ucapan.js       # pelayar: Presiden memilih tema Ucapan Dasar di PAU, keputusan, EN
+node tools/ujian-dana.js         # pelayar: keluhan dan Isu Tempatan diselesaikan dengan dana peribadi, had sebulan, EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

@@ -835,6 +835,31 @@ ujian('kawasan: keluhan diselesaikan dengan peruntukan, dibawa sebagai usul ke p
   if (ak !== null) { betul(p.kesetiaan.akarUmbi < ak, 'akar umbi turun'); }
   sama(KW.selesaikan('tiada').ok, false);
 });
+/* ---------- v13.23: Dana peribadi (keluhan dan Isu Tempatan) ---------- */
+ujian('dana peribadi: keluhan kos x1.2, pembangkang +1 akar umbi, had 2 sebulan; Isu Tempatan untuk semua pemain', () => {
+  const KW = g.MyPolitikKawasan, C = KW.DANA_CFG; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: false });
+  P.tetap({ ap: 20, myr: 20000 });
+  let p = S.loadPlayer();
+  S.applyEffects({}, { kiraTindakan: false, patch: { kawasan: Object.assign({}, KW.getKawasan(p), { baki: 0, keluhan: [{ id: 'd1', kod: 'air_terputus', idx: 0 }] }),
+    isu: [{ kod: 'jalan_berlubang', tajuk: 'Jalan kampung berlubang', tahap: 2, selesai: false }, { kod: 'kerja_belia', tajuk: 'Belia', tahap: 3, selesai: false }, { kod: 'lampu_jalan', tajuk: 'Lampu', tahap: 1, selesai: false }] } });
+  p = S.loadPlayer(); sama(KW.selesaikan('d1').ok, false, 'baki peruntukan 0');
+  const kos = KW.kosDana(p, 1800), myr0 = p.myr, ap0 = p.ap, ak0 = p.kesetiaan.akarUmbi, rep0 = p.reputasi;
+  sama(KW.ringkasan(p).keluhan[0].kosDana, kos, 'kos 1500 x1.2');
+  let r = KW.danaKeluhan('d1'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.myr, myr0 - kos); sama(p.ap, ap0 - 1); sama(KW.getKawasan(p).keluhan.length, 0); betul(p.reputasi > rep0, 'reputasi naik');
+  sama(p.kesetiaan.akarUmbi, Math.min(100, ak0 + C.KELUHAN.akarUmbi + C.PEMBANGKANG.akarUmbi), 'pembangkang +1');
+  sama(KW.kosIsu({ tahap: 3 }), 1800); sama(KW.kosIsu({}), 1000, 'lalai tahap 2');
+  r = KW.danaIsu('jalan_berlubang'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  const x = p.isu.filter((i) => i.kod === 'jalan_berlubang')[0]; betul(x.selesai && x.cara === 'dana_peribadi', 'isu selesai');
+  sama(p.danaPeribadi.bil, 2); r = KW.danaIsu('kerja_belia'); sama(r.ok, false, 'had 2 sebulan'); betul(/Had/.test(r.ralat));
+  sama(KW.danaIsu('jalan_berlubang').ok, false, 'sudah selesai');
+  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: p.bulan === 12 ? 1 : p.bulan + 1 } });
+  P.tetap({ myr: 100 }); r = KW.danaIsu('kerja_belia'); sama(r.ok, false); betul(/tidak mencukupi/.test(r.ralat), 'dana tidak cukup');
+  kwPemain(null); P.tetap({ ap: 20, myr: 5000 });
+  S.applyEffects({}, { kiraTindakan: false, patch: { isu: [{ kod: 'lampu_jalan', tajuk: 'Lampu', tahap: 1, selesai: false }] } });
+  p = S.loadPlayer(); const ak1 = p.kesetiaan.akarUmbi; r = KW.danaIsu('lampu_jalan'); betul(r.ok, r.ralat);
+  p = S.loadPlayer(); sama(p.myr, 5000 - KW.kosDana(p, 600)); sama(p.kesetiaan.akarUmbi, Math.min(100, ak1 + C.ISU.akarUmbi), 'Ahli Biasa tanpa kerusi, bukan pembangkang');
+});
 ujian('kawasan: keluhan luput 3 bulan dengan penalti; dialog kurangkan keluhan; baki hangus Januari; tiada kerusi tiada keluhan', () => {
   const KW = g.MyPolitikKawasan; kwPemain({ jenis: 'ADUN', kerusi: 'X', kerajaan: true });
   let p = S.loadPlayer(); const kini = p.tahun * 12 + p.bulan;

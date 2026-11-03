@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.23 (2026-11-04)
+
+- **Selesaikan keluhan rakyat dengan dana peribadi (maklum balas di borang)**, ikut mockup yang dipersetujui. Pemain pembangkang yang hanya mendapat 40% peruntukan kini boleh menyelesaikan keluhan tanpa membawa usul ke mesyuarat.
+  - 📮 Keluhan Rakyat (ADUN / Ahli Parlimen): butang **💰 Dana peribadi**, kos keluhan × 1.2, 1 AP, IP +15, akar umbi +3, Reputasi +1 ⚠️.
+  - 📌 Isu Tempatan (semua pemain, termasuk Ahli Biasa): butang **💰 Selesai sendiri**, RM 600 / RM 1,000 / RM 1,800 ikut tahap isu, 1 AP, IP +10, akar umbi +2, Reputasi +1 ⚠️. Isu ditanda selesai "melalui dana peribadi".
+  - Pemain pembangkang: akar umbi +1 tambahan. Had 2 kali sebulan (gabungan kedua-dua kad). Kos ikut tahap kesukaran seperti perbelanjaan lain.
+- Ujian unit baharu dan `tools/ujian-dana.js` (pelayar). Cache `nusa-v13.23`.
+
 ## v13.22 (2026-11-04)
 
 - **Ucapan Dasar Presiden (maklum balas di borang, 3 pemain)**, ikut mockup yang dipersetujui. Jika pemain ialah Presiden, usul Ucapan Dasar di Perhimpunan Agung (semua parti) kini menjadi **🎤 pilihan tema ucapan** (2 AP ⚠️), bukan sokong / bantah:

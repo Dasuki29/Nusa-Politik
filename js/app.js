@@ -776,11 +776,15 @@
     h += bar('Reputasi Parti', p.reputasi, false);
     $('s-kesetiaan').innerHTML = h;
 
+    function rmIsu(n) { return 'RM ' + Math.round(Number(n) || 0).toLocaleString('ms-MY'); }
     var isu = (p.isu || []).slice().sort(function (a, b) { return (a && a.selesai ? 1 : 0) - (b && b.selesai ? 1 : 0); });   // v7.54: isu belum selesai dahulu; isu selesai ditanda
     $('s-isu').innerHTML = isu.length
       ? '<ul style="margin:0;padding-left:1.1rem;color:var(--text-muted);font-size:.88rem">' + isu.slice(0, 6).map(function (x) {
-          if (x && x.selesai) { return '<li style="opacity:.6;text-decoration:line-through" title="Diselesaikan melalui ' + (x.cara === 'manifesto' ? 'manifesto' : 'usul mesyuarat') + '">&#10003; ' + esc(x.tajuk) + '</li>'; }
-          return '<li>' + esc(x && x.tajuk ? x.tajuk : x) + '</li>'; }).join('') + '</ul>'
+          if (x && x.selesai) { return '<li style="opacity:.6;text-decoration:line-through" title="Diselesaikan melalui ' + (x.cara === 'manifesto' ? 'manifesto' : x.cara === 'dana_peribadi' ? 'dana peribadi' : 'usul mesyuarat') + '">&#10003; ' + esc(x.tajuk) + '</li>'; }
+          var KWi = W.MyPolitikKawasan, bD = '';   // v13.23: selesai sendiri dengan dana peribadi
+          if (KWi && KWi.danaIsu && x && x.kod) { var kI = KWi.kosIsu(x), sI = KWi.statusDana(p, kI); bD = ' <button type="button" class="btn btn--sm btn--ghost' + (sI.boleh ? '' : ' is-off') + '" data-act="isu-dana" data-kod="' + esc(x.kod) + '"' + (sI.boleh ? '' : ' disabled title="' + esc(sI.sebab) + '"') + '>💰 Selesai sendiri (' + esc(rmIsu(KWi.kosDana(p, kI))) + ')</button>'; }
+          return '<li style="margin:4px 0">' + esc(x && x.tajuk ? x.tajuk : x) + bD + '</li>'; }).join('') + '</ul>' +
+          (W.MyPolitikKawasan && W.MyPolitikKawasan.danaIsu && isu.some(function (x) { return x && !x.selesai; }) ? '<p class="note" style="font-size:.78rem;margin-top:6px">Dana peribadi: isu selesai serta-merta tanpa usul mesyuarat. 1 AP, +10 IP, +2 sokongan akar umbi, Reputasi +1 (pembangkang +1 akar umbi). Had 2 kali sebulan.</p>' : '')
       : '<p class="empty">Belum ada isu. Berbual di warung untuk mengumpul isu tempatan.</p>';
 
     var log = p.log || [];
@@ -1825,7 +1829,8 @@
     else if (act === 'gps-rakan') { var gk = W.MyPolitikSarawak.rundingRakan(t.getAttribute('data-pil')); render(); toast(gk.ok ? gk.mesej : gk.ralat, gk.ok ? 'ok' : 'ralat'); }
     else if (act === 'gps-runding') { var gr = W.MyPolitikSarawak.runding(t.getAttribute('data-pil')); render(); toast(gr.ok ? gr.mesej : gr.ralat, gr.ok ? 'ok' : 'ralat'); }
     else if (act === 'blok-dekati') { var bd = W.MyPolitikSarawak.dekati(); render(); toast(bd.ok ? bd.mesej : bd.ralat, bd.ok ? 'ok' : 'ralat'); }
-    else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
+    else if (act === 'isu-dana') { var di = W.MyPolitikKawasan.danaIsu(t.getAttribute('data-kod')); render(); toast(di.ok ? di.mesej : di.ralat, di.ok ? 'ok' : 'ralat'); }
+    else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-dana' ? KWm.danaKeluhan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
     else if (act === 'ke-tab') { setTab(t.getAttribute('data-v')); }
     else if (act === 'ulang-peta') { muatPeta(true); }
@@ -2037,7 +2042,7 @@
     if (EV && EV.getTertunggak()) { tunjukAcara(EV.getTertunggak()); }          // acara yang belum dijawab sebelum muat semula                                      // kemas kini masa nyata (juga antara tab pelayar)
   }
   /* ----- v8.15: butang Undo (js/undo.js). Tindakan yang boleh di-undo: aktiviti bulanan, tindakan sayap/negeri, misi sayap, beli/jual aset. ----- */
-  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'bandar-program': 1, 'kaum-janji': 1, 'naratif-kempen': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1 };
+  var UNDO_ACT = { 'blok-dekati': 1, 'gps-runding': 1, 'gps-lobi': 1, 'bandar-program': 1, 'kaum-janji': 1, 'naratif-kempen': 1, 'gps-rakan': 1, 'tindakan': 1, 'tindakan-sayap': 1, 'misi-sayap': 1, 'dekati-presiden': 1, 'negeri-tindak': 1, 'harta-beli': 1, 'harta-jual': 1, 'harta-naik': 1, 'kawasan-selesai': 1, 'kawasan-usul': 1, 'kawasan-abai': 1, 'kawasan-aktiviti': 1, 'kawasan-dana': 1, 'isu-dana': 1 };
   function kemaskiniUndo() {
     var b = $('btn-undo'), U = W.MyPolitikUndo; if (!b || !U) { return; }
     var k = U.keadaan(S.loadPlayer());

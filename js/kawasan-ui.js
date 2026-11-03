@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nusa Politik — js/kawasan-ui.js   (v8.18, v8.20)
+   Nusa Politik — js/kawasan-ui.js   (v8.18, v8.20, v13.23)
    Kad "Peruntukan Kawasan", "Keluhan Rakyat" dan "Aktiviti Rakyat" di tab Tindakan. Bergantung pada js/kawasan.js dan W.NusaUI (esc).
    ========================================================================== */
 (function (W) {
@@ -25,9 +25,10 @@
       r.keluhan.forEach(function (x) {
         h += '<div style="margin:8px 0"><b>' + x.ikon + ' ' + esc(x.tajuk) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">' + esc(x.penerangan) + '</div>' +
           '<div class="note" style="font-size:.78rem;margin:0 0 4px">Diabaikan automatik dalam ' + x.baki + ' bulan</div>' +
-          btn('kawasan-selesai', x.id, 'Selesaikan (' + esc(rm(x.kos)) + ')', x.bolehSelesai, x.sebabSelesai) + btn('kawasan-usul', x.id, 'Bawa sebagai usul', x.bolehUsul, 'AP tidak mencukupi.') + btn('kawasan-abai', x.id, 'Abaikan', true) + '</div>';
+          btn('kawasan-selesai', x.id, 'Selesaikan (' + esc(rm(x.kos)) + ')', x.bolehSelesai, x.sebabSelesai) +
+          (x.dana ? btn('kawasan-dana', x.id, '💰 Dana peribadi (' + esc(rm(x.kosDana)) + ')', x.dana.boleh, x.dana.sebab) : '') + btn('kawasan-usul', x.id, 'Bawa sebagai usul', x.bolehUsul, 'AP tidak mencukupi.') + btn('kawasan-abai', x.id, 'Abaikan', true) + '</div>';
       });
-      h += '<p class="note" style="font-size:.78rem">Selesaikan: guna peruntukan dan ' + r.apKeluhan + ' AP, +20 IP, +3 sokongan akar umbi. Usul: ' + r.apKeluhan + ' AP, dicatat di papan Isu Tempatan untuk mesyuarat. Abaikan: sokongan akar umbi -2. Tidak dijawab 3 bulan: penalti lebih berat.</p></section>';
+      h += '<p class="note" style="font-size:.78rem">Selesaikan: guna peruntukan dan ' + r.apKeluhan + ' AP, +20 IP, +3 sokongan akar umbi. Usul: ' + r.apKeluhan + ' AP, dicatat di papan Isu Tempatan untuk mesyuarat. Dana peribadi: kos x1.2, ' + r.apKeluhan + ' AP, +15 IP, +3 sokongan akar umbi, Reputasi +1 (pembangkang +1 akar umbi), had 2 kali sebulan. Abaikan: sokongan akar umbi -2. Tidak dijawab 3 bulan: penalti lebih berat.</p></section>';
       h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🎪 Aktiviti Rakyat</h2><p class="note" style="font-size:.78rem">Sekali sebulan, ' + r.apAktiviti + ' AP, guna Peruntukan Kawasan.</p>';
       r.aktiviti.forEach(function (x) {
         h += '<div style="margin:8px 0"><b>' + x.ikon + ' ' + esc(x.nama) + '</b><div class="note" style="font-size:.78rem;margin:2px 0 4px">Kos ' + esc(rm(x.kos)) + ' peruntukan, +' + x.ip + ' IP' + (x.akarUmbi ? ', +' + x.akarUmbi + ' sokongan akar umbi' : '') + (x.kurang ? ', kurangkan keluhan baharu bulan depan' : '') + '</div>' + btn('kawasan-aktiviti', x.id, 'Laksana', x.boleh, x.sebab) + '</div>';

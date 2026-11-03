@@ -2349,7 +2349,7 @@
   ["Diabaikan automatik dalam {a} bulan", "Automatically ignored in {a} months"],
   ["Selesaikan ({a})", "Resolve ({a})"],
   ["Bawa sebagai usul", "Bring as a motion"],
-  ["Selesaikan: guna peruntukan dan {a} AP, +20 IP, +3 sokongan akar umbi. Usul: {b} AP, dicatat di papan Isu Tempatan untuk mesyuarat. Abaikan: sokongan akar umbi -2. Tidak dijawab 3 bulan: penalti lebih berat.", "Resolve: uses the allocation and {a} AP, +20 IP, +3 grassroots support. Motion: {b} AP, recorded on the Local Issues board for the meeting. Ignore: grassroots support -2. Unanswered for 3 months: a heavier penalty."],
+  ["Selesaikan: guna peruntukan dan {a} AP, +20 IP, +3 sokongan akar umbi. Usul: {b} AP, dicatat di papan Isu Tempatan untuk mesyuarat. Dana peribadi: kos x1.2, {c} AP, +15 IP, +3 sokongan akar umbi, Reputasi +1 (pembangkang +1 akar umbi), had 2 kali sebulan. Abaikan: sokongan akar umbi -2. Tidak dijawab 3 bulan: penalti lebih berat.", "Resolve: uses the allocation and {a} AP, +20 IP, +3 grassroots support. Motion: {b} AP, recorded on the Local Issues board for the meeting. Personal funds: cost x1.2, {c} AP, +15 IP, +3 grassroots support, Reputation +1 (opposition +1 grassroots), limit 2 times a month. Ignore: grassroots support -2. Unanswered for 3 months: a heavier penalty."],
   ["Sekali sebulan, {a} AP, guna Peruntukan Kawasan.", "Once a month, {a} AP, uses the Constituency Allocation."],
   ["Kos {a} peruntukan, +{b} IP, +{c} sokongan akar umbi, kurangkan keluhan baharu bulan depan", "Cost {a} allocation, +{b} IP, +{c} grassroots support, fewer new complaints next month"],
   ["Kos {a} peruntukan, +{b} IP, kurangkan keluhan baharu bulan depan", "Cost {a} allocation, +{b} IP, fewer new complaints next month"],
@@ -3560,6 +3560,15 @@
   ["Hanya Presiden menyampaikan Ucapan Dasar.", "Only the President delivers the Policy Speech."],
   ["Ucapan Dasar sudah disampaikan.", "The Policy Speech has already been delivered."],
   ["Ucapan Dasar tidak ditemui.", "Policy Speech not found."],
-  ["Tema tidak sah.", "Invalid theme."]
+  ["Tema tidak sah.", "Invalid theme."],
+  ["💰 Dana peribadi ({a})", "💰 Personal funds ({a})"],
+  ["💰 Selesai sendiri ({a})", "💰 Resolve yourself ({a})"],
+  ["Dana peribadi: isu selesai serta-merta tanpa usul mesyuarat. 1 AP, +10 IP, +2 sokongan akar umbi, Reputasi +1 (pembangkang +1 akar umbi). Had 2 kali sebulan.", "Personal funds: the issue is resolved at once without a meeting motion. 1 AP, +10 IP, +2 grassroots support, Reputation +1 (opposition +1 grassroots). Limit 2 times a month."],
+  ["Had dana peribadi bulan ini sudah dicapai ({n} kali).", "This month's personal fund limit has been reached ({n} times)."],
+  ["Dana peribadi tidak mencukupi (perlu {a}).", "Not enough personal funds (needs {a})."],
+  ["{a} diselesaikan dengan dana peribadi ({b}): +{c} IP, +{d} sokongan akar umbi, Reputasi +{e}.", "{a} resolved with personal funds ({b}): +{c} IP, +{d} grassroots support, Reputation +{e}."],
+  ["Keluhan diselesaikan dengan dana peribadi: {x}", "Complaint resolved with personal funds: {x}"],
+  ["Isu Tempatan diselesaikan dengan dana peribadi: {x}", "Local issue resolved with personal funds: {x}"],
+  ["Isu tidak ditemui atau sudah selesai.", "Issue not found or already resolved."]
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

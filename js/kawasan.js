@@ -11,6 +11,9 @@
    State: p.kawasan = { baki, akhir, tahun, sejarah, keluhan:[{id,kod,idx}], aktivitiAkhir, kurang }
    ANDAIAN: semua angka ialah penyeimbang simulasi, bukan peruntukan sebenar.
    API: CONFIG, KELUHAN, AKTIVITI, jumlahBulanan(p), ringkasan(p), selesaikan(id), usul(id), abai(id), aktiviti(id), prosesBulan(o)
+   v13.23: Dana peribadi (maklum balas pemain, mockup dipersetujui): keluhan (kos x1.2) dan Isu Tempatan (ikut tahap) boleh diselesaikan
+     dengan p.myr tanpa usul mesyuarat. 1 AP, had 2 kali sebulan (gabungan). Pembangkang: akar umbi +1 tambahan.
+     State: p.danaPeribadi = { kunci:'tahun-bulan', bil }. API: DANA_CFG, statusDana(p), danaKeluhan(id), danaIsu(kod), kosIsu(x).
    ========================================================================== */
 (function (root, factory) {
   'use strict';
@@ -51,6 +54,8 @@
     { id: 'dialog', ikon: '🗣️', nama: 'Dialog bersama rakyat', kos: 300, ip: 6, akarUmbi: 0, kurang: 1 }
   ];
   var AKTIVITI_AP = 2;
+  var DANA_CFG = { GANDA: 1.2, HAD: 2, AP: 1, KELUHAN: { ip: 15, akarUmbi: 3, reputasi: 1 }, ISU: { ip: 10, akarUmbi: 2, reputasi: 1 },
+    KOS_ISU: { 1: 600, 2: 1000, 3: 1800 }, PEMBANGKANG: { akarUmbi: 1 } };
   function cariKeluhan(kod) { return KELUHAN.filter(function (x) { return x.kod === kod; })[0] || null; }
 
   function dasar() { return { baki: 0, akhir: '', tahun: 0, sejarah: [], keluhan: [], aktivitiAkhir: '', kurang: 0 }; }
@@ -86,7 +91,8 @@
     return { aktif: j.jumlah > 0, kerusi: kerusi, bulanan: j.jumlah, butiran: j.butiran, baki: k.baki,
       keluhan: k.keluhan.map(function (x) {
         var d = cariKeluhan(x.kod), umur = Math.max(0, kini - x.idx), sebabP = k.baki < d.kos ? 'Baki peruntukan tidak mencukupi (perlu ' + rm(d.kos) + ').' : ap < KELUHAN_CFG.AP ? 'AP tidak mencukupi.' : '';
-        return { id: x.id, kod: d.kod, ikon: d.ikon, tajuk: d.tajuk, penerangan: d.penerangan, kos: d.kos, umur: umur, baki: Math.max(0, KELUHAN_CFG.LUPUT.bulan - umur), bolehSelesai: !sebabP, sebabSelesai: sebabP, bolehUsul: ap >= KELUHAN_CFG.AP };
+        return { id: x.id, kod: d.kod, ikon: d.ikon, tajuk: d.tajuk, penerangan: d.penerangan, kos: d.kos, umur: umur, baki: Math.max(0, KELUHAN_CFG.LUPUT.bulan - umur), bolehSelesai: !sebabP, sebabSelesai: sebabP, bolehUsul: ap >= KELUHAN_CFG.AP,
+          kosDana: kosDana(p, kosKeluhanDana(d)), dana: statusDana(p, kosKeluhanDana(d)) };
       }),
       aktiviti: AKTIVITI.map(function (x) {
         var sebab = k.aktivitiAkhir === kunciBulan(p) ? 'Aktiviti rakyat sudah dibuat bulan ini.' : k.baki < x.kos ? 'Baki peruntukan tidak mencukupi (perlu ' + rm(x.kos) + ').' : ap < AKTIVITI_AP ? 'AP tidak mencukupi.' : '';
@@ -102,6 +108,53 @@
   function cariK(k, id) { return k.keluhan.filter(function (x) { return x.id === id; })[0] || null; }
   function buang(k, id) { k.keluhan = k.keluhan.filter(function (x) { return x.id !== id; }); }
   function catat(k, p, jenis, kod) { k.sejarah = k.sejarah.concat([{ jenis: jenis, kod: kod, tahun: p.tahun, bulan: p.bulan }]).slice(-10); }
+
+  /* ---------- v13.23: Dana peribadi ---------- */
+  function pembangkang(p) {
+    var Pr = PR(), st = Pr && Pr.semuaStatus ? Pr.semuaStatus(p) : [];
+    if (st.some(function (x) { return x && x.kerajaan === false; })) { return true; }
+    return !!(p && p.kerusiNasional && typeof p.kerusiNasional === 'object' && p.kerusiNasional.kerajaan === false);
+  }
+  function kosDana(p, n) { var Sv = S(); return Sv && Sv.kosSebenar ? Sv.kosSebenar(p, n) : n; }
+  function kosKeluhanDana(d) { return Math.round(d.kos * DANA_CFG.GANDA); }
+  function kosIsu(x) { var t = parseInt(x && x.tahap, 10); return DANA_CFG.KOS_ISU[t >= 1 && t <= 3 ? t : 2]; }
+  function bilDana(p) { var d = p && p.danaPeribadi; return d && d.kunci === kunciBulan(p) ? Math.max(0, Number(d.bil) || 0) : 0; }
+  /** Status asas: { boleh, sebab, baki } (had bulanan dan AP; dana disemak oleh pemanggil). */
+  function statusDana(p, kos) {
+    var baki = DANA_CFG.HAD - bilDana(p), sebab = '';
+    if (baki <= 0) { sebab = 'Had dana peribadi bulan ini sudah dicapai (' + DANA_CFG.HAD + ' kali).'; }
+    else if ((Number(p && p.ap) || 0) < DANA_CFG.AP) { sebab = 'AP tidak mencukupi.'; }
+    else if (kos != null && (Number(p && p.myr) || 0) < kosDana(p, kos)) { sebab = 'Dana peribadi tidak mencukupi (perlu ' + rm(kosDana(p, kos)) + ').'; }
+    return { boleh: !sebab, sebab: sebab, baki: Math.max(0, baki), pembangkang: pembangkang(p) };
+  }
+  function kesanDana(p, C, kos) {
+    var au = C.akarUmbi + (pembangkang(p) ? DANA_CFG.PEMBANGKANG.akarUmbi : 0);
+    return { kesan: { ap: -DANA_CFG.AP, myr: -kos, ip: C.ip, reputasi: C.reputasi, kesetiaan: { akarUmbi: au } }, au: au,
+      dp: { kunci: kunciBulan(p), bil: bilDana(p) + 1 } };
+  }
+  function mesejDana(p, tajuk, C, k) { return tajuk + ' diselesaikan dengan dana peribadi (' + rm(kosDana(p, -k.kesan.myr)) + '): +' + C.ip + ' IP, +' + k.au + ' sokongan akar umbi, Reputasi +' + C.reputasi + '.'; }
+  /** Selesaikan keluhan (Keluhan Rakyat) dengan dana peribadi. */
+  function danaKeluhan(id) {
+    var c = sedia(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
+    var x = cariK(c.k, id), d = x && cariKeluhan(x.kod); if (!d) { return { ok: false, ralat: 'Keluhan tidak ditemui.' }; }
+    var kos = kosKeluhanDana(d), st = statusDana(c.p, kos); if (!st.boleh) { return { ok: false, ralat: st.sebab }; }
+    buang(c.k, id); catat(c.k, c.p, 'dana', d.kod);
+    var k = kesanDana(c.p, DANA_CFG.KELUHAN, kos);
+    var r = c.Sv.applyEffects(k.kesan, { kiraTindakan: false, patch: { kawasan: c.k, danaPeribadi: k.dp }, log: { tindakan: 'kawasan_dana', nama: 'Keluhan diselesaikan dengan dana peribadi: ' + d.tajuk, peringkat: 'ahli' } });
+    return r.ok ? { ok: true, mesej: mesejDana(c.p, d.tajuk, DANA_CFG.KELUHAN, k) } : { ok: false, ralat: r.ralat || 'Gagal.' };
+  }
+  /** Selesaikan Isu Tempatan (papan p.isu) dengan dana peribadi; semua pemain. */
+  function danaIsu(kod) {
+    var Sv = S(), p = Sv && Sv.loadPlayer(); if (!p || p.tamat) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
+    var isu = Array.isArray(p.isu) ? p.isu.slice() : [], ix = -1;
+    isu.forEach(function (x, n) { if (ix < 0 && x && x.kod === kod && !x.selesai) { ix = n; } });
+    if (ix < 0) { return { ok: false, ralat: 'Isu tidak ditemui atau sudah selesai.' }; }
+    var x = isu[ix], kos = kosIsu(x), st = statusDana(p, kos); if (!st.boleh) { return { ok: false, ralat: st.sebab }; }
+    isu[ix] = Object.assign({}, x, { selesai: true, cara: 'dana_peribadi', selesaiTahun: p.tahun, selesaiBulan: p.bulan });
+    var k = kesanDana(p, DANA_CFG.ISU, kos);
+    var r = Sv.applyEffects(k.kesan, { kiraTindakan: false, patch: { isu: isu, danaPeribadi: k.dp }, log: { tindakan: 'isu_dana', nama: 'Isu Tempatan diselesaikan dengan dana peribadi: ' + x.tajuk, peringkat: 'ahli' } });
+    return r.ok ? { ok: true, mesej: mesejDana(p, x.tajuk, DANA_CFG.ISU, k) } : { ok: false, ralat: r.ralat || 'Gagal.' };
+  }
 
   /** Selesaikan keluhan dengan Peruntukan Kawasan. */
   function selesaikan(id) {
@@ -176,5 +229,6 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, KELUHAN: KELUHAN, KELUHAN_CFG: KELUHAN_CFG, AKTIVITI: AKTIVITI, getKawasan: getKawasan, jumlahBulanan: jumlahBulanan, ringkasan: ringkasan, selesaikan: selesaikan, usul: usul, abai: abai, aktiviti: aktivitiRakyat, prosesBulan: prosesBulan };
+  return { CONFIG: CONFIG, KELUHAN: KELUHAN, KELUHAN_CFG: KELUHAN_CFG, AKTIVITI: AKTIVITI, getKawasan: getKawasan, jumlahBulanan: jumlahBulanan, ringkasan: ringkasan, selesaikan: selesaikan, usul: usul, abai: abai, aktiviti: aktivitiRakyat, prosesBulan: prosesBulan,
+    DANA_CFG: DANA_CFG, statusDana: statusDana, danaKeluhan: danaKeluhan, danaIsu: danaIsu, kosIsu: kosIsu, kosDana: kosDana };
 });
