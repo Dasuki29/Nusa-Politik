@@ -4,7 +4,7 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v13.26';
+var VERSI = 'nusa-v13.27';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
@@ -42,6 +42,7 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   var r = e.request, u = new URL(r.url);
   if (r.method !== 'GET' || u.origin !== self.location.origin) { return; }       // abaikan Sheets, analitik dan fon luar
+  if (r.headers.has('range')) { return; }                                         // v13.27: strim audio (206) tidak boleh disimpan dalam cache
   e.respondWith(fetch(r).then(function (res) {
     if (res && res.ok && res.type === 'basic') { var salin = res.clone(); caches.open(VERSI).then(function (c) { c.put(r, salin); }); }
     return res;

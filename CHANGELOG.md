@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v13.27 (2026-11-04)
+
+- **Muzik latar UMNO**: cover orkestra lagu UMNO (`assets/audio/lagu-umno.mp3`, digunakan dengan kebenaran) menggantikan mars asli untuk pemain UMNO. Parti lain kekal dengan gubahan mars asli yang dijana pelayar.
+- Service worker tidak lagi cuba menyimpan permintaan strim audio (Range / 206) dalam cache.
+- Ujian pelayar baharu `tools/ujian-audio.js`. Cache `nusa-v13.27`.
+
 ## v13.26 (2026-11-04)
 
 - **Carta hemisikal Fasa 2**, ikut mockup yang dipersetujui.

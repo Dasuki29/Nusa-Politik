@@ -5,8 +5,9 @@
    Sumber muzik:
      1. Fail anda: letakkan MP3/OGG di assets/audio/ dan tetapkan
           window.MYPOLITIK_CONFIG.musicUrl = 'assets/audio/lagu-latar.mp3';
-        (Gunakan fail yang anda berhak guna. Lagu rasmi/anthem parti ialah hak cipta
-         pemiliknya, jadi tiada fail disertakan di sini.)
+        (Gunakan fail yang anda berhak guna. Lagu rasmi/anthem parti ialah hak cipta pemiliknya.)
+        v13.27: assets/audio/lagu-umno.mp3 (cover orkestra lagu UMNO, digunakan dengan kebenaran) dimainkan
+        untuk pemain UMNO sahaja (LAGU_PARTI); parti lain guna gubahan mars asli.
      2. Jika tiada fail atau gagal dimuat: gubahan mars ringkas asli dijana oleh
         pelayar (Web Audio) supaya butang tetap berfungsi.
 
@@ -102,7 +103,10 @@
   }
 
   /* ---------- Main / jeda ---------- */
-  function sumberFail() { var c = root.MYPOLITIK_CONFIG || {}; return c.musicUrl || ''; }
+  /** v13.27: lagu latar UMNO (cover orkestra, dengan kebenaran pemilik) untuk pemain UMNO sahaja; parti lain kekal mars asli. */
+  var LAGU_PARTI = { UMNO: 'assets/audio/lagu-umno.mp3' };
+  function partiPemain() { try { var Sv = root.MyPolitikSave, p = Sv && Sv.loadPlayer ? Sv.loadPlayer() : null; return p ? (p.parti || 'UMNO') : ''; } catch (e) { return ''; } }
+  function sumberFail() { var c = root.MYPOLITIK_CONFIG || {}; return c.musicUrl || LAGU_PARTI[partiPemain()] || ''; }
 
   async function play() {
     if (st.mod === 'fail' && st.el) {
