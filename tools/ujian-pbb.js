@@ -87,8 +87,8 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(), pru = MyPolitikPRU.getPRU(p); pru.status = { jenis: 'ADUN', kerusi: 'Uji', sejakTahun: 2026, sejakBulan: 6, kerajaan: false };
     MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { pru: pru } }); NusaUI.render(); });
   await pg.click('[data-tab="dewan"]').catch(() => {}); await pg.waitForTimeout(500);
-  const dw = await pg.evaluate(() => { const b = document.querySelector('.dw-bar'); return b ? b.textContent + ' | ' + b.parentNode.textContent : ''; });
-  semak(/GPS \d+/.test(dw) && !/BN \d+/.test(dw) && /GPS \(pembangkang\)/.test(dw), 'bar kerusi DUN berlabel GPS (' + dw.slice(0, 160) + ')');
+  const dw = await pg.evaluate(() => { const b = document.querySelector('.dw-hemi .dw-hemi-leg'); return b ? b.textContent + ' | ' + b.closest('section').textContent : ''; });   // v13.25: carta hemisikal
+  semak(/GPS/.test(dw.split(' | ')[0]) && !/\bBN\b/.test(dw.split(' | ')[0]) && /GPS \(pembangkang\) \d+/.test(dw), 'carta kerusi DUN berlabel GPS (' + dw.slice(0, 160) + ')');
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

@@ -3571,6 +3571,14 @@
   ["Isu Tempatan diselesaikan dengan dana peribadi: {x}", "Local issue resolved with personal funds: {x}"],
   ["Isu tidak ditemui atau sudah selesai.", "Issue not found or already resolved."],
   ["Naikkan sokongan perwakilan sebelum PAU. Jelajah: +{a}% di satu Bahagian pilihan. Majlis Penerangan: +{b}% di semua Bahagian dalam satu negeri. Setiap satu sekali sebulan.", "Raise delegate support before the General Assembly. Division Tour: +{a}% in one chosen Division. State Liaison Body Briefing: +{b}% in every Division in one state. Each once a month."],
+  ["Kerajaan {a} · Pembangkang {b}", "Government {a} · Opposition {b}"],
+  ["Garis putus = majoriti mudah ({n}).", "Dashed line = simple majority ({n})."],
+  ["Garis putus = majoriti mudah ({n}). Titik bertepi kuning = kerusi anda.", "Dashed line = simple majority ({n}). Yellow-ringed dot = your seat."],
+  ["⭐ Kerusi anda:", "⭐ Your seat:"],
+  ["· majoriti {n}", "· majority {n}"],
+  ["⏭️ Langkau animasi", "⏭️ Skip animation"],
+  ["Rakan gabungan", "Coalition partners"],
+  ["Bebas/lain", "Independent/other"],
   ["Naikkan sokongan perwakilan sebelum Perhimpunan Agung. Jelajah: +{a}% di satu Bahagian pilihan, sekali sebulan.", "Raise delegate support before the General Assembly. Division Tour: +{a}% in one chosen Division, once a month."]
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

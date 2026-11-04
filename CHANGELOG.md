@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.25 (2026-11-04)
+
+- **Carta hemisikal Dewan (Fasa 1)**, ikut mockup yang dipersetujui. Di tab Dewan, bar kerusi mendatar diganti dengan separuh bulatan, satu titik untuk setiap kerusi (Dewan Rakyat 222 dan DUN negeri).
+  - Warna: parti anda, rakan gabungan, bebas/lain, PH, PN. Pihak kerajaan di kiri, pembangkang di kanan, garis putus untuk majoriti mudah.
+  - Kerusi anda ditonjolkan (titik bertepi kuning); ketik untuk melihat nama kerusi. Nama kerusi dan majoriti PRU dipapar di bawah carta.
+  - Animasi isian sekali bagi setiap keputusan PRU (sekitar 2 saat), boleh dilangkau; dimatikan jika peranti meminta kurang gerakan.
+  - Paparan sahaja: angka kerusi tidak berubah. Warna PN di carta ditukar kepada hijau tua supaya tidak sama dengan biru BN.
+- Ujian pelayar baharu `tools/ujian-hemisikal.js`. Cache `nusa-v13.25`.
+
 ## v13.24 (2026-11-04)
 
 - **Penjelasan kempen Pemilihan Pusat (maklum balas di borang: "Apakah fungsi ini?")**. Kad UMNO: Pemilihan & Lantikan kini ada nota ringkas: Jelajah +8% di satu Bahagian pilihan, Majlis Penerangan +3% di semua Bahagian dalam satu negeri, setiap satu sekali sebulan. Nota serupa di kad MCA (Jelajah sahaja). Angka tidak berubah. Cache `nusa-v13.24`.

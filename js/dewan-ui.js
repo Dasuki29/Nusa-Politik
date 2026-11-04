@@ -1,7 +1,9 @@
 /* ==========================================================================
-   Nusa Politik — js/dewan-ui.js   (v7.55)
+   Nusa Politik — js/dewan-ui.js   (v7.55, v13.25)
    UI tab Dewan Rakyat (js/dewan.js): kerusi mengikut gabungan, bentang RUU/Bajet, lobi MP, undian,
    Usul Undi Tidak Percaya (3 hari) dan Soal Jawab Lisan.
+   v13.25: carta hemisikal (satu titik = satu kerusi) menggantikan bar kerusi di tab Dewan; kerusi pemain ditonjolkan;
+     animasi isian sekali bagi setiap keputusan PRU (boleh dilangkau). Paparan sahaja, angka tidak berubah.
    Bergantung pada W.NusaUI (modal, toast, render, esc, fmt) daripada js/app.js.
    ========================================================================== */
 (function (W) {
@@ -34,7 +36,14 @@
     '.dw-undi div{border:2px solid var(--garis,var(--border));border-radius:6px;padding:6px;background:var(--bg-elev-2)}.dw-undi b{display:block;font-size:1.25rem}' +
     '.dw-tp{border:3px solid var(--red);background:var(--bg-elev-1)}.dw-list{display:grid;gap:8px;margin:8px 0;padding:0;list-style:none}' +
     '.dw-list button{width:100%;text-align:left}.dw-sej{margin:6px 0 0;padding:0;list-style:none;font-size:.8rem}.dw-sej li{border-left:4px solid var(--garis,var(--border));padding-left:8px;margin:4px 0;color:var(--text-muted)}' +
-    '.dw-tukar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.dw-lulus{color:#14994F;font-weight:800}.dw-gagal{color:#D3162F;font-weight:800}';
+    '.dw-tukar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.dw-lulus{color:#14994F;font-weight:800}.dw-gagal{color:#D3162F;font-weight:800}' +
+    '.dw-hemi{margin:6px 0 2px;color:var(--text,#222)}.dw-hemi svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}' +
+    '.dw-hemi circle[data-hemi-anda]{cursor:pointer}.dw-hemi-leg{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:.78rem;margin:4px 0}' +
+    '.dw-hemi-leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}.dw-hemi-sub{text-align:center;font-size:.85rem;margin:0}' +
+    '.dw-hemi--anim circle{opacity:0;animation:dwpop .25s ease-out forwards}.dw-hemi--anim .dw-hemi-siap{opacity:0;animation:dwpop .3s ease-out 2.1s forwards}' +
+    '@keyframes dwpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}.dw-hemi circle{transform-box:fill-box;transform-origin:center}' +
+    '.dw-hemi--siap circle,.dw-hemi--siap .dw-hemi-siap{animation:none!important;opacity:1!important}' +
+    '@media (prefers-reduced-motion:reduce){.dw-hemi--anim circle,.dw-hemi--anim .dw-hemi-siap{animation:none;opacity:1}}';
   (function () { var s = W.document.createElement('style'); s.textContent = CSS; W.document.head.appendChild(s); })();
 
   function bar(label, nilai, bahaya) {
@@ -53,6 +62,65 @@
     return h + '<i class="dw-garis" style="left:' + (k.ambang / k.jumlah * 100) + '%" title="Majoriti ' + k.ambang + '"></i></div>';
   }
 
+
+  /* ---------- v13.25: carta hemisikal ---------- */
+  var WARNA_H = { PARTI: '#1F3C8F', RAKAN: '#5B7FE0', BN: '#2D50B8', LAIN: '#9AA0AA', PH: '#D7263D', PN: '#0F7B5F' };
+  var GEOM = {};
+  function hash(t) { var h = 0; t = String(t || ''); for (var i = 0; i < t.length; i++) { h = (h * 31 + t.charCodeAt(i)) >>> 0; } return h; }
+  /** Kedudukan titik (disusun ikut sudut, kiri ke kanan) bagi n kerusi. */
+  function geom(n) {
+    if (GEOM[n]) { return GEOM[n]; }
+    var rows = Math.max(3, Math.round(Math.sqrt(n / 1.6))), R = 1, r0 = 0.42, radii = [], pos = [], i, j;
+    for (i = 0; i < rows; i++) { radii.push(r0 + (R - r0) * (i / (rows - 1))); }
+    var tot = radii.reduce(function (a, b) { return a + b; }, 0), baki = n;
+    var bil = radii.map(function (r, x) { var m = x === rows - 1 ? baki : Math.round(n * r / tot); baki -= m; return m; });
+    radii.forEach(function (r, x) { var m = bil[x]; for (j = 0; j < m; j++) { var a = Math.PI * (m === 1 ? 0.5 : j / (m - 1)); pos.push({ x: -Math.cos(a) * r, y: Math.sin(a) * r, a: a, r: r }); } });
+    pos.sort(function (p1, p2) { return (p1.a - p2.a) || (p2.r - p1.r); });
+    GEOM[n] = { pos: pos, dot: (R - r0) / (rows - 1) * 0.42 };
+    return GEOM[n];
+  }
+  /** Kerusi pemain dalam dewan ini: { nama, majoriti } atau null. */
+  function kerusiAnda(p, dun) {
+    var Pr = W.MyPolitikPRU, pr = Pr && Pr.getPRU ? Pr.getPRU(p) : null; if (!pr) { return null; }
+    var st = [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === (dun ? 'ADUN' : 'MP'); })[0]; if (!st) { return null; }
+    var sj = (pr.sejarah || []).filter(function (x) { return x && x.kerusi === st.kerusi && x.hasil === 'menang'; }).pop();
+    return { nama: st.kerusi || '', majoriti: sj && sj.majoriti != null ? sj.majoriti : null };
+  }
+  function blokHemi(k, L, p, dun) {
+    var gab = (L && L.gab) || 'BN', b = [];
+    if (!dun && typeof k.rakan === 'number' && k.rakan > 0 && k.BN - k.rakan > 0) {
+      b.push({ kod: 'PARTI', nama: (p.parti || gab), n: k.BN - k.rakan, anda: true }, { kod: 'RAKAN', nama: 'Rakan gabungan', n: k.rakan });
+    } else { b.push({ kod: 'BN', nama: gab, n: k.BN, anda: true }); }
+    b.push({ kod: 'LAIN', nama: 'Bebas/lain', n: k.LAIN }, { kod: 'PH', nama: 'PH', n: k.PH }, { kod: 'PN', nama: 'PN', n: k.PN });
+    b = b.filter(function (x) { return x.n > 0; });
+    return k.kerajaanBN === false ? b.reverse() : b;                       // pihak kerajaan di kiri
+  }
+  function hemisikal(k, L, p, dun) {
+    var jumlah = k.jumlah, G = geom(jumlah), b = blokHemi(k, L, p, dun), anda = kerusiAnda(p, dun), sasar = -1, i = 0, h = '';
+    var kunci = 'nusa-hemi-' + (dun ? 'dun' : 'rakyat') + '-' + k.tahun + '-' + k.bulan, anim = false;
+    try { anim = !W.localStorage.getItem(kunci); if (anim) { W.localStorage.setItem(kunci, '1'); } } catch (e) { anim = false; }
+    if (anda) { var bA = 0; b.forEach(function (x) { if (x.anda) { sasar = bA + (hash(anda.nama) % x.n); } bA += x.n; }); }
+    var s = 92, cx = 100, cy = 100, lambat = 2000 / jumlah, svg = '';
+    b.forEach(function (x) {
+      for (var j = 0; j < x.n && i < G.pos.length; j++, i++) {
+        var q = G.pos[i], me = i === sasar, rr = G.dot * s * (me ? 1.3 : 1);
+        svg += '<circle cx="' + (cx + q.x * s).toFixed(2) + '" cy="' + (cy - q.y * s).toFixed(2) + '" r="' + rr.toFixed(2) + '" fill="' + WARNA_H[x.kod] + '"' +
+          (me ? ' stroke="#FFC107" stroke-width="1.8" data-hemi-anda="1"' : '') + (anim ? ' style="animation-delay:' + Math.round(i * lambat) + 'ms"' : '') + '><title>' + esc(me ? anda.nama + ' · ' + x.nama : x.nama) + '</title></circle>';
+      }
+    });
+    var ag = Math.PI * (k.ambang - 0.5) / jumlah, r1 = 0.34, r2 = 1.07;
+    svg += '<line class="dw-hemi-siap" x1="' + (cx - Math.cos(ag) * r1 * s).toFixed(2) + '" y1="' + (cy - Math.sin(ag) * r1 * s).toFixed(2) + '" x2="' + (cx - Math.cos(ag) * r2 * s).toFixed(2) + '" y2="' + (cy - Math.sin(ag) * r2 * s).toFixed(2) + '" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2"/>';
+    svg += '<text class="dw-hemi-siap" x="100" y="96" text-anchor="middle" font-weight="800" font-size="18" fill="currentColor">' + jumlah + '</text>';
+    var kj = k.kerajaanBN === false ? jumlah - k.BN : k.BN;
+    h += '<div class="dw-hemi' + (anim ? ' dw-hemi--anim' : '') + '" role="img" aria-label="' + esc((L && L.dewan) || 'Dewan Rakyat') + '"><svg viewBox="0 0 200 104" aria-hidden="true">' + svg + '</svg>' +
+      '<p class="dw-hemi-sub"><b>Kerajaan ' + kj + ' · Pembangkang ' + (jumlah - kj) + '</b></p>' +
+      '<div class="dw-hemi-leg">' + b.map(function (x) { return '<span><i style="background:' + WARNA_H[x.kod] + '"></i>' + esc(x.nama) + '</span>'; }).join('') + '</div>' +
+      '<p class="note dw-hemi-sub" style="font-size:.76rem">Garis putus = majoriti mudah (' + k.ambang + ').' + (anda ? ' Titik bertepi kuning = kerusi anda.' : '') + '</p>' +
+      (anda ? '<p class="note dw-hemi-sub" style="font-size:.8rem">⭐ Kerusi anda: <b>' + esc(anda.nama) + '</b>' + (anda.majoriti != null ? ' · majoriti ' + Number(anda.majoriti).toLocaleString('en') : '') + '</p>' : '') +
+      (anim ? '<p class="dw-hemi-sub"><button type="button" class="btn btn--sm btn--ghost" data-dewan="hemi-langkau">⏭️ Langkau animasi</button></p>' : '') + '</div>';
+    return h;
+  }
+
   /* ---------- Panel ---------- */
   function panel(p) {
     try {
@@ -63,7 +131,7 @@
       h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(L.dewan) + (L.negeri ? ' · ' + esc(L.negeri) : '') + '</h2>';
       if (!k) { return h + '<p class="note">Belum ada keputusan PRU untuk dipaparkan.</p></section>'; }
       h += '<p class="note">' + esc(r.peranan === 'MP' ? 'Ahli Parlimen' : r.peranan === 'ADUN' ? 'ADUN' : r.peranan === 'EXCO' ? (L.gab === 'GPS' ? 'Menteri Negeri' : 'EXCO Negeri') : 'Menteri') + (r.portfolio ? ' · ' + esc(r.portfolio) : '') + ' · ' + (r.kerajaan ? (L.gab && L.gab !== 'BN' ? '<b>Kerajaan: ' + esc(L.gab) + '</b>' : '<b>Kerajaan: BN</b>') : (L.gab && L.gab !== 'BN' ? 'Bukan kerajaan ' + esc(L.gab) : 'Bukan kerajaan BN')) + ' · majoriti ' + r.ambang + '/' + k.jumlah + '</p>';
-      h += pecahKerusi(k, L);
+      h += hemisikal(k, L, p, D !== D0);                                       // v13.25: ganti bar kerusi
       h += '<p class="note">' + (k.kerajaanBN === false ? esc(L.gab || 'BN') + ' (pembangkang)' : 'Kerajaan (' + esc(L.gab || 'BN') + ')') + ' <b>' + k.BN + '</b> · PH <b>' + k.PH + '</b> · PN <b>' + k.PN + '</b> · Bebas/lain <b>' + k.LAIN + '</b></p>';
       if (r.kerajaan) { h += bar('Kestabilan gabungan', r.kestabilan, r.kestabilan < 30) + (r.rating !== null ? bar('Penarafan Tadbir Urus', r.rating, r.rating < 30) : ''); }
       h += '<p class="note" style="font-size:.78rem">Simulasi: angka kerusi dianggar daripada keputusan PRU dalam permainan.</p></section>';
@@ -166,8 +234,11 @@
   }
 
   W.document.addEventListener('click', function (ev) {
+    var c = ev.target.closest ? ev.target.closest('circle[data-hemi-anda]') : null;              // v13.25: ketik kerusi sendiri
+    if (c) { var tt = c.querySelector('title'); toast('⭐ ' + (tt ? tt.textContent : ''), 'ok'); return; }
     var t = ev.target.closest ? ev.target.closest('[data-dewan]') : null;
     if (!t || t.disabled) { return; }
+    if (t.getAttribute('data-dewan') === 'hemi-langkau') { var hm = t.closest('.dw-hemi'); if (hm) { hm.classList.add('dw-hemi--siap'); } t.remove(); return; }
     var a = t.getAttribute('data-dewan'), id = t.getAttribute('data-id'); pilih(S.loadPlayer());
     if (a === 'bentang') { bentang(id); } else if (a === 'lobi') { lobi(id); } else if (a === 'undi') { mulaUndi(); } else if (a === 'tarik') { tarik(); }
     else if (a === 'tukar') { pilihan = id === 'DUN' ? 'DUN' : 'RAKYAT'; segarkan(); } else if (a === 'tp') { tindakTP(id); } else if (a === 'soalan') { soalan(); }
