@@ -2110,6 +2110,46 @@ ujian('v10.6: parti Sarawak tiada Puteri, Fasal UMNO dan syarat penggal MKT', ()
   betul(/id: 'konvensyen_puteri'[^\n]*\n[^]*?syarat: function \(p\) \{ return !p\.parti \|\| p\.parti === 'UMNO'/.test(src) === false || src.indexOf("id: 'konvensyen_wanita'") > 0, 'acara Konvensyen Wanita untuk parti lain wujud');
 });
 
+/* ---------- v13.26: perubahan kerusi semasa penggal dan sejarah PRU ---------- */
+function ksPemain() {
+  P.daftar({ kesukaran: 'NORMAL', sayap: 'utama' });
+  const p0 = S.loadPlayer();
+  S.applyEffects({}, { kiraTindakan: false, patch: { reputasi: 50, kerusiNasional: { tahun: p0.tahun, bulan: p0.bulan, parti: 58, rakan: 62, pembangkang: 99, bebas: 3, kerajaan: true,
+    dun: { jumlah: 42, kerajaan: 24, bebas: 1, pembangkang: 17, negeri: '06' } } } });
+  return S.loadPlayer();
+}
+ujian('kerusi semasa: geser memindah kerusi antara blok (Parlimen dan DUN) dan dicatat', () => {
+  const KS = g.MyPolitikKerusiSemasa; let p = ksPemain();
+  const b0 = KS.blok(p, false), d0 = KS.blok(p, true); sama(b0.PARTI + b0.RAKAN + b0.LAIN + b0.PH + b0.PN, 222);
+  betul(KS.geser({ dari: 'PH', ke: 'PARTI', kerusi: 'P.120' }).ok); p = S.loadPlayer();
+  const b1 = KS.blok(p, false); sama(b1.PARTI, b0.PARTI + 1); sama(b1.PH, b0.PH - 1); sama(b1.PN, b0.PN, 'PN tidak berubah'); sama(p.kerusiNasional.perubahan.length, 1);
+  betul(KS.geser({ dun: true, dari: 'PARTI', ke: 'PN', kerusi: 'N.10' }).ok); p = S.loadPlayer();
+  const d1 = KS.blok(p, true); sama(d1.PARTI, d0.PARTI - 1); sama(d1.PN, d0.PN + 1); sama(d1.PH, d0.PH);
+  sama(KS.geser({ dari: 'LAIN', ke: 'LAIN' }).ok, false); sama(KS.terkini(p).length, 2);
+});
+ujian('kerusi semasa: PRK pemain dan PRK selepas letak jawatan menukar kerusi', () => {
+  const KS = g.MyPolitikKerusiSemasa; let p = ksPemain(); const b0 = KS.blok(p, false);
+  sama(KS.selepasPRKPemain({ jenis: 'PARLIMEN', nama: 'Pekan', pertahan: true, lawan: 'PAS' }, true), null, 'pertahan menang: tiada perubahan');
+  KS.selepasPRKPemain({ jenis: 'PARLIMEN', nama: 'Pekan', pertahan: true, lawan: 'PAS' }, false); p = S.loadPlayer();
+  sama(KS.blok(p, false).PARTI, b0.PARTI - 1); sama(KS.blok(p, false).PN, b0.PN + 1, 'PAS = PN');
+  KS.selepasPRKPemain({ jenis: 'PARLIMEN', nama: 'Bangsar', pertahan: false, lawan: 'DAP' }, true); p = S.loadPlayer();
+  sama(KS.blok(p, false).PARTI, b0.PARTI); sama(KS.blok(p, false).PH, b0.PH - 1, 'rampas daripada PH');
+  KS.selepasPRKLetak({ jenis: 'DUN', nama: 'Peramu' }, false, () => 0.1); p = S.loadPlayer(); sama(KS.blok(p, true).PH, KS.blok(ksPemain(), true).PH + 1);
+});
+ujian('kerusi semasa: PRK NPC 15% sebulan, penyandang kekal, tidak menukar kerajaan; arkib sejarah PRU', () => {
+  const KS = g.MyPolitikKerusiSemasa; let p = ksPemain();
+  sama(KS.prosesBulan({ rng: () => 0.9 }).peristiwa.length, 0, 'tiada PRK (rng >= 0.15)');
+  p = S.loadPlayer(); sama(p.kerusiSejarah.length, 1, 'PRU diarkib'); sama(p.kerusiSejarah[0].PARTI, 58);
+  let ev = KS.prosesBulan({ rng: rngTetap(0.1) }).peristiwa; betul(ev.length === 1 && /mengekalkan/.test(ev[0].mesej), 'rng 0.1: penyandang kekal');
+  const sq = [0.1, 0.9, 0.9, 0.5, 0.95, 0.1], seq = () => sq.length ? sq.shift() : 0.1;    // PRK, Parlimen, blok terakhir (PN), nama, bertukar, pemain
+  ev = KS.prosesBulan({ rng: seq }).peristiwa; p = S.loadPlayer();
+  betul(ev.length === 1 && /merampas/.test(ev[0].mesej), ev.map((e) => e.mesej).join()); sama(p.kerusiNasional.perubahan.length, 1);
+  S.applyEffects({}, { kiraTindakan: false, patch: { kerusiNasional: Object.assign({}, p.kerusiNasional, { parti: 52, rakan: 60, pembangkang: 107, perubahan: [] }) } });
+  const sq2 = [0.1, 0.9, 0.0, 0.5, 0.95, 0.9], seq2 = () => sq2.length ? sq2.shift() : 0.9;   // kerusi PARTI ke pembangkang: 112 -> 111 (merentas ambang)
+  ev = KS.prosesBulan({ rng: seq2 }).peristiwa; p = S.loadPlayer();
+  betul(/mengekalkan/.test(ev[0].mesej), 'PRK NPC tidak menukar kerajaan'); sama(p.kerusiNasional.parti, 52);
+  const sj = KS.sejarah(p); sama(sj.length, 1); betul(!sj[0].ringkas, 'arkib penuh');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

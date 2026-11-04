@@ -294,8 +294,10 @@
   };
   /** Pecah kerusi pembangkang kepada PH/PN (anggaran deterministik). Jika parti anda kalah, PH diberi bahagian lebih besar (gabungan pembangkang utama). */
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
-    var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(jumlah * r);
-    return { PH: ph, PN: jumlah - ph };
+    var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
+    var asal = jumlah - uPH - uPN;
+    var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(asal * r);
+    var PH = Math.max(0, ph + uPH); return { PH: PH, PN: Math.max(0, jumlah - PH) };
   }
   /** v9.5: nama gabungan parti pemain (slot 'BN'): UMNO = Barisan Nasional; PBB = Gabungan Parti Sarawak (DUN) / Kerajaan Perpaduan (persekutuan). */
   function labelBN(p, dun) {

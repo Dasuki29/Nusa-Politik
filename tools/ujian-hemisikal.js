@@ -2,6 +2,7 @@
 /* ==========================================================================
    Nusa Politik — tools/ujian-hemisikal.js   (v13.25)
    Ujian pelayar (Playwright): carta hemisikal tab Dewan: 222 titik, kerusi pemain ditonjolkan, animasi sekali dan Langkau, EN tanpa BM bocor.
+   v13.26: perubahan kerusi (lencana, senarai, kelip), sejarah PRU, carta undian RUU dan Undi Tidak Percaya.
    Dilangkau (kod keluar 0) jika Playwright atau Chromium tiada. Guna: node tools/ujian-hemisikal.js
    ========================================================================== */
 'use strict';
@@ -55,6 +56,30 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
       kerusiNasional: Object.assign({}, p.kerusiNasional, { dun: { jumlah: 42, kerajaan: 24, bebas: 1, pembangkang: 17, negeri: '06' } }) } });
     NusaUI.render(); const h = document.querySelector('#panel-dewan .dw-hemi'); return h ? { n: h.querySelectorAll('circle').length, anda: h.querySelectorAll('circle[data-hemi-anda]').length } : null; });
   semak(dn && dn.n === 42 && dn.anda === 1, 'DUN: 42 titik dan kerusi ADUN ditonjolkan (' + JSON.stringify(dn) + ')');
+  /* v13.26: perubahan kerusi, sejarah PRU, carta undian */
+  const f2 = await pg.evaluate(() => { const S = MyPolitikSave, KS = MyPolitikKerusiSemasa, p = S.loadPlayer(), pr = MyPolitikPRU.getPRU(p);
+    S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, pr, { status: { jenis: 'MP', kerusi: 'Pekan', kerajaan: true, sejakTahun: p.tahun, sejakBulan: p.bulan },
+      sejarahNasional: [{ tahun: p.tahun - 5, bulan: 3, parti: 46, rakan: 66, status: 'kerajaan' }] }) } });
+    KS.prosesBulan({ rng: () => 0.9 });                                               // arkib PRU semasa
+    KS.geser({ dari: 'PH', ke: 'PARTI', kerusi: 'P.120' }); NusaUI.render();
+    const h = document.querySelector('#panel-dewan .dw-hemi');
+    return { chg: h ? h.querySelectorAll('.dw-chg').length : 0, kelip: h ? h.querySelectorAll('.dw-kelip').length : 0, log: !!document.querySelector('#panel-dewan .dw-ubah'), pru: document.querySelectorAll('#panel-dewan [data-dewan="hemi-sejarah"]').length }; });
+  semak(f2.chg === 2, 'lencana perubahan (2): ' + JSON.stringify(f2)); semak(f2.kelip === 1, 'titik berubah berkelip'); semak(f2.log, 'senarai perubahan kerusi'); semak(f2.pru === 3, 'butang PRU lama, PRU semasa dan Semasa');
+  await pg.click('#panel-dewan [data-dewan="hemi-sejarah"]'); await pg.waitForTimeout(300);
+  const sj = await pg.evaluate(() => { const h = document.querySelector('#panel-dewan .dw-hemi'); return { n: h.querySelectorAll('circle').length, t: h.textContent }; });
+  semak(sj.n === 222 && /Pembangkang/.test(sj.t) && /disimpan sebelum/.test(sj.t), 'paparan PRU lama (satu blok pembangkang)');
+  await pg.click('#panel-dewan [data-dewan="hemi-sejarah"][data-id=""]'); await pg.waitForTimeout(300);
+  const vt = await pg.evaluate(() => { const S = MyPolitikSave, p = S.loadPlayer(), d = Object.assign({}, p.dewan || {});
+    d.undi = { id: 'x', jenis: 'ruu', tajuk: 'RUU Ujian', kategori: 'ekonomi', sokong: 98, atas: 34, bantah: 90, lobi: 0, tahun: p.tahun, bulan: p.bulan };
+    S.applyEffects({}, { kiraTindakan: false, patch: { dewan: d } }); NusaUI.render();
+    const c = Array.from(document.querySelectorAll('#panel-dewan .dw-hemi')).filter((x) => /Atas pagar/.test(x.textContent))[0];
+    return c ? { n: c.querySelectorAll('circle').length } : null; });
+  semak(vt && vt.n === 222, 'carta undian RUU (Sokong / Atas pagar / Bantah): ' + JSON.stringify(vt));
+  if (process.env.SKRIN2) { const k = await pg.$('#panel-dewan'); if (k) { await k.screenshot({ path: process.env.SKRIN2 }).catch(() => {}); } }
+  await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(600);
+  const bocor2 = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll('#panel-dewan .dw-hemi, #panel-dewan .dw-ubah').forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t.slice(0, 120)); } } }); return out; }, BM.source + '|Kerajaan|Pembangkang|Sokong|Bantah|Atas pagar|merampas|Semasa|Berbanding|Mac\\b|Ogos|Disember');
+  semak(bocor2.length === 0, 'EN Fasa 2: tiada BM bocor:\n    ' + bocor2.join('\n    '));
+  await pg.evaluate(() => MyPolitikI18n.setLanguage('BM'));
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian Hemisikal lulus.'); process.exit(gagal.length ? 1 : 0);

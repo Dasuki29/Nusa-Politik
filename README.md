@@ -94,6 +94,7 @@ Modul utama dalam `js/`:
 | `friends-bn.js`, `friends-bn-ui.js` | Friends of BN sebagai NPC (kuota kerusi PRU, Jemput berkempen, usul Majlis Tertinggi BN) |
 | `sabah-bn.js`, `sabah-bn-ui.js` | MCA & MIC Sabah (Pemulihan Sabah, kuota MCA Sabah, Senator MIC Sabah) |
 | `npc.js`, `npc-ui.js` | Lantikan pegawai (Kekalkan / Ubah) selepas menang Ketua; daftar nama NPC dalam `organisasi.js` |
+| `kerusi-semasa.js` | Perubahan kerusi semasa penggal (PRK pemain, PRK selepas letak jawatan, PRK NPC) dan arkib sejarah PRU untuk carta hemisikal tab Dewan |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
@@ -160,7 +161,7 @@ node tools/ujian-import.js       # pelayar: import kod simpanan dari menu utama 
 node tools/ujian-npc.js          # pelayar: kad Lantikan (Kekalkan / Ubah), nama Struktur MCA bukan Melayu, EN
 node tools/ujian-ucapan.js       # pelayar: Presiden memilih tema Ucapan Dasar di PAU, keputusan, EN
 node tools/ujian-dana.js         # pelayar: keluhan dan Isu Tempatan diselesaikan dengan dana peribadi, had sebulan, EN
-node tools/ujian-hemisikal.js    # pelayar: carta hemisikal tab Dewan (222 / DUN), kerusi pemain, animasi + Langkau, EN
+node tools/ujian-hemisikal.js    # pelayar: carta hemisikal tab Dewan (222 / DUN), kerusi pemain, animasi + Langkau, perubahan kerusi, sejarah PRU, carta undian, EN
 node tools/ujian-perlembagaan.js # pelayar: menu Perlembagaan UMNO bertab (6 dokumen), Struktur Organisasi Fasa A, EN
 ```
 

@@ -277,6 +277,7 @@
     k.rekod = rek; a.fasa = 'keputusan'; a.keputusan = k; a.campaignFunds = 0;
     var res = S().applyEffects(kes, { kiraTindakan: false, pindahan: true, patch: Object.assign({ prk: prk, pru: pru }, patch), log: { tindakan: 'prk_keputusan', nama: (k.menang ? 'MENANG PRK ' : 'KALAH PRK ') + a.nama, peringkat: 'ahli' } });   // v8.0: baki dana kempen dipulangkan tanpa bonus sayap
     if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    try { var KSm = modul('MyPolitikKerusiSemasa', 'kerusi-semasa.js'); if (KSm && KSm.selepasPRKPemain) { KSm.selepasPRKPemain(a, k.menang); } } catch (eKS) { /* v13.26: carta hemisikal; abaikan */ }
     laras({ stress: k.menang ? CONFIG.MENANG.stress : CONFIG.KALAH.stress });
     if (kab && kab.getKabinet && kb && kb.hasGovernmentRole) {                       // kestabilan jawatan kerajaan
       var p2 = S().loadPlayer(), k2 = kab.getKabinet(p2), m = k.menang ? CONFIG.MENANG : CONFIG.KALAH;

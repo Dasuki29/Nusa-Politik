@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.26 (2026-11-04)
+
+- **Carta hemisikal Fasa 2**, ikut mockup yang dipersetujui.
+  - **Mod undian:** kad 🗳️ Undian (RUU / Bajet, Dewan Rakyat dan DUN) memaparkan carta Sokong / Atas pagar / Bantah dengan garis ambang; setiap lobi mengemas kini titik. Keputusan undian dipapar dengan carta Sokong / Bantah beranimasi. Undi Tidak Percaya: Setia / Goyah / Pembangkang.
+  - **Perubahan kerusi semasa penggal** (modul baharu `js/kerusi-semasa.js`): PRK pemain dan PRK selepas letak jawatan kini menukar kiraan kerusi apabila kerusi bertukar tangan. PRK di kawasan lain (NPC) ⚠️: peluang 15% sebulan, penyandang kekal 70%, pemenang ikut Reputasi; tiada PRK dalam 12 bulan terakhir penggal atau semasa PRU, dan PRK NPC tidak boleh menukar kerajaan. Lencana "UMNO +1 · PH −1", titik berubah berkelip sekali, dan senarai 🔄 Perubahan kerusi semasa penggal.
+  - **Sejarah PRU:** butang PRU lepas (sehingga 5) dengan perbandingan kerusi. PRU baharu diarkib dengan pecahan penuh; PRU lama dipapar dengan pembangkang satu blok.
+  - Lompat parti tidak dimodelkan (Akta Anti Lompat Parti: kerusi dikosongkan dan muncul sebagai PRK).
+- Ujian unit baharu; `tools/ujian-hemisikal.js` diperluas. Cache `nusa-v13.26`.
+
 ## v13.25 (2026-11-04)
 
 - **Carta hemisikal Dewan (Fasa 1)**, ikut mockup yang dipersetujui. Di tab Dewan, bar kerusi mendatar diganti dengan separuh bulatan, satu titik untuk setiap kerusi (Dewan Rakyat 222 dan DUN negeri).

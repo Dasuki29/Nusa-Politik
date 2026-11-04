@@ -201,15 +201,17 @@
     if (!p || p.tamat || !p.letak) { return { peristiwa: ev }; }
     var l = getLetak(p), kini = idx(p), tiba = l.prk.filter(function (x) { return x.i <= kini; });
     if (!tiba.length) { return { peristiwa: ev }; }
-    var r = rng(o), rep = 0;
+    var r = rng(o), rep = 0, kalahList = [];
     l.prk = l.prk.filter(function (x) { return x.i > kini; });
     tiba.forEach(function (x) {
       var pel = peluangPRK(p), menang = r() < pel, n = (x.jenis === 'DUN' ? 'DUN ' : 'Parlimen ') + x.nama;
-      if (!menang) { rep += CONFIG.PRK.kalahReputasi; }
+      if (!menang) { rep += CONFIG.PRK.kalahReputasi; kalahList.push(x); }
       rekod(l, p, 'PRK ' + n + ': calon parti ' + (menang ? 'menang' : 'kalah'));
       ev.push({ jenis: menang ? 'letak_prk_menang' : 'letak_prk_kalah', mesej: 'PRK ' + n + ' (selepas anda meletak jawatan): calon parti ' + (menang ? 'MENANG. Kerusi kekal milik parti.' : 'KALAH. Reputasi ' + neg(CONFIG.PRK.kalahReputasi) + '.') });
     });
     simpan(l, rep ? { reputasi: rep } : {}, { tindakan: 'letak_prk', nama: 'Keputusan PRK selepas letak jawatan', peringkat: 'ahli' });
+    var KSm = modul('MyPolitikKerusiSemasa', 'kerusi-semasa.js');                // v13.26: kerusi bertukar tangan dalam carta hemisikal
+    if (KSm && KSm.selepasPRKLetak) { kalahList.forEach(function (x) { try { KSm.selepasPRKLetak(x, false, r); } catch (eK) { /* abaikan */ } }); }
     return { peristiwa: ev };
   }
 

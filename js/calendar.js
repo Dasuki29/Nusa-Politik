@@ -489,6 +489,8 @@
     if (DUNS && DUNS.prosesBulan) { peristiwa = peristiwa.concat(DUNS.prosesBulan().peristiwa || []); }
     var PRU = muat('MyPolitikPRU', 'pru.js');                                                   // v7.3: pengisytiharan PRU/PRN & penilaian manifesto
     if (PRU && PRU.prosesBulan) { peristiwa = peristiwa.concat(PRU.prosesBulan().peristiwa || []); }
+    var KSm = muat('MyPolitikKerusiSemasa', 'kerusi-semasa.js');                              // v13.26: PRK kawasan lain (NPC) dan arkib sejarah PRU (carta hemisikal)
+    if (KSm && KSm.prosesBulan) { peristiwa = peristiwa.concat(KSm.prosesBulan().peristiwa || []); }
     var NPCm = muat('MyPolitikNPC', 'npc.js');                                                  // v13.20: lantikan pegawai (Kekalkan / Ubah) ditutup pada akhir bulan
     if (NPCm && NPCm.prosesBulan) { peristiwa = peristiwa.concat(NPCm.prosesBulan().peristiwa || []); }
     var SBNm = muat('MyPolitikSabahBN', 'sabah-bn.js');                                         // v13.16: MCA & MIC Sabah (Pemulihan Sabah, Senator)

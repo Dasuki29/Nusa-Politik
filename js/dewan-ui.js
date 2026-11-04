@@ -43,7 +43,9 @@
     '.dw-hemi--anim circle{opacity:0;animation:dwpop .25s ease-out forwards}.dw-hemi--anim .dw-hemi-siap{opacity:0;animation:dwpop .3s ease-out 2.1s forwards}' +
     '@keyframes dwpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}.dw-hemi circle{transform-box:fill-box;transform-origin:center}' +
     '.dw-hemi--siap circle,.dw-hemi--siap .dw-hemi-siap{animation:none!important;opacity:1!important}' +
-    '@media (prefers-reduced-motion:reduce){.dw-hemi--anim circle,.dw-hemi--anim .dw-hemi-siap{animation:none;opacity:1}}';
+    '.dw-hemi-pru{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 6px}.dw-chg{display:inline-block;border:2px solid var(--garis,var(--border));border-radius:6px;padding:0 6px;font-weight:800;font-size:.75rem;background:#b9f6ca;color:#111}.dw-chg.is-turun{background:#fdecea}' +
+    '.dw-kelip{animation:dwkelip .5s ease-in-out 3}@keyframes dwkelip{50%{opacity:.15}}.dw-ubah{margin:6px 0 0;font-size:.85rem}.dw-ubah summary{cursor:pointer;font-weight:700}' +
+    '@media (prefers-reduced-motion:reduce){.dw-kelip{animation:none}.dw-hemi--anim circle,.dw-hemi--anim .dw-hemi-siap{animation:none;opacity:1}}';
   (function () { var s = W.document.createElement('style'); s.textContent = CSS; W.document.head.appendChild(s); })();
 
   function bar(label, nilai, bahaya) {
@@ -64,7 +66,7 @@
 
 
   /* ---------- v13.25: carta hemisikal ---------- */
-  var WARNA_H = { PARTI: '#1F3C8F', RAKAN: '#5B7FE0', BN: '#2D50B8', LAIN: '#9AA0AA', PH: '#D7263D', PN: '#0F7B5F' };
+  var WARNA_H = { PARTI: '#1F3C8F', RAKAN: '#5B7FE0', BN: '#2D50B8', LAIN: '#9AA0AA', PH: '#D7263D', PN: '#0F7B5F', LAWAN: '#B5838D' };
   var GEOM = {};
   function hash(t) { var h = 0; t = String(t || ''); for (var i = 0; i < t.length; i++) { h = (h * 31 + t.charCodeAt(i)) >>> 0; } return h; }
   /** Kedudukan titik (disusun ikut sudut, kiri ke kanan) bagi n kerusi. */
@@ -95,32 +97,81 @@
     b = b.filter(function (x) { return x.n > 0; });
     return k.kerajaanBN === false ? b.reverse() : b;                       // pihak kerajaan di kiri
   }
-  function hemisikal(k, L, p, dun) {
-    var jumlah = k.jumlah, G = geom(jumlah), b = blokHemi(k, L, p, dun), anda = kerusiAnda(p, dun), sasar = -1, i = 0, h = '';
-    var kunci = 'nusa-hemi-' + (dun ? 'dun' : 'rakyat') + '-' + k.tahun + '-' + k.bulan, anim = false;
-    try { anim = !W.localStorage.getItem(kunci); if (anim) { W.localStorage.setItem(kunci, '1'); } } catch (e) { anim = false; }
-    if (anda) { var bA = 0; b.forEach(function (x) { if (x.anda) { sasar = bA + (hash(anda.nama) % x.n); } bA += x.n; }); }
-    var s = 92, cx = 100, cy = 100, lambat = 2000 / jumlah, svg = '';
+  /** v13.26: lukis titik hemisikal. b = [{ warna, nama, n, anda?, kelip? }]; opt = { anim, sasar, namaAnda, label, kelip:[indeks] }. */
+  function lukis(b, jumlah, ambang, opt) {
+    opt = opt || {};
+    var G = geom(jumlah), s = 92, cx = 100, cy = 100, lambat = (opt.ms || 2000) / jumlah, svg = '', i = 0, kelip = opt.kelip || [];
     b.forEach(function (x) {
       for (var j = 0; j < x.n && i < G.pos.length; j++, i++) {
-        var q = G.pos[i], me = i === sasar, rr = G.dot * s * (me ? 1.3 : 1);
-        svg += '<circle cx="' + (cx + q.x * s).toFixed(2) + '" cy="' + (cy - q.y * s).toFixed(2) + '" r="' + rr.toFixed(2) + '" fill="' + WARNA_H[x.kod] + '"' +
-          (me ? ' stroke="#FFC107" stroke-width="1.8" data-hemi-anda="1"' : '') + (anim ? ' style="animation-delay:' + Math.round(i * lambat) + 'ms"' : '') + '><title>' + esc(me ? anda.nama + ' · ' + x.nama : x.nama) + '</title></circle>';
+        var q = G.pos[i], me = i === opt.sasar, rr = G.dot * s * (me ? 1.3 : 1), kl = kelip.indexOf(i) >= 0;
+        svg += '<circle' + (kl ? ' class="dw-kelip"' : '') + ' cx="' + (cx + q.x * s).toFixed(2) + '" cy="' + (cy - q.y * s).toFixed(2) + '" r="' + rr.toFixed(2) + '" fill="' + x.warna + '"' +
+          (me ? ' stroke="#FFC107" stroke-width="1.8" data-hemi-anda="1"' : '') + (opt.anim ? ' style="animation-delay:' + Math.round(i * lambat) + 'ms"' : '') + '><title>' + esc(me ? opt.namaAnda + ' · ' + x.nama : x.nama) + '</title></circle>';
       }
     });
-    var ag = Math.PI * (k.ambang - 0.5) / jumlah, r1 = 0.34, r2 = 1.07;
+    var ag = Math.PI * (ambang - 0.5) / jumlah, r1 = 0.34, r2 = 1.07;
     svg += '<line class="dw-hemi-siap" x1="' + (cx - Math.cos(ag) * r1 * s).toFixed(2) + '" y1="' + (cy - Math.sin(ag) * r1 * s).toFixed(2) + '" x2="' + (cx - Math.cos(ag) * r2 * s).toFixed(2) + '" y2="' + (cy - Math.sin(ag) * r2 * s).toFixed(2) + '" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2"/>';
-    svg += '<text class="dw-hemi-siap" x="100" y="96" text-anchor="middle" font-weight="800" font-size="18" fill="currentColor">' + jumlah + '</text>';
+    svg += '<text class="dw-hemi-siap" x="100" y="96" text-anchor="middle" font-weight="800" font-size="18" fill="currentColor">' + (opt.label != null ? opt.label : jumlah) + '</text>';
+    return '<svg viewBox="0 0 200 104" aria-hidden="true">' + svg + '</svg>';
+  }
+  function legenda(b, nombor) { return '<div class="dw-hemi-leg">' + b.map(function (x) { return '<span><i style="background:' + x.warna + '"></i>' + esc(x.nama) + (nombor ? ' <b>' + x.n + '</b>' : '') + '</span>'; }).join('') + '</div>'; }
+  /** v13.26: carta undian (RUU / Bajet: Sokong, Atas pagar, Bantah; Undi Tidak Percaya: Setia, Goyah, Pembangkang). */
+  function hemiUndi(seg, ambang, opt) {
+    var jumlah = seg.reduce(function (a, x) { return a + x.n; }, 0); if (!jumlah) { return ''; }
+    var b = seg.filter(function (x) { return x.n > 0; });
+    return '<div class="dw-hemi' + (opt && opt.anim ? ' dw-hemi--anim' : '') + '" role="img">' + lukis(b, jumlah, ambang, { label: b[0] ? b[0].n : 0, anim: opt && opt.anim, ms: 1500 }) + legenda(b, true) + '</div>';
+  }
+  var WARNA_U = { SOKONG: '#2E9E5B', ATAS: '#E8A33D', BANTAH: '#D7263D' };
+  var lihat = null;      // v13.26: PRU lepas yang dipapar ('tahun-bulan') atau null (semasa)
+  function KS() { return W.MyPolitikKerusiSemasa; }
+  function namaBlok(kod, p, L, dun) { var gab = (L && L.gab) || 'BN'; return kod === 'PARTI' ? (dun ? gab : (p.parti || gab)) : kod === 'RAKAN' ? 'Rakan gabungan' : kod === 'LAIN' ? 'Bebas/lain' : kod === 'LAWAN' ? 'Pembangkang' : kod; }
+  function tanda1(n) { return (n > 0 ? '+' : n < 0 ? '−' : '±') + Math.abs(n); }
+  function hemisikal(k, L, p, dun) {
+    var jumlah = k.jumlah, b = blokHemi(k, L, p, dun), anda = kerusiAnda(p, dun), sasar = -1, h = '', M = KS();
+    var senarai = M && M.sejarah ? M.sejarah(p).filter(function (e) { return dun ? !!e.dun : true; }) : [];
+    var e = lihat ? senarai.filter(function (x) { return x.tahun + '-' + x.bulan === lihat; })[0] : null; if (!e) { lihat = null; }
+    var butang = senarai.length ? '<div class="dw-hemi-pru">' + senarai.map(function (x) { var id = x.tahun + '-' + x.bulan; return '<button type="button" class="btn btn--sm ' + (lihat === id ? 'btn--primary' : 'btn--ghost') + '" data-dewan="hemi-sejarah" data-id="' + id + '">PRU ' + x.tahun + '</button>'; }).join('') +
+      '<button type="button" class="btn btn--sm ' + (lihat ? 'btn--ghost' : 'btn--primary') + '" data-dewan="hemi-sejarah" data-id="">Semasa</button></div>' : '';
+    if (e) {                                                                     // paparan sejarah PRU
+      var d = dun ? e.dun : e, kods = d.LAWAN != null ? ['PARTI', 'RAKAN', 'LAWAN'] : ['PARTI', 'RAKAN', 'LAIN', 'PH', 'PN'];
+      var bs = kods.map(function (kd) { return { warna: WARNA_H[kd === 'LAWAN' ? 'LAWAN' : (dun && kd === 'PARTI' ? 'BN' : kd)], nama: namaBlok(kd, p, L, dun), n: Number(d[kd]) || 0 }; }).filter(function (x) { return x.n > 0; });
+      var kjE = (d.PARTI + (d.RAKAN || 0)) >= d.ambang; if (!kjE) { bs.reverse(); }
+      var gK = kjE ? d.PARTI + (d.RAKAN || 0) : d.jumlah - d.PARTI - (d.RAKAN || 0), ix = senarai.indexOf(e), sbl = ix > 0 ? (dun ? senarai[ix - 1].dun : senarai[ix - 1]) : null;
+      h += '<div class="dw-hemi" role="img" aria-label="PRU ' + e.tahun + '">' + butang + lukis(bs, d.jumlah, d.ambang) +
+        '<p class="dw-hemi-sub"><b>PRU ' + e.tahun + ' · Kerajaan ' + gK + ' · Pembangkang ' + (d.jumlah - gK) + '</b></p>' + legenda(bs, true) +
+        (sbl ? '<p class="note dw-hemi-sub" style="font-size:.8rem">' + (!dun && (d.RAKAN || sbl.RAKAN) ? 'Berbanding PRU ' + senarai[ix - 1].tahun + ': ' + esc(namaBlok('PARTI', p, L, dun)) + ' ' + tanda1(d.PARTI - sbl.PARTI) + ', rakan gabungan ' + tanda1((d.RAKAN || 0) - (sbl.RAKAN || 0)) + '.' : 'Berbanding PRU ' + senarai[ix - 1].tahun + ': ' + esc(namaBlok('PARTI', p, L, dun)) + ' ' + tanda1(d.PARTI - sbl.PARTI) + '.') + '</p>' : '') +
+        (d.LAWAN != null ? '<p class="note dw-hemi-sub" style="font-size:.76rem">PRU ini disimpan sebelum v13.26: pembangkang dipapar sebagai satu blok.</p>' : '') + '</div>';
+      return h;
+    }
+    var kunci = 'nusa-hemi-' + (dun ? 'dun' : 'rakyat') + '-' + k.tahun + '-' + k.bulan, anim = false;
+    try { anim = !W.localStorage.getItem(kunci); if (anim) { W.localStorage.setItem(kunci, '1'); } } catch (eA) { anim = false; }
+    if (anda) { var bA = 0; b.forEach(function (x) { if (x.anda) { sasar = bA + (hash(anda.nama) % x.n); } bA += x.n; }); }
+    /* perubahan semasa penggal: lencana, titik berkelip (sekali bagi setiap perubahan), senarai */
+    var ubah = M && M.terkini ? M.terkini(p, 3).filter(function (x) { return !!x.dun === !!dun; }) : [], kelip = [], beza = {};
+    ubah.forEach(function (x) { beza[x.ke] = (beza[x.ke] || 0) + 1; beza[x.dari] = (beza[x.dari] || 0) - 1; });
+    var mula = {}, c0 = 0; b.forEach(function (x) { mula[x.kod] = c0; c0 += x.n; });
+    ubah.forEach(function (x, n) {
+      var kc = 'nusa-hemi-ubah-' + x.tahun + '-' + x.bulan + '-' + x.kerusi + '-' + n, baru = false;
+      try { baru = !W.localStorage.getItem(kc); if (baru) { W.localStorage.setItem(kc, '1'); } } catch (eK) { baru = false; }
+      var kd = dun && x.ke === 'PARTI' ? 'BN' : x.ke, bx = b.filter(function (y) { return y.kod === kd; })[0];
+      if (baru && bx) { kelip.push(mula[kd] + Math.max(0, bx.n - 1 - n)); }
+    });
+    var lencana = Object.keys(beza).filter(function (kd) { return beza[kd]; }).map(function (kd) { return '<span class="dw-chg' + (beza[kd] < 0 ? ' is-turun' : '') + '">' + esc(namaBlok(kd, p, L, dun)) + ' <b>' + tanda1(beza[kd]) + '</b></span>'; }).join(' ');
+    var bw = b.map(function (x) { return { warna: WARNA_H[x.kod], nama: x.nama, n: x.n }; });
     var kj = k.kerajaanBN === false ? jumlah - k.BN : k.BN;
-    h += '<div class="dw-hemi' + (anim ? ' dw-hemi--anim' : '') + '" role="img" aria-label="' + esc((L && L.dewan) || 'Dewan Rakyat') + '"><svg viewBox="0 0 200 104" aria-hidden="true">' + svg + '</svg>' +
-      '<p class="dw-hemi-sub"><b>Kerajaan ' + kj + ' · Pembangkang ' + (jumlah - kj) + '</b></p>' +
-      '<div class="dw-hemi-leg">' + b.map(function (x) { return '<span><i style="background:' + WARNA_H[x.kod] + '"></i>' + esc(x.nama) + '</span>'; }).join('') + '</div>' +
+    h += '<div class="dw-hemi' + (anim ? ' dw-hemi--anim' : '') + '" role="img" aria-label="' + esc((L && L.dewan) || 'Dewan Rakyat') + '">' + butang + (lencana ? '<p class="dw-hemi-sub">' + lencana + '</p>' : '') +
+      lukis(bw, jumlah, k.ambang, { anim: anim, sasar: sasar, namaAnda: anda ? anda.nama : '', kelip: kelip }) +
+      '<p class="dw-hemi-sub"><b>Kerajaan ' + kj + ' · Pembangkang ' + (jumlah - kj) + '</b></p>' + legenda(bw) +
       '<p class="note dw-hemi-sub" style="font-size:.76rem">Garis putus = majoriti mudah (' + k.ambang + ').' + (anda ? ' Titik bertepi kuning = kerusi anda.' : '') + '</p>' +
       (anda ? '<p class="note dw-hemi-sub" style="font-size:.8rem">⭐ Kerusi anda: <b>' + esc(anda.nama) + '</b>' + (anda.majoriti != null ? ' · majoriti ' + Number(anda.majoriti).toLocaleString('en') : '') + '</p>' : '') +
       (anim ? '<p class="dw-hemi-sub"><button type="button" class="btn btn--sm btn--ghost" data-dewan="hemi-langkau">⏭️ Langkau animasi</button></p>' : '') + '</div>';
+    var log = (p.kerusiNasional && Array.isArray(p.kerusiNasional.perubahan) ? p.kerusiNasional.perubahan : []).filter(function (x) { return !!x.dun === !!dun; });
+    if (log.length) {
+      h += '<details class="dw-ubah"><summary>🔄 Perubahan kerusi semasa penggal (' + log.length + ')</summary><ul class="dw-sej">' + log.slice().reverse().map(function (x) {
+        return '<li>' + esc(BULAN[(x.bulan || 1) - 1] + ' ' + x.tahun) + ': PRK ' + esc(x.kerusi) + ' · ' + esc(namaBlok(x.ke, p, L, dun)) + ' merampas kerusi daripada ' + esc(namaBlok(x.dari, p, L, dun)) + '</li>';
+      }).join('') + '</ul></details>';
+    }
     return h;
   }
-
   /* ---------- Panel ---------- */
   function panel(p) {
     try {
@@ -161,6 +212,7 @@
   function kadUndi(s) {
     var u = s.undi, h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🗳️ Undian: ' + esc(u.tajuk) + '</h2>';
     h += '<div class="dw-undi"><div>Sokong<b>' + u.sokong + '</b></div><div>Atas pagar<b>' + u.atas + '</b></div><div>Bantah<b>' + u.bantah + '</b></div></div>';
+    h += hemiUndi([{ warna: WARNA_U.SOKONG, nama: 'Sokong', n: u.sokong }, { warna: WARNA_U.ATAS, nama: 'Atas pagar', n: u.atas }, { warna: WARNA_U.BANTAH, nama: 'Bantah', n: u.bantah }], s.ambang);   // v13.26
     h += '<p class="note">Perlu <b>' + s.ambang + '</b> sokong · anggaran peluang lulus: <b>' + esc(s.kebarangkalian) + '</b> · lobi berbaki: ' + s.baki + '</p><ul class="dw-list">';
     s.tindakan.forEach(function (t) { h += btn('lobi', t.id, t.nama, t.huraian, t.boleh ? true : t.sebab); });
     h += '</ul><button type="button" class="btn btn--primary btn--block" data-dewan="undi">🗳️ Mula Undian Sekarang</button> <button type="button" class="btn btn--ghost btn--block" data-dewan="tarik">Tarik Balik Usul</button></section>';
@@ -169,6 +221,7 @@
   function kadTP(s, L) {
     var t = s.tp, h = '<section class="card dw-tp"><h2 class="card__title" style="margin:0 0 4px">⚠️ Undi Tidak Percaya (' + esc(L.ketua) + ') · Hari ' + Math.min(t.hari, s.hariMaks) + '/' + s.hariMaks + '</h2>';
     h += '<div class="dw-undi"><div>Setia<b>' + t.setia + '</b></div><div>Goyah<b>' + t.goyah + '</b></div><div>Pembangkang<b>' + t.tentang + '</b></div></div>';
+    h += hemiUndi([{ warna: WARNA_U.SOKONG, nama: 'Setia', n: t.setia }, { warna: WARNA_U.ATAS, nama: 'Goyah', n: t.goyah }, { warna: WARNA_U.BANTAH, nama: 'Pembangkang', n: t.tentang }], s.ambang);   // v13.26
     h += '<p class="note">Perlu <b>' + s.ambang + '</b> undi untuk kekal. Setiap wakil rakyat goyah boleh dipujuk; sebahagian kecil akan menyokong anda pada hari undian. Hubungan gabungan: ' + s.hubungan + '%.</p><ul class="dw-list">';
     s.tindakan.forEach(function (a) { h += btn('tp', a.id, a.nama, a.huraian, a.boleh ? true : a.sebab, a.id === 'bubar' ? 'btn--ghost' : 'btn--primary'); });
     h += '</ul>' + (t.log.length ? '<ul class="dw-sej">' + t.log.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + '</section>';
@@ -188,7 +241,9 @@
     if (!ok) { return; }
     var r = D.undi();
     if (!r.ok) { toast(r.ralat, 'ralat'); return; }
-    await modal({ tajuk: r.lulus ? '✅ Lulus' : '❌ Gagal', isi: '<div class="dw-undi"><div>Sokong<b>' + r.sokong + '</b></div><div>Bantah<b>' + r.bantah + '</b></div><div>Perlu<b>' + (D.ringkasan(S.loadPlayer()).ambang) + '</b></div></div><p>' + esc(r.mesej) + '</p>' });
+    var amb = D.ringkasan(S.loadPlayer()).ambang;
+    await modal({ tajuk: r.lulus ? '✅ Lulus' : '❌ Gagal', isi: hemiUndi([{ warna: WARNA_U.SOKONG, nama: 'Sokong', n: r.sokong }, { warna: WARNA_U.BANTAH, nama: 'Bantah', n: r.bantah }], amb, { anim: true }) +   // v13.26
+      '<div class="dw-undi"><div>Sokong<b>' + r.sokong + '</b></div><div>Bantah<b>' + r.bantah + '</b></div><div>Perlu<b>' + amb + '</b></div></div><p>' + esc(r.mesej) + '</p>' });
     segarkan();
   }
   async function tarik() {
@@ -238,6 +293,7 @@
     if (c) { var tt = c.querySelector('title'); toast('⭐ ' + (tt ? tt.textContent : ''), 'ok'); return; }
     var t = ev.target.closest ? ev.target.closest('[data-dewan]') : null;
     if (!t || t.disabled) { return; }
+    if (t.getAttribute('data-dewan') === 'hemi-sejarah') { lihat = t.getAttribute('data-id') || null; segarkan(); return; }
     if (t.getAttribute('data-dewan') === 'hemi-langkau') { var hm = t.closest('.dw-hemi'); if (hm) { hm.classList.add('dw-hemi--siap'); } t.remove(); return; }
     var a = t.getAttribute('data-dewan'), id = t.getAttribute('data-id'); pilih(S.loadPlayer());
     if (a === 'bentang') { bentang(id); } else if (a === 'lobi') { lobi(id); } else if (a === 'undi') { mulaUndi(); } else if (a === 'tarik') { tarik(); }
