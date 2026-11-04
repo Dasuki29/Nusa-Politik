@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v13.28 (2026-11-04)
+
+- **Baiki (maklum balas di borang): elaun jawatan komuniti dan gaji GLC tidak dipapar dalam pratonton tukar bulan.** Wang memang dibayar setiap bulan, tetapi senarai "Pendapatan bulanan" hanya menunjukkan kerjaya, elaun YB, elaun kerajaan dan hartanah. Kini turut dipapar: **Elaun jawatan komuniti** (termasuk Lembaga Agensi Pendapatan Tinggi RM 6,000) dan **Gaji jawatan GLC**.
+- Cache `nusa-v13.28`.
+
 ## v13.27 (2026-11-04)
 
 - **Muzik latar UMNO**: cover orkestra lagu UMNO (`assets/audio/lagu-umno.mp3`, digunakan dengan kebenaran) menggantikan mars asli untuk pemain UMNO. Parti lain kekal dengan gubahan mars asli yang dijana pelayar.

@@ -256,5 +256,11 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, JENIS: JENIS, SUKAN: SUKAN, JAWATAN: JAWATAN, getKomuniti: getKomuniti, senarai: senarai, lobi: lobi, baharui: baharui, letak: letak, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  /** v13.28 (maklum balas pemain): jangkaan elaun bulanan (RM) jawatan komuniti untuk pratonton tukar bulan. */
+  function jangkaanBulanan(p) {
+    var k = getKomuniti(p), n = 0;
+    (k.jawatan || []).forEach(function (j) { var d = cari(j.id); if (!d || (d.gajiTinggi && !bolehBerjawatanTinggi(p))) { return; } n += Number(d.ganjaran && d.ganjaran.myr) || 0; });
+    return n;
+  }
+  return { CONFIG: CONFIG, JENIS: JENIS, SUKAN: SUKAN, JAWATAN: JAWATAN, getKomuniti: getKomuniti, jangkaanBulanan: jangkaanBulanan, senarai: senarai, lobi: lobi, baharui: baharui, letak: letak, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });

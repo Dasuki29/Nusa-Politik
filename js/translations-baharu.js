@@ -2383,6 +2383,8 @@
   ["Sewa hartanah", "Property rent"],
   ["Penyelenggaraan aset", "Asset maintenance"],
   ["Elaun jawatan kerajaan", "Government post allowance"],
+  ["Elaun jawatan komuniti", "Community post allowance"],
+  ["Gaji jawatan GLC", "GLC post salary"],
   ["Aset ini hanya boleh diperoleh melalui naik taraf.", "This asset can only be obtained by upgrading."],
   ["Aset ini tiada naik taraf.", "This asset has no upgrade."],
   ["Menaik taraf kepada {x} (bayar beza RM {a}). Sewa RM {b} sebulan.", "Upgraded to {x} (paid the RM {a} difference). Rent RM {b} a month."],

@@ -1672,6 +1672,10 @@
     var HT8 = W.MyPolitikHarta, ps8 = HT8 && HT8.ringkasan ? HT8.ringkasan(p0).pasif : null;   // v8.22: sewa hartanah & penyelenggaraan dalam pratonton
     if (ps8 && ps8.sewa) { butir8.push({ nama: 'Sewa hartanah', jumlah: ps8.sewa }); jum8 += ps8.sewa; }
     if (ps8 && ps8.kos) { butir8.push({ nama: 'Penyelenggaraan aset', jumlah: -ps8.kos }); jum8 -= ps8.kos; }
+    var KM8 = W.MyPolitikKomuniti, km8 = KM8 && KM8.jangkaanBulanan ? KM8.jangkaanBulanan(p0) : 0;   // v13.28 (maklum balas pemain): elaun komuniti & gaji GLC dalam pratonton
+    if (km8) { butir8.push({ nama: 'Elaun jawatan komuniti', jumlah: km8 }); jum8 += km8; }
+    var GL8 = W.MyPolitikGLC, gl8 = GL8 && GL8.jangkaanBulanan ? GL8.jangkaanBulanan(p0) : 0;
+    if (gl8) { butir8.push({ nama: 'Gaji jawatan GLC', jumlah: gl8 }); jum8 += gl8; }
     var henti8 = KJ8 && KJ8.faktorKerjaya && KJ8.faktorKerjaya(p0) === 0;
     var kepala = pv.tahunBaharu ? 'Teruskan ke Bulan 1, ' + pv.ke.tahun + '?' : 'Teruskan ke Bulan ' + pv.ke.bulan + ' (' + K.namaBulan(pv.ke.bulan) + ')?';
     var ya = await modal({

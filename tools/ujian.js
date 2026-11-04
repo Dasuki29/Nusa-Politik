@@ -970,6 +970,7 @@ ujian('komuniti: ganjaran bulanan (akar umbi, IP, Dana) sekali sebulan; Agensi m
   const KM = kmPemain({ umur: 35, p: { jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian')] } });
   betul(KM.lobi('ajk_masjid', { rng: () => 0.01 }).ok); betul(KM.lobi('sukan_negeri_badminton', { rng: () => 0.01 }).ok);
   let p = S.loadPlayer(); const m0 = p.myr, ip0 = p.ip, au0 = p.kesetiaan.akarUmbi;
+  sama(KM.jangkaanBulanan(p), 300, 'v13.28: jangkaan elaun dalam pratonton tukar bulan');
   KM.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
   sama(p.myr - m0, 300, 'sukan negeri RM300'); betul(p.ip > ip0 && p.ip - ip0 <= 3, 'IP bertambah (diredam IP tinggi)'); sama(p.kesetiaan.akarUmbi - au0, 2, 'akar umbi +2');
   KM.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().myr, p.myr, 'sekali sebulan');

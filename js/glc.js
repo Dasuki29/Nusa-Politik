@@ -173,5 +173,7 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, TAHAP: TAHAP, SYARIKAT: SYARIKAT, JAWATAN: JAWATAN, getGLC: getGLC, bukaLobi: bukaLobi, senarai: senarai, lobi: lobi, baharui: baharui, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  /** v13.28 (maklum balas pemain): jangkaan gaji bulanan (RM) jawatan GLC untuk pratonton tukar bulan. */
+  function jangkaanBulanan(p) { var g = getGLC(p); return g.jawatan && !kerajaan(p) ? Number(g.jawatan.gaji) || 0 : 0; }
+  return { CONFIG: CONFIG, TAHAP: TAHAP, SYARIKAT: SYARIKAT, JAWATAN: JAWATAN, getGLC: getGLC, jangkaanBulanan: jangkaanBulanan, bukaLobi: bukaLobi, senarai: senarai, lobi: lobi, baharui: baharui, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });
