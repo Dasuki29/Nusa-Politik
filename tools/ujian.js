@@ -2151,6 +2151,19 @@ ujian('kerusi semasa: PRK NPC 15% sebulan, penyandang kekal, tidak menukar keraj
   betul(/mengekalkan/.test(ev[0].mesej), 'PRK NPC tidak menukar kerajaan'); sama(p.kerusiNasional.parti, 52);
   const sj = KS.sejarah(p); sama(sj.length, 1); betul(!sj[0].ringkas, 'arkib penuh');
 });
+/* ---------- v13.29: status kerajaan ikut kad kerusi (maklum balas pemain: ADUN Melaka, BN 19/28, "tidak membentuk kerajaan") ---------- */
+ujian('status kerajaan: baiki ADUN "bukan kerajaan" yang bercanggah dengan kad kerusi dan buka Lobi; PRK DUN ikut kad kerusi', () => {
+  let p = ksPemain(); const pr = PRU.getPRU(p);
+  S.applyEffects({}, { kiraTindakan: false, patch: { pru: Object.assign({}, pr, { aktif: null, status: { jenis: 'ADUN', kerusi: 'Bukit Katil', kerajaan: false, sejakTahun: p.tahun, sejakBulan: p.bulan } }) } });
+  sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN'), true, 'BN 24/42 = kerajaan');
+  betul(PRU.baikiStatusKerajaan(), 'dibaiki'); p = S.loadPlayer();
+  sama(PRU.getPRU(p).status.kerajaan, true); betul(!!KB.getKabinet(p).lobi, 'Lobi Portfolio dibuka');
+  sama(PRU.baikiStatusKerajaan(), false, 'tidak berulang');
+  S.applyEffects({}, { kiraTindakan: false, patch: { kerusiNasional: Object.assign({}, p.kerusiNasional, { dun: { jumlah: 42, kerajaan: 15, bebas: 1, pembangkang: 26, negeri: '06' } }),
+    pru: Object.assign({}, PRU.getPRU(p), { status: { jenis: 'ADUN', kerusi: 'Bukit Katil', kerajaan: false } }) } });
+  sama(PRU.baikiStatusKerajaan(), false, 'pembangkang sebenar tidak diubah');
+  sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN'), false); sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN', { rampas: true }), false, '16 < 22');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

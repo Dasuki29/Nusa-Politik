@@ -282,6 +282,41 @@
     if (Kb && Kb.getKabinet && Kb.bukaLobi) { var kb = Kb.getKabinet(S().loadPlayer()); if (!kb.hasGovernmentRole && !kb.lobi) { Kb.bukaLobi('DUN'); } }
     return true;
   }
+  /** v13.29 (maklum balas pemain): status kerajaan semasa bagi kerusi MP / ADUN ikut kad kerusi yang dipaparkan (p.kerusiNasional,
+      termasuk perubahan PRK). Pulang true / false, atau null jika tidak dapat ditentukan (Sarawak, PSB, PRN Sabah, kerusi negeri lain). */
+  function kerajaanSemasa(p, jenis, opts) {
+    opts = opts || {};
+    if (!p || SW(p.parti)) { return null; }
+    var pru = getPRU(p);
+    if (diSabah(p)) {                                                                // PRN Sabah: kerajaan negeri ikut anggaran 73 DUN Sabah (BN >= 3 kerusi)
+      if (jenis === 'ADUN') { return pru.sabahPRN ? !!pru.sabahPRN.kerajaanBN : null; }
+      if (p.parti === 'PBRS') { return null; }
+    }
+    var A = modul('NusaPaparan', 'paparan.js'), g = A && A.kerusiGabungan ? A.kerusiGabungan(p) : null; if (!g) { return null; }
+    var tambah = opts.rampas ? 1 : 0;                                                // kerusi PRK yang dirampas belum dikira
+    if (jenis === 'MP') { return (g.BN + tambah) >= g.ambang; }
+    if (jenis === 'ADUN') { return g.dun ? (g.dun.BN + tambah) >= g.dun.ambang : null; }
+    return null;
+  }
+  /** v13.29 (maklum balas pemain): baiki status "bukan kerajaan" yang bercanggah dengan kad kerusi (cth. menang PRK DUN sebelum v13.29,
+      atau simpanan sebelum v13.21). ADUN sentiasa; MP bukan Presiden (Presiden boleh memilih menjadi pembangkang dalam rundingan).
+      Lobi Portfolio dibuka semula jika belum memegang jawatan kerajaan. Pulang true jika dibaiki. */
+  function baikiStatusKerajaan() {
+    var p = S().loadPlayer(); if (!p || p.tamat || SW(p.parti)) { return false; }
+    var pru = getPRU(p), ubah = [], presiden = adalahPresiden(p);
+    if (pru.aktif) { return false; }
+    [pru.status, pru.statusKedua].forEach(function (st) {
+      if (!st || st.kerajaan !== false || st.lain) { return; }
+      if (st.jenis === 'MP' && presiden) { return; }
+      if (kerajaanSemasa(p, st.jenis) === true) { st.kerajaan = true; ubah.push(st.jenis); }
+    });
+    if (!ubah.length) { return false; }
+    var r = simpanPRU(pru, {}, { log: { tindakan: 'pru_baiki', nama: 'Status kerajaan dibetulkan ikut kad kerusi', peringkat: 'ahli' } });
+    if (!r || !r.ok) { return false; }
+    var Kb = modul('MyPolitikKabinet', 'kabinet.js');
+    if (Kb && Kb.getKabinet && Kb.bukaLobi) { var kb = Kb.getKabinet(S().loadPlayer()); if (!kb.hasGovernmentRole && !kb.lobi) { Kb.bukaLobi(ubah.indexOf('ADUN') >= 0 ? 'DUN' : 'PARLIMEN'); } }
+    return true;
+  }
   function getPRU(p) {
     var b = dasar(), x = p && p.pru && typeof p.pru === 'object' ? p.pru : {};
     for (var k in b) { if (x[k] === undefined) { x[k] = b[k]; } }
@@ -1019,7 +1054,7 @@
     janaNasionalUji: function (p) { return janaNasional(p, getPRU(p), null, null, true); },      // v13.11: untuk ujian
     getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
-    baikiStatusSarawak: baikiStatusSarawak, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
+    baikiStatusSarawak: baikiStatusSarawak, baikiStatusKerajaan: baikiStatusKerajaan, kerajaanSemasa: kerajaanSemasa, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan
   };
 });

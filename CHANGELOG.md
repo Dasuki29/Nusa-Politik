@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.29 (2026-11-04)
+
+- **Baiki besar (maklum balas di borang): ADUN ditanda "parti tidak membentuk kerajaan" walaupun kad kerusi menunjukkan parti memerintah** (contoh pemain: DUN Melaka BN 19/28, tetapi Ketua Menteri dan Lobi Portfolio dikunci).
+  - Punca 1: menang **PRK** menyalin status kerajaan daripada kerusi lain pemain (atau "bukan kerajaan" jika tiada kerusi lain), bukan daripada kad kerusi. Kini status kerusi PRK ikut kad kerusi (Parlimen: kerajaan persekutuan; DUN: kerajaan negeri), termasuk kerusi yang dirampas.
+  - Punca 2: simpanan yang melalui PRU sebelum v13.21 (status rawak).
+  - **Pembaikan automatik** semasa dashboard dibuka: status ADUN (dan MP bukan Presiden) yang bercanggah dengan kad kerusi dibetulkan, dan Lobi Portfolio dibuka jika belum memegang jawatan kerajaan. PRN Sabah (BN ≥ 3 kerusi), Sarawak, kerusi negeri lain dan Presiden yang memilih pembangkang tidak diubah.
+- Ujian unit baharu. Cache `nusa-v13.29`.
+
 ## v13.28 (2026-11-04)
 
 - **Baiki (maklum balas di borang): elaun jawatan komuniti dan gaji GLC tidak dipapar dalam pratonton tukar bulan.** Wang memang dibayar setiap bulan, tetapi senarai "Pendapatan bulanan" hanya menunjukkan kerjaya, elaun YB, elaun kerajaan dan hartanah. Kini turut dipapar: **Elaun jawatan komuniti** (termasuk Lembaga Agensi Pendapatan Tinggi RM 6,000) dan **Gaji jawatan GLC**.

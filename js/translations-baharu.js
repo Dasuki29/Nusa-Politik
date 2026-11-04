@@ -2384,6 +2384,8 @@
   ["Penyelenggaraan aset", "Asset maintenance"],
   ["Elaun jawatan kerajaan", "Government post allowance"],
   ["Elaun jawatan komuniti", "Community post allowance"],
+  ["Status anda dibetulkan: parti anda membentuk kerajaan mengikut kad kerusi. Lobi Portfolio dibuka di tab Pemilihan.", "Your status was corrected: your party forms the government according to the seat card. Portfolio Lobbying is open in the Elections tab."],
+  ["Status kerajaan dibetulkan ikut kad kerusi", "Government status corrected to match the seat card"],
   ["Gaji jawatan GLC", "GLC post salary"],
   ["Aset ini hanya boleh diperoleh melalui naik taraf.", "This asset can only be obtained by upgrading."],
   ["Aset ini tiada naik taraf.", "This asset has no upgrade."],

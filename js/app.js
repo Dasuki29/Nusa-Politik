@@ -2040,6 +2040,7 @@
     }
     try { var ut = W.sessionStorage.getItem('nusa_undo_toast'); if (ut) { W.sessionStorage.removeItem('nusa_undo_toast'); toast(ut, 'ok'); } } catch (e) { /* abaikan */ }   // v8.15
     try { if (W.MyPolitikPRU && W.MyPolitikPRU.baikiStatusSarawak && W.MyPolitikPRU.baikiStatusSarawak()) { toast('Status anda dibetulkan: GPS membentuk kerajaan negeri, jadi anda ADUN kerajaan. Lobi Portfolio dibuka di tab Pemilihan.', 'ok'); render(); } } catch (eB) { /* abaikan */ }   // v12.6
+    try { if (W.MyPolitikPRU && W.MyPolitikPRU.baikiStatusKerajaan && W.MyPolitikPRU.baikiStatusKerajaan()) { toast('Status anda dibetulkan: parti anda membentuk kerajaan mengikut kad kerusi. Lobi Portfolio dibuka di tab Pemilihan.', 'ok'); render(); } } catch (eK) { /* abaikan */ }   // v13.29
     if (p.notisPSB) { toast('PSB telah dibubarkan. Keahlian anda dipindahkan ke PDP.', 'ok'); p.notisPSB = false; try { S.savePlayer(p); } catch (eP) { /* abaikan */ } }      // v11.0
     peringatanSimpanan(p);                                           // v8.14: amaran pelayar dalam-aplikasi / sandaran
     if (W.NusaHarta_UI && W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p)) { W.NusaHarta_UI.isytihar(); }      // v8.13: pengisytiharan yang belum dijawab sebelum muat semula

@@ -260,7 +260,9 @@
       kes.reputasi = CONFIG.MENANG.reputasi;
       var kes2 = p.kesetiaan || {};
       patch.kesetiaan = Object.assign({}, kes2, { akarUmbi: clamp((Number(kes2.akarUmbi) || 50) + CONFIG.MENANG.akarUmbi, 0, 100), ajk: clamp((Number(kes2.ajk) || 50) + CONFIG.MENANG.ajk, 0, 100) });
-      var stPrk = { jenis: a.jenis === 'DUN' ? 'ADUN' : 'MP', kerusi: a.nama, sejakTahun: p.tahun, sejakBulan: p.bulan, kerajaan: !!(pru.status && pru.status.kerajaan), prk: true };
+      var jnPrk = a.jenis === 'DUN' ? 'ADUN' : 'MP', Pk = PRU(), kjPrk = Pk && Pk.kerajaanSemasa ? Pk.kerajaanSemasa(p, jnPrk, { rampas: !a.pertahan }) : null;   // v13.29: ikut kad kerusi, bukan status kerusi lain
+      var stSama = [pru.status, pru.statusKedua].filter(function (x) { return x && x.jenis === jnPrk; })[0];
+      var stPrk = { jenis: jnPrk, kerusi: a.nama, sejakTahun: p.tahun, sejakBulan: p.bulan, kerajaan: kjPrk !== null ? kjPrk : !!((stSama || pru.status || {}).kerajaan), prk: true };
       if (pru.status && pru.status.jenis !== stPrk.jenis) { pru.statusKedua = stPrk; } else { pru.status = stPrk; }      // v7.55: menang PRK jenis lain = kerusi kedua
       k.stabil = kb && kb.hasGovernmentRole ? 'KPI Portfolio +' + CONFIG.MENANG.kabRating + '%, risiko rombakan ' + CONFIG.MENANG.kabRombak : 'Sokongan akar umbi & AJK kukuh';
     } else {
