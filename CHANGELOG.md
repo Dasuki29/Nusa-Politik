@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.30 (2026-11-05)
+
+- **Gelaran negeri lain (maklum balas di borang)**, ikut mockup yang dipersetujui. Negeri selain negeri cawangan kini boleh mengurniakan gelaran tahap 1 (fiksyen permainan) ⚠️:
+  - Khidmat persekutuan: Menteri Penuh / Timbalan PM / PM setiap 24 bulan; pimpinan parti pusat: Naib Presiden ke atas 36 bulan; Integriti ≥ 65.
+  - Maksimum 3 negeri lain, Reputasi +1 setiap satu. Negeri dipilih rawak; negeri yang dijelajah ≥ 6 kali (Jelajah Bahagian / Majlis Penerangan UMNO) berpeluang 3 kali ganda.
+  - Nama ikut negeri (dipermudahkan): Dato' / Datuk. Awalan nama tidak berubah. Kad Anugerah & Gelaran menunjukkan 🌏 Gelaran Negeri Lain dan kemajuan.
+- **10 pencapaian kerjaya baharu** (jumlah 15): Ketua Kerajaan Negeri, Perdana Menteri, Hatrik PRU, Raja PRK, Nakhoda Parti, Tokoh Seluruh Negara, Tun, Suara Rakyat (20 keluhan / isu), Penggubal Undang-undang (5 RUU lulus), Doktor Falsafah dan Jutawan Politik (RM 1 juta tanpa kes SPRM / siasatan aktif). Trofi berkunci menunjukkan bar kemajuan.
+- Ujian unit baharu; `tools/ujian-gelaran.js` diperluas. Cache `nusa-v13.30`.
+
 ## v13.29 (2026-11-04)
 
 - **Baiki besar (maklum balas di borang): ADUN ditanda "parti tidak membentuk kerajaan" walaupun kad kerusi menunjukkan parti memerintah** (contoh pemain: DUN Melaka BN 19/28, tetapi Ketua Menteri dan Lobi Portfolio dikunci).

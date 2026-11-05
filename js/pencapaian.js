@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nusa Politik — js/pencapaian.js   (v8.6)
+   Nusa Politik — js/pencapaian.js   (v8.6, v13.30: 10 pencapaian kerjaya tambahan)
    Sistem Pencapaian & Trofi (achievementsSystem).
 
    Reka bentuk:
@@ -46,8 +46,21 @@
     { id: 'ikon_sayap', ikon: '🏆', nama: 'Ikon Sayap', huraian: 'Pimpin sayap di peringkat Bahagian selama 2 penggal.' },
     { id: 'wira_pru', ikon: '🏆', nama: 'Wira PRU (Giant Killer)', huraian: 'Menang kerusi di kawasan Bandar/Campuran yang mencabar.' },
     { id: 'bapa_reformasi', ikon: '🏆', nama: 'Bapa Reformasi', huraian: 'Skor integriti melebihi 90 sepanjang satu penggal Parlimen.' },
-    { id: 'negarawan_utama', ikon: '🏆', nama: 'Negarawan Utama', huraian: 'Dilantik Menteri Penuh atau Perdana Menteri.' }
+    { id: 'negarawan_utama', ikon: '🏆', nama: 'Negarawan Utama', huraian: 'Dilantik Menteri Penuh atau Perdana Menteri.' },
+    // v13.30 (maklum balas pemain, mockup dipersetujui)
+    { id: 'ketua_negeri', ikon: '🏛️', nama: 'Ketua Kerajaan Negeri', huraian: 'Dilantik Menteri Besar / Ketua Menteri / Premier.' },
+    { id: 'perdana_menteri', ikon: '⭐', nama: 'Perdana Menteri', huraian: 'Dilantik Perdana Menteri.' },
+    { id: 'hatrik_pru', ikon: '🎯', nama: 'Hatrik PRU', huraian: 'Menang kerusi dalam 3 PRU berturut-turut.' },
+    { id: 'raja_prk', ikon: '🔄', nama: 'Raja PRK', huraian: 'Menang satu Pilihan Raya Kecil.' },
+    { id: 'nakhoda_parti', ikon: '👔', nama: 'Nakhoda Parti', huraian: 'Menang jawatan Presiden parti.' },
+    { id: 'tokoh_negara', ikon: '🌏', nama: 'Tokoh Seluruh Negara', huraian: 'Gelaran daripada 3 negeri lain.' },
+    { id: 'tun', ikon: '🎖️', nama: 'Tun', huraian: 'Dikurniakan gelaran Tun.' },
+    { id: 'suara_rakyat', ikon: '📢', nama: 'Suara Rakyat', huraian: 'Selesaikan 20 keluhan / isu tempatan.' },
+    { id: 'penggubal', ikon: '📜', nama: 'Penggubal Undang-undang', huraian: 'Bentang 5 RUU yang lulus di Dewan.' },
+    { id: 'doktor_falsafah', ikon: '🎓', nama: 'Doktor Falsafah', huraian: 'Tamatkan PhD (gelaran Dr.).' },
+    { id: 'jutawan_politik', ikon: '💰', nama: 'Jutawan Politik', huraian: 'Dana peribadi mencecah RM 1 juta tanpa kes SPRM.' }
   ];
+  var KELUHAN_SASAR = 20, RUU_SASAR = 5, NEGERI_SASAR = 3, JUTA = 1000000;
 
   function storan() { try { return typeof localStorage !== 'undefined' ? localStorage : null; } catch (e) { return null; } }
   function kosong() { return { dibuka: {}, jejak: {}, dilihat: {} }; }
@@ -84,7 +97,7 @@
   function semak(p, meta, stAsal) {
     var st = JSON.parse(JSON.stringify(stAsal || kosong())), baru = [];
     if (!p || typeof p !== 'object' || !p.id) { return { st: st, baru: baru }; }
-    var jej = st.jejak[p.id] = Object.assign({ kalah: 0, bulanSayap: 0, bulanIntegriti: 0, kunci: 0, mandat: '' }, st.jejak[p.id] || {});
+    var jej = st.jejak[p.id] = Object.assign({ kalah: 0, bulanSayap: 0, bulanIntegriti: 0, kunci: 0, mandat: '', keluhan: 0, ruu: 0 }, st.jejak[p.id] || {});
     var tindakan = meta && meta.tindakan ? String(meta.tindakan) : '';
     function buka(id) {
       if (st.dibuka[id]) { return; }
@@ -126,10 +139,42 @@
     var k = p.kabinet;
     if (k && k.hasGovernmentRole && TAHAP_NEGARAWAN.indexOf(k.roleLevel) >= 0) { buka('negarawan_utama'); }
 
+    /* 5. v13.30: pencapaian kerjaya tambahan */
+    if (k && k.hasGovernmentRole && k.roleLevel === 'MENTERI_BESAR') { buka('ketua_negeri'); }
+    if (k && k.hasGovernmentRole && k.roleLevel === 'PERDANA_MENTERI') { buka('perdana_menteri'); }
+    if (hatrik(p)) { buka('hatrik_pru'); }
+    var prk = p.prk && Array.isArray(p.prk.sejarah) ? p.prk.sejarah : [];
+    if (prk.some(function (r) { return r && r.hasil === 'menang'; }) || [p.pru && p.pru.status, p.pru && p.pru.statusKedua].some(function (x) { return x && x.prk; })) { buka('raja_prk'); }
+    if ((p.jawatanList || []).some(function (j) { return j && j.kod === 'presiden'; })) { buka('nakhoda_parti'); }
+    var gl = p.gelaran || {};
+    if (Array.isArray(gl.luar) && gl.luar.length >= NEGERI_SASAR) { buka('tokoh_negara'); }
+    if (gl.tun) { buka('tun'); }
+    if (/^(kawasan_selesai|kawasan_dana|isu_dana)$/.test(tindakan) && l0 && l0.tindakan === tindakan) { jej.keluhan += 1; }
+    if (bilKeluhan(p, jej) >= KELUHAN_SASAR) { buka('suara_rakyat'); }
+    if (tindakan === 'dewan_undi' && l0 && l0.tindakan === tindakan && /^Lulus: /.test(l0.nama || '')) {
+      var sj = p.dewan && Array.isArray(p.dewan.sejarah) ? p.dewan.sejarah : [], akhir = sj[sj.length - 1];
+      if (akhir && akhir.jenis === 'ruu' && akhir.lulus) { jej.ruu += 1; }
+    }
+    if (jej.ruu >= RUU_SASAR) { buka('penggubal'); }
+    if (p.pendidikan && p.pendidikan.tahap === 'phd') { buka('doktor_falsafah'); }
+    if ((Number(p.myr) || 0) >= JUTA && !(p.integriti && p.integriti.audit) && !(p.etika && p.etika.siasatan)) { buka('jutawan_politik'); }
+
     baru.forEach(function (id) { delete st.dilihat[id]; });
     return { st: st, baru: baru };
   }
 
+  /** v13.30: menang kerusi dalam 3 PRU berturut-turut (rekod p.pru.sejarah dikumpul ikut tarikh PRU). */
+  function hatrik(p) {
+    var sej = (p.pru && Array.isArray(p.pru.sejarah)) ? p.pru.sejarah : [], ikut = {};
+    sej.forEach(function (r) { if (!r) { return; } var kk = (r.tahun || 0) * 12 + (r.bulan || 0); ikut[kk] = ikut[kk] || (r.hasil === 'menang'); });
+    var kunci = Object.keys(ikut).map(Number).sort(function (a, b) { return a - b; }), siri = 0, maks = 0;
+    kunci.forEach(function (kk) { siri = ikut[kk] ? siri + 1 : 0; maks = Math.max(maks, siri); });
+    return maks >= 3;
+  }
+  function bilKeluhan(p, jej) {
+    var isu = Array.isArray(p.isu) ? p.isu : [];
+    return (jej.keluhan || 0) + isu.filter(function (x) { return x && x.selesai && x.cara !== 'dana_peribadi'; }).length;
+  }
   function latihanAktif() { var L = root.MyPolitikLatihan; try { return !!(L && L.aktif && L.aktif()); } catch (e) { return false; } }
 
   /** Muat profil, semak, simpan jika ada perubahan. Pulang senarai id baharu. */
@@ -147,6 +192,10 @@
     var j = (st && st.jejak && p && st.jejak[p.id]) || {};
     if (id === 'ikon_sayap') { return (j.bulanSayap || 0) + ' / ' + BULAN_SAYAP + ' bulan'; }
     if (id === 'bapa_reformasi') { return (j.bulanIntegriti || 0) + ' / ' + BULAN_INTEGRITI + ' bulan berturut-turut'; }
+    if (id === 'suara_rakyat') { return Math.min(bilKeluhan(p, j), KELUHAN_SASAR) + ' / ' + KELUHAN_SASAR; }
+    if (id === 'penggubal') { return Math.min(j.ruu || 0, RUU_SASAR) + ' / ' + RUU_SASAR + ' RUU'; }
+    if (id === 'tokoh_negara') { var lu = p.gelaran && Array.isArray(p.gelaran.luar) ? p.gelaran.luar.length : 0; return Math.min(lu, NEGERI_SASAR) + ' / ' + NEGERI_SASAR + ' negeri'; }
+    if (id === 'jutawan_politik') { return 'RM ' + Math.round(Number(p.myr) || 0).toLocaleString('en') + ' / RM 1,000,000'; }
     if (id === 'akar_umbi_teguh') { return j.kalah ? 'Kalah pemilihan jawatan: ' + j.kalah + ' (syarat gagal untuk watak ini)' : ''; }
     return '';
   }

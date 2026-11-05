@@ -56,6 +56,10 @@
       h += '<li' + (x.diperoleh ? '' : ' style="opacity:.55"') + '>' + (x.diperoleh ? '✅' : '🔒') + ' <b>' + esc(x.nama) + '</b> · ' + esc(syarat[x.kod]) + (x.diperoleh ? ' · <i>dikurniakan</i>' : (kira[x.kod] ? ' · ' + Math.min(kira[x.kod], had[x.kod]) + '/' + had[x.kod] + ' bulan' : '')) + '</li>';
     });
     h += '</ul>';
+    var LU = GL.CONFIG.LUAR;                                                                              // v13.30: gelaran negeri lain
+    h += '<h3 style="margin:10px 0 4px;font-size:.9rem">🌏 Gelaran Negeri Lain (' + r.luar.length + ' / ' + LU.had + ')</h3><ul style="list-style:none;padding:0;margin:6px 0">';
+    r.luar.forEach(function (x) { h += '<li>✅ <b>' + esc(x.nama) + '</b> · ' + esc(x.negeri) + ' · ' + x.tahun + '</li>'; });
+    h += '</ul>' + (r.luar.length < LU.had ? '<p class="note" style="font-size:.78rem">Menteri Penuh / Timbalan PM / PM: ' + Math.min(r.bulanLuarF, LU.fed) + ' / ' + LU.fed + ' bulan. Naib Presiden ke atas: ' + Math.min(r.bulanLuarP, LU.parti) + ' / ' + LU.parti + ' bulan. Integriti ≥ ' + LU.integriti + '. Negeri yang kerap dijelajah lebih berpeluang.</p>' : '');
     if (r.ditahan) { h += '<div class="banner banner--warn">Gelaran ditahan sementara (keahlian digantung).</div>'; }
     if (r.ditarik) { h += '<div class="banner banner--warn">Gelaran ditarik balik (dipecat).</div>'; }
     return h + '<p class="note" style="font-size:.78rem">Dikurniakan secara fiksyen oleh pihak istana. Ditahan jika digantung, ditarik jika dipecat. Kesan: Reputasi +2 setiap anugerah, awalan nama pada profil dan Rumusan Kerjaya.' + (r.awalan ? ' Nama pada profil: <b>' + esc(r.awalan + p.nama) + '</b>' : '') + '</p></section>';

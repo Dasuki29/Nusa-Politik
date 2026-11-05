@@ -15,6 +15,10 @@
        Setiap gelaran negeri Reputasi +2. Nama gelaran negeri dipermudahkan (andaian).
      - Awalan nama: persekutuan tertinggi -> negeri tertinggi -> "Dr." (PhD, js/pendidikan.js). "Datuk" persekutuan tidak diulang jika ada gelaran negeri;
        Tun memadai; di Sarawak Datuk Patinggi / Pehin Sri didahulukan.
+   v13.30 (maklum balas pemain, mockup dipersetujui): gelaran negeri lain (kehormat), maksimum 3 negeri, Reputasi +1 setiap satu.
+     Khidmat persekutuan: Menteri Penuh / TPM / PM setiap 24 bulan; pimpinan parti pusat: Naib Presiden ke atas 36 bulan; Integriti >= 65.
+     Negeri dipilih rawak; negeri yang dijelajah >= 6 kali (Jelajah Bahagian / Majlis Penerangan UMNO) berpeluang 3 kali ganda.
+     Nama tahap 1 ikut negeri (dipermudahkan): Dato' / Datuk. Awalan nama tidak berubah. State: luar [{ negeri, nama, sebab, tahun, bulan }], bulanLuarF, bulanLuarP.
    State: p.gelaran = { bulanDato, bulanTan, dato, tansri, tun, bulanPM, negeri:{t1,t2,amar,patinggi,pehin}, bulanN1, bulanN2, bulanAmar, bulanPremier,
                         anugerah:{kod:{tahun,bulan}}, ditarik, sejarah }
    ANDAIAN: nama, syarat dan tempoh ialah rekaan permainan; gelaran sebenar dikurniakan oleh Sultan/Yang di-Pertua Negeri, bukan parti atau kerajaan.
@@ -45,6 +49,7 @@
     KERAJAAN_TAN: ['TIMBALAN_PM', 'PERDANA_MENTERI'],
     TUN: { bulanPM: 36, integriti: 75, reputasi: 3 },                                      // v13.13
     NEGERI: { bulan: 36, int1: 60, int2: 70, reputasi: 2, amar: 36, patinggi: 24, pehin: 60 },
+    LUAR: { fed: 24, parti: 36, integriti: 65, had: 3, reputasi: 1, pangkat: 10, jelajah: 6, berat: 3, KERAJAAN: ['MENTERI_PENUH', 'TIMBALAN_PM', 'PERDANA_MENTERI'] },   // v13.30
     ANUGERAH: [
       { kod: 'pingat', ikon: '🥉', nama: 'Pingat Khidmat Cemerlang', tahun: 3, integriti: 60, pangkat: 0, bersih: false, syarat: '3 tahun berkhidmat, Integriti ≥ 60' },
       { kod: 'setia',  ikon: '🥈', nama: 'Darjah Setia Nusa',         tahun: 6, integriti: 70, pangkat: 7, bersih: false, syarat: '6 tahun berkhidmat, jawatan Bahagian ke atas, Integriti ≥ 70' },
@@ -52,7 +57,7 @@
     ]
   };
 
-  function dasar0() { return { bulanDato: 0, bulanTan: 0, dato: null, tansri: null, tun: null, bulanPM: 0, negeri: {}, bulanN1: 0, bulanN2: 0, bulanAmar: 0, bulanPremier: 0, anugerah: {}, ditarik: false, sejarah: [] }; }
+  function dasar0() { return { bulanDato: 0, bulanTan: 0, dato: null, tansri: null, tun: null, bulanPM: 0, negeri: {}, bulanN1: 0, bulanN2: 0, bulanAmar: 0, bulanPremier: 0, luar: [], bulanLuarF: 0, bulanLuarP: 0, anugerah: {}, ditarik: false, sejarah: [] }; }
   function getGelaran(p) {
     var b = dasar0(), d = p && p.gelaran && typeof p.gelaran === 'object' ? p.gelaran : {};
     for (var f in b) { if (d[f] === undefined) { d[f] = b[f]; } }
@@ -85,6 +90,19 @@
     if (n === 'sabah') { a = ['Datuk', 'Datuk Seri Panglima']; } else if (n === 'melaka' || n === 'pulau pinang') { a = ['Datuk', 'Datuk Seri']; } else if (n === 'pahang') { a = ["Dato'", "Dato' Sri"]; }
     return [{ kod: 't1', nama: a[0] }, { kod: 't2', nama: a[1] }];
   }
+  /** v13.30: nama gelaran tahap 1 bagi setiap negeri (dipermudahkan). */
+  var NEGERI_LUAR = { 'Johor': "Dato'", 'Kedah': "Dato'", 'Kelantan': "Dato'", 'Negeri Sembilan': "Dato'", 'Pahang': "Dato'", 'Perak': "Dato'", 'Perlis': "Dato'",
+    'Selangor': "Dato'", 'Terengganu': "Dato'", 'Melaka': 'Datuk', 'Pulau Pinang': 'Datuk', 'Sabah': 'Datuk', 'Sarawak': 'Datuk' };
+  function negeriSendiri(p) { return SWp(p) ? 'sarawak' : String((p && p.negeri) || '').toLowerCase(); }
+  function pilihNegeriLuar(p, d, rng) {
+    var sendiri = negeriSendiri(p), ada = (d.luar || []).map(function (x) { return x.negeri; });
+    var U = modul('MyPolitikUMNO', 'umno.js'), jl = U && U.kiraJelajahNegeri ? U.kiraJelajahNegeri(p) : {};
+    var calon = Object.keys(NEGERI_LUAR).filter(function (n) { return n.toLowerCase() !== sendiri && ada.indexOf(n) < 0; });
+    if (!calon.length) { return null; }
+    var berat = calon.map(function (n) { return (jl[n] || 0) >= CONFIG.LUAR.jelajah ? CONFIG.LUAR.berat : 1; }), jum = berat.reduce(function (a, b) { return a + b; }, 0), t = (rng || Math.random)() * jum;
+    for (var i = 0; i < calon.length; i++) { t -= berat[i]; if (t < 0) { return calon[i]; } }
+    return calon[calon.length - 1];
+  }
   function negeriTertinggi(p, d) { var t = tanggaNegeri(p), h = ''; t.forEach(function (x) { if (d.negeri[x.kod]) { h = x.nama; } }); return h; }
   /** Awalan nama, cth. "Datuk ", "Tan Sri Dato' Seri Dr. ", "Tun Dr. ". Gelaran kosong jika ditahan atau ditarik; "Dr." kekal. */
   function awalan(p) {
@@ -105,15 +123,16 @@
       negeri: tangga.map(function (x) { return { kod: x.kod, nama: x.nama, diperoleh: d.negeri[x.kod] || null }; }), bulanN1: d.bulanN1, bulanN2: d.bulanN2, bulanAmar: d.bulanAmar, bulanPremier: d.bulanPremier,
       ditarik: d.ditarik, ditahan: !d.ditarik && !!(d.dato || d.tansri || d.tun || negeriTertinggi(p, d)) && (statusEtika(p) === 'digantung' || statusEtika(p) === 'dipecat'), bulanDato: d.bulanDato, bulanTan: d.bulanTan, bulanLayak: CONFIG.BULAN_LAYAK,
       anugerah: CONFIG.ANUGERAH.map(function (a) { return { kod: a.kod, ikon: a.ikon, nama: a.nama, syarat: a.syarat, diperoleh: d.anugerah[a.kod] || null }; }),
-      sejarah: d.sejarah || [], tahun: tahun, skor: skor, pangkat: pangkat };
+      sejarah: d.sejarah || [], tahun: tahun, skor: skor, pangkat: pangkat,
+      luar: (d.luar || []).slice(), bulanLuarF: d.bulanLuarF || 0, bulanLuarP: d.bulanLuarP || 0 };
   }
 
-  function prosesBulan() {
-    var ev = [], p = S() && S().loadPlayer();
+  function prosesBulan(o) {
+    var ev = [], p = S() && S().loadPlayer(), rngL = (o && o.rng) || Math.random;
     if (!p || p.tamat) { return { peristiwa: ev }; }
     var d = getGelaran(p), st = statusEtika(p), kes = {}, ubah = false, skor = skorIntegriti(p);
     if (st === 'dipecat') {
-      if (!d.ditarik && (d.dato || d.tansri || d.tun || Object.keys(d.negeri).length || Object.keys(d.anugerah).length)) { d.ditarik = true; rekod(d, p, 'Gelaran ditarik balik (dipecat)'); ev.push({ jenis: 'gelaran_kurniaan', mesej: 'Gelaran kurniaan anda ditarik balik kerana keahlian dipecat.' }); ubah = true; }
+      if (!d.ditarik && (d.dato || d.tansri || d.tun || Object.keys(d.negeri).length || (d.luar || []).length || Object.keys(d.anugerah).length)) { d.ditarik = true; rekod(d, p, 'Gelaran ditarik balik (dipecat)'); ev.push({ jenis: 'gelaran_kurniaan', mesej: 'Gelaran kurniaan anda ditarik balik kerana keahlian dipecat.' }); ubah = true; }
       if (ubah) { simpan(d, kes); }
       return { peristiwa: ev };
     }
@@ -152,6 +171,23 @@
         if (d.negeri.amar && !d.negeri.patinggi && d.bulanPremier >= N.patinggi) { kurnia('patinggi'); }
         if (d.negeri.patinggi && !d.negeri.pehin && d.bulanPremier >= N.pehin) { kurnia('pehin'); }
       } else if (d.negeri.t1 && !d.negeri.t2 && d.bulanN2 >= N.bulan && skor >= N.int2) { kurnia('t2'); }
+      // v13.30: gelaran negeri lain (kehormat)
+      var LU = CONFIG.LUAR; d.luar = Array.isArray(d.luar) ? d.luar : [];
+      if (d.luar.length < LU.had) {
+        var fedL = LU.KERAJAAN.indexOf(tahap) >= 0, partiL = pangkat >= LU.pangkat;
+        if (fedL) { d.bulanLuarF = (d.bulanLuarF || 0) + 1; ubah = true; }
+        if (partiL) { d.bulanLuarP = (d.bulanLuarP || 0) + 1; ubah = true; }
+        var sebabL = fedL && d.bulanLuarF >= LU.fed ? 'fed' : partiL && d.bulanLuarP >= LU.parti ? 'parti' : '';
+        if (sebabL && skor >= LU.integriti) {
+          var ngL = pilihNegeriLuar(p, d, rngL);
+          if (ngL) {
+            if (sebabL === 'fed') { d.bulanLuarF = 0; } else { d.bulanLuarP = 0; }
+            d.luar.push({ negeri: ngL, nama: NEGERI_LUAR[ngL], sebab: sebabL, tahun: p.tahun, bulan: p.bulan });
+            kes.reputasi = (kes.reputasi || 0) + LU.reputasi; rekod(d, p, 'Gelaran negeri ' + ngL + ': ' + NEGERI_LUAR[ngL]);
+            ev.push({ jenis: 'gelaran_kurniaan', mesej: 'Anda dikurniakan gelaran ' + NEGERI_LUAR[ngL] + ' oleh negeri ' + ngL + ' atas khidmat ' + (sebabL === 'fed' ? 'di peringkat persekutuan' : 'sebagai pemimpin parti pusat') + ' (fiksyen permainan). Reputasi +' + LU.reputasi + '.' });
+          }
+        }
+      }
       CONFIG.ANUGERAH.forEach(function (a) {
         if (d.anugerah[a.kod] || tahun < a.tahun || skor < a.integriti || pangkat < a.pangkat || (a.bersih && !bersih)) { return; }
         d.anugerah[a.kod] = { tahun: p.tahun, bulan: p.bulan }; kes.reputasi = (kes.reputasi || 0) + CONFIG.REPUTASI; rekod(d, p, a.nama); ubah = true;
@@ -186,5 +222,5 @@
     return t === 'tan' ? 'Tan Sri ' : "Dato' ";
   }
 
-  return { CONFIG: CONFIG, NPC: NPC, awalanNPC: awalanNPC, getGelaran: getGelaran, awalan: awalan, tanggaNegeri: tanggaNegeri, ringkasan: ringkasan, prosesBulan: prosesBulan };
+  return { NEGERI_LUAR: NEGERI_LUAR, pilihNegeriLuar: pilihNegeriLuar, CONFIG: CONFIG, NPC: NPC, awalanNPC: awalanNPC, getGelaran: getGelaran, awalan: awalan, tanggaNegeri: tanggaNegeri, ringkasan: ringkasan, prosesBulan: prosesBulan };
 });

@@ -267,6 +267,7 @@
     var d = DATA(); if (!d.bahagian[kod]) { return { ok: false, ralat: 'Bahagian tidak sah.' }; }
     var m = st(p), sb = sokonganBahagian(p), baru = clamp(sb[kod] + CONFIG.PUSAT.jelajahNaik, 0, 100);
     m.pusat[kod] = baru; m.jelajahBulan = sekarang(p);
+    var ngJ = NEGERI[String(d.bahagian[kod].ng)]; if (ngJ) { m.jelajahNegeri = m.jelajahNegeri || {}; m.jelajahNegeri[ngJ] = (m.jelajahNegeri[ngJ] || 0) + 1; }   // v13.30: untuk gelaran negeri lain
     var r = simpan(p, m, { ap: -CONFIG.PUSAT.jelajahAP, myr: -CONFIG.PUSAT.jelajahMYR }, { kira: true, tindakan: 'umno_jelajah', nama: 'Jelajah Bahagian ' + d.bahagian[kod].n });
     if (!r.ok) { return { ok: false, ralat: r.ralat }; }
     return { ok: true, mesej: 'Jelajah Bahagian ' + d.bahagian[kod].n + ': sokongan perwakilan ' + Math.round(sb[kod]) + '% → ' + Math.round(baru) + '%.' };
@@ -293,6 +294,7 @@
     var m = st(p), sb = sokonganBahagian(p), r0 = ringkasPusat(p).purata;
     ks.forEach(function (k) { m.pusat[k] = clamp(sb[k] + CONFIG.PUSAT.penerangNaik, 0, 100); });
     m.penerangan = { bulan: sekarang(p), negeri: String(negeri) };
+    var ngP = NEGERI[String(negeri)]; if (ngP) { m.jelajahNegeri = m.jelajahNegeri || {}; m.jelajahNegeri[ngP] = (m.jelajahNegeri[ngP] || 0) + 1; }   // v13.30
     var nm = NEGERI[String(negeri)] || String(negeri);
     var r = simpan(p, m, { ap: -CONFIG.PUSAT.penerangAP, myr: -CONFIG.PUSAT.penerangMYR }, { kira: true, tindakan: 'umno_penerangan', nama: 'Majlis Penerangan Badan Perhubungan ' + nm });
     if (!r.ok) { return { ok: false, ralat: r.ralat }; }
@@ -412,7 +414,9 @@
     return { peristiwa: ev };
   }
 
-  return { CONFIG: CONFIG, adalah: adalah, khasDari: khasDari, kit: kit, musim: musim, senaraiTahun: senaraiTahun, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
+  /** v13.30: bilangan Jelajah Bahagian + Majlis Penerangan mengikut nama negeri. */
+  function kiraJelajahNegeri(p) { try { var m = st(p); return Object.assign({}, m.jelajahNegeri || {}); } catch (e) { return {}; } }
+  return { CONFIG: CONFIG, kiraJelajahNegeri: kiraJelajahNegeri, adalah: adalah, khasDari: khasDari, kit: kit, musim: musim, senaraiTahun: senaraiTahun, adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
     lama: lama, baharu: baharu, kitaranId: kitaranId, takwimKini: takwimKini, musimKhasKini: musimKhasKini, kunciMesyuarat: kunciMesyuarat, tempohPemilihan: tempohPemilihan, statusKitaran: statusKitaran,
     sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, bonusSayap: bonusSayap,
     statusJelajah: statusJelajah, jelajah: jelajah, statusPenerangan: statusPenerangan, penerangan: penerangan, senaraiNegeri: senaraiNegeri,

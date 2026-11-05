@@ -34,11 +34,17 @@
     var h = '<section class="card"><div class="pc-sum"><div><h2 class="card__title" style="margin:0">🏆 Pencapaian</h2><b>' + dibuka + ' / ' + n + ' dibuka</b>' +
       '<div class="pc-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + dibuka + '"><i style="width:' + Math.round(100 * dibuka / n) + '%"></i></div></div>' +
       '<small class="note">Simulasi: tidak mewakili UMNO sebenar.</small></div>';
+    function palang(t) {                                                       // v13.30: bar kemajuan "a / b"
+      var m = /([\d,]+)\s*\/\s*(?:RM\s*)?([\d,]+)/.exec(String(t)); if (!m) { return ''; }
+      var a = Number(m[1].replace(/,/g, '')), b = Number(m[2].replace(/,/g, '')); if (!(b > 0)) { return ''; }
+      var w = Math.max(0, Math.min(100, Math.round(a / b * 100)));
+      return '<div class="progress progress--sm" style="margin-top:3px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + w + '"><div class="progress__bar" style="width:' + w + '%"></div></div>';
+    }
     PC.SENARAI.forEach(function (d) {
       var o = st.dibuka[d.id], kem = o ? '' : PC.kemajuan(p, st, d.id);
       h += '<div class="pc-kad ' + (o ? 'is-buka' : 'is-kunci') + '"><div class="pc-ikon" aria-hidden="true">' + (o ? d.ikon : '🔒') + '</div><div><b>' + esc(d.nama) + (o && !st.dilihat[d.id] ? '<span class="pc-baru">Baharu</span>' : '') + '</b>' +
         '<small>' + esc(d.huraian) + '</small>' +
-        (o ? '<span class="pc-tarikh">Dibuka · ' + esc(o.bulan + '/' + o.tahun) + '</span>' : (kem ? '<small>Kemajuan: ' + esc(kem) + '</small>' : '')) + '</div></div>';
+        (o ? '<span class="pc-tarikh">Dibuka · ' + esc(o.bulan + '/' + o.tahun) + '</span>' : (kem ? '<small>Kemajuan: ' + esc(kem) + '</small>' + palang(kem) : '')) + '</div></div>';
     });
     return h + '</section>';
   }

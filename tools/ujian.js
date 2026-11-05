@@ -2164,6 +2164,42 @@ ujian('status kerajaan: baiki ADUN "bukan kerajaan" yang bercanggah dengan kad k
   sama(PRU.baikiStatusKerajaan(), false, 'pembangkang sebenar tidak diubah');
   sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN'), false); sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN', { rampas: true }), false, '16 < 22');
 });
+/* ---------- v13.30: gelaran negeri lain dan pencapaian kerjaya tambahan ---------- */
+ujian('v13.30: gelaran negeri lain: Menteri 24 bulan, maksimum 3, bukan negeri sendiri, jelajah diutamakan', () => {
+  const GL = g.MyPolitikGelaran || require('../js/gelaran.js');
+  P.daftar({}); P.tetap({ negeri: 'Johor', tahun: 2035, bulan: 1, integriti: { skor: 80 }, gelaran: { bulanLuarF: 23 },
+    kabinet: { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri' } });
+  const rep = S.loadPlayer().reputasi; let ev = GL.prosesBulan({ rng: () => 0.0 }).peristiwa, d = GL.getGelaran(S.loadPlayer());
+  sama(d.luar.length, 1, 'satu gelaran negeri lain'); betul(d.luar[0].negeri !== 'Johor', 'bukan negeri sendiri'); sama(d.bulanLuarF, 0, 'pembilang diset semula');
+  betul(ev.some((e) => /oleh negeri/.test(e.mesej))); betul(S.loadPlayer().reputasi >= rep + 1, 'Reputasi +1');
+  P.tetap({ gelaran: Object.assign({}, d, { bulanLuarF: 23 }), integriti: { skor: 60 } }); GL.prosesBulan(); sama(GL.getGelaran(S.loadPlayer()).luar.length, 1, 'Integriti 60: tiada');
+  P.tetap({ gelaran: { luar: [{ negeri: 'Kedah' }, { negeri: 'Perak' }, { negeri: 'Sabah' }], bulanLuarF: 30 }, integriti: { skor: 80 } }); GL.prosesBulan();
+  sama(GL.getGelaran(S.loadPlayer()).luar.length, 3, 'had 3 negeri');
+  const p = S.loadPlayer(), d0 = GL.getGelaran(p); d0.luar = [];
+  const U = g.MyPolitikUMNO, asal = U.kiraJelajahNegeri; U.kiraJelajahNegeri = () => ({ Pahang: 8 });
+  const kira = {}; for (let i = 0; i < 200; i++) { const n = GL.pilihNegeriLuar(p, d0, () => i / 200); kira[n] = (kira[n] || 0) + 1; }
+  U.kiraJelajahNegeri = asal; betul(kira.Pahang > 30, 'Pahang (dijelajah 8 kali) lebih kerap: ' + kira.Pahang); betul(!kira.Johor, 'Johor tidak dipilih');
+  S.clearPlayer();
+});
+ujian('v13.30: pencapaian kerjaya tambahan (Ketua Negeri, PM, Hatrik PRU, PRK, Presiden, Tun, Suara Rakyat, RUU, PhD, Jutawan)', () => {
+  let h = pcLangkah(pcPemain({ kabinet: { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR' } }), {}, null); betul(h.baru.indexOf('ketua_negeri') >= 0);
+  h = pcLangkah(pcPemain({ kabinet: { hasGovernmentRole: true, roleLevel: 'PERDANA_MENTERI' } }), {}, null); betul(h.baru.indexOf('perdana_menteri') >= 0 && h.baru.indexOf('negarawan_utama') >= 0);
+  const sej = [2026, 2031, 2036].map((t) => ({ tahun: t, bulan: 5, hasil: 'menang', jenis: 'PARLIMEN' }));
+  sama(pcLangkah(pcPemain({ pru: { sejarah: sej.slice(0, 2) } }), {}, null).baru.indexOf('hatrik_pru'), -1, '2 PRU tidak cukup');
+  betul(pcLangkah(pcPemain({ pru: { sejarah: sej } }), {}, null).baru.indexOf('hatrik_pru') >= 0, '3 PRU berturut-turut');
+  sama(pcLangkah(pcPemain({ pru: { sejarah: [sej[0], { tahun: 2031, bulan: 5, hasil: 'kalah' }, sej[2]] } }), {}, null).baru.indexOf('hatrik_pru'), -1, 'terputus');
+  betul(pcLangkah(pcPemain({ prk: { sejarah: [{ hasil: 'menang' }] } }), {}, null).baru.indexOf('raja_prk') >= 0);
+  betul(pcLangkah(pcPemain({ jawatanList: [{ kod: 'presiden' }] }), {}, null).baru.indexOf('nakhoda_parti') >= 0);
+  const b1 = pcLangkah(pcPemain({ gelaran: { tun: { tahun: 2040 }, luar: [{}, {}, {}] } }), {}, null).baru; betul(b1.indexOf('tun') >= 0 && b1.indexOf('tokoh_negara') >= 0);
+  const isu = Array.from({ length: 19 }, (x, i) => ({ kod: 'k' + i, selesai: true, cara: 'usul' }));
+  let st = pcLangkah(pcPemain({ isu }), {}, null).st; sama(PC.kemajuan(pcPemain({ isu }), st, 'suara_rakyat'), '19 / 20');
+  h = pcLangkah(pcPemain({ isu, log: [{ tindakan: 'kawasan_dana', nama: 'x' }] }), { tindakan: 'kawasan_dana' }, st); betul(h.baru.indexOf('suara_rakyat') >= 0, '19 isu + 1 keluhan');
+  st = null; for (let i = 0; i < 5; i++) { h = pcLangkah(pcPemain({ dewan: { sejarah: [{ jenis: 'ruu', lulus: true }] }, log: [{ tindakan: 'dewan_undi', nama: 'Lulus: RUU' + i }] }), { tindakan: 'dewan_undi' }, st); st = h.st; }
+  betul(h.baru.indexOf('penggubal') >= 0, '5 RUU lulus');
+  betul(pcLangkah(pcPemain({ pendidikan: { tahap: 'phd' } }), {}, null).baru.indexOf('doktor_falsafah') >= 0);
+  betul(pcLangkah(pcPemain({ myr: 1200000 }), {}, null).baru.indexOf('jutawan_politik') >= 0);
+  sama(pcLangkah(pcPemain({ myr: 1200000, integriti: { skor: 70, audit: { x: 1 } } }), {}, null).baru.indexOf('jutawan_politik'), -1, 'audit SPRM aktif');
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

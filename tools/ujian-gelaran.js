@@ -35,7 +35,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   semak(await pg.evaluate(() => MyPolitikSave.loadPlayer().pendidikan.tahap === 'phd'), 'profil: PhD');
   semak(/^Dr\. /.test(await pg.textContent('#p-nama')), 'nama profil bermula Dr. (' + await pg.textContent('#p-nama') + ')');
-  await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { myr: 100000, pendidikan: { tahap: 'sarjana' }, gelaran: { dato: { tahun: 2029, bulan: 1 }, negeri: { t1: { tahun: 2029, bulan: 1 } }, bulanPM: 5, bulanN2: 3 } } }); NusaUI.render(); });
+  await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { myr: 100000, pendidikan: { tahap: 'sarjana' }, gelaran: { dato: { tahun: 2029, bulan: 1 }, negeri: { t1: { tahun: 2029, bulan: 1 } }, bulanPM: 5, bulanN2: 3, luar: [{ negeri: 'Pahang', nama: "Dato'", sebab: 'fed', tahun: 2033, bulan: 2 }], bulanLuarF: 9 } } }); NusaUI.render(); });
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(500);
   const pf = await pg.textContent('#panel-profil');
   semak(/Pendidikan/.test(pf) && /Sarjana/.test(pf) && /Sambung PhD/.test(pf), 'kad Pendidikan');
@@ -46,6 +46,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(500);
   const tk = await pg.evaluate(() => document.body.textContent);
   semak(/Datuk · Ketua Sayap Pusat/.test(tk) && /Tun · bekas/.test(tk) && /Gelaran Negeri/.test(tk) && /Dato' Seri/.test(tk), 'kad Anugerah & Gelaran (Datuk, Tun, negeri): ' + tk.slice(tk.indexOf('Gelaran Kurniaan'), tk.indexOf('Gelaran Kurniaan') + 400).replace(/\n/g, ' | '));
+  semak(/Gelaran Negeri Lain \(1 \/ 3\)/.test(tk) && /Pahang/.test(tk) && /9 \/ 24 bulan/.test(tk), 'v13.30: gelaran negeri lain dipapar');
   semak(/^Dato' Ahmad/.test(await pg.textContent('#p-nama')), 'awalan negeri menggantikan Datuk (Sarjana: tanpa Dr.) (' + await pg.textContent('#p-nama') + ')');
   if (process.env.SKRIN2) { await pg.click('text=Jawatan & Aset Luar').catch(() => {}); await pg.waitForTimeout(300); const k = await pg.$('xpath=//section[h2[contains(., "Anugerah")]]'); if (k) { await k.screenshot({ path: process.env.SKRIN2 }).catch(() => {}); } }
   const kutip = (sel) => pg.evaluate(([src, s]) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll(s).forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, [BM.source, sel]);
