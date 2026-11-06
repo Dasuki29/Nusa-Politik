@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.31 (2026-11-06)
+
+- **Parti baharu: PAS (Perikatan Nasional), Fasa 1** (maklum balas di borang, baris 8 dan 11–13), ikut mockup skop PAS yang dipersetujui dan Perlembagaan PAS (Pindaan 2025).
+  - Menu utama: gabungan **PN** dengan chip PAS; rakan PN (Bersatu, Gerakan, MIPP, Wawasan) sebagai NPC. Logo daripada pengguna.
+  - Mod penuh menggunakan enjin UMNO dengan istilah PAS: **Kawasan** dan **Yang Dipertua Kawasan** (Fasal 41), **Perhubungan PAS Negeri** dan **Pesuruhjaya** (Fasal 53), **Jawatankuasa Kerja PAS Pusat** (Fasal 38), **Muktamar Tahunan** (Fasal 18), **Dewan Muslimat** (Fasal 58). Dewan Pemuda 40 tahun ke bawah; tiada Puteri.
+  - Pemilihan parti **setiap 2 tahun** (dari 2027 ⚠️). Perwakilan Kawasan ke Muktamar: 4 wakil, +1 bagi setiap 1,000 ahli melebihi 2,000, maksimum 15. Kad PAS dengan **Jelajah Kawasan**.
+  - Kawasan operasi: 165 kawasan Parlimen Semenanjung (`tools/build-pas.js`). Kuota PAS dalam PN ⚠️: 70 Parlimen dan 200 DUN, ikut peratus Bumiputera.
+  - Kerajaan ⚠️: PN bermula lebih lemah di peringkat persekutuan (boleh menang jika populariti tinggi); kekuatan DUN ikut negeri, jadi PN memerintah Kelantan, Terengganu, Kedah dan Perlis. Kad kerusi, carta hemisikal dan PRK memaparkan PN sebagai gabungan anda dan BN sebagai lawan.
+- Ujian: 2 ujian unit baharu, `tools/ujian-pas.js` (pelayar), simulasi `PARTI=PAS`. Ujian pelayar dan indeks dikemas kini (16 trofi, 10 pilihan parti). Cache `nusa-v13.31`.
+
 ## v13.30 (2026-11-05)
 
 - **Gelaran negeri lain (maklum balas di borang)**, ikut mockup yang dipersetujui. Negeri selain negeri cawangan kini boleh mengurniakan gelaran tahap 1 (fiksyen permainan) ⚠️:

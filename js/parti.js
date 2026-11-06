@@ -101,6 +101,29 @@
   SENARAI.PBRS = { kod: 'PBRS', nama: 'PBRS', penuh: 'Parti Bersatu Rakyat Sabah', logo: 'assets/images/logo-pbrs.jpg', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sabah', data: 'data/pbrs-sabah.csv', bahagianJenis: 'Parlimen', pbrs: true,
     istilah: SENARAI.PPP.istilah.map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace("Wisma PBRS, Kuala Lumpur", 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu') : x[1]]; }),
     istilahSongsang: SENARAI.PPP.istilahSongsang.map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS') : x[1]]; }) };
+  /* v13.31: PAS = parti komponen Perikatan Nasional (PN) di Semenanjung, MOD PENUH (enjin UMNO seperti MCA; js/pas.js). Istilah ikut
+     Perlembagaan PAS (Pindaan 2025): Kawasan dan Yang Dipertua Kawasan (Fasal 41), Perhubungan PAS Negeri dan Pesuruhjaya (Fasal 53),
+     Jawatankuasa Kerja PAS Pusat (Fasal 38), Muktamar Tahunan (Fasal 18), Dewan Muslimat (Fasal 58). Sayap Pemuda dan Muslimat (tiada Puteri).
+     ANDAIAN: kawasan operasi = 165 kawasan Parlimen Semenanjung (data/pas-semenanjung.csv, tools/build-pas.js); takwim bulan 3/5/9. Logo daripada pengguna. */
+  var BULAN_PPP = SENARAI.PPP.istilah.filter(function (x) { return /ulan|onth/.test(x[0].source); }), BULAN_PPP_S = SENARAI.PPP.istilahSongsang.filter(function (x) { return /ulan|onth/.test(x[0].source); });
+  SENARAI.PAS = { kod: 'PAS', nama: 'PAS', penuh: 'Parti Islam Se-Malaysia', logo: 'assets/images/logo-pas.svg', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/pas-semenanjung.csv', bahagianJenis: 'Parlimen', pas: true, gabungan: 'PN',
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja PAS Pusat (JK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja PAS Pusat'], [/\bMKT\b/g, 'JK Pusat'],
+      [/Perhimpunan Agung PAS \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung PAS/g, 'Muktamar Tahunan PAS'],
+      [/PAS General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/\bPAU\b/g, 'Muktamar'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di negeri tuan rumah Muktamar'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in the Muktamar host state'],
+      [/\bTimbalan Ketua Bahagian\b/g, 'Timbalan Yang Dipertua Kawasan'], [/\bNaib Ketua Bahagian\b/g, 'Naib Yang Dipertua Kawasan'], [/\bKetua Bahagian\b/g, 'Yang Dipertua Kawasan'], [/\bketua bahagian\b/g, 'yang dipertua kawasan'],
+      [/Bahagian/g, 'Kawasan'], [/(peringkat|Peringkat) bahagian/g, '$1 kawasan'], [/\bDivisions\b/g, 'Areas'], [/\bDivision\b/g, 'Area'], [/\bdivisions\b/g, 'areas'], [/\bdivision\b/g, 'area'],
+      [/Pengerusi Badan Perhubungan Negeri/g, 'Pesuruhjaya PAS Negeri'], [/Pengerusi Badan Perhubungan/g, 'Pesuruhjaya PAS'], [/Badan Perhubungan Negeri/g, 'Perhubungan PAS Negeri'], [/Badan Perhubungan/g, 'Perhubungan PAS'],
+      [/State Liaison Body Chairman/g, 'State PAS Commissioner'], [/Liaison Body Chairman/g, 'PAS Commissioner'], [/State Liaison Body/g, 'State PAS Liaison'], [/Liaison Body/g, 'PAS Liaison'],
+      [/\bWanita\b/g, 'Muslimat'], [/\bWomen\b/g, 'Muslimat']].concat(BULAN_PPP),
+    istilahSongsang: [[/Jawatankuasa Kerja PAS Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja PAS Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
+      [/Muktamar Tahunan PAS/g, 'Perhimpunan Agung PAS (PAU)'], [/PAS Annual Muktamar/g, 'PAS General Assembly (PAU)'], [/\bMuktamar\b/g, 'PAU'],
+      [/ di negeri tuan rumah PAU/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ in the PAU host state/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/Timbalan Yang Dipertua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Yang Dipertua Kawasan/g, 'Naib Ketua Bahagian'], [/Yang Dipertua Kawasan/g, 'Ketua Bahagian'], [/yang dipertua kawasan/g, 'ketua bahagian'],
+      [/(peringkat|Peringkat) kawasan/g, '$1 bahagian'], [/(?<!Peruntukan |Zon |Kaum |Lobi |Butiran |di )Kawasan(?! (campuran|operasi|anda|Pemain))/g, 'Bahagian'], [/\bAreas\b/g, 'Divisions'], [/\bArea\b/g, 'Division'],
+      [/Pesuruhjaya PAS Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Pesuruhjaya PAS/g, 'Pengerusi Badan Perhubungan'], [/Perhubungan PAS Negeri/g, 'Badan Perhubungan Negeri'], [/Perhubungan PAS/g, 'Badan Perhubungan'],
+      [/State PAS Commissioner/g, 'State Liaison Body Chairman'], [/PAS Commissioner/g, 'Liaison Body Chairman'], [/State PAS Liaison/g, 'State Liaison Body'], [/PAS Liaison/g, 'Liaison Body'],
+      [/\bMuslimat\b/g, 'Wanita']].concat(BULAN_PPP_S) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -121,7 +144,7 @@
   function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = (k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s);      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
+    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PAS' && /Perlembagaan PAS|PAS Constitution/.test(s));   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
     if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
     if (i.ringan) { r = r.split(SENARAI.PBB.penuh).join(i.penuh).replace(/\bPBB\b/g, i.nama); }          // v10.0: teks Sarawak yang menyebut PBB dijenamakan semula untuk parti mod ringan
@@ -129,10 +152,12 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
-    [d, tanpaBulan].forEach(function (x) {
+    var calon = [d, tanpaBulan];
+    if (k === 'PAS') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(/\bPAS\b/g, 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
+    calon.forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });
     });
     return out;
@@ -145,7 +170,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }

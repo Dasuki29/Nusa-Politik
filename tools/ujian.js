@@ -2200,6 +2200,38 @@ ujian('v13.30: pencapaian kerjaya tambahan (Ketua Negeri, PM, Hatrik PRU, PRK, P
   betul(pcLangkah(pcPemain({ myr: 1200000 }), {}, null).baru.indexOf('jutawan_politik') >= 0);
   sama(pcLangkah(pcPemain({ myr: 1200000, integriti: { skor: 70, audit: { x: 1 } } }), {}, null).baru.indexOf('jutawan_politik'), -1, 'audit SPRM aktif');
 });
+/* ---------- v13.31: PAS (Perikatan Nasional), Fasa 1 ---------- */
+ujian('v13.31 PAS: kitaran 2 tahun, perwakilan Kawasan (Fasal 18(5)), kuota PN, jelajah', () => {
+  const M = g.MyPolitikPAS; P.daftar({}); P.tetap({ parti: 'PAS', ap: 10, myr: 10000 });
+  let p = S.loadPlayer(); sama(p.parti, 'PAS');
+  betul(M.adalahTahunPemilihan(p, 2027) && M.adalahTahunPemilihan(p, 2029) && !M.adalahTahunPemilihan(p, 2028), 'setiap 2 tahun dari 2027');
+  sama(M.tahunSeterusnya(p, 2028), 2029); sama(g.MyPolitikElection.adalahTahunPemilihan(2031), true, 'enjin pemilihan ikut PAS');
+  const d = g.MyPolitikPASData; sama(Object.keys(d.parlimen).length, 165);
+  const kecil = Object.keys(d.parlimen).filter((k) => d.parlimen[k].a < 2000)[0], besar = Object.keys(d.parlimen).sort((a, b) => d.parlimen[b].a - d.parlimen[a].a)[0];
+  if (kecil) { sama(M.perwakilan(kecil), 4, 'Kawasan < 2,000 ahli: 4 wakil'); }
+  betul(M.perwakilan(besar) <= 15 && M.perwakilan(besar) > 4, 'maksimum 15 wakil');
+  const k = M.kawasan(p); betul(k.parlimen && typeof k.kuotaPL === 'boolean', 'kawasan dan kuota'); betul(/rakan PN/.test(M.sebabKuota(p, 'PARLIMEN')));
+  sama(M.statusJelajah(p).boleh, false, 'perlu Yang Dipertua Kawasan');
+  S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: p.tahun }] } });
+  const kod = Object.keys(d.parlimen)[3], s0 = M.sokonganBahagian(S.loadPlayer())[kod];
+  betul(M.jelajah(kod).ok); betul(M.sokonganBahagian(S.loadPlayer())[kod] > s0, 'jelajah naikkan sokongan');
+});
+ujian('v13.31 PAS: anggaran kerusi PN (pembangkang persekutuan, kerajaan negeri Kelantan) dan label lawan BN', () => {
+  P.daftar({}); P.tetap({ parti: 'PAS', reputasi: 50 }); const p = S.loadPlayer(), A = g.NusaPaparan;
+  let kj = 0, kel = 0, joh = 0;
+  for (let i = 0; i < 60; i++) {
+    const q = Object.assign({}, p, { id: 'pas' + i });
+    const a = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Kelantan', pop: 45 }); if (a.kerajaan) { kj++; } if (a.dun.kerajaan >= 23) { kel++; }
+    const b = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Johor', pop: 45 }); if (b.dun.kerajaan >= 29) { joh++; }
+  }
+  sama(kj, 0, 'pop 45: PN tidak membentuk kerajaan persekutuan'); sama(kel, 60, 'PN memerintah Kelantan'); sama(joh, 0, 'PN tidak memerintah Johor');
+  let kj70 = 0; for (let i = 0; i < 60; i++) { if (A.anggarKerusi(Object.assign({}, p, { id: 'q' + i }), { tahun: 2028, bulan: 3 }, { pop: 70 }).kerajaan) { kj70++; } }
+  betul(kj70 > 40, 'pop 70: PN boleh membentuk kerajaan (' + kj70 + '/60)');
+  sama(A.labelBN(p).pendek, 'PN'); sama(A.lawanGab(p).PN.pendek, 'BN', "slot lawan 'PN' = BN");
+  sama(g.MyPolitikKerusiSemasa.label(p, 'PN'), 'BN'); sama(g.MyPolitikKerusiSemasa.blokLawan('UMNO', null, p), 'PN');
+  const Pt = g.MyPolitikParti; betul(Pt.sah('PAS') && Pt.info('PAS').sayap.indexOf('puteri') < 0, 'PAS tiada Puteri');
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

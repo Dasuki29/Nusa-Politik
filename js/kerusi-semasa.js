@@ -32,7 +32,8 @@
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   var CONFIG = { PELUANG: 0.15, DUN: 0.3, KEKAL: 0.7, MAKS_LOG: 10, MAKS_SEJARAH: 5, JUMLAH: 222, MAJORITI: 112,
-    LAWAN: { PAS: 'PN', Bersatu: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' } };
+    LAWAN: { PAS: 'PN', Bersatu: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' },
+    LAWAN_PAS: { UMNO: 'PN', MCA: 'PN', MIC: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' } };   // v13.31: pemain PAS: slot 'PN' dalaman = BN
   var rngLalai = Math.random;
   function salin(o) { return JSON.parse(JSON.stringify(o)); }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
@@ -68,13 +69,14 @@
     return h && h.ok ? { ok: true } : { ok: false, ralat: (h && h.ralat) || 'Gagal.' };
   }
   /** Blok lawan daripada nama parti lawan PRK (PAS / Bersatu = PN; DAP / PKR / Amanah = PH). */
-  function blokLawan(nama, r) { return CONFIG.LAWAN[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
+  function blokLawan(nama, r, p) { var M = p && p.parti === 'PAS' ? CONFIG.LAWAN_PAS : CONFIG.LAWAN; return M[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
   /** Dipanggil oleh prk.js selepas keputusan PRK pemain. */
   function selepasPRKPemain(a, menang) {
     if (!a) { return null; }
     var dun = a.jenis === 'DUN', o = { dun: dun, kerusi: a.nama, sebab: 'prk_pemain' };
-    if (a.pertahan && !menang) { o.dari = 'PARTI'; o.ke = blokLawan(a.lawan); }
-    else if (!a.pertahan && menang) { o.dari = blokLawan(a.lawan); o.ke = 'PARTI'; }
+    var pS = S() && S().loadPlayer ? S().loadPlayer() : null;
+    if (a.pertahan && !menang) { o.dari = 'PARTI'; o.ke = blokLawan(a.lawan, null, pS); }
+    else if (!a.pertahan && menang) { o.dari = blokLawan(a.lawan, null, pS); o.ke = 'PARTI'; }
     else { return null; }
     return geser(o);
   }
@@ -145,6 +147,7 @@
     if (kod === 'PARTI') { return (p && p.parti) || 'BN'; }
     if (kod === 'RAKAN') { return 'Rakan gabungan'; }
     if (kod === 'LAIN') { return 'Calon bebas'; }
+    if (kod === 'PN' && p && p.parti === 'PAS') { return 'BN'; }
     return kod;
   }
   /** Perubahan terkini (dalam `bulan` bulan): senarai log. */

@@ -96,6 +96,7 @@ Modul utama dalam `js/`:
 | `npc.js`, `npc-ui.js` | Lantikan pegawai (Kekalkan / Ubah) selepas menang Ketua; daftar nama NPC dalam `organisasi.js` |
 | `kerusi-semasa.js` | Perubahan kerusi semasa penggal (PRK pemain, PRK selepas letak jawatan, PRK NPC) dan arkib sejarah PRU untuk carta hemisikal tab Dewan |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
+| `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN dan data kawasan (`node tools/build-pas.js`) |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
 | `i18n.js`, `translations*.js`, `tutorial-en.js` | Dwibahasa BM / EN |
@@ -152,6 +153,7 @@ node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, 
 node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), panel parti, EN
 node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pautan Google Form isi automatik, EN
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
+node tools/ujian-pas.js          # pelayar: panel PN, daftar PAS (Kelantan), istilah PAS, kad PAS, Jelajah Kawasan, kad kerusi PN, hemisikal, EN
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
