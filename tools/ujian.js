@@ -2232,6 +2232,44 @@ ujian('v13.31 PAS: anggaran kerusi PN (pembangkang persekutuan, kerajaan negeri 
   const Pt = g.MyPolitikParti; betul(Pt.sah('PAS') && Pt.info('PAS').sayap.indexOf('puteri') < 0, 'PAS tiada Puteri');
   S.clearPlayer();
 });
+/* ---------- v13.32: PAS Fasa 2 ---------- */
+ujian('v13.32 PAS: Restu Majlis Syura (Ceramah, susut, Integriti), sekatan Presiden, peluang calon', () => {
+  const M = g.MyPolitikPAS, R = M.CONFIG.RESTU; P.daftar({}); P.tetap({ parti: 'PAS', ap: 10, myr: 10000, integriti: { skor: 60 } });
+  let p = S.loadPlayer(); sama(M.restu(p), 50);
+  const r = M.ceramah(false); betul(r.ok, r.ralat); p = S.loadPlayer(); sama(M.restu(p), 51); sama(M.ceramah(false).ok, false, 'sekali sebulan');
+  sama(M.statusCeramah(p, true).boleh, false, 'Ceramah Perdana perlu Yang Dipertua Kawasan');
+  M.prosesBulan({ rng: () => 0.99 }); sama(M.restu(S.loadPlayer()), 50, 'susut ke arah 50');
+  P.tetap({ integriti: { skor: 85 } }); M.prosesBulan({ rng: () => 0.99 }); sama(M.restu(S.loadPlayer()), 50.5, 'Integriti >= 80: +0.5');
+  P.tetap({ pas: Object.assign({}, S.loadPlayer().pas, { restu: 55 }) }); p = S.loadPlayer();
+  betul(/Restu Majlis Syura/.test(M.sekatanJawatan(p, { kod: 'presiden' })), 'Presiden perlu Restu 60'); sama(M.sekatanJawatan(p, { kod: 'ketua_cawangan' }), null);
+  P.tetap({ pas: Object.assign({}, p.pas, { restu: 75 }) }); p = S.loadPlayer(); sama(M.sekatanJawatan(p, { kod: 'presiden' }), null);
+  sama(Math.round(M.adjCalon(p) * 1000) / 10, 10, 'Restu 75: peluang calon +10%');
+  P.tetap({ etika: Object.assign({}, p.etika || {}, { siasatan: { tahun: p.tahun, bulan: p.bulan } }) }); M.prosesBulan({ rng: () => 0.99 });
+  betul(M.restu(S.loadPlayer()) <= 70.5, 'siasatan etika: -5'); M.prosesBulan({ rng: () => 0.99 }); betul(M.restu(S.loadPlayer()) > 68, 'siasatan dikira sekali');
+  S.clearPlayer();
+});
+ujian('v13.32 PAS: Dewan Ulamak (bidang Islam), As-Sabiqun (60+, tanpa jawatan), Ahli Bersekutu, Majlis Syura, rayuan', () => {
+  const M = g.MyPolitikPAS, J0 = g.MyPolitikJawatan; P.daftar({}); P.tetap({ parti: 'PAS', ap: 10, myr: 10000, ip: 800, tahun: 2027, bulan: 2, pendidikan: { tahap: 'ijazah', bidang: 'umum' } });
+  let p = S.loadPlayer(); sama(M.layakDewan(p, 'ulamak').boleh, false, 'perlu bidang Islam');
+  betul(M.tukarBidang().ok); sama(M.tukarBidang().ok, false, 'sekali sahaja'); p = S.loadPlayer(); betul(M.layakDewan(p, 'ulamak').boleh);
+  betul(M.sertaiDewan('ulamak').ok); betul(M.bertandingDewan('ulamak').ok, 'calon Kawasan');
+  P.tetap({ bulan: 5 }); M.prosesBulan({ rng: () => 0.0 }); p = S.loadPlayer(); sama(M.dewanPemain(p, 'ulamak').jawatan, 'kawasan', 'menang Ketua Dewan Ulamak Kawasan');
+  betul(M.statusBertandingDewan(p, 'ulamak').boleh && M.statusBertandingDewan(p, 'ulamak').ke === 'negeri', 'seterusnya Negeri');
+  P.tetap({ pas: Object.assign({}, p.pas, { restu: 90, dewan: { ulamak: { ahli: true, jawatan: 'pusat', calon: null } } }), bulan: 10 });
+  M.prosesBulan({ rng: () => 0.0 }); p = S.loadPlayer(); betul(!!p.pas.syura, 'dilantik Ahli Majlis Syura');
+  sama(M.layakDewan(p, 'sabiqun').boleh, false, 'As-Sabiqun 60 tahun ke atas');
+  // rayuan tatatertib
+  P.tetap({ pas: Object.assign({}, p.pas, { restu: 80 }), etika: Object.assign({}, p.etika || {}, { status: 'digantung', hukuman: { tahun: p.tahun, bulan: p.bulan } }) });
+  const ry = M.rayuan({ rng: () => 0.1 }); betul(ry.ok && ry.jaya, ry.ralat); sama(S.loadPlayer().etika.status, 'baik');
+  // Ahli Bersekutu
+  P.daftar({}); P.tetap({ parti: 'PAS', keahlianJenis: 'bersekutu', ip: 500 }); p = S.loadPlayer();
+  betul(M.bersekutu(p)); betul(/Dewan Himpunan Pendukung/.test(M.sekatanJawatan(p, { kod: 'ketua_cawangan' })));
+  const st = J0.statusJawatan ? J0.statusJawatan(p, 'ketua_cawangan') : null; if (st) { sama(st.terbuka, false); }
+  betul(M.layakDewan(p, 'pendukung').boleh && !M.layakDewan(p, 'ulamak').boleh, 'Pendukung sahaja');
+  const k = M.kawasan(p); if (k.parlimen && k.parlimen.m >= 60) { betul(/Bumiputera/.test(M.sekatanCalon(p, 'PARLIMEN'))); }
+  const pr = S.buildPlayerProfile ? null : null; void pr;
+  S.clearPlayer();
+});
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

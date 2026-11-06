@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.32 (2026-11-06)
+
+- **PAS Fasa 2: keunikan PAS**, ikut mockup yang dipersetujui dan Perlembagaan PAS (Pindaan 2025). Semua dalam kad PAS (tab Profil).
+  - **📿 Restu Majlis Syura Ulamak** (0–100, mula 50, susut 1 sebulan ke arah 50) ⚠️: naik melalui Ceramah, Integriti ≥ 80 (+0.5 sebulan) dan jawatan Ketua Dewan Ulamak (+0.5 sebulan); turun apabila disiasat (−5) atau Integriti < 50 (−1 sebulan). Kesan: peluang dicalonkan PRU ±0.4% bagi setiap mata dari 50 (Fasal 39(9)(f)); bertanding Presiden / Timbalan Presiden perlu Restu ≥ 60; rayuan tatatertib ke Majlis Syura (Fasal 77) perlu Restu ≥ 75, peluang 70%.
+  - **🗣️ Ceramah** (1 AP, RM 300: akar umbi +2, IP +4, Restu +1) dan **📣 Ceramah Perdana** untuk Yang Dipertua Kawasan ke atas (2 AP, RM 1,500: akar umbi +3, IP +8, Reputasi +1, Restu +2), sekali sebulan.
+  - **📖 Dewan Ulamak**: medan baharu *Bidang pengajian* semasa mendaftar (Umum / Pengajian Islam); simpanan lama boleh menukar sekali. Jawatan Ketua Dewan Ulamak Kawasan → Negeri → Pusat dipilih dalam tahun pemilihan (keputusan bulan 5 / 7 / 9) ⚠️. Ketua Dewan Ulamak Pusat dengan Restu ≥ 80 berpeluang 50% dilantik **Ahli Majlis Syura Ulamak** (5 tahun, IP +10 sebulan, Reputasi +2; Fasal 8).
+  - **🧓 Dewan As-Sabiqun** (60 tahun ke atas): IP +3 dan stress −1 sebulan; jawatan hanya jika tiada jawatan parti lain (Fasal 59(5)).
+  - **🤝 Ahli Bersekutu** (bukan Islam): pilihan *Jenis keahlian PAS* semasa mendaftar. Hanya boleh memegang jawatan dalam **Dewan Himpunan Pendukung** (Fasal 16(2), 60); tiada sayap; calon PRU hanya di kerusi dengan pengundi Bumiputera bawah 60% ⚠️.
+  - Peringatan **Fasal 15A** (paparan sahaja).
+  - Ketua Dewan: IP bulanan +2 / +4 / +8 (Kawasan / Negeri / Pusat) ⚠️.
+- Ujian unit baharu; `tools/ujian-pas.js` diperluas. Cache `nusa-v13.32`.
+
 ## v13.31 (2026-11-06)
 
 - **Parti baharu: PAS (Perikatan Nasional), Fasa 1** (maklum balas di borang, baris 8 dan 11–13), ikut mockup skop PAS yang dipersetujui dan Perlembagaan PAS (Pindaan 2025).

@@ -368,6 +368,7 @@
     if (tc) { tc.textContent = pbb || state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb && state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS'; }
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
+    var fpb = $('f-pas-bidang'), fpj = $('f-pas-jenis'); if (fpb) { fpb.hidden = state.parti !== 'PAS'; } if (fpj) { fpj.hidden = state.parti !== 'PAS'; }   // v13.32: PAS Fasa 2
     if (hp && state.parti === 'MCA') { hp.textContent = HINT_MCA; }
     if (hp && state.parti === 'MIC') { hp.textContent = HINT_MIC; }
     if (hp && state.parti === 'PPP') { hp.textContent = HINT_PPP; }
@@ -489,7 +490,8 @@
 
     var ahliEl = document.getElementById('s-ahli');
     var pdEl = document.getElementById('s-pendidikan');                                          // v13.13
-    var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var bdEl = $('s-bidang'), jaEl = $('s-jenis-ahli');
+    var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, bidang: state.parti === 'PAS' && bdEl ? bdEl.value : null, keahlianJenis: state.parti === 'PAS' && jaEl ? jaEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 

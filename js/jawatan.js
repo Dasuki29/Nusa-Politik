@@ -216,6 +216,9 @@
       var pg = Et.semakPenggal(p, { getJawatan: getJawatan });
       if (!pg.sah) { return { terbuka: false, sebab: pg.sebab }; }
     }
+    var PASj = p && p.parti === 'PAS' && typeof globalThis !== 'undefined' ? (globalThis.MyPolitikPAS || null) : null;                 // v13.32: PAS: Restu Majlis Syura (Presiden / Timbalan), Ahli Bersekutu
+    if (!PASj && p && p.parti === 'PAS' && typeof require === 'function') { try { PASj = require('./pas.js'); } catch (eP) { PASj = null; } }
+    var skP = PASj && PASj.sekatanJawatan ? PASj.sekatanJawatan(p, d) : null; if (skP) { return { terbuka: false, sebab: skP }; }
     if (p.ip < d.ipMin) { return { terbuka: false, sebab: 'Perlukan ' + d.ipMin + ' IP (anda ada ' + p.ip + ').' }; }
     if (d.perluSayapCawangan && !(pegang(p, 'sayap_cawangan_' + d.sayap) || pegang(p, 'sayap_pusat_' + d.sayap))) {     // v6.7: mesti Ketua Sayap Cawangan dahulu
       return { terbuka: false, sebab: 'Menangi jawatan Ketua ' + NAMA_SAYAP[d.sayap] + ' Cawangan dahulu (pertandingan menentang calon NPC di Cawangan).' };

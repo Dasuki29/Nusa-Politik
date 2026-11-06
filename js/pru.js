@@ -377,10 +377,12 @@
         if (jenis === 'PARLIMEN' && !kw.kuotaPL) { sebab.push(MCk.sebabKuota ? MCk.sebabKuota(p, 'PARLIMEN') : 'Kawasan Parlimen anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_PARLIMEN + ' kerusi)'); }      // v13.8: PPP: Tuntut Kerusi BN
         if (jenis === 'DUN' && p.dun && !kw.kuotaDUN) { sebab.push(MCk.sebabKuota ? MCk.sebabKuota(p, 'DUN') : 'DUN anda di luar kuota ' + p.parti + ' dalam BN (kuota ' + MCk.CONFIG.KUOTA_DUN + ' kerusi)'); }
         if (p.parti === 'MCA' && !MCk.cukupKeahlian(p)) { sebab.push('Perlu menjadi ahli sekurang-kurangnya 3 tahun (Perkara 120)'); }
+        if (p.parti === 'PAS' && MCk.sekatanCalon) { var skC = MCk.sekatanCalon(p, jenis); if (skC) { sebab.push(skC); } }   // v13.32: Ahli Bersekutu
       }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
-      var peluang = clamp(0.45 + (ratio - 1) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.004 + (jenis === 'DUN' ? 0.1 : 0), CONFIG.TERIMA_MIN, CONFIG.TERIMA_MAKS);
+      var adjPAS = p.parti === 'PAS' && MCk && MCk.adjCalon ? MCk.adjCalon(p) : 0;   // v13.32: Restu Majlis Syura (Fasal 39(9)(f))
+      var peluang = clamp(0.45 + (ratio - 1) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.004 + (jenis === 'DUN' ? 0.1 : 0) + adjPAS, CONFIG.TERIMA_MIN, CONFIG.TERIMA_MAKS);
       return { boleh: sebab.length === 0, sebab: sebab, ipMin: c.ipMin, minPeruntukan: c.minPeruntukan, peluang: Math.round(peluang * 100) };
     }
     return { DUN: semak('DUN'), PARLIMEN: semak('PARLIMEN') };

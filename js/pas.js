@@ -11,7 +11,11 @@
      - Gabungan PN: rakan Bersatu, Gerakan, MIPP dan Wawasan sebagai NPC. ANDAIAN: kuota PAS 70 Parlimen dan 200 DUN dalam PN, ikut peratus Bumiputera.
      - Kerajaan: PN bermula sebagai pembangkang persekutuan; kerajaan negeri PN pada permulaan ialah Kelantan, Terengganu, Kedah dan Perlis
        (ANDAIAN: kekuatan DUN asas setiap negeri ikut PRN 2023 / PRU 2022, dipermudahkan). Anggaran kerusi dalam js/paparan.js.
-   State: p.pas = { pusat:{kod:sokongan}, jelajahBulan }
+   v13.32 (Fasa 2, mockup dipersetujui): Restu Majlis Syura Ulamak (0-100), Ceramah / Ceramah Perdana, Dewan Ulamak (bidang Pengajian Islam),
+     Dewan As-Sabiqun (60 tahun ke atas, tanpa jawatan lain, Fasal 59(5)), Ahli Bersekutu & Dewan Himpunan Pendukung (Fasal 11(2), 16(2), 60),
+     lantikan Ahli Majlis Syura (Fasal 8(4)-(5)), rayuan tatatertib ke Majlis Syura (Fasal 77) dan peringatan Fasal 15A.
+   State: p.pas = { pusat:{kod:sokongan}, jelajahBulan, restu, ceramahBulan, dewan:{ ulamak|sabiqun|pendukung:{ ahli, jawatan, calon, sejak } },
+                    syura:{ sehingga }|null, rayuanKunci, siasatanKunci }
    SEMUA ANGKA BERTANDA ANDAIAN IALAH ANDAIAN PERMAINAN. Permainan simulasi; bukan laman rasmi parti.
    ========================================================================== */
 (function (root, factory) {
@@ -37,7 +41,18 @@
     KUOTA_PARLIMEN: 70, KUOTA_DUN: 200,                                   // ANDAIAN: kuota PAS dalam PN
     TAHUN_MULA: 2027, KITARAN_TAHUN: 2, BULAN_PUSAT: 9,                    // Fasal 38(2): setiap 2 tahun; ANDAIAN tahun mula dan bulan Muktamar
     PERWAKILAN: { asas: 4, ambang: 2000, setiap: 1000, maks: 15 },         // Fasal 18(5)
-    WAKIL_DEWAN: 40, WAKIL_PUSAT: 40,                                      // Fasal 18(4)(b)-(h): 20 wakil Dewan Pemuda + 20 Dewan Muslimat (Fasa 1); JK Pusat, Majlis Syura dan Pesuruhjaya (anggaran)
+    WAKIL_DEWAN: 40, WAKIL_PUSAT: 40,
+    /* v13.32 (Fasa 2) ANDAIAN: angka permainan. */
+    RESTU: { awal: 50, susut: 1, integritiTinggi: 80, naikIntegriti: 0.5, integritiRendah: 50, turunIntegriti: 1, ketuaUlamak: 0.5, siasatan: -5,
+      presiden: 60, rayuan: 75, rayuanPeluang: 0.7, rayuanAP: 1, rayuanGagal: -3, calonSkala: 0.004, syura: 80, syuraPeluang: 0.5, syuraBulan: 60, syuraIP: 10, syuraReputasi: 2 },
+    CERAMAH: { ap: 1, myr: 300, akarUmbi: 2, ip: 4, restu: 1 }, PERDANA: { ap: 2, myr: 1500, akarUmbi: 3, ip: 8, restu: 2, reputasi: 1, pangkat: 7 },
+    DEWAN: {
+      ulamak: { nama: 'Dewan Ulamak', ketua: 'Ketua Dewan Ulamak', ip: { kawasan: 120, negeri: 300, pusat: 700 }, bonus: { kawasan: 2, negeri: 4, pusat: 8 } },
+      sabiqun: { nama: 'Dewan As-Sabiqun', ketua: 'Ketua As-Sabiqun', ip: { kawasan: 120, negeri: 300, pusat: 700 }, bonus: { kawasan: 2, negeri: 4, pusat: 8 }, umur: 60, ahliIP: 3, ahliStress: -1 },
+      pendukung: { nama: 'Dewan Himpunan Pendukung', ketua: 'Ketua Dewan Himpunan Pendukung', ip: { kawasan: 120, negeri: 300, pusat: 700 }, bonus: { kawasan: 2, negeri: 4, pusat: 8 } }
+    },
+    PERINGKAT: ['kawasan', 'negeri', 'pusat'], BULAN_DEWAN: { kawasan: 5, negeri: 7, pusat: 9 },
+    BUMI_BERSEKUTU: 60,                                      // Fasal 18(4)(b)-(h): 20 wakil Dewan Pemuda + 20 Dewan Muslimat (Fasa 1); JK Pusat, Majlis Syura dan Pesuruhjaya (anggaran)
     PUSAT: { sendiri: 60, lain: [30, 45], bonusSkala: 0.3, jelajahAP: 2, jelajahMYR: 2000, jelajahNaik: 8 },
     /* ANDAIAN: peratus kerusi DUN PN asas setiap negeri (kod negeri data peta), dipermudahkan daripada PRN 2023 / PRU 2022. */
     DUN_ASAS: { '9': 0.93, '2': 0.92, '3': 0.95, '11': 0.99, '7': 0.28, '8': 0.44, '6': 0.4, '10': 0.39, '5': 0.14, '4': 0.07, '1': 0.05 },
@@ -51,6 +66,7 @@
   };
 
   function adalah(p) { return !!(p && p.parti === 'PAS'); }
+  function bersekutu(p) { return adalah(p) && p.keahlianJenis === 'bersekutu'; }
   function st(p) {
     var m = p && p.pas && typeof p.pas === 'object' ? p.pas : {};
     if (!m.pusat || typeof m.pusat !== 'object') { m.pusat = {}; }
@@ -138,18 +154,168 @@
     return clamp(a + ((Number(pop) || 45) - 45) / 100 + (rng() * 0.1 - 0.05), 0.02, 0.98);
   }
 
+  /* ---------- v13.32: Restu Majlis Syura Ulamak ---------- */
+  function restu(p) { var m = st(p); return typeof m.restu === 'number' ? m.restu : CONFIG.RESTU.awal; }
+  function larasRestu(m, n) { m.restu = Math.round(clamp((typeof m.restu === 'number' ? m.restu : CONFIG.RESTU.awal) + n, 0, 100) * 10) / 10; return m.restu; }
+  /** Pelarasan peluang dicalonkan PRU (js/pru.js): ±0.4% bagi setiap mata dari 50. */
+  function adjCalon(p) { return adalah(p) ? (restu(p) - 50) * CONFIG.RESTU.calonSkala : 0; }
+  /** Sekatan jawatan (js/jawatan.js): Presiden / Timbalan Presiden perlu Restu >= 60; Ahli Bersekutu hanya Dewan Himpunan Pendukung. */
+  function sekatanJawatan(p, d) {
+    if (!adalah(p) || !d) { return null; }
+    if (bersekutu(p)) { return 'Ahli Bersekutu hanya boleh memegang jawatan dalam Dewan Himpunan Pendukung (Fasal 16(2)).'; }
+    if ((d.kod === 'presiden' || d.kod === 'timbalan_presiden') && restu(p) < CONFIG.RESTU.presiden) { return 'Perlu Restu Majlis Syura sekurang-kurangnya ' + CONFIG.RESTU.presiden + ' untuk bertanding jawatan ini (anda ' + Math.round(restu(p)) + ').'; }
+    return null;
+  }
+  /** Sekatan calon PRU Ahli Bersekutu: kerusi dengan pengundi Bumiputera < 60% sahaja (ANDAIAN). */
+  function sekatanCalon(p, jenis) {
+    if (!bersekutu(p)) { return null; }
+    var k = kawasan(p), x = jenis === 'DUN' ? k.dun : k.parlimen;
+    return x && x.m >= CONFIG.BUMI_BERSEKUTU ? 'Ahli Bersekutu hanya dicalonkan di kerusi dengan pengundi Bumiputera bawah ' + CONFIG.BUMI_BERSEKUTU + '% (kerusi ini ' + x.m + '%)' : null;
+  }
+
+  /* ---------- v13.32: Ceramah ---------- */
+  function pangkat(p) { var J0 = J(); return J0 && J0.pangkatTertinggi ? J0.pangkatTertinggi(p) : 0; }
+  function statusCeramah(p, perdana) {
+    if (!adalah(p)) { return { boleh: false, sebab: 'Hanya untuk PAS.' }; }
+    var C = perdana ? CONFIG.PERDANA : CONFIG.CERAMAH, m = st(p);
+    if (perdana && pangkat(p) < CONFIG.PERDANA.pangkat) { return { boleh: false, sebab: 'Perlu Yang Dipertua Kawasan atau lebih.' }; }
+    if (m.ceramahBulan === idx(p.tahun, p.bulan)) { return { boleh: false, sebab: 'Ceramah sudah diadakan bulan ini.' }; }
+    if ((Number(p.ap) || 0) < C.ap) { return { boleh: false, sebab: 'Mata Tindakan (AP) tidak mencukupi.' }; }
+    if ((Number(p.myr) || 0) < C.myr) { return { boleh: false, sebab: 'Dana tidak mencukupi.' }; }
+    return { boleh: true, sebab: '' };
+  }
+  function ceramah(perdana) {
+    var p = S().loadPlayer(), s0 = statusCeramah(p, perdana); if (!s0.boleh) { return { ok: false, ralat: s0.sebab }; }
+    var C = perdana ? CONFIG.PERDANA : CONFIG.CERAMAH, m = st(p), a = restu(p), b = larasRestu(m, C.restu); m.ceramahBulan = idx(p.tahun, p.bulan);
+    var kes = { ap: -C.ap, myr: -C.myr, ip: C.ip, kesetiaan: { akarUmbi: C.akarUmbi } }; if (C.reputasi) { kes.reputasi = C.reputasi; }
+    var r = simpan(p, m, kes, { kira: true, tindakan: perdana ? 'pas_ceramah_perdana' : 'pas_ceramah', nama: perdana ? 'Ceramah Perdana' : 'Ceramah' });
+    return r.ok ? { ok: true, mesej: (perdana ? 'Ceramah Perdana' : 'Ceramah') + ' diadakan: sokongan akar umbi +' + C.akarUmbi + ', IP +' + C.ip + (C.reputasi ? ', Reputasi +' + C.reputasi : '') + ', Restu Majlis Syura ' + Math.round(a) + ' → ' + Math.round(b) + '.' } : { ok: false, ralat: r.ralat };
+  }
+
+  /* ---------- v13.32: Dewan Ulamak, As-Sabiqun, Himpunan Pendukung ---------- */
+  function umur(p) { var H = modul('MyPolitikHayat', 'hayat.js'); return H && H.umurSemasa ? H.umurSemasa(p) : 0; }
+  function adaJawatanLain(p) { var J0 = J(); return !!(J0 && J0.getJawatan && J0.getJawatan(p).filter(function (j) { return j && j.kod !== 'lama'; }).length); }
+  function dewanPemain(p, kod) { var m = st(p), d = (m.dewan || {})[kod]; return d && typeof d === 'object' ? d : { ahli: false, jawatan: null, calon: null }; }
+  function islamLulusan(p) { var pd = p && p.pendidikan; return !!(pd && pd.bidang === 'islam' && pd.tahap && pd.tahap !== 'spm'); }
+  /** Kelayakan menyertai Dewan: { boleh, sebab }. */
+  function layakDewan(p, kod) {
+    if (!adalah(p)) { return { boleh: false, sebab: 'Hanya untuk PAS.' }; }
+    if (kod === 'pendukung') { return bersekutu(p) ? { boleh: true, sebab: '' } : { boleh: false, sebab: 'Untuk Ahli Bersekutu (bukan Islam) sahaja (Fasal 60).' }; }
+    if (bersekutu(p)) { return { boleh: false, sebab: 'Ahli Bersekutu hanya dalam Dewan Himpunan Pendukung.' }; }
+    if (kod === 'ulamak') { return islamLulusan(p) ? { boleh: true, sebab: '' } : { boleh: false, sebab: 'Dewan Ulamak: perlu lulusan Pengajian Islam (Diploma ke atas, Fasal 56(2)).' }; }
+    if (kod === 'sabiqun') {
+      if (umur(p) < CONFIG.DEWAN.sabiqun.umur) { return { boleh: false, sebab: 'Dewan As-Sabiqun untuk ahli berumur 60 tahun ke atas (Fasal 59(2)).' }; }
+      return { boleh: true, sebab: '' };
+    }
+    return { boleh: false, sebab: 'Dewan tidak sah.' };
+  }
+  function sertaiDewan(kod) {
+    var p = S().loadPlayer(), l = layakDewan(p, kod); if (!l.boleh) { return { ok: false, ralat: l.sebab }; }
+    var m = st(p); m.dewan = m.dewan || {}; if (m.dewan[kod] && m.dewan[kod].ahli) { return { ok: false, ralat: 'Anda sudah ahli ' + CONFIG.DEWAN[kod].nama + '.' }; }
+    m.dewan[kod] = { ahli: true, jawatan: null, calon: null, sejak: idx(p.tahun, p.bulan) };
+    var r = simpan(p, m, {}, { tindakan: 'pas_dewan', nama: 'Menyertai ' + CONFIG.DEWAN[kod].nama });
+    return r.ok ? { ok: true, mesej: 'Anda kini ahli ' + CONFIG.DEWAN[kod].nama + '.' } : { ok: false, ralat: r.ralat };
+  }
+  function peringkatSeterusnya(d) { var i = d.jawatan ? CONFIG.PERINGKAT.indexOf(d.jawatan) : -1; return i < CONFIG.PERINGKAT.length - 1 ? CONFIG.PERINGKAT[i + 1] : null; }
+  function statusBertandingDewan(p, kod) {
+    var d = dewanPemain(p, kod), D0 = CONFIG.DEWAN[kod]; if (!D0 || !d.ahli) { return { boleh: false, sebab: 'Sertai ' + (D0 ? D0.nama : 'Dewan') + ' dahulu.' }; }
+    var ke = peringkatSeterusnya(d); if (!ke) { return { boleh: false, sebab: 'Anda sudah ' + D0.ketua + ' Pusat.' }; }
+    if (kod === 'sabiqun' && adaJawatanLain(p)) { return { boleh: false, sebab: 'Pemegang jawatan parti lain tidak layak memegang jawatan As-Sabiqun (Fasal 59(5)).' }; }
+    if (!adalahTahunPemilihan(p, p.tahun) || p.bulan > CONFIG.BULAN_DEWAN[ke]) { return { boleh: false, sebab: 'Pemilihan Dewan dalam tahun pemilihan, sebelum bulan ' + CONFIG.BULAN_DEWAN[ke] + ' (seterusnya ' + tahunSeterusnya(p, p.tahun + (adalahTahunPemilihan(p, p.tahun) ? 1 : 0)) + ').' }; }
+    if (d.calon) { return { boleh: false, sebab: 'Anda sudah mendaftar sebagai calon ' + D0.ketua + ' ' + label(d.calon) + '.' }; }
+    if ((Number(p.ip) || 0) < D0.ip[ke]) { return { boleh: false, sebab: 'Perlukan ' + D0.ip[ke] + ' IP (anda ada ' + Math.round(Number(p.ip) || 0) + ').' }; }
+    return { boleh: true, sebab: '', ke: ke };
+  }
+  function label(pr) { return pr === 'kawasan' ? 'Kawasan' : pr === 'negeri' ? 'Negeri' : 'Pusat'; }
+  function bertandingDewan(kod) {
+    var p = S().loadPlayer(), s0 = statusBertandingDewan(p, kod); if (!s0.boleh) { return { ok: false, ralat: s0.sebab }; }
+    var m = st(p); m.dewan[kod].calon = s0.ke;
+    var r = simpan(p, m, {}, { kira: true, tindakan: 'pas_dewan_calon', nama: 'Calon ' + CONFIG.DEWAN[kod].ketua + ' ' + label(s0.ke) });
+    return r.ok ? { ok: true, mesej: 'Anda mendaftar sebagai calon ' + CONFIG.DEWAN[kod].ketua + ' ' + label(s0.ke) + '. Keputusan pada bulan ' + CONFIG.BULAN_DEWAN[s0.ke] + '.' } : { ok: false, ralat: r.ralat };
+  }
+  function peluangDewan(p, kod, ke) { var ipM = CONFIG.DEWAN[kod].ip[ke]; return clamp(0.3 + ((Number(p.ip) || 0) - ipM) / ipM * 0.3 + (restu(p) - 50) * 0.01, 0.1, 0.9); }
+
+  /** Simpanan lama / tukar bidang: daftar sebagai lulusan Pengajian Islam sekali sahaja (Diploma ke atas). */
+  function statusBidang(p) {
+    if (!adalah(p) || bersekutu(p)) { return { boleh: false, sebab: '' }; }
+    if (islamLulusan(p)) { return { boleh: false, sebab: '', sudah: true }; }
+    var pd = p.pendidikan || {}; if (!pd.tahap || pd.tahap === 'spm') { return { boleh: false, sebab: 'Perlu Diploma ke atas.' }; }
+    if (st(p).bidangTukar) { return { boleh: false, sebab: 'Bidang pengajian sudah ditukar sekali.' }; }
+    return { boleh: true, sebab: '' };
+  }
+  function tukarBidang() {
+    var p = S().loadPlayer(), s0 = statusBidang(p); if (!s0.boleh) { return { ok: false, ralat: s0.sebab || 'Tidak boleh.' }; }
+    var m = st(p), pd = JSON.parse(JSON.stringify(p.pendidikan || {})); pd.bidang = 'islam'; m.bidangTukar = true;
+    var r = S().applyEffects({}, { kiraTindakan: false, patch: { pas: m, pendidikan: pd }, log: { tindakan: 'pas_bidang', nama: 'Bidang pengajian: Pengajian Islam', peringkat: 'ahli' } });
+    return r.ok ? { ok: true, mesej: 'Bidang pengajian anda kini Pengajian Islam. Anda boleh menyertai Dewan Ulamak.' } : { ok: false, ralat: r.ralat };
+  }
+
+  /* ---------- v13.32: rayuan tatatertib ke Majlis Syura (Fasal 77) ---------- */
+  function kunciHukuman(p) { var e = p && p.etika, h = e && e.hukuman; return e && /^(digantung|dilarang|dipecat)$/.test(e.status) ? e.status + '|' + (h ? (h.tahun || h.mulaTahun || '') + '-' + (h.bulan || h.mulaBulan || '') : '') : null; }
+  function statusRayuan(p) {
+    if (!adalah(p)) { return { boleh: false, sebab: '' }; }
+    var kk = kunciHukuman(p); if (!kk) { return { boleh: false, sebab: 'Tiada tindakan tatatertib.' }; }
+    if (st(p).rayuanKunci === kk) { return { boleh: false, sebab: 'Rayuan ke Majlis Syura sudah dibuat untuk tindakan ini.' }; }
+    if (restu(p) < CONFIG.RESTU.rayuan) { return { boleh: false, sebab: 'Perlu Restu Majlis Syura sekurang-kurangnya ' + CONFIG.RESTU.rayuan + '.' }; }
+    if ((Number(p.ap) || 0) < CONFIG.RESTU.rayuanAP) { return { boleh: false, sebab: 'Mata Tindakan (AP) tidak mencukupi.' }; }
+    return { boleh: true, sebab: '' };
+  }
+  function rayuan(o) {
+    var p = S().loadPlayer(), s0 = statusRayuan(p); if (!s0.boleh) { return { ok: false, ralat: s0.sebab }; }
+    var r = (o && o.rng) || S().rngBerbenih(String(p.id) + '|pas|rayuan|' + idx(p.tahun, p.bulan)), m = st(p), jaya = r() < CONFIG.RESTU.rayuanPeluang, patch = { pas: m };
+    m.rayuanKunci = kunciHukuman(p);
+    if (jaya) { var e = JSON.parse(JSON.stringify(p.etika)); e.status = 'baik'; e.hukuman = null; e.notisRayu = false; patch.etika = e; }
+    else { larasRestu(m, CONFIG.RESTU.rayuanGagal); }
+    var res = S().applyEffects({ ap: -CONFIG.RESTU.rayuanAP }, { kiraTindakan: true, patch: patch, log: { tindakan: 'pas_rayuan', nama: 'Rayuan tatatertib ke Majlis Syura Ulamak' + (jaya ? ' (diterima)' : ' (ditolak)'), peringkat: 'disiplin' } });
+    if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    return { ok: true, jaya: jaya, mesej: jaya ? 'Majlis Syura Ulamak menerima rayuan anda (Fasal 77). Tindakan tatatertib dibatalkan.' : 'Majlis Syura Ulamak menolak rayuan anda. Restu Majlis Syura ' + CONFIG.RESTU.rayuanGagal + '.' };
+  }
+  function tb(i) { var B = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'], t = Math.floor((i - 1) / 12), b = ((i - 1) % 12) + 1; return B[b - 1] + ' ' + t; }
+
   /* ---------- Bulanan ---------- */
-  function prosesBulan() {
+  function prosesBulan(o) {
     var Sv = S(), p = Sv && Sv.loadPlayer(), ev = [];
     if (!p || p.tamat || !adalah(p)) { return { peristiwa: ev }; }
-    var m = st(p), own = kodPL(p);
+    var m = st(p), own = kodPL(p), R0 = CONFIG.RESTU, kes = {}, now = idx(p.tahun, p.bulan), rng = (o && o.rng) || S().rngBerbenih(String(p.id) + '|pas|bulan|' + now);
     Object.keys(m.pusat).forEach(function (k) { var asal = k === own ? CONFIG.PUSAT.sendiri : 40; m.pusat[k] = Math.round((m.pusat[k] + (asal - m.pusat[k]) * 0.02) * 10) / 10; });
-    simpan(p, m, {});
+    // v13.32: Restu Majlis Syura: susut ke arah 50, Integriti, Ketua Dewan Ulamak, siasatan etika
+    var rs = restu(p), skor = p.integriti && typeof p.integriti.skor === 'number' ? p.integriti.skor : 60;
+    if (rs > R0.awal) { larasRestu(m, -Math.min(R0.susut, rs - R0.awal)); } else if (rs < R0.awal) { larasRestu(m, Math.min(R0.susut, R0.awal - rs)); }
+    if (skor >= R0.integritiTinggi) { larasRestu(m, R0.naikIntegriti); } else if (skor < R0.integritiRendah) { larasRestu(m, -R0.turunIntegriti); }
+    var ul = dewanPemain(p, 'ulamak'); if (ul.jawatan) { larasRestu(m, R0.ketuaUlamak); }
+    var sk = p.etika && p.etika.siasatan ? 'siasatan|' + (p.etika.siasatan.tahun || '') + '-' + (p.etika.siasatan.bulan || '') : null;
+    if (sk && m.siasatanKunci !== sk) { m.siasatanKunci = sk; larasRestu(m, R0.siasatan); ev.push({ jenis: 'pas', mesej: 'Siasatan etika terhadap anda: Restu Majlis Syura Ulamak ' + R0.siasatan + '.' }); }
+    // v13.32: Dewan: keputusan pemilihan, bonus IP jawatan, As-Sabiqun
+    Object.keys(CONFIG.DEWAN).forEach(function (kod) {
+      var d = (m.dewan || {})[kod]; if (!d || !d.ahli) { return; }
+      var D0 = CONFIG.DEWAN[kod];
+      if (d.calon && p.bulan >= CONFIG.BULAN_DEWAN[d.calon]) {
+        var ke = d.calon, menang = rng() < peluangDewan(p, kod, ke); d.calon = null;
+        if (menang) { d.jawatan = ke; ev.push({ jenis: 'pas', mesej: 'Anda menang jawatan ' + D0.ketua + ' ' + label(ke) + '.' }); }
+        else { ev.push({ jenis: 'pas', mesej: 'Anda kalah dalam pemilihan ' + D0.ketua + ' ' + label(ke) + '.' }); }
+      }
+      if (d.jawatan) { kes.ip = (kes.ip || 0) + D0.bonus[d.jawatan]; }
+      if (kod === 'sabiqun') {
+        kes.ip = (kes.ip || 0) + D0.ahliIP;
+        var STm = modul('MyPolitikStres', 'stress.js'); if (STm && STm.laras) { try { STm.laras({ stress: D0.ahliStress }); } catch (eS) { /* abaikan */ } }
+      }
+    });
+    // v13.32: Ahli Majlis Syura Ulamak (Fasal 8(4)-(5)): Ketua Dewan Ulamak Pusat dengan Restu >= 80, selepas Muktamar tahun pemilihan
+    if (m.syura && now > m.syura.sehingga) { m.syura = null; ev.push({ jenis: 'pas', mesej: 'Penggal anda sebagai Ahli Majlis Syura Ulamak tamat.' }); }
+    if (m.syura) { kes.ip = (kes.ip || 0) + R0.syuraIP; }
+    else if (ul.jawatan === 'pusat' && restu(Object.assign({}, p, { pas: m })) >= R0.syura && adalahTahunPemilihan(p, p.tahun) && p.bulan === CONFIG.BULAN_PUSAT + 1 && rng() < R0.syuraPeluang) {
+      m.syura = { sehingga: now + R0.syuraBulan }; kes.reputasi = (kes.reputasi || 0) + R0.syuraReputasi; kes.ip = (kes.ip || 0) + R0.syuraIP;
+      ev.push({ jenis: 'pas', mesej: 'Anda dilantik Ahli Majlis Syura Ulamak untuk penggal 5 tahun (Fasal 8): IP +' + R0.syuraIP + ' sebulan, Reputasi +' + R0.syuraReputasi + '.' });
+    }
+    simpan(p, m, kes);
     return { peristiwa: ev };
   }
 
   return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, kerajaanNegeriAwal: kerajaanNegeriAwal,
     adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
     sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, statusJelajah: statusJelajah, jelajah: jelajah,
-    lantikanSemasa: function () { return null; }, kerusiParlimen: kerusiParlimen, kadarDUN: kadarDUN, prosesBulan: prosesBulan };
+    lantikanSemasa: function () { return null; }, kerusiParlimen: kerusiParlimen, kadarDUN: kadarDUN, prosesBulan: prosesBulan,
+    bersekutu: bersekutu, restu: restu, adjCalon: adjCalon, sekatanJawatan: sekatanJawatan, sekatanCalon: sekatanCalon, statusCeramah: statusCeramah, ceramah: ceramah,
+    islamLulusan: islamLulusan, layakDewan: layakDewan, sertaiDewan: sertaiDewan, dewanPemain: dewanPemain, statusBertandingDewan: statusBertandingDewan, bertandingDewan: bertandingDewan,
+    peluangDewan: peluangDewan, statusBidang: statusBidang, tukarBidang: tukarBidang, statusRayuan: statusRayuan, rayuan: rayuan, label: label, tb: tb };
 });

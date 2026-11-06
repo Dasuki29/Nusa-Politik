@@ -35,6 +35,8 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   semak(/kuota kerusi Parlimen PAS/.test(await pg.textContent('#h-parti')), 'notis kuota PN selepas pilih Kawasan');
   await pg.selectOption('#s-dun', { index: 1 }); await pg.waitForTimeout(300);
   await pg.selectOption('#s-cawangan', { index: 1 }); await pg.waitForTimeout(300);
+  semak(await pg.evaluate(() => !document.getElementById('f-pas-bidang').hidden && !document.getElementById('f-pas-jenis').hidden), 'v13.32: medan bidang pengajian dan jenis keahlian PAS');
+  await pg.selectOption('#s-bidang', 'islam');
   await pg.fill('#f-nama', 'Siti Aminah'); await pg.fill('#f-umur', '30'); await pg.check('input[name=jantina][value=P]').catch(() => pg.check('input[name=jantina] >> nth=1'));
   const sy = await pg.$$eval('#sayap-grid .sy', (l) => l.map((x) => x.dataset.kod + ':' + (getComputedStyle(x).display === 'none' ? 'x' : 'o')).join());
   semak(/puteri:x/.test(sy), 'PAS tiada Puteri (' + sy + ')');
@@ -57,6 +59,14 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   const sebelum = await pg.evaluate((k) => MyPolitikPAS.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ);
   await pg.click('[data-pas="jelajah"]'); await pg.waitForTimeout(500);
   semak(await pg.evaluate((k) => MyPolitikPAS.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ) > sebelum, 'Jelajah Kawasan menaikkan sokongan perwakilan');
+  /* v13.32: Fasa 2 */
+  semak(await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); return p.pendidikan.bidang === 'islam'; }), 'bidang Pengajian Islam disimpan');
+  const pf2 = await pg.textContent('#panel-profil');
+  semak(/Restu Majlis Syura Ulamak/.test(pf2) && /Dewan Ulamak/.test(pf2) && /Fasal 15A/.test(pf2), 'kad PAS: Restu, Dewan, Fasal 15A');
+  await pg.click('[data-pas="ceramah"]'); await pg.waitForTimeout(400);
+  semak(await pg.evaluate(() => MyPolitikPAS.restu(MyPolitikSave.loadPlayer()) === 51), 'Ceramah: Restu +1');
+  await pg.click('[data-pas="sertai"][data-dewan-pas="ulamak"]'); await pg.waitForTimeout(400);
+  semak(await pg.evaluate(() => MyPolitikPAS.dewanPemain(MyPolitikSave.loadPlayer(), 'ulamak').ahli), 'sertai Dewan Ulamak');
   const kr = await pg.evaluate(() => { const h = window.NusaPaparan.htmlKerusi(MyPolitikSave.loadPlayer()); const d = document.createElement('div'); d.innerHTML = h; return d.textContent; });
   semak(/Perikatan Nasional \(★ parti anda\)/.test(kr) && /Barisan Nasional/.test(kr) && /Kerajaan negeri: Perikatan Nasional/.test(kr), 'kad kerusi PN (pembangkang persekutuan, kerajaan negeri): ' + kr.slice(0, 160));
   await pg.click('#tab-dewan').catch(() => {}); await pg.waitForTimeout(600);
@@ -75,6 +85,14 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   }
   if (process.env.SENARAI) { console.log(bocorSemua.join('\n')); }
   semak(bocorSemua.length === 0, 'EN: tiada BM bocor dalam tab dashboard PAS (' + bocorSemua.length + '):\n    ' + bocorSemua.slice(0, 20).join('\n    '));
+  await pg.evaluate(() => MyPolitikI18n.setLanguage('BM')); await pg.waitForTimeout(300);
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { keahlianJenis: 'bersekutu', jawatanList: [] } }); NusaUI.render(); });
+  await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(400);
+  const pf3 = await pg.textContent('.pas-kad');
+  semak(/Ahli Bersekutu/.test(pf3) && /Dewan Himpunan Pendukung/.test(pf3) && !/Dewan Ulamak/.test(pf3.replace(/Ketua Dewan Ulamak Pusat/, '')), 'Ahli Bersekutu: Dewan Himpunan Pendukung sahaja: ' + pf3.replace(/\s+/g, ' ').slice(pf3.indexOf('Dewan PAS') - 10, pf3.indexOf('Dewan PAS') + 300));
+  await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(600);
+  const bocor3 = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; const k = document.querySelector('.pas-kad'); const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t.slice(0, 140)); } } return out; }, BM.source);
+  semak(bocor3.length === 0, 'EN Ahli Bersekutu: tiada BM bocor:\n    ' + bocor3.slice(0, 10).join('\n    '));
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PAS lulus.'); process.exit(gagal.length ? 1 : 0);
