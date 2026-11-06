@@ -10,7 +10,7 @@
      - Perwakilan Cabang ke Kongres tahun pemilihan (Fasal 17.2A(c)): 46 Perwakilan Jawatankuasa Cabang + 40 Perwakilan Biasa Cabang,
        +10 Perwakilan Tambahan bagi setiap 1,000 anggota melebihi 3,000, maksimum 156; Jelajah Cabang.
      - Angkatan Muda (AMK, had umur 35 tahun, Fasal 25) dan Wanita (Fasal 26) guna sayap Pemuda / Wanita sedia ada; tiada Puteri.
-     - Gabungan PH: rakan DAP, Amanah dan UPKO sebagai NPC. ANDAIAN: kuota PKR 70 Parlimen dan 150 DUN dalam PH, kawasan bercampur dahulu.
+     - Gabungan PH: rakan DAP dan Amanah sebagai NPC (UPKO keluar PH pada 10 November 2025). ANDAIAN: kuota PKR 70 Parlimen dan 150 DUN dalam PH, kawasan bercampur dahulu.
      - Kerajaan (ANDAIAN): PH memimpin Kerajaan Perpaduan; selepas PRU, PH perlu rakan (BN) untuk majoriti (js/rundingan.js).
        Kekuatan DUN blok kerajaan (PH + rakan Kerajaan Perpaduan) ikut negeri, dipermudahkan daripada PRN 2023 / PRU 2022.
    State: p.pkr = { pusat:{kod:sokongan}, jelajahBulan }
@@ -47,9 +47,8 @@
     KERAJAAN_NEGERI: ['Selangor', 'Pulau Pinang', 'Negeri Sembilan'],
     RAKAN: [
       { kod: 'DAP', nama: 'DAP', penuh: 'Parti Tindakan Demokratik', logo: 'assets/images/logo-dap.svg' },
-      { kod: 'AMANAH', nama: 'Amanah', penuh: 'Parti Amanah Negara', logo: 'assets/images/logo-amanah.png' },
-      { kod: 'UPKO', nama: 'UPKO', penuh: 'Pertubuhan Kinabalu Progresif Bersatu', logo: '' }
-    ]
+      { kod: 'AMANAH', nama: 'Amanah', penuh: 'Parti Amanah Negara', logo: 'assets/images/logo-amanah.png' }
+    ]                                                                       // v13.35: UPKO keluar PH (10 November 2025)
   };
 
   function adalah(p) { return !!(p && p.parti === 'PKR'); }

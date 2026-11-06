@@ -1,9 +1,13 @@
 # Catatan Perubahan
 
+## v13.35 (2026-11-06)
+
+- Pembetulan (maklum balas pengguna): **UPKO dibuang daripada senarai rakan PH**. UPKO keluar Pakatan Harapan pada 10 November 2025. Rakan PH kini hanya DAP dan Amanah, di menu utama dan kad PKR. Cache `nusa-v13.35`.
+
 ## v13.34 (2026-11-06)
 
 - **Parti baharu: PKR (Pakatan Harapan), Fasa 1** (maklum balas di borang, baris 11 hingga 13), ikut mockup skop PH yang dipersetujui dan Perlembagaan PKR (pindaan diluluskan hingga 11 Mac 2025).
-  - Menu utama: gabungan **PH** dengan chip PKR. Rakan PH (DAP, Amanah, UPKO) dimainkan sebagai NPC. Logo daripada pengguna; UPKO tanpa logo.
+  - Menu utama: gabungan **PH** dengan chip PKR. Rakan PH (DAP, Amanah) dimainkan sebagai NPC. Logo daripada pengguna. (UPKO disenaraikan pada asalnya; dibuang dalam v13.35.)
   - Mod penuh menggunakan enjin UMNO dengan istilah PKR:
     - **Ranting** (Fasal 39.1(g)) dan **Cabang** di setiap kawasan Parlimen, minimum 100 anggota (Fasal 32).
     - **Majlis Pimpinan Negeri** (Fasal 27), **Majlis Pimpinan Pusat** (Fasal 21) dan **Kongres Nasional KEADILAN** (Fasal 17, 18).

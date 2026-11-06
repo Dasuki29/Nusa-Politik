@@ -24,7 +24,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('[data-gab="PH"]'); await pg.waitForTimeout(300);
   const ph = await pg.evaluate(() => { const p = document.querySelector('#gab-ph'); return p && !p.hidden ? p.textContent : ''; });
-  semak(/PKR/.test(ph) && /DAP/.test(ph) && /Amanah/.test(ph) && /UPKO/.test(ph), 'panel PH di menu utama: ' + ph.slice(0, 120));
+  semak(/PKR/.test(ph) && /DAP/.test(ph) && /Amanah/.test(ph) && !/UPKO/.test(ph), 'panel PH di menu utama (tanpa UPKO): ' + ph.slice(0, 120));
   semak(await pg.$$eval('#gab-ph img', (l) => l.length === 3 && l.every((i) => i.complete && i.naturalWidth > 0)), 'logo PKR, DAP, Amanah dimuat');
   semak(await pg.$$eval('[data-gab="PH"] img', (l) => l.every((i) => i.complete && i.naturalWidth > 0)), 'logo PH dimuat');
   await pg.click('#gab-ph .poster__chip[data-parti="PKR"]'); await pg.waitForTimeout(2500);
