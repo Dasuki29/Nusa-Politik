@@ -215,6 +215,9 @@
       var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
       return smb + bMB + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ Lobi Portfolio Kerajaan</h2><p class="note">Parti membentuk kerajaan. Anda boleh melobi satu portfolio (' + k.lobi.baki + ' percubaan tinggal).</p><button type="button" class="btn btn--primary btn--block" data-pru="lobi">Buka Lobi Portfolio</button>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem;margin-top:8px">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '') + '</section>';
     }
+    if (!k.hasGovernmentRole && k.mbTertunda && k.mb && k.mb.boleh) {   // v13.40: lobi Menteri Persekutuan gagal, MB masih boleh dituntut sekali
+      return smb + '<div class="banner banner--gold"><strong>👔 ' + esc(k.mb.label) + ' ' + esc(k.mb.negeri) + '</strong>Lobi Menteri Persekutuan tidak berjaya, tetapi anda masih boleh menuntut jawatan ' + esc(k.mb.label) + ' sekali. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">Tuntut ' + esc(k.mb.label) + '</button></div>' + kadTiadaLobi(p);
+    }
     if (!k.hasGovernmentRole) { return smb + kadTiadaLobi(p); }
     h = smb + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
     var arah = k.arah > 0 ? ' ▲ +' + k.arah : k.arah < 0 ? ' ▼ ' + k.arah : ' ▬';
@@ -596,6 +599,7 @@
       var id = await modal({
         tajuk: '🏛️ Lobi Portfolio Kerajaan',
         isi: '<p>Parti membentuk kerajaan. Guna <b>IP</b> dan <b>Dana</b> untuk melobi satu portfolio. Lobi gagal = separuh kos hilang. Percubaan tinggal: <b>' + k.lobi.baki + '</b>.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Dana: <b>RM ' + fmt(p.myr) + '</b></p>' + amaranDanaLobi(p, k) + '<ul class="acara__pil">' +
+          (k.tpm && k.tpm.layak ? opsi('TPM', '🤝 Lobi Timbalan Perdana Menteri', 'Timbalan Presiden · kos ' + k.tpm.ap + ' AP + RM ' + fmt(k.tpm.myr) + ' + ' + k.tpm.ip + ' IP · peluang ± ' + k.tpm.peluang + '% (' + (k.tpm.pmSendiri ? 'PM dari parti anda' : 'PM dari rakan gabungan') + ') · elaun +RM 6,000 &amp; +25 IP/bulan' + (k.tpm.boleh ? '' : '<br>' + esc(k.tpm.sebab)), k.tpm.boleh) : '') +   // v13.40
           (k.portfolio.length ? '' : '<li class="muted" style="list-style:none">Tiada portfolio dibuka pada IP anda sekarang (minimum 250 IP).</li>') + k.portfolio.map(function (x) { return opsi(x.id, esc(x.nama), esc(x.tahapNama) + ' · kos IP ' + x.ip + ' + RM ' + fmt(x.myr) + ' · peluang ± ' + x.peluang + '% · elaun +RM ' + fmt(x.elaun.myr) + ' &amp; +' + x.elaun.ip + ' IP/bulan' + (x.boleh ? '' : '<br>' + esc(x.sebab)), x.boleh); }).join('') +
           opsi('TANGGUH', 'Tangguh', 'Lobi kekal terbuka sehingga pilihan raya akan datang. Buka semula dari tab Pemilihan bila sedia.', true) + '</ul>',
         butang: []
@@ -603,11 +607,12 @@
       if (!id) { break; }
       if (id === 'LEPAS') { KB.lepaskanLobi(); break; }
       if (id === 'TANGGUH') { toast('Lobi ditangguh. Anda boleh membukanya semula dari tab Pemilihan.', 'ok'); break; }   // v8.16: kekal terbuka
-      var r = KB.lobiPortfolio(id);
+      var r = id === 'TPM' ? KB.lobiTPM() : KB.lobiPortfolio(id);
       if (!r.ok) { toast(r.ralat, 'ralat'); continue; }
       segarkan();
       await modal({ tajuk: r.dilantik ? '🏛️ Dilantik!' : 'Lobi Gagal', isi: '<p>' + esc(r.mesej) + '</p>' });
-      if (r.dilantik || r.tutup) { break; }
+      if (r.dilantik) { break; }
+      if (r.tutup) { if (r.mbTertunda) { await menteriBesar(); } break; }   // v13.40: MB masih boleh dituntut sekali
     }
     segarkan();
   }
@@ -620,13 +625,17 @@
       ? '<p>Parti anda menang <b>' + m.parti + '</b> daripada ' + m.jumlah + ' kerusi DUN (majoriti ' + m.ambang + '). Anda boleh mengangkat sumpah sebagai <b>' + esc(m.label) + '</b>.</p>'
       : !m.jumlah ? '<p>Rakan gabungan turut menuntut jawatan itu. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan ' + (SW(p.parti) ? 'Menteri Kanan' : 'EXCO Kanan') + '.</p>'
       : '<p>Parti anda <b>' + m.parti + '</b> kerusi + rakan gabungan <b>' + m.rakan + '</b> = <b>' + m.gabungan + '</b> daripada ' + m.jumlah + ' (majoriti ' + m.ambang + '). Bahagian kerusi parti dalam gabungan: <b>' + m.kongsi + '%</b>. Peluang menuntut ' + esc(m.label) + ': ± <b>' + m.peluang + '%</b>.</p><p style="font-size:.82rem">Gagal: hubungan gabungan -10 dan anda ditawarkan EXCO Kanan.</p>';
-    var id = await modal({ tajuk: '👔 ' + esc(m.label) + ' ' + esc(m.negeri),
-      isi: isi + '<ul class="acara__pil">' +
+    var kL = KB.ringkasan(p), laluan = !!(kL.lobi && kL.lobi.sumber === 'PARLIMEN');   // v13.40: Pilih Laluan Kerajaan (MP + ADUN + Pengerusi Badan Perhubungan)
+    var id = await modal({ tajuk: laluan ? '🏛️ Pilih Laluan Kerajaan' : '👔 ' + esc(m.label) + ' ' + esc(m.negeri),
+      isi: (laluan ? '<p>Anda menang kerusi Parlimen dan DUN. Pilih satu laluan: <b>' + esc(m.label) + ' ' + esc(m.negeri) + '</b> atau <b>Menteri / Timbalan Menteri Persekutuan</b>. Hanya satu jawatan kerajaan pada satu masa.</p>' : '') + isi + '<ul class="acara__pil">' +
         opsi('TUNTUT', m.sendiri ? '👔 Angkat sumpah ' + esc(m.label) : '👔 Tuntut ' + esc(m.label), '2 AP · elaun +RM 6,000 &amp; +18 IP sebulan · Stress lebih berat', (Number(p.ap) || 0) >= 2) +
         (m.sendiri ? '' : opsi('KANAN', SW(p.parti) ? '🤝 Terima Menteri Kanan' : '🤝 Terima EXCO Kanan', SW(p.parti) ? 'Selamat, tanpa menuntut. Elaun Menteri Negeri.' : 'Selamat, tanpa menuntut. Elaun EXCO.', true)) +
-        opsi('LAIN', 'Lobi portfolio biasa', (SW(p.parti) ? 'Tidak menuntut jawatan tertinggi; pilih portfolio Menteri seperti biasa.' : 'Tidak menuntut jawatan tertinggi; pilih portfolio EXCO seperti biasa.'), true) + '</ul>', butang: [] });
+        (laluan ? opsi('LAIN', '🏛️ Menteri / Timbalan Menteri Persekutuan', 'Lobi portfolio Parlimen ikut IP anda; kekal ADUN. Jika semua percubaan gagal, ' + esc(m.label) + ' masih boleh dituntut sekali.' + (kL.tpm && kL.tpm.layak ? ' Termasuk lobi Timbalan Perdana Menteri.' : ''), true)
+          : kL.lobi ? opsi('LAIN', 'Lobi portfolio biasa', (SW(p.parti) ? 'Tidak menuntut jawatan tertinggi; pilih portfolio Menteri seperti biasa.' : 'Tidak menuntut jawatan tertinggi; pilih portfolio EXCO seperti biasa.'), true) : '') +
+        (laluan ? opsi('TANGGUH', 'Tangguh', 'Lobi kekal terbuka sehingga pilihan raya akan datang. Buka semula dari tab Pemilihan bila sedia.', true) : '') + '</ul>', butang: [] });
     if (!id) { return; }
     if (id === 'LAIN') { await lobi(); return; }
+    if (id === 'TANGGUH') { toast('Lobi ditangguh. Anda boleh membukanya semula dari tab Pemilihan.', 'ok'); return; }
     var r = id === 'TUNTUT' ? KB.tuntutMB() : KB.terimaExcoKanan();
     if (!r.ok) { toast(r.ralat, 'ralat'); return; }
     segarkan();

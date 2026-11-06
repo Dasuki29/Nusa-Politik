@@ -1,5 +1,19 @@
 # Catatan Perubahan
 
+## v13.40 (2026-11-07)
+
+- **Maklum balas borang baris 23: Pilih Laluan Kerajaan dan Lobi Timbalan Perdana Menteri**, ikut mockup yang dipersetujui.
+  - **🏛️ Pilih Laluan Kerajaan:**
+    - Berlaku apabila pemain menang kerusi Parlimen dan DUN, memegang Pengerusi Badan Perhubungan Negeri, dan parti membentuk kerajaan persekutuan dan negeri.
+    - Dialog selepas PRU kini menawarkan dua laluan dengan jelas: **Menteri Besar / Ketua Menteri** (peluang dipaparkan) atau **Menteri / Timbalan Menteri Persekutuan** (lobi portfolio Parlimen), serta EXCO Kanan dan Tangguh.
+    - Jika semua percubaan lobi persekutuan gagal, **MB masih boleh dituntut sekali** ⚠️. Kad Kabinet memaparkan butang Tuntut MB.
+  - **🤝 Lobi Timbalan Perdana Menteri:**
+    - Untuk Timbalan Presiden parti (DAP: Pengerusi Kebangsaan) yang menjadi Ahli Parlimen, apabila lobi kerajaan persekutuan dibuka dan belum memegang jawatan kerajaan.
+    - ⚠️ Kos 3 AP + RM 20,000 + 400 IP.
+    - ⚠️ Peluang asas 60% jika PM dari parti sendiri, 30% jika PM dari rakan gabungan. Pelarasan: Reputasi ±10%, hubungan gabungan ±10%, IP melebihi 400 sehingga +10%.
+    - Gagal: separuh kos hilang (sekali bagi setiap pembentukan kerajaan); lobi portfolio Menteri biasa masih terbuka.
+- Ujian: 2 ujian unit baharu, `tools/ujian-laluan.js` (pelayar). Cache `nusa-v13.40`.
+
 ## v13.39 (2026-11-07)
 
 - Pembetulan (maklum balas borang baris 24): Ketua Cawangan atau Timbalan Ketua Cawangan yang menang Ketua Sayap Cawangan tidak dapat memegang kedua-duanya (satu jawatan setiap peringkat). Sebelum ini, Ketua Sayap Bahagian kekal dikunci walaupun pemain menang. Kini jawatan Cawangan yang lebih tinggi itu memenuhi syarat Ketua Sayap Bahagian. Mesej keputusan juga menerangkan bahawa jawatan Cawangan lebih tinggi dikekalkan. Ujian unit baharu. Cache `nusa-v13.39`.

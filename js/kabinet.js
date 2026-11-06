@@ -195,7 +195,7 @@
     if (k.hasGovernmentRole) { return { ok: false, ralat: 'Sudah memegang jawatan kerajaan.' }; }
     var LT = modul('MyPolitikLetak', 'letak.js'), bt = LT && LT.bertenang ? LT.bertenang(p) : 0;          // v13.12: tempoh bertenang selepas letak jawatan
     if (bt) { return { ok: false, ralat: 'Tempoh bertenang selepas letak jawatan (sehingga ' + LT.tb(bt) + ').' }; }
-    k.lobi = { sumber: sumber === 'DUN' ? 'DUN' : 'PARLIMEN', baki: CONFIG.LOBI_PERCUBAAN };
+    k.lobi = { sumber: sumber === 'DUN' ? 'DUN' : 'PARLIMEN', baki: CONFIG.LOBI_PERCUBAAN }; k.mbTertunda = false; k.tpmCuba = false;   // v13.40
     var r = simpan(k, {}, { log: { tindakan: 'lobi_buka', nama: 'Lobi Portfolio Kerajaan dibuka', peringkat: 'ahli' } });
     return { ok: !!(r && r.ok) };
   }
@@ -249,10 +249,10 @@
     var h = CONFIG.LOBI_GAGAL_PULANG;
     kes = { ip: -Math.round(d.ip * (1 - h)), myr: -Math.round(d.myr * (1 - h)) };
     var tutup = k.lobi.baki <= 0;
-    if (tutup) { k.lobi = null; }
+    if (tutup) { var mbSah = k.lobi.sumber === 'PARLIMEN' && syaratMB(p).boleh; k.lobi = null; if (mbSah) { k.mbTertunda = true; } }   // v13.40
     var rs = simpan(k, kes, { log: { tindakan: 'lobi_gagal', nama: 'Lobi gagal: ' + d.nama, peringkat: 'ahli' } });
     if (!rs.ok) { return { ok: false, ralat: rs.ralat }; }
-    return { ok: true, dilantik: false, tutup: tutup, mesej: 'Lobi ' + d.nama + ' gagal. Separuh kos hilang.' + (tutup ? ' Peluang lobi penggal ini habis.' : ' Baki percubaan: ' + k.lobi.baki + '.') };
+    return { ok: true, dilantik: false, tutup: tutup, mbTertunda: !!k.mbTertunda, mesej: 'Lobi ' + d.nama + ' gagal. Separuh kos hilang.' + (tutup ? (k.mbTertunda ? ' Peluang lobi Menteri Persekutuan habis, tetapi anda masih boleh menuntut jawatan Menteri Besar sekali.' : ' Peluang lobi penggal ini habis.') : ' Baki percubaan: ' + k.lobi.baki + '.') };
   }
   /** v7.22: Presiden parti dilantik terus ke jawatan tertinggi kerajaan (tanpa lobi/kos). tahap: 'PERDANA_MENTERI' | 'TIMBALAN_PM'. */
   function lantikKanan(tahap) {
@@ -289,7 +289,7 @@
       return { boleh: !sebab, sebab: sebab };
     }
     if (k.hasGovernmentRole) { sebab = 'Sudah memegang jawatan kerajaan.'; }
-    else if (!k.lobi) { sebab = 'Tiada pembentukan kerajaan negeri.'; }
+    else if (!k.lobi && !k.mbTertunda) { sebab = 'Tiada pembentukan kerajaan negeri.'; }   // v13.40: MB masih boleh dituntut sekali selepas lobi Menteri Persekutuan gagal
     else if (String(p.negeri || '').toLowerCase() === 'sarawak') { sebab = 'UMNO tiada cawangan di Sarawak.'; }
     else if (!sa) { sebab = 'Anda mesti ADUN.'; }
     else if (sa.kerajaan === false) { sebab = 'Parti anda tidak membentuk kerajaan negeri.'; }
@@ -339,11 +339,11 @@
       var ada = false; try { var s0 = NG && NG.status ? NG.status(p) : null; ada = !!(s0 && s0.bp && s0.bp.pengerusi && s0.bp.pengerusi.pemain); } catch (e) { ada = false; }
       item.push({ ok: ada, teks: ada ? 'Anda Pengerusi Badan Perhubungan Negeri' : 'Anda Pengerusi Badan Perhubungan Negeri: lobi di kad Negeri (tab Profil) selepas pemilihan Pusat' });
     }
-    var semua = item.every(function (x) { return x.ok; }), mb = k.lobi && !k.hasGovernmentRole ? maklumatMB(p) : null;
+    var semua = item.every(function (x) { return x.ok; }), mb = (k.lobi || k.mbTertunda) && !k.hasGovernmentRole ? maklumatMB(p) : null;
     return { label: label, negeri: p.negeri || '', item: item, semua: semua, sedia: !!(mb && mb.boleh), peluang: mb ? mb.peluang : null, sendiri: !!(mb && mb.sendiri) };
   }
   function lantikDi(p, k, tahap, nama, log) {
-    k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = ''; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
+    k.mbTertunda = false; k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = ''; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
     k.bulanBerjawatan = 0; k.ratingRendah = 0; k.lobi = null; k.acara = null;
     k.popularitiNasional = CONFIG.POP_AWAL; k.risikoRombak = 0; k.ratingLalu = CONFIG.RATING_AWAL; k.cdfBaki = CONFIG.CDF.BULANAN[tahap]; k.cdfBulan = 0; k.cdfJumlah = 0;
     k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilantik' }]).slice(-10);
@@ -535,19 +535,66 @@
     return { ok: true, mesej: mesej, ip: pil.ip, jumlah: pil.jumlah };
   }
 
+  /* ---------- v13.40: Lobi Timbalan Perdana Menteri (maklum balas borang baris 23, mockup dipersetujui) ----------
+     Timbalan Presiden parti (DAP: Pengerusi Kebangsaan), Ahli Parlimen, lobi kerajaan persekutuan dibuka, tiada jawatan kerajaan.
+     ANDAIAN: kos 3 AP + RM 20,000 + 400 IP; peluang asas 60% jika PM dari parti sendiri, 30% jika PM dari rakan gabungan;
+     Reputasi +/-10%, hubungan gabungan +/-10%, IP melebihi 400: +1% setiap 50 IP (maks. +10%). Gagal: separuh kos hilang; sekali bagi setiap lobi. */
+  var TPM = { ap: 3, myr: 20000, ip: 400, asasSendiri: 0.6, asasRakan: 0.3, min: 0.05, maks: 0.9 };
+  function statusMP(p) { var PR = modul('MyPolitikPRU', 'pru.js'); if (!PR || !PR.getPRU) { return null; } var pr = PR.getPRU(p); return [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === 'MP'; })[0] || null; }
+  /** PM dari parti sendiri? Hanya parti teraju gabungan; rakan gabungan yang lebih besar memegang PM (ANDAIAN). */
+  function pmPartiSendiri(p) {
+    var teraju = { UMNO: 1, PKR: 1, PAS: 1, PBB: 1 }; if (!p || !teraju[p.parti]) { return false; }
+    var kn = p.kerusiNasional || {}, PR = modul('MyPolitikPRU', 'pru.js'), n = PR && PR.getPRU ? PR.getPRU(p).nasional : null;
+    if (n && n.rakanPM) { return false; }
+    var u = kn.ubah || {}, tambah = Math.max(-(Number(u.PH) || 0), -(Number(u.PN) || 0), 0);
+    return !(kn.gabungan && kn.gabungan.length && tambah > (Number(kn.parti) || 0));
+  }
+  function syaratTPM(p) {
+    var k = getKabinet(p), J = modul('MyPolitikJawatan', 'jawatan.js'), sebab = '';
+    if (k.hasGovernmentRole) { sebab = 'Sudah memegang jawatan kerajaan.'; }
+    else if (!k.lobi || k.lobi.sumber !== 'PARLIMEN') { sebab = 'Lobi kerajaan persekutuan tidak dibuka.'; }
+    else if (!J || !J.pegang(p, 'timbalan_presiden')) { sebab = 'Hanya Timbalan Presiden parti.'; }
+    else if (!statusMP(p)) { sebab = 'Anda mesti Ahli Parlimen.'; }
+    else if (k.tpmCuba) { sebab = 'Lobi Timbalan Perdana Menteri sudah dicuba bagi pembentukan kerajaan ini.'; }
+    return { boleh: !sebab, sebab: sebab };
+  }
+  function peluangTPM(p) {
+    var PR = modul('MyPolitikPRU', 'pru.js'), hub = Number(PR && PR.getPRU ? PR.getPRU(p).hubunganGabungan : 50) || 50, ip = Number(p.ip) || 0;
+    return clamp((pmPartiSendiri(p) ? TPM.asasSendiri : TPM.asasRakan) + ((Number(p.reputasi) || 50) - 50) * 0.002 + (hub - 50) * 0.002 + Math.min(0.1, Math.max(0, Math.floor((ip - TPM.ip) / 50) * 0.01)), TPM.min, TPM.maks);
+  }
+  function maklumatTPM(p) {
+    var sy = syaratTPM(p), kosMyr = S().kosSebenar ? S().kosSebenar(p, TPM.myr) : TPM.myr, kurang = [];
+    if ((Number(p.ap) || 0) < TPM.ap) { kurang.push('AP tidak mencukupi (perlu ' + TPM.ap + ')'); }
+    if ((Number(p.myr) || 0) < kosMyr) { kurang.push('Dana tidak cukup (perlu RM ' + kosMyr.toLocaleString('ms-MY') + ')'); }
+    if ((Number(p.ip) || 0) < TPM.ip) { kurang.push('IP tidak cukup (perlu ' + TPM.ip + ')'); }
+    return { layak: sy.boleh, boleh: sy.boleh && !kurang.length, sebab: sy.sebab || kurang.join('; '), peluang: Math.round(peluangTPM(p) * 100), pmSendiri: pmPartiSendiri(p), ap: TPM.ap, myr: kosMyr, ip: TPM.ip };
+  }
+  function lobiTPM(o) {
+    var p = S().loadPlayer(), m = maklumatTPM(p), r = rng(o); if (!m.boleh) { return { ok: false, ralat: m.sebab }; }
+    var lulus = r() < peluangTPM(p), k = getKabinet(p);
+    if (lulus) {
+      S().applyEffects({ ap: -TPM.ap, myr: -m.myr, ip: -TPM.ip }, { kiraTindakan: false }); p = S().loadPlayer(); k = getKabinet(p);
+      var res = lantikDi(p, k, 'TIMBALAN_PM', TAHAP.TIMBALAN_PM.nama, 'lantik_tpm');
+      return { ok: !!(res && res.ok), dilantik: true, mesej: 'Dilantik sebagai Timbalan Perdana Menteri. Elaun bulanan bermula.' };
+    }
+    k.tpmCuba = true;
+    var rs = simpan(k, { ap: -TPM.ap, myr: -Math.round(m.myr / 2), ip: -Math.round(TPM.ip / 2) }, { log: { tindakan: 'lobi_tpm_gagal', nama: 'Lobi Timbalan Perdana Menteri gagal', peringkat: 'ahli' } });
+    if (!rs.ok) { return { ok: false, ralat: rs.ralat }; }
+    return { ok: true, dilantik: false, mesej: 'Lobi Timbalan Perdana Menteri gagal. Separuh kos hilang. Anda masih boleh melobi portfolio Menteri.' };
+  }
   function ringkasan(p) {
     var k = getKabinet(p), t = TAHAP[k.roleLevel] || null;
     return { hasGovernmentRole: k.hasGovernmentRole, roleLevel: k.roleLevel, tahapNama: t ? namaTahap(p, k.roleLevel) : '', portfolioName: k.portfolioName, governanceRating: k.governanceRating,
       tekananPolitik: k.tekananPolitik, elaun: t ? t.elaun : null, bulanBerjawatan: k.bulanBerjawatan, ratingRendah: k.ratingRendah, lobi: k.lobi, acara: acaraSemasa(p),
       sejarah: k.sejarah, portfolio: senaraiPortfolio(p),
       kpiLabel: labelKPI(k.governanceRating), ratingLalu: k.ratingLalu, arah: k.governanceRating - k.ratingLalu, popularitiNasional: k.popularitiNasional, risikoRombak: k.risikoRombak,
-      cdfBaki: k.cdfBaki, cdfBulan: k.cdfBulan, cdfHad: CONFIG.CDF.HAD_KALI, cdfPilihan: pilihanCDF(p), mb: k.lobi ? maklumatMB(p) : null };
+      cdfBaki: k.cdfBaki, cdfBulan: k.cdfBulan, cdfHad: CONFIG.CDF.HAD_KALI, cdfPilihan: pilihanCDF(p), mb: k.lobi || k.mbTertunda ? maklumatMB(p) : null, tpm: k.lobi ? maklumatTPM(p) : null, mbTertunda: !!k.mbTertunda };
   }
 
   return {
     CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getKabinet: getKabinet, lantikKanan: lantikKanan, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
+    getKabinet: getKabinet, lantikKanan: lantikKanan, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
     laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
   };
 });

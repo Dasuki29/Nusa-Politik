@@ -2485,6 +2485,30 @@ ujian('v13.39 Ketua Cawangan yang menang Ketua Pemuda Cawangan boleh bertanding 
   sama(J.semakKelayakan(p, d).terbuka, false, 'AJK Cawangan sahaja: masih perlu Ketua Pemuda Cawangan');
   S.clearPlayer();
 });
+/* ---------- v13.40: Laluan Kerajaan & Lobi TPM (maklum balas baris 23) ---------- */
+ujian('v13.40 Lobi Timbalan Perdana Menteri: syarat, peluang 60% / 30%, kos, sekali bagi setiap lobi', () => {
+  const KB = g.MyPolitikKabinet; P.daftar({});
+  const tp = { kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 11, tahun: 2026 };
+  P.tetap({ parti: 'UMNO', ip: 900, myr: 100000, ap: 10, reputasi: 50, jawatanList: [tp], kerusiNasional: { parti: 60, rakan: 30, gabungan: ['PH'], ubah: { PH: -82, PN: 0 } } });
+  P.tetap({ pru: Object.assign({}, S.loadPlayer().pru, { status: { jenis: 'MP', kerusi: 'X', kerajaan: true }, hubunganGabungan: 50 }) });
+  sama(KB.syaratTPM(S.loadPlayer()).boleh, false, 'perlu lobi persekutuan dibuka'); KB.bukaLobi('PARLIMEN');
+  let p = S.loadPlayer(); betul(KB.syaratTPM(p).boleh, KB.syaratTPM(p).sebab);
+  sama(KB.pmPartiSendiri(p), false, 'UMNO: PM dari rakan (PH lebih besar)'); sama(KB.maklumatTPM(p).peluang, 40, '30% + IP (maks +10%)');
+  P.tetap({ parti: 'PKR', kerusiNasional: { parti: 80, rakan: 30, gabungan: ['BN'], ubah: { PH: -30, PN: 0 } } }); p = S.loadPlayer();
+  sama(KB.pmPartiSendiri(p), true, 'PKR: PM dari parti sendiri'); sama(KB.maklumatTPM(p).peluang, 70);
+  const m0 = p.myr, ip0 = p.ip, r = KB.lobiTPM({ rng: () => 0.99 }); betul(r.ok && !r.dilantik, r.ralat);
+  p = S.loadPlayer(); sama(m0 - p.myr, 10000, 'gagal: separuh Dana'); sama(ip0 - p.ip, 200, 'gagal: separuh IP'); betul(/sudah dicuba/.test(KB.syaratTPM(p).sebab));
+  KB.bukaLobi('PARLIMEN'); const r2 = KB.lobiTPM({ rng: () => 0 }); betul(r2.ok && r2.dilantik); sama(KB.getKabinet(S.loadPlayer()).roleLevel, 'TIMBALAN_PM');
+  P.tetap({ jawatanList: [], kabinet: null }); KB.bukaLobi('PARLIMEN'); betul(/Timbalan Presiden/.test(KB.syaratTPM(S.loadPlayer()).sebab), 'bukan Timbalan Presiden');
+  S.clearPlayer();
+});
+ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
+  const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
+  const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
+  P.tetap({ kabinet: { mbTertunda: false, lobi: null } }); betul(/Tiada pembentukan kerajaan negeri/.test(KB.syaratMB(S.loadPlayer()).sebab));
+  S.clearPlayer();
+});
+
 
 
 

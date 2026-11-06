@@ -156,6 +156,7 @@ node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, 
 node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), panel parti, EN
 node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pautan Google Form isi automatik, EN
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
+node tools/ujian-laluan.js       # pelayar: Lobi Timbalan Perdana Menteri untuk Timbalan Presiden (pilihan TPM dalam dialog lobi, dilantik, EN)
 node tools/ujian-dap.js          # pelayar: cip DAP, daftar DAP (Pulau Pinang, umur 17), istilah DAP, kad DAP, Penyelaras JPKP (pilihan b), Jelajah Kawasan, Mesyuarat Pertama JTP, lobi, peta Fasal VII, kad kerusi PH, hemisikal, EN
 node tools/ujian-pkr.js          # pelayar: panel PH, daftar PKR (Selangor), istilah Ranting / Cabang / MPP / Kongres, AMK 35 tahun, kad PKR, Jelajah Cabang, Pasukan Perwakilan, Forum Reformasi, Kem Dalaman, peta Fasal disiplin, kad kerusi PH, hemisikal, EN
 node tools/ujian-pas.js          # pelayar: panel PN, daftar PAS (Kelantan), istilah PAS, kad PAS, Jelajah Kawasan, kad kerusi PN, hemisikal, Restu, Ceramah, Dewan Ulamak, Ahli Bersekutu, EN
