@@ -221,8 +221,8 @@
     if (!PASj && namaKhas && typeof require === 'function') { try { PASj = require(namaKhas[1]); } catch (eP) { PASj = null; } }
     var skP = PASj && PASj.sekatanJawatan ? PASj.sekatanJawatan(p, d) : null; if (skP) { return { terbuka: false, sebab: skP }; }
     if (p.ip < d.ipMin) { return { terbuka: false, sebab: 'Perlukan ' + d.ipMin + ' IP (anda ada ' + p.ip + ').' }; }
-    if (d.perluSayapCawangan && !(pegang(p, 'sayap_cawangan_' + d.sayap) || pegang(p, 'sayap_pusat_' + d.sayap))) {     // v6.7: mesti Ketua Sayap Cawangan dahulu
-      return { terbuka: false, sebab: 'Menangi jawatan Ketua ' + NAMA_SAYAP[d.sayap] + ' Cawangan dahulu (pertandingan menentang calon NPC di Cawangan).' };
+    if (d.perluSayapCawangan && !(pegang(p, 'sayap_cawangan_' + d.sayap) || pegang(p, 'sayap_pusat_' + d.sayap) || lebihTinggiCawangan(p, d.sayap))) {     // v6.7: mesti Ketua Sayap Cawangan dahulu
+      return { terbuka: false, sebab: 'Menangi jawatan Ketua ' + NAMA_SAYAP[d.sayap] + ' Cawangan dahulu (pertandingan menentang calon NPC di Cawangan), atau pegang jawatan Cawangan yang lebih tinggi.' };
     }
     if (d.perluBahagian && !(perwakilanSah(p, 'cawangan').layak)) {
       return { terbuka: false, sebab: 'Menangi Perwakilan Cawangan tahun ' + p.tahun + ' dahulu (atau pegang jawatan Ketua Cawangan/Bahagian/Pusat).' };
@@ -250,6 +250,12 @@
     return !!(E && E.adalahTahunPemilihan && E.adalahTahunPemilihan(p.tahun) && Number(j.tahun) && Number(j.tahun) < Number(p.tahun));
   }
   /** v5.7: jawatan (pangkat tertinggi) yang dipegang pada peringkat yang sama dengan d, kecuali d itu sendiri. */
+  /** v13.39 (maklum balas pemain, baris 24): Ketua / Timbalan Ketua Cawangan yang menang Ketua Sayap Cawangan tidak dapat memegang kedua-duanya
+      (satu jawatan setiap peringkat), tetapi jawatan Cawangan yang lebih tinggi itu memenuhi syarat Ketua Sayap Bahagian. */
+  function lebihTinggiCawangan(p, sayap) {
+    var ks = cariDef('sayap_cawangan_' + sayap), min = ks ? ks.pangkat : 2;
+    return getJawatan(p).some(function (j) { return j.peringkat === 'cawangan' && j.kumpulan === 'utama' && (j.pangkat || 0) > min; });
+  }
   function jawatanSamaPeringkat(p, d) {
     var r = null;
     getJawatan(p).forEach(function (j) { if (j.kod !== d.kod && j.peringkat === d.peringkat && (!r || (j.pangkat || 0) > (r.pangkat || 0))) { r = j; } });

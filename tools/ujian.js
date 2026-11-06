@@ -2473,6 +2473,19 @@ ujian('v13.38 DAP: Kongres ditangguh sebelum PRU, caruman elaun, peta Fasal VII,
   betul(!(p.pru.status && p.pru.status.jenis === 'MP'), 'kerusi dikosongkan'); betul(M.hubJTP(p) < h0 + 1, 'hukuman menurunkan Hubungan JTP');
   S.clearPlayer();
 });
+/* ---------- v13.39: pembetulan baris 24 ---------- */
+ujian('v13.39 Ketua Cawangan yang menang Ketua Pemuda Cawangan boleh bertanding Ketua Pemuda Bahagian (maklum balas baris 24)', () => {
+  const J = g.MyPolitikJawatan; P.daftar({});
+  P.tetap({ parti: 'UMNO', tahun: 2038, bulan: 6, ip: 900, sayap: 'pemuda', demografik: Object.assign({}, S.loadPlayer().demografik, { umur: 35, jantina: 'L' }),
+    jawatanList: [{ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 3, tahun: 2038 }] });
+  let p = S.loadPlayer(); const d = J.cariDef('sayap_bahagian_pemuda');
+  sama(J.semakKelayakan(p, d).terbuka, true, 'Ketua Cawangan: Ketua Pemuda Bahagian terbuka');
+  sama(J.terapkan(p, J.cariDef('sayap_cawangan_pemuda'), true).jawatanList, undefined, 'menang Ketua Pemuda Cawangan tidak menggantikan Ketua Cawangan');
+  P.tetap({ jawatanList: [{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 1, tahun: 2038 }] }); p = S.loadPlayer();
+  sama(J.semakKelayakan(p, d).terbuka, false, 'AJK Cawangan sahaja: masih perlu Ketua Pemuda Cawangan');
+  S.clearPlayer();
+});
+
 
 
 

@@ -746,7 +746,9 @@
     } else {
       var def = J.cariDef(kod), pegangSebelum = J.pegang(p, kod);
       if (def) { var pt = J.terapkan(p, def, menang); Object.keys(pt).forEach(function (k) { patch[k] = pt[k]; }); }
-      if (menang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Tahniah. ' + (pegangSebelum ? 'Anda kekal sebagai ' : 'Anda dipilih sebagai ') + d.jawatan + '.' }); }
+      var tidakDipegang = menang && def && !Object.keys(pt || {}).length && !pegangSebelum ? J.jawatanSamaPeringkat(p, def) : null;   // v13.39: menang tetapi jawatan lebih tinggi di peringkat sama dikekalkan
+      if (tidakDipegang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Anda menang ' + d.jawatan + ', tetapi kekal sebagai ' + tidakDipegang.jawatan + ' kerana hanya satu jawatan bagi setiap peringkat. Jawatan ' + tidakDipegang.jawatan + ' tetap melayakkan anda bertanding di peringkat lebih tinggi.' }); }
+      else if (menang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Tahniah. ' + (pegangSebelum ? 'Anda kekal sebagai ' : 'Anda dipilih sebagai ') + d.jawatan + '.' }); }
       else if (pegangSebelum) { peristiwa.push({ jenis: 'jawatan_hilang', mesej: 'Anda kalah mempertahankan ' + d.jawatan + ' dan kehilangan jawatan itu.' }); }
       var cb = cabaranUntuk(p, d);                                               // v8.0: keputusan pemilihan menamatkan cabaran jawatan
       if (cb) {

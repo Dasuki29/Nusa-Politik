@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.39 (2026-11-07)
+
+- Pembetulan (maklum balas borang baris 24): Ketua Cawangan atau Timbalan Ketua Cawangan yang menang Ketua Sayap Cawangan tidak dapat memegang kedua-duanya (satu jawatan setiap peringkat). Sebelum ini, Ketua Sayap Bahagian kekal dikunci walaupun pemain menang. Kini jawatan Cawangan yang lebih tinggi itu memenuhi syarat Ketua Sayap Bahagian. Mesej keputusan juga menerangkan bahawa jawatan Cawangan lebih tinggi dikekalkan. Ujian unit baharu. Cache `nusa-v13.39`.
+
 ## v13.38 (2026-11-06)
 
 - **DAP Fasa 2: keunikan DAP**, ikut mockup yang dipersetujui dan Perlembagaan DAP. Semua bahagian berada dalam kad DAP di tab Profil.
