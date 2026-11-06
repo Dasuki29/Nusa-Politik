@@ -194,10 +194,10 @@
       keahlianJenis: input.parti === 'PAS' && input.keahlianJenis === 'bersekutu' ? 'bersekutu' : undefined,   // v13.32: Ahli Bersekutu PAS (Fasal 11(2))   // v13.13: pendidikan tertinggi
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' ? input.parti : 'UMNO',   // v13.31: PAS                // v13.8: PPP                // v13.1: MCA; v13.3: MIC
+      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' ? input.parti : 'UMNO',   // v13.31: PAS                // v13.8: PPP                // v13.1: MCA; v13.3: MIC
       blokPBB: input.parti === 'PBB' && (input.blokPBB === 'bumiputera' || input.blokPBB === 'pesaka') ? input.blokPBB : undefined,   // v9.0
       dunInfo: SW(input.parti) && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
-      sayap: input.parti === 'PAS' && input.keahlianJenis === 'bersekutu' ? 'utama' : SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA' || input.parti === 'PBRS' || input.parti === 'PAS') && input.sayap === 'wanita' && d.kod === 'puteri') || ((input.parti === 'MIC' || input.parti === 'PPP') && input.sayap === 'putera' && d.kod === 'pemuda' && parseInt(d.umur, 10) <= 29)) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
+      sayap: input.parti === 'PAS' && input.keahlianJenis === 'bersekutu' ? 'utama' : SY && SY.sah(input.sayap) && (input.sayap === 'utama' || input.sayap === d.kod || ((SW(input.parti) || input.parti === 'MCA' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR') && input.sayap === 'wanita' && d.kod === 'puteri') || ((input.parti === 'MIC' || input.parti === 'PPP') && input.sayap === 'putera' && d.kod === 'pemuda' && parseInt(d.umur, 10) <= 29)) ? input.sayap : (SY ? SY.cadangan(d.jantina, d.umur, input.parti) : 'utama'),   // v5.9: laluan kerjaya (Utama / Pemuda / Puteri / Wanita)
       jawatan: DEFAULTS.jawatan,
       ip: DEFAULTS.ip,
       myr: DEFAULTS.myr,
@@ -206,7 +206,7 @@
       bulan: DEFAULTS.bulan,
       kesetiaan: salin(KESETIAAN_LALAI),
       keahlian: { sejakTahun: DEFAULTS.tahun - tahunAhli(input.tahunAhli, d.umur), sejakBulan: 1 },
-      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
+      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
       dicipta: new Date().toISOString()
     });
   }

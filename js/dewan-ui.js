@@ -58,7 +58,7 @@
     return '<li><button type="button" class="btn ' + (kelas || 'btn--ghost') + '" data-dewan="' + act + '" data-id="' + esc(id) + '"' + (ok ? '' : ' disabled') + '><b>' + esc(teks) + '</b><br><small>' + esc(kecil) + (ok ? '' : ' — ' + esc(boleh)) + '</small></button></li>';
   }
   function pecahKerusi(k, L) {
-    var gab = (L && L.gab) || 'BN', nama = { BN: gab, PH: 'PH', PN: lawanPN(), LAIN: 'Lain' };                // v13.14: label gabungan pemain (GPS / Perpaduan), bukan BN
+    var gab = (L && L.gab) || 'BN', nama = { BN: gab, PH: lawanPH(), PN: lawanPN(), LAIN: 'Lain' };                // v13.14: label gabungan pemain (GPS / Perpaduan), bukan BN
     var seg = [['BN', k.BN], ['PH', k.PH], ['PN', k.PN], ['LAIN', k.LAIN]], h = '<div class="dw-bar" role="img" aria-label="Kerusi ' + esc((L && L.dewan) || 'Dewan Rakyat') + '">';
     seg.forEach(function (s) { if (s[1] > 0) { h += '<div style="width:' + (s[1] / k.jumlah * 100) + '%;background:' + WARNA[s[0]] + '" title="' + esc(nama[s[0]]) + ' ' + s[1] + '">' + (s[1] >= 14 ? esc(nama[s[0]]) + ' ' + s[1] : '') + '</div>'; } });
     return h + '<i class="dw-garis" style="left:' + (k.ambang / k.jumlah * 100) + '%" title="Majoriti ' + k.ambang + '"></i></div>';
@@ -69,9 +69,13 @@
   var WARNA_H = { PARTI: '#1F3C8F', RAKAN: '#5B7FE0', BN: '#2D50B8', LAIN: '#9AA0AA', PH: '#D7263D', PN: '#0F7B5F', LAWAN: '#B5838D' };
   /* v13.31: pemain PAS: parti = hijau PAS, rakan PN = biru tua, slot lawan 'PN' dalaman = Barisan Nasional (biru). */
   var WARNA_PAS = { PARTI: '#0A7A3B', RAKAN: '#0B2A5B', BN: '#0A7A3B', LAIN: '#9AA0AA', PH: '#D7263D', PN: '#2D50B8', LAWAN: '#B5838D' };
-  function pemainPAS(p) { try { var q = p || (S && S.loadPlayer ? S.loadPlayer() : null); return !!q && q.parti === 'PAS'; } catch (e) { return false; } }
-  function warnaH(kod, p) { return (pemainPAS(p) ? WARNA_PAS : WARNA_H)[kod]; }
+  /* v13.34: pemain PKR: parti = merah PH, rakan (GPS, GRS) = ungu, slot lawan 'PH' dalaman = Barisan Nasional (biru). */
+  var WARNA_PKR = { PARTI: '#E10600', RAKAN: '#7A4FD0', BN: '#E10600', LAIN: '#9AA0AA', PH: '#2D50B8', PN: '#0F7B5F', LAWAN: '#B5838D' };
+  function pemainParti(p, k) { try { var q = p || (S && S.loadPlayer ? S.loadPlayer() : null); return !!q && q.parti === k; } catch (e) { return false; } }
+  function pemainPAS(p) { return pemainParti(p, 'PAS'); }
+  function warnaH(kod, p) { return (pemainPAS(p) ? WARNA_PAS : pemainParti(p, 'PKR') ? WARNA_PKR : WARNA_H)[kod]; }
   function lawanPN(p) { return pemainPAS(p) ? 'BN' : 'PN'; }
+  function lawanPH(p) { return pemainParti(p, 'PKR') ? 'BN' : 'PH'; }
   var GEOM = {};
   function hash(t) { var h = 0; t = String(t || ''); for (var i = 0; i < t.length; i++) { h = (h * 31 + t.charCodeAt(i)) >>> 0; } return h; }
   /** Kedudukan titik (disusun ikut sudut, kiri ke kanan) bagi n kerusi. */
@@ -98,7 +102,7 @@
     if (!dun && typeof k.rakan === 'number' && k.rakan > 0 && k.BN - k.rakan > 0) {
       b.push({ kod: 'PARTI', nama: (p.parti || gab), n: k.BN - k.rakan, anda: true }, { kod: 'RAKAN', nama: 'Rakan gabungan', n: k.rakan });
     } else { b.push({ kod: 'BN', nama: gab, n: k.BN, anda: true }); }
-    b.push({ kod: 'LAIN', nama: 'Bebas/lain', n: k.LAIN }, { kod: 'PH', nama: 'PH', n: k.PH }, { kod: 'PN', nama: lawanPN(p), n: k.PN });
+    b.push({ kod: 'LAIN', nama: 'Bebas/lain', n: k.LAIN }, { kod: 'PH', nama: lawanPH(p), n: k.PH }, { kod: 'PN', nama: lawanPN(p), n: k.PN });
     b = b.filter(function (x) { return x.n > 0; });
     return k.kerajaanBN === false ? b.reverse() : b;                       // pihak kerajaan di kiri
   }
@@ -128,7 +132,7 @@
   var WARNA_U = { SOKONG: '#2E9E5B', ATAS: '#E8A33D', BANTAH: '#D7263D' };
   var lihat = null;      // v13.26: PRU lepas yang dipapar ('tahun-bulan') atau null (semasa)
   function KS() { return W.MyPolitikKerusiSemasa; }
-  function namaBlok(kod, p, L, dun) { var gab = (L && L.gab) || 'BN'; return kod === 'PARTI' ? (dun ? gab : (p.parti || gab)) : kod === 'RAKAN' ? 'Rakan gabungan' : kod === 'LAIN' ? 'Bebas/lain' : kod === 'LAWAN' ? 'Pembangkang' : kod === 'PN' ? lawanPN(p) : kod; }
+  function namaBlok(kod, p, L, dun) { var gab = (L && L.gab) || 'BN'; return kod === 'PARTI' ? (dun ? gab : (p.parti || gab)) : kod === 'RAKAN' ? 'Rakan gabungan' : kod === 'LAIN' ? 'Bebas/lain' : kod === 'LAWAN' ? 'Pembangkang' : kod === 'PN' ? lawanPN(p) : kod === 'PH' ? lawanPH(p) : kod; }
   function tanda1(n) { return (n > 0 ? '+' : n < 0 ? '−' : '±') + Math.abs(n); }
   function hemisikal(k, L, p, dun) {
     var jumlah = k.jumlah, b = blokHemi(k, L, p, dun), anda = kerusiAnda(p, dun), sasar = -1, h = '', M = KS();
@@ -180,7 +184,7 @@
   /* ---------- Panel ---------- */
   function panel(p) {
     try {
-      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' ? 'PN' : 'BN' };
+      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' ? 'PH' : 'BN' };
       var sw = kedua(p) ? '<div class="dw-tukar" role="group" aria-label="Pilih dewan"><button type="button" class="btn btn--sm ' + (D === D0 ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="RAKYAT">🏛️ Dewan Rakyat</button> <button type="button" class="btn btn--sm ' + (D === N ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="DUN">🏢 DUN' + (p.negeri ? ' ' + esc(p.negeri) : '') + '</button></div>' : '';
       if (!r.aktif) { return '<div class="banner"><strong>Dewan Rakyat</strong>Tab ini terbuka apabila anda menjadi Ahli Parlimen, Menteri, ADUN atau EXCO Negeri.</div>'; }
       var k = r.kerusi, h = sw;

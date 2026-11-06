@@ -251,7 +251,7 @@
       var pop = clamp((opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3) + (rng() * 12 - 6), 30, 70);      // v11.4: populariti parti semasa PRU jika ada
       parti = clamp(Math.round(J * (0.18 + (pop - 30) / 40 * 0.42) + (rng() * 16 - 8)), 30, 150);
       rakan = Math.min(J - parti, Math.round(J * (0.14 + rng() * 0.12)));
-      var PASm = adalahPN(p) ? (root.MyPolitikPAS || (typeof require === 'function' ? (function () { try { return require('./pas.js'); } catch (e) { return null; } })() : null)) : null;
+      var PASm = modGab(p);                                                                              // v13.34: PAS (PN) atau PKR (PH)
       if (PASm) { var kp = PASm.kerusiParlimen(pop, rng); parti = kp.parti; rakan = kp.rakan; }   // v13.31: PN (PAS + rakan) bermula lebih lemah di peringkat persekutuan
       if (p && SW(p.parti) && p.parti !== 'PSB') {                                      // v13.21 (maklum balas pemain): GPS = blok Sarawak dalam Kerajaan Perpaduan (andaian: sentiasa dalam kerajaan persekutuan)
         parti = 23 + Math.floor(rng() * 6); rakan = Math.min(J - parti, CONFIG.MAJORITI - parti + 8 + Math.floor(rng() * 30));
@@ -267,7 +267,7 @@
     if (dun) {
       var skala = (kerajaan ? gabung : J - gabung) / J, nBebas = Math.round(rng() * 2);
       var kr = clamp(Math.round(dun * (kerajaan ? clamp(gabung / J + (rng() * 0.1 - 0.05), 0.3, 0.8) : clamp(gabung / J + (rng() * 0.1 - 0.05), 0.15, 0.6))), 1, dun - nBebas - 1);
-      var PASd = adalahPN(p) ? root.MyPolitikPAS || (typeof require === 'function' ? (function () { try { return require('./pas.js'); } catch (e) { return null; } })() : null) : null;
+      var PASd = modGab(p);
       if (PASd) { var popD = opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3; kr = clamp(Math.round(dun * PASd.kadarDUN(kodNegeriDUN(ngr), popD, rng)), 0, dun - nBebas); }   // v13.31: kekuatan PN ikut negeri
       o.dun = { jumlah: dun, kerajaan: kr, bebas: nBebas, pembangkang: dun - kr - nBebas, negeri: ngr };
       void skala;
@@ -312,13 +312,19 @@
   };
   /** v13.31: pemain PAS = slot gabungan pemain ialah Perikatan Nasional; slot lawan 'PN' dalaman mewakili Barisan Nasional. */
   function adalahPN(p) { return !!p && p.parti === 'PAS'; }
-  function lawanGab(p) { return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
+  /** v13.34: pemain PKR = slot gabungan pemain ialah Pakatan Harapan; slot lawan 'PH' dalaman mewakili Barisan Nasional. */
+  function adalahPH(p) { return !!p && p.parti === 'PKR'; }
+  function modGab(p) {
+    var n = adalahPN(p) ? ['MyPolitikPAS', './pas.js'] : adalahPH(p) ? ['MyPolitikPKR', './pkr.js'] : null; if (!n) { return null; }
+    return root[n[0]] || (typeof require === 'function' ? (function () { try { return require(n[1]); } catch (e) { return null; } })() : null);
+  }
+  function lawanGab(p) { return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : adalahPH(p) ? { PH: GABUNGAN.BN, PN: GABUNGAN.PN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
   /** Pecah kerusi pembangkang kepada PH/PN (anggaran deterministik). Jika parti anda kalah, PH diberi bahagian lebih besar (gabungan pembangkang utama). */
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
     var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
     var asal = jumlah - uPH - uPN;
     if (kunci === 'parlimen' && k.pecahTetap != null) { kerajaan = k.pecahTetap; }                    // v13.33: pecahan asal sebelum rundingan gabungan
-    var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(asal * r);
+    var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = adalahPH(p) && kunci === 'parlimen' ? 0.22 + rng() * 0.12 : kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(asal * r);   // v13.34: PKR: slot 'PH' = BN (~25-40 kerusi)
     var PH = Math.max(0, ph + uPH); return { PH: PH, PN: Math.max(0, jumlah - PH) };
   }
   /** v9.5: nama gabungan parti pemain (slot 'BN'): UMNO = Barisan Nasional; PBB = Gabungan Parti Sarawak (DUN) / Kerajaan Perpaduan (persekutuan). */
@@ -326,6 +332,7 @@
     if (p && p.parti === 'PSB' && !dun) { return { nama: 'Parti Sarawak Bersatu', pendek: 'PSB' }; }   // v10.3: pembangkang di luar Kerajaan Perpaduan
     if (p && SW(p.parti)) { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
     if (adalahPN(p)) { return { nama: 'Perikatan Nasional', pendek: 'PN', warna: '#0B2A5B' }; }   // v13.31
+    if (adalahPH(p)) { return { nama: 'Pakatan Harapan', pendek: 'PH', warna: '#E10600' }; }   // v13.34
     return GABUNGAN.BN;
   }
   function segGabungan(n, bn, lw) {

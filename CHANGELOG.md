@@ -1,5 +1,23 @@
 # Catatan Perubahan
 
+## v13.34 (2026-11-06)
+
+- **Parti baharu: PKR (Pakatan Harapan), Fasa 1** (maklum balas di borang, baris 11 hingga 13), ikut mockup skop PH yang dipersetujui dan Perlembagaan PKR (pindaan diluluskan hingga 11 Mac 2025).
+  - Menu utama: gabungan **PH** dengan chip PKR. Rakan PH (DAP, Amanah, UPKO) dimainkan sebagai NPC. Logo daripada pengguna; UPKO tanpa logo.
+  - Mod penuh menggunakan enjin UMNO dengan istilah PKR:
+    - **Ranting** (Fasal 39.1(g)) dan **Cabang** di setiap kawasan Parlimen, minimum 100 anggota (Fasal 32).
+    - **Majlis Pimpinan Negeri** (Fasal 27), **Majlis Pimpinan Pusat** (Fasal 21) dan **Kongres Nasional KEADILAN** (Fasal 17, 18).
+    - **Angkatan Muda (AMK)** untuk ahli 35 tahun ke bawah (Fasal 25). Sayap **Wanita**; tiada Puteri.
+  - Pemilihan parti **setiap 3 tahun** (Fasal 47.3): 2025, 2028 dan seterusnya. ⚠️ Takwim: Ranting bulan 3, Cabang bulan 4, Kongres bulan 5.
+  - Perwakilan Cabang ke Kongres (Fasal 17.2A): 46 Perwakilan Jawatankuasa Cabang + 40 Perwakilan Biasa, ditambah 10 bagi setiap 1,000 anggota melebihi 3,000, maksimum 156. Kad PKR dengan **Jelajah Cabang**.
+  - Kawasan operasi: semua **222 kawasan Parlimen**, termasuk Sabah dan Sarawak (`tools/build-pkr.js`). ⚠️ Kuota PKR dalam PH: 70 Parlimen dan 150 DUN, kawasan bercampur dahulu.
+  - ⚠️ Kerajaan:
+    - PH memimpin Kerajaan Perpaduan. Selepas PRU, PH biasanya perlu BN untuk majoriti; rundingan gabungan v13.33 digunakan versi PH (BN 70%, PN 10%, Bebas 70%).
+    - Lawan tradisi: PH + BN (akar umbi −4), PH + PN (−8).
+    - Kekuatan DUN ikut negeri: PH memimpin Selangor, Pulau Pinang dan Negeri Sembilan; rakan kerajaan di Perak, Melaka, Johor dan Pahang.
+  - Kad kerusi, carta hemisikal dan PRK memaparkan PH sebagai gabungan anda, BN dan PN sebagai blok lain.
+- Ujian: 2 ujian unit baharu, `tools/ujian-pkr.js` (pelayar), simulasi `PARTI=PKR`. Ujian indeks (11 pilihan parti) dan ujian pelayar dikemas kini. Cache `nusa-v13.34`.
+
 ## v13.33 (2026-11-06)
 
 - **PAS Fasa 3 / maklum balas borang (baris 13): Pilih Rakan Gabungan**, ikut mockup yang dipersetujui.

@@ -1,6 +1,6 @@
 /* ==========================================================================
    Nusa Politik — js/rundingan.js   (v13.33)
-   Rundingan Gabungan selepas Parlimen tergantung (mockup "Pilih Rakan Gabungan", Fasa 3, dipersetujui; maklum balas pemain):
+   Nusa Politik — js/rundingan.js   (v13.33; v13.34: versi PH untuk pemain PKR)
      - Pemain Presiden: jika gabungan sendiri kurang 112 kerusi, pilih rakan (PH, PN atau BN, GPS, GRS, Bebas) sehingga 112.
        Setiap rakan bersetuju ikut Kesediaan; jika baki yang bersetuju masih >= 112, kerajaan dibentuk.
      - Pemain bukan Presiden: NPC Presiden parti memilih rakan paling bersedia secara automatik (js/paparan.js anggarKerusi).
@@ -32,15 +32,15 @@
 
   var CONFIG = {
     MAJORITI: 112,
-    KESEDIAAN: { BN: { PH: 60, PN: 45, GPS: 90, GRS: 80, BEBAS: 70 }, PN: { BN: 55, PH: 15, GPS: 60, GRS: 60, BEBAS: 70 } },
-    TRADISI: { BN: { PH: -6, PN: -3 }, PN: { PH: -6 } },
+    KESEDIAAN: { BN: { PH: 60, PN: 45, GPS: 90, GRS: 80, BEBAS: 70 }, PN: { BN: 55, PH: 15, GPS: 60, GRS: 60, BEBAS: 70 }, PH: { BN: 70, PN: 10, BEBAS: 70 } },
+    TRADISI: { BN: { PH: -6, PN: -3 }, PN: { PH: -6 }, PH: { BN: -4, PN: -8 } },
     GPS: [23, 28], GRS: [5, 8],
     ADJ: { hubungan: 0.3, reputasi: 0.2, saiz: 0.2, saizAsas: 90 },
     PAS: { restu: 50, restuPH: 70 }, GAGAL_HUBUNGAN: -5,
     NAMA: { PH: 'Pakatan Harapan', PN: 'Perikatan Nasional', BN: 'Barisan Nasional', GPS: 'Gabungan Parti Sarawak', GRS: 'Gabungan Rakyat Sabah', BEBAS: 'Calon bebas' }
   };
-  /** Gabungan pemain: 'BN' (UMNO dan komponen), 'PN' (PAS), atau null (parti Sarawak: tiada rundingan). */
-  function gabPemain(p) { if (!p || SW(p.parti)) { return null; } return p.parti === 'PAS' ? 'PN' : 'BN'; }
+  /** Gabungan pemain: 'BN' (UMNO dan komponen), 'PN' (PAS), 'PH' (PKR, v13.34) atau null (parti Sarawak: tiada rundingan). */
+  function gabPemain(p) { if (!p || SW(p.parti)) { return null; } return p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' ? 'PH' : 'BN'; }
   function antara(r, a, b) { return a + Math.floor(r() * (b - a + 1)); }
 
   /** Senarai calon rakan bagi keputusan kerusi { parti, rakan, bebas, pembangkang, tahun, bulan }. */
@@ -52,7 +52,9 @@
     var kedua = g === 'PN' ? 'BN' : 'PN', K = CONFIG.KESEDIAAN[g], gabung = ka.parti + ka.rakan;
     var adj = ((Number(hub) || 50) - 50) * CONFIG.ADJ.hubungan + ((Number(p.reputasi) || 50) - 50) * CONFIG.ADJ.reputasi + (gabung - CONFIG.ADJ.saizAsas) * CONFIG.ADJ.saiz;
     var restu = g === 'PN' && PASm() && PASm().restu ? PASm().restu(p) : null;
-    return [{ kod: 'PH', slot: 'PH', n: pp.PH }, { kod: kedua, slot: 'PN', n: lain }, { kod: 'GPS', slot: 'PN', n: gps }, { kod: 'GRS', slot: 'PN', n: grs }, { kod: 'BEBAS', slot: 'BEBAS', n: ka.bebas || 0 }]
+    var senarai = g === 'PH' ? [{ kod: 'BN', slot: 'PH', n: pp.PH }, { kod: 'PN', slot: 'PN', n: pp.PN }, { kod: 'BEBAS', slot: 'BEBAS', n: ka.bebas || 0 }]   // v13.34: PH: slot 'PH' = BN; GPS dan GRS sudah dalam rakan
+      : [{ kod: 'PH', slot: 'PH', n: pp.PH }, { kod: kedua, slot: 'PN', n: lain }, { kod: 'GPS', slot: 'PN', n: gps }, { kod: 'GRS', slot: 'PN', n: grs }, { kod: 'BEBAS', slot: 'BEBAS', n: ka.bebas || 0 }];
+    return senarai
       .filter(function (x) { return x.n > 0; }).map(function (x) {
         var k = clamp(Math.round(K[x.kod] + adj), 5, 95), sebab = '';
         if (restu !== null && restu < CONFIG.PAS.restu) { k = 0; sebab = 'Perlu Restu Majlis Syura sekurang-kurangnya ' + CONFIG.PAS.restu + ' (Perlembagaan PAS, Fasal 39(9)(k)).'; }

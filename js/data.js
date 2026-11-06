@@ -87,7 +87,7 @@
     umur = parseInt(umur, 10);
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < 18) { return null; }
     if (umur >= 60) { return 'veteran'; }
-    if (j === 'L') { return umur <= 40 ? 'pemuda' : 'biasa'; }
+    if (j === 'L') { return umur <= (parti === 'PKR' ? 35 : 40) ? 'pemuda' : 'biasa'; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1)
     return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
   }
 

@@ -33,7 +33,8 @@
 
   var CONFIG = { PELUANG: 0.15, DUN: 0.3, KEKAL: 0.7, MAKS_LOG: 10, MAKS_SEJARAH: 5, JUMLAH: 222, MAJORITI: 112,
     LAWAN: { PAS: 'PN', Bersatu: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' },
-    LAWAN_PAS: { UMNO: 'PN', MCA: 'PN', MIC: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' } };   // v13.31: pemain PAS: slot 'PN' dalaman = BN
+    LAWAN_PAS: { UMNO: 'PN', MCA: 'PN', MIC: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH' },   // v13.31: pemain PAS: slot 'PN' dalaman = BN
+    LAWAN_PKR: { UMNO: 'PH', MCA: 'PH', MIC: 'PH', PAS: 'PN', Bersatu: 'PN', Gerakan: 'PN' } };   // v13.34: pemain PKR: slot 'PH' dalaman = BN   // v13.31: pemain PAS: slot 'PN' dalaman = BN
   var rngLalai = Math.random;
   function salin(o) { return JSON.parse(JSON.stringify(o)); }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
@@ -69,7 +70,7 @@
     return h && h.ok ? { ok: true } : { ok: false, ralat: (h && h.ralat) || 'Gagal.' };
   }
   /** Blok lawan daripada nama parti lawan PRK (PAS / Bersatu = PN; DAP / PKR / Amanah = PH). */
-  function blokLawan(nama, r, p) { var M = p && p.parti === 'PAS' ? CONFIG.LAWAN_PAS : CONFIG.LAWAN; return M[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
+  function blokLawan(nama, r, p) { var M = p && p.parti === 'PAS' ? CONFIG.LAWAN_PAS : p && p.parti === 'PKR' ? CONFIG.LAWAN_PKR : CONFIG.LAWAN; return M[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
   /** Dipanggil oleh prk.js selepas keputusan PRK pemain. */
   function selepasPRKPemain(a, menang) {
     if (!a) { return null; }
@@ -148,6 +149,7 @@
     if (kod === 'RAKAN') { return 'Rakan gabungan'; }
     if (kod === 'LAIN') { return 'Calon bebas'; }
     if (kod === 'PN' && p && p.parti === 'PAS') { return 'BN'; }
+    if (kod === 'PH' && p && p.parti === 'PKR') { return 'BN'; }
     return kod;
   }
   /** Perubahan terkini (dalam `bulan` bulan): senarai log. */

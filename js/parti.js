@@ -124,6 +124,33 @@
       [/Pesuruhjaya PAS Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Pesuruhjaya PAS/g, 'Pengerusi Badan Perhubungan'], [/Perhubungan PAS Negeri/g, 'Badan Perhubungan Negeri'], [/Perhubungan PAS/g, 'Badan Perhubungan'],
       [/State PAS Commissioner/g, 'State Liaison Body Chairman'], [/PAS Commissioner/g, 'Liaison Body Chairman'], [/State PAS Liaison/g, 'State Liaison Body'], [/PAS Liaison/g, 'Liaison Body'],
       [/\bMuslimat\b/g, 'Wanita']].concat(BULAN_PPP_S) };
+  /* v13.34: PKR (KEADILAN) = parti komponen Pakatan Harapan (PH), MOD PENUH (enjin UMNO seperti PAS; js/pkr.js). Istilah ikut Perlembagaan PKR
+     (pindaan hingga 11 Mac 2025): Ranting (Fasal 39.1(g)) dan Cabang (Fasal 32), Majlis Pimpinan Negeri (Fasal 27), Majlis Pimpinan Pusat (Fasal 21),
+     Kongres Nasional (Fasal 17, 18), Angkatan Muda (AMK, Fasal 25) dan Wanita (Fasal 26). Tiada Puteri. Dalam BI: Ranting = branch, Cabang = division.
+     ANDAIAN: kawasan operasi = semua 222 kawasan Parlimen (data/pkr-malaysia.csv, tools/build-pkr.js); takwim Ranting 3, Cabang 4, Kongres 5. Logo daripada pengguna. */
+  var BULAN_PKR = [[/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/pada bulan 4\./g, 'pada bulan 3.'], [/in month 4\./g, 'in month 3.'],
+    [/sehingga bulan 3\b/g, 'sehingga bulan 2'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'],
+    [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 4'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 4'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 5'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 5'],
+    [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 6-12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 6 hingga 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onths 6-12'], [/\b([Mm])onths 10 to 12\b/g, '$1onths 6 to 12']];
+  var BULAN_PKR_S = [[/\b([Bb])ulan 6-12\b/g, '$1ulan 10-12'], [/\b([Bb])ulan 6 hingga 12\b/g, '$1ulan 10 hingga 12'], [/\b([Bb])ulan 4\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 9'],
+    [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']];
+  SENARAI.PKR = { kod: 'PKR', nama: 'PKR', penuh: 'Parti Keadilan Rakyat', logo: 'assets/images/logo-pkr.png', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/pkr-malaysia.csv', bahagianJenis: 'Parlimen', pkr: true, gabungan: 'PH',
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Majlis Pimpinan Pusat (MPP)'], [/Majlis Kerja Tertinggi/g, 'Majlis Pimpinan Pusat'], [/\bMKT\b/g, 'MPP'], [/Supreme Council \(MKT\)/g, 'Central Leadership Council (MPP)'],
+      [/Perhimpunan Agung PKR \(PAU\)/g, 'Kongres Nasional KEADILAN'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Kongres Nasional KEADILAN'], [/Perhimpunan Agung \(PAU\)/g, 'Kongres Nasional KEADILAN'], [/Perhimpunan Agung PKR/g, 'Kongres Nasional KEADILAN'],
+      [/PKR General Assembly \(PAU\)/g, 'KEADILAN National Congress'], [/General Assembly \(PAU\)/g, 'KEADILAN National Congress'], [/PKR General Assembly/g, 'KEADILAN National Congress'], [/\bPAU\b/g, 'Kongres'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di lokasi Kongres Nasional'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at the National Congress venue'], [/\b3 Naib Presiden\b/g, '4 Naib Presiden'], [/\b3 Vice Presidents\b/g, '4 Vice Presidents'],
+      [/Cawangan/g, 'Ranting'], [/cawangan/g, 'ranting'], [/CAWANGAN/g, 'RANTING'],
+      [/Bahagian/g, 'Cabang'], [/(peringkat|Peringkat|ketua|Ketua) bahagian/g, '$1 cabang'],
+      [/Pengerusi Badan Perhubungan Negeri/g, 'Pengerusi Majlis Pimpinan Negeri'], [/Badan Perhubungan Negeri/g, 'Majlis Pimpinan Negeri'], [/Pengerusi Badan Perhubungan/g, 'Pengerusi MPN'], [/Badan Perhubungan/g, 'MPN'],
+      [/State Liaison Body Chairman/g, 'State Leadership Council Chairman'], [/Liaison Body Chairman/g, 'MPN Chairman'], [/State Liaison Body/g, 'State Leadership Council'], [/Liaison Body/g, 'MPN'],
+      [/\bPemuda\b/g, 'Angkatan Muda']].concat(BULAN_PKR),
+    istilahSongsang: [[/Majlis Pimpinan Pusat \(MPP\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Majlis Pimpinan Pusat/g, 'Majlis Kerja Tertinggi'], [/\bMPP\b/g, 'MKT'], [/Central Leadership Council/g, 'Supreme Council'],
+      [/Kongres Nasional KEADILAN/g, 'Perhimpunan Agung PKR (PAU)'], [/KEADILAN National Congress/g, 'PKR General Assembly (PAU)'], [/\bKongres\b/g, 'PAU'],
+      [/ di lokasi PAU Nasional/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ at the National Congress venue/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"], [/\b4 Naib Presiden\b/g, '3 Naib Presiden'],
+      [/Cabang/g, 'Bahagian'], [/(peringkat|Peringkat|ketua|Ketua) cabang/g, '$1 bahagian'], [/Ranting/g, 'Cawangan'], [/ranting/g, 'cawangan'], [/RANTING/g, 'CAWANGAN'],
+      [/Pengerusi Majlis Pimpinan Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Majlis Pimpinan Negeri/g, 'Badan Perhubungan Negeri'], [/Pengerusi MPN/g, 'Pengerusi Badan Perhubungan'], [/\bMPN\b/g, 'Badan Perhubungan'],
+      [/State Leadership Council Chairman/g, 'State Liaison Body Chairman'], [/State Leadership Council/g, 'State Liaison Body'],
+      [/\bAngkatan Muda\b/g, 'Pemuda']].concat(BULAN_PKR_S) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -144,7 +171,7 @@
   function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
+    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PKR' && /Perlembagaan PKR|PKR Constitution/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
     if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
     if (i.ringan) { r = r.split(SENARAI.PBB.penuh).join(i.penuh).replace(/\bPBB\b/g, i.nama); }          // v10.0: teks Sarawak yang menyebut PBB dijenamakan semula untuk parti mod ringan
@@ -152,7 +179,7 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
@@ -170,7 +197,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }

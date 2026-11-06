@@ -2318,6 +2318,46 @@ ujian('v13.33 Rundingan: bentukGabungan (berjaya: status GABUNGAN, kerusi rakan;
   sama(k.parti + k.rakan + k.pembangkang + k.bebas, 222);
   S.clearPlayer();
 });
+/* ---------- v13.34: PKR (Pakatan Harapan) Fasa 1 ---------- */
+ujian('v13.34 PKR: kitaran 3 tahun, perwakilan Cabang (Fasal 17.2A), kuota PH, jelajah, AMK 35 tahun', () => {
+  const M = g.MyPolitikPKR; P.daftar({}); P.tetap({ parti: 'PKR', ap: 10, myr: 10000 });
+  let p = S.loadPlayer(); sama(p.parti, 'PKR');
+  betul(M.adalahTahunPemilihan(p, 2025) && M.adalahTahunPemilihan(p, 2028) && !M.adalahTahunPemilihan(p, 2027), 'setiap 3 tahun dari 2025');
+  sama(M.tahunSeterusnya(p, 2026), 2028); sama(g.MyPolitikElection.adalahTahunPemilihan(2031), true, 'enjin pemilihan ikut PKR');
+  const d = g.MyPolitikPKRData; sama(Object.keys(d.parlimen).length, 222, 'Cabang di semua 222 kawasan Parlimen');
+  betul(Object.keys(d.parlimen).every((k) => d.parlimen[k].a >= 100), 'Cabang minimum 100 anggota (Fasal 32.2)');
+  const kecil = Object.keys(d.parlimen).filter((k) => d.parlimen[k].a <= 3000)[0], besar = Object.keys(d.parlimen).sort((a, b) => d.parlimen[b].a - d.parlimen[a].a)[0];
+  if (kecil) { sama(M.perwakilan(kecil), 86, 'Cabang <= 3,000 anggota: 46 + 40 perwakilan'); }
+  sama(M.perwakilan(besar), 156, 'maksimum 156 perwakilan');
+  const k = M.kawasan(p); betul(k.parlimen && typeof k.kuotaPL === 'boolean', 'Cabang dan kuota'); betul(/rakan PH/.test(M.sebabKuota(p, 'PARLIMEN')));
+  sama(M.statusJelajah(p).boleh, false, 'perlu Ketua Cabang');
+  S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: p.tahun }] } });
+  const kod = Object.keys(d.parlimen)[3], s0 = M.sokonganBahagian(S.loadPlayer())[kod];
+  betul(M.jelajah(kod).ok); betul(M.sokonganBahagian(S.loadPlayer())[kod] > s0, 'jelajah naikkan sokongan');
+  const SY = g.MyPolitikSayap; sama(SY.cadangan('L', 30, 'PKR'), 'pemuda'); sama(SY.cadangan('L', 38, 'PKR'), 'utama', 'AMK had umur 35'); sama(SY.cadangan('L', 38, 'UMNO'), 'pemuda');
+  sama(SY.cadangan('P', 25, 'PKR'), 'wanita', 'tiada Puteri'); betul(/35/.test(SY.kelayakan('L', 38, 'PKR').pemuda.sebab));
+  sama(g.MyPolitikData.kategoriMengikutUmur('L', 38, 'PKR'), 'biasa');
+  S.clearPlayer();
+});
+ujian('v13.34 PKR: kerusi PH (Kerajaan Perpaduan), slot lawan PH = BN, rundingan PH, kerajaan negeri Selangor', () => {
+  P.daftar({}); P.tetap({ parti: 'PKR', reputasi: 50, jawatan: 'Ahli Biasa' }); const p = S.loadPlayer(), A = g.NusaPaparan, R = g.MyPolitikRundingan;
+  let kj = 0, sel = 0, kel = 0, npcBN = 0;
+  for (let i = 0; i < 60; i++) {
+    const q = Object.assign({}, p, { id: 'pkr' + i });
+    const a = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Selangor', pop: 45 }); if (a.kerajaan) { kj++; } if (a.dun.kerajaan >= 29) { sel++; }
+    if (a.npcGabungan && a.gabungan.indexOf('BN') >= 0) { npcBN++; }
+    const b = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Kelantan', pop: 45 }); if (b.dun.kerajaan >= 23) { kel++; }
+  }
+  betul(kj >= 45, 'pop 45: PH biasanya membentuk kerajaan (' + kj + '/60)'); betul(npcBN > 0, 'NPC mengajak BN (' + npcBN + ')');
+  sama(sel, 60, 'PH memerintah Selangor'); sama(kel, 0, 'PH tidak memerintah Kelantan');
+  sama(A.labelBN(p).pendek, 'PH'); sama(A.lawanGab(p).PH.pendek, 'BN', "slot lawan 'PH' = BN"); sama(A.lawanGab(p).PN.pendek, 'PN');
+  sama(g.MyPolitikKerusiSemasa.label(p, 'PH'), 'BN'); sama(g.MyPolitikKerusiSemasa.blokLawan('UMNO', null, p), 'PH'); sama(g.MyPolitikKerusiSemasa.blokLawan('PAS', null, p), 'PN');
+  sama(R.gabPemain(p), 'PH'); const c = R.calonDari(p, { tahun: 2028, bulan: 3, parti: 80, rakan: 30, bebas: 4, pembangkang: 108 }, 50);
+  sama(c.map((x) => x.kod).join(','), 'BN,PN,BEBAS'); betul(c[0].kesediaan > c[1].kesediaan, 'BN lebih bersedia daripada PN'); sama(c[1].akarUmbi, -8);
+  const Pt = g.MyPolitikParti; betul(Pt.sah('PKR') && Pt.info('PKR').sayap.indexOf('puteri') < 0, 'PKR tiada Puteri');
+  S.clearPlayer();
+});
+
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
