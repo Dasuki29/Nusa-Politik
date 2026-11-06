@@ -66,12 +66,29 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   const sebelum = await pg.evaluate((k) => MyPolitikPKR.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ);
   await pg.click('[data-pkr="jelajah"]'); await pg.waitForTimeout(500);
   semak(await pg.evaluate((k) => MyPolitikPKR.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ) > sebelum, 'Jelajah Cabang menaikkan sokongan perwakilan');
+  // v13.36: Fasa 2 (tahun pemilihan 2028, bulan 2)
+  await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { tahun: 2028, bulan: 2, ap: 30, myr: 40000 } }); NusaUI.render(); });
+  await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
+  const f2 = await pg.textContent('.pkr-kad');
+  semak(/Semangat Reformasi/.test(f2) && /Pasukan Perwakilan/.test(f2) && /Kem Dalaman/.test(f2) && /Fasal 21\.11/.test(f2) && /Fasal 17\.2B/.test(f2), 'kad PKR Fasa 2 (Reformasi, Pasukan, Kem, Presiden)');
+  await pg.fill('[data-pkr-isi="calon"]', '30'); await pg.dispatchEvent('[data-pkr-isi="calon"]', 'change'); await pg.waitForTimeout(300);
+  semak(/kuota 9/.test(await pg.textContent('.pkr-kad')), 'kuota wanita 30% dikira semula (9 daripada 30)');
+  await pg.click('[data-pkr="pasukan"]'); await pg.waitForTimeout(400);
+  semak(await pg.evaluate(() => { const x = MyPolitikSave.loadPlayer().pkr.pasukan; return !!x && x.calon === 30 && x.patuh; }), 'Pasukan Perwakilan didaftarkan (30 calon, kuota dipenuhi)');
+  const r0 = await pg.evaluate(() => MyPolitikPKR.reformasi(MyPolitikSave.loadPlayer()));
+  await pg.click('[data-pkr="forum"]'); await pg.waitForTimeout(400);
+  semak(await pg.evaluate((a) => MyPolitikPKR.reformasi(MyPolitikSave.loadPlayer()) > a, r0), 'Forum Reformasi menaikkan meter');
+  await pg.click('[data-pkr="kem"][data-kem="A"]'); await pg.waitForTimeout(400);
+  semak(await pg.evaluate(() => MyPolitikSave.loadPlayer().pkr.kem === 'A'), 'menyertai Kem A');
+  semak(await pg.$eval('[data-pkr="tangguh"]', (b) => b.disabled), 'butang tangguh dikunci (bukan Presiden)');
+  const fs0 = await pg.evaluate(() => [MyPolitikParti.ke('Memberi wang bagi mendapatkan undi (Fasal 20.13)'), MyPolitikParti.ke('Hak keahlian anda digantung (Fasal 20.10b).'), MyPolitikParti.dari('Memberi wang bagi mendapatkan undi (Perlembagaan PKR, Fasal 43.2)')]);
+  semak(/Perlembagaan PKR, Fasal 43\.2/.test(fs0[0]) && /Perlembagaan PKR, Fasal 41\.7/.test(fs0[1]) && /Fasal 20\.13/.test(fs0[2]), 'rujukan disiplin dipetakan ke Perlembagaan PKR: ' + fs0.join(' | '));
   const kr = await pg.evaluate(() => { const h = window.NusaPaparan.htmlKerusi(MyPolitikSave.loadPlayer()); const d = document.createElement('div'); d.innerHTML = h; return d.textContent; });
   semak(/Pakatan Harapan \(★ parti anda\)/.test(kr) && /Barisan Nasional/.test(kr) && /Perikatan Nasional/.test(kr), 'kad kerusi PH: ' + kr.slice(0, 200));
   await pg.click('#tab-dewan').catch(() => {}); await pg.waitForTimeout(600);
   const hm = await pg.evaluate(() => { const h = document.querySelector('#panel-dewan .dw-hemi'); return h ? { leg: h.querySelector('.dw-hemi-leg').textContent, n: h.querySelectorAll('circle').length } : null; });
   semak(hm && /PKR/.test(hm.leg) && /BN/.test(hm.leg) && /PN/.test(hm.leg) && hm.n === 222, 'carta hemisikal Dewan Rakyat dengan PKR, BN dan PN: ' + JSON.stringify(hm));
-  if (process.env.SKRIN) { await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400); const k = await pg.$('.pkr-kad'); if (k) { await k.screenshot({ path: process.env.SKRIN }).catch(() => {}); } }
+  if (process.env.SKRIN) { await pg.addStyleTag({ content: '.toast-stack,.toast,#mpa-bar,.tut-fab{display:none!important}' }); await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400); const k = await pg.$('.pkr-kad'); if (k) { await k.screenshot({ path: process.env.SKRIN }).catch(() => {}); } }
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(700);
   await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(500);
   const bocor = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; const k = document.querySelector('.pkr-kad'); if (!k) { return ['(tiada kad)']; } const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t.slice(0, 140)); } } return out; }, BM.source);

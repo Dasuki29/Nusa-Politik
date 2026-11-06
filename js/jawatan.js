@@ -216,8 +216,9 @@
       var pg = Et.semakPenggal(p, { getJawatan: getJawatan });
       if (!pg.sah) { return { terbuka: false, sebab: pg.sebab }; }
     }
-    var PASj = p && p.parti === 'PAS' && typeof globalThis !== 'undefined' ? (globalThis.MyPolitikPAS || null) : null;                 // v13.32: PAS: Restu Majlis Syura (Presiden / Timbalan), Ahli Bersekutu
-    if (!PASj && p && p.parti === 'PAS' && typeof require === 'function') { try { PASj = require('./pas.js'); } catch (eP) { PASj = null; } }
+    var namaKhas = p && p.parti === 'PAS' ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'PKR' ? ['MyPolitikPKR', './pkr.js'] : null;   // v13.36: PKR: had 3 penggal Presiden (Fasal 21.11)
+    var PASj = namaKhas && typeof globalThis !== 'undefined' ? (globalThis[namaKhas[0]] || null) : null;                 // v13.32: PAS: Restu Majlis Syura (Presiden / Timbalan), Ahli Bersekutu
+    if (!PASj && namaKhas && typeof require === 'function') { try { PASj = require(namaKhas[1]); } catch (eP) { PASj = null; } }
     var skP = PASj && PASj.sekatanJawatan ? PASj.sekatanJawatan(p, d) : null; if (skP) { return { terbuka: false, sebab: skP }; }
     if (p.ip < d.ipMin) { return { terbuka: false, sebab: 'Perlukan ' + d.ipMin + ' IP (anda ada ' + p.ip + ').' }; }
     if (d.perluSayapCawangan && !(pegang(p, 'sayap_cawangan_' + d.sayap) || pegang(p, 'sayap_pusat_' + d.sayap))) {     // v6.7: mesti Ketua Sayap Cawangan dahulu

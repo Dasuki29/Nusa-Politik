@@ -201,7 +201,8 @@
   }
   function peluang(p, def) {
     var PD = modul('MyPolitikPendidikan', 'pendidikan.js'), bp = PD && PD.bonusLobi ? PD.bonusLobi(p) : 0;          // v13.13: pendidikan (Ijazah +2%, Sarjana +4%, PhD +6%)
-    return clamp(def.asas + ((Number(p.ip) || 0) - def.ip) / (def.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003 + bp, 0.1, 0.95);
+    var PK = p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : null, kem = PK && PK.adjLantikan ? PK.adjLantikan(p) : 0;   // v13.36: kem lawan menguasai MPP
+    return clamp(def.asas + ((Number(p.ip) || 0) - def.ip) / (def.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003 + bp + kem, 0.1, 0.95);
   }
   /** v7.42: Parlimen: hanya portfolio dengan IP perlu <= IP pemain; paling HAMPIR dengan IP pemain dahulu, maks HAD_PILIHAN (rawak tetap bagi IP sama). */
   /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */

@@ -98,7 +98,7 @@ Modul utama dalam `js/`:
 | `rundingan.js` | Rundingan Gabungan selepas Parlimen tergantung: calon rakan (PH, PN / BN, GPS, GRS, Bebas), kesediaan, lawan tradisi, Restu PAS, pilihan automatik NPC bagi pemain bukan Presiden |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN; Fasa 2: Restu Majlis Syura, Ceramah, Dewan Ulamak / As-Sabiqun / Himpunan Pendukung, Ahli Bersekutu; data kawasan (`node tools/build-pas.js`) |
-| `pkr.js`, `pkr-ui.js`, `pkr-data.js` | PKR (Pakatan Harapan) mod penuh ikut Perlembagaan PKR (pindaan hingga 11 Mac 2025): Ranting, Cabang (222 kawasan Parlimen), MPN, MPP, Kongres Nasional setiap 3 tahun, perwakilan Cabang (Fasal 17.2A), AMK 35 tahun, kuota PH, kerusi PH dan rundingan versi PH. Data dijana oleh `tools/build-pkr.js` |
+| `pkr.js`, `pkr-ui.js`, `pkr-data.js` | PKR (Pakatan Harapan) mod penuh ikut Perlembagaan PKR (pindaan hingga 11 Mac 2025): Ranting, Cabang (222 kawasan Parlimen), MPN, MPP, Kongres Nasional setiap 3 tahun, perwakilan Cabang (Fasal 17.2A), AMK 35 tahun, kuota PH, kerusi PH dan rundingan versi PH. Fasa 2: Pasukan Perwakilan Cabang (Fasal 17.2B), Semangat Reformasi, Kem Dalaman, had 3 penggal Presiden dan tangguh pemilihan (Fasal 21.11, 47.3). Data dijana oleh `tools/build-pkr.js` |
 | `mca.js`, `mca-ui.js`, `mca-data.js` | Peraturan khas MCA (kuota BN, kitaran pemilihan, Pusat, lantikan) dan data kawasan (`node tools/build-mca.js`) |
 | `dewan.js`, `dun.js` | Sidang Dewan Rakyat dan Dewan Undangan Negeri |
 | `i18n.js`, `translations*.js`, `tutorial-en.js` | Dwibahasa BM / EN |
@@ -155,7 +155,7 @@ node tools/ujian-umno.js         # pelayar: Fasa B UMNO 2025 (takwim, kad UMNO, 
 node tools/ujian-gabungan.js     # pelayar: menu utama ikut gabungan (BN, GPS), panel parti, EN
 node tools/ujian-maklumbalas.js  # pelayar: butang Maklum balas, pengesahan, pautan Google Form isi automatik, EN
 node tools/ujian-ppp.js          # pelayar: daftar PPP melalui panel BN (Putera, kad PPP, lobi, krisis, EN)
-node tools/ujian-pkr.js          # pelayar: panel PH, daftar PKR (Selangor), istilah Ranting / Cabang / MPP / Kongres, AMK 35 tahun, kad PKR, Jelajah Cabang, kad kerusi PH, hemisikal, EN
+node tools/ujian-pkr.js          # pelayar: panel PH, daftar PKR (Selangor), istilah Ranting / Cabang / MPP / Kongres, AMK 35 tahun, kad PKR, Jelajah Cabang, Pasukan Perwakilan, Forum Reformasi, Kem Dalaman, peta Fasal disiplin, kad kerusi PH, hemisikal, EN
 node tools/ujian-pas.js          # pelayar: panel PN, daftar PAS (Kelantan), istilah PAS, kad PAS, Jelajah Kawasan, kad kerusi PN, hemisikal, Restu, Ceramah, Dewan Ulamak, Ahli Bersekutu, EN
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN

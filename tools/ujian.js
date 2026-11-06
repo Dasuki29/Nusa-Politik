@@ -2357,6 +2357,52 @@ ujian('v13.34 PKR: kerusi PH (Kerajaan Perpaduan), slot lawan PH = BN, rundingan
   const Pt = g.MyPolitikParti; betul(Pt.sah('PKR') && Pt.info('PKR').sayap.indexOf('puteri') < 0, 'PKR tiada Puteri');
   S.clearPlayer();
 });
+/* ---------- v13.36: PKR Fasa 2 ---------- */
+ujian('v13.36 PKR: Pasukan Perwakilan (kuota, denda, keputusan bulan Kongres), Semangat Reformasi, Forum', () => {
+  const M = g.MyPolitikPKR; P.daftar({}); P.tetap({ parti: 'PKR', tahun: 2028, bulan: 2, ap: 40, myr: 50000 });
+  sama(M.statusPasukan(S.loadPlayer()).boleh, false, 'perlu Ketua Cabang');
+  const pj = S.loadPlayer();
+  S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: pj.tahun }] } });
+  let p = S.loadPlayer(); const own = M.kawasan(p).parlimen.kod, maks = M.kerusiPasukan(own);
+  sama(maks, M.perwakilan(own) - 46, 'kerusi dipilih anggota = Biasa + Tambahan');
+  betul(M.statusPasukan(p).boleh, M.statusPasukan(p).sebab);
+  const q = M.kuotaPasukan(p, 40); sama(q.wanita, 12, 'kuota wanita 30%');
+  betul(M.anggaranPasukan(p, { patuh: false }) < M.anggaranPasukan(p, { patuh: true }), 'denda kuota');
+  betul(!M.susunPasukan(35, 12, q.minoriti).ok, 'gandaan 10');
+  const r = M.susunPasukan(40, 12, q.minoriti); betul(r.ok, r.ralat); sama(S.loadPlayer().pkr.pasukan.patuh, true);
+  betul(!M.susunPasukan(40, 12, q.minoriti).ok, 'sekali setahun');
+  S.applyEffects({}, { kiraTindakan: false, patch: { bulan: 5 } }); M.prosesBulan();
+  const h = S.loadPlayer().pkr.pasukan.hasil; betul(h && h.menang <= 40 && h.sokongan > 0, 'keputusan pasukan: ' + JSON.stringify(h));
+  sama(M.sokonganBahagian(S.loadPlayer())[own], h.sokongan, 'sokongan Cabang sendiri ikut pasukan');
+  // Semangat Reformasi
+  P.tetap({ pkr: { reformasi: 80 } }); p = S.loadPlayer(); betul(M.bonusUndi(p, 'pusat') > 0 && M.adjCalon(p) > 0, 'reformasi tinggi: bonus');
+  sama(M.bonusUndi(p, 'cawangan'), 0); P.tetap({ pkr: { reformasi: 20 } }); betul(M.bonusUndi(S.loadPlayer(), 'bahagian') < 0);
+  P.tetap({ pkr: { reformasi: 50 }, integriti: { skor: 30 } }); M.prosesBulan(); betul(M.reformasi(S.loadPlayer()) < 50, 'Integriti rendah menurunkan reformasi');
+  const f = M.forum(); betul(f.ok, f.ralat); betul(!M.forum().ok, 'Forum sekali sebulan');
+  S.clearPlayer();
+});
+ujian('v13.36 PKR: Kem Dalaman, had 3 penggal Presiden, tangguh pemilihan (Fasal 47.3), peta Fasal disiplin', () => {
+  const M = g.MyPolitikPKR; P.daftar({}); P.tetap({ parti: 'PKR', tahun: 2028, bulan: 1, ap: 20, myr: 20000 });
+  let p = S.loadPlayer(); const kk = M.kekuatanKem(p); sama(kk.A + kk.B, 100); betul(kk.A >= 50 && kk.A <= 60);
+  const sb0 = M.sokonganBahagian(p), kodA = Object.keys(sb0).find((k) => M.kemCabang(p, k) === 'A' && k !== M.kawasan(p).parlimen.kod);
+  betul(M.pilihKem('A').ok); betul(!M.pilihKem('B').ok, 'sekali setiap penggal');
+  sama(M.sokonganBahagian(S.loadPlayer())[kodA], Math.min(100, sb0[kodA] + 8), 'bonus +8 di Cabang kem');
+  P.tetap({ bulan: 6, pkr: Object.assign({}, S.loadPlayer().pkr, { kemMenang: { tahun: 2028, kem: 'B' } }) }); sama(M.adjLantikan(S.loadPlayer()), -0.2, 'kem lawan menang: lantikan -20');
+  // Presiden
+  const pres = { kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 12, tahun: 2028 };
+  P.tetap({ bulan: 1, jawatanList: [pres], pkr: { penggal: 3 } }); p = S.loadPlayer();
+  betul(/3 penggal/.test(M.sekatanJawatan(p, { kod: 'presiden' })), 'had 3 penggal');
+  sama(M.sekatanJawatan(p, { kod: 'timbalan_presiden' }), null);
+  const def = g.MyPolitikJawatan.cariDef ? g.MyPolitikJawatan.cariDef('presiden') : null, pT = Object.assign({}, p, { jawatanList: [Object.assign({}, pres, { kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', pangkat: 11, tahun: 2025 })] });
+  betul(def && /Fasal 21\.11/.test(g.MyPolitikJawatan.semakKelayakan(pT, def).sebab || ''), 'jawatan.js menyekat: ' + (def && JSON.stringify(g.MyPolitikJawatan.semakKelayakan(pT, def))));
+  P.tetap({ pkr: { penggal: 1 } }); p = S.loadPlayer();
+  betul(M.statusTangguh(p).boleh, M.statusTangguh(p).sebab); const t = M.tangguh(); betul(t.ok, t.ralat); p = S.loadPlayer();
+  sama(M.adalahTahunPemilihan(p, 2028), false); sama(M.adalahTahunPemilihan(p, 2029), true); sama(M.adalahTahunPemilihan(p, 2032), true); sama(M.adalahTahunPemilihan(p, 2025), true);
+  sama(M.tahunSeterusnya(p, 2028), 2029); sama(M.tahunLepas(p, 2028), 2025); betul(M.reformasi(p) < 50, 'tangguh: reformasi -10');
+  P.tetap({ tahun: 2029, bulan: 1 }); sama(M.statusTangguh(S.loadPlayer()).boleh, false, 'tangguh sekali sahaja');
+  S.clearPlayer();
+});
+
 
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);

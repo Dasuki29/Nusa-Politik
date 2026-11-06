@@ -1,5 +1,26 @@
 # Catatan Perubahan
 
+## v13.36 (2026-11-06)
+
+- **PKR Fasa 2: keunikan KEADILAN**, ikut mockup yang dipersetujui dan Perlembagaan PKR. Semua bahagian baharu berada dalam kad PKR di tab Profil.
+  - **🗳️ Pasukan Perwakilan Cabang (Fasal 17.2B):**
+    - Dalam tahun pemilihan (bulan 1–4), Ketua Cabang ke atas menyusun pasukan calon Perwakilan Biasa dan Tambahan, dalam gandaan 10 calon (2 AP + RM 500 setiap 10) ⚠️.
+    - Kuota wanita ≥ 30% dan kuota etnik minoriti ikut demografi kawasan ⚠️. Jika kuota tidak dipenuhi, pasukan didenda −5% undi.
+    - Keputusan diumumkan pada awal bulan Kongres dan menentukan sokongan perwakilan Cabang anda.
+  - **🔥 Semangat Reformasi** (meter 0–100) ⚠️:
+    - Naik apabila skor Integriti ≥ 70 atau melalui Forum Reformasi (1 AP, RM 300, +4, sekali sebulan).
+    - Turun apabila Integriti < 40, dihukum Lembaga Disiplin (−10) atau menangguhkan pemilihan (−10).
+    - Kesan: ±5 kekuatan undi pemilihan Cabang dan Pusat, ±10 mata peluang dicalonkan PRU.
+  - **⚖️ Kem Dalaman** ⚠️:
+    - Dua kem NPC (kekuatan MPP 50–60%). Pilih kem atau berkecuali, sekali setiap penggal.
+    - Kem pilihan memberi +8 sokongan perwakilan di Cabang kem itu, tetapi menaikkan risiko aduan disiplin dalam tahun pemilihan.
+    - Jika kem lawan menguasai MPP selepas Kongres, peluang lantikan kerajaan −20 mata.
+  - **🛡️ Lembaga Disiplin:** rujukan Fasal UMNO dipetakan ke Perlembagaan PKR (Fasal 41.2, 41.7, 42.1, 43.2, 44.1). Gantung keanggotaan tetap melucutkan semua jawatan (Fasal 45.2).
+  - **👑 Presiden:**
+    - Maksimum 3 penggal (Fasal 21.11).
+    - Presiden boleh menangguhkan pemilihan 12 bulan (Fasal 47.3: had 18 bulan) ⚠️, sebelum musim Ranting. Kitaran 3 tahun bermula semula dari tahun baharu. Semangat Reformasi −10.
+- Ujian: 2 ujian unit baharu, `tools/ujian-pkr.js` diperluas (Pasukan, Forum, Kem, tangguh, peta Fasal, EN). Cache `nusa-v13.36`.
+
 ## v13.35 (2026-11-06)
 
 - Pembetulan (maklum balas pengguna): **UPKO dibuang daripada senarai rakan PH**. UPKO keluar Pakatan Harapan pada 10 November 2025. Rakan PH kini hanya DAP dan Amanah, di menu utama dan kad PKR. Cache `nusa-v13.35`.

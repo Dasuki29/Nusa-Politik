@@ -415,6 +415,7 @@
     var sm = syMod(); if (sm && sm.bonusWarisan) { v += sm.bonusWarisan(p, d); }              // v6.5: Legacy Loyalty (pertandingan Induk sahaja)
     var Et = etika();
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
+    if (p && p.parti === 'PKR') { var PKu = modKhas('MyPolitikPKR', 'pkr.js'); if (PKu && PKu.bonusUndi) { v += PKu.bonusUndi(p, pr); } }   // v13.36: Semangat Reformasi (Cabang & Pusat)
     if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR')) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     var um = umnoP(p, true); if (um) { if (pr === 'pusat' && !(d && d.kumpulan === 'sayap')) { v += um.M.bonusPusat(p); } v += um.M.bonusSayap(p, d); }      // v13.5: sokongan perwakilan Bahagian UMNO, lantikan dan pelapis muda
     return clamp(v, 0, 100);

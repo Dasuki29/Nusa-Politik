@@ -128,6 +128,9 @@
      (pindaan hingga 11 Mac 2025): Ranting (Fasal 39.1(g)) dan Cabang (Fasal 32), Majlis Pimpinan Negeri (Fasal 27), Majlis Pimpinan Pusat (Fasal 21),
      Kongres Nasional (Fasal 17, 18), Angkatan Muda (AMK, Fasal 25) dan Wanita (Fasal 26). Tiada Puteri. Dalam BI: Ranting = branch, Cabang = division.
      ANDAIAN: kawasan operasi = semua 222 kawasan Parlimen (data/pkr-malaysia.csv, tools/build-pkr.js); takwim Ranting 3, Cabang 4, Kongres 5. Logo daripada pengguna. */
+  /* v13.36: rujukan disiplin Perlembagaan UMNO -> Perlembagaan PKR (Fasal 41 Lembaga Disiplin, 42 Rayuan, 43.2 sogokan, 44.1 mahkamah). */
+  var FASAL_PKR = [[/Fasal 20\.13/g, 'Perlembagaan PKR, Fasal 43.2'], [/Fasal 20\.12/g, 'Perlembagaan PKR, Fasal 42.1'], [/Fasal 20\.10[a-d]?/g, 'Perlembagaan PKR, Fasal 41.7'], [/Fasal 20\.7\b/g, 'Perlembagaan PKR, Fasal 44.1'], [/Fasal 20\.5\b/g, 'Perlembagaan PKR, Fasal 41.2'],
+    [/Clause 20\.13/g, 'PKR Constitution, Clause 43.2'], [/Clause 20\.12/g, 'PKR Constitution, Clause 42.1'], [/Clause 20\.10[a-d]?(\([a-d]\))?/g, 'PKR Constitution, Clause 41.7'], [/Clause 20\.7\b/g, 'PKR Constitution, Clause 44.1'], [/Clause 20\.5\b/g, 'PKR Constitution, Clause 41.2']];
   var BULAN_PKR = [[/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/pada bulan 4\./g, 'pada bulan 3.'], [/in month 4\./g, 'in month 3.'],
     [/sehingga bulan 3\b/g, 'sehingga bulan 2'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'],
     [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 4'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 4'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 5'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 5'],
@@ -150,7 +153,7 @@
       [/Cabang/g, 'Bahagian'], [/(peringkat|Peringkat|ketua|Ketua) cabang/g, '$1 bahagian'], [/Ranting/g, 'Cawangan'], [/ranting/g, 'cawangan'], [/RANTING/g, 'CAWANGAN'],
       [/Pengerusi Majlis Pimpinan Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Majlis Pimpinan Negeri/g, 'Badan Perhubungan Negeri'], [/Pengerusi MPN/g, 'Pengerusi Badan Perhubungan'], [/\bMPN\b/g, 'Badan Perhubungan'],
       [/State Leadership Council Chairman/g, 'State Liaison Body Chairman'], [/State Leadership Council/g, 'State Liaison Body'],
-      [/\bAngkatan Muda\b/g, 'Pemuda']].concat(BULAN_PKR_S) };
+      [/\bAngkatan Muda\b/g, 'Pemuda'], [/Perlembagaan PKR, Fasal 43\.2/g, 'Fasal 20.13'], [/Perlembagaan PKR, Fasal 42\.1/g, 'Fasal 20.12'], [/Perlembagaan PKR, Fasal 41\.7/g, 'Fasal 20.10'], [/Perlembagaan PKR, Fasal 44\.1/g, 'Fasal 20.7'], [/Perlembagaan PKR, Fasal 41\.2/g, 'Fasal 20.5']].concat(BULAN_PKR_S) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -171,6 +174,7 @@
   function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
+    if (k === 'PKR' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_PKR); }      // v13.36: rujukan disiplin UMNO -> Perlembagaan PKR
     var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PKR' && /Perlembagaan PKR|PKR Constitution/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
     if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
