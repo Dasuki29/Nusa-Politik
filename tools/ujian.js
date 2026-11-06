@@ -2402,6 +2402,36 @@ ujian('v13.36 PKR: Kem Dalaman, had 3 penggal Presiden, tangguh pemilihan (Fasal
   P.tetap({ tahun: 2029, bulan: 1 }); sama(M.statusTangguh(S.loadPlayer()).boleh, false, 'tangguh sekali sahaja');
   S.clearPlayer();
 });
+/* ---------- v13.37: DAP Fasa 1 ---------- */
+ujian('v13.37 DAP: Kongres 3 tahun, Wakil Cawangan (Fasal VIII.3), JTP 30 kerusi + kuota wanita, kuota PH, DAPSY dan umur 17', () => {
+  const M = g.MyPolitikDAP; P.daftar({}); P.tetap({ parti: 'DAP', ap: 10, myr: 10000 });
+  let p = S.loadPlayer(); sama(p.parti, 'DAP');
+  betul(M.adalahTahunPemilihan(p, 2025) && M.adalahTahunPemilihan(p, 2028) && !M.adalahTahunPemilihan(p, 2026), 'Kongres setiap 3 tahun');
+  sama(g.MyPolitikCalendar.getFasa(1).kod, 'cawangan'); sama(g.MyPolitikCalendar.getFasa(2).kod, 'bahagian'); sama(g.MyPolitikCalendar.getFasa(3).kod, 'pau');
+  sama(M.wakilCawangan(24), 0); sama(M.wakilCawangan(25), 2); sama(M.wakilCawangan(50), 2); sama(M.wakilCawangan(51), 3); sama(M.wakilCawangan(100), 3); sama(M.wakilCawangan(101), 4); sama(M.wakilCawangan(250), 5);
+  const d = g.MyPolitikDAPData, jw = Object.keys(d.parlimen).reduce((t, k) => t + (d.parlimen[k].w || 0), 0); sama(Object.keys(d.parlimen).length, 222); betul(jw > 3000 && jw < 6000, 'Wakil Kongres ~4,200 (' + jw + ')');
+  const top = Object.keys(d.parlimen).find((k) => d.parlimen[k].r === 1); sama(d.parlimen[top].n, 'Tanjong', 'kuota: Bumiputera terendah dahulu');
+  const J = g.MyPolitikJawatan; sama(M.kerusiJawatan(p, J.cariDef('ahli_mkt')), 30, 'Ahli JTP 30 kerusi'); sama(M.kerusiJawatan(p, J.cariDef('naib_presiden')), 5, 'Naib Pengerusi maks. 5');
+  sama(M.kerusiJawatan(Object.assign({}, p, { parti: 'UMNO' }), J.cariDef('ahli_mkt')), null);
+  betul(M.bonusJTP(Object.assign({}, p, { demografik: { jantina: 'P' } }), J.cariDef('ahli_mkt')) > 0, 'kuota wanita JTP'); sama(M.bonusJTP(Object.assign({}, p, { demografik: { jantina: 'L' } }), J.cariDef('ahli_mkt')), 0);
+  const SY = g.MyPolitikSayap; sama(SY.cadangan('L', 17, 'DAP'), 'pemuda', 'DAP: ahli 17 tahun'); sama(SY.cadangan('L', 36, 'DAP'), 'utama', 'DAPSY 35'); sama(SY.cadangan('L', 17, 'UMNO'), 'utama'); sama(SY.cadangan('P', 20, 'DAP'), 'wanita', 'tiada Puteri');
+  betul(/rakan PH/.test(M.sebabKuota(p, 'PARLIMEN'))); sama(M.statusJelajah(p).boleh, false, 'perlu Setiausaha JPKP');
+  sama(g.MyPolitikRundingan.gabPemain(p), 'PH'); sama(g.NusaPaparan.lawanGab(p).PH.pendek, 'BN'); sama(g.MyPolitikKerusiSemasa.label(p, 'PH'), 'BN');
+  S.clearPlayer();
+});
+ujian('v13.37 DAP: pilihan (b) Penyelaras JPKP hanya Ahli Parlimen; Jelajah Kawasan', () => {
+  const M = g.MyPolitikDAP; P.daftar({}); P.tetap({ parti: 'DAP', ap: 10, myr: 10000 });
+  const p0 = S.loadPlayer(), kb = { kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: p0.tahun };
+  S.applyEffects({}, { kiraTindakan: false, patch: { jawatanList: [kb] } });
+  let p = S.loadPlayer(); sama(M.penyelaras(p), false, 'bukan Ahli Parlimen: Setiausaha JPKP');
+  P.tetap({ pru: Object.assign({}, p.pru || {}, { status: { jenis: 'MP', kerusi: 'X', kerajaan: true } }) }); p = S.loadPlayer();
+  sama(M.penyelaras(p), true, 'Ahli Parlimen: Penyelaras JPKP'); sama(M.segarPenyelaras(p), true);
+  const kod = Object.keys(g.MyPolitikDAPData.parlimen).find((k) => g.MyPolitikDAPData.parlimen[k].w > 0), s0 = M.sokonganBahagian(p)[kod];
+  const r = M.jelajah(kod); betul(r.ok, r.ralat); betul(M.sokonganBahagian(S.loadPlayer())[kod] > s0);
+  const kos = Object.keys(g.MyPolitikDAPData.parlimen).find((k) => !g.MyPolitikDAPData.parlimen[k].w); P.tetap({ dap: {} });
+  betul(!M.jelajah(kos).ok, 'kawasan tanpa Wakil Kongres'); g.MyPolitikDAP.segarPenyelaras({}); S.clearPlayer();
+});
+
 
 
 

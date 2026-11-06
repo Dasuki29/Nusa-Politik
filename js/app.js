@@ -16,7 +16,7 @@
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
   function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
-  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR'; }                      // v13.1: MCA juga tiada sayap Puteri
+  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP'; }                      // v13.1: MCA juga tiada sayap Puteri
   if (!document.getElementById('reg-form')) { return; }      // halaman lain (dashboard.html): lihat pengawal dashboard di bawah
 
   var D = window.MyPolitikData, S = window.MyPolitikSave;
@@ -160,8 +160,9 @@
   });
   /** v13.2: MCA dibuka di semua kawasan Semenanjung; beritahu awal jika kerusi Parlimen Bahagian ini di luar kuota kerusi MCA. */
   function notaKuotaMCA() {
-    var hp = $('h-parti'); if (!hp || (state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS' && state.parti !== 'PKR')) { return; }
+    var hp = $('h-parti'); if (!hp || (state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS' && state.parti !== 'PKR' && state.parti !== 'DAP')) { return; }
     if (state.parti === 'PBRS') { hp.textContent = HINT_PBRS; var bS = state.bahagian, xS = bS && window.MyPolitikPBRSData ? window.MyPolitikPBRSData.parlimen['P.' + String(parseInt(bS.kod, 10)).padStart(3, '0')] : null; if (xS) { var nS = document.createElement('strong'); nS.style.display = 'block'; nS.style.marginTop = '4px'; nS.textContent = xS.q ? '✅ Bahagian ini dalam kuota kerusi Parlimen PBRS (Pensiangan).' : '⛔ Kerusi Parlimen Bahagian ini di luar kuota PBRS; kerusi DUN dipertandingkan dalam PRN Sabah ikut kuota BN.'; hp.appendChild(nS); } return; }      // v13.9
+    if (state.parti === 'DAP') { hp.textContent = HINT_DAP; var bD = state.bahagian, xD = bD && window.MyPolitikDAPData ? window.MyPolitikDAPData.parlimen['P.' + String(parseInt(bD.kod, 10)).padStart(3, '0')] : null; if (xD) { var nD = document.createElement('strong'); nD.style.display = 'block'; nD.style.marginTop = '4px'; nD.textContent = xD.r <= 55 ? '✅ Kawasan ini dalam kuota kerusi Parlimen DAP dalam PH (pengundi Bumiputera ' + xD.m + '%; ' + (xD.w || 0) + ' Wakil Kongres).' : '⛔ Kawasan ini di luar kuota kerusi Parlimen DAP dalam PH (pengundi Bumiputera ' + xD.m + '%; ' + (xD.w || 0) + ' Wakil Kongres): kerusi ini biasanya untuk rakan PH.'; hp.appendChild(nD); } return; }   // v13.37
     if (state.parti === 'PKR') { hp.textContent = HINT_PKR; var bK = state.bahagian, xK = bK && window.MyPolitikPKRData ? window.MyPolitikPKRData.parlimen['P.' + String(parseInt(bK.kod, 10)).padStart(3, '0')] : null; if (xK) { var nK = document.createElement('strong'); nK.style.display = 'block'; nK.style.marginTop = '4px'; nK.textContent = xK.r <= 70 ? '✅ Cabang ini dalam kuota kerusi Parlimen PKR dalam PH (pengundi Bumiputera ' + xK.m + '%).' : '⛔ Cabang ini di luar kuota kerusi Parlimen PKR dalam PH (pengundi Bumiputera ' + xK.m + '%): kerusi ini biasanya untuk rakan PH.'; hp.appendChild(nK); } return; }   // v13.34
     if (state.parti === 'PAS') { hp.textContent = HINT_PAS; var bA = state.bahagian, xA = bA && window.MyPolitikPASData ? window.MyPolitikPASData.parlimen['P.' + String(parseInt(bA.kod, 10)).padStart(3, '0')] : null; if (xA) { var nA = document.createElement('strong'); nA.style.display = 'block'; nA.style.marginTop = '4px'; nA.textContent = xA.r <= 70 ? '✅ Kawasan ini dalam kuota kerusi Parlimen PAS dalam PN (pengundi Bumiputera ' + xA.m + '%).' : '⛔ Kawasan ini di luar kuota kerusi Parlimen PAS dalam PN (pengundi Bumiputera ' + xA.m + '%): kerusi ini biasanya untuk rakan PN.'; hp.appendChild(nA); } return; }   // v13.31
     if (state.parti === 'PPP') { hp.textContent = HINT_PPP; var bP = state.bahagian, xP = bP && window.MyPolitikPPPData ? window.MyPolitikPPPData.parlimen['P.' + String(parseInt(bP.kod, 10)).padStart(3, '0')] : null; if (xP) { var nP = document.createElement('strong'); nP.style.display = 'block'; nP.style.marginTop = '4px'; nP.textContent = 'Kawasan campuran: Bumiputera ' + xP.m + '%, Cina ' + xP.c + '%, India ' + xP.i + '%. PPP tiada kerusi tetap di sini; dapatkan kerusi melalui Tuntut Kerusi BN.'; hp.appendChild(nP); } return; }      // v13.8
@@ -219,7 +220,7 @@
   function cadangkanAvatar() {
     if (avatarState.manual || !AV || !D) { return; }
     var j = el.form.querySelector('input[name="jantina"]:checked'), u = parseInt(el.umur.value, 10);
-    if (!j || !isFinite(u) || u < 18 || u > 100) { return; }
+    if (!j || !isFinite(u) || u < (state.parti === 'DAP' ? 17 : 18) || u > 100) { return; }
     var dem = D.tentukanDemografi(j.value, u, state.parti);
     if (dem) { pilihAvatar(AV.cadangan(dem, state.parti), false); }
   }
@@ -305,7 +306,7 @@
 
   async function muatData() {
     if (esSW(state.parti)) { return muatDataPBB(); }
-    if (state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR') { return muatDataMCA(state.parti); }                 // v13.1; v13.3: MIC guna pemuat yang sama
+    if (state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR' || state.parti === 'DAP') { return muatDataMCA(state.parti); }                 // v13.1; v13.3: MIC guna pemuat yang sama
     var parti0 = state.parti;                                       // v10.5: abaikan hasil lambat jika parti sudah ditukar
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true;
@@ -352,6 +353,7 @@
   var HINT_MIC = 'MIC (mod penuh, komponen BN): keahlian untuk warganegara Malaysia keturunan India berumur 18 tahun ke atas (Perkara 7). Kawasan operasi ialah semua 165 kawasan Parlimen Semenanjung; Cawangan ialah Daerah Mengundi (60 hingga 200 ahli). Hanya 10 kerusi Parlimen dan 20 kerusi DUN yang paling ramai pengundi India dalam kuota kerusi MIC. Semua jawatan tinggi mensyaratkan anda sedang menjadi Pengerusi Cawangan. Pemilihan parti setiap 3 tahun bermula 2027. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   var HINT_PBRS = 'PBRS (mod ringan, komponen BN di Sabah): parti pedalaman Sabah yang memperjuangkan orang asal dan Perjanjian 20 Perkara. Kawasan operasi ialah 7 kawasan Parlimen pedalaman (20 DUN); Cawangan ialah Daerah Mengundi (30 hingga 150 ahli). Kerusi DUN dipertandingkan dalam PRN Sabah, kerusi Parlimen dalam PRU. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   var HINT_PAS = 'PAS (mod penuh, komponen Perikatan Nasional): Cawangan, Kawasan (Yang Dipertua Kawasan) dan Pusat ikut Perlembagaan PAS. Kawasan operasi ialah 165 kawasan Parlimen Semenanjung; Cawangan ialah Daerah Mengundi (sekurang-kurangnya 25 ahli). Pemilihan parti setiap 2 tahun. PN bermula sebagai pembangkang persekutuan, dan memerintah Kelantan, Terengganu, Kedah dan Perlis.';   // v13.31
+  var HINT_DAP = 'DAP (mod penuh, komponen Pakatan Harapan): Cawangan, Jawatankuasa Perhubungan Kawasan Parlimen (JPKP), Jawatankuasa Negeri dan Jawatankuasa Tertinggi Pusat (JTP, 30 ahli) ikut Perlembagaan DAP. Kawasan operasi: semua 222 kawasan Parlimen. Kongres Kebangsaan setiap 3 tahun (2028). Ahli boleh berumur 17 tahun; DAPSY untuk ahli 35 tahun ke bawah. Penyelaras JPKP ialah Ahli Parlimen DAP kawasan itu.';   // v13.37
   var HINT_PKR = 'PKR (mod penuh, komponen Pakatan Harapan): Ranting, Cabang dan Majlis Pimpinan Pusat ikut Perlembagaan PKR. Cabang ialah kawasan Parlimen (semua 222 kawasan, termasuk Sabah dan Sarawak); Ranting ialah Daerah Mengundi. Pemilihan parti setiap 3 tahun (2028). Angkatan Muda (AMK) untuk ahli 35 tahun ke bawah. PH memimpin Kerajaan Perpaduan dan Selangor, Pulau Pinang serta Negeri Sembilan.';   // v13.34
   var HINT_PPP = 'PPP (mod ringan, komponen BN): parti berbilang kaum. Kawasan operasi ialah 39 kawasan Parlimen Semenanjung yang campuran (tiada kaum melebihi 60%); Cawangan ialah Daerah Mengundi (27 hingga 120 ahli). PPP tiada kerusi tetap dalam BN: bina Pengaruh dalam BN dan tuntut kerusi sebelum PRU. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.';
   var HINT_MCA_SABAH = 'MCA Sabah: kedudukan MCA lemah di Sabah selepas 2018 (kalah semua kerusi yang ditandingi pada PRN 2020 dan 2025). Anda bermula dengan Pemulihan Sabah yang rendah; kuota BN 2 hingga 4 kerusi DUN ikut Pemulihan. Ikut jadual PRN Sabah.';
@@ -367,8 +369,8 @@
     var fd = el.dun && el.dun.closest ? el.dun.closest('.field') : null; if (fd) { fd.hidden = pbb; }
     var tb = $('t-bahagian'), tc = $('t-cawangan'), hp = $('h-parti');
     if (tb) { tb.textContent = pbb ? 'Bahagian (DUN)' : 'Bahagian (Parlimen)'; }
-    if (tc) { tc.textContent = pbb || state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR' ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
-    if (hp) { hp.hidden = !pbb && state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS' && state.parti !== 'PKR'; }
+    if (tc) { tc.textContent = pbb || state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR' || state.parti === 'DAP' ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
+    if (hp) { hp.hidden = !pbb && state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS' && state.parti !== 'PKR' && state.parti !== 'DAP'; }
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
     var fpb = $('f-pas-bidang'), fpj = $('f-pas-jenis'); if (fpb) { fpb.hidden = state.parti !== 'PAS'; } if (fpj) { fpj.hidden = state.parti !== 'PAS'; }   // v13.32: PAS Fasa 2
     if (hp && state.parti === 'MCA') { hp.textContent = HINT_MCA; }
@@ -377,6 +379,7 @@
     if (hp && state.parti === 'PBRS') { hp.textContent = HINT_PBRS; }
     if (hp && state.parti === 'PAS') { hp.textContent = HINT_PAS; }
     if (hp && state.parti === 'PKR') { hp.textContent = HINT_PKR; }
+    if (hp && state.parti === 'DAP') { hp.textContent = HINT_DAP; }
     if (hp && pbb) { hp.textContent = state.parti === 'PRS' ? HINT_PRS : state.parti === 'SUPP' ? HINT_SUPP : state.parti === 'PDP' ? HINT_PDP : state.parti === 'PSB' ? HINT_PSB : HINT_PBB; }
     if (typeof kemaskiniSayap === 'function') { kemaskiniSayap(true); }
     if (typeof segarAvatar === 'function') { segarAvatar(); }
@@ -421,7 +424,7 @@
   }
   /* ---------- v13.1: MCA (Semenanjung). Bahagian = kawasan Parlimen, DUN, Cawangan = Daerah Mengundi; data tempatan data/mca-semenanjung.csv ---------- */
   async function muatDataMCA(kodP) {
-    kodP = kodP === 'MIC' || kodP === 'PPP' || kodP === 'PBRS' || kodP === 'PAS' || kodP === 'PKR' ? kodP : 'MCA';
+    kodP = kodP === 'MIC' || kodP === 'PPP' || kodP === 'PBRS' || kodP === 'PAS' || kodP === 'PKR' || kodP === 'DAP' ? kodP : 'MCA';
     kosongkanSemua('Memuatkan data...');
     el.submit.disabled = true; el.retry.hidden = true; state.tab = null;
     setStatus('loading', 'Memuatkan data ' + kodP + '...');
@@ -432,7 +435,7 @@
       if (state.parti !== kodP) { return; }
       state.data = h;
     } catch (e) { setStatus('fallback', 'Data ' + kodP + ' tidak dapat dimuatkan: ' + (e && e.message ? e.message : e)); el.retry.hidden = false; return; }
-    setStatus('sheet', 'Data ' + kodP + (kodP === 'PKR' ? ' seluruh Malaysia' : kodP === 'MCA' || kodP === 'MIC' ? ' Semenanjung dan Sabah' : ' Semenanjung') + ' (' + ringkasan(state.data) + '). Bilangan ahli ialah anggaran permainan.');
+    setStatus('sheet', 'Data ' + kodP + (kodP === 'PKR' || kodP === 'DAP' ? ' seluruh Malaysia' : kodP === 'MCA' || kodP === 'MIC' ? ' Semenanjung dan Sabah' : ' Semenanjung') + ' (' + ringkasan(state.data) + '). Bilangan ahli ialah anggaran permainan.');
     isiNegeri();
     el.submit.disabled = false;
   }
@@ -449,7 +452,7 @@
     } catch (ePM) { /* abaikan */ }
   }
 
-  el.retry.addEventListener('click', function () { if (esSW(state.parti)) { muatDataPBB(); } else if (state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR') { muatDataMCA(state.parti); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
+  el.retry.addEventListener('click', function () { if (esSW(state.parti)) { muatDataPBB(); } else if (state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR' || state.parti === 'DAP') { muatDataMCA(state.parti); } else if (state.tab && el.negeri.value) { pilihNegeriTab(); } else { muatData(); } });
 
   /* ---------- Padam ralat sebaik pengguna membetulkan medan ---------- */
   el.nama.addEventListener('input', function () { if (el.nama.value.trim().length >= 3) { setError('nama'); } });
@@ -472,7 +475,8 @@
 
     if (nama.length < 3) { setError('nama', 'Masukkan nama sekurang-kurangnya 3 huruf.'); salah.push(el.nama); }
     if (!jantinaEl) { setError('jantina', 'Pilih jantina.'); salah.push(el.form.querySelector('input[name="jantina"]')); }
-    if (!isFinite(umur) || umur < 18 || umur > 60) { setError('umur', 'Umur permulaan mesti antara 18 dan 60 tahun.'); salah.push(el.umur); }
+    var umurMin = state.parti === 'DAP' ? 17 : 18;   // v13.37: DAP umur minimum ahli 17 tahun (Fasal III.2)
+    if (!isFinite(umur) || umur < umurMin || umur > 60) { setError('umur', umurMin === 17 ? 'Umur permulaan mesti antara 17 dan 60 tahun.' : 'Umur permulaan mesti antara 18 dan 60 tahun.'); salah.push(el.umur); }
     if (!state.negeri) { setError('negeri', 'Pilih negeri.'); salah.push(el.negeri); }
     else if (!state.bahagian) { setError('bahagian', 'Pilih bahagian.'); salah.push(el.bahagian); }
     else if (!state.dun) { setError('dun', 'Pilih DUN.'); salah.push(el.dun); }
@@ -549,7 +553,7 @@
 (function () {
   'use strict';
   function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
-  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR'; }                      // v13.1: MCA juga tiada sayap Puteri
+  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP'; }                      // v13.1: MCA juga tiada sayap Puteri
   if (!document.getElementById('btn-tahun')) { return; }
 
   var W = window, S = W.MyPolitikSave, D = W.MyPolitikData, O = W.MyPolitikOrdinaryMember,
@@ -999,7 +1003,7 @@
     var h = '<section class="card etika"><h2 class="card__title" style="margin:0 0 4px">Tataetika &amp; Tempoh Keahlian</h2>';
     h += '<p class="note">Kempen bersih membina <b>Modal Sosial</b> (kekuatan undi +' + r.bonusUndi + ') dan menurunkan risiko dilapor. Politik wang, fitnah dan ugutan melanggar Tataetika Ahli UMNO dan boleh dihukum Lembaga Disiplin (Fasal 20.10): amaran, gantung, dilarang bertanding atau dipecat.</p>';
     h += bar(r.modal, 'baik', 'Modal Sosial') + bar(r.risiko, r.risiko >= 45 ? 'bahaya' : r.risiko >= 20 ? 'amaran' : 'baik', 'Risiko Disiplin (' + r.labelRisiko + ')');
-    h += '<div class="kv"><span>Tempoh keahlian</span><b class="' + (r.cukup3Tahun ? 'text-gold' : '') + '">' + Math.floor(r.bulanKeahlian / 12) + ' tahun ' + (r.bulanKeahlian % 12) + ' bulan' + (r.cukup3Tahun ? '' : (esSW(p.parti) || p.parti === 'PAS' || p.parti === 'PKR' ? ' (perlu 3 tahun untuk Bahagian)' : ' (perlu 3 tahun untuk Bahagian, Fasal 15.5)')) + '</b></div>';
+    h += '<div class="kv"><span>Tempoh keahlian</span><b class="' + (r.cukup3Tahun ? 'text-gold' : '') + '">' + Math.floor(r.bulanKeahlian / 12) + ' tahun ' + (r.bulanKeahlian % 12) + ' bulan' + (r.cukup3Tahun ? '' : (esSW(p.parti) || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' ? ' (perlu 3 tahun untuk Bahagian)' : ' (perlu 3 tahun untuk Bahagian, Fasal 15.5)')) + '</b></div>';
     h += '<div class="kv"><span>Rekod disiplin</span><b>' + r.salah + ' hukuman' + (r.amaran ? ' · ' + r.amaran + ' amaran' : '') + '</b></div>';
     if (r.rekod && r.rekod.length) {
       h += '<details class="note" style="margin-top:6px"><summary>Sejarah disiplin</summary><ul style="margin:6px 0 0;padding-left:18px">' +
@@ -1202,7 +1206,7 @@
 
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
+    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikDAPUI ? lipatKad('pf-dap', W.MyPolitikDAPUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.MyPolitikPendidikanUI ? lipatKad('pf-pendidikan', W.MyPolitikPendidikanUI.kad(p), { buka: true }) : '') +   // v13.13: Pendidikan
       (W.MyPolitikLetakUI ? lipatKad('pf-letak', W.MyPolitikLetakUI.kad(p), { buka: true }) : '') +   // v13.12: Letak Jawatan
       (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +
@@ -1371,7 +1375,7 @@
         renderKrisisSW();
         pt.status = 'siap'; return;
       }
-      if (!pt.data && pPBB && (pPBB.parti === 'MCA' || pPBB.parti === 'MIC' || pPBB.parti === 'PPP' || pPBB.parti === 'PBRS' || pPBB.parti === 'PAS' || pPBB.parti === 'PKR') && W.MyPolitikParti) {   // v13.1: MCA: data Cawangan (DM) MCA, bukan Sheet UMNO; v13.3: MIC
+      if (!pt.data && pPBB && (pPBB.parti === 'MCA' || pPBB.parti === 'MIC' || pPBB.parti === 'PPP' || pPBB.parti === 'PBRS' || pPBB.parti === 'PAS' || pPBB.parti === 'PKR' || pPBB.parti === 'DAP') && W.MyPolitikParti) {   // v13.1: MCA: data Cawangan (DM) MCA, bukan Sheet UMNO; v13.3: MIC
         var rM = await fetch(W.MyPolitikParti.info(pPBB.parti).data, { cache: 'no-cache' }); if (!rM.ok) { throw new Error('HTTP ' + rM.status); }
         pt.data = D.rowsToHierarchy(D.teksKeBaris(await rM.text()));
       }

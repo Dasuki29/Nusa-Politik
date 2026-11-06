@@ -138,6 +138,9 @@
   }
   CONFIG.LAMA = { FASA: F0, TETINGKAP: T0, lama: true };                                // v13.5: takwim sebelum Fasa B (simpanan lama yang di tengah musim, sehingga tahun berikutnya)
   CONFIG.FASA = fasaUMNO(4, 5, 6, 9); CONFIG.TETINGKAP = tetingkapUMNO(4, 5, 6, 9);
+  /* v13.37: kalendar DAP (Perlembagaan DAP): Kongres Kebangsaan setiap 3 tahun (Fasal VIII.1(b)). ANDAIAN takwim: Mesyuarat Agung Tahunan Cawangan
+     bulan 1, MB JPKP bulan 2, Kongres Kebangsaan bulan 3 (Kongres 2025: 16 Mac 2025). */
+  CONFIG.DAP = { FASA: fasaUMNO(1, 1, 2, 3), TETINGKAP: tetingkapUMNO(1, 1, 2, 3), ppp: true };
   /** v13.5: musim pemilihan khas UMNO selepas PRU (Fasal 10.16). k = { c, b, a } (bulan Cawangan, Bahagian, PAU). */
   function takwimKhas(k) { var c2 = Math.max(k.c, Math.min(k.b - 1, k.c + 1)); return { FASA: fasaUMNO(k.c, c2, k.b, k.a), TETINGKAP: tetingkapUMNO(k.c, c2, k.b, k.a), khas: true }; }
   /** Set takwim aktif mengikut parti pemain (PBB atau lalai UMNO). */
@@ -145,7 +148,7 @@
     var k = null;
     try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
     if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
-    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; }
+    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; } if (k === 'DAP') { return CONFIG.DAP; }
     if (!k || k === 'UMNO') { var U = root.MyPolitikUMNO, kh = U && U.takwimKini ? U.takwimKini() : null; if (kh === 'lama') { return CONFIG.LAMA; } if (kh) { return takwimKhas(kh); } }      // v13.5: simpanan lama di tengah musim / musim pemilihan khas (dicache)
     return CONFIG;
   }
@@ -447,6 +450,8 @@
     if (PASm && PASm.prosesBulan) { peristiwa = peristiwa.concat(PASm.prosesBulan().peristiwa || []); }
     var PKRm = muat('MyPolitikPKR', 'pkr.js');                                                 // v13.34: PKR (sokongan perwakilan Cabang)
     if (PKRm && PKRm.prosesBulan) { peristiwa = peristiwa.concat(PKRm.prosesBulan().peristiwa || []); }
+    var DAPm = muat('MyPolitikDAP', 'dap.js');                                                 // v13.37: DAP (sokongan Wakil Kongres)
+    if (DAPm && DAPm.prosesBulan) { peristiwa = peristiwa.concat(DAPm.prosesBulan().peristiwa || []); }
     var MCAm = muat('MyPolitikMCA', 'mca.js');                                                 // v13.1: peraturan khas MCA (kehadiran, had Presiden, sumbangan, lantikan)
     if (MCAm && MCAm.prosesBulan) { peristiwa = peristiwa.concat(MCAm.prosesBulan().peristiwa || []); }
 

@@ -70,7 +70,7 @@
     return h && h.ok ? { ok: true } : { ok: false, ralat: (h && h.ralat) || 'Gagal.' };
   }
   /** Blok lawan daripada nama parti lawan PRK (PAS / Bersatu = PN; DAP / PKR / Amanah = PH). */
-  function blokLawan(nama, r, p) { var M = p && p.parti === 'PAS' ? CONFIG.LAWAN_PAS : p && p.parti === 'PKR' ? CONFIG.LAWAN_PKR : CONFIG.LAWAN; return M[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
+  function blokLawan(nama, r, p) { var M = p && p.parti === 'PAS' ? CONFIG.LAWAN_PAS : p && (p.parti === 'PKR' || p.parti === 'DAP') ? CONFIG.LAWAN_PKR : CONFIG.LAWAN; return M[nama] || ((r || rngLalai)() < 0.5 ? 'PH' : 'PN'); }
   /** Dipanggil oleh prk.js selepas keputusan PRK pemain. */
   function selepasPRKPemain(a, menang) {
     if (!a) { return null; }
@@ -149,7 +149,7 @@
     if (kod === 'RAKAN') { return 'Rakan gabungan'; }
     if (kod === 'LAIN') { return 'Calon bebas'; }
     if (kod === 'PN' && p && p.parti === 'PAS') { return 'BN'; }
-    if (kod === 'PH' && p && p.parti === 'PKR') { return 'BN'; }
+    if (kod === 'PH' && p && (p.parti === 'PKR' || p.parti === 'DAP')) { return 'BN'; }
     return kod;
   }
   /** Perubahan terkini (dalam `bulan` bulan): senarai log. */

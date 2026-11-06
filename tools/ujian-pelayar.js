@@ -44,7 +44,7 @@ const pelayan = http.createServer((req, res) => {
 /* Kumpul literal rentetan BM daripada kod sumber: nod teks EN yang sama persis dengan literal itu dan tiada terjemahan = bocor. */
 function kumpulLiteral() {
   const set = new Set(), re = /'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"/g;
-  fs.readdirSync(path.join(ROOT, 'js')).filter((f) => /\.js$/.test(f) && !/^(translations|i18n|tutorial|tutorial-en|data|watak|geo|mca-data|mic-data|umno-data|pas-data|pkr-data)/.test(f)).forEach((f) => {
+  fs.readdirSync(path.join(ROOT, 'js')).filter((f) => /\.js$/.test(f) && !/^(translations|i18n|tutorial|tutorial-en|data|watak|geo|mca-data|mic-data|umno-data|pas-data|pkr-data|dap-data)/.test(f)).forEach((f) => {
     const src = fs.readFileSync(path.join(ROOT, 'js', f), 'utf8');
     let m; while ((m = re.exec(src))) {
       const t = (m[1] || m[2] || '').replace(/\\'/g, "'").trim();
@@ -54,7 +54,7 @@ function kumpulLiteral() {
   return [...set];
 }
 /* Nama khas yang sengaja kekal (negeri, istilah UMNO, jenama). */
-const NAMA_KHAS = /^(Division|Divisions|Kuala Lumpur|Putrajaya|Labuan|Perlis|Kedah|Kelantan|Terengganu|Pulau Pinang|Perak|Pahang|Selangor|Wilayah Persekutuan|Negeri Sembilan|Melaka|Johor|Sarawak|Sabah|Bumiputera|Pemuda|Wanita|Puteri|UMNO|PAU|MKT|Nusa Politik|Barisan Nasional|Dewan Rakyat|Dewan Negara|Bahasa Melayu|Hard|Easy|Normal)$/;
+const NAMA_KHAS = /^(Division|Divisions|Secretary-General|Kuala Lumpur|Putrajaya|Labuan|Perlis|Kedah|Kelantan|Terengganu|Pulau Pinang|Perak|Pahang|Selangor|Wilayah Persekutuan|Negeri Sembilan|Melaka|Johor|Sarawak|Sabah|Bumiputera|Pemuda|Wanita|Puteri|UMNO|PAU|MKT|Nusa Politik|Barisan Nasional|Dewan Rakyat|Dewan Negara|Bahasa Melayu|Hard|Easy|Normal)$/;
 const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|dalam|pada|atau|boleh|mesti|setiap|bulan|tahun|sebagai|daripada|kawasan|negeri|bahagian|cawangan|sokongan|pemilih|ahli|tahap|jumlah|perwakilan|kerusi|lihat|klik|anjur|tiada|mencukupi|perlu|baki|setahun|usaha|pilih|daerah|mengundi|penduduk|kesukaran|butiran|lobi|jelajah|dana|wang)\b/i;
 /* Kata/pola BM yang dibenarkan kekal (nama sendiri, istilah UMNO, sumber luar). */
 const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Negeri Sembilan|DUN Contoh)/;

@@ -85,9 +85,9 @@
   function kategoriMengikutUmur(jantina, umur, parti) {
     var j = String(jantina || '').trim().toUpperCase().charAt(0);
     umur = parseInt(umur, 10);
-    if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < 18) { return null; }
+    if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < (parti === 'DAP' ? 17 : 18)) { return null; }   // v13.37: DAP umur minimum 17 (Fasal III.2)
     if (umur >= 60) { return 'veteran'; }
-    if (j === 'L') { return umur <= (parti === 'PKR' ? 35 : 40) ? 'pemuda' : 'biasa'; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1)
+    if (j === 'L') { return umur <= (parti === 'PKR' || parti === 'DAP' ? 35 : 40) ? 'pemuda' : 'biasa'; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
     return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
   }
 

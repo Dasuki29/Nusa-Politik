@@ -1,5 +1,25 @@
 # Catatan Perubahan
 
+## v13.37 (2026-11-06)
+
+- **Parti baharu: DAP (Pakatan Harapan), Fasa 1**, ikut mockup skop DAP yang dipersetujui dan Perlembagaan DAP (seperti pada 22.10.2019, PDF pengguna; dibaca melalui OCR).
+  - **Menu utama:** chip DAP dalam panel PH (boleh dimain). Bagi pemain DAP, rakan PH ialah PKR dan Amanah, dimainkan sebagai NPC.
+  - **Istilah DAP** atas enjin UMNO:
+    - Peringkat bawah: **Pengerusi Cawangan** (Fasal XXI), **JPKP** (Jawatankuasa Perhubungan Kawasan Parlimen, Fasal XIX) dan **Jawatankuasa Negeri** (Fasal XIV).
+    - Peringkat pusat: **Jawatankuasa Tertinggi Pusat (JTP)** dan **Kongres Kebangsaan** (Fasal VIII).
+    - Jawatan puncak: **Setiausaha Agung** (kuasa eksekutif), **Pengerusi Kebangsaan** dan **Naib Pengerusi Kebangsaan** (maks. 5).
+    - Sayap: **DAPSY** dan Wanita; tiada Puteri.
+  - **Pilihan (b): Penyelaras JPKP** ialah Ahli Parlimen DAP kawasan itu. Tanpa kerusi Parlimen, jawatan tertinggi pemain di kawasan ialah **Setiausaha JPKP**; selepas menang kerusi Parlimen, jawatan itu dipaparkan sebagai Penyelaras JPKP.
+  - **Ahli JTP 30 kerusi** (Fasal VIII.14). 30% dikhaskan untuk wanita (Fasal VIII.16): ⚠️ calon wanita mendapat bonus kekuatan +6.
+  - **Wakil Cawangan ke Kongres (Fasal VIII.3):**
+    - Cawangan 25–50 ahli berbayar menghantar 2 wakil, 51–100 ahli tambah 1, dan setiap 100 ahli seterusnya tambah 1. Cawangan bawah 25 ahli tiada wakil.
+    - Data (`tools/build-dap.js`) ⚠️: ~1,700 Cawangan layak dan ~4,200 Wakil Kongres. Kad DAP ada butang **Jelajah Kawasan**.
+  - **Kongres Kebangsaan** setiap 3 tahun (2025, 2028 dan seterusnya). ⚠️ Takwim: Cawangan bulan 1, JPKP bulan 2, Kongres bulan 3.
+  - **Umur minimum ahli 17 tahun** (Fasal III.2). ⚠️ DAPSY untuk ahli 35 tahun ke bawah (tiada dalam Perlembagaan).
+  - **⚠️ Kuota DAP dalam PH:** 55 Parlimen dan 120 DUN, kawasan majoriti Cina dahulu (Tanjong, Bukit Bendera, Kepong, Bagan, Bukit Gelugor). Kerajaan dan rundingan sama seperti PKR.
+  - **PRK:** pemain PH (PKR, DAP) tidak lagi berdepan calon rakan PH sendiri.
+- Ujian: 2 ujian unit baharu, `tools/ujian-dap.js` (pelayar), simulasi `PARTI=DAP`. Ujian indeks kini mengira 12 pilihan parti. Cache `nusa-v13.37`.
+
 ## v13.36 (2026-11-06)
 
 - **PKR Fasa 2: keunikan KEADILAN**, ikut mockup yang dipersetujui dan Perlembagaan PKR. Semua bahagian baharu berada dalam kad PKR di tab Profil.
