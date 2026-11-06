@@ -36,6 +36,9 @@
     '.pru-menang{background:#14994F;color:#fff;border:3px solid var(--garis,#111);padding:10px;text-align:center;font-weight:900;font-size:1.1rem;text-transform:uppercase;margin-bottom:8px}' +
     '.pru-nas{display:flex;height:28px;border:2px solid var(--garis,var(--border));border-radius:6px;overflow:hidden;margin:8px 0}.pru-nas div{display:grid;place-items:center;color:#fff;font-size:.72rem;font-weight:800;min-width:0;white-space:nowrap;overflow:hidden}' +
     '.pru-nas .p{background:#C8102E}.pru-nas .r{background:#2B6CB0}.pru-nas .b{background:#555}' +
+    '.rg-latar{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px}.rg-kad{background:var(--surface,#fff);color:var(--text,#111);border:3px solid var(--garis,#111);border-radius:14px;padding:14px;width:min(520px,100%);max-height:90vh;overflow:auto}' +
+    '.rg-pil{display:flex;align-items:center;gap:10px;border:2px solid var(--garis,var(--border));border-radius:10px;padding:8px 10px;margin:6px 0;cursor:pointer}.rg-pil.is-on{background:rgba(46,158,91,.15)}.rg-pil.is-off{opacity:.55;cursor:not-allowed}.rg-pil input{width:20px;height:20px}.rg-n{margin-left:auto;font-size:1.05rem}' +
+    '.rg-tot{margin:8px 0 2px}.rg-bar{position:relative;height:14px;border:2px solid var(--garis,var(--border));border-radius:7px;background:rgba(127,127,127,.2)}.rg-bar i{display:block;height:100%;background:#2E9E5B;border-radius:5px}.rg-bar span{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed currentColor}' +
     '.pru-kalah{background:#555}.pru-ok{color:#14994F;font-weight:800}.pru-ng{color:#D3162F;font-weight:800}' +
     '.pru-jns{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}.pru-pilih{display:grid;gap:8px;margin:8px 0}' +
     '.pru-pilih label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:2px solid var(--garis,var(--border));border-radius:6px;cursor:pointer;background:var(--bg-elev-2)}' +
@@ -473,29 +476,69 @@
   /* v7.22: keputusan nasional & rundingan kerajaan (Presiden parti) */
   function htmlNasional(n) {
     var j = n.jumlah, pc = function (x) { return Math.max(0, x / j * 100).toFixed(1) + '%'; };
-    var ket = n.status === 'MAJORITI' ? '<b>Majoriti mutlak.</b> Parti anda membentuk kerajaan sendirian.'
-      : n.status === 'GABUNGAN' ? '<b>Tiada majoriti mutlak.</b> Parti + rakan = ' + (n.parti + n.rakan) + ' kerusi (cukup ' + n.majoriti + '). Rundingan pembentukan kerajaan diperlukan.'
-      : '<b>Gabungan anda ' + (n.parti + n.rakan) + ' kerusi</b>, kurang daripada ' + n.majoriti + '. Parti anda menjadi pembangkang.';
-    return '<p style="font-size:.85rem">Anda Presiden parti. ' + j + ' kerusi Parlimen; majoriti mudah <b>' + n.majoriti + '</b>.</p>' +
-      '<div class="pru-nas"><div class="p" style="width:' + pc(n.parti) + '">Parti ' + n.parti + '</div>' + (n.rakan ? '<div class="r" style="width:' + pc(n.rakan) + '">Rakan ' + n.rakan + '</div>' : '') + '<div class="b" style="width:' + pc(n.pembangkang) + '">Lawan ' + n.pembangkang + '</div></div>' +
+    var ket = n.status === 'MAJORITI' ? '<b>Majoriti mutlak.</b> <span>Parti anda membentuk kerajaan sendirian.</span>'
+      : n.status === 'GABUNGAN' ? (n.gabungan ? '<b>Kerajaan gabungan.</b> <span>Rakan baharu: ' + esc(n.gabungan.join(', ')) + '.</span> ' : '<b>Tiada majoriti mutlak.</b> ') + '<span>Parti + rakan = ' + (n.parti + n.rakan) + ' kerusi (cukup ' + n.majoriti + ').</span> <span>Rundingan pembentukan kerajaan diperlukan.</span>'
+      : '<b>Gabungan anda ' + (n.parti + n.rakan) + ' kerusi, kurang daripada ' + n.majoriti + '.</b> <span>' + (adaRundingan(n) ? 'Parlimen tergantung: anda boleh mengajak gabungan lain membentuk kerajaan.' : 'Parti anda menjadi pembangkang.') + '</span>';
+    return '<p style="font-size:.85rem">Anda Presiden parti. ' + j + ' kerusi Parlimen; majoriti mudah ' + n.majoriti + '.</p>' +
+      '<div class="pru-nas"><div class="p" style="width:' + pc(n.parti) + '"><span>Parti</span> ' + n.parti + '</div>' + (n.rakan ? '<div class="r" style="width:' + pc(n.rakan) + '"><span>Rakan</span> ' + n.rakan + '</div>' : '') + '<div class="b" style="width:' + pc(n.pembangkang) + '"><span>Lawan</span> ' + n.pembangkang + '</div></div>' +
       '<div class="kv"><span>🔴 Parti anda</span><b>' + n.parti + ' kerusi</b></div><div class="kv"><span>🔵 Rakan gabungan</span><b>' + n.rakan + ' kerusi</b></div><div class="kv"><span>⚫ Pembangkang</span><b>' + n.pembangkang + ' kerusi</b></div>' +
       '<p style="font-size:.85rem;margin-top:8px">' + ket + '</p>' +
       (n.bolehPM || n.status === 'PEMBANGKANG' ? '' : '<p style="font-size:.8rem;color:var(--text-muted)">Anda bukan Ahli Parlimen yang menang, jadi tidak layak menjadi Perdana Menteri.</p>') +
       '<p style="font-size:.72rem;color:var(--text-muted)">Anggaran permainan, bukan data pilihan raya sebenar.</p>';
   }
+  /* v13.33 (Fasa 3): Rundingan Gabungan selepas Parlimen tergantung (js/rundingan.js). */
+  function RGm() { return W.MyPolitikRundingan; }
+  function adaRundingan(n) { var R = RGm(); return !!(n && n.status === 'PEMBANGKANG' && R && R.calon(S.loadPlayer()).length); }
+  var pilihGab = {};
+  function htmlRundingan(n, senarai) {
+    var sendiri = n.parti + n.rakan, j = sendiri, dipilih = senarai.filter(function (x) { return pilihGab[x.kod]; }), R = RGm();
+    dipilih.forEach(function (x) { j += x.n; });
+    var cukup = j >= n.majoriti, w = Math.min(100, Math.round(j / n.jumlah * 100));
+    return '<p style="font-size:.85rem">Gabungan anda: ' + sendiri + ' kerusi. Perlu ' + n.majoriti + '. Pilih rakan, kemudian tekan Bentuk Kerajaan.</p>' +
+      senarai.map(function (x) {
+        return '<label class="rg-pil' + (pilihGab[x.kod] ? ' is-on' : '') + (x.kesediaan ? '' : ' is-off') + '"><input type="checkbox" data-rg="' + esc(x.kod) + '"' + (pilihGab[x.kod] ? ' checked' : '') + (x.kesediaan ? '' : ' disabled') + '>' +
+          '<span><b>' + esc(x.kod === 'BEBAS' ? 'Bebas' : x.kod) + '</b> · ' + esc(x.nama) + '<br><small><span>Kesediaan ' + x.kesediaan + '%</span>' + (x.akarUmbi ? ' · <span>Lawan tradisi: akar umbi ' + x.akarUmbi + '</span>' : '') + (x.sebab ? ' · <span>' + esc(x.sebab) + '</span>' : '') + '</small></span><b class="rg-n">' + x.n + '</b></label>';
+      }).join('') +
+      '<p class="rg-tot"><b>Jumlah: ' + j + ' / ' + n.majoriti + '</b>' + (cukup ? ' ✅' : '') + '</p><div class="rg-bar"><i style="width:' + w + '%"></i><span style="left:' + (n.majoriti / n.jumlah * 100).toFixed(1) + '%"></span></div>' +
+      (dipilih.length ? '<p class="note" style="font-size:.78rem">Peluang semua rakan bersetuju: ' + Math.round(R.peluangSemua(dipilih) * 100) + '%. Jika ada rakan menolak tetapi baki masih ' + n.majoriti + ' ke atas, kerajaan tetap dibentuk.</p>' : '') +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button type="button" class="btn btn--gold" data-rg-act="bentuk"' + (cukup ? '' : ' disabled') + '>🏛️ Bentuk Kerajaan</button><button type="button" class="btn btn--ghost" data-rg-act="pembangkang">🪧 Jadi pembangkang</button></div>';
+  }
+  function rundingan(n) {
+    return new Promise(function (selesai) {
+      var R = RGm(), senarai = R.calon(S.loadPlayer()); pilihGab = {};
+      var kotak = W.document.createElement('div'); kotak.className = 'rg-latar'; kotak.setAttribute('role', 'dialog'); kotak.setAttribute('aria-modal', 'true');
+      kotak.innerHTML = '<div class="rg-kad"><h3 style="margin:0 0 6px">🤝 Rundingan Gabungan · Parlimen tergantung</h3><div data-rg-isi></div></div>';
+      W.document.body.appendChild(kotak);
+      function lukis() { kotak.querySelector('[data-rg-isi]').innerHTML = htmlRundingan(n, senarai); }
+      lukis();
+      kotak.addEventListener('change', function (ev) { var t = ev.target; if (t && t.hasAttribute('data-rg')) { pilihGab[t.getAttribute('data-rg')] = t.checked; lukis(); } });
+      kotak.addEventListener('click', function (ev) {
+        var b = ev.target.closest ? ev.target.closest('[data-rg-act]') : null; if (!b || b.disabled) { return; }
+        var a = b.getAttribute('data-rg-act'); kotak.remove();
+        selesai(a === 'bentuk' ? Object.keys(pilihGab).filter(function (k) { return pilihGab[k]; }) : null);
+      });
+    });
+  }
   async function nasional() {
     var p = S.loadPlayer(), n = PRU.nasionalTertunggak(p);
     if (!n) { return; }
-    await modal({ tajuk: '🗳️ Keputusan Nasional', isi: htmlNasional(n), butang: [{ label: n.status === 'PEMBANGKANG' ? 'Teruskan' : n.status === 'MAJORITI' && n.bolehPM ? 'Teruskan' : 'Runding Pembentukan Kerajaan', nilai: true, kelas: 'btn--gold' }] });
+    var boleRG = adaRundingan(n);
+    await modal({ tajuk: '🗳️ Keputusan Nasional', isi: htmlNasional(n), butang: [{ label: n.status === 'PEMBANGKANG' ? (boleRG ? 'Runding Gabungan' : 'Teruskan') : n.status === 'MAJORITI' && n.bolehPM ? 'Teruskan' : 'Runding Pembentukan Kerajaan', nilai: true, kelas: 'btn--gold' }] });
     var pil;
+    if (n.status === 'PEMBANGKANG' && boleRG) {
+      var kods = await rundingan(n), hg = kods && kods.length ? PRU.bentukGabungan(kods) : null;
+      if (hg && !hg.ok) { toast(hg.ralat, 'ralat'); }
+      if (hg && hg.ok) { await modal({ tajuk: hg.berjaya ? '🤝 Kerajaan Gabungan' : '❌ Rundingan Gagal', isi: '<p>' + (hg.ayat || [hg.mesej]).map(function (s) { return '<span>' + esc(s) + '</span>'; }).join(' ') + '</p>', butang: [{ label: 'Teruskan', nilai: true, kelas: 'btn--gold' }] }); }
+      p = S.loadPlayer(); n = PRU.nasionalTertunggak(p) || n;
+    }
     if (n.status === 'PEMBANGKANG') { pil = 'PEMBANGKANG'; }
     else if (n.status === 'MAJORITI' && n.bolehPM) { pil = 'PM'; }
     else {
       pil = await modal({
         tajuk: n.bolehPM ? '👑 Siapa Jadi Perdana Menteri?' : '🏛️ Pembentukan Kerajaan',
-        isi: '<p style="font-size:.85rem">Parti ' + n.parti + ' daripada ' + (n.parti + n.rakan) + ' kerusi gabungan. Hubungan gabungan <b>' + n.hubungan + '</b>/100.</p><ul class="acara__pil">' +
+        isi: '<p style="font-size:.85rem">Parti ' + n.parti + ' daripada ' + (n.parti + n.rakan) + ' kerusi gabungan. Hubungan gabungan ' + n.hubungan + '/100.</p><ul class="acara__pil">' +
           (n.bolehPM ? opsi('PM', '👑 Tuntut jawatan Perdana Menteri', 'Peluang berjaya ± ' + n.peluangPM + '%. Gagal: hubungan gabungan ' + PRU.CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN + ' dan anda menerima Timbalan PM.', true) : '') +
-          (n.bolehPM ? opsi('TPM', '🤝 Terima Timbalan Perdana Menteri', 'Selamat. Rakan gabungan memegang jawatan Perdana Menteri.', true) : '') +
+          (n.bolehPM || n.rakanPM ? opsi('TPM', '🤝 Terima Timbalan Perdana Menteri', 'Selamat. Rakan gabungan memegang jawatan Perdana Menteri.', true) : '') +
           opsi('KABINET', '🗂️ Pilih portfolio kabinet', 'Lobi Menteri seperti biasa (guna IP dan Dana).', true) +
           opsi('PEMBANGKANG', '🪧 Jadi pembangkang', 'Tolak gabungan. Kerajaan dibentuk tanpa anda.', true) + '</ul>',
         butang: []

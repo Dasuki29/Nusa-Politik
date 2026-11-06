@@ -2221,10 +2221,10 @@ ujian('v13.31 PAS: anggaran kerusi PN (pembangkang persekutuan, kerajaan negeri 
   let kj = 0, kel = 0, joh = 0;
   for (let i = 0; i < 60; i++) {
     const q = Object.assign({}, p, { id: 'pas' + i });
-    const a = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Kelantan', pop: 45 }); if (a.kerajaan) { kj++; } if (a.dun.kerajaan >= 23) { kel++; }
+    const a = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Kelantan', pop: 45 }); if (a.kerajaan && !a.npcGabungan) { kj++; } if (a.dun.kerajaan >= 23) { kel++; }
     const b = A.anggarKerusi(q, { tahun: 2028, bulan: 3 }, { negeri: 'Johor', pop: 45 }); if (b.dun.kerajaan >= 29) { joh++; }
   }
-  sama(kj, 0, 'pop 45: PN tidak membentuk kerajaan persekutuan'); sama(kel, 60, 'PN memerintah Kelantan'); sama(joh, 0, 'PN tidak memerintah Johor');
+  sama(kj, 0, 'pop 45: PN tidak membentuk kerajaan persekutuan tanpa gabungan NPC (v13.33)'); sama(kel, 60, 'PN memerintah Kelantan'); sama(joh, 0, 'PN tidak memerintah Johor');
   let kj70 = 0; for (let i = 0; i < 60; i++) { if (A.anggarKerusi(Object.assign({}, p, { id: 'q' + i }), { tahun: 2028, bulan: 3 }, { pop: 70 }).kerajaan) { kj70++; } }
   betul(kj70 > 40, 'pop 70: PN boleh membentuk kerajaan (' + kj70 + '/60)');
   sama(A.labelBN(p).pendek, 'PN'); sama(A.lawanGab(p).PN.pendek, 'BN', "slot lawan 'PN' = BN");
@@ -2270,6 +2270,55 @@ ujian('v13.32 PAS: Dewan Ulamak (bidang Islam), As-Sabiqun (60+, tanpa jawatan),
   const pr = S.buildPlayerProfile ? null : null; void pr;
   S.clearPlayer();
 });
+/* ---------- v13.33: Fasa 3 Rundingan Gabungan ---------- */
+ujian('v13.33 Rundingan: calon rakan BN dan PN, sekatan Restu PAS, nilai berjaya dan gagal', () => {
+  const R = g.MyPolitikRundingan; P.daftar({}); P.tetap({ parti: 'UMNO', jawatan: 'Presiden' });
+  let p = S.loadPlayer(); const ka = { tahun: 2028, bulan: 3, parti: 60, rakan: 30, bebas: 4, pembangkang: 128 };
+  sama(R.gabPemain(p), 'BN'); sama(R.gabPemain(Object.assign({}, p, { parti: 'PBB' })), null, 'parti Sarawak tiada rundingan');
+  const c = R.calonDari(p, ka, 50), kod = c.map((x) => x.kod);
+  betul(kod.indexOf('PH') >= 0 && kod.indexOf('PN') >= 0 && kod.indexOf('GPS') >= 0, 'calon BN: ' + kod.join(','));
+  const jum = c.reduce((a, x) => a + x.n, 0); sama(jum, ka.pembangkang + ka.bebas, 'jumlah kerusi calon = pembangkang + bebas');
+  const ph = c.find((x) => x.kod === 'PH'); sama(ph.akarUmbi, -6, 'lawan tradisi PH'); betul(c.every((x) => x.kesediaan >= 5 && x.kesediaan <= 95));
+  const ya = R.nilai(p, ka, c, () => 0), tidak = R.nilai(p, ka, c, () => 0.999);
+  betul(ya.berjaya && ya.setuju.length === c.length && ya.jumlah === 90 + jum, 'semua bersetuju');
+  sama(ya.ubah.PH, -ph.n); sama(ya.ambilBebas, ka.bebas); sama(tidak.berjaya, false); sama(tidak.tolak.length, c.length);
+  P.tetap({ parti: 'PAS', pas: { restu: 40 } }); p = S.loadPlayer(); const cp = R.calonDari(p, ka, 50);
+  betul(cp.length && cp.every((x) => x.kesediaan === 0 && /Restu Majlis Syura/.test(x.sebab)), 'Restu < 50: semua tertutup');
+  betul(cp.some((x) => x.kod === 'BN'), 'PAS: blok lawan kedua = BN');
+  P.tetap({ pas: { restu: 60 } }); p = S.loadPlayer(); const cq = R.calonDari(p, ka, 50);
+  sama(cq.find((x) => x.kod === 'PH').kesediaan, 0, 'PH perlu Restu 70'); betul(cq.find((x) => x.kod === 'BN').kesediaan > 0);
+  S.clearPlayer();
+});
+ujian('v13.33 Rundingan: NPC membentuk gabungan bagi pemain bukan Presiden; Presiden tidak', () => {
+  P.daftar({}); P.tetap({ parti: 'UMNO', jawatan: 'Ahli Biasa' }); const p = S.loadPlayer(), A = g.NusaPaparan;
+  let npc = 0, salah = 0;
+  for (let i = 0; i < 80; i++) {
+    const k = A.anggarKerusi(Object.assign({}, p, { id: 'npc' + i }), { tahun: 2028, bulan: 3 }, { pop: 40 });
+    if (k.npcGabungan) { npc++; if (!k.kerajaan || k.parti + k.rakan < 112 || k.parti + k.rakan + k.pembangkang + k.bebas !== 222 || !k.gabungan.length) { salah++; } }
+  }
+  betul(npc > 0, 'NPC gabungan berlaku (' + npc + '/80)'); sama(salah, 0, 'kiraan kerusi gabungan NPC konsisten');
+  let pres = 0; for (let i = 0; i < 40; i++) { if (A.anggarKerusi(Object.assign({}, p, { id: 'npc' + i, jawatan: 'Presiden' }), { tahun: 2028, bulan: 3 }, { pop: 40 }).npcGabungan) { pres++; } }
+  sama(pres, 0, 'Presiden memilih sendiri');
+  S.clearPlayer();
+});
+ujian('v13.33 Rundingan: bentukGabungan (berjaya: status GABUNGAN, kerusi rakan; gagal: hubungan -5)', () => {
+  const PR = g.MyPolitikPRU, R = g.MyPolitikRundingan, A = g.NusaPaparan;
+  const asas = { status: 'PEMBANGKANG', tahun: 2031, bulan: 3, parti: 70, rakan: 25, jumlah: 222, majoriti: 112, bolehPM: true, peluangPM: 0, hubungan: 50 };
+  P.daftar({}); P.tetap({ parti: 'UMNO', jawatan: 'Presiden', pru: { status: { jenis: 'MP', kerusi: 'Kangar', kerajaan: false }, hubunganGabungan: 50, nasional: Object.assign({}, asas) } });
+  const c = R.calon(S.loadPlayer()); betul(c.length >= 3, 'calon ada');
+  sama(PR.bentukGabungan([], { rng: () => 0 }).ok, false, 'perlu pilih rakan');
+  const kecil = c.filter((x) => x.kod === 'BEBAS' || x.kod === 'GRS').map((x) => x.kod); if (kecil.length) { betul(/belum mencapai/.test(PR.bentukGabungan(kecil, { rng: () => 0 }).ralat)); }
+  const gagal = PR.bentukGabungan(['PH'], { rng: () => 0.999 }); betul(gagal.ok && !gagal.berjaya, 'semua menolak');
+  sama(S.loadPlayer().pru.hubunganGabungan, 45); sama(S.loadPlayer().pru.nasional.status, 'PEMBANGKANG');
+  const r = PR.bentukGabungan(['PH', 'GPS'], { rng: () => 0 }); betul(r.ok && r.berjaya, r.mesej || r.ralat);
+  const n = S.loadPlayer().pru.nasional, ph = c.find((x) => x.kod === 'PH').n, gps = c.find((x) => x.kod === 'GPS').n;
+  sama(n.status, 'GABUNGAN'); sama(n.rakan, 25 + ph + gps); sama(n.gabungan.join(','), 'PH,GPS'); sama(n.ubah.PH, -ph);
+  sama(n.rakanPM, ph > 95, 'PM ikut gabungan terbesar');
+  const k = A.anggarKerusi(S.loadPlayer(), { tahun: 2031, bulan: 3 }, {}); betul(k.kerajaan && k.gabungan.join(',') === 'PH,GPS', 'anggaran kerusi ikut gabungan');
+  sama(k.parti + k.rakan + k.pembangkang + k.bebas, 222);
+  S.clearPlayer();
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

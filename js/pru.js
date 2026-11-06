@@ -946,6 +946,40 @@
     var n = getPRU(p).nasional;
     return n && !n.selesai ? n : null;
   }
+  /** v13.33 (Fasa 3, maklum balas pemain): Presiden membentuk gabungan baharu selepas Parlimen tergantung (js/rundingan.js).
+      kods = kod rakan dipilih (PH, PN/BN, GPS, GRS, BEBAS). Berjaya: status GABUNGAN, rakan kerajaan ditambah; PM ikut gabungan terbesar. */
+  function bentukGabungan(kods, o) {
+    var p = S().loadPlayer(), pru = getPRU(p), n = pru.nasional, RG = modul('MyPolitikRundingan', 'rundingan.js'), A = modul('NusaPaparan', 'paparan.js');
+    if (!n || n.selesai || n.status !== 'PEMBANGKANG') { return { ok: false, ralat: 'Tiada rundingan gabungan.' }; }
+    if (!RG || !A) { return { ok: false, ralat: 'Modul rundingan tiada.' }; }
+    var ka = A.anggarKerusi(p, { tahun: n.tahun, bulan: n.bulan }, {}), semua = RG.calonDari(p, ka, n.hubungan);
+    var pilih = semua.filter(function (x) { return (kods || []).indexOf(x.kod) >= 0; });
+    if (!pilih.length) { return { ok: false, ralat: 'Pilih sekurang-kurangnya satu rakan.' }; }
+    var jum = ka.parti + ka.rakan + pilih.reduce(function (a, x) { return a + x.n; }, 0);
+    if (jum < RG.CONFIG.MAJORITI) { return { ok: false, ralat: 'Jumlah kerusi ' + jum + ' belum mencapai ' + RG.CONFIG.MAJORITI + '.' }; }
+    var h = RG.nilai(p, ka, pilih, rng(o)), kes = {};
+    if (!h.berjaya) {
+      pru.hubunganGabungan = clamp((Number(pru.hubunganGabungan) || 50) + RG.CONFIG.GAGAL_HUBUNGAN, 0, 100);
+      simpanPRU(pru, {}, { log: { tindakan: 'pru_gabungan', nama: 'Rundingan gabungan gagal', peringkat: 'ahli' } });
+      var ag = ['Rundingan gagal.']; if (h.tolak.length) { ag.push('Rakan yang menolak: ' + h.tolak.map(function (x) { return x.kod; }).join(', ') + '.'); }
+      ag.push('Baki ' + h.jumlah + ' kerusi, kurang daripada ' + RG.CONFIG.MAJORITI + '.'); ag.push('Parti anda menjadi pembangkang; hubungan gabungan ' + RG.CONFIG.GAGAL_HUBUNGAN + '.');
+      return { ok: true, berjaya: false, tolak: h.tolak.map(function (x) { return x.kod; }), jumlah: h.jumlah, ayat: ag, mesej: ag.join(' ') };
+    }
+    var sendiri = ka.parti + ka.rakan, terbesar = h.setuju.reduce(function (a, x) { return x.slot === 'BEBAS' ? a : Math.max(a, x.n); }, 0);
+    n.rakan += h.tambah; n.pembangkang = n.jumlah - n.parti - n.rakan; n.status = 'GABUNGAN';
+    n.gabungan = h.setuju.map(function (x) { return x.kod; }); n.ubah = { PH: h.ubah.PH, PN: h.ubah.PN }; n.ambilBebas = h.ambilBebas;
+    n.rakanPM = terbesar > sendiri;                                                    // rakan lebih besar memegang jawatan Perdana Menteri
+    if (n.rakanPM) { n.bolehPM = false; n.peluangPM = 0; }
+    else if (n.bolehPM) { n.peluangPM = Math.round(clamp(0.65 + (sendiri / (sendiri + h.tambah) - 0.5) * 1.5, 0.5, 0.97) * 100); }
+    if (h.akarUmbi) { kes.kesetiaan = { akarUmbi: h.akarUmbi }; }
+    pru.nasional = n;
+    simpanPRU(pru, kes, { log: { tindakan: 'pru_gabungan', nama: 'Gabungan kerajaan: ' + n.gabungan.join(' + '), peringkat: 'ahli' } });
+    var ay = ['Kerajaan gabungan dibentuk dengan ' + n.gabungan.join(', ') + ' (' + h.jumlah + ' kerusi).'];
+    if (h.tolak.length) { ay.push('Rakan yang menolak: ' + h.tolak.map(function (x) { return x.kod; }).join(', ') + '.'); }
+    if (h.akarUmbi) { ay.push('Sokongan akar umbi ' + h.akarUmbi + ' (lawan tradisi).'); }
+    if (n.rakanPM) { ay.push('Rakan lebih besar memegang jawatan Perdana Menteri.'); }
+    return { ok: true, berjaya: true, setuju: n.gabungan, tolak: h.tolak.map(function (x) { return x.kod; }), jumlah: h.jumlah, rakanPM: n.rakanPM, ayat: ay, mesej: ay.join(' ') };
+  }
   /** pilihan: 'PM' | 'TPM' | 'KABINET' | 'PEMBANGKANG' (juga 'TUTUP' bagi parti pembangkang). */
   function rundingKerajaan(pilihan, o) {
     var p = S().loadPlayer(), pru = getPRU(p), n = pru.nasional, K = modul('MyPolitikKabinet', 'kabinet.js'), r = rng(o);
@@ -1058,7 +1092,7 @@
     janaNasionalUji: function (p) { return janaNasional(p, getPRU(p), null, null, true); },      // v13.11: untuk ujian
     getPRU: getPRU, semuaStatus: semuaStatus, negeriADUN: negeriADUN, pegang: pegang, profilKawasan: profilKawasan, kelayakan: kelayakan, peluangKerusi: peluangKerusi, tahapKerusi: tahapKerusi, KERUSI_LAIN: CONFIG.KERUSI_LAIN, ringkasan: ringkasan, prosesBulan: prosesBulan, isytihar: isytihar,
     pilihKerusi: pilihKerusi, tidakBertanding: tidakBertanding, adalahPresiden: adalahPresiden, nasionalTertunggak: nasionalTertunggak, rundingKerajaan: rundingKerajaan, runding: runding, peruntukanPilihan: peruntukanPilihan, bonusManifesto: bonusManifesto,
-    baikiStatusSarawak: baikiStatusSarawak, baikiStatusKerajaan: baikiStatusKerajaan, kerajaanSemasa: kerajaanSemasa, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
+    baikiStatusSarawak: baikiStatusSarawak, bentukGabungan: bentukGabungan, baikiStatusKerajaan: baikiStatusKerajaan, kerajaanSemasa: kerajaanSemasa, hantarJentera: hantarJentera, namakanZon: namakanZon, mulaKempen: mulaKempen, keadaanKempen: keadaanKempen, tindakanKempen: tindakanKempen, jawabKejutan: jawabKejutan, selesaikan: selesaikan, tutupKeputusan: tutupKeputusan,
     janjiStatus: janjiStatus, majukanJanji: majukanJanji, pecahan: pecahan, hitungKeputusan: hitungKeputusan
   };
 });

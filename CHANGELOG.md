@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.33 (2026-11-06)
+
+- **PAS Fasa 3 / maklum balas borang (baris 13): Pilih Rakan Gabungan**, ikut mockup yang dipersetujui.
+  - **Presiden parti**: jika gabungan sendiri kurang 112 kerusi selepas PRU, dialog **🤝 Rundingan Gabungan** dibuka. Pilih rakan (PH, PN atau BN, GPS, GRS, Bebas) sehingga 112; setiap rakan bersetuju ikut **Kesediaan** (hubungan gabungan, reputasi, saiz gabungan) ⚠️. Jika baki yang bersetuju masih ≥ 112, kerajaan gabungan dibentuk; jika tidak, parti menjadi pembangkang dan hubungan gabungan −5.
+  - Rakan yang lebih besar memegang jawatan Perdana Menteri (anda boleh menerima Timbalan PM atau portfolio kabinet).
+  - **Lawan tradisi** ⚠️: BN + PH (akar umbi −6), BN + PN (−3), PN + PH (−6).
+  - **PAS**: rakan baharu perlu Restu Majlis Syura ≥ 50; PH perlu ≥ 70 (Fasal 39(9)(k)).
+  - **Pemain bukan Presiden**: NPC Presiden parti memilih rakan paling bersedia secara automatik; kad kerusi, carta hemisikal dan status kerajaan mengikut gabungan baharu.
+  - GPS 23–28 dan GRS 5–8 kerusi diasingkan daripada blok lawan kedua ⚠️.
+- Ujian: 3 ujian unit baharu, `tools/ujian-rundingan.js` (pelayar). Cache `nusa-v13.33`.
+
 ## v13.32 (2026-11-06)
 
 - **PAS Fasa 2: keunikan PAS**, ikut mockup yang dipersetujui dan Perlembagaan PAS (Pindaan 2025). Semua dalam kad PAS (tab Profil).

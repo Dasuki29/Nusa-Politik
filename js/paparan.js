@@ -258,8 +258,11 @@
       }
     }
     bebas = Math.min(bebas, J - parti - rakan);
+    var Ngab = N && N.gabungan && N.tahun === rekod.tahun && N.bulan === rekod.bulan ? N : null;      // v13.33: rakan gabungan dipilih Presiden
+    if (Ngab) { bebas = Math.max(0, bebas - (Number(Ngab.ambilBebas) || 0)); }
     var lawan = J - parti - rakan - bebas, gabung = parti + rakan, kerajaan = gabung >= CONFIG.MAJORITI;
     var o = { tahun: rekod.tahun, bulan: rekod.bulan, parti: parti, rakan: rakan, pembangkang: lawan, bebas: bebas, kerajaan: kerajaan };
+    if (Ngab) { o.gabungan = Ngab.gabungan.slice(); o.ubah = Object.assign({ PH: 0, PN: 0 }, Ngab.ubah || {}); o.pecahTetap = false; }
     var ngr = (opt && opt.negeri) || negeriPemainDUN(p), dun = negeriDUN(p, ngr);
     if (dun) {
       var skala = (kerajaan ? gabung : J - gabung) / J, nBebas = Math.round(rng() * 2);
@@ -268,6 +271,14 @@
       if (PASd) { var popD = opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3; kr = clamp(Math.round(dun * PASd.kadarDUN(kodNegeriDUN(ngr), popD, rng)), 0, dun - nBebas); }   // v13.31: kekuatan PN ikut negeri
       o.dun = { jumlah: dun, kerajaan: kr, bebas: nBebas, pembangkang: dun - kr - nBebas, negeri: ngr };
       void skala;
+    }
+    /* v13.33: pemain bukan Presiden: NPC Presiden parti membentuk gabungan jika gabungan sendiri kurang majoriti (js/rundingan.js). */
+    var presidenP = p && (/^Presiden$/i.test(String(p.jawatan || '')) || (Array.isArray(p.jawatanList) ? p.jawatanList : []).some(function (j) { return /^Presiden$/i.test(String(j && j.jawatan || '')); }));
+    var RG = !Ngab && !kerajaan && !presidenP && !(N && N.tahun === rekod.tahun && N.bulan === rekod.bulan) ? (root.MyPolitikRundingan || (typeof require === 'function' ? (function () { try { return require('./rundingan.js'); } catch (e) { return null; } })() : null)) : null;
+    var hN = RG && RG.npc ? RG.npc(p, o) : null;
+    if (hN) {
+      o.rakan += hN.tambah; o.bebas = Math.max(0, o.bebas - hN.ambilBebas); o.pembangkang = J - o.parti - o.rakan - o.bebas;
+      o.ubah = { PH: hN.ubah.PH, PN: hN.ubah.PN }; o.pecahTetap = false; o.kerajaan = true; o.gabungan = hN.setuju.map(function (x) { return x.kod; }); o.npcGabungan = true;
     }
     return o;
   }
@@ -306,6 +317,7 @@
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
     var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
     var asal = jumlah - uPH - uPN;
+    if (kunci === 'parlimen' && k.pecahTetap != null) { kerajaan = k.pecahTetap; }                    // v13.33: pecahan asal sebelum rundingan gabungan
     var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(asal * r);
     var PH = Math.max(0, ph + uPH); return { PH: PH, PN: Math.max(0, jumlah - PH) };
   }
@@ -348,9 +360,10 @@
     var k = p.kerusiNasional, r = kunciRekod(p);
     if (!k || !r) { return '<p class="pp-nota">Belum ada keputusan PRU. Anggaran kerusi muncul selepas pilihan raya pertama.</p>'; }
     var gabung = k.parti + k.rakan, pp = pecahPembangkang(p, k, k.pembangkang, k.kerajaan, 'parlimen');
-    var np = { BN: gabung, PH: pp.PH, PN: pp.PN, LAIN: k.bebas }, seg = segGabungan(np, labelBN(p, false), lawanGab(p));
+    var lbP = labelBN(p, false); if (Array.isArray(k.gabungan) && k.gabungan.length) { lbP = { nama: lbP.nama + ' + ' + k.gabungan.join(' + '), pendek: lbP.pendek + '+', warna: lbP.warna }; }   // v13.33
+    var np = { BN: gabung, PH: pp.PH, PN: pp.PN, LAIN: k.bebas }, seg = segGabungan(np, lbP, lawanGab(p));
     var h = '<h4>Kerusi Parlimen <small>PRU ' + esc(k.tahun) + ' · anggaran</small></h4>' + bar(seg, CONFIG.MAJORITI) + legend(seg) +
-      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, labelBN(p, false), lawanGab(p)) + fbnNota(p) + ' Garis putus = majoriti.</p>';
+      '<p class="pp-nota">' + ayatKerajaan('Kerajaan persekutuan', np, CONFIG.MAJORITI, lbP, lawanGab(p)) + fbnNota(p) + ' Garis putus = majoriti.</p>';
     if (k.dun) {
       var amb = Math.floor(k.dun.jumlah / 2) + 1, pd = pecahPembangkang(p, k, k.dun.pembangkang, k.dun.kerajaan >= amb, 'dun'), nd = { BN: k.dun.kerajaan, PH: pd.PH, PN: pd.PN, LAIN: k.dun.bebas }, jumDun = k.dun.jumlah;
       var SWp = SW(p.parti) ? (root.MyPolitikSarawak || (typeof require === 'function' ? require('./sarawak.js') : null)) : null;                          // v9.5: PBB: kerusi DUN Sarawak (82) sama dengan sidang DUN
@@ -406,5 +419,5 @@
   }
   if (dok()) { if (dok().readyState === 'loading') { dok().addEventListener('DOMContentLoaded', function () { try { mula(); } catch (e) { /* abaikan */ } }); } else { try { mula(); } catch (e) { /* abaikan */ } } }
 
-  return { CONFIG: CONFIG, toast: toast, toastImpak: toastImpak, chipDaripada: chipDaripada, render: render, anggarKerusi: anggarKerusi, kemaskiniKerusi: kemaskiniKerusi, htmlKerusi: htmlKerusi, kerusiGabungan: kerusiGabungan, lawanGab: lawanGab, labelBN: labelBN, htmlSentimen: htmlSentimen, bukaLog: bukaLog, tutupLog: tutupLog, senyap: senyap, setSenyap: setSenyap, mula: mula };
+  return { CONFIG: CONFIG, toast: toast, toastImpak: toastImpak, chipDaripada: chipDaripada, render: render, anggarKerusi: anggarKerusi, kemaskiniKerusi: kemaskiniKerusi, htmlKerusi: htmlKerusi, kerusiGabungan: kerusiGabungan, lawanGab: lawanGab, labelBN: labelBN, pecahPembangkang: pecahPembangkang, htmlSentimen: htmlSentimen, bukaLog: bukaLog, tutupLog: tutupLog, senyap: senyap, setSenyap: setSenyap, mula: mula };
 });
