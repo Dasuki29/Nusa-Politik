@@ -73,7 +73,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('#tab-dewan').catch(() => {}); await pg.waitForTimeout(600);
   const hm = await pg.evaluate(() => { const h = document.querySelector('#panel-dewan .dw-hemi'); return h ? { leg: h.querySelector('.dw-hemi-leg').textContent, n: h.querySelectorAll('circle').length } : null; });
   semak(hm && /DAP/.test(hm.leg) && /BN/.test(hm.leg) && /PN/.test(hm.leg) && hm.n === 222, 'carta hemisikal Dewan Rakyat dengan DAP, BN dan PN: ' + JSON.stringify(hm));
-  if (process.env.SKRIN) { await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400); const k = await pg.$('.dap-kad'); if (k) { await k.screenshot({ path: process.env.SKRIN }).catch(() => {}); } }
+  if (process.env.SKRIN) { await pg.addStyleTag({ content: '.toast-stack,.toast,#mpa-bar,.tut-fab{display:none!important}' }); await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400); const k = await pg.$('.dap-kad'); if (k) { await k.screenshot({ path: process.env.SKRIN }).catch(() => {}); } }
   await pg.evaluate(() => MyPolitikI18n.setLanguage('EN')); await pg.waitForTimeout(700);
   await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(500);
   const bocor = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; const k = document.querySelector('.dap-kad'); if (!k) { return ['(tiada kad)']; } const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t.slice(0, 140)); } } return out; }, BM.source);
