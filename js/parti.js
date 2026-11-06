@@ -159,6 +159,10 @@
      Ahli Parlimen; tanpa kerusi Parlimen jawatan tertinggi pemain ialah Setiausaha JPKP), Jawatankuasa Negeri (Fasal XIV), Jawatankuasa Tertinggi
      Pusat (JTP, Fasal X) dengan Setiausaha Agung (kuasa eksekutif), Pengerusi Kebangsaan dan Naib Pengerusi Kebangsaan, Kongres Kebangsaan
      (Fasal VIII), DAPSY dan Wanita DAP. ANDAIAN takwim: Cawangan 1, JPKP 2, Kongres 3. */
+  /* v13.38: rujukan disiplin Perlembagaan UMNO -> Perlembagaan DAP (Fasal VII Tatatertib: VII.1 Jawatankuasa Tatatertib, VII.2 tindakan
+     tatatertib (denda, gantung, pecat), VII.3 rayuan kepada JTP dalam 14 hari; Fasal IV.13(c): tiada tindakan mahkamah). */
+  var FASAL_DAP = [[/Fasal 20\.13/g, 'Perlembagaan DAP, Fasal VII.2'], [/Fasal 20\.12(\.\d)?/g, 'Perlembagaan DAP, Fasal VII.3'], [/Fasal 20\.10[a-d]?/g, 'Perlembagaan DAP, Fasal VII.2'], [/Fasal 20\.7\b/g, 'Perlembagaan DAP, Fasal IV.13(c)'], [/Fasal 20\.5\b/g, 'Perlembagaan DAP, Fasal VII.1'],
+    [/Clause 20\.13/g, 'DAP Constitution, Clause VII.2'], [/Clause 20\.12(\.\d)?/g, 'DAP Constitution, Clause VII.3'], [/Clause 20\.10[a-d]?(\([a-d]\))?/g, 'DAP Constitution, Clause VII.2'], [/Clause 20\.7\b/g, 'DAP Constitution, Clause IV.13(c)'], [/Clause 20\.5\b/g, 'DAP Constitution, Clause VII.1']];
   var BULAN_DAP = [[/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 1'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 1'], [/pada bulan 4\./g, 'pada bulan 1.'], [/in month 4\./g, 'in month 1.'],
     [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 2'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 2'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 3'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 3'],
     [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 4-12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 4 hingga 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onths 4-12'], [/\b([Mm])onths 10 to 12\b/g, '$1onths 4 to 12']];
@@ -186,7 +190,7 @@
       [/Penyelaras JPKP/g, 'Ketua Bahagian'], [/Bendahari JPKP/g, 'Timbalan Ketua Bahagian'], [/Penolong Setiausaha JPKP/g, 'Naib Ketua Bahagian'], [/Setiausaha JPKP/g, 'Ketua Bahagian'], [/Ahli JPKP/g, 'AJK Bahagian'], [/MB JPKP/g, 'Mesyuarat Perwakilan Bahagian'],
       [/(peringkat|Peringkat) JPKP/g, '$1 bahagian'], [/JPKP/g, 'Bahagian'],
       [/Pengerusi Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Jawatankuasa Negeri/g, 'Badan Perhubungan Negeri'],
-      [/\bDAPSY\b/g, 'Pemuda']].concat(BULAN_DAP_S) };
+      [/\bDAPSY\b/g, 'Pemuda'], [/Perlembagaan DAP, Fasal VII\.3/g, 'Fasal 20.12'], [/Perlembagaan DAP, Fasal VII\.2/g, 'Fasal 20.10'], [/Perlembagaan DAP, Fasal VII\.1/g, 'Fasal 20.5'], [/Perlembagaan DAP, Fasal IV\.13\(c\)/g, 'Fasal 20.7']].concat(BULAN_DAP_S) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -207,7 +211,8 @@
   function terap(s, senarai) { if (!senarai) { return s; } for (var j = 0; j < senarai.length; j++) { s = s.replace(senarai[j][0], senarai[j][1]); } return s; }
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
-    if (k === 'PKR' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_PKR); }      // v13.36: rujukan disiplin UMNO -> Perlembagaan PKR
+    if (k === 'PKR' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_PKR); }
+    if (k === 'DAP' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_DAP); }      // v13.38: rujukan disiplin UMNO -> Perlembagaan DAP (Fasal VII)      // v13.36: rujukan disiplin UMNO -> Perlembagaan PKR
     var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PKR' && /Perlembagaan PKR|PKR Constitution/.test(s)) || (k === 'DAP' && /Perlembagaan DAP|DAP Constitution/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
     if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
@@ -222,6 +227,7 @@
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
     if (k === 'PAS') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(/\bPAS\b/g, 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
+    if (k === 'DAP' || k === 'PKR') { [d, tanpaBulan].forEach(function (x) { ['20.13', '20.10a', '20.10b', '20.10c', '20.10d', '20.12.2'].forEach(function (f0) { var y = x.replace(/Fasal 20\.(10|12|5)\b/, 'Fasal ' + f0); if (y !== x) { calon.push(y); } }); }); }   // v13.38: rujukan disiplin dipetakan banyak-ke-satu
     calon.forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });
     });

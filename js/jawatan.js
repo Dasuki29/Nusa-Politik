@@ -216,7 +216,7 @@
       var pg = Et.semakPenggal(p, { getJawatan: getJawatan });
       if (!pg.sah) { return { terbuka: false, sebab: pg.sebab }; }
     }
-    var namaKhas = p && p.parti === 'PAS' ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'PKR' ? ['MyPolitikPKR', './pkr.js'] : null;   // v13.36: PKR: had 3 penggal Presiden (Fasal 21.11)
+    var namaKhas = p && p.parti === 'PAS' ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'PKR' ? ['MyPolitikPKR', './pkr.js'] : p && p.parti === 'DAP' ? ['MyPolitikDAP', './dap.js'] : null;   // v13.38: DAP: pegawai JTP, syarat calon JTP   // v13.36: PKR: had 3 penggal Presiden (Fasal 21.11)
     var PASj = namaKhas && typeof globalThis !== 'undefined' ? (globalThis[namaKhas[0]] || null) : null;                 // v13.32: PAS: Restu Majlis Syura (Presiden / Timbalan), Ahli Bersekutu
     if (!PASj && namaKhas && typeof require === 'function') { try { PASj = require(namaKhas[1]); } catch (eP) { PASj = null; } }
     var skP = PASj && PASj.sekatanJawatan ? PASj.sekatanJawatan(p, d) : null; if (skP) { return { terbuka: false, sebab: skP }; }

@@ -68,6 +68,19 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   const sebelum = await pg.evaluate((k) => MyPolitikDAP.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ);
   await pg.click('[data-dap="jelajah"]'); await pg.waitForTimeout(500);
   semak(await pg.evaluate((k) => MyPolitikDAP.sokonganBahagian(MyPolitikSave.loadPlayer())[k], kodJ) > sebelum, 'Jelajah Kawasan menaikkan sokongan Wakil');
+  // v13.38: Fasa 2: Mesyuarat Pertama JTP (2028, bulan 4)
+  await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { tahun: 2028, bulan: 4, ap: 20, myr: 30000, keahlian: { sejakTahun: 2020, sejakBulan: 1 },
+    jawatanList: p.jawatanList.concat([{ kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', kumpulan: 'utama', pangkat: 8, tahun: 2028 }]) } }); MyPolitikDAP.prosesBulan(); NusaUI.render(); });
+  await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
+  const f2 = await pg.textContent('.dap-kad');
+  semak(/Hubungan JTP/.test(f2) && /Pencalonan ke JTP/.test(f2) && /Mesyuarat Pertama JTP/.test(f2) && /Fasal X\.1/.test(f2) && /Fasal IV\.12/.test(f2), 'kad DAP Fasa 2');
+  semak(await pg.$$eval('.dap-titik i', (l) => l.length) === 30, '30 titik ahli JTP');
+  await pg.click('[data-dap="sasaran"][data-kod="presiden"]'); await pg.waitForTimeout(300);
+  const s0 = await pg.evaluate(() => MyPolitikDAP.mesyuarat(MyPolitikSave.loadPlayer()).sokong);
+  await pg.evaluate(() => { Math.random = () => 0; }); await pg.click('[data-dap="lobi"]'); await pg.waitForTimeout(300);
+  semak(await pg.evaluate((a) => MyPolitikDAP.mesyuarat(MyPolitikSave.loadPlayer()).sasaran === 'presiden' && MyPolitikDAP.mesyuarat(MyPolitikSave.loadPlayer()).sokong === a + 1, s0), 'sasaran Setiausaha Agung + lobi');
+  const fs0 = await pg.evaluate(() => [MyPolitikParti.ke('Hak keahlian anda digantung (Fasal 20.10b).'), MyPolitikParti.ke('Rayuan kepada MKT (Fasal 20.12).')]);
+  semak(/Perlembagaan DAP, Fasal VII\.2/.test(fs0[0]) && /Perlembagaan DAP, Fasal VII\.3/.test(fs0[1]), 'rujukan disiplin -> Fasal VII: ' + fs0.join(' | '));
   const kr = await pg.evaluate(() => { const h = window.NusaPaparan.htmlKerusi(MyPolitikSave.loadPlayer()); const d = document.createElement('div'); d.innerHTML = h; return d.textContent; });
   semak(/Pakatan Harapan \(★ parti anda\)/.test(kr) && /Barisan Nasional/.test(kr) && /Perikatan Nasional/.test(kr), 'kad kerusi PH: ' + kr.slice(0, 200));
   await pg.click('#tab-dewan').catch(() => {}); await pg.waitForTimeout(600);

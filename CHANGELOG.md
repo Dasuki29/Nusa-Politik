@@ -1,5 +1,26 @@
 # Catatan Perubahan
 
+## v13.38 (2026-11-06)
+
+- **DAP Fasa 2: keunikan DAP**, ikut mockup yang dipersetujui dan Perlembagaan DAP. Semua bahagian berada dalam kad DAP di tab Profil.
+  - **🗳️ Mesyuarat Pertama JTP (Fasal X.1):**
+    - Setiausaha Agung, Pengerusi Kebangsaan dan Naib Pengerusi Kebangsaan tidak lagi dipertandingkan di Kongres.
+    - Pemain yang menang kerusi Ahli JTP (bulan 3) memilih jawatan sasaran dan melobi rakan JTP pada bulan 4 ⚠️ (1 AP + RM 500, 60% peluang, maks. 3 kali sebulan). Keputusan pada awal bulan 5.
+    - Perlu 16 / 30 undi untuk Setiausaha Agung atau Pengerusi; Naib Pengerusi ≥ 6 undi ⚠️.
+  - **📋 Syarat calon JTP (Fasal XXX):**
+    - Dicalonkan oleh ≥ 2 Cawangan dan menjadi ahli ≥ 2 tahun.
+    - Butang **Kumpul Pencalonan Cawangan** (bulan 1–2 tahun Kongres; peluang ikut sokongan Wakil kawasan ⚠️). Pengerusi Cawangan mendapat 1 pencalonan automatik.
+  - **🎯 Calon PRU ialah prerogatif JTP (Fasal XII):**
+    - Meter baharu **Hubungan JTP** ⚠️ memberi ±15 mata peluang dicalonkan PRU.
+    - Naik apabila menjadi Ahli JTP (+10), mencarum elaun (+0.5 sebulan) atau melobi (+1). Turun apabila dihukum (−10) atau Integriti < 40 (−1 sebulan).
+    - Calon PRU mesti ahli ≥ 2 tahun.
+  - **⏳ Peraturan masa:**
+    - Setiausaha Agung maksimum 3 penggal (Fasal X.2(b)).
+    - **Kongres ditangguh automatik** jika jadualnya jatuh dalam 24 bulan sebelum PRU, dan diadakan pada tahun selepas PRU ⚠️ (Fasal VIII.1(c)).
+  - **💰 Caruman elaun** 10% ⚠️ (MP RM 250, ADUN RM 150 sebulan) kepada dana parti (Fasal IV.12(a)).
+  - **🛡️ Tatatertib:** rujukan disiplin ditukar kepada Perlembagaan DAP Fasal VII (VII.1, VII.2, VII.3 rayuan) dan IV.13(c). Pemain yang **dipecat semasa menjadi wakil rakyat kehilangan kerusinya** (Fasal IV.12(c)) ⚠️.
+- Ujian: 3 ujian unit baharu; `tools/ujian-dap.js` diperluas (Mesyuarat Pertama JTP, lobi, peta Fasal VII, EN). Cache `nusa-v13.38`.
+
 ## v13.37 (2026-11-06)
 
 - **Parti baharu: DAP (Pakatan Harapan), Fasa 1**, ikut mockup skop DAP yang dipersetujui dan Perlembagaan DAP (seperti pada 22.10.2019, PDF pengguna; dibaca melalui OCR).

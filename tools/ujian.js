@@ -2431,6 +2431,49 @@ ujian('v13.37 DAP: pilihan (b) Penyelaras JPKP hanya Ahli Parlimen; Jelajah Kawa
   const kos = Object.keys(g.MyPolitikDAPData.parlimen).find((k) => !g.MyPolitikDAPData.parlimen[k].w); P.tetap({ dap: {} });
   betul(!M.jelajah(kos).ok, 'kawasan tanpa Wakil Kongres'); g.MyPolitikDAP.segarPenyelaras({}); S.clearPlayer();
 });
+/* ---------- v13.38: DAP Fasa 2 ---------- */
+ujian('v13.38 DAP: syarat calon JTP, pencalonan Cawangan, pegawai JTP tidak di Kongres, calon PRU ahli 2 tahun', () => {
+  const M = g.MyPolitikDAP, J = g.MyPolitikJawatan; P.daftar({}); P.tetap({ parti: 'DAP', tahun: 2028, bulan: 1, ap: 20, myr: 20000, keahlian: { sejakTahun: 2027, sejakBulan: 1 } });
+  let p = S.loadPlayer();
+  betul(/2 tahun/.test(M.sekatanJawatan(p, J.cariDef('ahli_mkt'))), 'ahli < 2 tahun'); betul(/2 tahun/.test(M.sekatanCalon(p) || ''), 'calon PRU ahli < 2 tahun');
+  betul(/Mesyuarat Pertama JTP/.test(M.sekatanJawatan(p, J.cariDef('presiden'))), 'Setiausaha Agung tidak di Kongres');
+  P.tetap({ keahlian: { sejakTahun: 2020, sejakBulan: 1 } }); p = S.loadPlayer(); sama(M.sekatanCalon(p), null);
+  betul(/2 Cawangan/.test(M.sekatanJawatan(p, J.cariDef('ahli_mkt'))), 'perlu 2 pencalonan'); sama(M.pencalonan(p), 0);
+  P.tetap({ jawatanList: [{ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', kumpulan: 'utama', pangkat: 3, tahun: 2027 }] }); sama(M.pencalonan(S.loadPlayer()), 1, 'Pengerusi Cawangan: 1 pencalonan');
+  const r = M.kumpulPencalonan({ rng: () => 0 }); betul(r.ok && r.dapat, r.ralat); sama(M.pencalonan(S.loadPlayer()), 2); sama(M.sekatanJawatan(S.loadPlayer(), J.cariDef('ahli_mkt')), null, 'layak bertanding JTP');
+  betul(!M.statusPencalonan(S.loadPlayer()).boleh, 'cukup');
+  P.tetap({ bulan: 3, dap: { pencalonan: { tahun: 2028, n: 0 } } }); betul(!M.statusPencalonan(S.loadPlayer()).boleh, 'hanya bulan 1-2');
+  S.clearPlayer();
+});
+ujian('v13.38 DAP: Mesyuarat Pertama JTP (bulan 4 lobi, bulan 5 keputusan), had 3 penggal Setiausaha Agung', () => {
+  const M = g.MyPolitikDAP; P.daftar({}); P.tetap({ parti: 'DAP', tahun: 2028, bulan: 4, ap: 20, myr: 20000, reputasi: 70,
+    jawatanList: [{ kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', kumpulan: 'utama', pangkat: 8, tahun: 2028 }] });
+  M.prosesBulan(); let p = S.loadPlayer(), mt = M.mesyuarat(p);
+  betul(mt && mt.sokong + mt.belum + mt.lawan === 29, 'mesyuarat dibuka (29 ahli lain): ' + JSON.stringify(mt)); betul(M.hubJTP(p) >= 60, 'Ahli JTP: Hubungan JTP +10');
+  betul(!M.statusLobi(p).boleh, 'perlu sasaran'); betul(M.pilihSasaran('presiden').ok);
+  const s0 = M.mesyuarat(S.loadPlayer()).sokong; for (let i = 0; i < 3; i++) { betul(M.lobi({ rng: () => 0 }).ok); }
+  sama(M.mesyuarat(S.loadPlayer()).sokong, s0 + 3); betul(!M.lobi({ rng: () => 0 }).ok, 'maks 3 sebulan');
+  P.tetap({ dap: Object.assign({}, S.loadPlayer().dap, { jtp: Object.assign({}, S.loadPlayer().dap.jtp, { sokong: 20, belum: 0, lawan: 9 }) }) });
+  P.tetap({ bulan: 5 }); M.prosesBulan(); p = S.loadPlayer();
+  betul(M.mesyuarat(p).hasil.menang, 'menang: ' + JSON.stringify(M.mesyuarat(p).hasil)); betul(g.MyPolitikJawatan.pegang(p, 'presiden'), 'Setiausaha Agung'); sama(M.penggalSA(p), 1);
+  P.tetap({ tahun: 2031, bulan: 4, dap: Object.assign({}, p.dap, { penggalSA: 3 }), jawatanList: [{ kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', kumpulan: 'utama', pangkat: 8, tahun: 2031 }] });
+  M.prosesBulan(); betul(/3 penggal/.test(M.pilihSasaran('presiden').ralat || ''), 'had 3 penggal'); betul(M.pilihSasaran('timbalan_presiden').ok);
+  S.clearPlayer();
+});
+ujian('v13.38 DAP: Kongres ditangguh sebelum PRU, caruman elaun, peta Fasal VII, dipecat = kerusi dikosongkan', () => {
+  const M = g.MyPolitikDAP; P.daftar({}); P.tetap({ parti: 'DAP', tahun: 2028, bulan: 1, myr: 10000 });
+  P.tetap({ pru: Object.assign({}, S.loadPlayer().pru, { tahunPRU: 2029, bulanPRU: 6 }) }); M.prosesBulan(); let p = S.loadPlayer();
+  sama(p.dap.tangguhDari, 2028); sama(M.adalahTahunPemilihan(p, 2028), false); sama(M.adalahTahunPemilihan(p, 2029), false); sama(M.adalahTahunPemilihan(p, 2030), true); sama(M.tahunSeterusnya(p, 2028), 2030); sama(M.adalahTahunPemilihan(p, 2025), true);
+  P.daftar({}); P.tetap({ parti: 'DAP', tahun: 2026, bulan: 6, myr: 10000 });
+  P.tetap({ pru: Object.assign({}, S.loadPlayer().pru, { status: { jenis: 'MP', kerusi: 'Tanjong', kerajaan: true } }) });
+  const m0 = S.loadPlayer().myr, h0 = M.hubJTP(S.loadPlayer()); M.prosesBulan(); p = S.loadPlayer();
+  sama(m0 - p.myr, 250, 'caruman 10% elaun MP'); betul(M.hubJTP(p) > h0, 'caruman menaikkan Hubungan JTP');
+  sama(M.adjCalon(Object.assign({}, p, { dap: { hubJTP: 100 } })), 0.15); sama(M.adjCalon(Object.assign({}, p, { dap: { hubJTP: 0 } })), -0.15);
+  P.tetap({ etika: Object.assign({}, p.etika || {}, { status: 'dipecat', hukuman: { jenis: 'dipecat', tahun: 2026, bulan: 6 } }) }); M.prosesBulan(); p = S.loadPlayer();
+  betul(!(p.pru.status && p.pru.status.jenis === 'MP'), 'kerusi dikosongkan'); betul(M.hubJTP(p) < h0 + 1, 'hukuman menurunkan Hubungan JTP');
+  S.clearPlayer();
+});
+
 
 
 
