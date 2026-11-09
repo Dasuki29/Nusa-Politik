@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.49 (2026-11-09)
+
+- **Pembetulan: mesej aduan Jawatankuasa Disiplin kadang-kadang tidak diterjemah ke EN.**
+  - Punca: log aktiviti disiplin memotong mesej pada 80 aksara ("…Jawatankuasa Disiplin Neger"), jadi teks itu tiada dalam kamus terjemahan. Ia muncul dalam log aktiviti tab Profil apabila acara aduan berlaku (rawak, sebab itu ujian pelayar hanya gagal sekali-sekala).
+  - Log disiplin dan log hukuman kini menyimpan mesej penuh.
+  - Log lama yang sudah dipotong turut diterjemah; templat EN ditambah untuk log "Gantung hak keahlian: …" dan "Dilarang bertanding: …".
+- Ujian baharu (181 ujian); ujian pelayar EN 12 bulan lulus 3 kali berturut-turut.
+
 ## v13.48 (2026-11-09)
 
 - **Pembetulan maklum balas borang baris 26: pemain PAS tidak boleh bertanding / mempertahankan jawatan pada musim pemilihan berikutnya.**

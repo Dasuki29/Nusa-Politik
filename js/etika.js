@@ -331,7 +331,7 @@
     if (e.risiko > 0) { e.risiko = Math.floor(e.risiko * CONFIG.PENYUSUTAN_RISIKO); berubah = true; }
 
     if (berubah || (patch && patch.etika)) {
-      var r = S.applyEffects(kesan, { kiraTindakan: false, patch: patch || { etika: e }, log: peristiwa.length ? { tindakan: 'disiplin', nama: peristiwa[0].mesej.slice(0, 80), peringkat: 'disiplin' } : undefined });
+      var r = S.applyEffects(kesan, { kiraTindakan: false, patch: patch || { etika: e }, log: peristiwa.length ? { tindakan: 'disiplin', nama: peristiwa[0].mesej, peringkat: 'disiplin' } : undefined });
       if (!r.ok) { return { peristiwa: peristiwa, berubah: false, ralat: r.ralat }; }
       if (patch && patch.etika && patch.etika.status === 'dipecat') {             // v8.0: ahli yang dipecat tidak lagi dikekalkan dalam kerajaan
         var g0 = typeof globalThis !== 'undefined' ? globalThis : null, KBm = g0 && g0.MyPolitikKabinet;
@@ -348,7 +348,7 @@
     var p = S.loadPlayer();
     if (!p || !HUKUMAN_NAMA[jenis]) { return { ok: false }; }
     var e = getEtika(p), k = kenakan(p, e, jenis, perkara, fasal);
-    var r = S.applyEffects(k.kesan, { kiraTindakan: false, patch: k.patch, log: { tindakan: 'disiplin', nama: (HUKUMAN_NAMA[jenis] + ': ' + perkara).slice(0, 80), peringkat: 'disiplin' } });
+    var r = S.applyEffects(k.kesan, { kiraTindakan: false, patch: k.patch, log: { tindakan: 'disiplin', nama: HUKUMAN_NAMA[jenis] + ': ' + perkara, peringkat: 'disiplin' } });
     return { ok: !!(r && r.ok), jenis: jenis, mesej: mesejHukuman(jenis, perkara, fasal, e.hukuman) };
   }
 

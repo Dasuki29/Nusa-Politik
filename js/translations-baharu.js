@@ -134,6 +134,7 @@
   ["Menentang arahan parti: {x}", "Opposing the party directive: {x}"],
   ["Patuh arahan parti: {x}", "Complying with the party directive: {x}"],
   ["Amaran: {x}", "Warning: {x}"],
+  ["Gantung hak keahlian: {x}", "Membership rights suspended: {x}"], ["Dilarang bertanding: {x}", "Barred from contesting: {x}"],   // v13.49: log hukuman (tidak lagi dipotong)
   ["Anda menerima teguran dengan hormat. Sokongan pimpinan meningkat dan reputasi parti pulih.", "You accept the reprimand respectfully. Leadership support rises and party reputation recovers."],
   ["Anda mematuhi arahan parti dan menyokong {x}. Integriti Parti dan Kepatuhan Whip meningkat.", "You comply with the party directive and support {x}. Party Integrity and Whip Compliance rise."],
   ["Tiada arahan parti menunggu.", "No party directive pending."],

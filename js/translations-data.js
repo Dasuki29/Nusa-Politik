@@ -216,6 +216,8 @@
   ["Fasal 9.5: calon MKT mesti pernah memegang jawatan MKT atau AJK Bahagian selama satu (1) penggal (3 tahun).", "Clause 9.5: MKT candidates must have held an MKT or Division Committee (AJK) position for one (1) term (3 years)."],
   ["Keahlian anda telah dipecat (Fasal 20.10d). Rayuan boleh dibuat selepas 3 tahun (Fasal 20.12.2).", "Your membership has been terminated by dismissal (Clause 20.10d). An appeal can be made after 3 years (Clause 20.12.2)."],
   ["Jawatan dilucutkan (digantung)", "Position removed (suspended)"],
+  ["Seseorang membuat aduan tentang kegiatan anda kepada Jawatankuasa Disiplin Neger", "Someone has lodged a complaint about your activities with the State Disciplinary Committee"],   // v13.49: log lama dipotong pada 80 aksara
+  ["Anda kini boleh menghantar rayuan:", "You may now submit an appeal:"],
   ["Seseorang membuat aduan tentang kegiatan anda kepada Jawatankuasa Disiplin Negeri (Fasal 20.5). Siasatan dimulakan.", "Someone has lodged a complaint about your activities with the State Disciplinary Committee (Clause 20.5). An investigation begins."],
   ["Tiada pemecatan untuk dirayu.", "There is no dismissal to appeal."],
   ["Rayuan anda diterima. Keahlian dipulihkan sebagai ahli baharu; tempoh keahlian dikira semula (Fasal 15.5).", "Your appeal is accepted. Membership is restored as a new member; the membership tenure is recounted (Clause 15.5)."],

@@ -2618,6 +2618,12 @@ ujian('v13.48 PAS: setiap musim pemilihan (2 tahun) bermula semula; keputusan mu
   betul(E.getKeadaanPemilihan(S.loadPlayer()).daftar[kod], 'pendaftaran musim semasa dikekalkan selepas kemas kini'); betul(pm);
   S.clearPlayer();
 });
+ujian('v13.49 Log disiplin tidak dipotong pada 80 aksara (teks EN bocor dalam log aktiviti)', () => {
+  const ET = g.MyPolitikEtika; P.daftar({}); P.tetap({ etika: Object.assign({}, ET.getEtika(S.loadPlayer()), { risiko: 90, modal: 0, status: 'baik', siasatan: null }) });
+  const r = ET.prosesBulan({ rng: () => 0 }); betul(r.peristiwa.some((x) => /Siasatan dimulakan\./.test(x.mesej)), 'aduan dicetuskan');
+  const lg = S.loadPlayer().log.find((x) => x.tindakan === 'disiplin'); betul(lg && /Siasatan dimulakan\.$/.test(lg.nama), 'log penuh: ' + (lg && lg.nama));
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
