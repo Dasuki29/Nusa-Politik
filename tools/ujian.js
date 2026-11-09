@@ -2548,6 +2548,18 @@ ujian('v13.44 PM penyandang: parti terbesar dalam gabungan kekal PM; parti lebih
   sama(K.getKabinet(S.loadPlayer()).roleLevel, 'NONE', 'jawatan tamat bersama penggal');
   S.clearPlayer();
 });
+ujian('v13.45 Pencapaian setiap watak: watak baharu bermula kosong, watak lama kekal, simpanan v1 dipindah ke watak semasa (maklum balas baris 30)', () => {
+  const ls = g.localStorage; ls.removeItem(PC.KUNCI);
+  P.daftar({}); P.tetap({ dicipta: '2026-01-01T00:00:00Z' });
+  ls.setItem(PC.KUNCI, JSON.stringify({ dibuka: { wira_pru: { tahun: 2030, bulan: 5 } }, jejak: {}, dilihat: {} }));   // simpanan lama (v1)
+  betul(PC.muat().dibuka.wira_pru, 'v1 dipindah ke watak semasa'); sama(JSON.parse(ls.getItem(PC.KUNCI)).versi, undefined, 'muat tidak menulis');
+  let st = PC.muat(); st.dibuka.ikon_sayap = { tahun: 2031, bulan: 1 }; PC.simpan(st); sama(JSON.parse(ls.getItem(PC.KUNCI)).versi, 2);
+  P.tetap({ dicipta: '2027-06-01T00:00:00Z' });                       // watak baharu (id cawangan sama)
+  sama(Object.keys(PC.muat().dibuka).length, 0, 'watak baharu tiada trofi'); sama(PC.bilBaru(), 0);
+  st = PC.muat(); st.dibuka.doktor_falsafah = { tahun: 2028, bulan: 2 }; PC.simpan(st); sama(Object.keys(PC.muat().dibuka).join(), 'doktor_falsafah');
+  P.tetap({ dicipta: '2026-01-01T00:00:00Z' }); sama(Object.keys(PC.muat().dibuka).sort().join(), 'ikon_sayap,wira_pru', 'watak lama kekal');
+  ls.removeItem(PC.KUNCI); S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

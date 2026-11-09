@@ -33,7 +33,7 @@
     var st = PC.muat(), n = PC.SENARAI.length, dibuka = PC.SENARAI.filter(function (d) { return st.dibuka[d.id]; }).length;
     var h = '<section class="card"><div class="pc-sum"><div><h2 class="card__title" style="margin:0">🏆 Pencapaian</h2><b>' + dibuka + ' / ' + n + ' dibuka</b>' +
       '<div class="pc-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + dibuka + '"><i style="width:' + Math.round(100 * dibuka / n) + '%"></i></div></div>' +
-      '<small class="note">Simulasi: tidak mewakili UMNO sebenar.</small></div>';
+      '<small class="note">Trofi watak ini sahaja; watak baharu bermula semula.</small><small class="note">Simulasi: tidak mewakili UMNO sebenar.</small></div>';
     function palang(t) {                                                       // v13.30: bar kemajuan "a / b"
       var m = /([\d,]+)\s*\/\s*(?:RM\s*)?([\d,]+)/.exec(String(t)); if (!m) { return ''; }
       var a = Number(m[1].replace(/,/g, '')), b = Number(m[2].replace(/,/g, '')); if (!(b > 0)) { return ''; }

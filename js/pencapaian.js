@@ -4,8 +4,8 @@
 
    Reka bentuk:
    - Simpanan BERASINGAN (kunci 'myPolitik_pencapaian'), bukan dalam profil pemain, supaya
-     modul lain yang menyimpan profil lama tidak memadam trofi. Trofi kekal merentas watak;
-     pembilang kemajuan (jejak) dikunci mengikut id pemain.
+     modul lain yang menyimpan profil lama tidak memadam trofi. v13.45: trofi dan pembilang kemajuan
+     disimpan bagi SETIAP WATAK (kunci = tarikh profil dicipta); watak baharu bermula tanpa trofi.
    - semak(p, meta, st) ialah fungsi tulen: tidak menyimpan apa-apa, pulang { st, baru }.
      proses(meta) memuat profil, memanggil semak() dan menyimpan. Dipanggil oleh
      js/pencapaian-ui.js setiap kali profil disimpan (MyPolitikSave.subscribe).
@@ -65,21 +65,45 @@
   function storan() { try { return typeof localStorage !== 'undefined' ? localStorage : null; } catch (e) { return null; } }
   function kosong() { return { dibuka: {}, jejak: {}, dilihat: {} }; }
 
-  function muat() {
-    var s = storan(), st = kosong();
-    try {
-      var r = s ? JSON.parse(s.getItem(KUNCI) || 'null') : null;
-      if (r && typeof r === 'object') {
-        st.dibuka = r.dibuka && typeof r.dibuka === 'object' ? r.dibuka : {};
-        st.jejak = r.jejak && typeof r.jejak === 'object' ? r.jejak : {};
-        st.dilihat = r.dilihat && typeof r.dilihat === 'object' ? r.dilihat : {};
+  /* v13.45 (maklum balas baris 30): trofi SETIAP WATAK. Simpanan: { versi: 2, watak: { kunci: { dibuka, dilihat } }, jejak: { kunci: {...} } }.
+     Kunci watak = tarikh profil dicipta (unik bagi setiap watak; p.id ialah id cawangan dan boleh dikongsi watak lain), atau p.id bagi profil lama.
+     Simpanan lama (v1, trofi dikongsi): dipindahkan kepada watak semasa sahaja; watak baharu bermula kosong. */
+  function kunciWatak(p) { return p ? (p.dicipta ? 'w:' + p.dicipta : (p.id ? String(p.id) : '')) : ''; }
+  function pemainKini() { var S = root.MyPolitikSave; try { return S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { return null; } }
+  function bacaMentah(p) {
+    var s = storan(), r = null;
+    try { r = s ? JSON.parse(s.getItem(KUNCI) || 'null') : null; } catch (e) { r = null; }
+    if (!r || typeof r !== 'object') { r = {}; }
+    if (r.versi !== 2) {                                                   // migrasi v1 -> v2
+      var lama = r, k = kunciWatak(p), jj = {};
+      r = { versi: 2, watak: {}, jejak: {} };
+      if (k) {
+        r.watak[k] = { dibuka: lama.dibuka && typeof lama.dibuka === 'object' ? lama.dibuka : {}, dilihat: lama.dilihat && typeof lama.dilihat === 'object' ? lama.dilihat : {} };
+        if (lama.jejak && typeof lama.jejak === 'object' && p && lama.jejak[p.id]) { jj[k] = lama.jejak[p.id]; }
       }
-    } catch (e) { /* simpanan rosak: mula semula */ }
+      r.jejak = jj;
+    }
+    if (!r.watak || typeof r.watak !== 'object') { r.watak = {}; }
+    if (!r.jejak || typeof r.jejak !== 'object') { r.jejak = {}; }
+    return r;
+  }
+  /** Trofi watak semasa (atau watak p). st.kunci menandakan pemilik. */
+  function muat(p) {
+    p = p || pemainKini();
+    var r = bacaMentah(p), k = kunciWatak(p), w = (k && r.watak[k]) || {}, st = kosong();
+    st.kunci = k;
+    st.dibuka = w.dibuka && typeof w.dibuka === 'object' ? w.dibuka : {};
+    st.dilihat = w.dilihat && typeof w.dilihat === 'object' ? w.dilihat : {};
+    if (k && r.jejak[k]) { st.jejak[k] = r.jejak[k]; }
     return st;
   }
   function simpan(st) {
-    var s = storan();
-    try { if (s) { s.setItem(KUNCI, JSON.stringify(st)); return true; } } catch (e) { /* abaikan */ }
+    var s = storan(); if (!s || !st) { return false; }
+    var p = pemainKini(), k = st.kunci || kunciWatak(p), r = bacaMentah(p);
+    if (!k) { return false; }
+    r.watak[k] = { dibuka: st.dibuka || {}, dilihat: st.dilihat || {} };
+    if (st.jejak && st.jejak[k]) { r.jejak[k] = st.jejak[k]; }
+    try { s.setItem(KUNCI, JSON.stringify(r)); return true; } catch (e) { /* abaikan */ }
     return false;
   }
 
@@ -97,7 +121,8 @@
   function semak(p, meta, stAsal) {
     var st = JSON.parse(JSON.stringify(stAsal || kosong())), baru = [];
     if (!p || typeof p !== 'object' || !p.id) { return { st: st, baru: baru }; }
-    var jej = st.jejak[p.id] = Object.assign({ kalah: 0, bulanSayap: 0, bulanIntegriti: 0, kunci: 0, mandat: '', keluhan: 0, ruu: 0 }, st.jejak[p.id] || {});
+    var kw = kunciWatak(p); st.kunci = st.kunci || kw;
+    var jej = st.jejak[kw] = Object.assign({ kalah: 0, bulanSayap: 0, bulanIntegriti: 0, kunci: 0, mandat: '', keluhan: 0, ruu: 0 }, st.jejak[kw] || {});
     var tindakan = meta && meta.tindakan ? String(meta.tindakan) : '';
     function buka(id) {
       if (st.dibuka[id]) { return; }
@@ -183,13 +208,13 @@
     if (!S || latihanAktif()) { return []; }
     var p = S.loadPlayer();
     if (!p) { return []; }
-    var lama = muat(), h = semak(p, meta, lama);
+    var lama = muat(p), h = semak(p, meta, lama);
     if (JSON.stringify(h.st) !== JSON.stringify(lama)) { simpan(h.st); }
     return h.baru;
   }
 
   function kemajuan(p, st, id) {
-    var j = (st && st.jejak && p && st.jejak[p.id]) || {};
+    var j = (st && st.jejak && p && st.jejak[kunciWatak(p)]) || {};
     if (id === 'ikon_sayap') { return (j.bulanSayap || 0) + ' / ' + BULAN_SAYAP + ' bulan'; }
     if (id === 'bapa_reformasi') { return (j.bulanIntegriti || 0) + ' / ' + BULAN_INTEGRITI + ' bulan berturut-turut'; }
     if (id === 'suara_rakyat') { return Math.min(bilKeluhan(p, j), KELUHAN_SASAR) + ' / ' + KELUHAN_SASAR; }
@@ -212,6 +237,6 @@
 
   return {
     KUNCI: KUNCI, SENARAI: SENARAI, BULAN_SAYAP: BULAN_SAYAP, BULAN_INTEGRITI: BULAN_INTEGRITI,
-    muat: muat, simpan: simpan, semak: semak, proses: proses, kemajuan: kemajuan, bilBaru: bilBaru, tandaDilihat: tandaDilihat
+    muat: muat, simpan: simpan, kunciWatak: kunciWatak, semak: semak, proses: proses, kemajuan: kemajuan, bilBaru: bilBaru, tandaDilihat: tandaDilihat
   };
 });

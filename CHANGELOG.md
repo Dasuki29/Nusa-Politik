@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.45 (2026-11-09)
+
+- **Maklum balas borang baris 30: pencapaian kini milik setiap watak.**
+  - Sebelum ini trofi dikongsi oleh semua watak pada peranti yang sama, jadi watak baharu mewarisi trofi watak lama.
+  - Kini setiap watak mempunyai trofi dan kemajuan sendiri. Watak baharu bermula tanpa trofi; trofi watak lama kekal jika watak itu dimainkan semula (slot simpanan lain).
+  - Kunci watak ialah tarikh profil dicipta, kerana id pemain ialah id cawangan dan boleh dikongsi oleh watak lain di cawangan yang sama.
+  - Simpanan lama: trofi sedia ada dipindahkan kepada watak yang sedang aktif sahaja.
+  - Tab Pencapaian memaparkan nota "Trofi watak ini sahaja; watak baharu bermula semula."
+- Ujian baharu (177 ujian).
+
 ## v13.44 (2026-11-09)
 
 - **Maklum balas borang baris 29: PM penyandang hilang jawatan selepas menang PRU.**
