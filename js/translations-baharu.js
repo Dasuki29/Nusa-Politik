@@ -1564,6 +1564,8 @@
   ["MENANG", "WON"],
   ["KALAH", "LOST"],
   ["{a} sokong, {b} bantah · anda: {r} ({p}) → {i} IP, {j} Reputasi", "{a} for, {b} against · you: {r} ({p}) → {i} IP, {j} Reputation"],
+  ["{a} sokong, {b} bantah · anda: {r} ({p}) → {i} IP (asas {k}), {j} Reputasi", "{a} for, {b} against · you: {r} ({p}) → {i} IP (base {k}), {j} Reputation"],
+  ["ℹ️ Redaman IP: makin tinggi IP anda, makin kecil tambahan yang diterima. Nilai di atas ialah IP sebenar yang diterima.", "ℹ️ IP damping: the higher your IP, the smaller the gain you receive. The values above are the IP actually received."],
   ["{a} sokong, {b} bantah · tiada penyertaan", "{a} for, {b} against · no participation"],
   ["pembahas", "debater"],
   ["pembawa", "mover"],

@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.43 (2026-11-09)
+
+- **Maklum balas borang baris 33: IP dalam ringkasan mesyuarat tidak sama dengan IP yang diterima.**
+  - Punca: redaman IP (makin tinggi IP, makin kecil tambahan). Ringkasan mesyuarat mencatat nilai asas (cth +12) sedangkan pemain menerima nilai selepas redaman (cth +4).
+  - Usul dan Ucapan Dasar Presiden kini mencatat IP sebenar yang diterima. Jumlah "Perubahan Sumber" dalam ringkasan kini sama dengan perubahan IP sebenar.
+  - Jika ada redaman, baris usul memaparkan nilai asas, cth "+4 IP (asas +12)", dan nota ℹ️ Redaman IP dipaparkan.
+- Ujian baharu (175 ujian).
+
 ## v13.42 (2026-11-09)
 
 - **Maklum balas borang baris 32: wakil Cina dan India dalam Jemaah Menteri.**

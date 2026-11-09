@@ -2522,6 +2522,15 @@ ujian('v13.42 Jemaah Menteri: calon rakan gabungan termasuk Cina / India; calon 
   betul(anda.filter(bukanMelayu).length >= 5, 'DAP: calon parti sendiri kebanyakannya bukan Melayu: ' + anda.join(', '));
   S.clearPlayer();
 });
+ujian('v13.43 Mesyuarat: IP usul yang dicatat = IP sebenar diterima selepas redaman (maklum balas baris 33)', () => {
+  P.daftar({}); P.tetap({ bulan: 4, ip: 200, ap: 20 }); const r = M.mulaMesyuarat('cawangan'); betul(r.ok, r.ralat);
+  const u = r.mesyuarat.agenda.find((a) => a.jenis !== 'pemilihan'), ip0 = S.loadPlayer().ip;
+  const x = M.pilihPeranan('cawangan', u.id, 'pembawa', 'sokong', { rng: () => 0 }); betul(x.ok, x.ralat);
+  sama(x.keputusan.ip, S.loadPlayer().ip - ip0, 'IP dicatat = IP diterima'); betul(x.keputusan.ipAsas > x.keputusan.ip, 'redaman pada IP 200');
+  const t = M.tutupMesyuarat('cawangan', { rng: () => 0.5 }); betul(t.ok, t.ralat);
+  const us = t.ringkasan.usul.find((v) => v.pilihan); sama(us.ip, x.keputusan.ip); sama(us.ipAsas, x.keputusan.ipAsas);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

@@ -1627,7 +1627,7 @@
     (r.usul || []).forEach(function (u) {
       h += '<li><span class="ring__tag ring__tag--' + (u.lulus ? 'ya' : 'tidak') + '">' + (u.lulus ? 'LULUS' : 'DITOLAK') + '</span><b>' + esc(u.tajuk) + '</b>' +
         '<small>' + fmt(u.undiSokong) + ' sokong, ' + fmt(u.undiBantah) + ' bantah · ' +
-        (u.pilihan ? 'anda: ' + esc(u.pilihan.peranan) + ' (' + esc(u.pilihan.pendirian) + ') → ' + tanda(u.ip) + ' IP, ' + tanda(u.reputasi) + ' Reputasi' : 'tiada penyertaan') + '</small></li>';
+        (u.pilihan ? 'anda: ' + esc(u.pilihan.peranan) + ' (' + esc(u.pilihan.pendirian) + ') → ' + tanda(u.ip) + ' IP' + (u.ipAsas > u.ip ? ' (asas ' + tanda(u.ipAsas) + ')' : '') + ', ' + tanda(u.reputasi) + ' Reputasi' : 'tiada penyertaan') + '</small></li>';
     });
     h += '</ul>';
     if (r.pemilihan && r.pemilihan.length) {
@@ -1643,6 +1643,7 @@
     var d = r.perubahan || {}, b = r.baki || {};
     h += '<h3>Perubahan Sumber</h3><div class="ring__sumber">' + sel('Pengaruh (IP)', d.ip || 0, b.ip || 0) + sel('Dana (MYR)', d.myr || 0, b.myr || 0, 'RM ') +
       sel('AP', d.ap || 0, b.ap || 0) + sel('Reputasi', d.reputasi || 0, b.reputasi || 0) + '</div>';
+    if ((r.usul || []).some(function (u) { return u.ipAsas > u.ip; })) { h += '<p class="note">ℹ️ Redaman IP: makin tinggi IP anda, makin kecil tambahan yang diterima. Nilai di atas ialah IP sebenar yang diterima.</p>'; }   // v13.43 (baris 33)
     var sp = r.perwakilanStatus;
     if (r.usulDibawa) { h += '<div class="banner"><strong>Usul dibawa ke ' + esc(r.usulDibawa.ke) + '</strong>' + esc(r.usulDibawa.tajuk) + '</div>'; }
     else if (r.usulDibawa === null && r.peringkat && r.peringkat.indexOf('sayap_') === 0) { h += '<div class="banner banner--warn"><strong>Tiada usul dibawa</strong>Tiada usul sayap yang diluluskan, jadi sayap anda tidak membawa usul ke mesyuarat utama.</div>'; }

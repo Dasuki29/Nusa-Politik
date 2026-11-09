@@ -601,10 +601,11 @@
     var rng = opts.rng || Math.random;
     var hasil = selesaikanUsul(usul, pengaruhPemain(p, peringkat, peranan, pendirian), bilHadir(p, peringkat), rng);
     var kesan = kesanPeranan(peranan, pendirian, hasil.lulus, usul);
+    var ipTerima = kesan.ip > 0 && S.ipSebenar ? S.ipSebenar(p, kesan.ip) : kesan.ip;   // v13.43 (baris 33): simpan IP sebenar selepas redaman, bukan nilai asas
 
     usul.status = 'selesai';
     usul.pilihan = { peranan: peranan, pendirian: pendirian };
-    usul.keputusan = { lulus: hasil.lulus, sokongan: hasil.sokongan, hadir: hasil.hadir, undiSokong: hasil.undiSokong, undiBantah: hasil.undiBantah, padan: kesan.padan, ip: kesan.ip, reputasi: kesan.reputasi };
+    usul.keputusan = { lulus: hasil.lulus, sokongan: hasil.sokongan, hadir: hasil.hadir, undiSokong: hasil.undiSokong, undiBantah: hasil.undiBantah, padan: kesan.padan, ip: ipTerima, ipAsas: kesan.ip, reputasi: kesan.reputasi };
 
     // v7.54: usul isu tempatan (Sembang Warung) yang LULUS menyelesaikan isu itu pada papan Isu Tempatan; akar umbi +3.
     var patchUsul = { mesyuarat: ms }, kesetiaanUsul = null, isuSelesai = null;
@@ -657,7 +658,7 @@
     if (tm.hubungan && R && R.getPRU) { var pru = R.getPRU(p); pru.hubunganGabungan = clamp((Number(pru.hubunganGabungan) || 50) + tm.hubungan, 0, 100); patch.pru = pru; }
     if (tm.sentimen && PK && PK.getPRK) { var prk = PK.getPRK(p); prk.sentimen = clamp((Number(prk.sentimen) || 0) + tm.sentimen, -20, 20); patch.prk = prk; }
     usul.status = 'selesai'; usul.pilihan = { peranan: 'presiden', pendirian: tm.kod };
-    usul.keputusan = { lulus: terima, sokongan: sok, tema: tm.nama, reputasi: rep, ip: terima ? UCAPAN.ip : 0, gagalRisiko: gagalRisiko };
+    usul.keputusan = { lulus: terima, sokongan: sok, tema: tm.nama, reputasi: rep, ip: terima ? (S.ipSebenar ? S.ipSebenar(p, UCAPAN.ip) : UCAPAN.ip) : 0, ipAsas: terima ? UCAPAN.ip : 0, gagalRisiko: gagalRisiko };
     usul.tajuk = 'Ucapan Dasar Presiden: ' + tm.nama;
     var kesan = { ap: -UCAPAN.ap, reputasi: rep, ip: terima ? UCAPAN.ip : 0 }; if (Object.keys(kset).length) { kesan.kesetiaan = kset; }
     var r = S.applyEffects(kesan, { patch: patch, log: { tindakan: 'ucapan_presiden', nama: 'Ucapan Dasar Presiden: ' + tm.nama + ' (' + sok + '% sokongan)', peringkat: peringkat } });
@@ -719,7 +720,7 @@
       usul: usulList.map(function (a) {
         var k = a.keputusan, pl = a.pilihan;
         return { tajuk: a.tajuk, lulus: k.lulus, undiSokong: k.undiSokong, undiBantah: k.undiBantah, hadir: k.hadir,
-                 pilihan: pl ? { peranan: pl.peranan, pendirian: pl.pendirian } : null, padan: !!k.padan, ip: k.ip || 0, reputasi: k.reputasi || 0 };
+                 pilihan: pl ? { peranan: pl.peranan, pendirian: pl.pendirian } : null, padan: !!k.padan, ip: k.ip || 0, ipAsas: k.ipAsas != null ? k.ipAsas : (k.ip || 0), reputasi: k.reputasi || 0 };
       }),
       tidakDidaftar: (E && adaPemilihan(p, peringkat) ? E.senaraiPertandingan(p) : []).filter(function (c) {
         return c.peringkat === (peringkat === 'pau' ? 'pusat' : peringkat) && c.terbuka && !c.didaftar && !c.selesai && !c.pertahan;
