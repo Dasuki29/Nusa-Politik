@@ -55,7 +55,7 @@
     DUN:      { ipMin: 300, minPeruntukan: 2000, pengundi: [22000, 34000], bonusIp: 150 },
     PARLIMEN: { ipMin: 600, minPeruntukan: 5000, pengundi: [60000, 95000], bonusIp: 220 },
     GABUNGAN: { awal: 50, peluangRunding: 0.5 },
-    NASIONAL: { JUMLAH: 222, MAJORITI: 112, GAGAL_PM_HUBUNGAN: -10 },    // v7.22: keputusan nasional (anggaran permainan) untuk Presiden parti
+    NASIONAL: { JUMLAH: 222, MAJORITI: 112, GAGAL_PM_HUBUNGAN: -10, PENYANDANG_PM: 0.2 },    // v7.22: keputusan nasional (anggaran permainan) untuk Presiden parti; v13.44: bonus PM penyandang (parti lebih kecil)
     PECAH_3: 0.8,                       // bahagian undi 1-lawan-1 yang kekal pada anda dalam 3-penjuru (selebihnya ke rakan gabungan)
     SKALA_GAIN: 0.6,                    // penyesuaian keseimbangan kesan tindakan kempen
     TEKANAN_LAWAN_HARIAN: 1.0,          // voterSupport susut sedikit setiap hari (lawan juga berkempen)
@@ -432,6 +432,8 @@
     };
     pru.krisisSudah = true;
     var tamatKab = null;
+    var kbPy = K && K.getKabinet ? K.getKabinet(p) : null;
+    pru.pmPenyandang = !!(kbPy && kbPy.hasGovernmentRole && kbPy.roleLevel === 'PERDANA_MENTERI');   // v13.44 (baris 29): PM penyandang sebelum Parlimen dibubarkan
     if (K && K.tamatPenggal) {                                                    // v9.4: PBB: PRN tidak menamatkan jawatan Menteri persekutuan; PRU tidak menamatkan jawatan Premier/Menteri negeri
       var kbN = mPBB && K.getKabinet ? K.getKabinet(p) : null, tahapNeg = kbN && (kbN.roleLevel === 'EXCO_NEGERI' || kbN.roleLevel === 'MENTERI_BESAR');
       if (!(kbN && kbN.hasGovernmentRole && ((mPBB === 'PRU' && tahapNeg) || (mPBB === 'PRN' && !tahapNeg)))) { tamatKab = K.tamatPenggal(); }
@@ -938,8 +940,11 @@
     var adjPM = ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002;
     // v13.11 (maklum balas pemain): parti terbesar dalam gabungan hampir pasti mendapat PM: 65% + (bahagian - 50%) x 1.5, maksimum 97%. Parti lebih kecil: formula asal (10% hingga 90%).
     var peluangPM = status === 'GABUNGAN' && adaMP ? (kongsi >= 0.5 ? clamp(0.65 + (kongsi - 0.5) * 1.5 + adjPM, 0.5, 0.97) : clamp(0.4 + (kongsi - 0.5) * 1.2 + adjPM, 0.1, 0.9)) : 0;
+    // v13.44 (maklum balas baris 29): PM penyandang. Parti terbesar dalam gabungan: kekal PM (100%). Parti lebih kecil: +20% (maksimum 97%).
+    var penyandang = !!(pru.pmPenyandang && status === 'GABUNGAN' && adaMP);
+    if (penyandang) { peluangPM = kongsi >= 0.5 ? 1 : clamp(peluangPM + N.PENYANDANG_PM, 0, 0.97); }
     return { tahun: p.tahun, bulan: p.bulan, jumlah: N.JUMLAH, majoriti: N.MAJORITI, parti: parti, rakan: rakan, pembangkang: N.JUMLAH - parti - rakan,
-      status: status, bolehPM: !!adaMP, peluangPM: Math.round(peluangPM * 100), hubungan: Number(pru.hubunganGabungan) || 50, selesai: false, hasil: null };
+      status: status, bolehPM: !!adaMP, peluangPM: Math.round(peluangPM * 100), penyandang: penyandang, hubungan: Number(pru.hubunganGabungan) || 50, selesai: false, hasil: null };
   }
   /** Keputusan nasional yang menunggu keputusan Presiden (null jika tiada). */
   function nasionalTertunggak(p) {
@@ -970,7 +975,7 @@
     n.gabungan = h.setuju.map(function (x) { return x.kod; }); n.ubah = { PH: h.ubah.PH, PN: h.ubah.PN }; n.ambilBebas = h.ambilBebas;
     n.rakanPM = terbesar > sendiri;                                                    // rakan lebih besar memegang jawatan Perdana Menteri
     if (n.rakanPM) { n.bolehPM = false; n.peluangPM = 0; }
-    else if (n.bolehPM) { n.peluangPM = Math.round(clamp(0.65 + (sendiri / (sendiri + h.tambah) - 0.5) * 1.5, 0.5, 0.97) * 100); }
+    else if (n.bolehPM) { n.peluangPM = pru.pmPenyandang ? 100 : Math.round(clamp(0.65 + (sendiri / (sendiri + h.tambah) - 0.5) * 1.5, 0.5, 0.97) * 100); n.penyandang = !!pru.pmPenyandang; }   // v13.44: PM penyandang parti terbesar kekal
     if (h.akarUmbi) { kes.kesetiaan = { akarUmbi: h.akarUmbi }; }
     pru.nasional = n;
     simpanPRU(pru, kes, { log: { tindakan: 'pru_gabungan', nama: 'Gabungan kerajaan: ' + n.gabungan.join(' + '), peringkat: 'ahli' } });

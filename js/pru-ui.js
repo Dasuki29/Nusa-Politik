@@ -540,7 +540,7 @@
       pil = await modal({
         tajuk: n.bolehPM ? '👑 Siapa Jadi Perdana Menteri?' : '🏛️ Pembentukan Kerajaan',
         isi: '<p style="font-size:.85rem">Parti ' + n.parti + ' daripada ' + (n.parti + n.rakan) + ' kerusi gabungan. Hubungan gabungan ' + n.hubungan + '/100.</p><ul class="acara__pil">' +
-          (n.bolehPM ? opsi('PM', '👑 Tuntut jawatan Perdana Menteri', 'Peluang berjaya ± ' + n.peluangPM + '%. Gagal: hubungan gabungan ' + PRU.CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN + ' dan anda menerima Timbalan PM.', true) : '') +
+          (n.bolehPM ? opsi('PM', '👑 Tuntut jawatan Perdana Menteri', (n.penyandang ? 'PM penyandang. ' : '') + 'Peluang berjaya ± ' + n.peluangPM + '%. Gagal: hubungan gabungan ' + PRU.CONFIG.NASIONAL.GAGAL_PM_HUBUNGAN + ' dan anda menerima Timbalan PM.', true) : '') +
           (n.bolehPM || n.rakanPM ? opsi('TPM', '🤝 Terima Timbalan Perdana Menteri', 'Selamat. Rakan gabungan memegang jawatan Perdana Menteri.', true) : '') +
           opsi('KABINET', '🗂️ Pilih portfolio kabinet', 'Lobi Menteri seperti biasa (guna IP dan Dana).', true) +
           opsi('PEMBANGKANG', '🪧 Jadi pembangkang', 'Tolak gabungan. Kerajaan dibentuk tanpa anda.', true) + '</ul>',

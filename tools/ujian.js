@@ -2531,6 +2531,23 @@ ujian('v13.43 Mesyuarat: IP usul yang dicatat = IP sebenar diterima selepas reda
   const us = t.ringkasan.usul.find((v) => v.pilihan); sama(us.ip, x.keputusan.ip); sama(us.ipAsas, x.keputusan.ipAsas);
   S.clearPlayer();
 });
+ujian('v13.44 PM penyandang: parti terbesar dalam gabungan kekal PM; parti lebih kecil +20% (maklum balas baris 29)', () => {
+  const P0 = g.MyPolitikPRU; P.daftar({}); P.tetap({ parti: 'UMNO', reputasi: 50 });
+  P.tetap({ pru: Object.assign({}, P0.getPRU(S.loadPlayer()), { pmPenyandang: true, hubunganGabungan: 50 }) });
+  let besar = 0, kecil = 0;
+  for (let s = 1; s <= 120; s++) {
+    const b = P0.janaNasionalUji(S.loadPlayer()); if (b.status !== 'GABUNGAN') { betul(!b.penyandang); continue; }
+    betul(b.penyandang, 'bendera penyandang');
+    const kongsi = b.parti / (b.parti + b.rakan);
+    if (kongsi >= 0.5) { besar++; sama(b.peluangPM, 100, 'terbesar: kekal PM'); }
+    else { kecil++; sama(b.peluangPM, Math.round(Math.min(0.97, Math.min(0.9, Math.max(0.1, 0.4 + (kongsi - 0.5) * 1.2)) + 0.2) * 100), 'lebih kecil: +20%'); }
+  }
+  betul(besar > 0, 'kes parti terbesar diuji: ' + besar + '/' + kecil);
+  P.tetap({ pru: Object.assign({}, P0.getPRU(S.loadPlayer()), { pmPenyandang: false }) }); betul(!P0.janaNasionalUji(S.loadPlayer()).penyandang, 'bukan penyandang');
+  const K = g.MyPolitikKabinet; K.lantikKanan('PERDANA_MENTERI'); P0.isytihar('tamat'); sama(P0.getPRU(S.loadPlayer()).pmPenyandang, true, 'isytihar PRU merekod PM penyandang');
+  sama(K.getKabinet(S.loadPlayer()).roleLevel, 'NONE', 'jawatan tamat bersama penggal');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.44 (2026-11-09)
+
+- **Maklum balas borang baris 29: PM penyandang hilang jawatan selepas menang PRU.**
+  - Punca: peluang kekal PM selepas PRU hanya ikut bahagian kerusi parti dalam gabungan. Status penyandang tidak dikira, jadi undian rawak boleh menjatuhkan PM yang memerintah.
+  - Status PM penyandang kini direkod apabila Parlimen dibubarkan.
+  - **Parti terbesar dalam gabungan:** PM penyandang kekal PM (peluang 100%), termasuk selepas membentuk gabungan baharu dalam Parlimen tergantung.
+  - **Parti lebih kecil dalam gabungan:** peluang +20% ⚠️ (maksimum 97%).
+  - Dialog keputusan PRU memaparkan "PM penyandang".
+- Ujian baharu (176 ujian).
+
 ## v13.43 (2026-11-09)
 
 - **Maklum balas borang baris 33: IP dalam ringkasan mesyuarat tidak sama dengan IP yang diterima.**

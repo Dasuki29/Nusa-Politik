@@ -76,6 +76,7 @@
   ["👔 Tuntut {x}", "👔 Claim {x}"],
   ["2 AP · elaun +RM 6,000 & +18 IP sebulan · Stress lebih berat", "2 AP · allowance +RM 6,000 & +18 IP a month · heavier Stress"],
   ["⚠️ AP habis. Tamatkan bulan untuk tambah AP.", "⚠️ Out of AP. End the month to refill AP."], ["⚠️ AP hampir habis.", "⚠️ AP running low."],
+  ["PM penyandang. ", "Incumbent PM. "],
   ["Tanpa AP · elaun +RM 6,000 & +18 IP sebulan · Stress lebih berat", "No AP · allowance +RM 6,000 & +18 IP a month · heavier Stress"],
   ["🤝 Terima EXCO Kanan", "🤝 Accept Senior EXCO (EXCO Kanan)"],
   ["Selamat, tanpa menuntut. Elaun EXCO.", "Safe, without claiming. EXCO allowance."],
