@@ -1065,6 +1065,15 @@ body.menu-aktif { overflow: hidden; }
 .jm-tag { display: inline-block; border: 1.5px solid var(--border); border-radius: 999px; padding: 0 7px; font-size: .72rem; font-weight: 700; margin: 0 3px 0 0; white-space: nowrap; color: #111; }
 .jm-tag--anda { background: #FFD6DD; } .jm-tag--rakan { background: #D6E6FF; } .jm-tag--borneo { background: #D8F2E0; } .jm-tag--pencabar { background: #FFE0B3; }
 .jm-meter { margin: 0 0 10px; }
+/* v13.46: pilih TPM, portfolio (select), semakan struktur parti */
+.jm-grid > div, .jm-slot { min-width: 0; } .jm-port span { flex: 1 1 auto; min-width: 0; } .jm-port select { flex: 0 1 62%; width: 62%; }
+.jm-port { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 2px; border-top: 1.5px dashed var(--border); font-size: .88rem; }
+.jm-port select { max-width: 62%; min-width: 0; font: inherit; font-size: .8rem; padding: 4px 6px; border: 2px solid var(--border); border-radius: 8px; background: var(--bg-elev-1); color: var(--text); }
+.jm-lain summary { font-weight: 800; cursor: pointer; padding: 4px 0 6px; }
+.jm-semak { list-style: none; margin: 4px 0 8px; padding: 0; font-size: .82rem; }
+.jm-semak li { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+.jm-ok { color: var(--success); } .jm-amaran { color: var(--danger); }
+.jm-jp { display: block; color: var(--text-muted); font-size: .72rem; }
 .jm-meter__t { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 700; }
 .jm-meter__b { height: 12px; border: 2px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 3px; background: var(--bg-elev-2); }
 .jm-meter__b i { display: block; height: 100%; }

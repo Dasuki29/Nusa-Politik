@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v13.46 (2026-11-09)
+
+- **Maklum balas borang baris 25: Presiden-PM membentuk Kabinet penuh dan memilih TPM daripada struktur parti** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).
+  - **① Pilih Timbalan Perdana Menteri** (wajib):
+    - Timbalan Presiden (tradisi): Kesetiaan +10.
+    - Naib Presiden paling cekap: Timbalan Presiden dilangkau (Kesetiaan -15, kuasa pencabar +10%).
+    - Presiden parti rakan: Hubungan Gabungan +8; Timbalan Presiden dilangkau.
+    - Ketua rakan Sabah/Sarawak: Hubungan Gabungan +5, dikira wakil Borneo; Timbalan Presiden dilangkau.
+  - **② Semua 29 portfolio boleh diisi:** 8 portfolio utama wajib; 21 portfolio lain pilihan (dibiar = automatik).
+  - **Calon parti sendiri daripada struktur Pusat dalam permainan:** Timbalan Presiden, Naib Presiden 1–3, ketua sayap, pegawai Pusat dan Ahli MKT 1–25 (2 daripadanya pencabar). Calon rakan dan Borneo kekal.
+  - **Seorang satu jawatan:** pilihan berganda ditolak.
+  - **③ Semakan:** Timbalan Presiden diberi jawatan, Naib Presiden dalam Kabinet, portfolio lain dipilih, pemimpin parti tanpa jawatan (Kesetiaan -3 setiap Naib Presiden / ketua sayap), pencabar belum dilantik.
+  - Senarai penuh Jemaah Menteri memaparkan jawatan parti menteri yang dilantik daripada struktur parti.
+- Ujian baharu (178 ujian); ujian pelayar Jemaah Menteri dikemas kini (TPM, dropdown, amaran pilihan berganda).
+
 ## v13.45 (2026-11-09)
 
 - **Maklum balas borang baris 30: pencapaian kini milik setiap watak.**

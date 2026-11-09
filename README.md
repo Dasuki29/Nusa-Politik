@@ -148,7 +148,7 @@ node tools/ujian-pelayar.js      # asap pelayar dalam EN (perlu Playwright; dila
 node tools/ujian-pbb.js          # pelayar: daftar sebagai ahli PBB (penjenamaan, peta Sarawak, istilah)
 PARTI=SUPP node tools/ujian-prs.js   # pelayar: parti mod ringan (PRS lalai; SUPP atau PDP)
 node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
-node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri
+node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri (pilih TPM, 29 portfolio, calon struktur parti)
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)

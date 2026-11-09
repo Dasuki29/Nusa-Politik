@@ -2560,6 +2560,27 @@ ujian('v13.45 Pencapaian setiap watak: watak baharu bermula kosong, watak lama k
   P.tetap({ dicipta: '2026-01-01T00:00:00Z' }); sama(Object.keys(PC.muat().dibuka).sort().join(), 'ikon_sayap,wira_pru', 'watak lama kekal');
   ls.removeItem(PC.KUNCI); S.clearPlayer();
 });
+ujian('v13.46 Jemaah Menteri: PM pilih TPM, 29 portfolio, calon daripada struktur parti, seorang satu jawatan (maklum balas baris 25)', () => {
+  const J = g.MyPolitikJemaah, KB = g.MyPolitikKabinet, C = J.CONFIG; P.daftar({}); P.tetap({ parti: 'UMNO', ap: 10 }); KB.lantikKanan('PERDANA_MENTERI');
+  let p = S.loadPlayer(); const k = J.kolam(p), tpm = J.calonTPM(p, k);
+  sama(tpm.length, 4); sama(tpm[0].jawatan, 'Timbalan Presiden'); betul(/^Naib Presiden/.test(tpm[1].jawatan)); sama(tpm[2].kat, 'ketua_rakan'); sama(tpm[3].kat, 'ketua_borneo');
+  sama(k.parti.filter((x) => x.kat === 'np').length, 3); betul(k.parti.some((x) => /Ahli MKT/.test(x.jawatan)), 'Ahli MKT dalam kolam'); sama(k.parti.filter((x) => x.pencabar).length, 2);
+  const parti = k.parti.filter((x) => x.kat !== 'tp'), m = {};
+  C.UTAMA.forEach((nm, i) => { m[nm] = i < 3 ? k.rakan[i].id : i < 5 ? k.borneo[i].id : parti[i].id; });
+  const a = J.nilai(p, { tpm: tpm[0].id, m }), b = J.nilai(p, { tpm: tpm[1].id, m });
+  betul(a.lengkap && a.tpTPM && !a.tpLangkau); betul(b.tpLangkau && !b.tpTPM);
+  betul(a.tertinggal.length > 0, 'pemimpin tertinggal dikira');
+  betul(!J.nilai(p, { tpm: null, m }).lengkap, 'TPM wajib');
+  const md = Object.assign({}, m, { 'Menteri Kewangan': m['Menteri Dalam Negeri'] }); sama(J.nilai(p, { tpm: tpm[0].id, m: md }).duplikat.length, 1);
+  betul(/satu jawatan/.test(J.umumkan({ tpm: tpm[0].id, m: md }).ralat), 'duplikat ditolak');
+  const lain = J.senaraiPortfolio().find((nm) => C.UTAMA.indexOf(nm) < 0), m2 = Object.assign({}, m, { [lain]: parti[10].id });
+  const hub0 = g.MyPolitikPRU.getPRU(p).hubunganGabungan, r = J.umumkan({ tpm: tpm[2].id, m: m2 }); betul(r.ok, r.ralat);
+  p = S.loadPlayer(); const l = J.senarai(p); sama(l[1].menteri, tpm[2].nama, 'TPM pilihan'); sama(l[1].jenis, 'rakan');
+  const rl = l.find((x) => x.portfolio === lain); sama(rl.menteri, parti[10].nama); sama(rl.jawatanParti, parti[10].jawatan, 'jawatan parti dipapar');
+  sama(l.find((x) => x.portfolio === C.UTAMA[6]).menteri, parti[6].nama);
+  sama(g.MyPolitikPRU.getPRU(p).hubunganGabungan, Math.min(100, hub0 + C.TPM_HUB_RAKAN), 'TPM rakan: Hubungan +8 (kuota dipenuhi)');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
