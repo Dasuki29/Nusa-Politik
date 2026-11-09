@@ -1099,3 +1099,11 @@ body.menu-aktif { overflow: hidden; }
 #p-jawatan-lain { display: inline-flex; flex-wrap: wrap; gap: 8px; }
 #p-jawatan-lain[hidden] { display: none; }
 html, body { overflow-x: clip; }
+
+/* v13.47: PRK luar kawasan */
+.prkl-aktif { border: 2px solid var(--border); border-radius: var(--radius); padding: 8px 10px; margin: 6px 0; background: var(--bg-elev-2); }
+.prkl-aktif small, .prkl-act small, .prkl-sejarah small { display: block; color: var(--text-muted); font-size: .78rem; }
+.prkl-bar { height: 14px; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; background: #6B7387; margin: 3px 0; }
+.prkl-bar i { display: block; height: 100%; background: var(--danger, #E8344F); }
+.prkl-act { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1.5px dashed var(--border); padding: 7px 0; font-size: .88rem; }
+.prkl-sejarah { margin-top: 8px; } .prkl-sejarah summary { font-weight: 700; cursor: pointer; } .prkl-sejarah ul { list-style: none; padding: 0; margin: 6px 0 0; font-size: .85rem; } .prkl-sejarah li { padding: 4px 0; border-top: 1.5px dashed var(--border); }

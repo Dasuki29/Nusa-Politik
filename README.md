@@ -95,6 +95,8 @@ Modul utama dalam `js/`:
 | `sabah-bn.js`, `sabah-bn-ui.js` | MCA & MIC Sabah (Pemulihan Sabah, kuota MCA Sabah, Senator MIC Sabah) |
 | `npc.js`, `npc-ui.js` | Lantikan pegawai (Kekalkan / Ubah) selepas menang Ketua; daftar nama NPC dalam `organisasi.js` |
 | `kerusi-semasa.js` | Perubahan kerusi semasa penggal (PRK pemain, PRK selepas letak jawatan, PRK NPC) dan arkib sejarah PRU untuk carta hemisikal tab Dewan |
+| `prk-luar.js` | PRK luar kawasan: dibuka sebulan, pemain membantu kempen calon parti / rakan gabungan, keputusan bulan berikutnya |
+| `prk-luar-ui.js` | Kad 🗳️ PRK Luar Kawasan dalam tab Pemilihan |
 | `rundingan.js` | Rundingan Gabungan selepas Parlimen tergantung: calon rakan (PH, PN / BN, GPS, GRS, Bebas), kesediaan, lawan tradisi, Restu PAS, pilihan automatik NPC bagi pemain bukan Presiden |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN; Fasa 2: Restu Majlis Syura, Ceramah, Dewan Ulamak / As-Sabiqun / Himpunan Pendukung, Ahli Bersekutu; data kawasan (`node tools/build-pas.js`) |
@@ -149,6 +151,7 @@ node tools/ujian-pbb.js          # pelayar: daftar sebagai ahli PBB (penjenamaan
 PARTI=SUPP node tools/ujian-prs.js   # pelayar: parti mod ringan (PRS lalai; SUPP atau PDP)
 node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
 node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri (pilih TPM, 29 portfolio, calon struktur parti)
+node tools/ujian-prk-luar.js     # pelayar: PRK luar kawasan (kad tab Pemilihan, bantu kempen, EN)
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)

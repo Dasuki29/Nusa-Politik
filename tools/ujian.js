@@ -2137,17 +2137,17 @@ ujian('kerusi semasa: PRK pemain dan PRK selepas letak jawatan menukar kerusi', 
   sama(KS.blok(p, false).PARTI, b0.PARTI); sama(KS.blok(p, false).PH, b0.PH - 1, 'rampas daripada PH');
   KS.selepasPRKLetak({ jenis: 'DUN', nama: 'Peramu' }, false, () => 0.1); p = S.loadPlayer(); sama(KS.blok(p, true).PH, KS.blok(ksPemain(), true).PH + 1);
 });
-ujian('kerusi semasa: PRK NPC 15% sebulan, penyandang kekal, tidak menukar kerajaan; arkib sejarah PRU', () => {
+ujian('kerusi semasa: PRK NPC 15% sebulan (cara lama serta-merta, o.serta), penyandang kekal, tidak menukar kerajaan; arkib sejarah PRU', () => {
   const KS = g.MyPolitikKerusiSemasa; let p = ksPemain();
-  sama(KS.prosesBulan({ rng: () => 0.9 }).peristiwa.length, 0, 'tiada PRK (rng >= 0.15)');
+  sama(KS.prosesBulan({ rng: () => 0.9, serta: true }).peristiwa.length, 0, 'tiada PRK (rng >= 0.15)');
   p = S.loadPlayer(); sama(p.kerusiSejarah.length, 1, 'PRU diarkib'); sama(p.kerusiSejarah[0].PARTI, 58);
-  let ev = KS.prosesBulan({ rng: rngTetap(0.1) }).peristiwa; betul(ev.length === 1 && /mengekalkan/.test(ev[0].mesej), 'rng 0.1: penyandang kekal');
+  let ev = KS.prosesBulan({ rng: rngTetap(0.1), serta: true }).peristiwa; betul(ev.length === 1 && /mengekalkan/.test(ev[0].mesej), 'rng 0.1: penyandang kekal');
   const sq = [0.1, 0.9, 0.9, 0.5, 0.95, 0.1], seq = () => sq.length ? sq.shift() : 0.1;    // PRK, Parlimen, blok terakhir (PN), nama, bertukar, pemain
-  ev = KS.prosesBulan({ rng: seq }).peristiwa; p = S.loadPlayer();
+  ev = KS.prosesBulan({ rng: seq, serta: true }).peristiwa; p = S.loadPlayer();
   betul(ev.length === 1 && /merampas/.test(ev[0].mesej), ev.map((e) => e.mesej).join()); sama(p.kerusiNasional.perubahan.length, 1);
   S.applyEffects({}, { kiraTindakan: false, patch: { kerusiNasional: Object.assign({}, p.kerusiNasional, { parti: 52, rakan: 60, pembangkang: 107, perubahan: [] }) } });
   const sq2 = [0.1, 0.9, 0.0, 0.5, 0.95, 0.9], seq2 = () => sq2.length ? sq2.shift() : 0.9;   // kerusi PARTI ke pembangkang: 112 -> 111 (merentas ambang)
-  ev = KS.prosesBulan({ rng: seq2 }).peristiwa; p = S.loadPlayer();
+  ev = KS.prosesBulan({ rng: seq2, serta: true }).peristiwa; p = S.loadPlayer();
   betul(/mengekalkan/.test(ev[0].mesej), 'PRK NPC tidak menukar kerajaan'); sama(p.kerusiNasional.parti, 52);
   const sj = KS.sejarah(p); sama(sj.length, 1); betul(!sj[0].ringkas, 'arkib penuh');
 });
@@ -2580,6 +2580,30 @@ ujian('v13.46 Jemaah Menteri: PM pilih TPM, 29 portfolio, calon daripada struktu
   sama(l.find((x) => x.portfolio === C.UTAMA[6]).menteri, parti[6].nama);
   sama(g.MyPolitikPRU.getPRU(p).hubunganGabungan, Math.min(100, hub0 + C.TPM_HUB_RAKAN), 'TPM rakan: Hubungan +8 (kuota dipenuhi)');
   S.clearPlayer();
+});
+ujian('v13.47 PRK luar kawasan: dibuka sebulan, pemain bantu kempen, keputusan bulan berikutnya, ganjaran ikut sumbangan (maklum balas baris 28)', () => {
+  const KS = g.MyPolitikKerusiSemasa, PL = g.MyPolitikPRKLuar; let p = ksPemain();
+  P.tetap({ ap: 10, myr: 100000, reputasi: 50, jawatanList: [] });
+  sama(KS.prosesBulan({ rng: () => 0.9 }).peristiwa.length, 0, 'tiada PRK (rng >= 0.15)');
+  let ev = KS.prosesBulan({ rng: rngTetap(0.1) }).peristiwa; betul(ev.length === 1 && /diadakan/.test(ev[0].mesej) && /tab Pemilihan/.test(ev[0].mesej), ev.map((e) => e.mesej).join());
+  p = S.loadPlayer(); const a = PL.getPL(p).aktif; betul(a && a.kerusi, 'PRK aktif'); betul(/^(P\.\d{3} [A-Z]|N\.\d{2})/.test(a.kerusi), 'nama kerusi: ' + a.kerusi);
+  sama(KS.prosesBulan({ rng: rngTetap(0.1) }).peristiwa.length, 0, 'bulan sama: tiada PRK baharu / keputusan');
+  const k0 = PL.keadaan(p); sama(k0.tindakan.length, 4); sama(k0.pengganda, 1);
+  const ap0 = p.ap, r1 = PL.bantu('ceramah'); betul(r1.ok, r1.ralat); p = S.loadPlayer(); sama(ap0 - p.ap, 2); sama(PL.getPL(p).aktif.bantuan, 3);
+  betul(!PL.bantu('ceramah').ok, 'sekali sahaja');
+  for (let i = 0; i < 4; i++) { betul(PL.sumbangDana().ok); } betul(!PL.sumbangDana().ok, 'maks 4 kali'); p = S.loadPlayer(); sama(PL.getPL(p).aktif.sumbangan, 7);
+  sama(PL.anggaran(PL.getPL(p).aktif), Math.round((a.asas + 7) * 10) / 10);
+  const rep0 = p.reputasi; P.tetap({ bulan: p.bulan === 12 ? 1 : p.bulan + 1, tahun: p.bulan === 12 ? p.tahun + 1 : p.tahun });
+  P.tetap({ prkLuar: Object.assign({}, PL.getPL(S.loadPlayer()), { aktif: Object.assign({}, PL.getPL(S.loadPlayer()).aktif, { asas: 60, calon: 'PARTI', pertahan: true, dari: 'PARTI' }) }) });
+  ev = KS.prosesBulan({ rng: () => 0.5 }).peristiwa; p = S.loadPlayer();
+  betul(ev.length === 1 && /MENANG/.test(ev[0].mesej), ev.map((e) => e.mesej).join()); sama(PL.getPL(p).aktif, null); sama(PL.getPL(p).sejarah.length, 1);
+  sama(p.reputasi - rep0, 1 + Math.floor(7 / 4), 'Reputasi ikut sumbangan'); sama(PL.getPL(p).sejarah[0].menang, true);
+  // tanpa sumbangan: calon rampas kalah, tiada kesan
+  P.tetap({ prkLuar: { aktif: Object.assign({}, a, { idx: 0, asas: 40, bantuan: 0, sumbangan: 0, tindakan: {}, dana: 0, pertahan: false, dari: 'PN', calon: 'PARTI', lawan: 'PN' }), sejarah: [] } });
+  const rep1 = S.loadPlayer().reputasi, pn0 = KS.blok(S.loadPlayer(), a.dun).PN; ev = KS.prosesBulan({ rng: () => 0.5 }).peristiwa; p = S.loadPlayer();
+  betul(/KALAH/.test(ev[0].mesej)); sama(p.reputasi, rep1, 'tiada sumbangan: tiada kesan'); sama(KS.blok(p, a.dun).PN, pn0, 'kerusi kekal pada lawan');
+  // jawatan Pusat: kesan x1.5
+  P.tetap({ jawatanList: [{ kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', pangkat: 9 }] }); sama(PL.pengganda(S.loadPlayer()), 1.5);
 });
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });

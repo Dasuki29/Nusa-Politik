@@ -4,7 +4,7 @@
      - geser(): satu kerusi berpindah antara blok (PARTI, RAKAN, LAIN, PH, PN) dalam p.kerusiNasional (Parlimen) atau .dun.
        Pecahan PH / PN disimpan sebagai pelarasan (ubah) di atas pecahan asal paparan.js.
      - PRK pemain (prk.js) dan PRK selepas letak jawatan (letak.js) memanggil geser() apabila kerusi bertukar tangan.
-     - prosesBulan(): PRK di kawasan lain (NPC), peluang 15% sebulan; tiada PRK dalam 12 bulan terakhir penggal
+     - prosesBulan(): PRK di kawasan lain (NPC), peluang 15% sebulan (v13.47: dibuka sebulan melalui js/prk-luar.js; o.serta = cara lama serta-merta); tiada PRK dalam 12 bulan terakhir penggal
        atau semasa PRU. Penyandang kekal 70%; jika bertukar, pemenang ikut Reputasi pemain (proksi sentimen nasional).
        PRK NPC tidak boleh menukar kerajaan (kerusi kekal jika pertukaran merentas ambang majoriti).
      - Sejarah: setiap keputusan PRU baharu diarkibkan (pecahan penuh) dalam p.kerusiSejarah (5 terakhir).
@@ -29,6 +29,7 @@
   function PAP() { return modul('NusaPaparan', 'paparan.js'); }
   function PRU() { return modul('MyPolitikPRU', 'pru.js'); }
   function LTK() { return modul('MyPolitikLetak', 'letak.js'); }
+  function PLR() { return modul('MyPolitikPRKLuar', 'prk-luar.js'); }
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   var CONFIG = { PELUANG: 0.15, DUN: 0.3, KEKAL: 0.7, MAKS_LOG: 10, MAKS_SEJARAH: 5, JUMLAH: 222, MAJORITI: 112,
@@ -125,10 +126,17 @@
     if (!p || p.tamat || !p.kerusiNasional || typeof p.kerusiNasional.parti !== 'number') { return { peristiwa: ev }; }
     var r = o.rng || rngLalai, ark = arkibkan(p);
     if (ark) { Sv.applyEffects({}, { kiraTindakan: false, patch: { kerusiSejarah: ark } }); p = Sv.loadPlayer(); }
+    var PL = PLR();                                                          // v13.47: PRK luar kawasan sebulan, pemain boleh membantu (js/prk-luar.js)
+    if (PL && !o.serta) {
+      var hs = PL.prosesBulan(o); ev = ev.concat(hs.peristiwa || []);
+      if (hs.selesai || hs.aktif) { return { peristiwa: ev }; }
+      p = Sv.loadPlayer();
+    }
     if (r() >= CONFIG.PELUANG) { return { peristiwa: ev }; }
     var dun = !!(p.kerusiNasional.dun && !SW(p.parti) && r() < CONFIG.DUN);
     if (!bolehPRK(p, dun)) { return { peristiwa: ev }; }
     var b = blok(p, dun); if (!b) { return { peristiwa: ev }; }
+    if (PL && !o.serta) { ev.push(PL.buka(p, b, dun, pilihBerat(b, r), r)); return { peristiwa: ev }; }
     var dari = pilihBerat(b, r), kerusi = namaKerusi(dun, r), ke = dari;
     if (r() >= CONFIG.KEKAL) {
       var pK = clamp(0.5 + ((Number(p.reputasi) || 50) - 50) / 100, 0.25, 0.75);

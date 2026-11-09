@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.47 (2026-11-09)
+
+- **Maklum balas borang baris 28: PRK luar kawasan dengan bantuan kempen** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).
+  - PRK di kawasan lain (dahulu diselesaikan serta-merta) kini **dibuka selama sebulan**; keputusan diumumkan pada peralihan bulan berikutnya. Peluang kekal 15% sebulan (± 2 setahun).
+  - Kerusi Parlimen bernama (cth P.105 Petaling Jaya, Selangor); kerusi DUN bernombor.
+  - Calon parti anda atau rakan gabungan, sama ada mempertahankan atau merampas kerusi. Undi asas: 52% (pertahan) / 45% (rampas), dilaras Reputasi dan sentimen nasional.
+  - **Bantu kempen** (sekali setiap PRK): Hantar jentera (1 AP + RM 2,000, +2%), Ceramah sokongan (2 AP + RM 3,000, +3%, Stress +5), Ziarah (2 AP, +2%, Stress +3), Kempen digital (1 AP + RM 1,500, +1.5%), Sumbang dana (RM 5,000 = +1%, maks 4 kali). Ketua Bahagian ×1.25, jawatan Pusat ×1.5.
+  - **Keputusan:** menang (jika menyumbang): Reputasi Parti +1 hingga +4, IP +60, Sokongan AJK +2; calon rakan menang: Hubungan Gabungan +3. Kalah (jika menyumbang): Reputasi -1. PRK tidak boleh menukar kerajaan (peraturan sedia ada).
+  - Kad baharu **🗳️ PRK Luar Kawasan** dalam tab Pemilihan (bukan tab baharu, supaya bar tab tidak sesak di telefon), dengan senarai keputusan PRK terkini.
+- Fail baharu: `js/prk-luar.js`, `js/prk-luar-ui.js`, `tools/ujian-prk-luar.js`. Ujian baharu (179 ujian).
+
 ## v13.46 (2026-11-09)
 
 - **Maklum balas borang baris 25: Presiden-PM membentuk Kabinet penuh dan memilih TPM daripada struktur parti** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).

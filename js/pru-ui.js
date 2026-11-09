@@ -243,7 +243,7 @@
   function kad(p, jenis) {
     try {
       if (jenis === 'pilihanraya') { return musim(p) ? kadPRK(p) + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p, 'pilihanraya') : '') + (PRU.getPRU(p).aktif ? kadPRU(p) : '') : '<div class="banner"><strong>Bukan musim pilihan raya</strong>Tab ini hanya aktif semasa PRU/PRN atau PRK.</div>'; }
-      if (jenis === 'pemilihan') { return musim(p) ? bannerMusim(p) : kadPRU(p); }
+      if (jenis === 'pemilihan') { return (musim(p) ? bannerMusim(p) : kadPRU(p)) + (W.MyPolitikPRKLuarUI ? W.MyPolitikPRKLuarUI.kad(p) : ''); }   // v13.47: PRK luar kawasan
       return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '') + (W.MyPolitikNPCUI ? W.MyPolitikNPCUI.kad(p) : '') + (W.MyPolitikFBNUI ? W.MyPolitikFBNUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
     } catch (e) { return ''; }
   }
