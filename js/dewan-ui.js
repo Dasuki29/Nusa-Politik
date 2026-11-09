@@ -196,6 +196,7 @@
       h += '<p class="note">' + (k.kerajaanBN === false ? esc(L.gab || 'BN') + ' (pembangkang)' : 'Kerajaan (' + esc(L.gab || 'BN') + ')') + ' <b>' + k.BN + '</b> · PH <b>' + k.PH + '</b> · PN <b>' + k.PN + '</b> · Bebas/lain <b>' + k.LAIN + '</b></p>';
       if (r.kerajaan) { h += bar('Kestabilan gabungan', r.kestabilan, r.kestabilan < 30) + (r.rating !== null ? bar('Penarafan Tadbir Urus', r.rating, r.rating < 30) : ''); }
       h += '<p class="note" style="font-size:.78rem">Simulasi: angka kerusi dianggar daripada keputusan PRU dalam permainan.</p></section>';
+      if (D === D0 && W.MyPolitikPembangkangUI) { h += W.MyPolitikPembangkangUI.kad(p); }   // v13.50: Ketua Pembangkang / MP pembangkang
 
       if (r.tp) { h += kadTP(r.tp, L); }
       if (r.soalan) { h += '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🎤 Waktu Pertanyaan Menteri</h2><p class="note"><b>' + esc(r.soalan.yb) + '</b>: ' + esc(r.soalan.soal) + '</p><button type="button" class="btn btn--primary btn--block" data-dewan="soalan">Jawab Soalan</button></section>'; }

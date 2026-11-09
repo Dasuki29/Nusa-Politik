@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.50 (2026-11-10)
+
+- **Maklum balas Threads no. 1: Ketua Pembangkang** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).
+  - **Ketua Pembangkang:** Presiden parti yang menjadi Ahli Parlimen, parti di pihak pembangkang dan blok pembangkang terbesar. Elaun RM 6,000 + 20 IP sebulan. ⚠️ Kerajaan = blok PH/PN terbesar (+ kerusi lain) jika cukup majoriti; jika tidak, PH + PN bergabung.
+  - **Naratif Pembangkang** (0–100, mula 50, susut 1 sebulan ke arah 50): PRU seterusnya +1 kerusi Parlimen parti bagi setiap 5 mata melebihi 50.
+  - **Tindakan semua MP pembangkang** (kad baharu dalam tab Dewan): Soalan Lisan (1 AP, sekali sebulan) dan Bahas RUU Kerajaan (bulan sidang 3, 7, 10: Sokong / Bantah / Pinda).
+  - **Ketua Pembangkang sahaja:** Bajet Alternatif (bulan 10, sekali setahun), Usul Undi Tidak Percaya (3 AP + RM 20,000, sekali setahun; pujuk MP kerajaan goyah sehingga 3 kali; berjaya = kerajaan tumbang dan PRU mengejut; gagal = Reputasi -4, Naratif -10), Kabinet Bayangan (8 portfolio daripada struktur parti; Kecekapan menambah kesan Naratif ×1.0–×1.3).
+- Fail baharu: `js/pembangkang.js`, `js/pembangkang-ui.js`, `tools/ujian-pembangkang.js`. Ujian baharu (182 ujian).
+
 ## v13.49 (2026-11-09)
 
 - **Pembetulan: mesej aduan Jawatankuasa Disiplin kadang-kadang tidak diterjemah ke EN.**

@@ -935,6 +935,8 @@
     var rakan = Math.min(N.JUMLAH - parti, bulat(N.JUMLAH * antara(r, 0.14, 0.26)));
     var PASn = p && p.parti === 'PAS' ? modul('MyPolitikPAS', 'pas.js') : p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : p && p.parti === 'DAP' ? modul('MyPolitikDAP', 'dap.js') : null;   // v13.34: PKR (PH) juga; v13.37: DAP
     if (PASn && PASn.kerusiParlimen) { var kpN = PASn.kerusiParlimen(pop, r); parti = kpN.parti; rakan = kpN.rakan; }   // v13.31: PN (PAS + rakan) ikut formula PAS
+    var PBm = modul('MyPolitikPembangkang', 'pembangkang.js'), bkN = PBm && PBm.bonusKerusi ? PBm.bonusKerusi(p) : 0;   // v13.50: Naratif Pembangkang (+1 kerusi setiap 5 mata melebihi 50)
+    if (bkN) { parti = clamp(parti + bkN, 30, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }
     var status = parti >= N.MAJORITI ? 'MAJORITI' : (parti + rakan >= N.MAJORITI ? 'GABUNGAN' : 'PEMBANGKANG');
     var kongsi = rakan > 0 ? parti / (parti + rakan) : 1;
     var adjPM = ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002;

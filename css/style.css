@@ -1107,3 +1107,8 @@ html, body { overflow-x: clip; }
 .prkl-bar i { display: block; height: 100%; background: var(--danger, #E8344F); }
 .prkl-act { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1.5px dashed var(--border); padding: 7px 0; font-size: .88rem; }
 .prkl-sejarah { margin-top: 8px; } .prkl-sejarah summary { font-weight: 700; cursor: pointer; } .prkl-sejarah ul { list-style: none; padding: 0; margin: 6px 0 0; font-size: .85rem; } .prkl-sejarah li { padding: 4px 0; border-top: 1.5px dashed var(--border); }
+
+/* v13.50: Ketua Pembangkang */
+.pbg-ban { background: #1D3A6E; color: #fff; border-radius: var(--radius); padding: 8px 10px; margin-bottom: 8px; }
+.pbg-ban small { display: block; color: #DBE4FF; font-size: .78rem; }
+.pbg-3 { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }

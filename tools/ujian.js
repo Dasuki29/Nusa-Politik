@@ -2624,6 +2624,38 @@ ujian('v13.49 Log disiplin tidak dipotong pada 80 aksara (teks EN bocor dalam lo
   const lg = S.loadPlayer().log.find((x) => x.tindakan === 'disiplin'); betul(lg && /Siasatan dimulakan\.$/.test(lg.nama), 'log penuh: ' + (lg && lg.nama));
   S.clearPlayer();
 });
+function pbPemain(kn, presiden) {
+  P.daftar({}); const p0 = S.loadPlayer();
+  P.tetap({ jawatanList: presiden ? [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 12, tahun: 2026 }] : [], ap: 20, myr: 100000, reputasi: 50,
+    kerusiNasional: Object.assign({ tahun: p0.tahun, bulan: p0.bulan, bebas: 3, kerajaan: false }, kn) });
+  P.tetap({ pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { status: { jenis: 'MP', kerusi: 'Pekan', kerajaan: false } }) });
+  return S.loadPlayer();
+}
+ujian('v13.50 Ketua Pembangkang: status, elaun, Soalan Lisan, Bahas RUU, Bajet Alternatif, Undi Tidak Percaya, Kabinet Bayangan, bonus kerusi PRU (Threads no. 1)', () => {
+  const PB = g.MyPolitikPembangkang, C = PB.CONFIG; let p = pbPemain({ parti: 60, rakan: 22, pembangkang: 137 }, true);
+  let st = PB.status(p); betul(st.mp && st.kp, 'Presiden MP pembangkang = Ketua Pembangkang'); sama(st.kami, 82); sama(st.lain, 0, 'PH + PN bergabung');
+  const myr0 = p.myr, ev = PB.prosesBulan().peristiwa; betul(ev.some((x) => /Ketua Pembangkang/.test(x.mesej))); p = S.loadPlayer(); sama(p.myr - myr0, C.ELAUN.myr, 'elaun');
+  sama(PB.status(pbPemain({ parti: 60, rakan: 22, pembangkang: 137 }, false)).kp, false, 'bukan Presiden: MP pembangkang biasa');
+  p = pbPemain({ parti: 60, rakan: 22, pembangkang: 137 }, true); PB.prosesBulan();
+  const r1 = PB.soalanLisan({ rng: () => 0 }); betul(r1.ok && r1.jaya); sama(PB.getPB(S.loadPlayer()).naratif, 53); betul(!PB.soalanLisan().ok, 'sekali sebulan');
+  betul(/bulan sidang/.test(PB.bahasRUU('bantah').ralat), 'RUU hanya bulan sidang');
+  P.tetap({ bulan: 10 }); betul(PB.bahasRUU('bantah').ok); sama(PB.getPB(S.loadPlayer()).naratif, 57); betul(!PB.bahasRUU('sokong').ok, 'sekali setiap sesi');
+  betul(PB.bajetAlternatif().ok); sama(PB.getPB(S.loadPlayer()).naratif, 65); betul(!PB.bajetAlternatif().ok, 'sekali setahun');
+  sama(PB.bonusKerusi(S.loadPlayer()), 3, 'Naratif 65: +3 kerusi PRU');
+  const n0 = PRU.janaNasionalUji(Object.assign({}, S.loadPlayer(), { pembangkang: Object.assign({}, S.loadPlayer().pembangkang, { naratif: 50 }) }));
+  betul(n0 && typeof n0.parti === 'number');
+  // Kabinet Bayangan
+  const J = g.MyPolitikJemaah, kol = PB.calonBayangan(S.loadPlayer()), m = {}; J.CONFIG.UTAMA.forEach((nm, i) => { m[nm] = kol[i].id; });
+  const nb = PB.nilaiBayangan(S.loadPlayer(), m); betul(nb.lengkap); betul(nb.pengganda >= 1 && nb.pengganda <= 1.3);
+  betul(PB.umumBayangan(m).ok); betul(!PB.umumBayangan(m).ok, 'sekali setiap penggal'); sama(PB.getPB(S.loadPlayer()).bayangan.senarai.length, 8);
+  // Undi Tidak Percaya: kerajaan PH tipis (kerajaan 115)
+  p = pbPemain({ parti: 70, rakan: 30, pembangkang: 119 }, true); st = PB.status(p);
+  betul(PB.mulaTP().ok); betul(!PB.mulaTP().ok, 'sudah berjalan'); const tp0 = PB.getPB(S.loadPlayer()).tp.sokong;
+  for (let i = 0; i < 3; i++) { betul(PB.pujukTP({ rng: () => 0.99 }).ok); } betul(!PB.pujukTP().ok, 'maks 3 pujukan'); sama(PB.getPB(S.loadPlayer()).tp.sokong, tp0 + 15);
+  const u = PB.undiTP(); betul(u.ok); sama(u.jaya, tp0 + 15 >= 112); betul(!PB.mulaTP().ok, 'sekali setahun');
+  if (u.jaya) { betul(PRU.getPRU(S.loadPlayer()).aktif, 'PRU mengejut'); } else { sama(S.loadPlayer().reputasi, 50 - 4); }
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
