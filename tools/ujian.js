@@ -2605,6 +2605,19 @@ ujian('v13.47 PRK luar kawasan: dibuka sebulan, pemain bantu kempen, keputusan b
   // jawatan Pusat: kesan x1.5
   P.tetap({ jawatanList: [{ kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', pangkat: 9 }] }); sama(PL.pengganda(S.loadPlayer()), 1.5);
 });
+ujian('v13.48 PAS: setiap musim pemilihan (2 tahun) bermula semula; keputusan musim lalu tidak kekal "selesai" (maklum balas baris 26)', () => {
+  P.daftar({ parti: 'PAS', umur: 28, jantina: 'L', sayap: 'pemuda' }); P.tetap({ parti: 'PAS', tahun: 2029, bulan: 3, ip: 2000, ap: 20, myr: 100000 });
+  const kod = 'sayap_cawangan_pemuda', st = () => E.senaraiPertandingan(S.loadPlayer()).find((x) => x.kod === kod);
+  betul(st().terbuka, '2029: dibuka'); betul(E.daftarBertanding(kod).ok); E.jalankanPemilihanPeringkat('sayap_cawangan', { rng: () => 0.01 });
+  betul(st().selesai, '2029: selesai'); sama(E.getKitaran(2029).kitaran, 2029); sama(E.getKitaran(2030).kitaran, 2029); sama(E.getKitaran(2031).kitaran, 2031);
+  E.majuTahun(); E.majuTahun(); P.tetap({ bulan: 3 }); sama(S.loadPlayer().tahun, 2031);
+  betul(!st().selesai && st().terbuka, '2031: musim baharu dibuka (dahulu kekal selesai)');
+  // simpanan lama dalam musim yang sama dikekalkan (kitaran lama = 1, tahunPemilihan 2031)
+  const pm = E.getKeadaanPemilihan(S.loadPlayer()); betul(E.daftarBertanding(kod).ok);
+  const lama = Object.assign({}, S.loadPlayer().pemilihan, { kitaran: 1 }); P.tetap({ pemilihan: lama });
+  betul(E.getKeadaanPemilihan(S.loadPlayer()).daftar[kod], 'pendaftaran musim semasa dikekalkan selepas kemas kini'); betul(pm);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

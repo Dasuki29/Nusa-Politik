@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.48 (2026-11-09)
+
+- **Pembetulan maklum balas borang baris 26: pemain PAS tidak boleh bertanding / mempertahankan jawatan pada musim pemilihan berikutnya.**
+  - Punca: id kitaran pemilihan bagi parti selain UMNO dikira dengan formula UMNO (3 tahun dari 2026). Pemilihan PAS setiap 2 tahun (2027, 2029, 2031, ...), jadi 2029 dan 2031 berkongsi kitaran yang sama. Keputusan 2029 kekal "Pertandingan ini sudah selesai" pada 2031, dan tab Pemilihan serta Mesyuarat terus memaparkan "menang jawatan".
+  - Kini id kitaran bagi PAS, PKR, DAP, MCA, MIC, PPP dan PBRS ialah tahun pemilihan terakhir parti itu, jadi setiap musim bermula semula.
+  - Simpanan sedia ada: pendaftaran dan keputusan musim semasa dikekalkan; hanya keputusan musim lalu yang dibuang.
+- Ujian baharu (180 ujian).
+
 ## v13.47 (2026-11-09)
 
 - **Maklum balas borang baris 28: PRK luar kawasan dengan bantuan kempen** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).

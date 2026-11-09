@@ -140,15 +140,19 @@
 
   function getKitaran(tahun) {
     var t = nomborTahun(tahun), k = CONFIG.KITARAN_TAHUN, d = Math.max(0, t - CONFIG.TAHUN_MULA);
-    var pemilihan = adalahTahunPemilihan(t), up = umnoP();
+    var pemilihan = adalahTahunPemilihan(t), up = umnoP(), mc = up ? null : mcaP();
+    // v13.48 (maklum balas baris 26): parti lain (cth PAS, kitaran 2 tahun) guna tahun pemilihan terakhir sebagai id kitaran.
+    // Formula lama (3 tahun dari 2026) menyebabkan PAS 2029 dan 2031 berkongsi kitaran: keputusan 2029 kekal "selesai" pada 2031.
+    var idMc = mc && mc.M.tahunLepas ? mc.M.tahunLepas(mc.p, t) : null;
     return {
       tahun: t,
       pemilihan: pemilihan,
       fasa: pemilihan ? 'pemilihan' : 'pentadbiran',
-      kitaran: up ? up.M.kitaranId(up.p, t) : Math.floor(d / k),       // 0 = 2026-2028, 1 = 2029-2031 (v13.5 UMNO: indeks musim pemilihan, sama jika tiada penangguhan)
+      kitaran: up ? up.M.kitaranId(up.p, t) : mc && mc.M.tahunLepas ? (idMc == null ? -1 : idMc) : Math.floor(d / k),
+      kitaranLama: Math.floor(d / k),       // 0 = 2026-2028, 1 = 2029-2031 (v13.5 UMNO: indeks musim pemilihan, sama jika tiada penangguhan)
       tahunDalamKitaran: (d % k) + 1,                    // 1, 2 atau 3
       tahunPemilihanLepas: tahunPemilihanLepas(t),
-      pemilihanBerikutnya: up ? up.M.tahunSeterusnya(up.p, t + 1) : t + (k - (d % k))             // sentiasa selepas tahun ini
+      pemilihanBerikutnya: up ? up.M.tahunSeterusnya(up.p, t + 1) : mc && mc.M.tahunSeterusnya ? mc.M.tahunSeterusnya(mc.p, t + 1) : t + (k - (d % k))             // sentiasa selepas tahun ini
     };
   }
 
@@ -193,6 +197,7 @@
     var p = profil || S.loadPlayer();
     if (!p) { return null; }
     var kit = getKitaran(p.tahun), st = p.pemilihan ? salin(p.pemilihan) : null;
+    if (st && st.kitaran !== kit.kitaran && st.kitaran === kit.kitaranLama && st.kitaran < 1000 && st.tahunPemilihan === kit.tahunPemilihanLepas) { st.kitaran = kit.kitaran; }   // v13.48: simpanan lama, musim yang sama
     if (!st || st.kitaran !== kit.kitaran) { st = keadaanBaharu(p.tahun); }
     st.kempen = st.kempen || { mata: 0, aktiviti: {} };
     st.kempen.aktiviti = st.kempen.aktiviti || {};
