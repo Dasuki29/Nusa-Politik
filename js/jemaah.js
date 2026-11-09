@@ -37,7 +37,8 @@
     KUOTA_RAKAN: 3, KUOTA_BORNEO: 2, PENALTI_RAKAN: 10, PENALTI_BORNEO: 5,
     TADBIR_ASAS: 40, TADBIR_FAKTOR: 0.3,
     TEKANAN: { tinggi: -2, sederhana: 0, rendah: 2 }, SETIA_TINGGI: 60, SETIA_SEDERHANA: 45,
-    PENCABAR_KURANG: 0.15, ROMBAK_AP: 3, BIL_PENCABAR: 2
+    PENCABAR_KURANG: 0.15, ROMBAK_AP: 3, BIL_PENCABAR: 2,
+    ETNIK_RAKAN: { melayu: 0.4, cina: 0.4, india: 0.2 }
   };
   var JENIS_LABEL = { anda: 'Parti anda', rakan: 'Rakan gabungan', borneo: 'Sabah/Sarawak' };
 
@@ -51,10 +52,12 @@
   }
   function rngUntuk(p, garam) { var Sv = S(); return Sv.rngBerbenih(String(p.id || p.nama || 'nusa') + '|jemaah|' + garam); }
   function senaraiPortfolio() { var d = KD(); return d && d.menteri && d.menteri.length ? d.menteri.map(function (m) { return m.nama; }) : CONFIG.UTAMA.slice(); }
+  /** v13.42 (maklum balas baris 32): menteri rakan gabungan termasuk wakil Cina dan India (cth MCA, MIC, DAP). ANDAIAN: Melayu 40%, Cina 40%, India 20%. */
+  function etnikRakan(x) { return x < CONFIG.ETNIK_RAKAN.melayu ? 'melayu' : x < CONFIG.ETNIK_RAKAN.melayu + CONFIG.ETNIK_RAKAN.cina ? 'cina' : 'india'; }
   function nama(rng, jenis, gelar) {
     var d = D(), j = rng() < 0.75 ? 'L' : 'P';
     if (!d || !d.janaNama) { return 'Pemimpin NPC'; }
-    var n = d.janaNama(rng, j, gelar ? 'dato' : null, { etnik: jenis === 'borneo' && rng() < 0.6 ? 'dayak' : 'melayu' });
+    var n = d.janaNama(rng, j, gelar ? 'dato' : null, { etnik: jenis === 'borneo' ? (rng() < 0.6 ? 'dayak' : 'melayu') : jenis === 'rakan' ? etnikRakan(rng()) : undefined });   // 'anda': ikut kaum parti pemain (cth DAP / MCA)
     return n.replace(/^Datin( Paduka)? /, "Dato' ");                // menteri wanita memegang gelaran sendiri (bukan gelaran isteri)
   }
   function bulat(n) { return Math.round(n); }

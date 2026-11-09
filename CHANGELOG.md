@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.42 (2026-11-09)
+
+- **Maklum balas borang baris 32: wakil Cina dan India dalam Jemaah Menteri.**
+  - Calon menteri rakan gabungan kini bernama Melayu, Cina atau India (⚠️ andaian 40% / 40% / 20%), mewakili parti seperti MCA, MIC dan DAP.
+  - Calon parti sendiri ikut kaum parti pemain (contoh: pemain DAP mendapat calon kebanyakannya Cina, pemain MIC calon India).
+  - Nama NPC parti DAP dan PKR kini ikut campuran kaum (⚠️ andaian DAP 75% Cina, 15% India, 10% Melayu; PKR 60% Melayu, 20% Cina, 20% India). Sebelum ini semua nama NPC kedua-dua parti bernama Melayu.
+- Ujian baharu (174 ujian).
+
 ## v13.41 (2026-11-09)
 
 - **Maklum balas thread: avatar PAS khas** (ikut mockup yang dipersetujui). Set umum (kemeja, tali leher, blazer, rambut terdedah) tidak lagi digunakan untuk PAS.

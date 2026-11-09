@@ -2512,6 +2512,16 @@ ujian('v13.41 Avatar PAS: kopiah/serban, tudung labuh, tiada songkok; UMNO dan P
   betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(/#2E6BD6/.test(A.svg('pemuda', { parti: 'PKR' })), 'PKR kekal set umum');
   sama(A.senarai('PAS').length, 4); betul(/kopiah/.test(A.senarai('PAS')[0].penerangan));
 });
+ujian('v13.42 Jemaah Menteri: calon rakan gabungan termasuk Cina / India; calon parti sendiri ikut kaum parti (maklum balas baris 32)', () => {
+  const J = g.MyPolitikJemaah, bukanMelayu = (n) => !/ (bin|binti) /.test(n);
+  P.daftar({}); P.tetap({ parti: 'UMNO' });
+  const rakan = J.calon(S.loadPlayer()).map((x) => x.calon.filter((c) => c.jenis === 'rakan')[0].nama);
+  betul(rakan.filter(bukanMelayu).length >= 2, 'sekurang-kurangnya 2 calon rakan Cina / India: ' + rakan.join(', '));
+  P.daftar({}); P.tetap({ parti: 'DAP' });
+  const anda = J.calon(S.loadPlayer()).map((x) => x.calon.filter((c) => c.jenis === 'anda')[0].nama);
+  betul(anda.filter(bukanMelayu).length >= 5, 'DAP: calon parti sendiri kebanyakannya bukan Melayu: ' + anda.join(', '));
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
