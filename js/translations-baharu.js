@@ -75,6 +75,8 @@
   ["👔 Angkat sumpah {x}", "👔 Take the oath as {x}"],
   ["👔 Tuntut {x}", "👔 Claim {x}"],
   ["2 AP · elaun +RM 6,000 & +18 IP sebulan · Stress lebih berat", "2 AP · allowance +RM 6,000 & +18 IP a month · heavier Stress"],
+  ["⚠️ AP habis. Tamatkan bulan untuk tambah AP.", "⚠️ Out of AP. End the month to refill AP."], ["⚠️ AP hampir habis.", "⚠️ AP running low."],
+  ["Tanpa AP · elaun +RM 6,000 & +18 IP sebulan · Stress lebih berat", "No AP · allowance +RM 6,000 & +18 IP a month · heavier Stress"],
   ["🤝 Terima EXCO Kanan", "🤝 Accept Senior EXCO (EXCO Kanan)"],
   ["Selamat, tanpa menuntut. Elaun EXCO.", "Safe, without claiming. EXCO allowance."],
   ["Lobi portfolio biasa", "Normal portfolio lobby"],
@@ -3971,6 +3973,8 @@
   ["{x} dipilih oleh 30 ahli Jawatankuasa Tertinggi Pusat dalam Mesyuarat Pertama JTP, bukan di Kongres (Perlembagaan DAP, Fasal X.1). Menangi kerusi Ahli JTP dahulu.", "{x} is elected by the 30 Central Executive Committee members at the First CEC Meeting, not at Congress (DAP Constitution, Clause X.1). Win a CEC seat first."],
   /* v13.40: Laluan Kerajaan & Lobi TPM */
   ["🤝 Lobi Timbalan Perdana Menteri", "🤝 Lobby for Deputy Prime Minister"],
+  ["Timbalan Presiden · kos RM {a} + {b} IP · peluang ± {c}% (PM dari parti anda) · elaun +RM 6,000 & +25 IP/bulan", "Deputy President · cost RM {a} + {b} IP · chance ± {c}% (PM from your party) · allowance +RM 6,000 & +25 IP/month"],
+  ["Timbalan Presiden · kos RM {a} + {b} IP · peluang ± {c}% (PM dari rakan gabungan) · elaun +RM 6,000 & +25 IP/bulan", "Deputy President · cost RM {a} + {b} IP · chance ± {c}% (PM from a coalition partner) · allowance +RM 6,000 & +25 IP/month"],
   ["Timbalan Presiden · kos {a} AP + RM {b} + {c} IP · peluang ± {d}% (PM dari parti anda) · elaun +RM 6,000 & +25 IP/bulan", "Deputy President · cost {a} AP + RM {b} + {c} IP · chance ± {d}% (PM from your party) · allowance +RM 6,000 & +25 IP/month"],
   ["Timbalan Presiden · kos {a} AP + RM {b} + {c} IP · peluang ± {d}% (PM dari rakan gabungan) · elaun +RM 6,000 & +25 IP/bulan", "Deputy President · cost {a} AP + RM {b} + {c} IP · chance ± {d}% (PM from a coalition partner) · allowance +RM 6,000 & +25 IP/month"],
   ["Sudah memegang jawatan kerajaan.", "Already holding a government post."],

@@ -249,6 +249,33 @@
     return s;
   }
 
+  /* v13.41: set avatar khas PAS (maklum balas thread). Dibina daripada lukisan UMNO: songkok diganti kopiah/serban, warna pakaian diubah, janggut ditambah.
+     PAS tiada Puteri: kod 'wanita' = Muslimat muda (asas Puteri), 'veteran_p' = Muslimat berusia (asas Wanita UMNO). */
+  var SONGKOK = [/<path d="M30\.5 36 L32\.5 21[^>]*>/, /<path d="M33 23 Q48 19[^>]*>/, /<path d="M31 35 Q48 29\.8[^>]*>/,
+                 /<path d="M30 36\.5 L32 20\.5[^>]*>/, /<path d="M32\.6 22\.5 Q48[^>]*>/, /<path d="M30\.5 35\.6 Q48[^>]*>/];
+  var KOPIAH = '<path d="M31.5 36 Q31 21.5 48 20.5 Q65 21.5 64.5 36 Q48 31 31.5 36Z" fill="#FAFAF4" stroke="#D6D6CA" stroke-width="1.2"/>' +
+               '<path d="M33 30 Q48 26 63 30 M34 25 Q48 21.8 62 25" fill="none" stroke="#E2E2D6" stroke-width="1" stroke-dasharray="1.2 1.8"/>';
+  var SERBAN = '<path d="M27.5 38 Q24 17 48 14 Q72 17 68.5 38 Q48 30 27.5 38Z" fill="#FFFFFF" stroke="#D2D2C8" stroke-width="1.2"/>' +
+               '<path d="M29 31 Q44 22 67 27 M28.5 25 Q45 17 64 21" fill="none" stroke="#DCDCD2" stroke-width="1.6" stroke-linecap="round"/>';
+  function janggut(w) { return '<path d="M36 53 Q37 67 48 69 Q59 67 60 53 Q55 60.5 48 60.5 Q41 60.5 36 53Z" fill="' + w + '"/><path d="M42.5 55 q5.5 3 11 0" fill="none" stroke="#7A3B2A" stroke-width="1.6" stroke-linecap="round"/>'; }
+  var GAYA_PAS = {
+    pemuda:    { asas: 'pemuda', kepala: KOPIAH, warna: {} },
+    biasa:     { asas: 'biasa', kepala: KOPIAH, janggut: '#2A1E16', warna: { '#1D3A6E': '#1F5A3A', '#11264B': '#143D27', '#2B4E8F': '#2C6E4A' } },
+    veteran:   { asas: 'veteran', kepala: SERBAN, janggut: '#E6E6EA', warna: { '#B3122B': '#F1F1EA', '#C41E37': '#E2E2D8', '#7E0A1D': '#CFCFC4', '#C93249': '#D8D8CE' } },
+    wanita:    { asas: 'puteri', warna: { '#E9729B': '#2E7D5B', '#C84F7E': '#1E5A40', '#F7A9C4': '#4FA27D', '#FDFCFA': '#2B2B30', '#F4E6EE': '#3A3A40', '#E4DCE2': '#1A1A1E', '#E9C9D9': '#45454C', '#EADDE6': '#45454C' } },
+    veteran_p: { asas: 'veteran_p', warna: { '#E3E5EB': '#2E5E4E', '#A9AEBB': '#1E4236', '#B3122B': '#F1F1EA', '#7E0A1D': '#CFCFC4', '#C93249': '#D8D8CE' } }
+  };
+  function bahagianPAS(kod) {
+    var g = GAYA_PAS[kod] || GAYA_PAS.pemuda, s = bahagian(g.asas, false);
+    SONGKOK.forEach(function (r) { s = s.replace(r, ''); });
+    Object.keys(g.warna).forEach(function (a) { s = s.split(a).join(g.warna[a]); });
+    return s + (g.janggut ? janggut(g.janggut) : '') + (g.kepala || '');
+  }
+  function partiOpts(opts) {
+    var k = opts && opts.parti; if (!k) { try { var P = (typeof globalThis !== 'undefined' ? globalThis : {}).MyPolitikParti; k = P && P.kini ? P.kini() : 'UMNO'; } catch (e) { k = 'UMNO'; } }
+    return k || 'UMNO';
+  }
+
   function bukanUMNO(opts) {
     var k = opts && opts.parti; if (!k) { try { var P = (typeof globalThis !== 'undefined' ? globalThis : {}).MyPolitikParti; k = P && P.kini ? P.kini() : 'UMNO'; } catch (e) { k = 'UMNO'; } }
     return !!k && k !== 'UMNO';
@@ -262,13 +289,15 @@
       '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c.bg1 + '"/><stop offset="1" stop-color="' + c.bg2 + '"/></linearGradient>' +
       '<clipPath id="' + id + 'c"><circle cx="48" cy="48" r="48"/></clipPath></defs>' +
       '<circle cx="48" cy="48" r="48" fill="url(#' + id + ')"/>' +
-      '<g clip-path="url(#' + id + 'c)">' + bahagian(kod, bukanUMNO(opts)) + '</g></svg>';
+      '<g clip-path="url(#' + id + 'c)">' + (partiOpts(opts) === 'PAS' ? bahagianPAS(kod) : bahagian(kod, bukanUMNO(opts))) + '</g></svg>';
   }
   var PENERANGAN_UMUM = { pemuda: 'Lelaki muda, kemeja putih dan tali leher', wanita: 'Perempuan, blaus dan rambut panjang', biasa: 'Lelaki pertengahan umur, blazer biru tua', veteran: 'Lelaki berusia, berkaca mata, baju batik coklat' };
-  /** v10.5: senarai watak mengikut parti. Parti selain UMNO tiada Puteri dan guna penerangan umum. */
+  var PENERANGAN_PAS = { pemuda: 'Lelaki muda, baju Melayu putih, kopiah putih', wanita: 'Perempuan, jubah hitam, tudung labuh hijau', biasa: 'Lelaki pertengahan umur, jubah hijau tua, kopiah putih, berjanggut', veteran: 'Lelaki berusia, jubah putih, serban putih, janggut beruban' };
+  /** v10.5: senarai watak mengikut parti. Parti selain UMNO tiada Puteri dan guna penerangan umum (PAS: set khas, v13.41). */
   function senarai(parti) {
     if (!parti || parti === 'UMNO') { return LIST; }
-    return LIST.filter(function (a) { return a.kod !== 'puteri'; }).map(function (a) { return { kod: a.kod, label: a.label, penerangan: PENERANGAN_UMUM[a.kod] || a.penerangan }; });
+    var P = parti === 'PAS' ? PENERANGAN_PAS : PENERANGAN_UMUM;
+    return LIST.filter(function (a) { return a.kod !== 'puteri'; }).map(function (a) { return { kod: a.kod, label: a.label, penerangan: P[a.kod] || a.penerangan }; });
   }
   function adaKod(kod) { return LIST.some(function (a) { return a.kod === kod; }); }
   function pasang(el, kod, opts) {

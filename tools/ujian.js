@@ -1230,7 +1230,7 @@ ujian('PBB v9.4: PRN (DUN) dan PRU (Parlimen) berasingan; lobi Premier terbuka u
   let kp = kempen('DUN'); betul(kp.menang, 'menang DUN'); betul(!kp.nasional, 'PBB tiada keputusan nasional'); betul(kp.kabinetBuka, 'lobi kerajaan negeri terbuka untuk Presiden');
   betul(KB.getKabinet(S.loadPlayer()).lobi && KB.getKabinet(S.loadPlayer()).lobi.sumber === 'DUN', 'lobi DUN'); PR.tutupKeputusan();
   let pru = PR.getPRU(S.loadPlayer()); sama(pru.jenisPBB, 'PRU'); sama(pru.tahunPRU, 2028, 'PRU setahun selepas PRN');
-  betul(KB.tuntutMB().ok, 'tuntut Premier'); sama(KB.getKabinet(S.loadPlayer()).roleLevel === 'MENTERI_BESAR' || KB.getKabinet(S.loadPlayer()).roleLevel === 'EXCO_NEGERI', true);
+  P.tetap({ ap: 0 }); betul(KB.tuntutMB().ok, 'tuntut Premier tanpa AP (v13.41)'); sama(S.loadPlayer().ap, 0, 'tiada AP ditolak'); sama(KB.getKabinet(S.loadPlayer()).roleLevel === 'MENTERI_BESAR' || KB.getKabinet(S.loadPlayer()).roleLevel === 'EXCO_NEGERI', true);
   kp = kempen('PARLIMEN'); PR.tutupKeputusan();
   const st = PR.semuaStatus(S.loadPlayer()).map((x) => x.jenis).sort(); sama(st.join(','), kp.menang ? 'ADUN,MP' : 'ADUN', 'ADUN kekal; MP ditambah jika menang');
   betul(/Premier|Menteri/.test(KB.getKabinet(S.loadPlayer()).portfolioName), 'jawatan negeri tidak tamat semasa PRU');
@@ -2499,8 +2499,18 @@ ujian('v13.40 Lobi Timbalan Perdana Menteri: syarat, peluang 60% / 30%, kos, sek
   const m0 = p.myr, ip0 = p.ip, r = KB.lobiTPM({ rng: () => 0.99 }); betul(r.ok && !r.dilantik, r.ralat);
   p = S.loadPlayer(); sama(m0 - p.myr, 10000, 'gagal: separuh Dana'); sama(ip0 - p.ip, 200, 'gagal: separuh IP'); betul(/sudah dicuba/.test(KB.syaratTPM(p).sebab));
   KB.bukaLobi('PARLIMEN'); const r2 = KB.lobiTPM({ rng: () => 0 }); betul(r2.ok && r2.dilantik); sama(KB.getKabinet(S.loadPlayer()).roleLevel, 'TIMBALAN_PM');
+  P.tetap({ jawatanList: [tp], kabinet: null, ap: 0, ip: 900 }); KB.bukaLobi('PARLIMEN'); betul(KB.maklumatTPM(S.loadPlayer()).boleh, 'v13.41: lobi TPM tanpa AP: ' + KB.maklumatTPM(S.loadPlayer()).sebab); sama(KB.maklumatTPM(S.loadPlayer()).ap, 0);
   P.tetap({ jawatanList: [], kabinet: null }); KB.bukaLobi('PARLIMEN'); betul(/Timbalan Presiden/.test(KB.syaratTPM(S.loadPlayer()).sebab), 'bukan Timbalan Presiden');
   S.clearPlayer();
+});
+ujian('v13.41 Avatar PAS: kopiah/serban, tudung labuh, tiada songkok; UMNO dan PKR tidak berubah', () => {
+  const A = require('../js/avatar.js');
+  const songkok = /M30\.5 36 L32\.5 21|M30 36\.5 L32 20\.5/;
+  ['pemuda', 'biasa', 'veteran'].forEach((k) => { const s = A.svg(k, { parti: 'PAS' }); betul(!songkok.test(s), k + ' tiada songkok'); betul(/M31\.5 36 Q31 21\.5|M27\.5 38 Q24 17/.test(s), k + ' kopiah/serban'); });
+  betul(!/#2F3E5C|#2E6BD6/.test(A.svg('biasa', { parti: 'PAS' }) + A.svg('pemuda', { parti: 'PAS' })), 'tiada blazer / tali leher');
+  betul(/#2E7D5B/.test(A.svg('wanita', { parti: 'PAS' })), 'Muslimat tudung labuh hijau'); betul(/#2E5E4E/.test(A.svg('veteran_p', { parti: 'PAS' })), 'Muslimat berusia');
+  betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(/#2E6BD6/.test(A.svg('pemuda', { parti: 'PKR' })), 'PKR kekal set umum');
+  sama(A.senarai('PAS').length, 4); betul(/kopiah/.test(A.senarai('PAS')[0].penerangan));
 });
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });

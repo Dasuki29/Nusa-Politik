@@ -1,5 +1,20 @@
 # Catatan Perubahan
 
+## v13.41 (2026-11-09)
+
+- **Maklum balas thread: avatar PAS khas** (ikut mockup yang dipersetujui). Set umum (kemeja, tali leher, blazer, rambut terdedah) tidak lagi digunakan untuk PAS.
+  - Pemuda: baju Melayu putih, kopiah putih.
+  - Biasa: jubah hijau tua, kopiah putih, berjanggut.
+  - Veteran: jubah putih, serban putih, janggut beruban.
+  - Wanita: Muslimat, jubah hitam, tudung labuh hijau. Veteran perempuan: tudung labuh hijau gelap, jubah putih.
+  - Parti lain kekal; UMNO tidak berubah.
+- **Maklum balas thread: AP tidak lagi menyekat angkat sumpah** (pilihan b).
+  - Tuntut / angkat sumpah Menteri Besar, Ketua Menteri atau Premier tidak lagi memerlukan AP (sebelum ini 2 AP).
+  - Lobi Timbalan Perdana Menteri tidak lagi memerlukan AP (sebelum ini 3 AP); kos RM 20,000 + 400 IP kekal.
+  - Pelantikan PM / TPM melalui rundingan kerajaan memang tanpa AP.
+  - Amaran baharu di bawah kiraan AP pada papan pemuka apabila AP tinggal 1 atau habis.
+- Ujian: avatar PAS, tuntut MB dengan 0 AP, lobi TPM dengan 0 AP (173 ujian).
+
 ## v13.40 (2026-11-07)
 
 - **Maklum balas borang baris 23: Pilih Laluan Kerajaan dan Lobi Timbalan Perdana Menteri**, ikut mockup yang dipersetujui.

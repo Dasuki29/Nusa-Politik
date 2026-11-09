@@ -731,6 +731,7 @@
     var tk = K ? K.getTakwim(p) : null;
     var tp = $('p-tahun'); tp.textContent = labelTahun(p.tahun) + (tk ? ' · BULAN ' + tk.bulan : ''); tp.setAttribute('data-fasa', pem ? 'pemilihan' : 'pentadbiran');
     $('r-ip').textContent = fmt(p.ip); $('r-myr').textContent = 'RM ' + fmt(p.myr); $('r-ap').textContent = fmt(p.ap);
+    var apAm = $('r-ap-amaran'); if (apAm) { var apN = Number(p.ap) || 0; apAm.hidden = apN > 1; apAm.textContent = apN <= 0 ? '⚠️ AP habis. Tamatkan bulan untuk tambah AP.' : '⚠️ AP hampir habis.'; }   // v13.41: amaran AP rendah (maklum balas thread)
     var stm = ST ? ST.ringkasan(p) : null, mb = $('meter-bar');                               // v5.6: meter Stress dan Kesihatan
     if (mb) {
       mb.hidden = !stm;

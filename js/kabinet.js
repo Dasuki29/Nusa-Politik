@@ -349,14 +349,11 @@
     k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilantik' }]).slice(-10);
     return simpan(k, {}, { log: { tindakan: log, nama: 'Dilantik: ' + nama, peringkat: 'ahli' } });
   }
-  /** Tuntut Menteri Besar (2 AP, tiada kos Dana). Majoriti sendiri = terus; gabungan = peluang. Gagal: hubungan gabungan -10 dan EXCO Kanan. */
+  /** Tuntut Menteri Besar (v13.41: tiada kos AP atau Dana; angkat sumpah tidak boleh tersekat kerana AP habis). Majoriti sendiri = terus; gabungan = peluang. Gagal: hubungan gabungan -10 dan EXCO Kanan. */
   function tuntutMB(o) {
     var p = S().loadPlayer(), k = getKabinet(p), sy = syaratMB(p), r = rng(o);
     if (!sy.boleh) { return { ok: false, ralat: sy.sebab }; }
-    if ((Number(p.ap) || 0) < 2) { return { ok: false, ralat: 'AP tidak mencukupi (perlu 2).' }; }
     var m = maklumatMB(p), lulus = m.sendiri || r() < peluangMB(p), PR = modul('MyPolitikPRU', 'pru.js');
-    S().applyEffects({ ap: -2 }, {});
-    p = S().loadPlayer(); k = getKabinet(p);
     if (lulus) {
       var res = lantikDi(p, k, 'MENTERI_BESAR', m.label + ' ' + (p.negeri || ''), 'lantik_mb');
       return { ok: !!(res && res.ok), dilantik: true, mesej: 'Dilantik sebagai ' + m.label + (p.negeri ? ' ' + p.negeri : '') + '. Elaun bulanan bermula.' };
@@ -539,7 +536,7 @@
      Timbalan Presiden parti (DAP: Pengerusi Kebangsaan), Ahli Parlimen, lobi kerajaan persekutuan dibuka, tiada jawatan kerajaan.
      ANDAIAN: kos 3 AP + RM 20,000 + 400 IP; peluang asas 60% jika PM dari parti sendiri, 30% jika PM dari rakan gabungan;
      Reputasi +/-10%, hubungan gabungan +/-10%, IP melebihi 400: +1% setiap 50 IP (maks. +10%). Gagal: separuh kos hilang; sekali bagi setiap lobi. */
-  var TPM = { ap: 3, myr: 20000, ip: 400, asasSendiri: 0.6, asasRakan: 0.3, min: 0.05, maks: 0.9 };
+  var TPM = { ap: 0, myr: 20000, ip: 400, asasSendiri: 0.6, asasRakan: 0.3, min: 0.05, maks: 0.9 };
   function statusMP(p) { var PR = modul('MyPolitikPRU', 'pru.js'); if (!PR || !PR.getPRU) { return null; } var pr = PR.getPRU(p); return [pr.status, pr.statusKedua].filter(function (x) { return x && x.jenis === 'MP'; })[0] || null; }
   /** PM dari parti sendiri? Hanya parti teraju gabungan; rakan gabungan yang lebih besar memegang PM (ANDAIAN). */
   function pmPartiSendiri(p) {
@@ -564,7 +561,7 @@
   }
   function maklumatTPM(p) {
     var sy = syaratTPM(p), kosMyr = S().kosSebenar ? S().kosSebenar(p, TPM.myr) : TPM.myr, kurang = [];
-    if ((Number(p.ap) || 0) < TPM.ap) { kurang.push('AP tidak mencukupi (perlu ' + TPM.ap + ')'); }
+    if (TPM.ap && (Number(p.ap) || 0) < TPM.ap) { kurang.push('AP tidak mencukupi (perlu ' + TPM.ap + ')'); }
     if ((Number(p.myr) || 0) < kosMyr) { kurang.push('Dana tidak cukup (perlu RM ' + kosMyr.toLocaleString('ms-MY') + ')'); }
     if ((Number(p.ip) || 0) < TPM.ip) { kurang.push('IP tidak cukup (perlu ' + TPM.ip + ')'); }
     return { layak: sy.boleh, boleh: sy.boleh && !kurang.length, sebab: sy.sebab || kurang.join('; '), peluang: Math.round(peluangTPM(p) * 100), pmSendiri: pmPartiSendiri(p), ap: TPM.ap, myr: kosMyr, ip: TPM.ip };
