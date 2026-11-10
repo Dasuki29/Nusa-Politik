@@ -9,7 +9,8 @@
      pangkatMin: syarat tangga jawatan (jika berbeza)
    Juga: wakilCawangan (bilangan wakil Cawangan ke Bahagian) dan perwakilanPA (siapa boleh menjadi perwakilan ke Perhimpunan Agung).
      lantikan  : kerusi AJK lantikan; calon kalah dalam lingkungan kerusi + lantikan berpeluang dilantik (js/election.js)
-   Fasa 2 (PN): PAS (Perlembagaan PAS Pindaan 2025).
+   Fasa 2 (PN): PAS (Perlembagaan PAS Pindaan 2025). Fasa 3 (PH): PKR (2025), DAP (2019), Amanah (2022).
+     perlu     : jawatan yang mesti dipegang dahulu; pemilih: 'ahli' | 'cawangan' | nombor (pengundi khas)
    Rujukan: Perlembagaan MCA (pindaan 2019), Perlembagaan MIC (2017); PPP dan PBRS daripada Wikipedia (ANDAIAN ⚠️).
    Permainan simulasi; bukan laman rasmi parti.
    ========================================================================== */
@@ -31,6 +32,11 @@
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
 
   var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
+
+  var PERLU_DAP = { kod: ['ketua_cawangan'], sebab: 'Pegawai JPKP dipilih daripada kalangan anggota JPKP: jadilah Pengerusi Cawangan dahulu' };
+  var PERLU_AMANAH_C = { kod: ['ajk_cawangan', 'naib_ketua_cawangan', 'ketua_cawangan'], sebab: 'Ketua dan Timbalan Ketua Cawangan dipilih oleh 11 AJK daripada kalangan mereka: menangi AJK Cawangan dahulu' };
+  var PERLU_AMANAH_K = { kod: ['ajk_bahagian', 'naib_ketua_bahagian', 'timbalan_ketua_bahagian', 'ketua_bahagian'], sebab: 'Pimpinan Kawasan dipilih oleh 15 AJK dan 3 ketua sayap daripada kalangan AJK: menangi AJK Kawasan dahulu' };
+  var TUTUP_SAYAP_AMANAH = 'Ketua AWAN, Pemuda Amanah dan WARDA Cawangan dilantik oleh Ketua Cawangan; tiada Naib atau AJK sayap Cawangan dipilih';
 
   var STRUKTUR = {
     MCA: {
@@ -67,6 +73,38 @@
         'sayap_naib_cawangan_*': { tutup: TUTUP_SAYAP_PAS }, 'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_PAS },
         'sayap_timbalan_bahagian_*': { buka: true, fasal: 'Fasal 67(3), 68' }, 'sayap_timbalan_pusat_*': { buka: true, fasal: 'Fasal 57(4), 58' },
         'sayap_ajk_bahagian_*': { kerusi: 12 }, 'sayap_ajk_pusat_*': { kerusi: 22 }         // ANDAIAN: semua AJK Dewan dipilih
+      }
+    },
+    PKR: {
+      sumber: 'Perlembagaan PKR (11 Mac 2025)',
+      jawatan: {
+        ajk_bahagian: { kerusi: 15, lantikan: 5, pemilih: 'ahli', fasal: 'Fasal 37.4, 37.6' },
+        naib_ketua_bahagian: { kerusi: 1, lantikan: 2, pemilih: 'ahli', fasal: 'Fasal 37.4, 37.6' },
+        timbalan_ketua_bahagian: { pemilih: 'ahli' }, ketua_bahagian: { pemilih: 'ahli' },     // dipilih oleh anggota Cabang (Fasal 37.4)
+        naib_presiden: { kerusi: 4, lantikan: 3, fasal: 'Fasal 21.4, 21.7' },
+        ahli_mkt: { kerusi: 20, lantikan: 7, fasal: 'Fasal 21.4, 21.7' },
+        'sayap_timbalan_bahagian_*': { buka: true, fasal: 'Fasal 17.2A(c)' }, 'sayap_timbalan_pusat_*': { buka: true, fasal: 'Fasal 21.5, 21.6' },
+        sayap_ajk_bahagian_wanita: { kerusi: 7, fasal: 'Fasal 17.2A(c)' }
+      }
+    },
+    DAP: {
+      sumber: 'Perlembagaan DAP (2019)',
+      jawatan: {
+        ajk_cawangan: { kerusi: 7, lantikan: 6, fasal: 'Fasal XXI.3, XXII.1' },             // SU, Pen. SU, Bendahari, SU Publisiti, SU Hal Ehwal Wanita, 2 AJK
+        ajk_bahagian: { tutup: 'Ahli JPKP tidak dipilih: Ahli Parlimen, ADUN, Ketua Pemuda, Ketua Wanita dan Pengerusi Cawangan menganggotai JPKP secara automatik' },
+        ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' }, timbalan_ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' }, naib_ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' },
+        ahli_mkt: { lantikan: 10, fasal: 'Fasal X.1(b)' }
+      }
+    },
+    AMANAH: {
+      sumber: 'Perlembagaan Parti Amanah Negara (2022)',
+      jawatan: {
+        ajk_cawangan: { kerusi: 11, lantikan: 4, fasal: 'Fasal 17.4' },
+        ketua_cawangan: { perlu: PERLU_AMANAH_C, pemilih: 11 }, naib_ketua_cawangan: { perlu: PERLU_AMANAH_C, pemilih: 11 },
+        ajk_bahagian: { kerusi: 15, lantikan: 8, fasal: 'Fasal 17.3' },
+        naib_ketua_bahagian: { kerusi: 2, lantikan: 1, perlu: PERLU_AMANAH_K, pemilih: 18 },
+        ketua_bahagian: { perlu: PERLU_AMANAH_K, pemilih: 18 }, timbalan_ketua_bahagian: { perlu: PERLU_AMANAH_K, pemilih: 18 },
+        'sayap_naib_cawangan_*': { tutup: TUTUP_SAYAP_AMANAH }, 'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_AMANAH }
       }
     },
     PPP: {
@@ -106,12 +144,16 @@
   function kerusi(p, d) { var e = entri(p, d); return e && e.kerusi ? e.kerusi : null; }
   /** Bilangan kerusi AJK lantikan (1/3 dilantik Ketua / Yang Dipertua / Presiden) bagi jawatan d, atau 0. */
   function lantikan(p, d) { var e = entri(p, d); return e && e.lantikan ? e.lantikan : 0; }
+  /** Syarat jawatan mesti dipegang dahulu: { kod:[...], sebab } atau null. */
+  function perlu(p, d) { var e = entri(p, d); return e && e.perlu ? e.perlu : null; }
+  /** Pengundi khas: 'ahli' (semua anggota Bahagian), 'cawangan' (ahli jawatankuasa = bilangan Cawangan + 4), nombor tetap, atau null. */
+  function pemilih(p, d) { var e = entri(p, d); return e && e.pemilih ? e.pemilih : null; }
   function pangkatMin(p, d) { var e = entri(p, d); return e && typeof e.pangkatMin === 'number' ? e.pangkatMin : (d ? d.pangkatMin : 0); }
   /** Bilangan kerusi wakil Cawangan ke Bahagian ikut perlembagaan parti, atau null (guna enjin asas). */
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
   /** Syarat perwakilan ke Perhimpunan Agung: { kod, sebab } atau null. */
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
-  return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, pangkatMin: pangkatMin,
+  return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, perlu: perlu, pemilih: pemilih, pangkatMin: pangkatMin,
     wakilCawangan: wakilCawangan, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA };
 });

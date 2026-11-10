@@ -538,7 +538,7 @@
       sasar.kekuatan = clamp(sasar.kekuatan + (cb.tahap === 'kritikal' ? CONFIG.BONUS_PENCABAR.kritikal : CONFIG.BONUS_PENCABAR.amaran), 8, 99); sasar.nama = cb.penentang.nama; sasar.pencabar = true;
     }
     calon.push({ nama: p.nama, pemain: true, kekuatan: kekuatanPemain(p, st, peringkat, d) });
-    return { calon: calon, kerusi: kerusi, pemilih: bilPemilih(p, peringkat, opts) };
+    return { calon: calon, kerusi: kerusi, pemilih: pemilihParti(p, d, opts) || bilPemilih(p, peringkat, opts) };
   }
 
   /** v8.0: cabaran aktif terhadap jawatan yang sedang dipertandingkan (null jika tiada). */
@@ -720,6 +720,14 @@
     else { b = ((p.kesetiaan && Number(p.kesetiaan.ketuaCawangan)) || 50) / 100 - 0.5; }
     return clamp(0.5 + b, 0.2, 0.8);
   }
+  /** v13.59: pengundi ikut perlembagaan parti (js/struktur.js): 'ahli' = semua anggota Cabang (PKR Fasal 37.4), 'cawangan' = ahli JPKP (DAP Fasal XIX.1), nombor = jawatankuasa (Amanah 17.3, 17.4). */
+  function pemilihParti(p, d, opts) {
+    var St = d && d.jenis !== 'perwakilan' ? modKhas('MyPolitikStruktur', 'struktur.js') : null, x = St && St.pemilih ? St.pemilih(p, d) : null;
+    if (!x) { return null; }
+    if (x === 'ahli') { return Math.max(100, ahliBahagian(p, opts)); }
+    if (x === 'cawangan') { return ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN) + 4; }
+    return Number(x) || null;
+  }
   function lantikanBerlaku(p, d, kedudukan, kerusi, rng) {
     var StL = modKhas('MyPolitikStruktur', 'struktur.js'), n = StL ? StL.lantikan(p, d) : 0;
     return !!(n && kedudukan > kerusi && kedudukan <= kerusi + n && (rng || Math.random)() < peluangLantikan(p, d));
@@ -866,7 +874,7 @@
     getStatusModul: getStatusModul,
     senaraiPertandingan: senaraiPertandingan,
     kuotaCawangan: kuotaCawangan, kuotaBahagian: kuotaBahagian, kuotaSayapCawangan: kuotaSayapCawangan, ahliSayap: ahliSayap,
-    daftarBertanding: daftarBertanding, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan,
+    daftarBertanding: daftarBertanding, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan, pemilihParti: pemilihParti,
     tarikBalik: tarikBalik,
     senaraiKempen: senaraiKempen,
     jalankanKempen: jalankanKempen,

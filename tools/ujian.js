@@ -2883,6 +2883,30 @@ ujian('v13.57 Enjin pemilihan ikut parti (Fasa 2 PN): PAS (Fasal 38, 41, 44, 57,
   betul(!E.lantikanBerlaku(Object.assign({}, p0, { parti: 'UMNO' }), dA, 10, 8, () => 0), 'UMNO tiada lantikan');
   S.clearPlayer();
 });
+ujian('v13.59 Enjin pemilihan ikut parti (Fasa 3 PH): PKR (Cabang diundi anggota), DAP (JPKP), Amanah (pemilihan tidak langsung)', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti, cd = (k) => J.cariDef(k);
+  const pkr = { parti: 'PKR', sayap: 'wanita' }, dap = { parti: 'DAP' }, am = { parti: 'AMANAH' };
+  // PKR
+  sama(ST.kerusi(pkr, cd('naib_presiden')), 4); sama(ST.lantikan(pkr, cd('naib_presiden')), 3); sama(ST.kerusi(pkr, cd('ahli_mkt')), 20); sama(ST.lantikan(pkr, cd('ahli_mkt')), 7);
+  sama(ST.kerusi(pkr, cd('ajk_bahagian')), 15); sama(ST.lantikan(pkr, cd('naib_ketua_bahagian')), 2); sama(ST.kerusi(pkr, cd('sayap_ajk_bahagian_wanita')), 7);
+  betul(J.katalogUntuk(pkr).some((d) => d.kod === 'sayap_timbalan_pusat_wanita'), 'Timbalan Ketua Wanita PKR');
+  sama(ST.pemilih(pkr, cd('ketua_bahagian')), 'ahli');
+  // DAP: Ahli JPKP ditutup, pegawai JPKP perlu Pengerusi Cawangan, JTP 30 + 10 lantikan
+  betul(!J.katalogUntuk(dap).some((d) => d.kod === 'ajk_bahagian')); sama(ST.kerusi(dap, cd('ajk_cawangan')), 7); sama(ST.lantikan(dap, cd('ahli_mkt')), 10);
+  sama(J.pangkatMinParti(dap, cd('ketua_bahagian')), 3, 'tangga: Pengerusi Cawangan');
+  // Amanah: AJK 11 / 15, Ketua perlu AJK, pengundi 11 / 18
+  sama(ST.kerusi(am, cd('ajk_cawangan')), 11); sama(ST.kerusi(am, cd('ajk_bahagian')), 15); sama(ST.kerusi(am, cd('naib_ketua_bahagian')), 2); sama(ST.pemilih(am, cd('ketua_cawangan')), 11); sama(ST.pemilih(am, cd('ketua_bahagian')), 18);
+  betul(!J.katalogUntuk({ parti: 'AMANAH', sayap: 'pemuda' }).some((d) => d.kod === 'sayap_ajk_cawangan_pemuda'));
+  // syarat 'perlu' dalam semakKelayakan
+  P.daftar({}); P.tetap({ parti: 'AMANAH', ip: 999, jawatanList: [] });
+  let k = J.semakKelayakan(S.loadPlayer(), cd('ketua_cawangan')); sama(k.terbuka, false); betul(/11 AJK/.test(k.sebab), k.sebab);
+  P.tetap({ jawatanList: [pegang('ajk_cawangan', 2025)] }); k = J.semakKelayakan(S.loadPlayer(), cd('ketua_cawangan')); betul(k.terbuka || !/11 AJK/.test(k.sebab), k.sebab);
+  sama(E.pemilihParti(S.loadPlayer(), { kod: 'ketua_cawangan', jenis: 'jawatan' }), 11);
+  P.tetap({ parti: 'DAP', jawatanList: [pegang('ajk_cawangan', 2025)] }); k = J.semakKelayakan(S.loadPlayer(), cd('ketua_bahagian')); sama(k.terbuka, false); betul(/Pengerusi Cawangan/.test(k.sebab), k.sebab);
+  P.tetap({ parti: 'PKR' }); betul(E.pemilihParti(S.loadPlayer(), { kod: 'ketua_bahagian', jenis: 'jawatan' }) >= 100, 'PKR: semua anggota Cabang');
+  P.tetap({ parti: 'DAP' }); sama(PT.ke('Naib Ketua Bahagian'), 'Setiausaha Organisasi JPKP');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

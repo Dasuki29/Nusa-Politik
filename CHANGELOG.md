@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.59 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 3 (PH)**, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PKR** (Perlembagaan 11-3-2025): pimpinan Cabang **diundi oleh semua anggota Cabang** (37.4), bukan perwakilan; AJK Cabang 15 + 5 lantikan, Naib Ketua Cabang 1 + 2 lantikan (37.6); Pusat 4 Naib Presiden + 3 lantikan, 20 Ahli MPP + 7 lantikan (21.4, 21.7); jawatan baharu Timbalan Ketua AMK / Wanita (Cabang dan Pusat); AJK Wanita Cabang 7. Ranting kekal dipertandingkan ⚠️.
+  - **DAP** (Perlembagaan 2019): Jawatankuasa Cawangan 7 dipilih + 6 lantikan (XXI.3, XXII.1); **Ahli JPKP tidak lagi dipertandingkan** (ahli automatik, XIX.1); pegawai JPKP perlu Pengerusi Cawangan, diundi ahli JPKP (XIX.2); "Penolong Setiausaha JPKP" kini **Setiausaha Organisasi JPKP**; JTP 30 + 10 lantikan (X.1(b)).
+  - **Amanah** (Perlembagaan 2022): **pemilihan tidak langsung**: Ketua / Timbalan Ketua Cawangan dipilih oleh 11 AJK (17.4), pimpinan Kawasan oleh 15 AJK + 3 ketua sayap (17.3), calon mesti AJK dahulu; AJK 11 + 4 dan 15 + 8 lantikan; Naib Ketua Kawasan 2 + 1 lantikan; Naib dan AJK sayap Cawangan ditutup (17.4(d)); Ketua sayap Cawangan kekal dipertandingkan ⚠️.
+- `js/struktur.js`: medan baharu `perlu` (jawatan mesti dipegang dahulu) dan `pemilih` ('ahli', 'cawangan' atau bilangan tetap). Ujian baharu (191 ujian).
+
 ## v13.58 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 2 (PN): PAS** ikut Perlembagaan PAS (Pindaan 2025), mockup yang dipersetujui (⚠️ andaian ditanda). BERSATU kekal NPC sehingga perlembagaannya diterima.

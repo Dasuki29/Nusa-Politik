@@ -68,7 +68,7 @@ Modul utama dalam `js/`:
 | `save.js` | Simpan dan baca profil pemain (localStorage), pintu tunggal untuk ubah nilai |
 | `calendar.js` | Takwim bulanan, AP dan elaun, susutan kesetiaan |
 | `jawatan.js` | Senarai jawatan dan syarat kelayakan |
-| `struktur.js` | Struktur jawatan dipilih ikut parti (MCA, MIC, PPP, PBRS, PAS; AJK lantikan 1/3): jawatan ditutup / khas, bilangan kerusi, tangga jawatan, wakil Cawangan, syarat perwakilan |
+| `struktur.js` | Struktur jawatan dipilih ikut parti (MCA, MIC, PPP, PBRS, PAS, PKR, DAP, Amanah; AJK lantikan 1/3, syarat jawatan, pengundi khas): jawatan ditutup / khas, bilangan kerusi, tangga jawatan, wakil Cawangan, syarat perwakilan |
 | `election.js` | Pemilihan, kempen, kuota perwakilan |
 | `meeting.js` | Persidangan Tahunan Cawangan dan Bahagian |
 | `etika.js` | Tataetika, siasatan dan hukuman disiplin |
