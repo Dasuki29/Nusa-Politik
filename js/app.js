@@ -16,7 +16,7 @@
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
   function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
-  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || k === 'BERJASA' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }                      // v13.1: MCA juga tiada sayap Puteri
+  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }                      // v13.1: MCA juga tiada sayap Puteri
   if (!document.getElementById('reg-form')) { return; }      // halaman lain (dashboard.html): lihat pengawal dashboard di bawah
 
   var D = window.MyPolitikData, S = window.MyPolitikSave;
@@ -614,7 +614,7 @@
 (function () {
   'use strict';
   function esSW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
-  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || k === 'BERJASA' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }                      // v13.1: MCA juga tiada sayap Puteri
+  function tanpaPuteri(k) { return esSW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }                      // v13.1: MCA juga tiada sayap Puteri
   if (!document.getElementById('btn-tahun')) { return; }
 
   var W = window, S = W.MyPolitikSave, D = W.MyPolitikData, O = W.MyPolitikOrdinaryMember,

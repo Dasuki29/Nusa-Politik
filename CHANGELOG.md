@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.67 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 6 (Lain-lain)** ikut Wikipedia Bahasa Melayu, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **BERJASA**: sayap baharu **Pemudi ANGKASA** (Angkatan Pemuda-Pemudi: Ketua Pemuda dan Ketua Pemudi) untuk wanita bawah 40 tahun; AJK Pusat 15, AJK Cawangan 9, Kawasan 15 AJK tanpa Naib ⚠️.
+  - **Warisan**: Majlis Tertinggi 20 ⚠️.
+  - Pembetulan: Warisan dan parti GRS (kecuali GAGASAN) tidak lagi mewarisi istilah "Pengerusi Cawangan / Bahagian" daripada PPP (kesan sampingan v13.57). GAGASAN kekal "Pengerusi Bahagian" (Wikipedia: Divisional chairpersons).
+- Ujian baharu (199 ujian); ujian pelayar BERJASA menyemak sayap Pemudi ANGKASA.
+
 ## v13.66 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 5 (GRS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).

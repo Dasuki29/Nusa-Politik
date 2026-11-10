@@ -177,6 +177,11 @@
       sumber: 'Wikipedia (ANDAIAN)', bilBahagian: 15,
       jawatan: { naib_presiden_kanan: { buka: true, kerusi: 3 }, naib_presiden: { kerusi: 2 }, ahli_mkt: { kerusi: 20 } }
     },
+    BERJASA: {
+      sumber: 'Wikipedia (ANDAIAN)',
+      jawatan: { ajk_cawangan: { kerusi: 9 }, ajk_bahagian: { kerusi: 15 }, naib_ketua_bahagian: { tutup: 'Bahagian parti ini memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).' }, ahli_mkt: { kerusi: 15 } }
+    },
+    WARISAN: { sumber: 'Wikipedia (ANDAIAN)', jawatan: { ahli_mkt: { kerusi: 20 } } },
     GAGASAN: { sumber: 'Wikipedia (ANDAIAN)', jawatan: { ahli_mkt: { kerusi: 18 } } },
     PBS: {
       sumber: 'Wikipedia (Majlis Eksekutif PBS 2026-2029)', kitaran: { mula: 2026, tahun: 3 },

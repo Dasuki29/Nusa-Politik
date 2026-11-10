@@ -2713,7 +2713,7 @@ ujian('v13.53 BERJASA: data Semenanjung, takwim 3/5/6, ANGKASA, Kekuatan Parti, 
   const M = g.MyPolitikBERJASA, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, fs = require('fs'), path = require('path');
   const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'berjasa-semenanjung.csv'), 'utf8')));
   sama(h.jumlah.bahagian, 139, '139 kawasan Bumiputera >= 50%'); const ahli = h.bahagian.reduce((a, b) => a + b.cawangan.reduce((x, c) => x + c.jumlahAhli, 0), 0);
-  betul(Math.abs(ahli - 56790) < 100, 'keahlian ~56,790 (' + ahli + ')'); betul(!SY.kelayakan('P', 25, 'BERJASA').puteri.boleh, 'tiada Puteri');
+  betul(Math.abs(ahli - 56790) < 100, 'keahlian ~56,790 (' + ahli + ')'); betul(SY.kelayakan('P', 25, 'BERJASA').puteri.boleh, 'v13.67: Pemudi ANGKASA (Puteri) dibuka');
   const kb = h.bahagian.find((b) => b.nama === 'Kota Bharu');
   S.savePlayer(S.buildPlayerProfile({ parti: 'BERJASA', nama: 'Uji BERJASA', demografik: D.tentukanDemografi('Lelaki', 39, 'BERJASA'), cawangan: kb.dun[0].cawangan[0], sayap: 'pemuda', avatar: 'pemuda', tahunAhli: 3 }));
   let p = S.loadPlayer(); sama(p.parti, 'BERJASA'); sama(p.sayap, 'pemuda'); sama(PT.info('BERJASA').gabungan, null);
@@ -3025,6 +3025,17 @@ ujian('v13.66 Enjin mesyuarat GRS (Fasa 5): PCS Mesyuarat Agung Dwitahunan, hadi
   betul(/gag_/.test(M0.janaAgendaUji(p, 'pau').map((a) => a.kod).join()), 'usul GAGASAN');
   P.tetap({ parti: 'PBS' }); betul(M0.janaAgendaUji(S.loadPlayer(), 'cawangan').every((a) => a.kod !== 'dewan_surau'), 'tiada usul surau PBS');
   P.tetap({ parti: 'LDP' }); betul(/Speaker LDP/.test(M0.janaAgendaUji(S.loadPlayer(), 'pau').map((a) => a.penerangan || '').join()), 'Speaker LDP');
+  S.clearPlayer();
+});
+ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 40), AJK kecil; Warisan MT 20; Warisan / GRS tanpa istilah Pengerusi (kecuali GAGASAN)', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti, D0 = g.MyPolitikData, cd = (k) => J.cariDef(k);
+  sama(D0.kategoriMengikutUmur('P', 38, 'BERJASA'), 'puteri'); sama(D0.kategoriMengikutUmur('P', 41, 'BERJASA'), 'wanita'); sama(D0.kategoriMengikutUmur('P', 38, 'UMNO'), 'wanita');
+  sama(ST.kerusi({ parti: 'BERJASA' }, cd('ahli_mkt')), 15); sama(ST.kerusi({ parti: 'BERJASA' }, cd('ajk_cawangan')), 9); sama(ST.kerusi({ parti: 'WARISAN' }, cd('ahli_mkt')), 20);
+  betul(!J.katalogUntuk({ parti: 'BERJASA' }).some((d) => d.kod === 'naib_ketua_bahagian'));
+  P.daftar({}); P.tetap({ parti: 'BERJASA' }); sama(PT.ke('Ketua Puteri'), 'Ketua Pemudi ANGKASA');
+  P.tetap({ parti: 'WARISAN' }); sama(PT.ke('Ketua Cawangan'), 'Ketua Cawangan');
+  P.tetap({ parti: 'PBS' }); sama(PT.ke('Ketua Bahagian'), 'Ketua Bahagian');
+  P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {

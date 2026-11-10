@@ -61,12 +61,12 @@
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < (parti === 'DAP' ? 17 : 18)) { return null; }   // v13.37: DAP 17 tahun
     if (umur >= 60) { return 'veteran'; }
     if (j === 'L') { return umur <= 40 ? 'pemuda' : 'biasa'; }
-    return umur <= 35 ? 'puteri' : 'wanita';
+    return umur <= (parti === 'BERJASA' ? 40 : 35) ? 'puteri' : 'wanita';   // v13.67: Pemudi ANGKASA bawah 40
   }
 
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
   /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
-  function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || k === 'BERJASA' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }   // v13.31: PAS (Dewan Pemuda dan Muslimat)      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
+  function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }   // v13.31: PAS (Dewan Pemuda dan Muslimat)      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
   function katParti(jantina, umur, parti) { var k = kategori(jantina, umur, parti); if ((parti === 'PKR' || parti === 'DAP') && k === 'pemuda' && parseInt(umur, 10) > 35) { k = 'biasa'; } return tanpaPuteri(parti) && k === 'puteri' ? 'wanita' : k; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
   function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
@@ -252,7 +252,7 @@
   function notisTransisi(profil) {
     var S = modul('MyPolitikSave', 'save.js'), p = profil || (S && S.loadPlayer());
     if (!p || p.tamat) { return null; }
-    var k = kod(p), t = TRANSISI[k], umur = umurPemain(p);
+    var k = kod(p), t = k === 'puteri' && p.parti === 'BERJASA' ? { had: 40, amaran: 38 } : TRANSISI[k], umur = umurPemain(p);   // v13.67: Pemudi ANGKASA 40
     if (!t || umur === null || umur < t.amaran || umur > t.had) { return null; }
     var baki = t.had - umur, anggaran = kiraBonusWarisan(p.ip, p.kesetiaan ? p.kesetiaan.akarUmbi : 0);
     return {

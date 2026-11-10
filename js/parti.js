@@ -268,15 +268,15 @@
     [/Perhimpunan Agung (UMNO|SUPP) \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/Perhimpunan Agung \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/(UMNO|SUPP) General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/\bPAU\b/g, 'Persidangan Perwakilan']].concat(SENARAI.SUPP.istilah || []);
   SENARAI.SUPP.istilahSongsang = (SENARAI.SUPP.istilahSongsang || []).concat([[/Jawatankuasa Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
     [/Persidangan Perwakilan SUPP/g, 'Perhimpunan Agung SUPP (PAU)'], [/SUPP Delegates Conference/g, 'SUPP General Assembly (PAU)'], [/Persidangan Perwakilan(?! SUPP)/g, 'PAU']]);
-  SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
-    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (AJK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'AJK Pusat'], [/Supreme Council \(MKT\)/g, 'Central Committee (AJK Pusat)'], [/Supreme Council/g, 'Central Committee'],
+  SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
+    istilah: [[/\bPuteri\b/g, 'Pemudi ANGKASA'], [/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (AJK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'AJK Pusat'], [/Supreme Council \(MKT\)/g, 'Central Committee (AJK Pusat)'], [/Supreme Council/g, 'Central Committee'],
       [/Perhimpunan Agung BERJASA \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung BERJASA/g, 'Muktamar BERJASA'],
       [/BERJASA General Assembly \(PAU\)/g, 'BERJASA Muktamar'], [/General Assembly \(PAU\)/g, 'BERJASA Muktamar'], [/BERJASA General Assembly/g, 'BERJASA Muktamar'], [/\bPAU\b/g, 'Muktamar'],
       [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Kota Bharu'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in Kota Bharu'],
       [/\bTimbalan Ketua Bahagian\b/g, 'Timbalan Ketua Kawasan'], [/\bNaib Ketua Bahagian\b/g, 'Naib Ketua Kawasan'], [/\bKetua Bahagian\b/g, 'Ketua Kawasan'], [/\bketua bahagian\b/g, 'ketua kawasan'],
       [/Bahagian/g, 'Kawasan'], [/(peringkat|Peringkat) bahagian/g, '$1 kawasan'], [/\bDivisions\b/g, 'Areas'], [/\bDivision\b/g, 'Area'], [/\bdivisions\b/g, 'areas'], [/\bdivision\b/g, 'area'],
       [/\bPemuda\b/g, 'ANGKASA'], [/\bYouth\b/g, 'ANGKASA']].concat(BULAN_BERJASA),
-    istilahSongsang: [[/Jawatankuasa Pusat \(AJK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bAJK Pusat\b/g, 'MKT'], [/Central Committee/g, 'Supreme Council'],
+    istilahSongsang: [[/Pemudi ANGKASA/g, 'Puteri'], [/Jawatankuasa Pusat \(AJK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bAJK Pusat\b/g, 'MKT'], [/Central Committee/g, 'Supreme Council'],
       [/Muktamar BERJASA/g, 'Perhimpunan Agung BERJASA (PAU)'], [/BERJASA Muktamar/g, 'BERJASA General Assembly (PAU)'], [/\bMuktamar\b/g, 'PAU'],
       [/ di Kota Bharu/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ in Kota Bharu/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
       [/Timbalan Ketua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Ketua Kawasan/g, 'Naib Ketua Bahagian'], [/Ketua Kawasan/g, 'Ketua Bahagian'], [/ketua kawasan/g, 'ketua bahagian'],
@@ -286,7 +286,7 @@
      Perhimpunan Agung <parti>, Kota Kinabalu. Gagasan Rakyat: sayap Pemuda, Wanita dan Beliawanis (Puteri); Bahagian ikut 25 kawasan Parlimen Sabah + Labuan
      (pindaan perlembagaan 17 Mei 2026). ANDAIAN: kawasan operasi parti lain, kuota kerusi GRS dan takwim 3/5/9 (data/grs-*.csv, tools/build-grs.js). Logo daripada pengguna. */
   function istilahGRS(kod, songsang) {
-    var asal = songsang ? SENARAI.PPP.istilahSongsang : SENARAI.PPP.istilah;
+    var asal = (songsang ? SENARAI.PPP.istilahSongsang : SENARAI.PPP.istilah).filter(function (r) { return kod === 'GAGASAN' || !/Ketua|Chief|Chairman|Pengerusi/.test(r[0].source); });   // v13.67: Warisan / GRS tidak mewarisi istilah Pengerusi PPP (v13.57); GAGASAN kekal (Wikipedia: Divisional chairpersons)
     var x = asal.map(function (r) { var src = r[0].source.replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, r[0].flags), typeof r[1] === 'string' ? r[1].replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu') : r[1]]; });
     if (kod === 'GAGASAN') { x = (songsang ? [[/\bBeliawanis\b/g, 'Puteri']] : [[/\bPuteri\b/g, 'Beliawanis']]).concat(x); }
     if (kod === 'PCS') { x = songsang ? [[/Mesyuarat Agung Dwitahunan PCS/g, 'Perhimpunan Agung PCS'], [/PCS Biennial General Meeting/g, 'PCS General Assembly']].concat(x) : x.concat([[/Perhimpunan Agung PCS/g, 'Mesyuarat Agung Dwitahunan PCS'], [/PCS General Assembly/g, 'PCS Biennial General Meeting']]); }   // v13.66: Wikipedia (BGM)

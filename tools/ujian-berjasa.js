@@ -43,7 +43,8 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.fill('#f-nama', 'Ahmad Zaki'); await pg.fill('#f-umur', '30'); await pg.check('input[name=jantina][value=L]').catch(() => pg.check('input[name=jantina] >> nth=0'));
   await pg.waitForTimeout(300);
   const sy = await pg.$$eval('#sayap-grid .sy', (l) => l.map((x) => x.dataset.kod + ':' + (getComputedStyle(x).display === 'none' ? 'x' : 'o')).join());
-  semak(/puteri:x/.test(sy), 'BERJASA tiada Puteri (' + sy + ')');
+  const lp = await pg.evaluate(() => { const b = document.querySelector('#sayap-grid .sy[data-kod="puteri"]'); return b ? b.textContent : ''; });
+  semak(/puteri:o/.test(sy) && /Pemudi ANGKASA/.test(lp), 'v13.67: sayap Pemudi ANGKASA (' + sy + '): ' + lp.slice(0, 60));
   const am = await pg.evaluate(() => { const b = document.querySelector('#sayap-grid .sy[data-kod="pemuda"]'); return b ? b.textContent : ''; });
   semak(/ANGKASA/.test(am), 'sayap ANGKASA: ' + am.slice(0, 160));
   await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
