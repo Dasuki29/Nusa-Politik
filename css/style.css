@@ -1133,3 +1133,12 @@ html, body { overflow-x: clip; }
 .bj-ban b { display: block; }
 .bj-ban small { color: #F3D1E3; font-size: .78rem; }
 .bj-bar i { background: #B0377A; }
+
+/* v13.54: kad GRS (Kerajaan Negeri Sabah) */
+.grs-ban { display: flex; gap: 10px; align-items: center; background: #1E5AA8; color: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
+.grs-ban img { width: 44px; height: 44px; border-radius: 8px; background: #fff; object-fit: contain; flex: none; }
+.grs-ban b { display: block; }
+.grs-ban small { color: #D6E8FA; font-size: .78rem; }
+.grs-dun { display: flex; height: 14px; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; }
+.grs-dun i { display: block; height: 100%; }
+.grs-bar i { background: #1E5AA8; }

@@ -153,7 +153,7 @@
     var k = null;
     try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
     if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
-    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; } if (k === 'DAP') { return CONFIG.DAP; } if (k === 'BERJASA') { return CONFIG.BERJASA; }
+    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; } if (k === 'DAP') { return CONFIG.DAP; } if (k === 'BERJASA') { return CONFIG.BERJASA; } if (/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(k)) { return CONFIG.PPP; }   /* v13.54: GRS (ANDAIAN takwim 3/5/9) */
     if (!k || k === 'UMNO') { var U = root.MyPolitikUMNO, kh = U && U.takwimKini ? U.takwimKini() : null; if (kh === 'lama') { return CONFIG.LAMA; } if (kh) { return takwimKhas(kh); } }      // v13.5: simpanan lama di tengah musim / musim pemilihan khas (dicache)
     return CONFIG;
   }
@@ -451,6 +451,8 @@
 
     var PBRSm = muat('MyPolitikPBRS', 'pbrs.js');                                              // v13.9: PBRS (Dua Gabungan: BN & GRS, kuota PRN Sabah)
     if (PBRSm && PBRSm.prosesBulan) { peristiwa = peristiwa.concat(PBRSm.prosesBulan().peristiwa || []); }
+    var GRm = muat('MyPolitikGRS', 'grs.js');                                                  // v13.54: GRS (Kerajaan Negeri Sabah, parti kecil)
+    if (GRm && GRm.prosesBulan) { peristiwa = peristiwa.concat(GRm.prosesBulan().peristiwa || []); }
     var BJm = muat('MyPolitikBERJASA', 'berjasa.js');                                          // v13.53: BERJASA (Parti Kecil: Kekuatan Parti, had umur ANGKASA)
     if (BJm && BJm.prosesBulan) { peristiwa = peristiwa.concat(BJm.prosesBulan().peristiwa || []); }
     var PPPm = muat('MyPolitikPPP', 'ppp.js');                                                 // v13.8: PPP (Tuntut Kerusi BN, krisis kepimpinan & ROS)

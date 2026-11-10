@@ -106,6 +106,9 @@ Modul utama dalam `js/`:
 | `berjasa.js` | BERJASA (Lain-lain, mod ringan): Kekuatan Parti, Dakwah, pakatan pilihan raya, PRU solo, Penentu kerajaan |
 | `berjasa-ui.js` | Kad 🌙 BERJASA: Parti Kecil (tab Profil) |
 | `berjasa-data.js` | Dijana oleh `tools/build-berjasa.js`: kawasan operasi BERJASA |
+| `grs.js` | GRS (6 parti Sabah, mod ringan): kuota kerusi GRS, Kestabilan Gabungan, krisis ADUN lompat, parti kecil |
+| `grs-ui.js` | Kad 🏝️ GRS: Kerajaan Negeri Sabah (tab Profil) |
+| `grs-data.js` | Dijana oleh `tools/build-grs.js`: kerusi Sabah + Labuan, kawasan operasi dan kuota setiap parti GRS |
 | `rundingan.js` | Rundingan Gabungan selepas Parlimen tergantung: calon rakan (PH, PN / BN, GPS, GRS, Bebas), kesediaan, lawan tradisi, Restu PAS, pilihan automatik NPC bagi pemain bukan Presiden |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN; Fasa 2: Restu Majlis Syura, Ceramah, Dewan Ulamak / As-Sabiqun / Himpunan Pendukung, Ahli Bersekutu; data kawasan (`node tools/build-pas.js`) |
@@ -165,6 +168,7 @@ node tools/ujian-pembangkang.js  # pelayar: Ketua Pembangkang (kad tab Dewan, ti
 node tools/ujian-lompat.js       # pelayar: Lompat Parti hujung ke hujung (kad Profil, borang cawangan baharu, EN)
 node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab Istana, tugas, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
+node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)

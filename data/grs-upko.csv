@@ -1,0 +1,346 @@
+ID,Nama Negeri,Nama Parlimen,Nama DUN,Nama Lokaliti,Jumlah Ahli,Lelaki,Perempuan,Bawah 40,Atas 40
+168/005/001,Sabah,"Kota Marudu","Matunggong","Sikuati",248,129,119,99,149
+168/005/002,Sabah,"Kota Marudu","Matunggong","Dualog",74,38,36,30,44
+168/005/003,Sabah,"Kota Marudu","Matunggong","Pinawantai",431,224,207,172,259
+168/005/004,Sabah,"Kota Marudu","Matunggong","Tambuluran",134,70,64,54,80
+168/005/005,Sabah,"Kota Marudu","Matunggong","Indarason",190,99,91,76,114
+168/005/006,Sabah,"Kota Marudu","Matunggong","Matunggong",474,246,228,190,284
+168/005/007,Sabah,"Kota Marudu","Matunggong","Nangka",96,50,46,38,58
+168/005/008,Sabah,"Kota Marudu","Matunggong","Tigaman",188,98,90,75,113
+168/005/009,Sabah,"Kota Marudu","Matunggong","Rampai",148,77,71,59,89
+168/005/010,Sabah,"Kota Marudu","Matunggong","Lodung",223,116,107,89,134
+168/005/011,Sabah,"Kota Marudu","Matunggong","Lokoton",114,59,55,46,68
+168/005/012,Sabah,"Kota Marudu","Matunggong","Lajong",151,79,72,60,91
+168/005/013,Sabah,"Kota Marudu","Matunggong","Tinangol",281,146,135,112,169
+168/005/014,Sabah,"Kota Marudu","Matunggong","Kandawayon",166,86,80,66,100
+168/005/015,Sabah,"Kota Marudu","Matunggong","Muhang",69,36,33,28,41
+168/005/016,Sabah,"Kota Marudu","Matunggong","Sebayan",134,70,64,54,80
+168/005/017,Sabah,"Kota Marudu","Matunggong","Lotong",182,95,87,73,109
+168/005/018,Sabah,"Kota Marudu","Matunggong","Tagumamal Laut",92,48,44,37,55
+168/005/019,Sabah,"Kota Marudu","Matunggong","Sampir",117,61,56,47,70
+168/005/020,Sabah,"Kota Marudu","Matunggong","Teringai Laut",137,71,66,55,82
+168/005/021,Sabah,"Kota Marudu","Matunggong","Bingolon",95,49,46,38,57
+168/005/022,Sabah,"Kota Marudu","Matunggong","Panudahan",141,73,68,56,85
+168/005/023,Sabah,"Kota Marudu","Matunggong","Narandang",114,59,55,46,68
+168/005/024,Sabah,"Kota Marudu","Matunggong","Terongkongan",153,80,73,61,92
+168/005/025,Sabah,"Kota Marudu","Matunggong","Pata",96,50,46,38,58
+168/006/001,Sabah,"Kota Marudu","Bandau","Bintasan",401,209,192,160,241
+168/006/002,Sabah,"Kota Marudu","Bandau","Mangaris",381,198,183,152,229
+168/006/003,Sabah,"Kota Marudu","Bandau","Tagaroh",294,153,141,118,176
+168/006/004,Sabah,"Kota Marudu","Bandau","Langkon",273,142,131,109,164
+168/006/005,Sabah,"Kota Marudu","Bandau","Panaitan",308,160,148,123,185
+168/006/006,Sabah,"Kota Marudu","Bandau","Mangin",110,57,53,44,66
+168/006/007,Sabah,"Kota Marudu","Bandau","Ranau",356,185,171,142,214
+168/006/008,Sabah,"Kota Marudu","Bandau","Bongon",619,322,297,248,371
+168/006/009,Sabah,"Kota Marudu","Bandau","Ongkilan",160,83,77,64,96
+168/006/010,Sabah,"Kota Marudu","Bandau","Taritipan",281,146,135,112,169
+168/006/011,Sabah,"Kota Marudu","Bandau","Popok",380,198,182,152,228
+168/006/012,Sabah,"Kota Marudu","Bandau","Tanjung Batu",232,121,111,93,139
+168/006/013,Sabah,"Kota Marudu","Bandau","Pangapuyan",191,99,92,76,115
+168/007/001,Sabah,"Kota Marudu","Tandek","Tingkalanon",552,287,265,221,331
+168/007/002,Sabah,"Kota Marudu","Tandek","Talantang",387,201,186,155,232
+168/007/003,Sabah,"Kota Marudu","Tandek","Ulu Bengkoka",37,19,18,15,22
+168/007/004,Sabah,"Kota Marudu","Tandek","Gana",174,90,84,70,104
+168/007/005,Sabah,"Kota Marudu","Tandek","Simpangan",184,96,88,74,110
+168/007/006,Sabah,"Kota Marudu","Tandek","Malangkap",198,103,95,79,119
+168/007/007,Sabah,"Kota Marudu","Tandek","Marak Parak",214,111,103,86,128
+168/007/008,Sabah,"Kota Marudu","Tandek","Salimandut",410,213,197,164,246
+168/007/009,Sabah,"Kota Marudu","Tandek","Samparita",116,60,56,46,70
+168/007/010,Sabah,"Kota Marudu","Tandek","Lingkabungan",73,38,35,29,44
+168/007/011,Sabah,"Kota Marudu","Tandek","Sonsogon Magandai",216,112,104,86,130
+168/007/012,Sabah,"Kota Marudu","Tandek","Gouton",44,23,21,18,26
+168/007/013,Sabah,"Kota Marudu","Tandek","Bombong I",85,44,41,34,51
+168/007/014,Sabah,"Kota Marudu","Tandek","Damai",268,139,129,107,161
+168/007/015,Sabah,"Kota Marudu","Tandek","Tagibang",85,44,41,34,51
+168/007/016,Sabah,"Kota Marudu","Tandek","Goshen",523,272,251,209,314
+168/007/017,Sabah,"Kota Marudu","Tandek","Timbang Batu",263,137,126,105,158
+168/007/018,Sabah,"Kota Marudu","Tandek","Sunsui",108,56,52,43,65
+168/007/019,Sabah,"Kota Marudu","Tandek","Masalog",322,167,155,129,193
+170/012/001,Sabah,"Tuaran","Sulaman","Penimbawan",216,112,104,86,130
+170/012/002,Sabah,"Tuaran","Sulaman","Serusup",273,142,131,109,164
+170/012/003,Sabah,"Tuaran","Sulaman","Kindu",521,271,250,208,313
+170/012/004,Sabah,"Tuaran","Sulaman","Indai",280,146,134,112,168
+170/012/005,Sabah,"Tuaran","Sulaman","Batangan",326,170,156,130,196
+170/012/006,Sabah,"Tuaran","Sulaman","Tambalang",895,465,430,358,537
+170/012/007,Sabah,"Tuaran","Sulaman","Baru-Baru",171,89,82,68,103
+170/013/001,Sabah,"Tuaran","Pantai Dalit","Tuaran Bandar",444,231,213,178,266
+170/013/002,Sabah,"Tuaran","Pantai Dalit","Marabahai",411,214,197,164,247
+170/013/003,Sabah,"Tuaran","Pantai Dalit","Mengkabong",599,311,288,240,359
+170/013/004,Sabah,"Tuaran","Pantai Dalit","Berungis",593,308,285,237,356
+170/013/005,Sabah,"Tuaran","Pantai Dalit","Gayang",299,155,144,120,179
+170/013/006,Sabah,"Tuaran","Pantai Dalit","Nongkoulud",478,249,229,191,287
+170/013/007,Sabah,"Tuaran","Pantai Dalit","Telipok",1016,528,488,406,610
+170/014/001,Sabah,"Tuaran","Tamparuli","Tenghilan",556,289,267,222,334
+170/014/002,Sabah,"Tuaran","Tamparuli","Rani",376,196,180,150,226
+170/014/003,Sabah,"Tuaran","Tamparuli","Rungus",155,81,74,62,93
+170/014/004,Sabah,"Tuaran","Tamparuli","Rengalis",300,156,144,120,180
+170/014/005,Sabah,"Tuaran","Tamparuli","Topokon",257,134,123,103,154
+170/014/006,Sabah,"Tuaran","Tamparuli","Sawah",444,231,213,178,266
+170/014/007,Sabah,"Tuaran","Tamparuli","Tamparuli",690,359,331,276,414
+170/014/008,Sabah,"Tuaran","Tamparuli","Mengkaladoi",538,280,258,215,323
+170/014/009,Sabah,"Tuaran","Tamparuli","Gayaratau",131,68,63,52,79
+170/014/010,Sabah,"Tuaran","Tamparuli","Kilang Bata",95,49,46,38,57
+170/014/011,Sabah,"Tuaran","Tamparuli","Telibong",345,179,166,138,207
+170/015/001,Sabah,"Tuaran","Kiulu","Rangalau",203,106,97,81,122
+170/015/002,Sabah,"Tuaran","Kiulu","Kiulu",597,310,287,239,358
+170/015/003,Sabah,"Tuaran","Kiulu","Malangang",183,95,88,73,110
+170/015/004,Sabah,"Tuaran","Kiulu","Togop",161,84,77,64,97
+170/015/005,Sabah,"Tuaran","Kiulu","Kelawat",139,72,67,56,83
+170/015/006,Sabah,"Tuaran","Kiulu","Bongol",73,38,35,29,44
+170/015/007,Sabah,"Tuaran","Kiulu","Simpangan",160,83,77,64,96
+170/015/008,Sabah,"Tuaran","Kiulu","Taginambur",72,37,35,29,43
+170/015/009,Sabah,"Tuaran","Kiulu","Pukak",204,106,98,82,122
+170/015/010,Sabah,"Tuaran","Kiulu","Mantob",143,74,69,57,86
+170/015/011,Sabah,"Tuaran","Kiulu","Pahu",170,88,82,68,102
+170/015/012,Sabah,"Tuaran","Kiulu","Tiong Simpodon",174,90,84,70,104
+170/015/013,Sabah,"Tuaran","Kiulu","Poring",53,28,25,21,32
+170/015/014,Sabah,"Tuaran","Kiulu","Tomis",128,67,61,51,77
+170/015/015,Sabah,"Tuaran","Kiulu","Tudan",37,19,18,15,22
+173/022/001,Sabah,"Putatan","Tanjong Aru","Pulau Gaya",694,361,333,278,416
+173/022/002,Sabah,"Putatan","Tanjong Aru","Sembulan Utara",634,330,304,254,380
+173/022/003,Sabah,"Putatan","Tanjong Aru","Sembulan Selatan",646,336,310,258,388
+173/022/004,Sabah,"Putatan","Tanjong Aru","Tanjung Aru Timor",450,234,216,180,270
+173/022/005,Sabah,"Putatan","Tanjong Aru","Tanjung Aru Barat",289,150,139,116,173
+173/022/006,Sabah,"Putatan","Tanjong Aru","Lapangan Terbang",51,27,24,20,31
+173/022/007,Sabah,"Putatan","Tanjong Aru","Tanjung Aru Baru",319,166,153,128,191
+173/023/001,Sabah,"Putatan","Petagas","Petagas",597,310,287,239,358
+173/023/002,Sabah,"Putatan","Petagas","Ulu Putatan",397,206,191,159,238
+173/023/003,Sabah,"Putatan","Petagas","Bandar Putatan",598,311,287,239,359
+173/023/004,Sabah,"Putatan","Petagas","Papason",789,410,379,316,473
+173/023/005,Sabah,"Putatan","Petagas","Tengah Padang",250,130,120,100,150
+173/023/006,Sabah,"Putatan","Petagas","Tombovo",289,150,139,116,173
+173/024/001,Sabah,"Putatan","Tanjung Keramat","Muhibbah",1105,575,530,442,663
+173/024/002,Sabah,"Putatan","Tanjung Keramat","Pasir Putih",1437,747,690,575,862
+173/024/003,Sabah,"Putatan","Tanjung Keramat","Lok Kawi",712,370,342,285,427
+173/024/004,Sabah,"Putatan","Tanjung Keramat","Taman Pantai Lok Kawi",527,274,253,211,316
+174/025/001,Sabah,"Penampang","Kapayan","Kapayan Barat",89,46,43,36,53
+174/025/002,Sabah,"Penampang","Kapayan","Kapayan",1371,713,658,548,823
+174/025/003,Sabah,"Penampang","Kapayan","Kapayan Timor",1195,621,574,478,717
+174/025/004,Sabah,"Penampang","Kapayan","Kobusak",1197,622,575,479,718
+174/025/005,Sabah,"Penampang","Kapayan","Nosob",1774,922,852,710,1064
+174/025/006,Sabah,"Penampang","Kapayan","Donggongon",867,451,416,347,520
+174/025/007,Sabah,"Penampang","Kapayan","Hungab",726,378,348,290,436
+174/026/001,Sabah,"Penampang","Moyog","Buit",309,161,148,124,185
+174/026/002,Sabah,"Penampang","Moyog","Guunsing",205,107,98,82,123
+174/026/003,Sabah,"Penampang","Moyog","Penampang Utara",762,396,366,305,457
+174/026/004,Sabah,"Penampang","Moyog","Nambazan",424,220,204,170,254
+174/026/005,Sabah,"Penampang","Moyog","Kurai",200,104,96,80,120
+174/026/006,Sabah,"Penampang","Moyog","Limbanak",621,323,298,248,373
+174/026/007,Sabah,"Penampang","Moyog","Terian",31,16,15,12,19
+174/026/008,Sabah,"Penampang","Moyog","Moyog",267,139,128,107,160
+174/026/009,Sabah,"Penampang","Moyog","Inobong",987,513,474,395,592
+174/026/010,Sabah,"Penampang","Moyog","Tanaki",292,152,140,117,175
+174/026/011,Sabah,"Penampang","Moyog","Buayan",43,22,21,17,26
+174/026/012,Sabah,"Penampang","Moyog","Longkogungan",30,16,14,12,18
+174/026/013,Sabah,"Penampang","Moyog","Babagon",349,181,168,140,209
+179/036/001,Sabah,"Ranau","Kundasang","Bundu Tuhan",367,191,176,147,220
+179/036/002,Sabah,"Ranau","Kundasang","Kundasang",901,469,432,360,541
+179/036/003,Sabah,"Ranau","Kundasang","Pinausok",167,87,80,67,100
+179/036/004,Sabah,"Ranau","Kundasang","Peranchangan",233,121,112,93,140
+179/036/005,Sabah,"Ranau","Kundasang","Pinawantai",246,128,118,98,148
+179/036/006,Sabah,"Ranau","Kundasang","Timbua",345,179,166,138,207
+179/036/007,Sabah,"Ranau","Kundasang","Nawanon",107,56,51,43,64
+179/036/008,Sabah,"Ranau","Kundasang","Ulu Sugut",332,173,159,133,199
+179/036/009,Sabah,"Ranau","Kundasang","Mangkapoh",155,81,74,62,93
+179/036/010,Sabah,"Ranau","Kundasang","Karagasan",197,102,95,79,118
+179/036/011,Sabah,"Ranau","Kundasang","Kaingaran",182,95,87,73,109
+179/036/012,Sabah,"Ranau","Kundasang","Kilanas",171,89,82,68,103
+179/036/013,Sabah,"Ranau","Kundasang","Langsat",177,92,85,71,106
+179/037/001,Sabah,"Ranau","Karanaan","Paka",307,160,147,123,184
+179/037/002,Sabah,"Ranau","Karanaan","Pekan Ranau",305,159,146,122,183
+179/037/003,Sabah,"Ranau","Karanaan","Tambiau",91,47,44,36,55
+179/037/004,Sabah,"Ranau","Karanaan","Tagudon",180,94,86,72,108
+179/037/005,Sabah,"Ranau","Karanaan","Karanaan",85,44,41,34,51
+179/037/006,Sabah,"Ranau","Karanaan","Tungou",66,34,32,26,40
+179/037/007,Sabah,"Ranau","Karanaan","Randagong",108,56,52,43,65
+179/037/008,Sabah,"Ranau","Karanaan","Lipasu",281,146,135,112,169
+179/037/009,Sabah,"Ranau","Karanaan","Mohimboyon",110,57,53,44,66
+179/037/010,Sabah,"Ranau","Karanaan","Toboh",99,51,48,40,59
+179/037/011,Sabah,"Ranau","Karanaan","Ratau",58,30,28,23,35
+179/037/012,Sabah,"Ranau","Karanaan","Kamburongoh",148,77,71,59,89
+179/037/013,Sabah,"Ranau","Karanaan","Sumaang",383,199,184,153,230
+179/037/014,Sabah,"Ranau","Karanaan","Kimolohing",239,124,115,96,143
+179/037/015,Sabah,"Ranau","Karanaan","Kinarasan",96,50,46,38,58
+179/037/016,Sabah,"Ranau","Karanaan","Waang",96,50,46,38,58
+179/037/017,Sabah,"Ranau","Karanaan","Tudan",60,31,29,24,36
+179/038/001,Sabah,"Ranau","Paginatan","Lohan",776,404,372,310,466
+179/038/002,Sabah,"Ranau","Paginatan","Bongkud",252,131,121,101,151
+179/038/003,Sabah,"Ranau","Paginatan","Kilimu",411,214,197,164,247
+179/038/004,Sabah,"Ranau","Paginatan","Libang",202,105,97,81,121
+179/038/005,Sabah,"Ranau","Paginatan","Kituntul",263,137,126,105,158
+179/038/006,Sabah,"Ranau","Paginatan","Nalapak",248,129,119,99,149
+179/038/007,Sabah,"Ranau","Paginatan","Suminimpod",116,60,56,46,70
+179/038/008,Sabah,"Ranau","Paginatan","Longut",28,15,13,11,17
+179/038/009,Sabah,"Ranau","Paginatan","Paus",121,63,58,48,73
+179/038/010,Sabah,"Ranau","Paginatan","Paginatan",253,132,121,101,152
+179/038/011,Sabah,"Ranau","Paginatan","Kinapulidan",183,95,88,73,110
+179/038/012,Sabah,"Ranau","Paginatan","Tinanom",57,30,27,23,34
+179/038/013,Sabah,"Ranau","Paginatan","Tampios",78,41,37,31,47
+179/038/014,Sabah,"Ranau","Paginatan","Miruru",122,63,59,49,73
+179/038/015,Sabah,"Ranau","Paginatan","Tiang",22,11,11,9,13
+179/038/016,Sabah,"Ranau","Paginatan","Noopung",102,53,49,41,61
+179/038/017,Sabah,"Ranau","Paginatan","Narawang",115,60,55,46,69
+179/038/018,Sabah,"Ranau","Paginatan","Marakau",174,90,84,70,104
+179/038/019,Sabah,"Ranau","Paginatan","Kandawayon",91,47,44,36,55
+179/038/020,Sabah,"Ranau","Paginatan","Sagindai",111,58,53,44,67
+179/038/021,Sabah,"Ranau","Paginatan","Nampasan",89,46,43,36,53
+179/038/022,Sabah,"Ranau","Paginatan","Matupang",109,57,52,44,65
+180/039/001,Sabah,"Keningau","Tambunan","Kirokot",102,53,49,41,61
+180/039/002,Sabah,"Keningau","Tambunan","Patau",232,121,111,93,139
+180/039/003,Sabah,"Keningau","Tambunan","Kinabaan",337,175,162,135,202
+180/039/004,Sabah,"Keningau","Tambunan","Sensuron",362,188,174,145,217
+180/039/005,Sabah,"Keningau","Tambunan","Timbou",153,80,73,61,92
+180/039/006,Sabah,"Keningau","Tambunan","Toboh",538,280,258,215,323
+180/039/007,Sabah,"Keningau","Tambunan","Kaingaran",119,62,57,48,71
+180/039/008,Sabah,"Keningau","Tambunan","Tambunan Bandar",850,442,408,340,510
+180/039/009,Sabah,"Keningau","Tambunan","Lubong",633,329,304,253,380
+180/039/010,Sabah,"Keningau","Tambunan","Nambayan",43,22,21,17,26
+180/039/011,Sabah,"Keningau","Tambunan","Kuala Monsok",227,118,109,91,136
+180/039/012,Sabah,"Keningau","Tambunan","Geras",227,118,109,91,136
+180/039/013,Sabah,"Keningau","Tambunan","Tiong",53,28,25,21,32
+180/039/014,Sabah,"Keningau","Tambunan","Namadan",89,46,43,36,53
+180/039/015,Sabah,"Keningau","Tambunan","Monsorulong",174,90,84,70,104
+180/039/016,Sabah,"Keningau","Tambunan","Rompon",104,54,50,42,62
+180/040/001,Sabah,"Keningau","Bingkor","Ranggom",294,153,141,118,176
+180/040/002,Sabah,"Keningau","Bingkor","Apin-Apin",411,214,197,164,247
+180/040/003,Sabah,"Keningau","Bingkor","Marampong",436,227,209,174,262
+180/040/004,Sabah,"Keningau","Bingkor","Bunga Raya",217,113,104,87,130
+180/040/005,Sabah,"Keningau","Bingkor","Kukuangoh",194,101,93,78,116
+180/040/006,Sabah,"Keningau","Bingkor","Tuntumulod",453,236,217,181,272
+180/040/007,Sabah,"Keningau","Bingkor","Bingkor",453,236,217,181,272
+180/040/008,Sabah,"Keningau","Bingkor","Baginda",354,184,170,142,212
+180/040/009,Sabah,"Keningau","Bingkor","Tuarid Taud",717,373,344,287,430
+180/040/010,Sabah,"Keningau","Bingkor","Keningau Station",540,281,259,216,324
+180/040/011,Sabah,"Keningau","Bingkor","Keningau Bandar",488,254,234,195,293
+180/041/001,Sabah,"Keningau","Liawan","Luagan",706,367,339,282,424
+180/041/002,Sabah,"Keningau","Liawan","Liawan",605,315,290,242,363
+180/041/003,Sabah,"Keningau","Liawan","Patikang Laut",381,198,183,152,229
+180/041/004,Sabah,"Keningau","Liawan","Sinagang",281,146,135,112,169
+180/041/005,Sabah,"Keningau","Liawan","Meninipir",365,190,175,146,219
+180/041/006,Sabah,"Keningau","Liawan","Bayangan",237,123,114,95,142
+180/041/007,Sabah,"Keningau","Liawan","Mesjid",487,253,234,195,292
+180/041/008,Sabah,"Keningau","Liawan","Limbawan",508,264,244,203,305
+180/041/009,Sabah,"Keningau","Liawan","Motou",475,247,228,190,285
+180/041/010,Sabah,"Keningau","Liawan","Banjar",721,375,346,288,433
+181/042/001,Sabah,"Tenom","Melalap","Pamilaan",241,125,116,96,145
+181/042/002,Sabah,"Tenom","Melalap","Melalap",478,249,229,191,287
+181/042/003,Sabah,"Tenom","Melalap","Lagud",371,193,178,148,223
+181/042/004,Sabah,"Tenom","Melalap","Kalang",492,256,236,197,295
+181/042/005,Sabah,"Tenom","Melalap","Tenom Utara",142,74,68,57,85
+181/042/006,Sabah,"Tenom","Melalap","Tenom Selatan",364,189,175,146,218
+181/042/007,Sabah,"Tenom","Melalap","Saga",227,118,109,91,136
+181/042/008,Sabah,"Tenom","Melalap","Mandalom",367,191,176,147,220
+181/042/009,Sabah,"Tenom","Melalap","Pangi",82,43,39,33,49
+181/042/010,Sabah,"Tenom","Melalap","Paguokon",335,174,161,134,201
+181/043/001,Sabah,"Tenom","Kemabong","Chinta Mata",347,180,167,139,208
+181/043/002,Sabah,"Tenom","Kemabong","Sapong",249,129,120,100,149
+181/043/003,Sabah,"Tenom","Kemabong","Mansasoh",154,80,74,62,92
+181/043/004,Sabah,"Tenom","Kemabong","Enubai",212,110,102,85,127
+181/043/005,Sabah,"Tenom","Kemabong","Paal",440,229,211,176,264
+181/043/006,Sabah,"Tenom","Kemabong","Baru Jumpa",200,104,96,80,120
+181/043/007,Sabah,"Tenom","Kemabong","Kemabong",709,369,340,284,425
+181/043/008,Sabah,"Tenom","Kemabong","Tomani",587,305,282,235,352
+181/043/009,Sabah,"Tenom","Kemabong","Rundum",45,23,22,18,27
+181/043/010,Sabah,"Tenom","Kemabong","Kapulu",25,13,12,10,15
+181/043/011,Sabah,"Tenom","Kemabong","Katuboh",29,15,14,12,17
+181/043/012,Sabah,"Tenom","Kemabong","Ulu Tomani",371,193,178,148,223
+182/044/001,Sabah,"Pensiangan","Tulid","Sinulihan",300,156,144,120,180
+182/044/002,Sabah,"Pensiangan","Tulid","Mansiat",373,194,179,149,224
+182/044/003,Sabah,"Pensiangan","Tulid","Tulid",261,136,125,104,157
+182/044/004,Sabah,"Pensiangan","Tulid","Sungoi",172,89,83,69,103
+182/044/005,Sabah,"Pensiangan","Tulid","Marapok",344,179,165,138,206
+182/044/006,Sabah,"Pensiangan","Tulid","Magatang",391,203,188,156,235
+182/044/007,Sabah,"Pensiangan","Tulid","Menawo",292,152,140,117,175
+182/044/008,Sabah,"Pensiangan","Tulid","Simbuan",92,48,44,37,55
+182/044/009,Sabah,"Pensiangan","Tulid","Lanas",192,100,92,77,115
+182/045/001,Sabah,"Pensiangan","Sook","Malima",397,206,191,159,238
+182/045/002,Sabah,"Pensiangan","Sook","Sook",378,197,181,151,227
+182/045/003,Sabah,"Pensiangan","Sook","Barasanon",229,119,110,92,137
+182/045/004,Sabah,"Pensiangan","Sook","Ansip",761,396,365,304,457
+182/045/005,Sabah,"Pensiangan","Sook","Mambulu",237,123,114,95,142
+182/045/006,Sabah,"Pensiangan","Sook","Karamatoi",114,59,55,46,68
+182/045/007,Sabah,"Pensiangan","Sook","Dalit",305,159,146,122,183
+182/045/008,Sabah,"Pensiangan","Sook","Kalampun",61,32,29,24,37
+182/045/009,Sabah,"Pensiangan","Sook","Malaing",49,25,24,20,29
+182/045/010,Sabah,"Pensiangan","Sook","Lumiri",26,14,12,10,16
+182/045/011,Sabah,"Pensiangan","Sook","Bonor",48,25,23,19,29
+182/045/012,Sabah,"Pensiangan","Sook","Tiulon",355,185,170,142,213
+182/046/001,Sabah,"Pensiangan","Nabawan","Nabawan",1421,739,682,568,853
+182/046/002,Sabah,"Pensiangan","Nabawan","Pandewan",246,128,118,98,148
+182/046/003,Sabah,"Pensiangan","Nabawan","Ponontomon",108,56,52,43,65
+182/046/004,Sabah,"Pensiangan","Nabawan","Saliu",50,26,24,20,30
+182/046/005,Sabah,"Pensiangan","Nabawan","Sabinait",143,74,69,57,86
+182/046/006,Sabah,"Pensiangan","Nabawan","Sapulot",283,147,136,113,170
+182/046/007,Sabah,"Pensiangan","Nabawan","Tataluan",176,92,84,70,106
+182/046/008,Sabah,"Pensiangan","Nabawan","Saliku",94,49,45,38,56
+182/046/009,Sabah,"Pensiangan","Nabawan","Longongon",281,146,135,112,169
+182/046/010,Sabah,"Pensiangan","Nabawan","Pensiangan",125,65,60,50,75
+182/046/011,Sabah,"Pensiangan","Nabawan","Sibangali",74,38,36,30,44
+182/046/012,Sabah,"Pensiangan","Nabawan","Pohon Batu",99,51,48,40,59
+182/046/013,Sabah,"Pensiangan","Nabawan","Salinatan",66,34,32,26,40
+182/046/014,Sabah,"Pensiangan","Nabawan","Babalitan",184,96,88,74,110
+182/046/015,Sabah,"Pensiangan","Nabawan","Saliliran",54,28,26,22,32
+183/047/001,Sabah,"Beluran","Telupid","Ulu Sapi",318,165,153,127,191
+183/047/002,Sabah,"Beluran","Telupid","Lidong",187,97,90,75,112
+183/047/003,Sabah,"Beluran","Telupid","Nangoh",307,160,147,123,184
+183/047/004,Sabah,"Beluran","Telupid","Kiabau",59,31,28,24,35
+183/047/005,Sabah,"Beluran","Telupid","Barayong",248,129,119,99,149
+183/047/006,Sabah,"Beluran","Telupid","Wonod",400,208,192,160,240
+183/047/007,Sabah,"Beluran","Telupid","Telupid",575,299,276,230,345
+183/047/008,Sabah,"Beluran","Telupid","Tongkungan",92,48,44,37,55
+183/048/001,Sabah,"Beluran","Sugut","Jambongan Utara",78,41,37,31,47
+183/048/002,Sabah,"Beluran","Sugut","Golong",121,63,58,48,73
+183/048/003,Sabah,"Beluran","Sugut","Paitan Barat",169,88,81,68,101
+183/048/004,Sabah,"Beluran","Sugut","Terusan Sugut",91,47,44,36,55
+183/048/005,Sabah,"Beluran","Sugut","Alungai",39,20,19,16,23
+183/048/006,Sabah,"Beluran","Sugut","Lingkabau Utara",15,8,7,6,9
+183/048/007,Sabah,"Beluran","Sugut","Lingkabau Selatan",251,131,120,100,151
+183/048/008,Sabah,"Beluran","Sugut","Sungai-Sungai",163,85,78,65,98
+183/048/009,Sabah,"Beluran","Sugut","Pamol",343,178,165,137,206
+183/048/010,Sabah,"Beluran","Sugut","Botitian",149,77,72,60,89
+183/048/011,Sabah,"Beluran","Sugut","Malalin",47,24,23,19,28
+183/048/012,Sabah,"Beluran","Sugut","Bawang",198,103,95,79,119
+183/048/013,Sabah,"Beluran","Sugut","Tanjung Nipis",102,53,49,41,61
+183/048/014,Sabah,"Beluran","Sugut","Lubang Buaya",56,29,27,22,34
+183/048/015,Sabah,"Beluran","Sugut","Obah",52,27,25,21,31
+183/048/016,Sabah,"Beluran","Sugut","Pantai Boring",73,38,35,29,44
+183/048/017,Sabah,"Beluran","Sugut","Tampat",113,59,54,45,68
+183/048/018,Sabah,"Beluran","Sugut","Dalamas",235,122,113,94,141
+183/048/019,Sabah,"Beluran","Sugut","Nakadong",50,26,24,20,30
+183/048/020,Sabah,"Beluran","Sugut","Abuan",123,64,59,49,74
+183/048/021,Sabah,"Beluran","Sugut","Binsulung",224,116,108,90,134
+183/049/001,Sabah,"Beluran","Labuk","Kaniogan",109,57,52,44,65
+183/049/002,Sabah,"Beluran","Labuk","Tetabuan",121,63,58,48,73
+183/049/003,Sabah,"Beluran","Labuk","Kolapis",230,120,110,92,138
+183/049/004,Sabah,"Beluran","Labuk","Klagan",70,36,34,28,42
+183/049/005,Sabah,"Beluran","Labuk","Sapi",178,93,85,71,107
+183/049/006,Sabah,"Beluran","Labuk","Sungai Nangka",373,194,179,149,224
+183/049/007,Sabah,"Beluran","Labuk","Pekan Beluran",490,255,235,196,294
+183/049/008,Sabah,"Beluran","Labuk","Muanad",541,281,260,216,325
+187/057/001,Sabah,"Kinabatangan","Kuamut","Mananam",297,154,143,119,178
+187/057/002,Sabah,"Kinabatangan","Kuamut","Sogo-Sogo",150,78,72,60,90
+187/057/003,Sabah,"Kinabatangan","Kuamut","Entilibon",480,250,230,192,288
+187/057/004,Sabah,"Kinabatangan","Kuamut","Karamuak",185,96,89,74,111
+187/057/005,Sabah,"Kinabatangan","Kuamut","Kuamut",118,61,57,47,71
+187/057/006,Sabah,"Kinabatangan","Kuamut","Tongod",484,252,232,194,290
+187/057/007,Sabah,"Kinabatangan","Kuamut","Penangah",433,225,208,173,260
+187/057/008,Sabah,"Kinabatangan","Kuamut","Masaum",61,32,29,24,37
+187/057/009,Sabah,"Kinabatangan","Kuamut","Inarad",84,44,40,34,50
+187/057/010,Sabah,"Kinabatangan","Kuamut","Saguan",353,184,169,141,212
+187/058/001,Sabah,"Kinabatangan","Lamag","Buang Sayang",176,92,84,70,106
+187/058/002,Sabah,"Kinabatangan","Lamag","Bukit Garam",539,280,259,216,323
+187/058/003,Sabah,"Kinabatangan","Lamag","Lamag",83,43,40,33,50
+187/058/004,Sabah,"Kinabatangan","Lamag","Balat",49,25,24,20,29
+187/058/005,Sabah,"Kinabatangan","Lamag","Kota Kinabatangan",900,468,432,360,540
+187/058/006,Sabah,"Kinabatangan","Lamag","Usaha Jaya",271,141,130,108,163
+187/059/001,Sabah,"Kinabatangan","Sukau","Tanjung Aru",293,152,141,117,176
+187/059/002,Sabah,"Kinabatangan","Sukau","Mumiang",91,47,44,36,55
+187/059/003,Sabah,"Kinabatangan","Sukau","Lubukan",151,79,72,60,91
+187/059/004,Sabah,"Kinabatangan","Sukau","Suan Lamba",427,222,205,171,256
+187/059/005,Sabah,"Kinabatangan","Sukau","Batu Puteh",344,179,165,138,206
+187/059/006,Sabah,"Kinabatangan","Sukau","Paris",531,276,255,212,319
+187/059/007,Sabah,"Kinabatangan","Sukau","Bilit",84,44,40,34,50
+187/059/008,Sabah,"Kinabatangan","Sukau","Sukau",226,118,108,90,136
+187/059/009,Sabah,"Kinabatangan","Sukau","Abai",49,25,24,20,29
+187/059/010,Sabah,"Kinabatangan","Sukau","Tundun Bohangin",57,30,27,23,34
+187/059/011,Sabah,"Kinabatangan","Sukau","Litang",147,76,71,59,88

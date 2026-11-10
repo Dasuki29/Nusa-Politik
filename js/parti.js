@@ -212,6 +212,21 @@
       [/Timbalan Ketua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Ketua Kawasan/g, 'Naib Ketua Bahagian'], [/Ketua Kawasan/g, 'Ketua Bahagian'], [/ketua kawasan/g, 'ketua bahagian'],
       [/(peringkat|Peringkat) kawasan/g, '$1 bahagian'], [/(?<!Peruntukan |Zon |Kaum |Lobi |Butiran |di )Kawasan(?! (campuran|operasi|anda|Pemain))/g, 'Bahagian'], [/\bAreas\b/g, 'Divisions'], [/\bArea\b/g, 'Division'],
       [/\bANGKASA\b/g, 'Pemuda']].concat(BULAN_BERJASA_S) };
+  /* v13.54: GRS (Gabungan Rakyat Sabah), enam parti MOD RINGAN (enjin yang sama seperti PBRS; js/grs.js). Istilah seperti PBRS: Majlis Tertinggi (MT),
+     Perhimpunan Agung <parti>, Kota Kinabalu. Gagasan Rakyat: sayap Pemuda, Wanita dan Beliawanis (Puteri); Bahagian ikut 25 kawasan Parlimen Sabah + Labuan
+     (pindaan perlembagaan 17 Mei 2026). ANDAIAN: kawasan operasi parti lain, kuota kerusi GRS dan takwim 3/5/9 (data/grs-*.csv, tools/build-grs.js). Logo daripada pengguna. */
+  function istilahGRS(kod, songsang) {
+    var asal = songsang ? SENARAI.PPP.istilahSongsang : SENARAI.PPP.istilah;
+    var x = asal.map(function (r) { var src = r[0].source.replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, r[0].flags), typeof r[1] === 'string' ? r[1].replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu') : r[1]]; });
+    if (kod === 'GAGASAN') { x = (songsang ? [[/\bBeliawanis\b/g, 'Puteri']] : [[/\bPuteri\b/g, 'Beliawanis']]).concat(x); }
+    return x;
+  }
+  [['GAGASAN', 'Parti Gagasan Rakyat Sabah', 'logo-gagasan.png', ['pemuda', 'puteri', 'wanita'], null], ['PBS', 'Parti Bersatu Sabah', 'logo-pbs.png', ['pemuda', 'wanita'], 'Sabah'],
+    ['UPKO', 'Pertubuhan Kinabalu Progresif Bersatu', 'logo-upko.png', ['pemuda', 'wanita'], 'Sabah'], ['LDP', 'Parti Liberal Demokratik', 'logo-ldp.png', ['pemuda', 'wanita'], 'Sabah'],
+    ['PHRS', 'Parti Harapan Rakyat Sabah', 'logo-phrs.png', ['pemuda', 'wanita'], 'Sabah'], ['PCS', 'Parti Cinta Sabah', 'logo-pcs.png', ['pemuda', 'wanita'], 'Sabah']].forEach(function (x) {
+    SENARAI[x[0]] = { kod: x[0], nama: x[0], penuh: x[1], logo: 'assets/images/' + x[2], sayap: x[3], negeriTetap: x[4], data: 'data/grs-' + x[0].toLowerCase() + '.csv', bahagianJenis: 'Parlimen', grs: true, gabungan: 'GRS',
+      istilah: istilahGRS(x[0], false), istilahSongsang: istilahGRS(x[0], true) };
+  });
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -244,7 +259,7 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
@@ -264,7 +279,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Puteri|Beliawanis|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }

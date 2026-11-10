@@ -25,6 +25,7 @@
     ANGGARAN: { GRS: [24, 34], Warisan: [18, 28], BN: [3, 9], UPKO: [1, 4] }
   };
   /** Pemain di Sabah (bukan parti Sarawak): UMNO Sabah atau PBRS. */
+  function GRSk(k) { return k === 'GAGASAN' || k === 'PBS' || k === 'UPKO' || k === 'LDP' || k === 'PHRS' || k === 'PCS'; }   // v13.54: parti GRS
   function adalah(p) { return !!p && !SW(p.parti) && (p.parti === 'PBRS' || /sabah/i.test(String(p.negeri || ''))); }
   function jadual() { return { tahun: CONFIG.PRN.tahun, bulan: CONFIG.PRN.bulan }; }
   /** Jadual musim seterusnya selepas 'PRN' atau 'PRU' tamat: { jenis, tahun, bulan }. */
@@ -46,8 +47,13 @@
     var h = hash(String(p.id || p.nama) + '|prnSabah|' + p.tahun), A = CONFIG.ANGGARAN;
     function ambil(r, n) { return r[0] + ((h >>> n) % (r[1] - r[0] + 1)); }
     var bn = clamp(ambil(A.BN, 0) + Math.round(((Number(pop) || 45) - 45) / 5), 1, 14), grs = ambil(A.GRS, 5), war = ambil(A.Warisan, 10), upko = ambil(A.UPKO, 15);
+    var G = GRSk(p.parti) ? (root.MyPolitikGRS || (typeof require === 'function' ? (function () { try { return require('./grs.js'); } catch (e) { return null; } })() : null)) : null;
+    if (G) {                                                                         // v13.54: pemain GRS: UPKO dalam GRS (Jun 2026); populariti, Sabah untuk Sabahan dan Kestabilan menggeser kerusi GRS
+      grs = clamp(grs + upko + Math.round(((Number(pop) || 45) - 45) / 5) + G.bonusPRN(p), 15, 50); upko = 0; war = Math.min(war, CONFIG.JUMLAH - grs - bn);
+    }
     var lain = Math.max(0, CONFIG.JUMLAH - bn - grs - war - upko);
-    return { tahun: parseInt(p.tahun, 10), GRS: grs, Warisan: war, BN: bn, UPKO: upko, lain: lain, kerajaanBN: bn >= CONFIG.BN_AMBANG };
+    var ambang = Math.floor(CONFIG.JUMLAH / 2) + 1, kerajaanGRS = grs + upko + bn + Math.floor(lain / 2) >= ambang;   // ANDAIAN: GRS membentuk kerajaan bersama BN, UPKO dan separuh kerusi lain
+    return { tahun: parseInt(p.tahun, 10), GRS: grs, Warisan: war, BN: bn, UPKO: upko, lain: lain, kerajaanBN: bn >= CONFIG.BN_AMBANG, kerajaanGRS: kerajaanGRS };
   }
-  return { CONFIG: CONFIG, adalah: adalah, jadual: jadual, jadualBerikut: jadualBerikut, jadualAwal: jadualAwal, lawan: lawan, kerusiPRN: kerusiPRN };
+  return { CONFIG: CONFIG, GRSk: GRSk, adalah: adalah, jadual: jadual, jadualBerikut: jadualBerikut, jadualAwal: jadualAwal, lawan: lawan, kerusiPRN: kerusiPRN };
 });

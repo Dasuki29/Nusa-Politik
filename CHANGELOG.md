@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.54 (2026-11-10)
+
+- **Maklum balas baris 34 (dan sebahagian baris 31): GRS (Gabungan Rakyat Sabah)** (ikut mockup v2 yang dipersetujui; sumber: PDF Wikipedia daripada pengguna; semua nombor mekanik ⚠️ andaian).
+  - **Menu utama:** BN, PH, PN, GPS, **GRS**, Lain-lain. Panel GRS dengan enam parti boleh dimain (mod ringan): **Gagasan Rakyat**, **PBS**, **UPKO**, **LDP**, **PHRS**, **PCS** (logo daripada pengguna).
+  - **Gagasan Rakyat:** Bahagian ikut 25 kawasan Parlimen Sabah + Labuan (pindaan perlembagaan 17 Mei 2026), keahlian ~579,980, sayap Pemuda, Wanita dan **Beliawanis** (Puteri). PBS (~580,000 ahli, 10 kawasan KDM), UPKO (10 kawasan KDM, sertai GRS Jun 2026), LDP (5 kawasan bandar), PHRS (4 kawasan pantai timur), PCS (4 kawasan pantai barat selatan) ⚠️.
+  - **Kuota kerusi dalam GRS** ⚠️ ikut PRN 2025: Gagasan 37 DUN + 8 Parlimen, PBS 11 + 2, UPKO 8 + 1. Parti kecil (LDP, PHRS, PCS): Kekuatan Parti, Gerak kerja & rekrut ahli, dan **Rundingan kuota GRS** 12 bulan sebelum pilihan raya.
+  - **Mekanik Kerajaan Negeri Sabah** (kad 🏝️ tab Profil): Kestabilan Gabungan (mula 62, susut ke 50); Jamuan rakan gabungan (+6), Tuntut hak MA63 (akar umbi +5, hubungan Putrajaya −3), Sabah untuk Sabahan (kerusi GRS +1 dalam PRN, maks +5). Kestabilan bawah 40: **Krisis ADUN lompat** (pujuk, terima atau bubar DUN untuk PRN mengejut).
+  - PRN Sabah: pemain GRS melihat UPKO dalam GRS; kerajaan negeri GRS jika GRS + UPKO + BN + separuh kerusi lain ≥ 37. Persekutuan: GRS rakan Kerajaan Perpaduan (5–8 kerusi Parlimen). Kad kerusi: Gabungan Rakyat Sabah, Warisan, PN.
+  - Lompat Parti: enam parti GRS tersedia di Sabah.
+- Fail baharu: `js/grs.js`, `js/grs-ui.js`, `js/grs-data.js`, `data/grs-*.csv` (6 fail), `tools/build-grs.js`, `tools/ujian-grs.js`, logo `assets/images/logo-{grs,gagasan,pbs,upko,ldp,phrs,pcs}.png`. Ujian baharu (186 ujian).
+
 ## v13.53 (2026-11-10)
 
 - **Maklum balas baris 27: BERJASA dan kumpulan "Lain-lain"** (ikut mockup yang dipersetujui; tiada perlembagaan BERJASA, jadi struktur, takwim dan semua nombor ⚠️ andaian).

@@ -1297,6 +1297,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
           <button type="button" class="gab__btn" data-menu="gabungan" data-gab="PH" aria-expanded="false" aria-controls="gab-ph"><img src="assets/images/logo-ph.jpg" alt="" width="36" height="36" style="object-fit:contain;background:#E10600"><span class="gab__teks"><b>PH</b><small>Pakatan Harapan · PKR · DAP</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
           <button type="button" class="gab__btn" data-menu="gabungan" data-gab="PN" aria-expanded="false" aria-controls="gab-pn"><img src="assets/images/logo-pn.svg" alt="" width="36" height="36" style="object-fit:contain;background:#003152"><span class="gab__teks"><b>PN</b><small>Perikatan Nasional · PAS</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
           <button type="button" class="gab__btn" data-menu="gabungan" data-gab="GPS" aria-expanded="false" aria-controls="gab-gps"><img src="assets/images/logo-gps.png" alt="" width="36" height="36"><span class="gab__teks"><b>GPS</b><small>Gabungan Parti Sarawak · 4 parti</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
+          <button type="button" class="gab__btn" data-menu="gabungan" data-gab="GRS" aria-expanded="false" aria-controls="gab-grs"><img src="assets/images/logo-grs.png" alt="" width="36" height="36" style="object-fit:contain;background:#fff"><span class="gab__teks"><b>GRS</b><small>Gabungan Rakyat Sabah · 6 parti</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
           <button type="button" class="gab__btn" data-menu="gabungan" data-gab="LAIN" aria-expanded="false" aria-controls="gab-lain"><img src="assets/images/logo-berjasa.png" alt="" width="36" height="36" style="object-fit:contain;background:#fff"><span class="gab__teks"><b>Lain-lain</b><small>Parti tanpa gabungan · BERJASA</small></span><span class="gab__panah" aria-hidden="true">▾</span></button>
         </div>
         <div class="gab__panel" id="gab-bn" data-gab-panel="BN" hidden>
@@ -1324,6 +1325,11 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
           <p class="gab__kaki">PKR dan DAP mod penuh (Perlembagaan PKR, pindaan hingga 11 Mac 2025; Perlembagaan DAP, seperti pada 22.10.2019).</p>
           <p class="gab__kaki gab__rakan-t"><b>Rakan PH</b> (NPC):</p>
           <div class="poster__parti gab__rakan" role="list" aria-label="Rakan PH"><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-amanah.png" alt="" width="22" height="22" style="object-fit:contain">Amanah</span></div>
+        </div>
+        <div class="gab__panel" id="gab-grs" data-gab-panel="GRS" hidden>
+          <h4>Parti dalam GRS · Sabah &amp; Labuan</h4>
+          <div class="poster__parti" role="group" aria-label="Parti GRS"><button type="button" class="poster__chip" data-menu="parti" data-parti="GAGASAN"><img src="assets/images/logo-gagasan.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">Gagasan Rakyat</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PBS"><img src="assets/images/logo-pbs.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">PBS</button><button type="button" class="poster__chip" data-menu="parti" data-parti="UPKO"><img src="assets/images/logo-upko.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">UPKO</button><button type="button" class="poster__chip" data-menu="parti" data-parti="LDP"><img src="assets/images/logo-ldp.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">LDP</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PHRS"><img src="assets/images/logo-phrs.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">PHRS</button><button type="button" class="poster__chip" data-menu="parti" data-parti="PCS"><img src="assets/images/logo-pcs.png" alt="" width="22" height="22" style="object-fit:contain;background:#fff">PCS</button></div>
+          <p class="gab__kaki">Semua parti GRS mod ringan; LDP, PHRS dan PCS parti kecil (kerusi melalui rundingan kuota GRS).</p>
         </div>
         <div class="gab__panel" id="gab-lain" data-gab-panel="LAIN" hidden>
           <h4>Parti tanpa gabungan · Semenanjung</h4>
@@ -1505,6 +1511,12 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                   <option value="PRS">PRS (Sarawak, GPS, mod ringan)</option>
                   <option value="SUPP">SUPP (Sarawak, GPS, mod ringan)</option>
                   <option value="PDP">PDP (Sarawak, GPS, mod ringan)</option>
+                  <option value="GAGASAN">Gagasan Rakyat (Sabah &amp; Labuan, GRS, mod ringan)</option>
+                  <option value="PBS">PBS (Sabah, GRS, mod ringan)</option>
+                  <option value="UPKO">UPKO (Sabah, GRS, mod ringan)</option>
+                  <option value="LDP">LDP (Sabah, GRS, parti kecil)</option>
+                  <option value="PHRS">PHRS (Sabah, GRS, parti kecil)</option>
+                  <option value="PCS">PCS (Sabah, GRS, parti kecil)</option>
                   <option value="BERJASA">BERJASA (Semenanjung, tanpa gabungan, mod ringan)</option>
                 </select>
                 <p class="field__hint" id="h-parti" style="margin:6px 0 0;font-size:.78rem;color:var(--text-muted)" hidden>Parti Sarawak: Bahagian = DUN, Cawangan = Daerah Mengundi. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.</p>
@@ -1737,6 +1749,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   <script src="js/mic-data.js"></script>
   <script src="js/ppp-data.js"></script>
   <script src="js/berjasa-data.js"></script>
+  <script src="js/grs-data.js"></script>
   <script src="js/pbrs-data.js"></script>
   <script src="js/pas-data.js"></script>
   <script src="js/pkr-data.js"></script>

@@ -66,7 +66,7 @@
 
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
   /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
-  function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || k === 'BERJASA'; }   // v13.31: PAS (Dewan Pemuda dan Muslimat)      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
+  function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || k === 'BERJASA' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }   // v13.31: PAS (Dewan Pemuda dan Muslimat)      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
   function katParti(jantina, umur, parti) { var k = kategori(jantina, umur, parti); if ((parti === 'PKR' || parti === 'DAP') && k === 'pemuda' && parseInt(umur, 10) > 35) { k = 'biasa'; } return tanpaPuteri(parti) && k === 'puteri' ? 'wanita' : k; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
   function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
@@ -75,7 +75,7 @@
     var k = katParti(jantina, umur, parti), r = {};
     SENARAI.forEach(function (s) {
       if (s === 'putera') { var uP = parseInt(umur, 10), bolehP = adaPutera(parti) && k === 'pemuda' && uP <= 29; r[s] = bolehP ? { boleh: true, sebab: '' } : { boleh: false, sebab: !adaPutera(parti) ? 'Sayap Putera hanya dalam MIC dan PPP.' : (k ? INFO.putera.syarat : 'Isi jantina dan umur dahulu.') }; return; }      // v13.3
-      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: tanpaPuteri(parti) && s === 'puteri' ? (parti === 'MCA' || parti === 'PBRS' || parti === 'PAS' || parti === 'PKR' || parti === 'DAP' || parti === 'BERJASA' ? parti : 'PBB') + ' tiada sayap Puteri.' : (k ? (parti === 'PKR' && s === 'pemuda' ? 'Lelaki berumur 18 hingga 35 tahun (Perlembagaan PKR, Fasal 25.1).' : parti === 'DAP' && s === 'pemuda' ? 'DAPSY: lelaki berumur 17 hingga 35 tahun.' : INFO[s].syarat) : 'Isi jantina dan umur dahulu.') };
+      r[s] = (s === 'utama' || k === s) ? { boleh: true, sebab: '' } : { boleh: false, sebab: tanpaPuteri(parti) && s === 'puteri' ? (parti === 'MCA' || parti === 'PBRS' || parti === 'PAS' || parti === 'PKR' || parti === 'DAP' || parti === 'BERJASA' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(parti) ? parti : 'PBB') + ' tiada sayap Puteri.' : (k ? (parti === 'PKR' && s === 'pemuda' ? 'Lelaki berumur 18 hingga 35 tahun (Perlembagaan PKR, Fasal 25.1).' : parti === 'DAP' && s === 'pemuda' ? 'DAPSY: lelaki berumur 17 hingga 35 tahun.' : INFO[s].syarat) : 'Isi jantina dan umur dahulu.') };
     });
     return r;
   }

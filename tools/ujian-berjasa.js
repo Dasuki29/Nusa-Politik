@@ -23,7 +23,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.route('**/*', (rt) => { if (rt.request().url().startsWith(base)) { rt.continue(); } else { rt.abort(); } });
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   const urutan = await pg.$$eval('.gab__btn', (l) => l.map((b) => b.getAttribute('data-gab')).join(','));
-  semak(urutan === 'BN,PH,PN,GPS,LAIN', 'susunan menu: ' + urutan);
+  semak(urutan === 'BN,PH,PN,GPS,GRS,LAIN', 'susunan menu: ' + urutan);
   if (process.env.SKRIN_MENU) { await pg.click('[data-gab="LAIN"]'); await pg.waitForTimeout(300); const m = await pg.$('.poster'); if (m) { await m.screenshot({ path: process.env.SKRIN_MENU }); } await pg.click('[data-gab="LAIN"]'); await pg.waitForTimeout(200); }
   await pg.click('[data-gab="LAIN"]'); await pg.waitForTimeout(300);
   const ln = await pg.evaluate(() => { const p = document.querySelector('#gab-lain'); return p && !p.hidden ? p.textContent : ''; });

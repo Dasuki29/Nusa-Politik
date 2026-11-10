@@ -249,13 +249,14 @@
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   function tular() { return modul('MyPolitikTular', 'tular.js'); }
-  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } if (p && p.parti === 'PBRS') { return modul('MyPolitikPBRS', 'pbrs.js'); } if (p && p.parti === 'PAS') { return modul('MyPolitikPAS', 'pas.js'); } if (p && p.parti === 'PKR') { return modul('MyPolitikPKR', 'pkr.js'); } if (p && p.parti === 'DAP') { return modul('MyPolitikDAP', 'dap.js'); } if (p && p.parti === 'BERJASA') { return modul('MyPolitikBERJASA', 'berjasa.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
+  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } if (p && p.parti === 'PBRS') { return modul('MyPolitikPBRS', 'pbrs.js'); } if (p && p.parti === 'PAS') { return modul('MyPolitikPAS', 'pas.js'); } if (p && p.parti === 'PKR') { return modul('MyPolitikPKR', 'pkr.js'); } if (p && p.parti === 'DAP') { return modul('MyPolitikDAP', 'dap.js'); } if (p && p.parti === 'BERJASA') { return modul('MyPolitikBERJASA', 'berjasa.js'); } if (p && GRSk(p.parti)) { return modul('MyPolitikGRS', 'grs.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function sabah() { return modul('MyPolitikSabah', 'sabah.js'); }                           // v13.9: PRN Sabah (UMNO Sabah, PBRS)
   function diSabah(p) { var B = sabah(); return !!(B && B.adalah && B.adalah(p)); }
   function bermusim(p) { return !!p && (SW(p.parti) || diSabah(p)); }
   /** v13.9: tiada keputusan nasional: parti serantau (Sarawak, PBRS) atau PRN Sabah. */
-  function tanpaNasional(p, pru) { return SW(p.parti) || p.parti === 'PBRS' || (diSabah(p) && musimPBB(p, pru) === 'PRN'); }
+  function GRSk(k) { return k === 'GAGASAN' || k === 'PBS' || k === 'UPKO' || k === 'LDP' || k === 'PHRS' || k === 'PCS'; }   // v13.54: parti GRS (serantau)
+  function tanpaNasional(p, pru) { return SW(p.parti) || p.parti === 'PBRS' || GRSk(p.parti) || (diSabah(p) && musimPBB(p, pru) === 'PRN'); }
   function namaPRN(p) { return SW(p && p.parti) ? 'PRN Sarawak' : 'PRN Sabah'; }
   function musimPBB(p, pru) { if (!p || !bermusim(p)) { return null; } var x = pru || getPRU(p); return x.jenisPBB === 'PRU' ? 'PRU' : 'PRN'; }
   /** v9.4: PBB: status kerusi jenis lain (cth ADUN semasa PRU) kekal; selebihnya digantikan keputusan baharu. */
@@ -289,7 +290,7 @@
     if (!p || SW(p.parti)) { return null; }
     var pru = getPRU(p);
     if (diSabah(p)) {                                                                // PRN Sabah: kerajaan negeri ikut anggaran 73 DUN Sabah (BN >= 3 kerusi)
-      if (jenis === 'ADUN') { return pru.sabahPRN ? !!pru.sabahPRN.kerajaanBN : null; }
+      if (jenis === 'ADUN') { return pru.sabahPRN ? !!(GRSk(p.parti) ? pru.sabahPRN.kerajaanGRS !== false : pru.sabahPRN.kerajaanBN) : null; }
       if (p.parti === 'PBRS') { return null; }
     }
     var A = modul('NusaPaparan', 'paparan.js'), g = A && A.kerusiGabungan ? A.kerusiGabungan(p) : null; if (!g) { return null; }
@@ -841,7 +842,7 @@
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
         g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8));
         var SBk = !SWg && jenis === 'DUN' ? a.sabahPRN : null;                                     // v13.9: kerajaan negeri Sabah (GRS + BN jika BN >= 3 kerusi)
-        if (SBk) { g.kerajaan = SBk.kerajaanBN; }
+        if (SBk) { g.kerajaan = GRSk(p.parti) ? !!SBk.kerajaanGRS : SBk.kerajaanBN; }   // v13.54: GRS
         else if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
         else if (SWg.kerusiPremier) { var kp0 = SWg.kerusiPremier(p); if (kp0) { g.kerajaan = kp0.gabungan >= kp0.ambang; } }   // v12.6: DUN Sarawak: status ikut kerusi GPS yang dipaparkan (70-78/82), bukan lambungan 60-90%
         kk.kerajaan = g.kerajaan;

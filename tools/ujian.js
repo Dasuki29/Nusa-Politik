@@ -2739,6 +2739,45 @@ ujian('v13.53 BERJASA: data Semenanjung, takwim 3/5/6, ANGKASA, Kekuatan Parti, 
   betul(g.MyPolitikLompat.aktifDi('BERJASA', 'Kelantan') && !g.MyPolitikLompat.aktifDi('BERJASA', 'Sabah'), 'lompat: Semenanjung sahaja');
   S.clearPlayer();
 });
+ujian('v13.54 GRS: enam parti Sabah, Gagasan (Beliawanis, Labuan), kuota GRS, Kestabilan Gabungan, krisis ADUN lompat, parti kecil (baris 34)', () => {
+  const M = g.MyPolitikGRS, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, GD = g.MyPolitikGRSData, B = g.MyPolitikSabah, fs = require('fs'), path = require('path');
+  const baca = (k) => D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'grs-' + k + '.csv'), 'utf8')));
+  const h = baca('gagasan'); sama(h.jumlah.bahagian, 26, '25 Parlimen Sabah + Labuan'); betul(h.bahagian.some((b) => b.nama === 'Labuan'));
+  ['pbs', 'upko', 'ldp', 'phrs', 'pcs'].forEach((k) => betul(baca(k).jumlah.bahagian >= 4, k));
+  sama(GD.parti.GAGASAN.qDUN.length, 37); sama(GD.parti.PBS.qDUN.length, 11); sama(GD.parti.LDP.qDUN.length, 0);
+  betul(SY.kelayakan('P', 25, 'GAGASAN').puteri.boleh, 'Gagasan ada Beliawanis'); betul(!SY.kelayakan('P', 25, 'PBS').puteri.boleh, 'PBS tiada Puteri');
+  // Gagasan: daftar di DUN dalam kuota
+  const kd = GD.parti.GAGASAN.qDUN[0], dn = GD.dun[kd], b0 = h.bahagian.find((b) => b.kod === dn.p.replace('P.', '') || ('P.' + String(parseInt(b.kod, 10)).padStart(3, '0')) === dn.p);
+  const dun0 = b0.dun.find((x) => x.nama === dn.n) || b0.dun[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'GAGASAN', nama: 'Uji GRS', demografik: D.tentukanDemografi('Perempuan', 28, 'GAGASAN'), cawangan: dun0.cawangan[0], sayap: 'puteri', avatar: 'puteri', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'GAGASAN'); sama(p.sayap, 'puteri'); sama(PT.info('GAGASAN').gabungan, 'GRS');
+  sama(PT.ke('Ketua Puteri Bahagian ke Perhimpunan Agung UMNO (PAU)'), 'Ketua Beliawanis Bahagian ke Perhimpunan Agung GAGASAN');
+  sama(K.getTetingkap('cawangan', 1).mula, 3); sama(K.getTetingkap('pau', 1).mula, 9); sama(E.adalahTahunPemilihan(2027), true);
+  let kw = M.kawasan(p); betul(kw.kuotaDUN, 'DUN dalam kuota GRS: ' + kd); betul(B.adalah(p), 'pemain PRN Sabah');
+  // Kestabilan & tindakan
+  sama(M.kestabilan(p), 62); P.tetap({ ap: 20, myr: 50000 });
+  let r = M.jamuan(); betul(r.ok, r.ralat); sama(M.kestabilan(S.loadPlayer()), 68); sama(M.jamuan().ok, false, 'sekali sebulan');
+  const hub0 = PRU.getPRU(S.loadPlayer()).hubunganGabungan || 50; r = M.ma63(); betul(r.ok, r.ralat); sama(PRU.getPRU(S.loadPlayer()).hubunganGabungan, hub0 - 3);
+  r = M.sabahan(); betul(r.ok, r.ralat); sama(M.bonusPRN(S.loadPlayer()), 1); sama(M.ofset(S.loadPlayer(), 'DUN'), 0.5);
+  // anggaran PRN: GRS + UPKO, kerajaan GRS
+  const sb = B.kerusiPRN(S.loadPlayer(), 45); sama(sb.UPKO, 0, 'UPKO dalam GRS'); betul(typeof sb.kerajaanGRS === 'boolean'); sama(sb.GRS + sb.Warisan + sb.BN + sb.lain, 73);
+  // krisis ADUN lompat
+  P.tetap({ grs: Object.assign(S.loadPlayer().grs, { kestabilan: 30 }) }); let ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa;
+  betul(ev.some((x) => /Krisis ADUN lompat/.test(x.mesej)), ev.map((x) => x.mesej).join()); betul(M.statusKrisis(S.loadPlayer()));
+  r = M.jawabKrisis('pujuk'); betul(r.ok, r.ralat); sama(M.statusKrisis(S.loadPlayer()), null); betul(M.kestabilan(S.loadPlayer()) >= 40);
+  // persekutuan: GRS rakan Kerajaan Perpaduan
+  const ka = g.NusaPaparan.anggarKerusi(S.loadPlayer(), { tahun: 2031, bulan: 3 }, {}); betul(ka.kerajaan && ka.parti >= 5 && ka.parti <= 8, JSON.stringify(ka));
+  // parti kecil: LDP
+  const hl = baca('ldp'); S.savePlayer(S.buildPlayerProfile({ parti: 'LDP', nama: 'Uji LDP', demografik: D.tentukanDemografi('Lelaki', 40, 'LDP'), cawangan: hl.bahagian[0].dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 3 }));
+  p = S.loadPlayer(); sama(M.kekuatan(p), 10); kw = M.kawasan(p); betul(!kw.kuotaPL && !kw.kuotaDUN, 'tiada kerusi tetap');
+  P.tetap({ ap: 10, myr: 20000 }); r = M.gerak(); betul(r.ok, r.ralat); sama(M.kekuatan(S.loadPlayer()), 11);
+  sama(M.statusKuota(S.loadPlayer()).boleh, false, 'terlalu awal');
+  const pr = Object.assign({}, PRU.getPRU(S.loadPlayer())); P.tetap({ tahun: pr.tahunPRU - 1, bulan: pr.bulanPRU, jawatan: 'Ketua Cawangan', jawatanList: [pegang('ketua_cawangan', pr.tahunPRU - 1)] });
+  betul(M.statusKuota(S.loadPlayer()).boleh, JSON.stringify(M.statusKuota(S.loadPlayer()))); r = M.rundingKuota({ rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat || r.mesej);
+  betul(M.kawasan(S.loadPlayer()).kuotaDUN, 'kuota DUN diberi');
+  betul(g.MyPolitikLompat.aktifDi('PBS', 'Sabah') && !g.MyPolitikLompat.aktifDi('PBS', 'Selangor'), 'lompat: Sabah sahaja');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

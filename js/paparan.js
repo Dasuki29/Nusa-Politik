@@ -17,6 +17,7 @@
   'use strict';
   /** v10.0: parti Sarawak (PBB mod penuh; PRS dan lain-lain mod ringan) guna enjin Sarawak yang sama. */
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
+  function GRSk(k) { return k === 'GAGASAN' || k === 'PBS' || k === 'UPKO' || k === 'LDP' || k === 'PHRS' || k === 'PCS'; }   // v13.54: parti GRS
 
   var CONFIG = { JUMLAH_PARLIMEN: 222, MAJORITI: 112, GABUNG_MS: 400, MAKS_TOAST: 3, MAKS_BIASA: 4, TOAST_MS: 4000, BEBAS_MAKS: 8, KUNCI_LIHAT: 'myPolitik_logLihat', KUNCI_SENYAP: 'myPolitik_notifSenyap' };
   var BULAN = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
@@ -253,6 +254,9 @@
       rakan = Math.min(J - parti, Math.round(J * (0.14 + rng() * 0.12)));
       var PASm = modGab(p);                                                                              // v13.34: PAS (PN) atau PKR (PH)
       if (PASm) { var kp = PASm.kerusiParlimen(pop, rng); parti = kp.parti; rakan = kp.rakan; }   // v13.31: PN (PAS + rakan) bermula lebih lemah di peringkat persekutuan
+      if (p && GRSk(p.parti)) {                                                          // v13.54: GRS = rakan Kerajaan Perpaduan (andaian 5-8 kerusi Parlimen)
+        parti = 5 + Math.floor(rng() * 4); rakan = Math.min(J - parti, CONFIG.MAJORITI - parti + 8 + Math.floor(rng() * 30));
+      }
       if (p && SW(p.parti) && p.parti !== 'PSB') {                                      // v13.21 (maklum balas pemain): GPS = blok Sarawak dalam Kerajaan Perpaduan (andaian: sentiasa dalam kerajaan persekutuan)
         parti = 23 + Math.floor(rng() * 6); rakan = Math.min(J - parti, CONFIG.MAJORITI - parti + 8 + Math.floor(rng() * 30));
       }
@@ -268,6 +272,8 @@
       var skala = (kerajaan ? gabung : J - gabung) / J, nBebas = Math.round(rng() * 2);
       var kr = clamp(Math.round(dun * (kerajaan ? clamp(gabung / J + (rng() * 0.1 - 0.05), 0.3, 0.8) : clamp(gabung / J + (rng() * 0.1 - 0.05), 0.15, 0.6))), 1, dun - nBebas - 1);
       var PASd = modGab(p);
+      var SBd = p && GRSk(p.parti) && /sabah/i.test(String(ngr)) && p.pru && p.pru.sabahPRN ? p.pru.sabahPRN : null;   // v13.54: GRS: kerusi DUN Sabah ikut anggaran PRN
+      if (SBd) { kr = SBd.kerajaanGRS === false ? SBd.GRS + SBd.UPKO : SBd.GRS + SBd.UPKO + SBd.BN + Math.floor(SBd.lain / 2); nBebas = Math.min(nBebas, dun - kr); }
       if (PASd) { var popD = opt && opt.pop != null ? Number(opt.pop) : 45 + ((Number(p.reputasi) || 50) - 50) * 0.3; kr = clamp(Math.round(dun * PASd.kadarDUN(kodNegeriDUN(ngr), popD, rng)), 0, dun - nBebas); }   // v13.31: kekuatan PN ikut negeri
       o.dun = { jumlah: dun, kerajaan: kr, bebas: nBebas, pembangkang: dun - kr - nBebas, negeri: ngr };
       void skala;
@@ -320,7 +326,7 @@
   }
   /** v13.53: BERJASA (tanpa gabungan): slot 'PH' = Kerajaan Perpaduan (PH + BN), slot 'PN' = Perikatan Nasional. */
   function adalahBERJASA(p) { return !!p && p.parti === 'BERJASA'; }
-  function lawanGab(p) { if (adalahBERJASA(p)) { return { PH: { nama: 'Kerajaan Perpaduan (PH + BN)', pendek: 'PH+BN', warna: GABUNGAN.PH.warna }, PN: GABUNGAN.PN }; } return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : adalahPH(p) ? { PH: GABUNGAN.BN, PN: GABUNGAN.PN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
+  function lawanGab(p) { if (p && GRSk(p.parti)) { return { PH: { nama: 'Warisan', pendek: 'Warisan', warna: '#1E9E8A' }, PN: GABUNGAN.PN }; } if (adalahBERJASA(p)) { return { PH: { nama: 'Kerajaan Perpaduan (PH + BN)', pendek: 'PH+BN', warna: GABUNGAN.PH.warna }, PN: GABUNGAN.PN }; } return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : adalahPH(p) ? { PH: GABUNGAN.BN, PN: GABUNGAN.PN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
   /** Pecah kerusi pembangkang kepada PH/PN (anggaran deterministik). Jika parti anda kalah, PH diberi bahagian lebih besar (gabungan pembangkang utama). */
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
     var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
@@ -334,6 +340,7 @@
     if (p && p.parti === 'PSB' && !dun) { return { nama: 'Parti Sarawak Bersatu', pendek: 'PSB' }; }   // v10.3: pembangkang di luar Kerajaan Perpaduan
     if (p && SW(p.parti)) { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
     if (adalahBERJASA(p)) { return { nama: 'BERJASA', pendek: 'BERJASA', warna: '#76094A' }; }   // v13.53
+    if (p && GRSk(p.parti)) { return dun ? { nama: 'Gabungan Rakyat Sabah', pendek: 'GRS', warna: '#1E5AA8' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }   // v13.54
     if (adalahPN(p)) { return { nama: 'Perikatan Nasional', pendek: 'PN', warna: '#0B2A5B' }; }   // v13.31
     if (adalahPH(p)) { return { nama: 'Pakatan Harapan', pendek: 'PH', warna: '#E10600' }; }   // v13.34
     return GABUNGAN.BN;

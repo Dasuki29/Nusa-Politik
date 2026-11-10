@@ -40,18 +40,18 @@
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   var CONFIG = { JEDA_TAHUN: 5, MAKS: 2, REP_MIN: 20, IP_KEKAL: 0.5, REPUTASI: -10, KATAK_BULAN: 24, AKAR_UMBI: 30, PRK_BULAN: 1 };
-  var SENARAI = ['UMNO', 'MCA', 'MIC', 'PPP', 'PBRS', 'PAS', 'PKR', 'DAP', 'PBB', 'PRS', 'SUPP', 'PDP', 'BERJASA'];
+  var SENARAI = ['UMNO', 'MCA', 'MIC', 'PPP', 'PBRS', 'PAS', 'PKR', 'DAP', 'PBB', 'PRS', 'SUPP', 'PDP', 'BERJASA', 'GAGASAN', 'PBS', 'UPKO', 'LDP', 'PHRS', 'PCS'];
   var KEKAL = ['nama', 'tahun', 'bulan', 'myr', 'ap', 'stress', 'kesihatan', 'settings', 'pendidikan', 'careerBackground', 'harta', 'log', 'dicipta', 'gelaran', 'jawatanTertinggi', 'tamat'];
 
   function aktifDi(kod, negeri) {
     var n = String(negeri || ''), swk = /sarawak/i.test(n), sbh = /sabah|labuan/i.test(n);
     if (SW(kod)) { return swk; }
     if (kod === 'PKR' || kod === 'DAP') { return true; }
-    if (kod === 'PBRS') { return sbh; }
+    if (kod === 'PBRS' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(kod)) { return sbh; }   // v13.54: GRS
     if (kod === 'PPP' || kod === 'PAS' || kod === 'BERJASA') { return !swk && !sbh; }
     return !swk;                                                          // UMNO, MCA, MIC: Semenanjung dan Sabah
   }
-  function gabParti(kod) { return SW(kod) ? 'GPS' : kod === 'PAS' ? 'PN' : kod === 'PKR' || kod === 'DAP' ? 'PH' : kod === 'BERJASA' ? 'LAIN' : 'BN'; }
+  function gabParti(kod) { return SW(kod) ? 'GPS' : kod === 'PAS' ? 'PN' : kod === 'PKR' || kod === 'DAP' ? 'PH' : kod === 'BERJASA' ? 'LAIN' : /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(kod) ? 'GRS' : 'BN'; }
   function nama(kod) { var P = PT(); var i = P && P.info ? P.info(kod) : null; return (i && (i.nama || i.singkatan)) || kod; }
   function getL(p) { var l = p && p.lompat && typeof p.lompat === 'object' ? salin(p.lompat) : {}; l.kali = l.kali || 0; l.sejarah = Array.isArray(l.sejarah) ? l.sejarah : []; l.prk = Array.isArray(l.prk) ? l.prk : []; l.katakSehingga = l.katakSehingga || 0; return l; }
   function dipecat(p) { return !!(p && p.etika && p.etika.status === 'dipecat'); }
@@ -73,7 +73,7 @@
     var l = getL(p), tolak = l.kali >= CONFIG.MAKS ? 'Parti menolak: anda sudah lompat ' + l.kali + ' kali.' : (Number(p.reputasi) || 0) < CONFIG.REP_MIN ? 'Parti menolak: Reputasi di bawah ' + CONFIG.REP_MIN + '.' : '';
     var asal = p.parti || 'UMNO', g = gabParti(asal);
     return SENARAI.filter(function (k) { return k !== asal; }).map(function (k) {
-      var sebab = !aktifDi(k, p.negeri) ? (SW(k) ? 'Hanya di Sarawak.' : k === 'PBRS' ? 'Hanya di Sabah.' : 'Tidak bergerak di negeri anda.') : tolak;
+      var sebab = !aktifDi(k, p.negeri) ? (SW(k) ? 'Hanya di Sarawak.' : k === 'PBRS' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(k) ? 'Hanya di Sabah.' : 'Tidak bergerak di negeri anda.') : tolak;
       return { kod: k, nama: nama(k), boleh: !sebab, sebab: sebab, mesra: gabParti(k) === g };
     });
   }
