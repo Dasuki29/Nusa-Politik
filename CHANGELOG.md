@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.69 (2026-11-10)
+
+- **Sistem Kepimpinan Negeri** (mockup yang dipersetujui; ⚠️ nilai ialah andaian permainan).
+  - Medan baharu `isStateLeader` (Menteri Besar / Ketua Menteri) dan `stateExcoPortfolio` (nama portfolio EXCO), dikira daripada `p.kabinet` (`MyPolitikKabinet.kepimpinanNegeri`).
+  - **10 portfolio EXCO**: portfolio 1 (Tanah, Mineral, Perhutanan & Kewangan) dipegang terus oleh MB/KM; EXCO biasa melobi 9 portfolio lain yang ditapis ikut IP (100 hingga 200 IP), dengan bar "Kurang X IP" bagi yang dikunci.
+  - Portfolio Hal Ehwal Agama Islam & Adat Istiadat Melayu tidak dibuka untuk MCA, MIC, DAP, PPP, LDP, UPKO, PBRS, PCS dan PHRS; PBS hanya komuniti Bumiputera Islam ⚠️. Sarawak kekal dengan portfolio Menteri Negeri sendiri.
+  - **Tab "Pejabat EXCO / Portfolio Saya"** di kad kerajaan (tab Tindakan): 3 tindakan khas bagi setiap portfolio, satu sebulan (1 AP + dana), memberi kesan pada IP, sokongan akar umbi, KPI portfolio, populariti dan risiko rombakan; beberapa tindakan berisiko integriti.
+  - Kategori Enakmen DUN kini ikut kategori portfolio EXCO yang ditetapkan.
+  - Simpanan lama yang memegang portfolio lama kekal berfungsi (tanpa tab baharu).
+- Ujian baharu (201 ujian) dan ujian pelayar `tools/ujian-exco.js`.
+
 ## v13.68 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 6 (Lain-lain)** ikut mockup yang dipersetujui (⚠️ andaian ditanda).

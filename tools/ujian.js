@@ -1182,9 +1182,9 @@ ujian('PBB v9.2: portfolio Menteri Sarawak untuk lobi DUN (UMNO kekal portfolio 
   betul(sn.every((x) => x.tahap === 'EXCO_NEGERI'), 'tahap EXCO_NEGERI kekal');
   let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('sw_kesihatan', () => 0.01); if (!lj.ok) { break; } }
   betul(lj.ok && lj.dilantik, lj.ralat); const k = KB.getKabinet(S.loadPlayer()); sama(k.portfolioId, 'sw_kesihatan'); betul(/Sarawak/.test(k.portfolioName));
-  sama(KB.lobiPortfolio('exco_kesihatan', () => 0.01).ok, false, 'portfolio UMNO tidak tersedia untuk PBB');
+  sama(KB.lobiPortfolio('exco_kerjaraya', () => 0.01).ok, false, 'portfolio UMNO tidak tersedia untuk PBB');
   S.clearPlayer();
-  P.daftar({}); betul(KB.bukaLobi('DUN').ok); sn = KB.senaraiPortfolio(S.loadPlayer()); betul(sn.length === 5 && sn.every((x) => /^exco_/.test(x.id)), 'UMNO: 5 portfolio EXCO umum');
+  P.daftar({}); betul(KB.bukaLobi('DUN').ok); sn = KB.senaraiPortfolio(S.loadPlayer()); betul(sn.length === 9 && sn.every((x) => /^exco_/.test(x.id)), 'UMNO: 9 portfolio EXCO umum (v13.69)');
   S.clearPlayer();
 });
 ujian('PBB v9.3: rundingan kerusi GPS (Presiden PBB, 12 bulan sebelum PRN) dan label Menteri Negeri', () => {
@@ -3036,6 +3036,32 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'WARISAN' }); sama(PT.ke('Ketua Cawangan'), 'Ketua Cawangan');
   P.tetap({ parti: 'PBS' }); sama(PT.ke('Ketua Bahagian'), 'Ketua Bahagian');
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
+  S.clearPlayer();
+});
+ujian('v13.69 Kepimpinan Negeri: MB/KM pegang portfolio 1, 9 portfolio EXCO ditapis IP, Agama ikut parti, Pejabat EXCO sebulan sekali', () => {
+  const KB = g.MyPolitikKabinet;
+  P.daftar({}); P.tetap({ tahun: 2027, ip: 130, myr: 50000, ap: 10 }); betul(KB.bukaLobi('DUN').ok);
+  let p = S.loadPlayer(), sn = KB.senaraiPortfolio(p);
+  sama(sn.length, 9); betul(!sn.some((x) => x.id === 'exco_tanah'), 'Tanah bukan untuk lobi EXCO');
+  const pl = sn.find((x) => x.id === 'exco_pelaburan'); betul(!pl.boleh && pl.kurangIP === 70, 'Pelaburan dikunci, kurang 70 IP');
+  betul(sn.find((x) => x.id === 'exco_luarbandar').boleh, 'Luar Bandar terbuka');
+  betul(sn.some((x) => x.id === 'exco_agama'), 'UMNO nampak portfolio Agama');
+  let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('exco_kerjaraya', () => 0.01); }
+  betul(lj && lj.dilantik); p = S.loadPlayer();
+  let kn = KB.kepimpinanNegeri(p); sama(kn.isStateLeader, false); sama(kn.stateExcoPortfolio, 'Kerja Raya, Infrastruktur & Kemudahan Awam');
+  sama(g.MyPolitikDewan.kategoriPemain(p)[0], 'infra');
+  let pj = KB.pejabatEXCO(p); sama(pj.tindakan.length, 3); const ap0 = p.ap, ak0 = p.kesetiaan.akarUmbi, ip0 = p.ip;
+  const r = KB.tindakanEXCO('jalan'); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.ap, ap0 - 1); betul(p.kesetiaan.akarUmbi > ak0 && p.ip > ip0, 'akar umbi dan IP naik');
+  sama(KB.tindakanEXCO('terbengkalai').ok, false, 'sekali sebulan'); betul(KB.ringkasan(p).pejabat.sudah);
+  S.clearPlayer();
+  P.daftar({}); P.tetap({ parti: 'MCA', tahun: 2027, ip: 1000 }); betul(KB.bukaLobi('DUN').ok); sn = KB.senaraiPortfolio(S.loadPlayer());
+  sama(sn.length, 8); betul(!sn.some((x) => x.id === 'exco_agama'), 'MCA tiada portfolio Agama');
+  S.clearPlayer();
+  P.daftar({}); P.tetap({ tahun: 2027 }); p = S.loadPlayer(); const k = KB.getKabinet(p);
+  k.hasGovernmentRole = true; k.roleLevel = 'MENTERI_BESAR'; k.portfolioName = 'Menteri Besar Johor'; k.portfolioId = 'exco_tanah'; S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); kn = KB.kepimpinanNegeri(p); sama(kn.isStateLeader, true); sama(kn.stateExcoPortfolio, 'Tanah, Mineral, Perhutanan & Kewangan');
+  betul(KB.pejabatEXCO(p).tindakan.some((t) => t.id === 'geran')); betul(g.MyPolitikDewan.kategoriPemain(p).length > 1, 'MB kekal semua kategori');
   S.clearPlayer();
 });
 ujian('v13.68 Enjin mesyuarat Lain-lain (Fasa 6): BERJASA / Warisan hadir dari modul, usul dan slogan parti', () => {

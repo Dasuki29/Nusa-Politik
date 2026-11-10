@@ -26,6 +26,9 @@
   function tanda(n) { return (n > 0 ? '+' : '') + n; }
 
   var CSS = '' +
+    '.exco-tab{display:flex;gap:4px;border-bottom:2px solid var(--garis,var(--border));margin:8px 0}.exco-tab button{background:none;border:0;padding:6px 10px;font-weight:700;color:var(--muted,inherit);cursor:pointer}.exco-tab button.on{color:var(--text,inherit);border-bottom:3px solid var(--gold);margin-bottom:-2px}' +
+    '.exco-tx{border:1px solid var(--garis,var(--border));border-left:4px solid var(--gold);border-radius:8px;padding:8px 10px;margin:6px 0}.exco-tx p{margin:2px 0 4px;font-size:.82rem}.exco-tx small{display:inline-block;background:var(--bg-elev-1);border-radius:6px;padding:1px 6px;margin:2px 4px 2px 0;font-size:.74rem}' +
+    '.exco-ip{display:block;height:6px;background:var(--bg-elev-1);border-radius:6px;overflow:hidden;margin:4px 0 2px;max-width:220px}.exco-ip i{display:block;height:100%;background:var(--gold)}' +
     '.pru-hari{display:flex;gap:3px;margin:6px 0 10px}.pru-hari i{flex:1;height:14px;border:2px solid var(--garis,var(--border));border-radius:2px;background:var(--bg-elev-1)}' +
     '.pru-hari i.d{background:var(--red)}.pru-hari i.n{background:var(--gold)}.pru-hari i.f{border-style:dashed}' +
     '.pru-pecah{display:flex;height:26px;border:2px solid var(--garis,var(--border));border-radius:4px;overflow:hidden;margin:6px 0}' +
@@ -220,6 +223,10 @@
     }
     if (!k.hasGovernmentRole) { return smb + kadTiadaLobi(p); }
     h = smb + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
+    if (k.pejabat) {                                                    // v13.69: tab Pejabat EXCO / Portfolio Saya
+      h += '<div class="exco-tab" role="tablist"><button type="button" role="tab" data-pru="exco-tab" data-id="ringkasan"' + (tabEXCO === 'ringkasan' ? ' class="on" aria-selected="true"' : '') + '>Ringkasan</button><button type="button" role="tab" data-pru="exco-tab" data-id="pejabat"' + (tabEXCO === 'pejabat' ? ' class="on" aria-selected="true"' : '') + '>🏛️ Portfolio Saya</button></div>';
+      if (tabEXCO === 'pejabat') { return h + kadPejabat(k.pejabat) + '</section>'; }
+    }
     var arah = k.arah > 0 ? ' ▲ +' + k.arah : k.arah < 0 ? ' ▼ ' + k.arah : ' ▬';
     h += bar('KPI Portfolio · ' + k.kpiLabel + arah, k.governanceRating, k.governanceRating < 30) + bar('Tekanan politik', k.tekananPolitik, k.tekananPolitik >= 70) +
       bar('Populariti nasional', k.popularitiNasional, k.popularitiNasional < 30) + bar('Risiko rombakan kabinet', k.risikoRombak, k.risikoRombak >= 60);
@@ -229,6 +236,23 @@
     if (k.acara) { h += '<button type="button" class="btn btn--primary btn--block" data-pru="acara">⚠️ <span>Isu kementerian menunggu:</span> <span>' + esc(k.acara.tajuk) + '</span></button>'; }
     return h + '</section>' + (SW(p.parti) ? '<p class="note" style="font-size:.78rem">Di Sarawak, anggota kabinet negeri dipanggil Menteri, bukan EXCO. Dalam permainan, elaun dan peraturan sama dengan EXCO Negeri.</p>' : '');
   }
+  /* v13.69: Pejabat EXCO / Portfolio Saya: satu tindakan khas sebulan. */
+  var tabEXCO = 'ringkasan';
+  function teksKesan(t) {
+    var x = t.kesan || {}, l = [];
+    if (x.rating) { l.push('KPI ' + tanda(x.rating)); } if (x.ip) { l.push('IP ' + tanda(x.ip)); } if (x.akar) { l.push('Akar umbi ' + tanda(x.akar)); }
+    if (x.dana) { l.push('Dana +RM ' + fmt(x.dana)); } if (x.pop) { l.push('Populariti ' + tanda(x.pop)); } if (x.tekanan) { l.push('Tekanan politik ' + tanda(x.tekanan)); } if (x.rombak) { l.push('Risiko rombakan ' + tanda(x.rombak)); }
+    if (t.rawak) { l.push(Math.round(t.rawak.p * 100) + '% berjaya; gagal: KPI ' + t.rawak.gagal.rating + ' &amp; risiko integriti'); }
+    return l.map(function (z) { return '<small>' + z + '</small>'; }).join('');
+  }
+  function kadPejabat(pj) {
+    return '<p class="note">' + esc(pj.ikon) + ' <b>' + esc(pj.nama) + '</b> · satu tindakan khas sebulan (' + pj.ap + ' AP + dana).' + (pj.sudah ? ' <b>Tindakan bulan ini sudah dibuat.</b>' : '') + '</p>' +
+      pj.tindakan.map(function (t) {
+        return '<div class="exco-tx"><b>' + t.ikon + ' ' + esc(t.nama) + '</b><p>' + esc(t.huraian) + '</p><small>' + pj.ap + ' AP' + (t.myr ? ' · RM ' + fmt(t.myr) : '') + '</small>' + teksKesan(t) +
+          '<div><button type="button" class="btn btn--sm btn--primary" data-pru="exco-tindak" data-id="' + esc(t.id) + '"' + (t.boleh ? '' : ' disabled title="' + esc(t.sebab) + '"') + '>Laksana</button></div></div>';
+      }).join('');
+  }
+  function tindakEXCO(id) { var r = KB.tindakanEXCO(id); toast(r.ok ? r.mesej : r.ralat, r.ok ? (r.jaya === false ? 'ralat' : 'ok') : 'ralat'); segarkan(); }
   /** Musim pilihan raya aktif (PRU/PRN atau PRK): tab khas Pilihan Raya dipaparkan. */
   function musim(p) { return !!((PRU.getPRU(p).aktif) || (PK && PK.getPRK(p).aktif)); }
   function bannerMusim(p) {
@@ -600,7 +624,7 @@
         tajuk: '🏛️ Lobi Portfolio Kerajaan',
         isi: '<p>Parti membentuk kerajaan. Guna <b>IP</b> dan <b>Dana</b> untuk melobi satu portfolio. Lobi gagal = separuh kos hilang. Percubaan tinggal: <b>' + k.lobi.baki + '</b>.</p><p style="font-size:.85rem">IP: <b>' + fmt(p.ip) + '</b> · Dana: <b>RM ' + fmt(p.myr) + '</b></p>' + amaranDanaLobi(p, k) + '<ul class="acara__pil">' +
           (k.tpm && k.tpm.layak ? opsi('TPM', '🤝 Lobi Timbalan Perdana Menteri', 'Timbalan Presiden · kos ' + (k.tpm.ap ? k.tpm.ap + ' AP + ' : '') + 'RM ' + fmt(k.tpm.myr) + ' + ' + k.tpm.ip + ' IP · peluang ± ' + k.tpm.peluang + '% (' + (k.tpm.pmSendiri ? 'PM dari parti anda' : 'PM dari rakan gabungan') + ') · elaun +RM 6,000 &amp; +25 IP/bulan' + (k.tpm.boleh ? '' : '<br>' + esc(k.tpm.sebab)), k.tpm.boleh) : '') +   // v13.40
-          (k.portfolio.length ? '' : '<li class="muted" style="list-style:none">Tiada portfolio dibuka pada IP anda sekarang (minimum 250 IP).</li>') + k.portfolio.map(function (x) { return opsi(x.id, esc(x.nama), esc(x.tahapNama) + ' · kos IP ' + x.ip + ' + RM ' + fmt(x.myr) + ' · peluang ± ' + x.peluang + '% · elaun +RM ' + fmt(x.elaun.myr) + ' &amp; +' + x.elaun.ip + ' IP/bulan' + (x.boleh ? '' : '<br>' + esc(x.sebab)), x.boleh); }).join('') +
+          (k.portfolio.length ? '' : '<li class="muted" style="list-style:none">Tiada portfolio dibuka pada IP anda sekarang (minimum 250 IP).</li>') + k.portfolio.map(function (x) { return opsi(x.id, (x.ikon ? x.ikon + ' ' : '') + esc(x.nama) + (x.kurangIP ? ' 🔒' : ''), (x.kurangIP ? '<span class="exco-ip"><i style="width:' + Math.round(100 * (1 - x.kurangIP / x.ip)) + '%"></i></span>Kurang ' + x.kurangIP + ' IP · ' : '') + esc(x.tahapNama) + ' · kos IP ' + x.ip + ' + RM ' + fmt(x.myr) + ' · peluang ± ' + x.peluang + '% · elaun +RM ' + fmt(x.elaun.myr) + ' &amp; +' + x.elaun.ip + ' IP/bulan' + (x.boleh ? '' : '<br>' + esc(x.sebab)), x.boleh); }).join('') +
           opsi('TANGGUH', 'Tangguh', 'Lobi kekal terbuka sehingga pilihan raya akan datang. Buka semula dari tab Pemilihan bila sedia.', true) + '</ul>',
         butang: []
       });
@@ -769,6 +793,7 @@
     var a = t.getAttribute('data-pru');
     if (a === 'buka') { alir(); } else if (a === 'tindak') { tindak(t.getAttribute('data-id')); } else if (a === 'jentera') { hantarJentera(t.getAttribute('data-i')); } else if (a === 'kejutan') { sibuk = true; kejutan().then(function () { sibuk = false; segarkan(); }, function () { sibuk = false; }); }
     else if (a === 'selesai') { selesai(); } else if (a === 'nasional') { nasional(); } else if (a === 'keputusan') { keputusan(); } else if (a === 'lobi') { lobi(); } else if (a === 'mb') { menteriBesar(); } else if (a === 'acara') { acara(); } else if (a === 'tarik') { tarikDiriPRU(); } else if (a === 'prk-tarik') { tarikDiriPRK(); } else if (a === 'prk-buka') { alirPRK(); } else if (a === 'prk-tindak') { tindakPRK(t.getAttribute('data-id')); } else if (a === 'prk-selesai') { selesaiPRK(); } else if (a === 'prk-keputusan') { keputusanPRK(); } else if (a === 'cdf') { salurCDF(t.getAttribute('data-jumlah')); } else if (a === 'janji') { majuJanji(t.getAttribute('data-id')); }
+    else if (a === 'exco-tab') { tabEXCO = t.getAttribute('data-id') === 'pejabat' ? 'pejabat' : 'ringkasan'; segarkan(); } else if (a === 'exco-tindak') { tindakEXCO(t.getAttribute('data-id')); }   // v13.69
   });
 
   W.NusaPRU_UI = {  nasional: nasional, musim: musim, kad: kad, lencana: lencana, selepasBulan: selepasBulan, alir: alir, kejutan: kejutan, keputusan: keputusan, lobi: lobi, acara: acara, selesai: selesai };

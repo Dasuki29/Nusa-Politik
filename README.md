@@ -84,7 +84,7 @@ Modul utama dalam `js/`:
 | `pru.js`, `pru-ui.js` | PRU/PRN: pencalonan, manifesto, kempen 14 hari, kejutan kempen, keputusan dan status kerajaan |
 | `polling.js` | Kaji Selidik Pilihan Raya: unjuran undi, status kerusi, pengundi atas pagar, demografi |
 | `warroom.js` | Bilik Gerakan (War Room): zon kawasan, penghantaran jentera, pertempuran jentera, keletihan kempen |
-| `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan dan pembentukan Jemaah Menteri oleh Perdana Menteri |
+| `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan, Kepimpinan Negeri (MB/KM, 10 portfolio EXCO, Pejabat EXCO) dan pembentukan Jemaah Menteri oleh Perdana Menteri |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -191,6 +191,7 @@ node tools/ujian-pkr.js          # pelayar: panel PH, daftar PKR (Selangor), ist
 node tools/ujian-pas.js          # pelayar: panel PN, daftar PAS (Kelantan), istilah PAS, kad PAS, Jelajah Kawasan, kad kerusi PN, hemisikal, Restu, Ceramah, Dewan Ulamak, Ahli Bersekutu, EN
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
+node tools/ujian-exco.js         # pelayar: lobi 9 portfolio EXCO dengan bar IP, tab Pejabat EXCO / Portfolio Saya, EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN

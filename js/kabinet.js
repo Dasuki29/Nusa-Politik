@@ -60,11 +60,16 @@
   };
   var PORTFOLIO = {
     DUN: [
-      { id: 'exco_kesihatan', tahap: 'EXCO_NEGERI', nama: 'EXCO Kesihatan & Kebajikan', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
-      { id: 'exco_pertanian', tahap: 'EXCO_NEGERI', nama: 'EXCO Pertanian & Industri Asas Tani', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
-      { id: 'exco_infra',     tahap: 'EXCO_NEGERI', nama: 'EXCO Infrastruktur & Kemudahan Awam', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
-      { id: 'exco_pelancong', tahap: 'EXCO_NEGERI', nama: 'EXCO Pelancongan & Kebudayaan', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
-      { id: 'exco_kewangan',  tahap: 'EXCO_NEGERI', nama: 'EXCO Kewangan Negeri', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi' }
+      /* v13.69: 9 portfolio EXCO yang boleh dilobi (portfolio 1, Tanah & Kewangan, dipegang MB/KM: PORTFOLIO_MB). ANDAIAN: IP, kos dan peluang ialah nilai permainan. */
+      { id: 'exco_luarbandar', tahap: 'EXCO_NEGERI', nama: 'EXCO Pembangunan Luar Bandar, Pertanian & Keterjaminan Makanan', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'ekonomi', ikon: '🌾' },
+      { id: 'exco_kebajikan', tahap: 'EXCO_NEGERI', nama: 'EXCO Kebajikan, Pembangunan Wanita & Keluarga', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'kesihatan', ikon: '🤝' },
+      { id: 'exco_belia',     tahap: 'EXCO_NEGERI', nama: 'EXCO Pembangunan Belia, Sukan & NGO', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'pendidikan', ikon: '⚽' },
+      { id: 'exco_kerjaraya', tahap: 'EXCO_NEGERI', nama: 'EXCO Kerja Raya, Infrastruktur & Kemudahan Awam', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '🏗️' },
+      { id: 'exco_pelancongan', tahap: 'EXCO_NEGERI', nama: 'EXCO Pelancongan, Kebudayaan & Warisan', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '🎭' },
+      { id: 'exco_pendidikan', tahap: 'EXCO_NEGERI', nama: 'EXCO Pendidikan, Pengajian Tinggi & Sumber Manusia', ip: 130, myr: 2200, asas: 0.62, risiko: 'sederhana', kategori: 'pendidikan', ikon: '🎓' },
+      { id: 'exco_agama',     tahap: 'EXCO_NEGERI', nama: 'EXCO Hal Ehwal Agama Islam & Adat Istiadat Melayu', ip: 140, myr: 2400, asas: 0.6, risiko: 'sederhana', kategori: 'kesihatan', ikon: '🕌', islam: true },
+      { id: 'exco_ktp',       tahap: 'EXCO_NEGERI', nama: 'EXCO Kerajaan Tempatan, Perumahan & Pengangkutan', ip: 150, myr: 2500, asas: 0.58, risiko: 'sederhana', kategori: 'infra', ikon: '🏙️' },
+      { id: 'exco_pelaburan', tahap: 'EXCO_NEGERI', nama: 'EXCO Pelaburan, Perdagangan, Perindustrian & PKS', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'ekonomi', ikon: '🏭' }
     ],
     /* v9.2: portfolio kabinet negeri Sarawak (untuk pemain PBB). Nama kementerian ialah label simulasi; IP/kos/peluang ialah andaian permainan. */
     SARAWAK: [
@@ -100,7 +105,13 @@
     return out;
   }
   var DARI_CSV = binaParlimen(); if (DARI_CSV) { PORTFOLIO.PARLIMEN = DARI_CSV; }
+  /* v13.69: portfolio 1 dipegang terus oleh Menteri Besar / Ketua Menteri (bukan Sarawak); tidak boleh dilobi EXCO biasa. */
+  var PORTFOLIO_MB = { id: 'exco_tanah', tahap: 'MENTERI_BESAR', nama: 'Tanah, Mineral, Perhutanan & Kewangan', kategori: 'ekonomi', ikon: '🏞️' };
+  /* v13.69: portfolio Agama Islam tidak dibuka untuk parti berasaskan bukan Islam (ANDAIAN). PBS: hanya komuniti Bumiputera Islam. */
+  var TANPA_AGAMA = { MCA: 1, MIC: 1, DAP: 1, PPP: 1, LDP: 1, UPKO: 1, PBRS: 1, PCS: 1, PHRS: 1 };
+  function bolehAgama(p) { if (!p) { return true; } if (p.parti === 'PBS') { return p.komunitiPBS === 'bi'; } return !TANPA_AGAMA[p.parti]; }
   function cariPortfolio(id) {
+    if (id === PORTFOLIO_MB.id) { return PORTFOLIO_MB; }
     var s = PORTFOLIO.DUN.concat(PORTFOLIO.SARAWAK, PORTFOLIO.PARLIMEN);
     for (var i = 0; i < s.length; i++) { if (s[i].id === id) { return s[i]; } }
     return null;
@@ -206,7 +217,11 @@
   }
   /** v7.42: Parlimen: hanya portfolio dengan IP perlu <= IP pemain; paling HAMPIR dengan IP pemain dahulu, maks HAD_PILIHAN (rawak tetap bagi IP sama). */
   /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */
-  function kolamSumber(p, sumber) { return sumber === 'DUN' && p && SW(p.parti) ? PORTFOLIO.SARAWAK : PORTFOLIO[sumber]; }
+  function kolamSumber(p, sumber) {
+    if (sumber === 'DUN' && p && SW(p.parti)) { return PORTFOLIO.SARAWAK; }
+    if (sumber === 'DUN') { return PORTFOLIO.DUN.filter(function (d) { return !d.islam || bolehAgama(p); }); }   // v13.69
+    return PORTFOLIO[sumber];
+  }
   function kolamPaparan(p, sumber) {
     var semua = kolamSumber(p, sumber);
     if (sumber !== 'PARLIMEN' || !DARI_CSV) { return semua; }
@@ -224,7 +239,7 @@
       if ((Number(p.ip) || 0) < d.ip) { sebab.push('IP tidak cukup (perlu ' + d.ip + ')'); }
       if ((Number(p.myr) || 0) < kosMyr) { sebab.push('Dana tidak cukup (perlu RM ' + kosMyr.toLocaleString('ms-MY') + ')'); }
       return { id: d.id, nama: d.nama, tahap: d.tahap, tahapNama: namaTahap(p, d.tahap), ip: d.ip, myr: kosMyr, peluang: Math.round(peluang(p, d) * 100),
-        elaun: TAHAP[d.tahap].elaun, risiko: d.risiko, boleh: !sebab.length, sebab: sebab.join('; ') };
+        elaun: TAHAP[d.tahap].elaun, risiko: d.risiko, boleh: !sebab.length, sebab: sebab.join('; '), ikon: d.ikon || '', kurangIP: Math.max(0, d.ip - (Number(p.ip) || 0)) };   // v13.69: bar IP
     });
   }
   function lobiPortfolio(id, o) {
@@ -343,7 +358,7 @@
     return { label: label, negeri: p.negeri || '', item: item, semua: semua, sedia: !!(mb && mb.boleh), peluang: mb ? mb.peluang : null, sendiri: !!(mb && mb.sendiri) };
   }
   function lantikDi(p, k, tahap, nama, log) {
-    k.mbTertunda = false; k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = ''; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
+    k.mbTertunda = false; k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = tahap === 'MENTERI_BESAR' && !SW(p.parti) ? PORTFOLIO_MB.id : '';   // v13.69: MB/KM pegang portfolio 1 k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
     k.bulanBerjawatan = 0; k.ratingRendah = 0; k.lobi = null; k.acara = null;
     k.popularitiNasional = CONFIG.POP_AWAL; k.risikoRombak = 0; k.ratingLalu = CONFIG.RATING_AWAL; k.cdfBaki = CONFIG.CDF.BULANAN[tahap]; k.cdfBulan = 0; k.cdfJumlah = 0;
     k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilantik' }]).slice(-10);
@@ -581,17 +596,107 @@
     if (!rs.ok) { return { ok: false, ralat: rs.ralat }; }
     return { ok: true, dilantik: false, mesej: 'Lobi Timbalan Perdana Menteri gagal. Separuh kos hilang. Anda masih boleh melobi portfolio Menteri.' };
   }
+  /* ---------- v13.69: Pejabat EXCO / Portfolio Saya (mockup dipersetujui) ----------
+     Satu tindakan khas sebulan bagi pemegang portfolio negeri: kos 1 AP + dana; kesan pada IP, sokongan akar umbi dan KPI portfolio.
+     kesan: ip, akar (kesetiaan.akarUmbi), rating, tekanan, pop, rombak, dana (pendapatan); rawak: { p, jaya, gagal }; ig = risiko integriti. ANDAIAN: semua nilai permainan. */
+  var TINDAKAN_EXCO = {
+    exco_tanah: [
+      { id: 'geran', ikon: '📜', nama: 'Luluskan geran tanah kampung', huraian: 'Selesaikan permohonan tanah rakyat yang tertangguh bertahun-tahun.', myr: 2000, kesan: { rating: 6, akar: 4, ip: 10 } },
+      { id: 'lesen', ikon: '🌲', nama: 'Semak semula lesen balak dan lombong', huraian: 'Tarik balik lesen yang melanggar syarat alam sekitar. Syarikat yang terjejas ada kawan dalam parti.', myr: 0, kesan: { rating: 8, tekanan: 6, rombak: 5 } },
+      { id: 'konsesi', ikon: '💰', nama: 'Luluskan konsesi untuk tambah hasil negeri', huraian: 'Hasil negeri naik, tetapi ada pihak mendakwa konsesi diberi kepada kroni.', myr: 0, kesan: { dana: 4000, pop: -4 }, rawak: { p: 0.5, jaya: { rating: 4 }, gagal: { rating: -8, ig: 10 } } }],
+    exco_ktp: [
+      { id: 'rumah', ikon: '🏠', nama: 'Luluskan projek rumah mampu milik', huraian: 'Projek perumahan rakyat untuk keluarga muda di kawasan anda.', myr: 3000, kesan: { rating: 5, akar: 5, ip: 12 } },
+      { id: 'bas', ikon: '🚌', nama: 'Bas awam percuma', huraian: 'Laluan bas percuma menghubungkan kampung ke bandar.', myr: 2500, kesan: { rating: 4, akar: 3, pop: 3 } },
+      { id: 'bersih', ikon: '🧹', nama: 'Kempen kebersihan PBT', huraian: 'Gerakkan majlis tempatan membersihkan longkang dan tapak sampah haram.', myr: 1000, kesan: { rating: 3, akar: 2, ip: 5 } }],
+    exco_luarbandar: [
+      { id: 'jalanair', ikon: '🚰', nama: 'Jalan dan bekalan air kampung', huraian: 'Turap jalan tanah dan sambung paip air ke rumah penduduk.', myr: 2500, kesan: { rating: 5, akar: 5, ip: 10 } },
+      { id: 'baja', ikon: '🌱', nama: 'Agihan subsidi baja dan benih', huraian: 'Bantuan input pertanian untuk pesawah dan pekebun kecil.', myr: 2000, kesan: { rating: 3, akar: 6, ip: 8 } },
+      { id: 'pasar', ikon: '🧺', nama: 'Pasar tani dan stok makanan negeri', huraian: 'Pastikan bekalan makanan asas cukup dan harga terkawal.', myr: 1500, kesan: { rating: 5, pop: 2, ip: 5 } }],
+    exco_kerjaraya: [
+      { id: 'jalan', ikon: '🛣️', nama: 'Peruntukan jalan raya DUN', huraian: 'Baiki jalan berlubang di kawasan DUN anda.', myr: 2500, kesan: { rating: 4, akar: 5, ip: 12 } },
+      { id: 'terbengkalai', ikon: '🏚️', nama: 'Selamatkan projek terbengkalai', huraian: 'Ambil alih projek yang lewat dan lantik kontraktor baharu.', myr: 3000, kesan: { rating: 8, tekanan: 4, rombak: 3 } },
+      { id: 'rundingterus', ikon: '📑', nama: 'Tender projek secara rundingan terus', huraian: 'Projek siap lebih cepat, tetapi tanpa tender terbuka.', myr: 0, kesan: { ip: 15, akar: 2 }, rawak: { p: 0.5, jaya: { rating: 2 }, gagal: { rating: -10, pop: -4, ig: 12 } } }],
+    exco_agama: [
+      { id: 'surau', ikon: '🕌', nama: 'Baik pulih surau dan masjid', huraian: 'Peruntukan membaiki surau dan masjid usang di kawasan anda.', myr: 2000, kesan: { rating: 4, akar: 6, ip: 8 } },
+      { id: 'kafa', ikon: '📖', nama: 'Elaun imam dan guru KAFA', huraian: 'Naikkan elaun imam, bilal dan guru KAFA negeri.', myr: 2500, kesan: { rating: 5, akar: 4, pop: 2 } },
+      { id: 'adat', ikon: '🎖️', nama: 'Majlis adat dan istiadat negeri', huraian: 'Anjurkan majlis adat bersama istana dan pembesar negeri.', myr: 1500, kesan: { rating: 2, ip: 15 } }],
+    exco_pelaburan: [
+      { id: 'misi', ikon: '✈️', nama: 'Misi pelaburan luar negara', huraian: 'Bawa pelabur asing melihat tapak industri negeri.', myr: 3000, kesan: { rating: 5, ip: 15, pop: 2 } },
+      { id: 'pks', ikon: '🏪', nama: 'Geran PKS tempatan', huraian: 'Geran kecil untuk peniaga dan usahawan tempatan.', myr: 2000, kesan: { rating: 3, akar: 5, ip: 8 } },
+      { id: 'taman', ikon: '🏭', nama: 'Buka taman perindustrian baharu', huraian: 'Kawasan industri membuka peluang kerja, tetapi ada bantahan penduduk.', myr: 2500, kesan: { rating: 6, akar: -2, ip: 12, tekanan: 3 } }],
+    exco_pelancongan: [
+      { id: 'festival', ikon: '🎪', nama: 'Festival budaya negeri', huraian: 'Pesta budaya yang menarik pelancong dan peniaga kecil.', myr: 2500, kesan: { rating: 4, akar: 3, ip: 10 } },
+      { id: 'warisan', ikon: '🏛️', nama: 'Baik pulih tapak warisan', huraian: 'Pulihara bangunan dan tapak bersejarah negeri.', myr: 2000, kesan: { rating: 5, pop: 2, ip: 5 } },
+      { id: 'promosi', ikon: '📣', nama: 'Kempen promosi pelancongan', huraian: 'Promosi di media sosial dan pameran pelancongan.', myr: 1500, kesan: { rating: 3, ip: 8 } }],
+    exco_belia: [
+      { id: 'sukan', ikon: '🏆', nama: 'Kejohanan sukan belia', huraian: 'Kejohanan antara kampung yang menghimpun anak muda.', myr: 2000, kesan: { rating: 3, akar: 5, ip: 8 } },
+      { id: 'ngo', ikon: '🤝', nama: 'Geran NGO', huraian: 'Geran kecil untuk NGO kebajikan dan alam sekitar.', myr: 1500, kesan: { rating: 4, akar: 3, ip: 6 } },
+      { id: 'usahawan', ikon: '💡', nama: 'Program keusahawanan belia', huraian: 'Latihan dan modal permulaan untuk usahawan muda.', myr: 2500, kesan: { rating: 5, akar: 3, pop: 2 } }],
+    exco_kebajikan: [
+      { id: 'warga', ikon: '👵', nama: 'Bantuan bulanan warga emas', huraian: 'Bantuan tunai bulanan untuk warga emas berpendapatan rendah.', myr: 2500, kesan: { rating: 4, akar: 6, ip: 8 } },
+      { id: 'taska', ikon: '🧸', nama: 'Taska komuniti', huraian: 'Taska murah untuk ibu bekerja di kawasan anda.', myr: 2000, kesan: { rating: 5, akar: 3, pop: 2 } },
+      { id: 'wanita', ikon: '👩‍💼', nama: 'Geran usahawan wanita', huraian: 'Geran untuk ibu tunggal dan suri rumah memulakan perniagaan.', myr: 1500, kesan: { rating: 3, akar: 4, ip: 6 } }],
+    exco_pendidikan: [
+      { id: 'biasiswa', ikon: '🎓', nama: 'Biasiswa negeri', huraian: 'Biasiswa untuk pelajar cemerlang dari keluarga miskin.', myr: 2500, kesan: { rating: 5, akar: 4, ip: 8 } },
+      { id: 'tuisyen', ikon: '📚', nama: 'Pusat tuisyen rakyat', huraian: 'Kelas tuisyen percuma untuk calon peperiksaan.', myr: 1500, kesan: { rating: 3, akar: 5, ip: 6 } },
+      { id: 'tvet', ikon: '🛠️', nama: 'Latihan kemahiran (TVET)', huraian: 'Latihan kemahiran untuk belia yang tercicir sekolah.', myr: 2000, kesan: { rating: 5, pop: 2, ip: 6 } }]
+  };
+  var EXCO_TINDAKAN_AP = 1;
+  function idxBulan(p) { return (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1); }
+  /** Status kepimpinan negeri (dikira daripada p.kabinet supaya tidak bercanggah). */
+  function kepimpinanNegeri(p) {
+    var k = getKabinet(p), d = k.portfolioId ? cariPortfolio(k.portfolioId) : null, ldr = !!(k.hasGovernmentRole && k.roleLevel === 'MENTERI_BESAR');
+    var negeri = !!(d && (d === PORTFOLIO_MB || PORTFOLIO.DUN.indexOf(d) >= 0 || PORTFOLIO.SARAWAK.indexOf(d) >= 0));
+    return { isStateLeader: ldr, stateExcoPortfolio: k.hasGovernmentRole && negeri ? String(d.nama).replace(/^EXCO /, '') : '', portfolioId: negeri ? d.id : '' };
+  }
+  function pejabatEXCO(p) {
+    var k = getKabinet(p), kn = kepimpinanNegeri(p), senarai = TINDAKAN_EXCO[kn.portfolioId];
+    if (!k.hasGovernmentRole || !senarai) { return null; }
+    var sudah = k.excoTindakan === idxBulan(p), d = cariPortfolio(kn.portfolioId);
+    return { portfolioId: kn.portfolioId, nama: kn.stateExcoPortfolio, ikon: d.ikon || '🏛️', sudah: sudah, ap: EXCO_TINDAKAN_AP,
+      tindakan: senarai.map(function (t) {
+        var kos = t.myr && S().kosSebenar ? S().kosSebenar(p, t.myr) : (t.myr || 0), sebab = sudah ? 'Tindakan khas bulan ini sudah dibuat.' : (Number(p.ap) || 0) < EXCO_TINDAKAN_AP ? 'AP tidak mencukupi.' : (Number(p.myr) || 0) < kos ? 'Dana tidak cukup.' : '';
+        return { id: t.id, ikon: t.ikon, nama: t.nama, huraian: t.huraian, myr: kos, kesan: t.kesan, rawak: t.rawak || null, boleh: !sebab, sebab: sebab };
+      }) };
+  }
+  function tindakanEXCO(id, o) {
+    var p = S().loadPlayer(), k = getKabinet(p), pj = pejabatEXCO(p), r = rng(o);
+    if (!pj) { return { ok: false, ralat: 'Anda tidak memegang portfolio negeri.' }; }
+    var t = pj.tindakan.filter(function (x) { return x.id === id; })[0];
+    if (!t) { return { ok: false, ralat: 'Tindakan tidak sah.' }; }
+    if (!t.boleh) { return { ok: false, ralat: t.sebab }; }
+    var x = {}, f, jaya = null;
+    for (f in t.kesan) { x[f] = t.kesan[f]; }
+    if (t.rawak) { jaya = r() < t.rawak.p; var tb = jaya ? t.rawak.jaya : t.rawak.gagal; for (f in tb) { x[f] = (x[f] || 0) + tb[f]; } }
+    k.governanceRating = clamp(k.governanceRating + (x.rating || 0), 0, 100); k.tekananPolitik = clamp(k.tekananPolitik + (x.tekanan || 0), 0, 100);
+    k.popularitiNasional = clamp(k.popularitiNasional + (x.pop || 0), 0, 100); k.risikoRombak = clamp(k.risikoRombak + (x.rombak || 0), 0, 100);
+    k.excoTindakan = idxBulan(p);
+    var kes = { ap: -EXCO_TINDAKAN_AP, myr: (x.dana || 0) - (t.myr || 0) };
+    if (x.ip) { kes.ip = x.ip; }
+    if (x.akar) { kes.kesetiaan = { akarUmbi: x.akar }; }
+    var res = simpan(k, kes, { log: { tindakan: 'exco_tindakan', nama: t.nama, peringkat: 'ahli' } });
+    if (!res.ok) { return { ok: false, ralat: res.ralat }; }
+    if (x.ig && root.MyPolitikIntegriti) { root.MyPolitikIntegriti.tambahRisiko(x.ig, t.nama); }
+    var bh = [];
+    if (x.rating) { bh.push('KPI ' + (x.rating > 0 ? '+' : '') + x.rating); } if (x.ip) { bh.push('IP ' + (x.ip > 0 ? '+' : '') + x.ip); } if (x.akar) { bh.push('Akar umbi ' + (x.akar > 0 ? '+' : '') + x.akar); }
+    if (x.dana) { bh.push('Dana +RM ' + x.dana.toLocaleString('ms-MY')); } if (x.pop) { bh.push('Populariti ' + (x.pop > 0 ? '+' : '') + x.pop); }
+    if (x.tekanan) { bh.push('Tekanan politik +' + x.tekanan); } if (x.rombak) { bh.push('Risiko rombakan +' + x.rombak); } if (x.ig) { bh.push('Risiko integriti +' + x.ig); }
+    return { ok: true, jaya: jaya, mesej: (jaya === false ? 'Timbul dakwaan salah guna kuasa: ' : 'Dilaksanakan: ') + t.nama + '. ' + bh.join(' · ') + '.' };
+  }
+
   function ringkasan(p) {
     var k = getKabinet(p), t = TAHAP[k.roleLevel] || null;
     return { hasGovernmentRole: k.hasGovernmentRole, roleLevel: k.roleLevel, tahapNama: t ? namaTahap(p, k.roleLevel) : '', portfolioName: k.portfolioName, governanceRating: k.governanceRating,
       tekananPolitik: k.tekananPolitik, elaun: t ? t.elaun : null, bulanBerjawatan: k.bulanBerjawatan, ratingRendah: k.ratingRendah, lobi: k.lobi, acara: acaraSemasa(p),
       sejarah: k.sejarah, portfolio: senaraiPortfolio(p),
       kpiLabel: labelKPI(k.governanceRating), ratingLalu: k.ratingLalu, arah: k.governanceRating - k.ratingLalu, popularitiNasional: k.popularitiNasional, risikoRombak: k.risikoRombak,
-      cdfBaki: k.cdfBaki, cdfBulan: k.cdfBulan, cdfHad: CONFIG.CDF.HAD_KALI, cdfPilihan: pilihanCDF(p), mb: k.lobi || k.mbTertunda ? maklumatMB(p) : null, tpm: k.lobi ? maklumatTPM(p) : null, mbTertunda: !!k.mbTertunda };
+      cdfBaki: k.cdfBaki, cdfBulan: k.cdfBulan, cdfHad: CONFIG.CDF.HAD_KALI, cdfPilihan: pilihanCDF(p), mb: k.lobi || k.mbTertunda ? maklumatMB(p) : null, tpm: k.lobi ? maklumatTPM(p) : null, mbTertunda: !!k.mbTertunda,
+      isStateLeader: kepimpinanNegeri(p).isStateLeader, stateExcoPortfolio: kepimpinanNegeri(p).stateExcoPortfolio, pejabat: pejabatEXCO(p) };   // v13.69
   }
 
   return {
-    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA,
+    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
+    kepimpinanNegeri: kepimpinanNegeri, pejabatEXCO: pejabatEXCO, tindakanEXCO: tindakanEXCO,
     setRng: function (f) { rngLalai = f || Math.random; },
     getKabinet: getKabinet, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
     laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan

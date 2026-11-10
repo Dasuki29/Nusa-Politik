@@ -168,6 +168,8 @@
   function kategoriPemain(p) {
     var k = peranKabinet(p);
     if (k.roleLevel === 'PERDANA_MENTERI' || k.roleLevel === 'TIMBALAN_PM') { return ORDER_KATEGORI.slice(); }
+    var KBx = KB(), dP = k.roleLevel === 'EXCO_NEGERI' && k.portfolioId && KBx && KBx.cariPortfolio ? KBx.cariPortfolio(k.portfolioId) : null;   // v13.69: kategori portfolio EXCO ditetapkan terus
+    if (dP && dP.kategori && KATEGORI[dP.kategori]) { return [dP.kategori]; }
     var nama = String(k.portfolioName || '');
     for (var i = 0; i < ORDER_KATEGORI.length; i++) { if (KATEGORI[ORDER_KATEGORI[i]].kata.test(nama)) { return [ORDER_KATEGORI[i]]; } }
     return ORDER_KATEGORI.slice();                                // portfolio tidak dikenali: semua kategori
