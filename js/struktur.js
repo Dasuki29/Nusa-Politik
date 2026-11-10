@@ -43,6 +43,16 @@
   /** PAS Fasal 18(5): 4 wakil Kawasan ke Muktamar; +1 bagi setiap 1,000 ahli melebihi 2,000; maks 15. */
   function wakilPAS(ahli) { var n = Number(ahli) || 0; return Math.min(15, 4 + Math.max(0, Math.floor((n - 2000) / 1000))); }
 
+  /** PKR Fasal 17.2(c), 17.2A(c): bukan tahun pemilihan 5 wakil Cabang; tahun pemilihan 40 Perwakilan Biasa + 10 bagi setiap 1,000 anggota melebihi 3,000 (ANDAIAN maks 110 tambahan). */
+  function wakilPKR(ahli, p) {
+    var E = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null, pilih = !!(E && p && E.adalahTahunPemilihan && E.adalahTahunPemilihan(p.tahun));
+    var n = Number(ahli) || 0; return pilih ? 40 + Math.min(110, n > 3000 ? Math.ceil((n - 3000) / 1000) * 10 : 0) : 5;
+  }
+  /** DAP Fasal VIII.3(a): 25-50 ahli = 2 wakil, 51-100 = +1, +1 bagi setiap 100 ahli seterusnya. */
+  function wakilDAP(ahli) { var n = Number(ahli) || 0; if (n < 25) { return 1; } if (n <= 50) { return 2; } return 3 + Math.floor(Math.max(0, n - 100) / 100) + (n > 100 && (n - 100) % 100 ? 1 : 0); }
+  /** Amanah Fasal 14.1(d): 5 perwakilan termasuk Ketua (Cawangan ke Kawasan; Kawasan ke Konvensyen Nasional). */
+  function wakilAmanah() { return 4; }
+
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
 
   var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
@@ -93,6 +103,8 @@
     },
     PKR: {
       sumber: 'Perlembagaan PKR (11 Mac 2025)',
+      wakilBahagian: wakilPKR, hadirSemuaBahagian: true, tanpaG2: true, wakilDewanPA: 50,      // v13.62: Fasal 17.2, 17.2A, 33.2
+      tanpaWakilCawangan: 'Mesyuarat Agung Tahunan Cabang terbuka kepada semua anggota Cabang yang menjelaskan yuran; tiada pemilihan wakil Ranting (Fasal 33.2).',
       jawatan: {
         ajk_bahagian: { kerusi: 15, lantikan: 5, pemilih: 'ahli', fasal: 'Fasal 37.4, 37.6' },
         naib_ketua_bahagian: { kerusi: 1, lantikan: 2, pemilih: 'ahli', fasal: 'Fasal 37.4, 37.6' },
@@ -105,6 +117,7 @@
     },
     DAP: {
       sumber: 'Perlembagaan DAP (2019)',
+      wakilCawangan: wakilDAP, wakilTerusPA: true, jpkpSahaja: true, pusatBerkala: true,        // v13.62: Fasal VIII.1(b), VIII.3, IX.1, XIX.1
       jawatan: {
         ajk_cawangan: { kerusi: 7, lantikan: 6, fasal: 'Fasal XXI.3, XXII.1' },             // SU, Pen. SU, Bendahari, SU Publisiti, SU Hal Ehwal Wanita, 2 AJK
         ajk_bahagian: { tutup: 'Ahli JPKP tidak dipilih: Ahli Parlimen, ADUN, Ketua Pemuda, Ketua Wanita dan Pengerusi Cawangan menganggotai JPKP secara automatik' },
@@ -114,6 +127,7 @@
     },
     AMANAH: {
       sumber: 'Perlembagaan Parti Amanah Negara (2022)',
+      wakilCawangan: wakilAmanah, wakilBahagian: wakilAmanah, gabungMesyuarat: { cawangan: 'sayap_cawangan' }, wakilSayapDilantik: true, g10: 20, tanpaG2: true, wakilDewanPA: 20,   // v13.62: Fasal 12.1, 14.1(d), 14.3, 17.4(d)
       jawatan: {
         ajk_cawangan: { kerusi: 11, lantikan: 4, fasal: 'Fasal 17.4' },
         ketua_cawangan: { perlu: PERLU_AMANAH_C, pemilih: 11 }, naib_ketua_cawangan: { perlu: PERLU_AMANAH_C, pemilih: 11 },
@@ -168,7 +182,7 @@
   /** Bilangan kerusi wakil Cawangan ke Bahagian ikut perlembagaan parti, atau null (guna enjin asas). */
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
   /** Bilangan wakil Bahagian ke Perhimpunan Agung ikut perlembagaan parti, atau null. */
-  function wakilBahagian(p, ahli) { var s = untuk(p); return s && s.wakilBahagian ? s.wakilBahagian(ahli) : null; }
+  function wakilBahagian(p, ahli) { var s = untuk(p); return s && s.wakilBahagian ? s.wakilBahagian(ahli, p) : null; }
   /** v13.61: tetapan mesyuarat parti: gabungMesyuarat, wakilSayapDilantik, g10, tanpaG2, wakilDewanPA (atau null). */
   function mesyuarat(p, k) { var s = untuk(p); return s && s[k] != null ? s[k] : null; }
   /** Had jumlah perwakilan Perhimpunan Agung (MIC Perkara 74.1: 2,000), atau null. */
@@ -177,5 +191,5 @@
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
   return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, perlu: perlu, pemilih: pemilih, pangkatMin: pangkatMin,
-    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, mesyuarat: mesyuarat, wakilPAS: wakilPAS, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
+    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, mesyuarat: mesyuarat, wakilPAS: wakilPAS, wakilPKR: wakilPKR, wakilDAP: wakilDAP, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
 });

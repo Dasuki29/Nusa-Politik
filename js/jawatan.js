@@ -158,6 +158,7 @@
   function perwakilanSah(p, aras) {
     var tahun = tahunMandat(p, aras), sah = !!p && tahun === p.tahun;
     var ex = exOfficio(p, aras === 'cawangan' ? 'bahagian' : 'pau');
+    var St = struktur(); if (aras === 'cawangan' && !ex.sah && St && St.mesyuarat && St.mesyuarat(p, 'hadirSemuaBahagian')) { ex = { sah: true, sumber: 'anggota Cawangan' }; }   // v13.62: PKR Fasal 33.2: semua anggota hadir Mesyuarat Agung Cabang
     return {
       sah: sah, tahun: tahun, luput: !sah && tahun > 0 && tahun < p.tahun,
       exOfficio: ex.sah, sumberExOfficio: ex.sumber || '',

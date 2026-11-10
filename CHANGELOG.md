@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.62 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 3 (PH)**, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PKR**: Mesyuarat Agung Tahunan Cabang **terbuka kepada semua anggota Cabang** (Fasal 33.2); tiada pemilihan wakil Ranting; mesyuarat Ranting dinamakan "Mesyuarat Ranting" (unit operasi ⚠️). Wakil Cabang ke Kongres: **5** (bukan tahun pemilihan, 17.2(c)) atau **40 + tambahan** (tahun pemilihan, 17.2A). Kongres AMK / Wanita memilih **50 wakil** ke Kongres Nasional (17.2(d)); G2 dibuang.
+  - **DAP**: wakil Cawangan dipilih **terus ke Kongres** ikut VIII.3 (25–50 ahli = 2, 51–100 = 3, +1 setiap 100); MB JPKP **untuk ahli JPKP sahaja** (XIX.1). **Kongres Kebangsaan setiap 3 tahun**, **Persidangan Parti** pada tahun berikutnya (⚠️ bulan 3; IX.1), tiada mesyuarat kebangsaan pada tahun ketiga. Ucapan Dasar oleh Setiausaha Agung.
+  - **Amanah**: Mesyuarat Tahunan Cawangan / Kawasan dan Konvensyen sayap Nasional; **4 wakil + Ketua** di setiap peringkat (14.1(d)); ketua sayap Cawangan dipilih dalam mesyuarat utama, wakil sayap dilantik; **G20** (14.3); **20 wakil sayap ke Konvensyen Nasional** (12.1(e)–(g)).
+  - Bilangan hadir PH dikira (bukan 125 / 1,500). Usul dan tema Ucapan Dasar ikut parti: PKR (Reformasi, MADANI), DAP (Malaysian Malaysia, Integriti), Amanah (Rahmatan lil Alamin).
+- Ujian baharu (194 ujian).
+
 ## v13.61 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 2 (PN): PAS** ikut Perlembagaan PAS (Pindaan 2025), mockup yang dipersetujui (⚠️ andaian ditanda).

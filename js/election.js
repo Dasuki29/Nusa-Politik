@@ -274,17 +274,18 @@
       senarai.push(e);
     }
 
+    var StQ = modKhas('MyPolitikStruktur', 'struktur.js'), mq = function (k) { return StQ && StQ.mesyuarat ? StQ.mesyuarat(p, k) : null; };   // v13.62: mesyuarat ikut parti (PH)
     // 1. Perwakilan tahunan
     var g10Sah = !!p.perwakilan && p.perwakilan.g10 === p.tahun;                      // v6.2: wakil G10 hadir Mesyuarat Perwakilan Bahagian
     var pc = J.perwakilanSah(p, 'cawangan'), exBhg = J.exOfficio(p, 'bahagian'), exPau = J.exOfficio(p, 'pau');
     tambah({
-      kod: 'perwakilan_cawangan', jenis: 'perwakilan', jawatan: 'Perwakilan Cawangan ke Bahagian', peringkat: 'cawangan', kumpulan: 'perwakilan', sayap: null,
+      kod: 'perwakilan_cawangan', jenis: 'perwakilan', jawatan: mq('wakilTerusPA') ? 'Wakil Cawangan ke PAU' : 'Perwakilan Cawangan ke Bahagian', peringkat: 'cawangan', kumpulan: 'perwakilan', sayap: null,
       kerusi: kuotaCawangan(p), kesukaran: 0,
-      terbuka: !exBhg.sah,
-      sebab: exBhg.sah ? 'Anda hadir Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : ''
+      terbuka: !exBhg.sah && !mq('tanpaWakilCawangan'),
+      sebab: mq('tanpaWakilCawangan') || (exBhg.sah ? 'Anda hadir Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
     });
     var StP = modKhas('MyPolitikStruktur', 'struktur.js'), syPA = StP ? StP.perwakilanPA(p) : null, okPA = !syPA || J.pegang(p, syPA.kod);   // v13.57: MIC: hanya Pengerusi Cawangan (Perkara 74.4)
-    tambah({
+    if (!mq('wakilTerusPA')) tambah({
       kod: 'perwakilan_bahagian', jenis: 'perwakilan', jawatan: 'Perwakilan Bahagian ke PAU', peringkat: 'bahagian', kumpulan: 'perwakilan', sayap: null,
       kerusi: kuotaBahagian(p), kesukaran: 0,
       terbuka: !exPau.sah && (pc.layak || g10Sah) && okPA,
@@ -785,6 +786,7 @@
     if (jenis === 'perwakilan') {
       var aras = KUNCI_PERWAKILAN[kod] || 'bahagian', pw = salin(p.perwakilan || { cawangan: 0, bahagian: 0 });
       pw[aras] = menang ? p.tahun : 0;
+      var StT = modKhas('MyPolitikStruktur', 'struktur.js'); if (kod === 'perwakilan_cawangan' && StT && StT.mesyuarat && StT.mesyuarat(p, 'wakilTerusPA')) { pw.bahagian = menang ? p.tahun : (pw.bahagian === p.tahun ? pw.bahagian : 0); }   // v13.62: DAP Fasal VIII.3: wakil Cawangan terus ke Kongres
       patch.perwakilan = pw;
       if (menang) { peristiwa.push({ jenis: 'perwakilan_terpilih', mesej: 'Anda terpilih sebagai ' + d.jawatan + '. Mandat sah untuk tahun ' + p.tahun + ' sahaja.' }); }
     } else {
@@ -899,7 +901,7 @@
     getStatusModul: getStatusModul,
     senaraiPertandingan: senaraiPertandingan,
     kuotaCawangan: kuotaCawangan, kuotaBahagian: kuotaBahagian, kuotaSayapCawangan: kuotaSayapCawangan, ahliSayap: ahliSayap,
-    daftarBertanding: daftarBertanding, bilPemilih: bilPemilih, kerusiParti: kerusiParti, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan, pemilihParti: pemilihParti,
+    daftarBertanding: daftarBertanding, ahliBahagian: ahliBahagian, bilPemilih: bilPemilih, kerusiParti: kerusiParti, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan, pemilihParti: pemilihParti,
     tarikBalik: tarikBalik,
     senaraiKempen: senaraiKempen,
     jalankanKempen: jalankanKempen,

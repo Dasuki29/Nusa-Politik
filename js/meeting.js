@@ -230,6 +230,50 @@
         { kod: 'ppp_rumah', tajuk: 'Rumah mampu milik bandar untuk semua kaum', penerangan: 'Skim perumahan bandar yang terbuka kepada semua isi rumah berpendapatan rendah.', populariti: 64, nilai: 3 }
       ]
     },
+    PKR: {
+      cawangan: [
+        { kod: 'pkr_aduan', tajuk: 'Pusat aduan rakyat di setiap Ranting', penerangan: 'Penduduk mahu saluran aduan tetap untuk masalah jalan, sampah dan bantuan.', populariti: 66, nilai: 3 },
+        { kod: 'pkr_gaji', tajuk: 'Desak gaji wajar untuk pekerja tempatan', penerangan: 'Pekerja kilang dan perkhidmatan di kawasan ini bergaji rendah.', populariti: 64, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'pkr_rasuah', tajuk: 'Perangi rasuah dan salah guna kuasa di peringkat negeri', penerangan: 'Cabang mahu siasatan telus terhadap projek yang dipertikaikan.', populariti: 68, nilai: 4 },
+        { kod: 'pkr_anak_muda', tajuk: 'Beri ruang anak muda dalam senarai calon', penerangan: 'AMK mahu lebih ramai calon muda dalam pilihan raya akan datang.', populariti: 62, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'pkr_reformasi', tajuk: 'Teruskan reformasi institusi: had tempoh Perdana Menteri', penerangan: 'Kongres mendesak had dua penggal bagi jawatan Perdana Menteri.', populariti: 66, nilai: 3 },
+        { kod: 'pkr_sara', tajuk: 'Tangani kos sara hidup dan subsidi bersasar', penerangan: 'Subsidi diberi kepada yang memerlukan, tanpa membebankan rakyat.', populariti: 64, nilai: 3 },
+        { kod: 'pkr_kehakiman', tajuk: 'Pemisahan kuasa Peguam Negara dan Pendakwa Raya', penerangan: 'Kongres mahu peranan pendakwaan diasingkan daripada penasihat kerajaan.', populariti: 60, nilai: 3 }
+      ]
+    },
+    DAP: {
+      cawangan: [
+        { kod: 'dap_bas', tajuk: 'Laluan bas awam ke taman perumahan', penerangan: 'Penduduk bergantung kepada kereta kerana tiada bas awam yang kerap.', populariti: 66, nilai: 3 },
+        { kod: 'dap_banjir_kilat', tajuk: 'Atasi banjir kilat di kawasan bandar', penerangan: 'Longkang tersumbat menyebabkan banjir kilat setiap kali hujan lebat.', populariti: 68, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'dap_telus', tajuk: 'Ketelusan perolehan kerajaan tempatan', penerangan: 'JPKP mahu tender majlis tempatan diumumkan secara terbuka.', populariti: 66, nilai: 4 },
+        { kod: 'dap_pbt', tajuk: 'Pilihan raya kerajaan tempatan', penerangan: 'Ahli majlis tempatan dipilih rakyat, bukan dilantik.', populariti: 58, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'dap_peluang', tajuk: 'Pendidikan dan peluang sama rata untuk semua', penerangan: 'Kemasukan universiti dan biasiswa berasaskan merit dan keperluan.', populariti: 66, nilai: 3 },
+        { kod: 'dap_integriti', tajuk: 'Integriti dan kecekapan dalam kerajaan', penerangan: 'Akta pembiayaan politik dan pengisytiharan harta wakil rakyat.', populariti: 64, nilai: 4 },
+        { kod: 'dap_transit', tajuk: 'Pengangkutan awam bandar yang bersepadu', penerangan: 'Sistem rel dan bas bersepadu untuk bandar-bandar utama.', populariti: 62, nilai: 3 }
+      ]
+    },
+    AMANAH: {
+      cawangan: [
+        { kod: 'amanah_masjid', tajuk: 'Tadbir urus masjid dan surau yang inklusif', penerangan: 'Ahli kariah mahu masjid terbuka untuk program masyarakat dan anak muda.', populariti: 66, nilai: 3 },
+        { kod: 'amanah_kebajikan', tajuk: 'Tabung kebajikan untuk keluarga miskin bandar', penerangan: 'Keluarga B40 memerlukan bantuan makanan dan yuran sekolah.', populariti: 68, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'amanah_dakwah', tajuk: 'Dakwah rahmah kepada masyarakat berbilang kaum', penerangan: 'Kawasan mahu program dialog dan kebajikan bersama masyarakat bukan Islam.', populariti: 60, nilai: 3 },
+        { kod: 'amanah_ph', tajuk: 'Kukuhkan jentera bersama PH di kerusi Melayu', penerangan: 'Amanah perlu menawan pengundi Melayu bersama PKR dan DAP.', populariti: 62, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'amanah_rahmah', tajuk: 'Islam rahmah dan progresif sebagai dasar negara', penerangan: 'Konvensyen mendukung pendekatan Islam yang adil, inklusif dan sederhana.', populariti: 64, nilai: 3 },
+        { kod: 'amanah_keadilan', tajuk: 'Keadilan sosial: gaji wajar dan perumahan rakyat', penerangan: 'Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.', populariti: 66, nilai: 3 }
+      ]
+    },
     PAS: {
       cawangan: [
         { kod: 'pas_tahfiz', tajuk: 'Kelas pengajian dan tahfiz di surau kawasan', penerangan: 'Ibu bapa mahu kelas al-Quran dan fardu ain yang tetap untuk anak-anak.', populariti: 72, nilai: 4 },
@@ -268,7 +312,10 @@
     MIC: ['Memperkasa Masyarakat India', 'Pendidikan dan Peluang untuk Generasi Baharu', 'MIC Bersama Rakyat'],
     PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
     PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63'],
-    PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera']
+    PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera'],
+    PKR: ['Reformasi', 'Malaysia MADANI'],
+    DAP: ['Malaysian Malaysia', 'Integriti dan Kecekapan'],
+    AMANAH: ['Rahmatan lil Alamin', 'Negara Rahmah']
   };
   var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
@@ -315,6 +362,7 @@
     PERINGKAT.sayap_cawangan.nama = 'Persidangan Tahunan ' + N + ' Cawangan';
     PERINGKAT.sayap_bahagian.nama = 'Mesyuarat Perwakilan ' + N + ' Bahagian';
     PERINGKAT.sayap_pau.nama = 'Perhimpunan ' + N + ' (Pra-PAU)';
+    PERINGKAT.pau.nama = jenisPusat(p) === 'persidangan' ? 'Persidangan Parti DAP' : 'Perhimpunan Agung UMNO (PAU)';   // v13.62: DAP Persidangan Parti (Fasal IX.1)
     ['sayap_cawangan', 'sayap_bahagian', 'sayap_pau'].forEach(function (k) { PERINGKAT[k].jenisUsul = u; });
   }
 
@@ -329,6 +377,12 @@
   function kunci(p) { var U = umnoM(); return U && U.kunciMesyuarat ? U.kunciMesyuarat(p) : p.tahun; }
   /** v13.61: tetapan mesyuarat parti (js/struktur.js): gabungMesyuarat, g10, tanpaG2, wakilDewanPA. */
   function mz(p, k) { var St = typeof globalThis !== 'undefined' ? globalThis.MyPolitikStruktur : null; return St && St.mesyuarat ? St.mesyuarat(p, k) : null; }
+  /** v13.62: DAP Fasal VIII.1(b), IX.1: 'kongres' (tahun pemilihan), 'persidangan' (tahun berikutnya, ANDAIAN) atau null. Parti lain: 'kongres'. */
+  function jenisPusat(p) {
+    if (!mz(p, 'pusatBerkala')) { return 'kongres'; }
+    if (E && E.adalahTahunPemilihan(p.tahun)) { return 'kongres'; }
+    return E && E.adalahTahunPemilihan(p.tahun - 1) ? 'persidangan' : null;
+  }
   function pusatDiBahagian(p) { var U = umnoM(); return !!(U && U.baharu && U.baharu(p)); }
   function pemilihanAktif(p) { return !!(E && E.adalahTahunPemilihan(p.tahun)); }
 
@@ -360,6 +414,11 @@
         : { ok: false, sebab: 'Hanya G2 ' + N + ' (2 wakil Bahagian) tahun ' + p.tahun + ', Ketua ' + N + ' Bahagian, Ketua Bahagian dan pemegang jawatan Pusat boleh hadir Perhimpunan ' + N + ' Pusat.' };
     }
     var g = pegangan(p);
+    if (peringkat === 'bahagian' && mz(p, 'hadirSemuaBahagian')) { return { ok: true }; }                 // v13.62: PKR Fasal 33.2: semua anggota Cabang
+    if (peringkat === 'bahagian' && mz(p, 'jpkpSahaja')) {                                                  // v13.62: DAP Fasal XIX.1: ahli JPKP sahaja
+      return g.exB.sah ? { ok: true } : { ok: false, sebab: 'Hanya ahli JPKP (Ahli Parlimen, ADUN, Ketua Pemuda / Wanita dan Pengerusi Cawangan) boleh hadir MB JPKP.' };
+    }
+    if (peringkat === 'pau' && mz(p, 'pusatBerkala') && !jenisPusat(p)) { return { ok: false, sebab: 'Tiada Kongres Kebangsaan atau Persidangan Parti tahun ini: Kongres diadakan setiap 3 tahun dan Persidangan Parti 18 bulan selepasnya.' }; }
     if (peringkat === 'bahagian') {
       return (g.pw.sah || g.exB.sah || (p.perwakilan && p.perwakilan.g10 === p.tahun)) ? { ok: true }
         : { ok: false, sebab: 'Hanya Perwakilan Cawangan atau G10 sayap tahun ' + p.tahun + ' yang terpilih, Ketua Cawangan dan pemegang jawatan Bahagian/Pusat boleh hadir. Mandat tahun lepas sudah luput.' };
@@ -421,11 +480,17 @@
   /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
   function hadirKira(p, peringkat) {
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
-    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS' }[p.parti || 'UMNO'];
+    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
     var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
     var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null; if (!M || !M.ringkasPusat) { return null; }
     var rp = null; try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } var nB = rp && rp.bilBahagian; if (!nB) { return null; }
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
+    if (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') {      // v13.62: PH: PKR semua anggota Cabang (≈10% hadir, ANDAIAN); DAP ahli JPKP; Amanah 14.3; Pusat = perwakilan modul parti
+      var nCw = (Eg.bilPemilih ? Eg.bilPemilih(p, 'bahagian') / Math.max(1, Eg.kuotaCawangan(p)) : 10);
+      if (peringkat === 'bahagian') { return p.parti === 'PKR' ? Math.max(100, Math.round((Eg.ahliBahagian ? Eg.ahliBahagian(p) : 2000) * 0.1)) : p.parti === 'DAP' ? Math.max(10, Math.round(nCw) + 4) : Math.max(30, Math.round(nCw * 5) + 23 + 60); }
+      if (peringkat === 'pau') { return p.parti === 'PKR' && !(E && E.adalahTahunPemilihan(p.tahun)) ? nB * 10 + 150 : (rp.pengundi || nB * 5); }
+      if (peringkat === 'sayap_pau') { return Math.max(40, Math.round((rp.pengundi || nB * 5) / 5)); }
+    }
     if (peringkat === 'bahagian') { return Eg.bilPemilih ? Math.max(30, Math.round(Eg.bilPemilih(p, 'bahagian')) + 20 + (pas ? 45 : 0)) : null; }
     if (peringkat === 'pau') { var n = Eg.kuotaBahagian(p) * nB + (pas ? nB + 150 : 40); return had ? Math.min(had, n) : n; }
     if (peringkat === 'sayap_pau') { return Math.max(40, Math.round((Eg.kuotaBahagian(p) * nB + 40) / 4)); }
