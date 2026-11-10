@@ -40,6 +40,9 @@
   /** MIC Perkara 74.1: 1 wakil Perhimpunan Agung bagi setiap 250 ahli Bahagian. */
   function wakilPAMIC(ahli) { return Math.max(1, Math.floor((Number(ahli) || 0) / 250)); }
 
+  /** PAS Fasal 18(5): 4 wakil Kawasan ke Muktamar; +1 bagi setiap 1,000 ahli melebihi 2,000; maks 15. */
+  function wakilPAS(ahli) { var n = Number(ahli) || 0; return Math.min(15, 4 + Math.max(0, Math.floor((n - 2000) / 1000))); }
+
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
 
   var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
@@ -78,6 +81,7 @@
     },
     PAS: {
       sumber: 'Perlembagaan PAS (Pindaan 2025)',
+      wakilBahagian: wakilPAS, gabungMesyuarat: { cawangan: 'sayap_cawangan' }, wakilSayapDilantik: true, g10: 15, tanpaG2: true, wakilDewanPA: 20,   // v13.61: Fasal 18(4)-(5), 19(4)(e), 32(4), 44(2)
       jawatan: {
         ajk_cawangan: { kerusi: 8, lantikan: 4, fasal: 'Fasal 44(2), 44(4)' },              // 2/3 daripada 12 dipilih, 1/3 dilantik Ketua
         ajk_bahagian: { kerusi: 16, lantikan: 8, fasal: 'Fasal 41(5)' },                    // 2/3 daripada 24 dipilih, 1/3 dilantik Yang Dipertua
@@ -165,11 +169,13 @@
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
   /** Bilangan wakil Bahagian ke Perhimpunan Agung ikut perlembagaan parti, atau null. */
   function wakilBahagian(p, ahli) { var s = untuk(p); return s && s.wakilBahagian ? s.wakilBahagian(ahli) : null; }
+  /** v13.61: tetapan mesyuarat parti: gabungMesyuarat, wakilSayapDilantik, g10, tanpaG2, wakilDewanPA (atau null). */
+  function mesyuarat(p, k) { var s = untuk(p); return s && s[k] != null ? s[k] : null; }
   /** Had jumlah perwakilan Perhimpunan Agung (MIC Perkara 74.1: 2,000), atau null. */
   function hadPA(p) { var s = untuk(p); return s && s.hadPA ? s.hadPA : null; }
   /** Syarat perwakilan ke Perhimpunan Agung: { kod, sebab } atau null. */
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
   return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, perlu: perlu, pemilih: pemilih, pangkatMin: pangkatMin,
-    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
+    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, mesyuarat: mesyuarat, wakilPAS: wakilPAS, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
 });

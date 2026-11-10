@@ -2931,6 +2931,27 @@ ujian('v13.60 Enjin mesyuarat ikut parti (Fasa 1 BN): wakil, bilangan hadir, taj
   sama(g.MyPolitikParti.ke('Ketua Cawangan'), 'Ketua Cawangan', 'PBRS tidak mewarisi istilah Pengerusi PPP');
   S.clearPlayer();
 });
+ujian('v13.61 Enjin mesyuarat PAS (Fasa 2): nama mesyuarat, wakil Muktamar 18(5), hadir, tiada mesyuarat sayap Cawangan, wakil dilantik, G15, 20 wakil Dewan, penangguhan 18(3)', () => {
+  const ST = g.MyPolitikStruktur, M0 = g.MyPolitikMeeting, PA = g.MyPolitikPAS, PT = g.MyPolitikParti;
+  sama(ST.wakilPAS(1500), 4); sama(ST.wakilPAS(5600), 7); sama(ST.wakilPAS(40000), 15);
+  P.daftar({ sayap: 'pemuda', umur: 30 }); P.tetap({ parti: 'PAS', sayap: 'pemuda', tahun: 2027, bulan: 3 }); let p = S.loadPlayer();
+  sama(PT.ke('Persidangan Tahunan Cawangan'), 'Mesyuarat Agung Tahunan Cawangan'); sama(PT.ke('Mesyuarat Perwakilan Bahagian'), 'Mesyuarat Agung Tahunan Kawasan'); sama(PT.ke('Perhimpunan Pemuda (Pra-PAU)'), 'Muktamar Dewan Pemuda');
+  betul(M0.bilHadir(p, 'pau') > 900 && M0.bilHadir(p, 'pau') !== 1500, 'hadir Muktamar dikira: ' + M0.bilHadir(p, 'pau'));
+  const sn = E.senaraiPertandingan(p), c = (k) => sn.find((x) => x.kod === k);
+  sama(c('perwakilan_sayap_cawangan').terbuka, false); betul(/dilantik/.test(c('perwakilan_sayap_cawangan').sebab)); sama(c('perwakilan_sayap_g10').kerusi, 15);
+  betul(!c('perwakilan_sayap_g2'), 'tiada G2'); betul(c('perwakilan_dewan_muktamar') && c('perwakilan_dewan_muktamar').kerusi === 20, 'wakil Dewan ke Muktamar');
+  // lantikan wakil sayap dalam Mesyuarat Agung Cawangan (rng 0 = dilantik)
+  P.tetap({ kesetiaan: Object.assign({}, p.kesetiaan, { ajk: 80, akarUmbi: 80 }) });
+  const h = E.jalankanPemilihanPeringkat('cawangan', { rng: () => 0 }); betul(h.some((x) => x.keputusan && x.keputusan.dilantik), JSON.stringify(h.map((x) => x.mesej)));
+  sama(S.loadPlayer().perwakilan.sayapCawangan, 2027);
+  // penangguhan Fasal 18(3): 2029 ditangguh -> 2030, 2032
+  const pt = { parti: 'PAS', pas: { tangguh: [2029] } };
+  sama(PA.adalahTahunPemilihan(pt, 2027), true); sama(PA.adalahTahunPemilihan(pt, 2029), false); sama(PA.adalahTahunPemilihan(pt, 2030), true); sama(PA.adalahTahunPemilihan(pt, 2032), true); sama(PA.tahunSeterusnya(pt, 2029), 2030); sama(PA.tahunLepas(pt, 2029), 2027);
+  sama(PA.adalahTahunPemilihan({ parti: 'PAS' }, 2029), true, 'tanpa penangguhan');
+  // usul dan tema PAS
+  const ag = M0.janaAgendaUji(S.loadPlayer(), 'pau').map((a) => a.kod + ':' + a.tajuk).join('|'); betul(/pas_/.test(ag) && /Islam Memimpin|Kepimpinan Ulamak|Malaysia Sejahtera/.test(ag), ag);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

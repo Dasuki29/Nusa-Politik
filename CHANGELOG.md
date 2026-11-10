@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.61 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 2 (PN): PAS** ikut Perlembagaan PAS (Pindaan 2025), mockup yang dipersetujui (⚠️ andaian ditanda).
+  - Nama mesyuarat PAS: **Mesyuarat Agung Tahunan Cawangan / Kawasan**, **Mesyuarat Agung Dewan Pemuda / Muslimat Kawasan**, **Muktamar Dewan Pemuda / Muslimat**.
+  - Wakil Kawasan ke Muktamar ikut **Fasal 18(5)** (4, +1 bagi setiap 1,000 ahli melebihi 2,000, maks 15). Bilangan hadir dikira: Mesyuarat Agung Kawasan + 45 wakil Dewan (19(4)); Muktamar = wakil Kawasan + Yang Dipertua Kawasan + wakil Dewan, JK Pusat dan Majlis Syura (18(4)).
+  - **Tiada mesyuarat sayap Cawangan berasingan**: Ketua JK Pemuda / Muslimat Cawangan dipilih dalam Mesyuarat Agung Cawangan (44(2)); wakil sayap Cawangan **dilantik** Ketua Pemuda / Muslimat Cawangan (32(4); ⚠️ peluang ikut sokongan AJK dan akar umbi).
+  - **G15** (15 wakil Dewan ke Mesyuarat Agung Kawasan, 19(4)(e)); G2 dibuang (Ketua Dewan Kawasan hadir Muktamar Dewan secara automatik, 22(4)); pertandingan baharu **20 wakil Dewan ke Muktamar Tahunan** setiap tahun (18(4)(g)–(h)).
+  - Usul PAS (tahfiz, banjir, air, jentera PN, pondok, tarbiyah, Akta 355, ekonomi Islam, royalti minyak) dan tema Ucapan Dasar ("Islam Memimpin", "Kepimpinan Ulamak", "Malaysia Sejahtera").
+  - **Penangguhan pemilihan** (18(3), ⚠️ 5% pada bulan 1 tahun pemilihan): kitaran pemilihan beranjak satu tahun; pemegang jawatan kekal.
+- Ujian baharu (193 ujian).
+
 ## v13.60 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 1 (BN)**, mockup yang dipersetujui (⚠️ andaian ditanda).

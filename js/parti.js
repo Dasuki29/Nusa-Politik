@@ -114,7 +114,10 @@
      ANDAIAN: kawasan operasi = 165 kawasan Parlimen Semenanjung (data/pas-semenanjung.csv, tools/build-pas.js); takwim bulan 3/5/9. Logo daripada pengguna. */
   var BULAN_PPP = SENARAI.PPP.istilah.filter(function (x) { return /ulan|onth/.test(x[0].source); }), BULAN_PPP_S = SENARAI.PPP.istilahSongsang.filter(function (x) { return /ulan|onth/.test(x[0].source); });
   SENARAI.PAS = { kod: 'PAS', nama: 'PAS', penuh: 'Parti Islam Se-Malaysia', logo: 'assets/images/logo-pas.svg', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/pas-semenanjung.csv', bahagianJenis: 'Parlimen', pas: true, gabungan: 'PN',
-    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja PAS Pusat (JK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja PAS Pusat'], [/\bMKT\b/g, 'JK Pusat'],
+    istilah: [[/Persidangan Tahunan (Pemuda|Wanita|Sayap) Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan ($1)'], [/Persidangan Tahunan Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan'],   // v13.61: nama mesyuarat PAS (Fasal 19-22)
+      [/Mesyuarat Perwakilan (Pemuda|Wanita|Sayap) Bahagian/g, 'Mesyuarat Agung Dewan $1 Bahagian'], [/Mesyuarat Perwakilan Bahagian/g, 'Mesyuarat Agung Tahunan Bahagian'],
+      [/Perhimpunan (Pemuda|Wanita|Sayap) \(Pra-PAU\)/g, 'Muktamar Dewan $1'], [/Perhimpunan (Pemuda|Wanita) Pusat/g, 'Muktamar Dewan $1'],
+      [/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja PAS Pusat (JK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja PAS Pusat'], [/\bMKT\b/g, 'JK Pusat'],
       [/Perhimpunan Agung PAS \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung PAS/g, 'Muktamar Tahunan PAS'],
       [/PAS General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/\bPAU\b/g, 'Muktamar'],
       [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di negeri tuan rumah Muktamar'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in the Muktamar host state'],
@@ -124,7 +127,10 @@
       [/Pengerusi Badan Perhubungan Negeri/g, 'Pesuruhjaya PAS Negeri'], [/Pengerusi Badan Perhubungan/g, 'Pesuruhjaya PAS'], [/Badan Perhubungan Negeri/g, 'Perhubungan PAS Negeri'], [/Badan Perhubungan/g, 'Perhubungan PAS'],
       [/State Liaison Body Chairman/g, 'State PAS Commissioner'], [/Liaison Body Chairman/g, 'PAS Commissioner'], [/State Liaison Body/g, 'State PAS Liaison'], [/Liaison Body/g, 'PAS Liaison'],
       [/\bWanita\b/g, 'Muslimat'], [/\bWomen\b/g, 'Muslimat']].concat(BULAN_PPP),
-    istilahSongsang: [[/Jawatankuasa Kerja PAS Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja PAS Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
+    istilahSongsang: [[/Mesyuarat Agung Tahunan Cawangan \((Pemuda|Muslimat|Wanita|Sayap)\)/g, 'Persidangan Tahunan $1 Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan'],
+      [/Mesyuarat Agung Dewan (Pemuda|Muslimat|Wanita|Sayap) (Kawasan|Bahagian)/g, 'Mesyuarat Perwakilan $1 Bahagian'], [/Mesyuarat Agung Tahunan (Kawasan|Bahagian)/g, 'Mesyuarat Perwakilan Bahagian'],
+      [/Muktamar Dewan (Pemuda|Muslimat|Wanita|Sayap)/g, 'Perhimpunan $1 (Pra-PAU)'],
+      [/Jawatankuasa Kerja PAS Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja PAS Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
       [/Muktamar Tahunan PAS/g, 'Perhimpunan Agung PAS (PAU)'], [/PAS Annual Muktamar/g, 'PAS General Assembly (PAU)'], [/\bMuktamar\b/g, 'PAU'],
       [/ di negeri tuan rumah PAU/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ in the PAU host state/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
       [/\bNaib Ketua Cawangan\b/g, 'Timbalan Ketua Cawangan'],

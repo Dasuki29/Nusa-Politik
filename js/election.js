@@ -297,26 +297,38 @@
     var sy = J.sayapPemain(p);
     if (sy) {
       var NS = J.NAMA_SAYAP[sy], pw2 = p.perwakilan || {}, swSah = pw2.sayapCawangan === p.tahun, ketuaSy = J.pegang(p, 'sayap_cawangan_' + sy);   // Ketua sayap Cawangan hadir automatik
+      var StM = modKhas('MyPolitikStruktur', 'struktur.js'), mz = function (k) { return StM && StM.mesyuarat ? StM.mesyuarat(p, k) : null; };   // v13.61: mesyuarat ikut parti (PAS)
+      var dilantikSy = !!mz('wakilSayapDilantik'), nG10 = mz('g10') || CONFIG.SAYAP_G10;
       tambah({
         kod: 'perwakilan_sayap_cawangan', jenis: 'perwakilan', jawatan: 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian', peringkat: 'sayap_cawangan', kumpulan: 'perwakilan', sayap: sy,
         kerusi: kuotaSayapCawangan(p), kesukaran: 0,
-        terbuka: !exBhg.sah && !ketuaSy,
-        sebab: ketuaSy ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai Ketua ' + NS + ' Cawangan.' : (exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
+        terbuka: !exBhg.sah && !ketuaSy && !dilantikSy,
+        sebab: dilantikSy && !ketuaSy && !exBhg.sah ? 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian dilantik oleh Ketua ' + NS + ' Cawangan, bukan diundi. Dilantik semasa Persidangan Tahunan Cawangan jika sokongan anda mencukupi.' : ketuaSy ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai Ketua ' + NS + ' Cawangan.' : (exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
       });
       var ketuaSyB = J.pegang(p, 'sayap_bahagian_' + sy);                       // Ketua sayap Bahagian hadir Perhimpunan Sayap Pusat automatik
       var layakB = swSah || exBhg.sah || ketuaSy;
       tambah({
-        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G10 ' + NS + ': 10 wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
-        kerusi: CONFIG.SAYAP_G10, kesukaran: 0,
+        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G' + nG10 + ' ' + NS + ': ' + nG10 + ' wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
+        kerusi: nG10, kesukaran: 0,
         terbuka: layakB && !exBhg.sah,
         sebab: exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });
+      if (!mz('tanpaG2')) {
       tambah({
         kod: 'perwakilan_sayap_g2', jenis: 'perwakilan', jawatan: 'G2 ' + NS + ': 2 wakil ke Perhimpunan ' + NS + ' Pusat', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
         kerusi: CONFIG.SAYAP_G2, kesukaran: 0,
         terbuka: layakB && !exPau.sah && !ketuaSyB,
         sebab: ketuaSyB ? 'Anda hadir Perhimpunan ' + NS + ' Pusat secara automatik sebagai Ketua ' + NS + ' Bahagian.' : exPau.sah ? 'Anda hadir Perhimpunan ' + NS + ' Pusat secara automatik sebagai ' + exPau.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });
+      } else if (mz('wakilDewanPA')) {                                            // v13.61: PAS: Muktamar Dewan memilih 20 wakil ke Muktamar Tahunan (Fasal 18(4)(g)-(h)); Ketua Dewan Kawasan hadir automatik (22(4))
+        var nDw = mz('wakilDewanPA'), ketuaDK = J.pegang(p, 'sayap_bahagian_' + sy) || J.pegang(p, 'sayap_pusat_' + sy), pwDw = pw2.dewanMuktamar === p.tahun;
+        tambah({
+          kod: 'perwakilan_dewan_muktamar', jenis: 'perwakilan', jawatan: nDw + ' wakil ' + NS + ' ke Perhimpunan Agung UMNO (PAU)', peringkat: 'sayap_pau', kumpulan: 'perwakilan', sayap: sy,
+          kerusi: nDw, kesukaran: 0,
+          terbuka: ketuaDK && !exPau.sah,
+          sebab: exPau.sah ? 'Anda hadir PAU secara automatik sebagai ' + exPau.sumber + '.' : (ketuaDK ? '' : 'Hanya ahli Perhimpunan ' + NS + ' (Pra-PAU) (Ketua ' + NS + ' Bahagian ke atas) boleh dipilih sebagai wakil ' + NS + ' ke PAU.')
+        });
+      }
     }
 
     // 2. Jawatan (tahun pemilihan)
@@ -711,7 +723,7 @@
    * opts: { rng, bilCawangan }
    * Pulangan: { ok, mesej, keputusan, perubahan, peristiwa:[], profil }
    */
-  var KUNCI_PERWAKILAN = { perwakilan_cawangan: 'cawangan', perwakilan_bahagian: 'bahagian', perwakilan_sayap_cawangan: 'sayapCawangan', perwakilan_sayap_g10: 'g10', perwakilan_sayap_g2: 'g2' };
+  var KUNCI_PERWAKILAN = { perwakilan_cawangan: 'cawangan', perwakilan_bahagian: 'bahagian', perwakilan_sayap_cawangan: 'sayapCawangan', perwakilan_sayap_g10: 'g10', perwakilan_sayap_g2: 'g2', perwakilan_dewan_muktamar: 'dewanMuktamar' };
 
   /** v13.57: peluang dilantik sebagai AJK lantikan selepas kalah tipis. ANDAIAN: 50% + sokongan Ketua Cawangan (Cawangan/Kawasan) atau Restu Majlis Syura (Pusat), 20-80%. */
   function peluangLantikan(p, d) {
@@ -820,9 +832,22 @@
     var kod = Object.keys(st.daftar).filter(function (k) { return !st.keputusan[k] && st.daftar[k].peringkat === peringkat; });
     var pg = function (k) { var df = J.cariDef(k); return df ? df.pangkat || 0 : 0; };
     var serta = umnoP(p, true) ? ({ bahagian: 'pusat', sayap_bahagian: 'sayap_pau' })[peringkat] : null;      // v13.5: undi jawatan Pusat dalam Mesyuarat Perwakilan Bahagian
+    var StG = modKhas('MyPolitikStruktur', 'struktur.js'), gm = StG && StG.mesyuarat ? StG.mesyuarat(p, 'gabungMesyuarat') : null; if (!serta && gm && gm[peringkat]) { serta = gm[peringkat]; }   // v13.61: PAS: Ketua JK Pemuda / Muslimat Cawangan dipilih dalam Mesyuarat Agung Cawangan (Fasal 44(2))
     if (serta) { kod = kod.concat(Object.keys(st.daftar).filter(function (k) { return !st.keputusan[k] && st.daftar[k].peringkat === serta; })); }
     kod.sort(function (a, b) { var ja = st.daftar[a].jenis === 'perwakilan' ? 0 : 1, jb = st.daftar[b].jenis === 'perwakilan' ? 0 : 1; var ga = (J.cariDef(a) || {}).kumpulan === 'sayap' ? 1 : 0, gb = (J.cariDef(b) || {}).kumpulan === 'sayap' ? 1 : 0; return ja - jb || ga - gb || pg(b) - pg(a); });   // perwakilan dahulu, jawatan utama sebelum sayap, kemudian pangkat tertinggi dahulu (v6.8)
-    return kod.map(function (k) { return jalankanPemilihan(k, opts); });
+    var hasil = kod.map(function (k) { return jalankanPemilihan(k, opts); });
+    if (peringkat === 'cawangan' && StG && StG.mesyuarat && StG.mesyuarat(p, 'wakilSayapDilantik')) { var lt = lantikWakilSayap(opts); if (lt) { hasil.push(lt); } }   // v13.61: PAS Fasal 32(4)
+    return hasil;
+  }
+  /** v13.61: PAS: Ketua Pemuda / Muslimat Cawangan melantik sehingga 5 wakil ke Mesyuarat Agung Dewan Kawasan (Fasal 32(4)). ANDAIAN peluang = (sokongan AJK + akar umbi) / 200, 20-90%. */
+  function lantikWakilSayap(opts) {
+    var p = S.loadPlayer(), sy = p && J.sayapPemain(p); if (!sy) { return null; }
+    var pw = salin(p.perwakilan || { cawangan: 0, bahagian: 0 }); if (pw.sayapCawangan === p.tahun || J.pegang(p, 'sayap_cawangan_' + sy) || J.exOfficio(p, 'bahagian').sah) { return null; }
+    var k = p.kesetiaan || {}, peluang = clamp(((Number(k.ajk) || 40) + (Number(k.akarUmbi) || 40)) / 200, 0.2, 0.9), dapat = ((opts && opts.rng) || Math.random)() < peluang, NS = J.NAMA_SAYAP[sy];
+    var d = { kod: 'perwakilan_sayap_cawangan', jawatan: 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian' };
+    if (dapat) { pw.sayapCawangan = p.tahun; S.applyEffects({}, { kiraTindakan: false, patch: { perwakilan: pw }, log: { tindakan: 'lantik_wakil_sayap', nama: 'Dilantik ' + d.jawatan, peringkat: 'pemilihan' } }); }
+    return { ok: true, mesej: (dapat ? 'Ketua ' + NS + ' Cawangan melantik anda sebagai wakil ke Mesyuarat Perwakilan ' + NS + ' Bahagian.' : 'Ketua ' + NS + ' Cawangan tidak melantik anda sebagai wakil ke Mesyuarat Perwakilan ' + NS + ' Bahagian tahun ini.'),
+      keputusan: { kod: d.kod, jawatan: d.jawatan, menang: dapat, dilantik: dapat, kedudukan: null, jumlahCalon: null, kerusi: 5, undi: null }, perubahan: { ip: 0 }, peristiwa: [] };
   }
 
   /* ------------------------------------------------------------------------

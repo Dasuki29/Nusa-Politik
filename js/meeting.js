@@ -230,6 +230,23 @@
         { kod: 'ppp_rumah', tajuk: 'Rumah mampu milik bandar untuk semua kaum', penerangan: 'Skim perumahan bandar yang terbuka kepada semua isi rumah berpendapatan rendah.', populariti: 64, nilai: 3 }
       ]
     },
+    PAS: {
+      cawangan: [
+        { kod: 'pas_tahfiz', tajuk: 'Kelas pengajian dan tahfiz di surau kawasan', penerangan: 'Ibu bapa mahu kelas al-Quran dan fardu ain yang tetap untuk anak-anak.', populariti: 72, nilai: 4 },
+        { kod: 'pas_banjir', tajuk: 'Tabung dan pasukan bantuan mangsa banjir', penerangan: 'Banjir tahunan memerlukan pasukan sukarela dan bekalan kecemasan yang tersusun.', populariti: 68, nilai: 3 },
+        { kod: 'pas_air', tajuk: 'Desak bekalan air bersih yang konsisten', penerangan: 'Penduduk masih berdepan air keruh dan gangguan bekalan.', populariti: 66, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'pas_jentera_pn', tajuk: 'Jentera bersama PN dengan BERSATU di kerusi campuran', penerangan: 'Kawasan mahu jentera PAS dan BERSATU digabungkan sebelum pilihan raya.', populariti: 62, nilai: 3 },
+        { kod: 'pas_pondok', tajuk: 'Dana pendidikan pondok dan maahad tahfiz', penerangan: 'Institusi pondok dan tahfiz memerlukan sumbangan tetap dan kemudahan asrama.', populariti: 67, nilai: 3 },
+        { kod: 'pas_tarbiyah', tajuk: 'Program tarbiyah untuk ahli baharu', penerangan: 'Ahli baharu perlu usrah dan kefahaman perjuangan sebelum diberi tugas.', populariti: 64, nilai: 2 }
+      ],
+      pau: [
+        { kod: 'pas_rang355', tajuk: 'Pindaan Akta 355: perluas bidang kuasa Mahkamah Syariah', penerangan: 'Muktamar mendesak hukuman Mahkamah Syariah dipertingkat melalui pindaan akta.', populariti: 70, nilai: 3 },
+        { kod: 'pas_ekonomi_islam', tajuk: 'Kewangan dan ekonomi Islam untuk rakyat', penerangan: 'Pembiayaan patuh syariah dan zakat produktif bagi golongan miskin.', populariti: 66, nilai: 3 },
+        { kod: 'pas_royalti', tajuk: 'Hak royalti minyak Kelantan dan Terengganu', penerangan: 'PAS menuntut bayaran royalti minyak kepada kerajaan negeri secara terus.', populariti: 68, nilai: 3 }
+      ]
+    },
     PBRS: {
       cawangan: [
         { kod: 'pbrs_air', tajuk: 'Bekalan air bersih untuk kampung pedalaman', penerangan: 'Kampung di pedalaman Pensiangan masih bergantung kepada air sungai.', populariti: 72, nilai: 4 },
@@ -250,7 +267,8 @@
     MCA: ['Suara Masyarakat Cina dalam Kerajaan', 'Ekonomi dan Pendidikan untuk Semua', 'MCA Bangkit Semula'],
     MIC: ['Memperkasa Masyarakat India', 'Pendidikan dan Peluang untuk Generasi Baharu', 'MIC Bersama Rakyat'],
     PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
-    PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63']
+    PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63'],
+    PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera']
   };
   var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
@@ -309,11 +327,13 @@
   /* v13.5: UMNO (js/umno.js): kunci mesyuarat tahunan (musim pemilihan khas mendapat set mesyuarat baharu) dan Pusat diundi di Bahagian. */
   function umnoM() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikUMNO) { return g.MyPolitikUMNO; } try { return typeof require === 'function' ? require('./umno.js') : null; } catch (e) { return null; } }
   function kunci(p) { var U = umnoM(); return U && U.kunciMesyuarat ? U.kunciMesyuarat(p) : p.tahun; }
+  /** v13.61: tetapan mesyuarat parti (js/struktur.js): gabungMesyuarat, g10, tanpaG2, wakilDewanPA. */
+  function mz(p, k) { var St = typeof globalThis !== 'undefined' ? globalThis.MyPolitikStruktur : null; return St && St.mesyuarat ? St.mesyuarat(p, k) : null; }
   function pusatDiBahagian(p) { var U = umnoM(); return !!(U && U.baharu && U.baharu(p)); }
   function pemilihanAktif(p) { return !!(E && E.adalahTahunPemilihan(p.tahun)); }
 
   /** Adakah mesyuarat peringkat ini mengadakan pengundian? Perwakilan: setiap tahun. Pusat (PAU): tahun pemilihan sahaja. */
-  function adaPemilihan(p, peringkat) { return !!E && ((peringkat === 'pau' || peringkat === 'sayap_pau') ? pemilihanAktif(p) && !pusatDiBahagian(p) : true); }   // v13.5: PAU UMNO tiada undi jawatan   // v6.2: sayap Cawangan dan Bahagian memilih wakil
+  function adaPemilihan(p, peringkat) { if (peringkat === 'sayap_pau' && E && mz(p, 'wakilDewanPA') && sayapPemain(p)) { return true; } return !!E && ((peringkat === 'pau' || peringkat === 'sayap_pau') ? pemilihanAktif(p) && !pusatDiBahagian(p) : true); }   // v13.61: PAS: Muktamar Dewan memilih wakil ke Muktamar setiap tahun   // v13.5: PAU UMNO tiada undi jawatan   // v6.2: sayap Cawangan dan Bahagian memilih wakil
 
   function pegangan(p) {
     if (J) { return { per: J.peringkatTertinggi(p), pw: J.perwakilanSah(p, 'cawangan'), pp: J.perwakilanSah(p, 'bahagian'), exB: J.exOfficio(p, 'bahagian'), exP: J.exOfficio(p, 'pau') }; }
@@ -327,7 +347,10 @@
     if (peringkat === 'cawangan') { return { ok: true }; }
     if (adalahSayap(peringkat)) {                                         // v6.1: mesyuarat sayap
       if (!sayapPemain(p)) { return { ok: false, sebab: 'Mesyuarat sayap hanya untuk laluan sayap (Pemuda, Puteri atau Wanita). Laluan anda ialah Utama / Induk.' }; }
-      if (peringkat === 'sayap_cawangan') { return { ok: true }; }            // mesyuarat peringkat Cawangan: semua ahli sayap boleh hadir
+      if (peringkat === 'sayap_cawangan') {                                   // mesyuarat peringkat Cawangan: semua ahli sayap boleh hadir
+        var gmH = mz(p, 'gabungMesyuarat'); if (gmH && gmH.cawangan === 'sayap_cawangan') { return { ok: false, sebab: 'Tiada mesyuarat sayap Cawangan berasingan: Ketua Jawatankuasa ' + NAMA_SAYAP[sayapPemain(p)] + ' Cawangan dipilih dalam Persidangan Tahunan Cawangan.' }; }   // v13.61: PAS Fasal 44(2)
+        return { ok: true };
+      }
       var gs = pegangan(p), pws = p.perwakilan || {}, N = NAMA_SAYAP[sayapPemain(p)];
       if (peringkat === 'sayap_bahagian') {                                  // hanya wakil sayap Cawangan tahun ini atau pemegang jawatan Bahagian/Pusat
         return (pws.sayapCawangan === p.tahun || gs.exB.sah || (J && J.pegang && J.pegang(p, 'sayap_cawangan_' + sayapPemain(p)))) ? { ok: true }
@@ -341,7 +364,7 @@
       return (g.pw.sah || g.exB.sah || (p.perwakilan && p.perwakilan.g10 === p.tahun)) ? { ok: true }
         : { ok: false, sebab: 'Hanya Perwakilan Cawangan atau G10 sayap tahun ' + p.tahun + ' yang terpilih, Ketua Cawangan dan pemegang jawatan Bahagian/Pusat boleh hadir. Mandat tahun lepas sudah luput.' };
     }
-    return (g.pp.sah || g.exP.sah) ? { ok: true }
+    return (g.pp.sah || g.exP.sah || (p.perwakilan && p.perwakilan.dewanMuktamar === p.tahun)) ? { ok: true }
       : { ok: false, sebab: 'Hanya Perwakilan Bahagian tahun ' + p.tahun + ' yang terpilih, Ketua Bahagian dan pemegang jawatan Pusat boleh hadir PAU.' };
   }
 
@@ -398,12 +421,13 @@
   /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
   function hadirKira(p, peringkat) {
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
-    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO' }[p.parti || 'UMNO'];
+    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS' }[p.parti || 'UMNO'];
+    var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
     var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null; if (!M || !M.ringkasPusat) { return null; }
     var rp = null; try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } var nB = rp && rp.bilBahagian; if (!nB) { return null; }
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
-    if (peringkat === 'bahagian') { return Eg.bilPemilih ? Math.max(30, Math.round(Eg.bilPemilih(p, 'bahagian')) + 20) : null; }
-    if (peringkat === 'pau') { var n = Eg.kuotaBahagian(p) * nB + 40; return had ? Math.min(had, n) : n; }
+    if (peringkat === 'bahagian') { return Eg.bilPemilih ? Math.max(30, Math.round(Eg.bilPemilih(p, 'bahagian')) + 20 + (pas ? 45 : 0)) : null; }
+    if (peringkat === 'pau') { var n = Eg.kuotaBahagian(p) * nB + (pas ? nB + 150 : 40); return had ? Math.min(had, n) : n; }
     if (peringkat === 'sayap_pau') { return Math.max(40, Math.round((Eg.kuotaBahagian(p) * nB + 40) / 4)); }
     return null;
   }
@@ -491,8 +515,8 @@
       agenda.push({
         id: peringkat + '-' + p.tahun + '-pemilihan', jenis: 'pemilihan', kod: 'pemilihan_' + peringkat, sumber: 'pemilihan',
         tajuk: peringkat === 'sayap_cawangan' ? 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'cawangan') + ' ' + Ns + ' Cawangan dan ' : '') + 'wakil ' + Ns + ' Cawangan ke Mesyuarat Perwakilan ' + Ns + ' Bahagian (' + (Es && Es.kuotaSayapCawangan ? Es.kuotaSayapCawangan(p) : 3) + ' kerusi)'
-                                              : peringkat === 'sayap_pau' ? 'Pemilihan ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' (Pusat)'
-                                              : 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'bahagian') + ' ' + Ns + ' Bahagian, ' + (pusatDiBahagian(p) ? 'undi ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' Pusat, ' : '') : '') + 'G10 (10 wakil ke Mesyuarat Perwakilan Bahagian) dan G2 (2 wakil ke Perhimpunan ' + Ns + ' Pusat)',
+                                              : peringkat === 'sayap_pau' ? (mz(p, 'wakilDewanPA') ? 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'pusat') + ' ' + Ns + ' (Pusat) dan ' : '') + mz(p, 'wakilDewanPA') + ' wakil ' + Ns + ' ke Perhimpunan Agung UMNO (PAU)' : 'Pemilihan ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' (Pusat)')
+                                              : 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'bahagian') + ' ' + Ns + ' Bahagian, ' + (pusatDiBahagian(p) ? 'undi ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' Pusat, ' : '') : '') + (mz(p, 'tanpaG2') ? 'G' + mz(p, 'g10') + ' (' + mz(p, 'g10') + ' wakil ke Mesyuarat Perwakilan Bahagian)' : 'G10 (10 wakil ke Mesyuarat Perwakilan Bahagian) dan G2 (2 wakil ke Perhimpunan ' + Ns + ' Pusat)'),
         penerangan: 'Pengundian dijalankan apabila mesyuarat ditutup. Daftar pencalonan anda melalui tab Pemilihan sebelum itu.',
         kerusi: null, status: 'menunggu', keputusan: null
       });

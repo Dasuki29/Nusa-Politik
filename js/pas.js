@@ -39,6 +39,7 @@
 
   var CONFIG = {
     KUOTA_PARLIMEN: 70, KUOTA_DUN: 200,                                   // ANDAIAN: kuota PAS dalam PN
+    TANGGUH: { peluang: 0.05, bulan: 1 },                                   // v13.61: Fasal 18(3), ANDAIAN peluang
     TAHUN_MULA: 2027, KITARAN_TAHUN: 2, BULAN_PUSAT: 9,                    // Fasal 38(2): setiap 2 tahun; ANDAIAN tahun mula dan bulan Muktamar
     PERWAKILAN: { asas: 4, ambang: 2000, setiap: 1000, maks: 15 },         // Fasal 18(5)
     WAKIL_DEWAN: 40, WAKIL_PUSAT: 40,
@@ -97,9 +98,11 @@
   function kerajaanNegeriAwal(nama) { return CONFIG.KERAJAAN_NEGERI.some(function (n) { return n.toLowerCase() === String(nama || '').toLowerCase(); }); }
 
   /* ---------- Kitaran pemilihan 2 tahun (Fasal 38(2)) ---------- */
-  function adalahTahunPemilihan(p, tahun) { var t = parseInt(tahun, 10); return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0; }
-  function tahunSeterusnya(p, tahun) { var t = parseInt(tahun, 10); if (t <= CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; } var b = (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN; return b === 0 ? t : t + CONFIG.KITARAN_TAHUN - b; }
-  function tahunLepas(p, tahun) { var t = parseInt(tahun, 10); return t < CONFIG.TAHUN_MULA ? null : t - ((t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN); }
+  /* v13.61: Fasal 18(3): pemilihan boleh ditangguh ke Muktamar tahun berikutnya (2/3 JK Pusat). p.pas.tangguh = [tahun ...]; kitaran beranjak 1 tahun selepas setiap penangguhan. */
+  function anjak(p, t) { var tg = p && p.pas && Array.isArray(p.pas.tangguh) ? p.pas.tangguh : []; return tg.filter(function (y) { return y <= t; }).length; }
+  function adalahTahunPemilihan(p, tahun) { var t = parseInt(tahun, 10), a = anjak(p, t); return t >= CONFIG.TAHUN_MULA + (a ? 1 : 0) && (t - CONFIG.TAHUN_MULA - a) % CONFIG.KITARAN_TAHUN === 0; }
+  function tahunSeterusnya(p, tahun) { var t = parseInt(tahun, 10); if (t < CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; } for (var y = t; y < t + 6; y++) { if (adalahTahunPemilihan(p, y)) { return y; } } return t; }
+  function tahunLepas(p, tahun) { var t = parseInt(tahun, 10); if (t < CONFIG.TAHUN_MULA) { return null; } for (var y = t; y >= CONFIG.TAHUN_MULA; y--) { if (adalahTahunPemilihan(p, y)) { return y; } } return null; }
 
   /* ---------- Pemilihan Pusat oleh perwakilan Kawasan ke Muktamar (Fasal 18) ---------- */
   function sokonganBahagian(p) {
@@ -283,6 +286,11 @@
     if (rs > R0.awal) { larasRestu(m, -Math.min(R0.susut, rs - R0.awal)); } else if (rs < R0.awal) { larasRestu(m, Math.min(R0.susut, R0.awal - rs)); }
     if (skor >= R0.integritiTinggi) { larasRestu(m, R0.naikIntegriti); } else if (skor < R0.integritiRendah) { larasRestu(m, -R0.turunIntegriti); }
     var ul = dewanPemain(p, 'ulamak'); if (ul.jawatan) { larasRestu(m, R0.ketuaUlamak); }
+    // v13.61: Fasal 18(3): penangguhan pemilihan (bulan 1 tahun pemilihan, sekali setahun)
+    if (p.bulan === CONFIG.TANGGUH.bulan && m.tangguhSemak !== p.tahun && adalahTahunPemilihan(p, p.tahun)) {
+      m.tangguhSemak = p.tahun;
+      if (rng() < CONFIG.TANGGUH.peluang) { m.tangguh = (Array.isArray(m.tangguh) ? m.tangguh : []).concat([p.tahun]); ev.push({ jenis: 'pas', mesej: 'Majlis Kerja Tertinggi bersetuju (2/3 ahli) menangguhkan agenda pemilihan ke Perhimpunan Agung UMNO (PAU) tahun ' + (p.tahun + 1) + ' (Fasal 18(3)). Pemegang jawatan sedia ada kekal.' }); }
+    }
     var sk = p.etika && p.etika.siasatan ? 'siasatan|' + (p.etika.siasatan.tahun || '') + '-' + (p.etika.siasatan.bulan || '') : null;
     if (sk && m.siasatanKunci !== sk) { m.siasatanKunci = sk; larasRestu(m, R0.siasatan); ev.push({ jenis: 'pas', mesej: 'Siasatan etika terhadap anda: Restu Majlis Syura Ulamak ' + R0.siasatan + '.' }); }
     // v13.32: Dewan: keputusan pemilihan, bonus IP jawatan, As-Sabiqun
