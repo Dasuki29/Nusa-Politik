@@ -320,9 +320,9 @@
   /** v13.31: pemain PAS = slot gabungan pemain ialah Perikatan Nasional; slot lawan 'PN' dalaman mewakili Barisan Nasional. */
   function adalahPN(p) { return !!p && p.parti === 'PAS'; }
   /** v13.34: pemain PKR = slot gabungan pemain ialah Pakatan Harapan; slot lawan 'PH' dalaman mewakili Barisan Nasional. */
-  function adalahPH(p) { return !!p && (p.parti === 'PKR' || p.parti === 'DAP'); }   // v13.37: DAP juga
+  function adalahPH(p) { return !!p && (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH'); }   // v13.37: DAP juga
   function modGab(p) {
-    var n = adalahPN(p) ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'BERJASA' ? ['MyPolitikBERJASA', './berjasa.js'] : p && p.parti === 'WARISAN' ? ['MyPolitikWarisan', './warisan.js'] : p && p.parti === 'DAP' ? ['MyPolitikDAP', './dap.js'] : adalahPH(p) ? ['MyPolitikPKR', './pkr.js'] : null; if (!n) { return null; }
+    var n = adalahPN(p) ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'BERJASA' ? ['MyPolitikBERJASA', './berjasa.js'] : p && p.parti === 'WARISAN' ? ['MyPolitikWarisan', './warisan.js'] : p && p.parti === 'DAP' ? ['MyPolitikDAP', './dap.js'] : p && p.parti === 'AMANAH' ? ['MyPolitikAmanah', './amanah.js'] : adalahPH(p) ? ['MyPolitikPKR', './pkr.js'] : null; if (!n) { return null; }
     return root[n[0]] || (typeof require === 'function' ? (function () { try { return require(n[1]); } catch (e) { return null; } })() : null);
   }
   /** v13.53: BERJASA (tanpa gabungan): slot 'PH' = Kerajaan Perpaduan (PH + BN), slot 'PN' = Perikatan Nasional. */

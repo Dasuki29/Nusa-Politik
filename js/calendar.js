@@ -146,6 +146,8 @@
   /* v13.37: kalendar DAP (Perlembagaan DAP): Kongres Kebangsaan setiap 3 tahun (Fasal VIII.1(b)). ANDAIAN takwim: Mesyuarat Agung Tahunan Cawangan
      bulan 1, MB JPKP bulan 2, Kongres Kebangsaan bulan 3 (Kongres 2025: 16 Mac 2025). */
   CONFIG.DAP = { FASA: fasaUMNO(1, 1, 2, 3), TETINGKAP: tetingkapUMNO(1, 1, 2, 3), ppp: true };
+  /* v13.56: kalendar Amanah (Perlembagaan Amanah 2022, Fasal 11.2, 14.1). ANDAIAN: Cawangan bulan 6, Kawasan bulan 8, Konvensyen Nasional bulan 11. */
+  CONFIG.AMANAH = { FASA: fasaUMNO(6, 6, 8, 11), TETINGKAP: tetingkapUMNO(6, 6, 8, 11), amanah: true };
   /** v13.5: musim pemilihan khas UMNO selepas PRU (Fasal 10.16). k = { c, b, a } (bulan Cawangan, Bahagian, PAU). */
   function takwimKhas(k) { var c2 = Math.max(k.c, Math.min(k.b - 1, k.c + 1)); return { FASA: fasaUMNO(k.c, c2, k.b, k.a), TETINGKAP: tetingkapUMNO(k.c, c2, k.b, k.a), khas: true }; }
   /** Set takwim aktif mengikut parti pemain (PBB atau lalai UMNO). */
@@ -153,7 +155,7 @@
     var k = null;
     try { k = root.MyPolitikParti && root.MyPolitikParti.kini ? root.MyPolitikParti.kini() : null; } catch (e) { k = null; }
     if (!k) { try { var pp = S && S.loadPlayer ? S.loadPlayer() : null; k = pp && pp.parti; } catch (e2) { k = null; } }
-    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; } if (k === 'DAP') { return CONFIG.DAP; } if (k === 'BERJASA') { return CONFIG.BERJASA; } if (/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) { return CONFIG.PPP; }   /* v13.54: GRS (ANDAIAN takwim 3/5/9) */
+    if (k === 'PBB') { return CONFIG.PBB; } if (k === 'MCA') { return CONFIG.MCA; } if (k === 'MIC') { return CONFIG.MIC; } if (k === 'PPP') { return CONFIG.PPP; } if (k === 'PBRS') { return CONFIG.PBRS; } if (k === 'PAS') { return CONFIG.PAS; } if (k === 'PKR') { return CONFIG.PKR; } if (k === 'DAP') { return CONFIG.DAP; } if (k === 'BERJASA') { return CONFIG.BERJASA; } if (/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) { return CONFIG.PPP; }   /* v13.54: GRS (ANDAIAN takwim 3/5/9) */ if (k === 'AMANAH') { return CONFIG.AMANAH; }
     if (!k || k === 'UMNO') { var U = root.MyPolitikUMNO, kh = U && U.takwimKini ? U.takwimKini() : null; if (kh === 'lama') { return CONFIG.LAMA; } if (kh) { return takwimKhas(kh); } }      // v13.5: simpanan lama di tengah musim / musim pemilihan khas (dicache)
     return CONFIG;
   }
@@ -296,6 +298,11 @@
       else if (bulan === 5) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 5 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
       else if (bulan === 9) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 9 (' + nb + '): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat. Hanya bulan ini.' }); }
       else if (bulan === 10) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 10 (' + nb + '): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+    } else if (takwimSet() === CONFIG.AMANAH) {                                         // v13.56: Amanah (bulan sudah dalam bulan Amanah; (Jun)/(Ogos)/(November)/(Disember) dilindungi daripada penukaran js/parti.js)
+      if (bulan === 6) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 6 (Jun): Mesyuarat Tahunan Cawangan dan pemilihan Cawangan dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (Ogos): Mesyuarat Tahunan Kawasan dan pemilihan Kawasan dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 11) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 11 (November): Konvensyen Nasional dan pemilihan 27 ahli JPN. Hanya bulan ini.' }); }
+      else if (bulan === 12) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 12 (Disember): Mesyuarat JPN memilih Presiden, Timbalan Presiden dan Naib Presiden.' }); }
     } else if (takwimSet() === CONFIG.BERJASA) {                                       // v13.53: BERJASA (bulan sudah dalam bulan BERJASA; (Jun) dilindungi daripada penukaran js/parti.js)
       if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
       else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
@@ -467,6 +474,8 @@
     if (PASm && PASm.prosesBulan) { peristiwa = peristiwa.concat(PASm.prosesBulan().peristiwa || []); }
     var PKRm = muat('MyPolitikPKR', 'pkr.js');                                                 // v13.34: PKR (sokongan perwakilan Cabang)
     if (PKRm && PKRm.prosesBulan) { peristiwa = peristiwa.concat(PKRm.prosesBulan().peristiwa || []); }
+    var AMm = muat('MyPolitikAmanah', 'amanah.js');                                           // v13.56: Amanah (Konvensyen Negeri, Mesyuarat JPN, Naratif Rahmah)
+    if (AMm && AMm.prosesBulan) { peristiwa = peristiwa.concat(AMm.prosesBulan().peristiwa || []); }
     var DAPm = muat('MyPolitikDAP', 'dap.js');                                                 // v13.37: DAP (sokongan Wakil Kongres)
     if (DAPm && DAPm.prosesBulan) { peristiwa = peristiwa.concat(DAPm.prosesBulan().peristiwa || []); }
     var MCAm = muat('MyPolitikMCA', 'mca.js');                                                 // v13.1: peraturan khas MCA (kehadiran, had Presiden, sumbangan, lantikan)

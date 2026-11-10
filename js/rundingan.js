@@ -40,7 +40,7 @@
     NAMA: { PH: 'Pakatan Harapan', PN: 'Perikatan Nasional', BN: 'Barisan Nasional', GPS: 'Gabungan Parti Sarawak', GRS: 'Gabungan Rakyat Sabah', BEBAS: 'Calon bebas' }
   };
   /** Gabungan pemain: 'BN' (UMNO dan komponen), 'PN' (PAS), 'PH' (PKR, v13.34) atau null (parti Sarawak: tiada rundingan). */
-  function gabPemain(p) { if (!p || SW(p.parti)) { return null; } return p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' ? 'PH' : 'BN'; }
+  function gabPemain(p) { if (!p || SW(p.parti)) { return null; } return p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' ? 'PH' : 'BN'; }
   function antara(r, a, b) { return a + Math.floor(r() * (b - a + 1)); }
 
   /** Senarai calon rakan bagi keputusan kerusi { parti, rakan, bebas, pembangkang, tahun, bulan }. */

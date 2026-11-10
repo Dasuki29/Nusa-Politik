@@ -113,7 +113,7 @@
     var pertahan = o.pertahan !== undefined ? !!o.pertahan : r() < CONFIG.PELUANG_PERTAHAN;
     var profil = PRU().profilKawasan(p);
     var lawanSenarai = { RURAL: ['PAS', 'Bersatu'], URBAN: ['DAP', 'PKR'], MIXED: ['PKR', 'PAS'] }[profil] || ['PKR', 'PAS'];
-    if (p && (p.parti === 'PKR' || p.parti === 'DAP')) { lawanSenarai = { RURAL: ['PAS', 'Bersatu'], URBAN: ['Gerakan', 'Bersatu'], MIXED: ['Bersatu', 'PAS'] }[profil] || ['Bersatu', 'PAS']; }   // v13.37: pemain PH tidak berdepan rakan sendiri
+    if (p && (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH')) { lawanSenarai = { RURAL: ['PAS', 'Bersatu'], URBAN: ['Gerakan', 'Bersatu'], MIXED: ['Bersatu', 'PAS'] }[profil] || ['Bersatu', 'PAS']; }   // v13.37: pemain PH tidak berdepan rakan sendiri
     prk.aktif = {
       fasa: 'isytihar', jenis: jenis, sebab: sebab, pertahan: pertahan, constituencyType: profil, lawan: lawanSenarai[0],
       nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun || '') : ((p.kod && p.kod.parlimen) || p.bahagian || ''),

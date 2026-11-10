@@ -2801,6 +2801,38 @@ ujian('v13.55 Warisan: Sabah, Labuan dan Semenanjung, Wira / Wirawati, Gelombang
   betul(g.MyPolitikLompat.aktifDi('WARISAN', 'Selangor') && g.MyPolitikLompat.aktifDi('WARISAN', 'Sabah') && !g.MyPolitikLompat.aktifDi('WARISAN', 'Sarawak'), 'lompat: bukan Sarawak');
   S.clearPlayer();
 });
+ujian('v13.56 Amanah: data, istilah, takwim 6/8/11, kuota PH, Naratif Rahmah, Konvensyen Negeri, Mesyuarat JPN 44 orang (perlembagaan 2022)', () => {
+  const M = g.MyPolitikAmanah, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, J = g.MyPolitikJawatan, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'amanah-malaysia.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 181); betul(Math.abs(h.jumlah.ahli - 200000) < 2000, 'ahli ~200,000: ' + h.jumlah.ahli); betul(SY.kelayakan('P', 25, 'AMANAH').puteri.boleh, 'WARDA');
+  const sa = h.bahagian.find((b) => b.nama === 'Shah Alam') || h.bahagian[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'AMANAH', nama: 'Uji Amanah', demografik: D.tentukanDemografi('Lelaki', 32, 'AMANAH'), cawangan: sa.dun[0].cawangan[0], sayap: 'pemuda', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'AMANAH'); sama(PT.info('AMANAH').gabungan, 'PH');
+  sama(PT.ke('Ketua Bahagian dan Ketua Puteri ke Perhimpunan Agung UMNO (PAU) bulan 9; Majlis Kerja Tertinggi (MKT)'), 'Ketua Kawasan dan Ketua WARDA ke Konvensyen Nasional Amanah bulan 11; Jawatankuasa Pimpinan Nasional (JPN)');
+  sama(PT.ke('Fasal 20.13'), 'Perlembagaan Amanah, Fasal 22.8');
+  sama(K.getTetingkap('cawangan', 1).mula, 6); sama(K.getTetingkap('bahagian', 1).mula, 8); sama(K.getTetingkap('pau', 1).mula, 11);
+  sama(E.adalahTahunPemilihan(2026), false); sama(E.adalahTahunPemilihan(2028), true);
+  betul(/Mesyuarat|mesyuarat 44/.test(M.sekatanJawatan(p, J.cariDef('presiden'))), 'Presiden tidak di Konvensyen'); sama(M.kerusiJawatan(p, J.cariDef('ahli_mkt')), 27);
+  const kw = M.kawasan(p); betul(kw.parlimen && typeof kw.kuotaPL === 'boolean');
+  // Naratif Rahmah
+  P.tetap({ ap: 20, myr: 50000 }); let r = M.ceramah(); betul(r.ok, r.ralat); sama(M.naratif(S.loadPlayer()), 54); sama(M.ceramah().ok, false, 'sebulan sekali');
+  // Konvensyen Negeri (bulan 9-10, keputusan bulan 11)
+  sama(M.statusNegeri(S.loadPlayer()).boleh, false, 'bukan tahun pemilihan');
+  P.tetap({ tahun: 2028, bulan: 9, reputasi: 90, jawatanList: [pegang('ketua_bahagian', 2028)], amanah: Object.assign({}, S.loadPlayer().amanah, { pusat: Object.fromEntries(Object.keys(g.MyPolitikAmanahData.parlimen).map((k) => [k, 90])) }) });
+  betul(M.statusNegeri(S.loadPlayer()).boleh, JSON.stringify(M.statusNegeri(S.loadPlayer()))); r = M.pilihNegeri('pengerusi'); betul(r.ok, r.ralat);
+  P.tetap({ bulan: 11 }); M.prosesBulan(); p = S.loadPlayer(); betul(M.jawatanNegeri(p) && M.jawatanNegeri(p).jawatan === 'pengerusi', JSON.stringify(p.amanah.negeri));
+  // Mesyuarat JPN: bulan 12 dibuka, bulan 1 keputusan
+  P.tetap({ bulan: 12, jawatanList: [pegang('ketua_bahagian', 2028), { kod: 'ahli_mkt', jawatan: 'Ahli MKT', peringkat: 'pusat', kumpulan: 'utama', pangkat: 8, tahun: 2028 }] });
+  M.prosesBulan(); p = S.loadPlayer(); let mt = M.mesyuarat(p);
+  betul(mt && mt.sokong + mt.belum + mt.lawan === 43, 'mesyuarat 44 orang: ' + JSON.stringify(mt)); betul(M.pilihSasaran('presiden').ok); betul(M.lobi({ rng: () => 0 }).ok);
+  P.tetap({ amanah: Object.assign({}, S.loadPlayer().amanah, { jpn: Object.assign({}, S.loadPlayer().amanah.jpn, { sokong: 30, belum: 0, lawan: 13 }) }) });
+  P.tetap({ tahun: 2029, bulan: 1 }); M.prosesBulan(); p = S.loadPlayer();
+  betul(p.amanah.jpn.hasil.menang, JSON.stringify(p.amanah.jpn.hasil)); betul(J.pegang(p, 'presiden'), 'Presiden'); sama(M.penggalPresiden(p), 1);
+  // persekutuan: PH
+  const ka = g.NusaPaparan.anggarKerusi(p, { tahun: 2031, bulan: 3 }, {}); betul(ka.parti >= 30, JSON.stringify(ka));
+  betul(g.MyPolitikLompat.aktifDi('AMANAH', 'Selangor') && !g.MyPolitikLompat.aktifDi('AMANAH', 'Sarawak'), 'lompat');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

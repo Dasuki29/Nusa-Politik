@@ -383,7 +383,7 @@
       }
       if (jenis === 'PARLIMEN' && !ketuaBahagianKeAtas(p)) { sebab.push('Perlu Ketua Bahagian atau lebih'); }
       var ratio = ip / c.ipMin;
-      var adjPAS = (p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP') && MCk && MCk.adjCalon ? MCk.adjCalon(p) : 0;   // v13.32: Restu Majlis Syura (Fasal 39(9)(f)); v13.36: Semangat Reformasi PKR
+      var adjPAS = (p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') && MCk && MCk.adjCalon ? MCk.adjCalon(p) : 0;   // v13.32: Restu Majlis Syura (Fasal 39(9)(f)); v13.36: Semangat Reformasi PKR
       var peluang = clamp(0.45 + (ratio - 1) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.004 + (jenis === 'DUN' ? 0.1 : 0) + adjPAS, CONFIG.TERIMA_MIN, CONFIG.TERIMA_MAKS);
       return { boleh: sebab.length === 0, sebab: sebab, ipMin: c.ipMin, minPeruntukan: c.minPeruntukan, peluang: Math.round(peluang * 100) };
     }
@@ -936,7 +936,7 @@
     var parti = bulat(N.JUMLAH * (0.18 + (pop - 30) / 40 * 0.42) + antara(r, -8, 8));
     parti = clamp(parti, 30, 150);
     var rakan = Math.min(N.JUMLAH - parti, bulat(N.JUMLAH * antara(r, 0.14, 0.26)));
-    var PASn = p && p.parti === 'PAS' ? modul('MyPolitikPAS', 'pas.js') : p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : p && p.parti === 'DAP' ? modul('MyPolitikDAP', 'dap.js') : p && p.parti === 'BERJASA' ? modul('MyPolitikBERJASA', 'berjasa.js') : p && p.parti === 'WARISAN' ? modul('MyPolitikWarisan', 'warisan.js') : null;   // v13.53: BERJASA (parti kecil); v13.34: PKR (PH) juga; v13.37: DAP
+    var PASn = p && p.parti === 'PAS' ? modul('MyPolitikPAS', 'pas.js') : p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : p && p.parti === 'DAP' ? modul('MyPolitikDAP', 'dap.js') : p && p.parti === 'AMANAH' ? modul('MyPolitikAmanah', 'amanah.js') : p && p.parti === 'BERJASA' ? modul('MyPolitikBERJASA', 'berjasa.js') : p && p.parti === 'WARISAN' ? modul('MyPolitikWarisan', 'warisan.js') : null;   // v13.53: BERJASA (parti kecil); v13.34: PKR (PH) juga; v13.37: DAP
     if (PASn && PASn.kerusiParlimen) { var kpN = PASn.kerusiParlimen(pop, r); parti = kpN.parti; rakan = kpN.rakan; }   // v13.31: PN (PAS + rakan) ikut formula PAS
     var PBm = modul('MyPolitikPembangkang', 'pembangkang.js'), bkN = PBm && PBm.bonusKerusi ? PBm.bonusKerusi(p) : 0;   // v13.50: Naratif Pembangkang (+1 kerusi setiap 5 mata melebihi 50)
     if (bkN) { parti = clamp(parti + bkN, parti < 30 ? 0 : 30, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }

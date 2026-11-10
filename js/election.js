@@ -96,7 +96,8 @@
   /* v13.1: MCA: pemilihan parti selepas setiap PRU (Perkara 167), bukan setiap 3 tahun. Fungsi tahun di bawah mengikut pemain semasa jika MCA. */
   /* v13.3: MIC guna antara muka yang sama (js/mic.js): kitaran 3 tahun bermula 2027, pengundi Pusat = pegawai Cawangan. */
   /** v13.37: bilangan kerusi jawatan pusat DAP (js/dap.js kerusiJawatan) atau null. */
-  function kerusiDAP(p, d) { if (!p || p.parti !== 'DAP') { return null; } var M = modKhas('MyPolitikDAP', 'dap.js'); return M && M.kerusiJawatan ? M.kerusiJawatan(p, d) : null; }
+  function kerusiDAP(p, d) { if (!p || (p.parti !== 'DAP' && p.parti !== 'AMANAH')) { return null; } var M = p.parti === 'AMANAH' ? modKhas('MyPolitikAmanah', 'amanah.js') : modKhas('MyPolitikDAP', 'dap.js');   // v13.56: Amanah: Ahli JPN 27, Naib Presiden 3
+  return M && M.kerusiJawatan ? M.kerusiJawatan(p, d) : null; }
   function modKhas(nama, fail) {
     var g = typeof globalThis !== 'undefined' ? globalThis : null, M = g && g[nama];
     if (!M) { try { M = typeof require === 'function' ? require('./' + fail) : null; } catch (e) { M = null; } }
@@ -105,8 +106,8 @@
   function mcaP(p0) {
     if (!S || !S.loadPlayer) { return null; }
     var p = p0 || null; if (!p) { try { p = S.loadPlayer(); } catch (e2) { p = null; } }
-    if (!p || (p.parti !== 'MCA' && p.parti !== 'MIC' && p.parti !== 'PPP' && p.parti !== 'PBRS' && p.parti !== 'PAS' && p.parti !== 'PKR' && p.parti !== 'DAP' && p.parti !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { return null; }
-    var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : p.parti === 'PPP' ? modKhas('MyPolitikPPP', 'ppp.js') : p.parti === 'PBRS' ? modKhas('MyPolitikPBRS', 'pbrs.js') : p.parti === 'PAS' ? modKhas('MyPolitikPAS', 'pas.js') : p.parti === 'PKR' ? modKhas('MyPolitikPKR', 'pkr.js') : p.parti === 'DAP' ? modKhas('MyPolitikDAP', 'dap.js') : p.parti === 'BERJASA' ? modKhas('MyPolitikBERJASA', 'berjasa.js') : /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti) ? modKhas('MyPolitikGRS', 'grs.js') : p.parti === 'WARISAN' ? modKhas('MyPolitikWarisan', 'warisan.js') : modKhas('MyPolitikMCA', 'mca.js');      // v13.8: PPP
+    if (!p || (p.parti !== 'MCA' && p.parti !== 'MIC' && p.parti !== 'PPP' && p.parti !== 'PBRS' && p.parti !== 'PAS' && p.parti !== 'PKR' && p.parti !== 'DAP' && p.parti !== 'AMANAH' && p.parti !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { return null; }
+    var M = p.parti === 'MIC' ? modKhas('MyPolitikMIC', 'mic.js') : p.parti === 'PPP' ? modKhas('MyPolitikPPP', 'ppp.js') : p.parti === 'PBRS' ? modKhas('MyPolitikPBRS', 'pbrs.js') : p.parti === 'PAS' ? modKhas('MyPolitikPAS', 'pas.js') : p.parti === 'PKR' ? modKhas('MyPolitikPKR', 'pkr.js') : p.parti === 'DAP' ? modKhas('MyPolitikDAP', 'dap.js') : p.parti === 'AMANAH' ? modKhas('MyPolitikAmanah', 'amanah.js') : p.parti === 'BERJASA' ? modKhas('MyPolitikBERJASA', 'berjasa.js') : /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti) ? modKhas('MyPolitikGRS', 'grs.js') : p.parti === 'WARISAN' ? modKhas('MyPolitikWarisan', 'warisan.js') : modKhas('MyPolitikMCA', 'mca.js');      // v13.8: PPP
     return M && M.adalah(p) ? { M: M, p: p } : null;
   }
   /* v13.5: UMNO (js/umno.js): kitaran 3 tahun dengan penangguhan selepas PRU (Fasal 10.16); 'baharu' = peraturan Fasa B (Pusat diundi di Bahagian). */
@@ -425,7 +426,7 @@
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
     if (p && p.parti === 'PKR') { var PKu = modKhas('MyPolitikPKR', 'pkr.js'); if (PKu && PKu.bonusUndi) { v += PKu.bonusUndi(p, pr); } }
     if (p && p.parti === 'DAP') { var DAu = modKhas('MyPolitikDAP', 'dap.js'); if (DAu && DAu.bonusJTP) { v += DAu.bonusJTP(p, d); } }   // v13.37: kuota wanita JTP (Fasal VIII.16)   // v13.36: Semangat Reformasi (Cabang & Pusat)
-    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
+    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     var um = umnoP(p, true); if (um) { if (pr === 'pusat' && !(d && d.kumpulan === 'sayap')) { v += um.M.bonusPusat(p); } v += um.M.bonusSayap(p, d); }      // v13.5: sokongan perwakilan Bahagian UMNO, lantikan dan pelapis muda
     return clamp(v, 0, 100);
   }
@@ -468,7 +469,7 @@
     if (peringkat === 'bahagian') {
       return kuotaCawangan(p) * ((opts && opts.bilCawangan) || CONFIG.ANGGARAN_CAWANGAN_PER_BAHAGIAN);
     }
-    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti)) ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }
+    var mc = p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti)) ? mcaP(p) : null; if (mc) { return mc.M.ringkasPusat(p).pengundi; }
     if (peringkat === 'pusat' && umnoP(p, true)) { return umnoP(p, true).M.ringkasPusat(p).pengundi; }      // v13.5: perwakilan Mesyuarat Perwakilan Bahagian di 191 Bahagian (Fasal 9.3)      // v13.3: MIC: pegawai Cawangan seluruh negara (Perkara 58.2, 59A)      // v13.1: MCA: perwakilan Bahagian seluruh negara (Perkara 21)
     return CONFIG.PEMILIH_PUSAT;
   }

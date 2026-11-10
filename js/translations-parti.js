@@ -679,6 +679,13 @@
   ["Kawasan Semenanjung: Warisan sedang berkembang; calon sangat sukar menang.", "Peninsula area: Warisan is still expanding; candidates rarely win."],
   ["Warisan (Sabah, Labuan & Semenanjung, tanpa gabungan, mod ringan)", "Warisan (Sabah, Labuan & Peninsula, no coalition, light mode)"],
   ["Parti tanpa gabungan · BERJASA · Warisan", "Parties without a coalition · BERJASA · Warisan"],
-  ["BERJASA (Semenanjung) dan Warisan (Sabah, Labuan dan Semenanjung) mod ringan.", "BERJASA (Peninsula) and Warisan (Sabah, Labuan and Peninsula) in light mode."]
+  ["BERJASA (Semenanjung) dan Warisan (Sabah, Labuan dan Semenanjung) mod ringan.", "BERJASA (Peninsula) and Warisan (Sabah, Labuan and Peninsula) in light mode."],
+  /* v13.56: Amanah */
+  ["Amanah (mod penuh, komponen PH): Parti Amanah Negara, ikut Perlembagaan 2022. Kawasan ialah kawasan Parlimen; Cawangan ialah Daerah Mengundi. Sayap AWAN, Pemuda Amanah (40 tahun ke bawah) dan WARDA (35 tahun ke bawah). Konvensyen Nasional memilih 27 ahli JPN, kemudian mesyuarat 44 orang memilih Presiden. Kuota Amanah dalam PH dan bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "Amanah (full mode, PH component): Parti Amanah Negara, following its 2022 Constitution. An Area is a parliamentary constituency; a branch is a polling district. Wings: AWAN, Pemuda Amanah (40 and under) and WARDA (35 and under). The National Convention elects 27 JPN members, then a 44-member meeting elects the President. Amanah's PH quota and member counts are game estimates. A simulation, not official party data."],
+  ["Kawasan {x}: Bumiputera {a}%, kedudukan {b} / {c} (dalam kuota Amanah dalam PH).", "Area {x}: Bumiputera {a}%, rank {b} / {c} (within Amanah's PH quota)."],
+  ["Kawasan {x}: Bumiputera {a}%, kedudukan {b} / {c} (kerusi Parlimen untuk rakan PH).", "Area {x}: Bumiputera {a}%, rank {b} / {c} (parliamentary seat for a PH partner)."],
+  ["Amanah (seluruh Malaysia kecuali Sarawak, PH, mod penuh)", "Amanah (all Malaysia except Sarawak, PH, full mode)"],
+  ["Pakatan Harapan · PKR · DAP · Amanah", "Pakatan Harapan · PKR · DAP · Amanah"],
+  ["PKR, DAP dan Amanah mod penuh (Perlembagaan PKR, pindaan hingga 11 Mac 2025; Perlembagaan DAP, seperti pada 22.10.2019; Perlembagaan Amanah 2022).", "PKR, DAP and Amanah in full mode (PKR Constitution, amended to 11 March 2025; DAP Constitution, as at 22.10.2019; Amanah Constitution 2022)."]
   ]);
 })();

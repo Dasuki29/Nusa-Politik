@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.56 (2026-11-10)
+
+- **Maklum balas baris 31: Amanah (Parti Amanah Negara) mod penuh dalam PH** (ikut mockup yang dipersetujui; Perlembagaan Parti Amanah Negara 2022 daripada pengguna; ⚠️ andaian ditanda).
+  - Panel PH: PKR, DAP dan **Amanah** boleh dimain (Amanah bukan lagi NPC). Enjin mod penuh yang sama seperti PKR / DAP.
+  - Struktur ikut perlembagaan: Cawangan → **Kawasan** (Fasal 16.3) → Negeri → Nasional; **Jawatankuasa Pimpinan Nasional (JPN)**, **Konvensyen Nasional**, sayap **AWAN**, Pemuda Amanah (≤40) dan **WARDA** (≤35, Fasal 21). ~200,000 ahli, ⚠️ 181 Kawasan (kawasan Parlimen Bumiputera ≥30%, bukan Sarawak).
+  - Pemilihan setiap 3 tahun (Fasal 11.2); pemilihan 2026 ditangguh (Feb 2026) → ⚠️ kitaran bermula 2028. ⚠️ Takwim: Cawangan bulan 6, Kawasan bulan 8, Konvensyen Negeri bulan 10, Konvensyen Nasional bulan 11, Mesyuarat JPN bulan 12.
+  - **Konvensyen Nasional** memilih 27 ahli JPN (5 perwakilan setiap Kawasan, Fasal 12.1(d)); **Mesyuarat JPN 44 orang** (27 + 3 ketua sayap + 14 Pengerusi Negeri) memilih Presiden / Timbalan Presiden (23 / 44) dan Naib Presiden (⚠️ ≥8); lobi ahli mesyuarat; Presiden maksimum 3 penggal berturut-turut (Fasal 17.1).
+  - **Konvensyen Negeri dipertandingkan** (jawapan mockup): pemegang jawatan Kawasan bertanding Pengerusi / Timbalan / Naib Pengerusi Negeri (bulan 9–10, keputusan bulan 11, ⚠️ ambang 50 / 42 / 35%). Pengerusi Negeri: +2 penyokong dalam Mesyuarat JPN dan bonus Konvensyen Nasional.
+  - **Naratif Rahmah** ⚠️ (Islam progresif menentang PAS): Ceramah Rahmah (+4), ofset undi ±3 di kerusi Melayu. Kuota PH ⚠️ 32 Parlimen (sasaran PRU16) dan 60 DUN. Hubungan JPN (±15 mata peluang calon PRU), caruman elaun 10% (Fasal 23.7), disiplin → Lembaga Tatatertib (Fasal 22).
+  - Lompat Parti: Amanah tersedia kecuali Sarawak. Terjemahan EN baharu (juga membetulkan "Musim … (Pra-PAU) (bulan 9-9) … sudah tamat" untuk semua parti).
+- Fail baharu: `js/amanah.js`, `js/amanah-ui.js`, `js/amanah-data.js`, `data/amanah-malaysia.csv`, `tools/build-amanah.js`, `tools/ujian-amanah.js`. Ujian baharu (188 ujian).
+
 ## v13.55 (2026-11-10)
 
 - **Maklum balas baris 31: Parti Warisan dalam Lain-lain** (ikut mockup yang dipersetujui; sumber: Wikipedia Bahasa Melayu daripada pengguna; semua nombor mekanik ⚠️ andaian).

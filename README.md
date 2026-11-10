@@ -112,6 +112,9 @@ Modul utama dalam `js/`:
 | `warisan.js` | Warisan (Lain-lain, mod ringan): Gelombang Warisan, Jelajah, Serang isu, Pikat ADUN, kerajaan Warisan dalam PRN Sabah |
 | `warisan-ui.js` | Kad ⛵ Warisan: Pembangkang Utama Sabah (tab Profil) |
 | `warisan-data.js` | Dijana oleh `tools/build-warisan.js`: kawasan operasi Warisan |
+| `amanah.js` | Amanah (PH, mod penuh, Perlembagaan 2022): Kawasan, Konvensyen Negeri, Konvensyen Nasional, Mesyuarat JPN 44 orang, Naratif Rahmah |
+| `amanah-ui.js` | Kad 🟠 Amanah: Parti & Konvensyen (tab Profil) |
+| `amanah-data.js` | Dijana oleh `tools/build-amanah.js`: Kawasan Amanah, kuota PH |
 | `rundingan.js` | Rundingan Gabungan selepas Parlimen tergantung: calon rakan (PH, PN / BN, GPS, GRS, Bebas), kesediaan, lawan tradisi, Restu PAS, pilihan automatik NPC bagi pemain bukan Presiden |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN; Fasa 2: Restu Majlis Syura, Ceramah, Dewan Ulamak / As-Sabiqun / Himpunan Pendukung, Ahli Bersekutu; data kawasan (`node tools/build-pas.js`) |
@@ -173,6 +176,7 @@ node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab 
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
 node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN
 node tools/ujian-warisan.js      # pelayar: cip Warisan, daftar Sabah (Wira / Wirawati), kad Warisan, kerusi, EN
+node tools/ujian-amanah.js       # pelayar: cip Amanah (PH), daftar (WARDA / AWAN), kad Amanah, Konvensyen Negeri, Mesyuarat JPN, EN
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)

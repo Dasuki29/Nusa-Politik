@@ -88,7 +88,7 @@
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < (parti === 'DAP' ? 17 : 18)) { return null; }   // v13.37: DAP umur minimum 17 (Fasal III.2)
     if (umur >= 60) { return 'veteran'; }
     if (j === 'L') { return umur <= (parti === 'PKR' || parti === 'DAP' ? 35 : 40) ? 'pemuda' : 'biasa'; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
-    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP' && parti !== 'GAGASAN' && parti !== 'WARISAN') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
+    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP' && parti !== 'GAGASAN' && parti !== 'WARISAN' && parti !== 'AMANAH') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
   }
 
   /** Tentukan kategori demografi pemain. jantina: 'L' | 'P'. Pulang null jika tidak sah. */

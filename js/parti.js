@@ -191,6 +191,34 @@
       [/(peringkat|Peringkat) JPKP/g, '$1 bahagian'], [/JPKP/g, 'Bahagian'],
       [/Pengerusi Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Jawatankuasa Negeri/g, 'Badan Perhubungan Negeri'],
       [/\bDAPSY\b/g, 'Pemuda'], [/Perlembagaan DAP, Fasal VII\.3/g, 'Fasal 20.12'], [/Perlembagaan DAP, Fasal VII\.2/g, 'Fasal 20.10'], [/Perlembagaan DAP, Fasal VII\.1/g, 'Fasal 20.5'], [/Perlembagaan DAP, Fasal IV\.13\(c\)/g, 'Fasal 20.7']].concat(BULAN_DAP_S) };
+  /* v13.56: Amanah (Parti Amanah Negara), komponen PH, MOD PENUH (js/amanah.js). Perlembagaan Parti Amanah Negara 2022: Kawasan (Fasal 16.3),
+     Jawatankuasa Pimpinan Nasional (JPN, Fasal 16.1, 17.1), Konvensyen Nasional (Fasal 11, 12), Jawatankuasa Pimpinan Negeri (Fasal 16.2),
+     sayap AWAN, Pemuda Amanah dan WARDA (Fasal 21). Disiplin: Lembaga Tatatertib (Fasal 22). ANDAIAN takwim: Cawangan 6, Kawasan 8, Konvensyen Nasional 11. */
+  var FASAL_AMANAH = [[/Fasal 20\.13/g, 'Perlembagaan Amanah, Fasal 22.8'], [/Fasal 20\.12(\.\d)?/g, 'Perlembagaan Amanah, Fasal 22.11'], [/Fasal 20\.10[a-d]?/g, 'Perlembagaan Amanah, Fasal 22.8'], [/Fasal 20\.7\b/g, 'Perlembagaan Amanah, Fasal 22.12'], [/Fasal 20\.5\b/g, 'Perlembagaan Amanah, Fasal 22.5'],
+    [/Clause 20\.13/g, 'Amanah Constitution, Clause 22.8'], [/Clause 20\.12(\.\d)?/g, 'Amanah Constitution, Clause 22.11'], [/Clause 20\.10[a-d]?(\([a-d]\))?/g, 'Amanah Constitution, Clause 22.8'], [/Clause 20\.7\b/g, 'Amanah Constitution, Clause 22.12'], [/Clause 20\.5\b/g, 'Amanah Constitution, Clause 22.5']];
+  var BULAN_AMANAH = [[/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 11'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 11'],
+    [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 8'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 8'],
+    [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 6'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 6'], [/pada bulan 4\./g, 'pada bulan 6.'], [/in month 4\./g, 'in month 6.'],
+    [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onth 12'], [/\b([Mm])onths 10 to 12\b/g, '$1onth 12']];
+  var BULAN_AMANAH_S = [[/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 4-5'], [/\b([Bb])ulan 8\b(?![-–\d])(?! \(Ogos\))/g, '$1ulan 6'], [/\b([Bb])ulan 11\b(?![-–\d])(?! \(November\))/g, '$1ulan 9'], [/\b([Bb])ulan 12\b(?![-–\d])(?! \(Disember\))/g, '$1ulan 10-12']];
+  SENARAI.AMANAH = { kod: 'AMANAH', nama: 'AMANAH', penuh: 'Parti Amanah Negara', logo: 'assets/images/logo-amanah.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: 'data/amanah-malaysia.csv', bahagianJenis: 'Parlimen', amanah: true, gabungan: 'PH',
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pimpinan Nasional (JPN)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pimpinan Nasional'], [/\bMKT\b/g, 'JPN'], [/Supreme Council \(MKT\)/g, 'National Leadership Committee (JPN)'], [/Supreme Council/g, 'National Leadership Committee'],
+      [/Perhimpunan Agung AMANAH \(PAU\)/g, 'Konvensyen Nasional Amanah'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Konvensyen Nasional Amanah'], [/Perhimpunan Agung \(PAU\)/g, 'Konvensyen Nasional Amanah'], [/Perhimpunan Agung AMANAH/g, 'Konvensyen Nasional Amanah'],
+      [/AMANAH General Assembly \(PAU\)/g, 'Amanah National Convention'], [/General Assembly \(PAU\)/g, 'Amanah National Convention'], [/AMANAH General Assembly/g, 'Amanah National Convention'], [/Pre-PAU/g, 'Pre-Convention'], [/\bPAU\b/g, 'Konvensyen'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di lokasi Konvensyen Nasional'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at the National Convention venue'],
+      [/\bTimbalan Ketua Bahagian\b/g, 'Timbalan Ketua Kawasan'], [/\bNaib Ketua Bahagian\b/g, 'Naib Ketua Kawasan'], [/\bKetua Bahagian\b/g, 'Ketua Kawasan'], [/\bketua bahagian\b/g, 'ketua kawasan'], [/Mesyuarat Perwakilan Bahagian/g, 'Mesyuarat Tahunan Kawasan'],
+      [/Bahagian/g, 'Kawasan'], [/(peringkat|Peringkat) bahagian/g, '$1 kawasan'], [/\bDivisions\b/g, 'Areas'], [/\bDivision\b/g, 'Area'], [/\bdivisions\b/g, 'areas'], [/\bdivision\b/g, 'area'],
+      [/Pengerusi Badan Perhubungan Negeri/g, 'Pengerusi Negeri'], [/Badan Perhubungan Negeri/g, 'Jawatankuasa Pimpinan Negeri'], [/Pengerusi Badan Perhubungan/g, 'Pengerusi Negeri'], [/Badan Perhubungan/g, 'Jawatankuasa Pimpinan Negeri'],
+      [/State Liaison Body Chairman/g, 'State Chairman'], [/Liaison Body Chairman/g, 'State Chairman'], [/State Liaison Body/g, 'State Leadership Committee'], [/Liaison Body/g, 'State Leadership Committee'],
+      [/\bPuteri\b/g, 'WARDA'], [/\bWanita\b/g, 'AWAN']].concat(BULAN_AMANAH),
+    istilahSongsang: [[/Jawatankuasa Pimpinan Nasional \(JPN\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pimpinan Nasional/g, 'Majlis Kerja Tertinggi'], [/\bJPN\b/g, 'MKT'], [/National Leadership Committee/g, 'Supreme Council'],
+      [/Konvensyen Nasional Amanah/g, 'Perhimpunan Agung AMANAH (PAU)'], [/Amanah National Convention/g, 'AMANAH General Assembly (PAU)'], [/Pre-Convention/g, 'Pre-PAU'], [/\bKonvensyen\b(?! (Nasional|Negeri))/g, 'PAU'],
+      [/ di lokasi Konvensyen Nasional/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ at the National Convention venue/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/Timbalan Ketua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Ketua Kawasan/g, 'Naib Ketua Bahagian'], [/Ketua Kawasan/g, 'Ketua Bahagian'], [/ketua kawasan/g, 'ketua bahagian'], [/Mesyuarat Tahunan Kawasan/g, 'Mesyuarat Perwakilan Bahagian'],
+      [/(peringkat|Peringkat) kawasan/g, '$1 bahagian'], [/(?<!Peruntukan |Zon |Kaum |Lobi |Butiran |di )Kawasan(?! (campuran|operasi|anda|Pemain|Melayu))/g, 'Bahagian'], [/\bAreas\b/g, 'Divisions'], [/\bArea\b/g, 'Division'],
+      [/Pengerusi Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Jawatankuasa Pimpinan Negeri/g, 'Badan Perhubungan Negeri'],
+      [/\bWARDA\b/g, 'Puteri'], [/\bAWAN\b/g, 'Wanita'],
+      [/Perlembagaan Amanah, Fasal 22\.11/g, 'Fasal 20.12'], [/Perlembagaan Amanah, Fasal 22\.8/g, 'Fasal 20.10'], [/Perlembagaan Amanah, Fasal 22\.5/g, 'Fasal 20.5'], [/Perlembagaan Amanah, Fasal 22\.12/g, 'Fasal 20.7']].concat(BULAN_AMANAH_S) };
   /* v13.53: BERJASA (Barisan Jemaah Islamiah Se-Malaysia) = parti tanpa gabungan (kumpulan "Lain-lain"), MOD RINGAN (enjin yang sama seperti PPP; js/berjasa.js).
      Tiada perlembagaan BERJASA: struktur diandaikan seperti PAS (parti asal BERJASA). Istilah: Kawasan dan Ketua Kawasan, Jawatankuasa Pusat (AJK Pusat),
      Muktamar BERJASA, sayap Wanita BERJASA dan ANGKASA (Angkatan Pemuda-Pemudi, had umur 40). ANDAIAN: kawasan operasi = kawasan Parlimen Semenanjung
@@ -254,8 +282,9 @@
   function ke(s) {
     var k = kini(); if (k === 'UMNO' || s == null) { return s; }
     if (k === 'PKR' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_PKR); }
-    if (k === 'DAP' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_DAP); }      // v13.38: rujukan disiplin UMNO -> Perlembagaan DAP (Fasal VII)      // v13.36: rujukan disiplin UMNO -> Perlembagaan PKR
-    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PKR' && /Perlembagaan PKR|PKR Constitution/.test(s)) || (k === 'DAP' && /Perlembagaan DAP|DAP Constitution/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
+    if (k === 'DAP' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_DAP); }
+    if (k === 'AMANAH' && /(Fasal|Clause) 20\.(5|7|10|12|13)/.test(s)) { s = terap(String(s), FASAL_AMANAH); }   // v13.56: Lembaga Tatatertib (Fasal 22)      // v13.38: rujukan disiplin UMNO -> Perlembagaan DAP (Fasal VII)      // v13.36: rujukan disiplin UMNO -> Perlembagaan PKR
+    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM, sendiri = ((k === 'MCA' || k === 'MIC') && /(Perkara|Article) \d/.test(s) && !/(Fasal|Clause) \d/.test(s)) || (k === 'PKR' && /Perlembagaan PKR|PKR Constitution/.test(s)) || (k === 'DAP' && /Perlembagaan DAP|DAP Constitution/.test(s)) || (k === 'AMANAH' && /Perlembagaan Amanah|Amanah Constitution/.test(s)) || (k === 'PAS' && (/Perlembagaan PAS|PAS Constitution/.test(s) || (/(Fasal|Clause) \d/.test(s) && /\bPAS\b|Majlis Syura|Dewan Ulamak|As-Sabiqun|Himpunan Pendukung|Ahli Bersekutu|Muktamar|Kawasan|\bArea\b|Associate Member|Shura|Ulama/.test(s))));   // v13.32: Fasal PAS sendiri   // v13.31: rujukan Fasal Perlembagaan PAS sendiri      // v13.3: rujukan Perkara Perlembagaan MCA/MIC sendiri dikekalkan
     if (TU && !sendiri) { s = TU.en(TU.bm(s)); }        // v10.6: tiada rujukan Perlembagaan/Fasal UMNO untuk parti lain
     var i = info(k), r = terap(String(s).replace(PENUH_UMNO, i.penuh).replace(RE_UMNO, i.nama), i.istilah);
     if (k === 'DAP' && W.__dapPenyelaras) { r = r.replace(/Setiausaha JPKP/g, 'Penyelaras JPKP').replace(/JPKP Secretary/g, 'JPKP Coordinator'); }   // v13.37: pilihan (b): Penyelaras = Ahli Parlimen
@@ -264,13 +293,13 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'AMANAH' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
-    if (k === 'BERJASA') { calon.push(a); }   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
-    if (k === 'PAS' || k === 'BERJASA') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
-    if (k === 'DAP' || k === 'PKR') { [d, tanpaBulan].forEach(function (x) { ['20.13', '20.10a', '20.10b', '20.10c', '20.10d', '20.12.2'].forEach(function (f0) { var y = x.replace(/Fasal 20\.(10|12|5)\b/, 'Fasal ' + f0); if (y !== x) { calon.push(y); } }); }); }   // v13.38: rujukan disiplin dipetakan banyak-ke-satu
+    if (k === 'BERJASA' || k === 'AMANAH') { calon.push(a); }   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
+    if (k === 'PAS' || k === 'BERJASA' || k === 'AMANAH') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
+    if (k === 'DAP' || k === 'PKR' || k === 'AMANAH') { [d, tanpaBulan].forEach(function (x) { ['20.13', '20.10a', '20.10b', '20.10c', '20.10d', '20.12.2'].forEach(function (f0) { var y = x.replace(/Fasal 20\.(10|12|5)\b/, 'Fasal ' + f0); if (y !== x) { calon.push(y); } }); }); }   // v13.38: rujukan disiplin dipetakan banyak-ke-satu
     calon.forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });
     });
@@ -284,7 +313,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Puteri|Beliawanis|Wira|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Puteri|Beliawanis|Wira|Wanita|AWAN|WARDA|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }
