@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.73 (2026-11-10)
+
+- **Modul Kementerian Pertahanan (MINDEF)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, aset dan insiden ialah label simulasi, tiada negara asing dinamakan).
+  - Fail baharu `js/mindef.js` dan `js/mindef-ui.js`. Rekod `p.mindef`: `nationalSecurityScore`, `militaryReadiness` (purata darat, laut, udara), `procurementScandalRisk`, sokongan jeneral, peruntukan operasi (RM juta) dan peruntukan perolehan (RM 3 bilion setiap Januari).
+  - **Tab "🎖️ Pejabat MINDEF"**: pemantauan sempadan (kesiapsiagaan dan status setiap cabang), hanya untuk pemegang portfolio Menteri Pertahanan.
+  - **Insiden sempadan** rawak (perairan paling kerap): bertindak tegas (peluang ikut kesiapsiagaan cabang) atau berunding (pasti tamat, jeneral kecewa).
+  - **Perolehan aset strategik** (kapal, jet, kenderaan perisai): tender terbuka (lambat, tiada risiko) atau rundingan terus (cepat, jeneral gembira, risiko skandal dan risiko integriti naik). Risiko melebihi 50% boleh mencetuskan skandal (KPI −10, Reputasi −5, SPRM menyiasat). Audit dalaman menurunkan risiko.
+  - **Arahan bulanan**: latihan bersama, penyelenggaraan aset atau kebajikan anggota.
+- Ujian baharu (205 ujian) dan ujian pelayar `tools/ujian-mindef.js`.
+
 ## v13.72 (2026-11-10)
 
 - **Modul Kementerian Dalam Negeri (KDN)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, agensi dan operasi ialah label simulasi).

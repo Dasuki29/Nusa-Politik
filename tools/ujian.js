@@ -3038,6 +3038,26 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.73 Modul Kementerian Pertahanan: insiden tegas/diplomatik, perolehan terbuka/terus, skandal, arahan, kesan bulanan', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikMINDEF;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Pertahanan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(M.aktif(p)); const r0 = M.ringkasan(p); sama(r0.cabang.length, 3); sama(r0.aset.length, 3); sama(r0.perolehan, 3);
+  const j0 = M.getMINDEF(p).sokonganJeneral, k0 = M.getMINDEF(p).procurementScandalRisk;
+  betul(M.lulusKontrak('kapal', 'terus').ok); p = S.loadPlayer(); sama(p.mindef.perolehan, 1); betul(p.mindef.sokonganJeneral > j0 && p.mindef.procurementScandalRisk > k0, 'terus: jeneral & risiko naik');
+  sama(M.lulusKontrak('perisai', 'terbuka').ok, false, 'satu kontrak sebulan');
+  P.tetap({ bulan: 4 }); sama(M.lulusKontrak('perisai', 'terbuka').ok, false, 'perolehan tidak cukup (RM 1.0 bilion < 1.2)');
+  betul(M.arahan('latihan', 'udara').ok); sama(M.arahan('kebajikan').ok, false, 'satu arahan sebulan');
+  P.tetap({ bulan: 5 }); const laut0 = S.loadPlayer().mindef.cabang.laut; M.prosesBulan({ rng: () => 0.01 }); p = S.loadPlayer();
+  betul(p.mindef.cabang.laut >= laut0 + 14, 'kapal siap: laut naik'); sama(p.mindef.kontrak.length, 0); betul(!!p.mindef.insiden, 'insiden baharu');
+  const o = M.tanganiInsiden('tegas', { rng: () => 0.01 }); betul(o.ok && o.jaya, o.ralat); p = S.loadPlayer(); sama(p.mindef.insiden, null);
+  P.tetap({ bulan: 6 }); p = S.loadPlayer(); p.mindef.insiden = { jenis: 'udara', bulan: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { mindef: p.mindef } });
+  const jd = S.loadPlayer().mindef.sokonganJeneral; betul(M.tanganiInsiden('diplomatik').ok); p = S.loadPlayer(); betul(p.mindef.insiden === null && p.mindef.sokonganJeneral < jd, 'diplomatik: tamat, jeneral turun');
+  p.mindef.procurementScandalRisk = 95; S.applyEffects({}, { kiraTindakan: false, patch: { mindef: p.mindef, reputasi: 50 } });
+  const rt = K.getKabinet(S.loadPlayer()).governanceRating; const ev = M.prosesBulan({ rng: () => 0.01 }).peristiwa; p = S.loadPlayer();
+  betul(ev.some((e) => /Skandal perolehan/.test(e.mesej))); betul(K.getKabinet(p).governanceRating < rt && p.reputasi < 50, 'skandal: KPI & Reputasi jatuh'); sama(p.mindef.procurementScandalRisk, 30);
+  S.clearPlayer();
+});
 ujian('v13.72 Modul Kementerian Dalam Negeri: agensi, dasar kebebasan sivil, ancaman dan Operasi Khas, kecemasan, kesan bulanan', () => {
   const K = g.MyPolitikKabinet, D = g.MyPolitikKDN;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!D.aktif(p));
