@@ -136,10 +136,12 @@
     var h = simpan(c.t, {}, { log: { tindakan: 'tyt_raja', nama: 'Mesyuarat Majlis Raja-Raja', peringkat: 'ahli' } });
     return h.ok ? { ok: true, mesej: 'Anda menghadiri Mesyuarat Majlis Raja-Raja. Kewibawaan +' + CONFIG.RAJA.kewibawaan + '.' } : { ok: false, ralat: h.ralat };
   }
-  /** Senarai calon kurnia tahun ini (6 calon, sekurang-kurangnya 2 ahli politik). */
+  /** Senarai calon kurnia tahun ini (6 calon: sekurang-kurangnya 2 ahli politik dan 2 bukan ahli politik dari kategori berbeza,
+      supaya senarai seimbang sentiasa boleh dipilih; v13.71 pembetulan: dahulu calon bukan politik boleh tinggal seorang sahaja). */
   function calonKurnia(p, a, r) {
     if (a.calon && a.calon.tahun === p.tahun) { return a.calon.senarai; }
-    var s = []; for (var i = 0; i < CONFIG.KURNIA.calon; i++) { var kt = i < 2 ? KATEGORI[0] : KATEGORI[Math.floor(r() * KATEGORI.length)]; s.push({ id: 'c' + i, nama: namaNPC(r, r() < 0.3 ? 'P' : 'L').replace(/^Dato'? ?|^Datuk ?/, ''), kategori: kt.kod, label: kt.nama }); }
+    var bukan = KATEGORI.slice(1), b1 = Math.floor(r() * bukan.length), b2 = (b1 + 1 + Math.floor(r() * (bukan.length - 1))) % bukan.length;
+    var s = []; for (var i = 0; i < CONFIG.KURNIA.calon; i++) { var kt = i < 2 ? KATEGORI[0] : i === 2 ? bukan[b1] : i === 3 ? bukan[b2] : KATEGORI[Math.floor(r() * KATEGORI.length)]; s.push({ id: 'c' + i, nama: namaNPC(r, r() < 0.3 ? 'P' : 'L').replace(/^Dato'? ?|^Datuk ?/, ''), kategori: kt.kod, label: kt.nama }); }
     a.calon = { tahun: p.tahun, senarai: s }; return s;
   }
   function kurnia(ids) {
@@ -219,5 +221,5 @@
   }
 
   return { CONFIG: CONFIG, NEGERI: NEGERI, setRng: function (f) { rngLalai = f || Math.random; }, getT: getT, aktif: aktif, syarat: syarat, peluang: peluang, bekas: bekas, kosongSeterusnya: kosongSeterusnya,
-    terima: terima, tolak: tolak, menghadap: menghadap, majlis: majlis, majlisRaja: majlisRaja, kurnia: kurnia, bubar: bubar, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan };
+    terima: terima, tolak: tolak, menghadap: menghadap, majlis: majlis, majlisRaja: majlisRaja, kurnia: kurnia, calonKurnia: calonKurnia, bubar: bubar, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan };
 });

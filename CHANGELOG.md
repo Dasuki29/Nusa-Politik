@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v13.71 (2026-11-10)
+
+- **Pembetulan: senarai calon kurnia darjah (Yang di-Pertua Negeri).** Senarai 6 calon dahulu hanya menjamin 2 ahli politik; selebihnya rawak, jadi kadang-kadang hanya seorang calon bukan ahli politik. Pemain tidak dapat memilih "senarai seimbang" (bonus Kewibawaan) pada tahun itu, dan ujian v13.52 gagal secara rawak. Kini senarai sentiasa ada sekurang-kurangnya 2 calon bukan ahli politik dari kategori berbeza.
+- Ujian baharu (203 ujian): 300 senarai calon rawak disemak.
+
 ## v13.70 (2026-11-10)
 
 - **Modul Kementerian Kewangan (MOF)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan).

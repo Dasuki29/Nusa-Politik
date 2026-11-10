@@ -3038,6 +3038,14 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.71 TYT: senarai calon kurnia sentiasa ada 2 ahli politik dan 2 bukan ahli politik dari kategori berbeza', () => {
+  const T = g.MyPolitikTYT; let x = 7;
+  const rng = () => { x = (x * 16807) % 2147483647; return x / 2147483647; };
+  for (let n = 0; n < 300; n++) {
+    const s = T.calonKurnia({ tahun: 2031 }, {}, rng), bukan = s.filter((c) => c.kategori !== 'politik');
+    betul(s.length === 6 && s.filter((c) => c.kategori === 'politik').length >= 2 && new Set(bukan.map((c) => c.kategori)).size >= 2, JSON.stringify(s));
+  }
+});
 ujian('v13.70 Modul Kementerian Kewangan: Bajet Tahunan, cukai & subsidi, rizab/inflasi/kepuasan bulanan, Dewan', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikMOF;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 9, ap: 10, myr: 50000 }); let p = S.loadPlayer();
