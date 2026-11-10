@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.65 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 5 (GRS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PBS**: jawatan Pusat **ikut komuniti** (Majlis Eksekutif 2026–2029): Timbalan Presiden 1 setiap komuniti, Naib Presiden **Bumiputera Bukan Islam 2 / Bumiputera Islam 2 / Cina 1**, Majlis Tertinggi **7 / 5 / 4**; Timbalan Ketua Wanita Pusat dibuka; kitaran **2026, 2029**.
+    - Medan baharu **"Komuniti dalam PBS"** dalam borang pendaftaran (seperti "Sayap dalaman PBB"); cadangan ikut Parlimen ⚠️ (Cina jika ≥ 30% pengundi Cina; Bumiputera Islam bagi Parlimen majoriti Islam; selainnya Bumiputera Bukan Islam). Boleh ditukar **sekali** dalam kad GRS (juga untuk simpanan lama).
+  - **UPKO**: 9 Naib Presiden, Majlis Tertinggi 19, kitaran 2026. **LDP**: 7 Naib Presiden, Majlis Tertinggi 12 ⚠️, kitaran 2024 / 2027. **GAGASAN**: Majlis Tertinggi 18.
+  - **PHRS / PCS** (parti kecil ⚠️): AJK Cawangan 9, Bahagian 15 AJK tanpa Naib; Naib Presiden 2 / 3, Majlis Tertinggi 10 / 15. **PCS**: kitaran **2 tahun** (Mesyuarat Agung Dwitahunan; 2026, 2028).
+- Pembetulan: menukar parti di skrin pendaftaran (contoh PBS ke Gagasan) kini menjenamakan semula label yang tidak berubah untuk parti sebelumnya (Puteri → Beliawanis).
+- Ujian baharu (197 ujian); ujian pelayar GRS menyemak medan komuniti PBS.
+
 ## v13.64 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 4 (GPS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).

@@ -143,7 +143,7 @@
 
   el.bahagian.addEventListener('change', function () {
     state.bahagian = state.negeri ? cari(state.negeri.bahagian, el.bahagian.value) : null;
-    state.dun = state.cawangan = null;
+    state.dun = state.cawangan = null; if (state.parti === 'PBS') { cadangKomuniti(); }
     setError('bahagian'); sembunyiInfo();
     reset(el.cawangan, 'Pilih DUN dahulu');
     if (state.bahagian && esSW(state.parti)) {               // v8.32: DUN ialah Bahagian PBB; terus pilih cawangan (DM)
@@ -388,6 +388,7 @@
     if (tc) { tc.textContent = pbb || state.parti === 'MCA' || state.parti === 'MIC' || state.parti === 'PPP' || state.parti === 'PBRS' || state.parti === 'PAS' || state.parti === 'PKR' || state.parti === 'DAP' || state.parti === 'AMANAH' || state.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(state.parti) ? 'Cawangan (Daerah Mengundi)' : 'Cawangan (Lokaliti)'; }
     if (hp) { hp.hidden = !pbb && state.parti !== 'MCA' && state.parti !== 'MIC' && state.parti !== 'PPP' && state.parti !== 'PBRS' && state.parti !== 'PAS' && state.parti !== 'PKR' && state.parti !== 'DAP' && state.parti !== 'AMANAH' && state.parti !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(state.parti); }
     var fb = $('f-blok'); if (fb) { fb.hidden = state.parti !== 'PBB'; }
+    var fk = $('f-komPBS'); if (fk) { fk.hidden = state.parti !== 'PBS'; }   // v13.65
     var fpb = $('f-pas-bidang'), fpj = $('f-pas-jenis'); if (fpb) { fpb.hidden = state.parti !== 'PAS'; } if (fpj) { fpj.hidden = state.parti !== 'PAS'; }   // v13.32: PAS Fasa 2
     if (hp && state.parti === 'MCA') { hp.textContent = HINT_MCA; }
     if (hp && state.parti === 'MIC') { hp.textContent = HINT_MIC; }
@@ -410,6 +411,13 @@
     if (!state.blokManual) { state.blok = SW && info ? SW.blokLalai(info) : 'bumiputera'; }
     var r = el.form.querySelector('input[name="blokPBB"][value="' + state.blok + '"]'); if (r) { r.checked = true; }
   }
+  /** v13.65: cadangkan komuniti PBS mengikut Parlimen (js/struktur.js komunitiLalai); pilihan manual dihormati. */
+  function cadangKomuniti() {
+    var St = window.MyPolitikStruktur, kod = state.bahagian ? state.bahagian.kod : null;
+    if (!state.komManual) { state.komuniti = St && St.komunitiLalai ? St.komunitiLalai(kod) : 'bbi'; }
+    var r = el.form.querySelector('input[name="komunitiPBS"][value="' + (state.komuniti || 'bbi') + '"]'); if (r) { r.checked = true; }
+  }
+  Array.prototype.forEach.call(el.form.querySelectorAll('input[name="komunitiPBS"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { state.komuniti = r.value; state.komManual = true; } }); });
   Array.prototype.forEach.call(el.form.querySelectorAll('input[name="blokPBB"]'), function (r) { r.addEventListener('change', function () { if (r.checked) { state.blok = r.value; state.blokManual = true; } }); });
   /** v10.5.1: muat js/data-sarawak.js (skrip, berfungsi walaupun fetch disekat) sekali sahaja. */
   var terbenamJanji = null;
@@ -463,7 +471,7 @@
   if (selParti) {
     selParti.addEventListener('change', function () {
       var v = selParti.value; if (PT && !PT.sah(v)) { v = 'UMNO'; }
-      state.parti = v; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(v); }
+      state.parti = v; state.blok = null; state.blokManual = false; state.komuniti = null; state.komManual = false; if (PT) { PT.tetapPilihan(v); }
       suaikanBorangParti(); muatData();
     });
     try {                                                                                    // v12.0: parti dipilih daripada cip poster di menu utama (selepas muat semula slot)
@@ -518,7 +526,7 @@
     var ahliEl = document.getElementById('s-ahli');
     var pdEl = document.getElementById('s-pendidikan');                                          // v13.13
     var bdEl = $('s-bidang'), jaEl = $('s-jenis-ahli');
-    var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, bidang: state.parti === 'PAS' && bdEl ? bdEl.value : null, keahlianJenis: state.parti === 'PAS' && jaEl ? jaEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, bidang: state.parti === 'PAS' && bdEl ? bdEl.value : null, keahlianJenis: state.parti === 'PAS' && jaEl ? jaEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, komunitiPBS: state.parti === 'PBS' ? (state.komuniti || 'bbi') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
     if (LOMPAT && window.MyPolitikLompat) { var lamaLp = S.loadPlayer(); if (lamaLp && lamaLp.lompatTertunda) { profil = window.MyPolitikLompat.gabung(lamaLp, profil); } }   // v13.51: lompat parti
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }

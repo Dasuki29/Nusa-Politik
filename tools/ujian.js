@@ -3001,6 +3001,21 @@ ujian('v13.64 Enjin mesyuarat GPS (Fasa 4): PBB Perhimpunan Agung 3 tahun, istil
   P.tetap({ parti: 'PDP' }); sama(PT.ke('Perhimpunan Agung UMNO (PAU)'), 'Perhimpunan Agung PDP'); betul(M0.bilHadir(S.loadPlayer(), 'pau') < 400);
   S.clearPlayer();
 });
+ujian('v13.65 Enjin pemilihan GRS (Fasa 5): PBS ikut komuniti (borang + tukar sekali), UPKO 9 Naib, LDP 7 Naib, PCS kitaran 2 tahun, GAGASAN MT 18', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, GR = g.MyPolitikGRS, M0 = g.MyPolitikMeeting, cd = (k) => J.cariDef(k);
+  sama(ST.komunitiLalai('172'), 'cina'); sama(ST.komunitiLalai('189'), 'bi'); sama(ST.komunitiLalai('180'), 'bbi');
+  sama(ST.kerusi({ parti: 'PBS', komunitiPBS: 'bbi' }, cd('naib_presiden')), 2); sama(ST.kerusi({ parti: 'PBS', komunitiPBS: 'cina' }, cd('naib_presiden')), 1); sama(ST.kerusi({ parti: 'PBS', komunitiPBS: 'bi' }, cd('ahli_mkt')), 5);
+  betul(J.katalogUntuk({ parti: 'PBS', sayap: 'wanita' }).some((d) => d.kod === 'sayap_timbalan_pusat_wanita'), 'Timbalan Ketua Wanita PBS');
+  P.daftar({}); P.tetap({ parti: 'PBS', komunitiPBS: 'bbi' });
+  sama(E.adalahTahunPemilihan(2026), true); sama(E.adalahTahunPemilihan(2029), true); sama(E.adalahTahunPemilihan(2027), false);
+  let r = GR.tukarKomuniti('cina'); betul(r.ok, r.ralat); sama(GR.komuniti(S.loadPlayer()), 'cina'); betul(!GR.tukarKomuniti('bi').ok, 'sekali sahaja');
+  sama(M0.senaraiPusat(S.loadPlayer()), 'Presiden, Timbalan Presiden, Naib Presiden, MKT');
+  P.tetap({ parti: 'UPKO' }); sama(M0.senaraiPusat(S.loadPlayer()), 'Presiden, Timbalan Presiden, 9 Naib Presiden, MKT'); sama(E.adalahTahunPemilihan(2026), true);
+  P.tetap({ parti: 'LDP' }); sama(ST.kerusi(S.loadPlayer(), cd('naib_presiden')), 7); sama(E.adalahTahunPemilihan(2027), true);
+  P.tetap({ parti: 'PCS' }); sama(E.adalahTahunPemilihan(2026), true); sama(E.adalahTahunPemilihan(2028), true); sama(E.adalahTahunPemilihan(2027), false);
+  P.tetap({ parti: 'GAGASAN' }); sama(ST.kerusi(S.loadPlayer(), cd('ahli_mkt')), 18);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

@@ -27,6 +27,11 @@
         h += '<div class="tyt-ev"><b>⚖️ Krisis ADUN lompat</b><small>Beberapa ADUN penyokong kerajaan berunding dengan pembangkang. Pujuk: ' + C.KRISIS.pujukAP + ' AP + ' + rm(C.KRISIS.pujukMyr) + ', Kestabilan +' + C.KRISIS.pujuk + '. Terima: Kestabilan ' + C.KRISIS.terima + ', Reputasi ' + C.KRISIS.terimaReputasi + '. Bubar DUN: PRN mengejut dalam 2 bulan.</small>' +
           '<div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' + btn('krisis:pujuk', '🤝 Pujuk', null, 'btn--primary') + btn('krisis:terima', 'Terima', null) + btn('krisis:bubar', '🗳️ Bubar DUN', null) + '</div></div>';
       }
+      if (p.parti === 'PBS' && M.komuniti) {                                       // v13.65: komuniti dalam PBS
+        var km = M.komuniti(p), NK = M.NAMA_KOMUNITI;
+        h += '<h3 style="margin:10px 0 4px">👥 Komuniti dalam PBS</h3><p class="note">Anda: <b>' + esc(NK[km]) + '</b>. Timbalan Presiden (1 setiap komuniti), Naib Presiden (2 / 2 / 1) dan Majlis Tertinggi (7 / 5 / 4) dibahagi ikut komuniti.</p>';
+        if (!p.komunitiTukar) { h += '<div class="pbg-3" style="justify-content:flex-start">' + Object.keys(NK).filter(function (x) { return x !== km; }).map(function (x) { return btn('kom:' + x, 'Tukar ke ' + NK[x], null); }).join('') + '</div><small class="note">Boleh ditukar sekali sahaja.</small>'; }
+      }
       h += '<h3 style="margin:10px 0 4px">📋 Tindakan</h3>';
       h += act('🤝 Jamuan rakan gabungan', C.JAMUAN.ap + ' AP · ' + rm(C.JAMUAN.myr) + ' · sekali sebulan · Kestabilan +' + C.JAMUAN.naik, k.jamuan, btn('jamuan', 'Adakan', k.jamuan));
       h += act('📜 Tuntut hak MA63', C.MA63.ap + ' AP · sekali sebulan · sokongan akar umbi +' + C.MA63.akarUmbi + ' · hubungan Putrajaya ' + C.MA63.putrajaya, k.ma63, btn('ma63', 'Tuntut', k.ma63));
@@ -51,6 +56,7 @@
     else if (a === 'gerak') { r = M.gerak(); }
     else if (a === 'kuota') { r = M.rundingKuota(); }
     else if (a.indexOf('krisis:') === 0) { r = M.jawabKrisis(a.slice(7)); }
+    else if (a.indexOf('kom:') === 0) { r = M.tukarKomuniti(a.slice(4)); }
     if (!r) { return; }
     if (UI().toast) { UI().toast(r.ok ? r.mesej : r.ralat, r.ok ? (r.jaya === false ? 'info' : 'ok') : 'ralat'); }
     if (UI().render) { UI().render(); }

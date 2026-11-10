@@ -396,6 +396,7 @@
     var w = D.createTreeWalker(D.body, 4), n, v;
     while ((n = w.nextNode())) {
       if (n.__npAsal !== undefined) { if (n.nodeValue === n.__npKe) { n.nodeValue = n.__npAsal; } n.__npAsal = undefined; n.__npKe = undefined; continue; }   // v13.1: pulih tepat daripada teks asal
+      n.__npKe = undefined;                                                       // v13.65: nod yang tidak berubah untuk parti lama perlu diimbas semula untuk parti baharu (cth. PBS -> Gagasan: Puteri -> Beliawanis)
       v = n.nodeValue; if (!v || (!/\b(PBB|PRS|SUPP|PDP|PSB)\b/.test(v) && v.indexOf(SENARAI.PBB.penuh) < 0 && v.indexOf(SENARAI.PRS.penuh) < 0 && v.indexOf(SENARAI.SUPP.penuh) < 0 && v.indexOf(SENARAI.PDP.penuh) < 0 && v.indexOf(SENARAI.PSB.penuh) < 0 && !/\bMT\b|\bPA\b|\bRanting\b|Perhimpunan Agung PBB/.test(v))) { continue; }
       if (n.parentElement && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentElement.tagName) || (n.parentElement.closest && n.parentElement.closest('[data-jenama-skip]')))) { continue; }
       n.nodeValue = terap(v, SENARAI.PBB.istilahSongsang).split(SENARAI.PBB.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PRS.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.SUPP.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PDP.penuh).join(SENARAI.UMNO.penuh).split(SENARAI.PSB.penuh).join(SENARAI.UMNO.penuh).replace(/\b(PBB|PRS|SUPP|PDP|PSB)\b/g, 'UMNO');

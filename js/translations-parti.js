@@ -686,6 +686,14 @@
   ["Kawasan {x}: Bumiputera {a}%, kedudukan {b} / {c} (kerusi Parlimen untuk rakan PH).", "Area {x}: Bumiputera {a}%, rank {b} / {c} (parliamentary seat for a PH partner)."],
   ["Amanah (seluruh Malaysia kecuali Sarawak, PH, mod penuh)", "Amanah (all Malaysia except Sarawak, PH, full mode)"],
   ["Pakatan Harapan · PKR · DAP · Amanah", "Pakatan Harapan · PKR · DAP · Amanah"],
-  ["PKR, DAP dan Amanah mod penuh (Perlembagaan PKR, pindaan hingga 11 Mac 2025; Perlembagaan DAP, seperti pada 22.10.2019; Perlembagaan Amanah 2022).", "PKR, DAP and Amanah in full mode (PKR Constitution, amended to 11 March 2025; DAP Constitution, as at 22.10.2019; Amanah Constitution 2022)."]
+  ["PKR, DAP dan Amanah mod penuh (Perlembagaan PKR, pindaan hingga 11 Mac 2025; Perlembagaan DAP, seperti pada 22.10.2019; Perlembagaan Amanah 2022).", "PKR, DAP and Amanah in full mode (PKR Constitution, amended to 11 March 2025; DAP Constitution, as at 22.10.2019; Amanah Constitution 2022)."],
+  /* v13.65: borang komuniti PBS */
+  ["Komuniti dalam PBS", "Community within PBS"],
+  ["Bumiputera Bukan Islam", "Non-Muslim Bumiputera"],
+  ["Bumiputera Islam", "Muslim Bumiputera"],
+  ["Cina", "Chinese"],
+  ["(Kadazandusun, Murut, Rungus)", "(Kadazandusun, Murut, Rungus)"],
+  ["(Bajau, Brunei, Suluk, dll.)", "(Bajau, Brunei, Suluk, etc.)"],
+  ["Timbalan Presiden, Naib Presiden dan Majlis Tertinggi PBS dibahagi ikut komuniti. Dicadangkan mengikut kawasan yang anda pilih; anda boleh menukarnya.", "PBS Deputy President, Vice President and Supreme Council seats are divided by community. Suggested from the area you chose; you can change it."],
   ]);
 })();

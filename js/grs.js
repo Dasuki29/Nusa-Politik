@@ -91,9 +91,11 @@
   function bonusPRN(p) { if (!adalah(p)) { return 0; } var m = st(p); return Math.min(CONFIG.SABAHAN.maks, m.sabahan) - (m.kestabilan < CONFIG.KESTABILAN.rendah ? 2 : 0); }
 
   /* ---------- Kitaran pemilihan 3 tahun dari 2027 (ANDAIAN) ---------- */
-  function adalahTahunPemilihan(p, tahun) { var t = parseInt(tahun, 10); return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0; }
-  function tahunSeterusnya(p, tahun) { var t = parseInt(tahun, 10); if (t <= CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; } var b = (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN; return b === 0 ? t : t + CONFIG.KITARAN_TAHUN - b; }
-  function tahunLepas(p, tahun) { var t = parseInt(tahun, 10); return t < CONFIG.TAHUN_MULA ? null : t - ((t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN); }
+  /** v13.65: kitaran pemilihan ikut parti (js/struktur.js: PBS / UPKO 2026, LDP 2024, PCS 2 tahun), atau lalai GRS. */
+  function kit(p) { var St = typeof globalThis !== 'undefined' ? globalThis.MyPolitikStruktur : null, k = St && St.mesyuarat && p ? St.mesyuarat(p, 'kitaran') : null; return k ? { TAHUN_MULA: k.mula, KITARAN_TAHUN: k.tahun } : CONFIG; }
+  function adalahTahunPemilihan(p, tahun) { var t = parseInt(tahun, 10), C = kit(p); return t >= C.TAHUN_MULA && (t - C.TAHUN_MULA) % C.KITARAN_TAHUN === 0; }
+  function tahunSeterusnya(p, tahun) { var t = parseInt(tahun, 10), C = kit(p); if (t <= C.TAHUN_MULA) { return C.TAHUN_MULA; } var b = (t - C.TAHUN_MULA) % C.KITARAN_TAHUN; return b === 0 ? t : t + C.KITARAN_TAHUN - b; }
+  function tahunLepas(p, tahun) { var t = parseInt(tahun, 10), C = kit(p); return t < C.TAHUN_MULA ? null : t - ((t - C.TAHUN_MULA) % C.KITARAN_TAHUN); }
 
   /* ---------- Pemilihan Pusat (ANDAIAN 10 perwakilan setiap Bahagian + Majlis Tertinggi) ---------- */
   function ringkasPusat(p) {
@@ -221,7 +223,18 @@
       jamuan: statusJamuan(p), ma63: statusMA63(p), sabahanS: statusSabahan(p), gerak: statusGerak(p), statusKuota: statusKuota(p) };
   }
 
-  return { CONFIG: CONFIG, KOD: KOD, KECIL: KECIL, NAMA: NAMA, adalahKod: adalahKod, adalah: adalah, kecil: kecil, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, bonusPRN: bonusPRN, kerajaanGRS: kerajaanGRS,
+  /* v13.65: komuniti PBS (Timbalan Presiden, Naib Presiden dan Majlis Tertinggi ikut komuniti). Boleh ditukar sekali. */
+  var NAMA_KOMUNITI = { bbi: 'Bumiputera Bukan Islam', bi: 'Bumiputera Islam', cina: 'Cina' };
+  function komuniti(p) { var St = typeof globalThis !== 'undefined' ? globalThis.MyPolitikStruktur : null; return St && St.komunitiPBS ? St.komunitiPBS(p) : (p && p.komunitiPBS) || 'bbi'; }
+  function tukarKomuniti(k) {
+    var p = S().loadPlayer(); if (!p || p.parti !== 'PBS') { return { ok: false, ralat: 'Hanya untuk pemain PBS.' }; }
+    if (!NAMA_KOMUNITI[k]) { return { ok: false, ralat: 'Komuniti tidak sah.' }; }
+    if (p.komunitiTukar) { return { ok: false, ralat: 'Komuniti dalam PBS hanya boleh ditukar sekali.' }; }
+    if (komuniti(p) === k) { return { ok: false, ralat: 'Itu komuniti anda sekarang.' }; }
+    S().applyEffects({}, { kiraTindakan: false, patch: { komunitiPBS: k, komunitiTukar: true }, log: { tindakan: 'pbs_komuniti', nama: 'Tukar komuniti PBS', peringkat: 'parti' } });
+    return { ok: true, mesej: 'Komuniti anda dalam PBS kini ' + NAMA_KOMUNITI[k] + '. Anda bertanding kerusi Timbalan Presiden, Naib Presiden dan Majlis Tertinggi bagi komuniti ini.' };
+  }
+  return { CONFIG: CONFIG, KOD: KOD, NAMA_KOMUNITI: NAMA_KOMUNITI, komuniti: komuniti, tukarKomuniti: tukarKomuniti, KECIL: KECIL, NAMA: NAMA, adalahKod: adalahKod, adalah: adalah, kecil: kecil, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, bonusPRN: bonusPRN, kerajaanGRS: kerajaanGRS,
     adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat,
     kestabilan: function (p) { return st(p).kestabilan; }, kekuatan: kekuatan, kuotaSah: kuotaSah, peluangKuota: peluangKuota, keadaan: keadaan,
     statusJamuan: statusJamuan, jamuan: jamuan, statusMA63: statusMA63, ma63: ma63, statusSabahan: statusSabahan, sabahan: sabahan,

@@ -32,6 +32,13 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('#gab-grs .poster__chip[data-parti="GAGASAN"]'); await pg.waitForTimeout(2500);
   semak(await pg.$eval('#s-parti', (x) => x.value) === 'GAGASAN', 'cip Gagasan terus ke pendaftaran');
   semak(/Hajiji/.test(await pg.textContent('#h-parti')), 'nota Gagasan pada skrin pendaftaran');
+  semak(await pg.$eval('#f-komPBS', (x) => x.hidden), 'tiada pilihan komuniti PBS untuk Gagasan');
+  await pg.selectOption('#s-parti', 'PBS'); await pg.waitForTimeout(1500);
+  semak(await pg.$eval('#f-komPBS', (x) => !x.hidden), 'pilihan komuniti PBS dipaparkan');
+  { const ng = await pg.$$eval('#s-negeri option', (o) => o.map((x) => x.textContent)); await pg.selectOption('#s-negeri', { label: ng.find((n) => /Sabah/.test(n)) }); await pg.waitForTimeout(400);
+    const op = await pg.$$eval('#s-bahagian option', (o) => o.map((x) => x.textContent)); await pg.selectOption('#s-bahagian', { index: op.findIndex((x) => /Papar/.test(x)) }); await pg.waitForTimeout(300);
+    semak(await pg.$eval('input[name=komunitiPBS][value=bi]', (x) => x.checked), 'Papar: cadangan komuniti Bumiputera Islam');
+    await pg.selectOption('#s-parti', 'GAGASAN'); await pg.waitForTimeout(1500); }
   const negeri = await pg.$$eval('#s-negeri option', (o) => o.map((x) => x.textContent));
   semak(negeri.some((n) => /Sabah/.test(n)) && negeri.some((n) => /Labuan/.test(n)) && !negeri.some((n) => /Selangor|Sarawak/.test(n)), 'negeri Sabah dan Labuan (' + negeri.join('|') + ')');
   await pg.selectOption('#s-negeri', { label: negeri.find((n) => /Sabah/.test(n)) }); await pg.waitForTimeout(400);
