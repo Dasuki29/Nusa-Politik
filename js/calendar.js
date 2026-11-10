@@ -519,6 +519,8 @@
     if (KAB && KAB.prosesBulan) { peristiwa = peristiwa.concat(KAB.prosesBulan().peristiwa || []); }
     var MOF = muat('MyPolitikMOF', 'mof.js');                                                    // v13.70: rizab, inflasi dan kepuasan rakyat (Menteri Kewangan)
     if (MOF && MOF.prosesBulan) { peristiwa = peristiwa.concat(MOF.prosesBulan().peristiwa || []); }
+    var KDN = muat('MyPolitikKDN', 'kdn.js');                                                    // v13.72: ketenteraman awam, kebebasan sivil (Menteri Dalam Negeri)
+    if (KDN && KDN.prosesBulan) { peristiwa = peristiwa.concat(KDN.prosesBulan().peristiwa || []); }
     var IGT = muat('MyPolitikIntegriti', 'integriti.js');                                       // v7.58: Whip, Disiplin Parti & Audit SPRM
     if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }
     var MDA = muat('MyPolitikMedia', 'media.js');                                                // v7.59: Jentera Media Digital (sidang media rawak, persepsi)

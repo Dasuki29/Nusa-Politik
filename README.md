@@ -86,6 +86,7 @@ Modul utama dalam `js/`:
 | `warroom.js` | Bilik Gerakan (War Room): zon kawasan, penghantaran jentera, pertempuran jentera, keletihan kempen |
 | `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan, Kepimpinan Negeri (MB/KM, 10 portfolio EXCO, Pejabat EXCO) dan pembentukan Jemaah Menteri oleh Perdana Menteri |
 | `mof.js`, `mof-ui.js` | Modul Kementerian Kewangan: rizab, inflasi, kepuasan rakyat, Bajet Tahunan Negara, cukai dan subsidi (tab Pejabat MOF) |
+| `kdn.js`, `kdn-ui.js` | Modul Kementerian Dalam Negeri: ketenteraman awam, kebebasan sivil, kesiapsiagaan, ancaman dan Operasi Khas, arahan agensi, dasar permit himpunan dan pendaftaran pertubuhan (tab Pejabat KDN) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -194,6 +195,7 @@ node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS,
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
 node tools/ujian-exco.js         # pelayar: lobi 9 portfolio EXCO dengan bar IP, tab Pejabat EXCO / Portfolio Saya, EN
 node tools/ujian-mof.js          # pelayar: tab Pejabat MOF, laras bajet, muktamad, tukar dasar cukai/subsidi, EN
+node tools/ujian-kdn.js          # pelayar: tab Pejabat KDN, Operasi Khas, arahan agensi, dasar kebebasan sivil, EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN

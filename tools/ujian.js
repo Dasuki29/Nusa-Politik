@@ -3038,6 +3038,23 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.72 Modul Kementerian Dalam Negeri: agensi, dasar kebebasan sivil, ancaman dan Operasi Khas, kecemasan, kesan bulanan', () => {
+  const K = g.MyPolitikKabinet, D = g.MyPolitikKDN;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!D.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Dalam Negeri' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(D.aktif(p)); sama(D.ringkasan(p).agensi.length, 4);
+  betul(D.arahAgensi('pdrm').ok); p = S.loadPlayer(); sama(p.kdn.policeReadiness, 62); sama(p.kdn.dana, 45); sama(D.arahAgensi('imigresen').ok, false, 'satu arahan sebulan');
+  const b0 = p.kdn.civilLiberties, a0 = p.kdn.sokonganAktivis; betul(D.ubahDasar('permit', 'longgar').ok); p = S.loadPlayer();
+  betul(p.kdn.civilLiberties > b0 && p.kdn.sokonganAktivis > a0, 'longgar: kebebasan & aktivis naik'); sama(D.ubahDasar('pertubuhan', 'ketat').ok, false, 'satu dasar sebulan');
+  P.tetap({ bulan: 4 }); betul(D.ubahDasar('permit', 'ketat').ok); p = S.loadPlayer(); betul(D.sasaran(p.kdn).tenteram > 70 && D.sasaran(p.kdn).aktivis < 45, 'ketat: ketenteraman naik, aktivis turun');
+  sama(D.lancarOps().ok, false, 'tiada ancaman'); D.prosesBulan({ rng: () => 0.01 }); p = S.loadPlayer(); betul(!!p.kdn.ancaman, 'ancaman baharu');
+  const ip0 = p.ip; const o = D.lancarOps({ rng: () => 0.01 }); betul(o.ok && o.jaya, o.ralat); p = S.loadPlayer(); sama(p.kdn.ancaman, null); betul(p.ip > ip0);
+  const rb = K.getKabinet(p).risikoRombak; betul(D.mohonKecemasan().ok); betul(K.getKabinet(S.loadPlayer()).risikoRombak > rb); sama(D.mohonKecemasan().ok, false, 'sekali 6 bulan');
+  p = S.loadPlayer(); p.kdn.publicOrderMeter = 20; p.kdn.civilLiberties = 10; p.kdn.dasar.permit = 'ketat'; p.kdn.dasar.pertubuhan = 'ketat'; S.applyEffects({}, { kiraTindakan: false, patch: { kdn: p.kdn, reputasi: 50 } });
+  const rt = K.getKabinet(S.loadPlayer()).governanceRating; D.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
+  betul(K.getKabinet(p).governanceRating < rt, 'ketenteraman rendah: KPI jatuh'); betul(p.reputasi < 50, 'kebebasan rendah: Reputasi jatuh');
+  S.clearPlayer();
+});
 ujian('v13.71 TYT: senarai calon kurnia sentiasa ada 2 ahli politik dan 2 bukan ahli politik dari kategori berbeza', () => {
   const T = g.MyPolitikTYT; let x = 7;
   const rng = () => { x = (x * 16807) % 2147483647; return x / 2147483647; };

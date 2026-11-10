@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.72 (2026-11-10)
+
+- **Modul Kementerian Dalam Negeri (KDN)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, agensi dan operasi ialah label simulasi).
+  - Fail baharu `js/kdn.js` dan `js/kdn-ui.js`. Rekod `p.kdn`: `publicOrderMeter`, `civilLiberties`, `policeReadiness`, sokongan aktivis & pembangkang dan peruntukan operasi KDN (RM 40 juta sebulan, had RM 160 juta).
+  - **Tab "🛡️ Pejabat KDN"** pada kad kerajaan, hanya untuk pemegang portfolio Menteri Dalam Negeri.
+  - **Ancaman rawak** (gelombang PATI, himpunan jalanan, sindiket jenayah) menurunkan ketenteraman setiap bulan sehingga **Operasi Khas** berjaya (peluang ikut kesiapsiagaan). **Peruntukan kecemasan** daripada Perbendaharaan sekali setiap 6 bulan (rizab MOF berkurang, risiko rombakan naik).
+  - **Arahan agensi** (Imigresen, kawalan sempadan, PDRM, siasatan integriti): satu sebulan. **Dasar kebebasan sivil** (permit himpunan, pendaftaran pertubuhan): satu perubahan sebulan.
+  - Bulanan: ketenteraman bawah 40% = KPI dan populariti jatuh; kebebasan sivil bawah 30 = Reputasi jatuh dan risiko rombakan naik; sokongan aktivis rendah = himpunan lebih kerap; kesiapsiagaan susut tanpa arahan PDRM atau sempadan.
+- Tab kad kerajaan kini menyokong beberapa pejabat (Portfolio Saya, Pejabat MOF, Pejabat KDN).
+- Ujian baharu (204 ujian) dan ujian pelayar `tools/ujian-kdn.js`.
+
 ## v13.71 (2026-11-10)
 
 - **Pembetulan: senarai calon kurnia darjah (Yang di-Pertua Negeri).** Senarai 6 calon dahulu hanya menjamin 2 ahli politik; selebihnya rawak, jadi kadang-kadang hanya seorang calon bukan ahli politik. Pemain tidak dapat memilih "senarai seimbang" (bonus Kewibawaan) pada tahun itu, dan ujian v13.52 gagal secara rawak. Kini senarai sentiasa ada sekurang-kurangnya 2 calon bukan ahli politik dari kategori berbeza.
