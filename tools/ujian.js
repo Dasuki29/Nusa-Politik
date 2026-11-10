@@ -3038,6 +3038,27 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.74 Modul KKDW: portfolio baharu, fokus agihan, projek infra/PPRS, kontraktor lewat, aduan rakyat, kesan bulanan', () => {
+  const K = g.MyPolitikKabinet, W2 = g.MyPolitikKKDW;
+  betul(g.MyPolitikKabinetData.menteri.some((m) => m.nama === 'Menteri Kemajuan Desa dan Wilayah'), 'portfolio dalam senarai kabinet');
+  betul(K.PORTFOLIO.PARLIMEN.some((d) => d.nama === 'Menteri Kemajuan Desa dan Wilayah' && d.tahap === 'MENTERI_PENUH'), 'boleh dilobi');
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!W2.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Kemajuan Desa dan Wilayah' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(W2.aktif(p)); sama(W2.ringkasan(p).projek.length, 5);
+  betul(W2.tukarFokus('infra').ok); sama(W2.ringkasan(S.loadPlayer()).projek.find((d) => d.id === 'jalan').kos, 24, 'diskaun fokus 20%'); sama(W2.tukarFokus('pprs').ok, false, 'satu fokus sebulan');
+  betul(W2.lulusProjek('dewan').ok); betul(W2.lulusProjek('jalan').ok); sama(W2.lulusProjek('air').ok, false, 'had 2 sebulan');
+  p = S.loadPlayer(); sama(p.kkdw.infrastructureFund, 120 - 12 - 24);
+  P.tetap({ bulan: 4 }); betul(W2.lulusProjek('pprs_bina').ok);
+  const l0 = S.loadPlayer().kkdw.ruralSupportScore, ip0 = S.loadPlayer().ip; W2.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer();
+  betul(p.kkdw.ruralSupportScore >= l0 + 2 + 3, 'fokus infra + dewan siap'); betul(p.ip > ip0, 'dewan: IP');
+  P.tetap({ bulan: 5 }); const ak0 = S.loadPlayer().kesetiaan.akarUmbi; W2.prosesBulan({ rng: () => 0.01 }); p = S.loadPlayer();
+  betul(p.kesetiaan.akarUmbi > ak0, 'jalan siap: akar umbi'); betul(p.kkdw.projek.find((x) => x.jenis === 'pprs_bina').lewat, 'kontraktor lewat'); betul(!!p.kkdw.aduan, 'aduan baharu');
+  const rt = K.getKabinet(p).governanceRating; const j = W2.jawabAduan('hitam', { rng: () => 0.99 }); betul(j.ok, j.ralat); p = S.loadPlayer(); sama(p.kkdw.aduan, null); betul(K.getKabinet(p).governanceRating > rt);
+  p.kkdw.ruralSupportScore = 10; S.applyEffects({}, { kiraTindakan: false, patch: { kkdw: p.kkdw } }); const rt2 = K.getKabinet(S.loadPlayer()).governanceRating;
+  P.tetap({ bulan: 6 }); W2.prosesBulan({ rng: () => 0.99 }); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt2, 'skor rendah: KPI jatuh');
+  Object.assign(k, { portfolioName: 'Menteri Pembangunan Luar Bandar' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } }); betul(W2.aktif(S.loadPlayer()), 'senarai sandaran');
+  S.clearPlayer();
+});
 ujian('v13.73 Modul Kementerian Pertahanan: insiden tegas/diplomatik, perolehan terbuka/terus, skandal, arahan, kesan bulanan', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikMINDEF;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));

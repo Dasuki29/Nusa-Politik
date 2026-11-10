@@ -88,6 +88,7 @@ Modul utama dalam `js/`:
 | `mof.js`, `mof-ui.js` | Modul Kementerian Kewangan: rizab, inflasi, kepuasan rakyat, Bajet Tahunan Negara, cukai dan subsidi (tab Pejabat MOF) |
 | `kdn.js`, `kdn-ui.js` | Modul Kementerian Dalam Negeri: ketenteraman awam, kebebasan sivil, kesiapsiagaan, ancaman dan Operasi Khas, arahan agensi, dasar permit himpunan dan pendaftaran pertubuhan (tab Pejabat KDN) |
 | `mindef.js`, `mindef-ui.js` | Modul Kementerian Pertahanan: skor keselamatan, kesiapsiagaan darat/laut/udara, insiden sempadan, perolehan aset strategik dan risiko skandal (tab Pejabat MINDEF) |
+| `kkdw.js`, `kkdw-ui.js` | Modul Kementerian Kemajuan Desa dan Wilayah: sokongan luar bandar, perumahan rakyat PPRS, dana infrastruktur, projek mini dan aduan rakyat (tab Pejabat KKDW) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -198,6 +199,7 @@ node tools/ujian-exco.js         # pelayar: lobi 9 portfolio EXCO dengan bar IP,
 node tools/ujian-mof.js          # pelayar: tab Pejabat MOF, laras bajet, muktamad, tukar dasar cukai/subsidi, EN
 node tools/ujian-kdn.js          # pelayar: tab Pejabat KDN, Operasi Khas, arahan agensi, dasar kebebasan sivil, EN
 node tools/ujian-mindef.js       # pelayar: tab Pejabat MINDEF, insiden, kontrak perolehan, arahan, EN
+node tools/ujian-kkdw.js         # pelayar: tab Pejabat KKDW, fokus agihan, kelulusan projek, aduan rakyat, EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN

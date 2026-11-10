@@ -29,7 +29,7 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
       await pg.click('[data-jm="umum"]'); await pg.waitForTimeout(800);
       const k2 = await pg.$('.jm-kad'); await pg.evaluate(() => { const d = document.querySelector('.jm-senarai'); if (d) d.open = true; });
       if (k2 && out) { await k2.screenshot({ path: out + '/jm-senarai.png' }); }
-      const tx = k2 ? await k2.textContent() : ''; if (!/(Senarai penuh|Full list) \(31/.test(tx)) { gagal.push('senarai penuh selepas umumkan'); }
+      const tx = k2 ? await k2.textContent() : ''; if (!/(Senarai penuh|Full list) \(32/.test(tx)) { gagal.push('senarai penuh selepas umumkan'); }
       const tpm = await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); return p.jemaah && p.jemaah.senarai[1]; }); if (!tpm || tpm.jenis !== 'rakan') { gagal.push('TPM pilihan tidak disimpan: ' + JSON.stringify(tpm)); }
     }
     if (er.length) { gagal.push(n + ': ralat ' + er.join(' | ')); }

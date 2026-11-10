@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.74 (2026-11-10)
+
+- **Modul Kementerian Kemajuan Desa dan Wilayah (KKDW)** (mockup yang dipersetujui, ikut struktur sebenar; ⚠️ semua nilai ialah anggaran permainan, nama projek ialah label simulasi).
+  - Portfolio baharu **Menteri Kemajuan Desa dan Wilayah** (550 IP) ditambah di hujung `data/kabinet-persekutuan.csv` (ID portfolio lain tidak berubah; Jemaah Menteri kini 30 portfolio).
+  - Fail baharu `js/kkdw.js` dan `js/kkdw-ui.js`. Rekod `p.kkdw`: `ruralSupportScore`, `ruralHousingSatisfaction` (perumahan rakyat PPRS) dan `infrastructureFund` (RM 60 juta sebulan, had RM 300 juta).
+  - **Tab "🏡 Pejabat KKDW"** (juga untuk "Menteri Pembangunan Luar Bandar" dalam senarai sandaran).
+  - **Fokus agihan bulanan**: Infrastruktur / Seimbang / Perumahan PPRS.
+  - **Luluskan projek** (2 sebulan): jalan kampung, bekalan air bersih, dewan komuniti, PPRS bina rumah baharu (risiko kontraktor lewat), PPRS baik pulih rumah. Projek luar bandar yang siap menaikkan sokongan akar umbi pemain.
+  - **Aduan rakyat** rawak: baiki segera, senarai hitam kontraktor atau abaikan.
+  - Nota: PPR bandar di bawah KPKT, bukan KKDW; PPRS (pengganti PPRT sejak 1 Okt 2024) di bawah KKDW.
+- Ujian baharu (206 ujian) dan ujian pelayar `tools/ujian-kkdw.js`; ujian pelayar Jemaah Menteri dikemas kini (senarai penuh kini 32 jawatan).
+
 ## v13.73 (2026-11-10)
 
 - **Modul Kementerian Pertahanan (MINDEF)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, aset dan insiden ialah label simulasi, tiada negara asing dinamakan).
