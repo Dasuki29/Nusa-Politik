@@ -27,6 +27,9 @@
       h += butang('lobi', '🤝 Lobi BN Sabah (' + C.LOBI.ap + ' AP, ' + rm(C.LOBI.myr) + ', +' + C.LOBI.naik + ')', M.statusLobi(p)) +
         butang('muhibah', '🕊️ Majlis Muhibah GRS (' + C.MUHIBAH.ap + ' AP, ' + rm(C.MUHIBAH.myr) + ', +' + C.MUHIBAH.naik + ', BN −' + C.MUHIBAH.tolakBN + ')', M.statusMuhibah(p)) +
         butang('ma63', '📜 Kempen Hak Orang Asal &amp; MA63 (' + C.MA63.ap + ' AP, akar umbi +' + C.MA63.akarUmbi + ')', M.statusMA63(p));
+      h += '<h3 class="pbrs-h">Restu Pengerusi Kehormat</h3>' + meter('Restu', mt.restu, '#7A4FB5') +
+        butang('restu', '🏛️ Kunjungi Pengerusi Kehormat (' + C.RESTU.ap + ' AP, ' + rm(C.RESTU.myr) + ', +' + C.RESTU.naik + ')', M.statusRestu(p)) +
+        '<p class="note">Pengasas PBRS kini Pengerusi Kehormat. Restu ' + C.RESTU.ambang + ' ke atas menguatkan anda untuk Presiden dan Timbalan Presiden; di bawahnya melemahkan. Susut perlahan ke arah ' + C.RESTU.tengah + '.</p>';
       h += '<h3 class="pbrs-h">Kuota kerusi BN</h3>';
       if (k.parlimen) { h += kv('Bahagian ' + esc(k.parlimen.n), k.kuotaPL ? '✅ Parlimen dalam kuota PBRS' : '⛔ Parlimen di luar kuota PBRS'); }
       h += kv('Kuota DUN (PRN Sabah)', esc(M.kuotaDUN(p).map(function (x) { return (D.dun[x] || {}).n; }).join(', ')));
@@ -41,7 +44,7 @@
   }
   W.document.addEventListener('click', function (ev) {
     var b = ev.target && ev.target.closest ? ev.target.closest('[data-pbrs]') : null; if (!b || b.disabled) { return; }
-    var a = b.getAttribute('data-pbrs'), r = a === 'lobi' ? M.lobi() : a === 'muhibah' ? M.muhibah() : a === 'ma63' ? M.ma63() : null;
+    var a = b.getAttribute('data-pbrs'), r = a === 'lobi' ? M.lobi() : a === 'muhibah' ? M.muhibah() : a === 'ma63' ? M.ma63() : a === 'restu' ? M.kunjungKehormat() : null;
     if (!r) { return; }
     if (U().toast) { U().toast(r.ok ? r.mesej : r.ralat, r.ok ? 'ok' : 'ralat'); }
     if (U().render) { U().render(); }

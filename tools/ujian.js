@@ -2833,6 +2833,41 @@ ujian('v13.56 Amanah: data, istilah, takwim 6/8/11, kuota PH, Naratif Rahmah, Ko
   betul(g.MyPolitikLompat.aktifDi('AMANAH', 'Selangor') && !g.MyPolitikLompat.aktifDi('AMANAH', 'Sarawak'), 'lompat');
   S.clearPlayer();
 });
+ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
+  const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);
+  const um = kod('UMNO');
+  betul(um.indexOf('naib_ketua_bahagian') >= 0 && um.indexOf('ajk_bahagian') >= 0 && um.indexOf('naib_pengerusi_cawangan') < 0, 'UMNO katalog asal');
+  ['MCA', 'MIC', 'PPP', 'PBRS'].forEach((k) => { betul(kod(k).join() !== um.join(), k + ' bukan salinan UMNO'); });
+  betul(kod('MIC').join() !== kod('PPP').join() && kod('PPP').join() !== kod('PBRS').join(), 'PPP dan PBRS bukan salinan MIC');
+  // MCA: Naib Pengerusi Cawangan, 4 Naib Pengerusi Bahagian, 10 AJK, 4 Naib Presiden, wakil Cawangan Perkara 94
+  const mca = { parti: 'MCA' }; betul(kod('MCA').indexOf('naib_pengerusi_cawangan') >= 0);
+  sama(ST.kerusi(mca, J.cariDef('ajk_cawangan')), 10); sama(ST.kerusi(mca, J.cariDef('naib_ketua_bahagian')), 4); sama(ST.kerusi(mca, J.cariDef('ajk_bahagian')), 10); sama(ST.kerusi(mca, J.cariDef('naib_presiden')), 4);
+  sama(ST.wakilMCA(50), 2); sama(ST.wakilMCA(200), 8); sama(ST.wakilMCA(500), 14); sama(ST.wakilMCA(100000), 29);
+  // MIC: tiada Naib / AJK Bahagian, 7 AJK Cawangan, 21 CWC, sayap Cawangan Ketua + Timbalan, perwakilan PA hanya Pengerusi Cawangan
+  const mic = { parti: 'MIC' }, km = kod('MIC', 'pemuda');
+  betul(km.indexOf('naib_ketua_bahagian') < 0 && km.indexOf('ajk_bahagian') < 0 && km.indexOf('sayap_ajk_cawangan_pemuda') < 0 && km.indexOf('sayap_naib_cawangan_pemuda') >= 0);
+  sama(ST.kerusi(mic, J.cariDef('ajk_cawangan')), 7); sama(ST.kerusi(mic, J.cariDef('ahli_mkt')), 21);
+  sama(J.pangkatMinParti(mic, J.cariDef('ketua_bahagian')), 3, 'tangga MIC: Pengerusi Cawangan terus ke Pengerusi Bahagian'); sama(J.pangkatMinParti({ parti: 'UMNO' }, J.cariDef('ketua_bahagian')), 4);
+  sama(J.pangkatMinParti(mic, J.cariDef('sayap_ajk_pusat_pemuda')), 3, 'tangga fallback bila AJK Bahagian ditutup');
+  sama(ST.perwakilanPA(mic).kod, 'ketua_cawangan');
+  // PPP: tiada Timbalan Presiden, Majlis Tertinggi 15; PBRS: Timbalan Presiden ada, 2 Naib Presiden
+  betul(kod('PPP').indexOf('timbalan_presiden') < 0 && kod('PBRS').indexOf('timbalan_presiden') >= 0);
+  sama(ST.kerusi({ parti: 'PPP' }, J.cariDef('ahli_mkt')), 15); sama(ST.kerusi({ parti: 'PBRS' }, J.cariDef('naib_presiden')), 2);
+  // enjin: senarai pertandingan MIC tahun pemilihan 2027 ikut struktur
+  P.daftar({}); P.tetap({ parti: 'MIC', tahun: 2027, bulan: 1, ip: 999, jawatanList: [pegang('ketua_cawangan', 2024)] });
+  const sn = E.senaraiPertandingan(S.loadPlayer()), cari = (k) => sn.find((x) => x.kod === k);
+  betul(!cari('ajk_bahagian') && !cari('naib_ketua_bahagian'), 'MIC tiada AJK / Naib Bahagian'); sama(cari('ahli_mkt').kerusi, 21); sama(cari('ajk_cawangan').kerusi, 7);
+  P.tetap({ jawatanList: [pegang('ajk_cawangan', 2024)] });
+  const pb = E.senaraiPertandingan(S.loadPlayer()).find((x) => x.kod === 'perwakilan_bahagian'); sama(pb.terbuka, false); betul(/74\.4/.test(pb.sebab), pb.sebab);
+  // istilah: MIC sayap Timbalan Ketua, PPP Pengerusi
+  P.tetap({ parti: 'MIC' }); sama(PT.ke('Naib Ketua Pemuda Cawangan'), 'Timbalan Ketua Pemuda Cawangan');
+  P.tetap({ parti: 'PPP' }); sama(PT.ke('Ketua Cawangan'), 'Pengerusi Cawangan');
+  // PBRS: Restu Pengerusi Kehormat menguatkan calon Presiden / Timbalan sahaja
+  const B = g.MyPolitikPBRS, pr = { parti: 'PBRS', pbrs: { restu: 90 } };
+  betul(B.bonusRestu(pr, J.cariDef('presiden')) > 0 && B.bonusRestu(pr, J.cariDef('ahli_mkt')) === 0 && B.bonusRestu({ parti: 'PBRS', pbrs: { restu: 10 } }, J.cariDef('timbalan_presiden')) < 0);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

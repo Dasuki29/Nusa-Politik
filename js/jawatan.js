@@ -30,6 +30,8 @@
 
   function etika() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikEtika) { return g.MyPolitikEtika; } try { return typeof require === 'function' ? require('./etika.js') : null; } catch (e) { return null; } }
 
+  function struktur() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikStruktur) { return g.MyPolitikStruktur; } try { return typeof require === 'function' ? require('./struktur.js') : null; } catch (e) { return null; } }   // v13.57: struktur jawatan ikut parti
+
   var BIASA = 'Ahli Biasa';
   var SAYAP = ['pemuda', 'puteri', 'wanita', 'putera'];                          // v13.3: Putera (MIC sahaja; katalogUntuk hanya memaparkan sayap pemain)
   var NAMA_SAYAP = { pemuda: 'Pemuda', puteri: 'Puteri', wanita: 'Wanita', putera: 'Putera' };
@@ -45,6 +47,7 @@
 
   // Cawangan
   tambah({ kod: 'ajk_cawangan',   jawatan: 'AJK Cawangan',   peringkat: 'cawangan', pangkat: 1, kerusi: 15, pesaing: 9, ipMin: 50 });      // v13.4: 15 AJK dipilih (Perlembagaan UMNO 2025 Fasal 18.1.7); pesaing ditambah supaya peluang menang kekal
+  tambah({ kod: 'naib_pengerusi_cawangan', jawatan: 'Naib Ketua Cawangan', peringkat: 'cawangan', pangkat: 2.2, ipMin: 60, pangkatMin: 1, kesukaran: 2, khas: true });   // v13.57: jawatan khas (MCA Perkara 102: 1 Naib Pengerusi Cawangan); tertutup kecuali dibuka js/struktur.js
   tambah({ kod: 'naib_ketua_cawangan', jawatan: 'Timbalan Ketua Cawangan', peringkat: 'cawangan', pangkat: 2.5, ipMin: 70, pangkatMin: 1, kesukaran: 4 });   // v7.39 (pangkat pecahan supaya tangga sedia ada tidak berubah); v13.4: Fasal 18.1.2 Timbalan Ketua (tiada Naib Ketua Cawangan; kod dikekalkan untuk simpanan lama)
   tambah({ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', pangkat: 3, ipMin: 95, pangkatMin: 1, kesukaran: 8 });
   // Bahagian
@@ -165,7 +168,8 @@
   /** Katalog yang berkaitan dengan sayap pemain (jawatan sayap sayap lain disembunyikan). */
   function katalogUntuk(p) {
     var w = sayapPemain(p);
-    return KATALOG.filter(function (d) { return d.kumpulan !== 'sayap' || d.sayap === w || (d.kod === 'sayap_pusat_puteri' && bolehKekalKetuaPuteri(p)); });
+    var St = struktur();                                                      // v13.57: jawatan yang tiada dalam perlembagaan parti tidak dipertandingkan
+    return KATALOG.filter(function (d) { return (St ? St.tersedia(p, d) : !d.khas) && (d.kumpulan !== 'sayap' || d.sayap === w || (d.kod === 'sayap_pusat_puteri' && bolehKekalKetuaPuteri(p))); });
   }
   /** v13.4: Ketua Puteri UMNO Malaysia boleh memegang dan mempertahankan jawatan sehingga umur 40 (Peraturan Puteri 4.2.1.1). */
   function bolehKekalKetuaPuteri(p) {
@@ -232,13 +236,23 @@
       return { terbuka: false, sebab: 'Perlu Perwakilan Bahagian ke PAU tahun ' + p.tahun + ' (atau Ketua Bahagian/pemegang jawatan Pusat).' };
     }
     // v7.44: jawatan sayap dan utama sama-sama dikira untuk syarat tangga (Ketua Wanita Pusat tidak perlu AJK Cawangan dahulu)
-    if (d.pangkatMin && Math.max(pangkatTertinggi(p), Number(p.pangkatUtamaLalu) || 0) < d.pangkatMin) {
-      var perlu = null;
-      KATALOG.forEach(function (x) { if (x.pangkat === d.pangkatMin && !perlu && x.kumpulan === 'utama') { perlu = x.jawatan; } });
-      if (!perlu) { KATALOG.forEach(function (x) { if (x.pangkat === d.pangkatMin && !perlu) { perlu = x.jawatan; } }); }
+    var pMin = pangkatMinParti(p, d);                                       // v13.57: syarat tangga ikut struktur parti
+    if (pMin && Math.max(pangkatTertinggi(p), Number(p.pangkatUtamaLalu) || 0) < pMin) {
+      var perlu = null, kat = katalogUntuk(p);
+      kat.forEach(function (x) { if (x.pangkat === pMin && !perlu && x.kumpulan === 'utama') { perlu = x.jawatan; } });
+      if (!perlu) { kat.forEach(function (x) { if (x.pangkat === pMin && !perlu) { perlu = x.jawatan; } }); }
       return { terbuka: false, sebab: 'Perlu memegang jawatan sekurang-kurangnya ' + (perlu || 'peringkat lebih rendah') + ' dahulu.' };
     }
     return { terbuka: true, sebab: '', pertahan: false };
+  }
+
+  /** v13.57: syarat pangkat minimum ikut struktur parti. Jika jawatan pada tangga itu ditutup dalam parti ini, guna jawatan utama terbuka yang lebih rendah. */
+  function pangkatMinParti(p, d) {
+    var St = struktur(), m = St ? St.pangkatMin(p, d) : d.pangkatMin;
+    if (!m || !St || !St.untuk(p)) { return m; }
+    var kat = KATALOG.filter(function (x) { return x.kumpulan === 'utama' && St.tersedia(p, x); });
+    if (kat.some(function (x) { return x.pangkat === m; })) { return m; }
+    return kat.reduce(function (a, x) { return x.pangkat < m && x.pangkat > a ? x.pangkat : a; }, 0) || m;
   }
 
   /* ------------------------------------------------------------------------
@@ -374,6 +388,6 @@
     cariDef: cariDef, selaraskan: selaraskan, getJawatan: getJawatan, pegang: pegang, pegangPeringkat: pegangPeringkat, bilJawatan: bilJawatan,
     pangkatTertinggi: pangkatTertinggi, jawatanTertinggi: jawatanTertinggi, peringkatTertinggi: peringkatTertinggi,
     sayapPemain: sayapPemain, exOfficio: exOfficio, perwakilanSah: perwakilanSah,
-    jawatanSamaPeringkat: jawatanSamaPeringkat, katalogUntuk: katalogUntuk, semakKelayakan: semakKelayakan, terapkan: terapkan, semakPenggalTamat: semakPenggalTamat, kemaskiniPenggal: kemaskiniPenggal, ringkas: ringkas
+    jawatanSamaPeringkat: jawatanSamaPeringkat, katalogUntuk: katalogUntuk, pangkatMinParti: pangkatMinParti, semakKelayakan: semakKelayakan, terapkan: terapkan, semakPenggalTamat: semakPenggalTamat, kemaskiniPenggal: kemaskiniPenggal, ringkas: ringkas
   };
 });

@@ -96,6 +96,8 @@
   /* v13.1: MCA: pemilihan parti selepas setiap PRU (Perkara 167), bukan setiap 3 tahun. Fungsi tahun di bawah mengikut pemain semasa jika MCA. */
   /* v13.3: MIC guna antara muka yang sama (js/mic.js): kitaran 3 tahun bermula 2027, pengundi Pusat = pegawai Cawangan. */
   /** v13.37: bilangan kerusi jawatan pusat DAP (js/dap.js kerusiJawatan) atau null. */
+  /** v13.57: bilangan kerusi ikut struktur parti (js/struktur.js), kemudian DAP/Amanah, kemudian katalog. */
+  function kerusiParti(p, d) { var St = modKhas('MyPolitikStruktur', 'struktur.js'), k = St ? St.kerusi(p, d) : null; return k || kerusiDAP(p, d) || d.kerusi || 1; }
   function kerusiDAP(p, d) { if (!p || (p.parti !== 'DAP' && p.parti !== 'AMANAH')) { return null; } var M = p.parti === 'AMANAH' ? modKhas('MyPolitikAmanah', 'amanah.js') : modKhas('MyPolitikDAP', 'dap.js');   // v13.56: Amanah: Ahli JPN 27, Naib Presiden 3
   return M && M.kerusiJawatan ? M.kerusiJawatan(p, d) : null; }
   function modKhas(nama, fail) {
@@ -281,11 +283,13 @@
       terbuka: !exBhg.sah,
       sebab: exBhg.sah ? 'Anda hadir Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : ''
     });
+    var StP = modKhas('MyPolitikStruktur', 'struktur.js'), syPA = StP ? StP.perwakilanPA(p) : null, okPA = !syPA || J.pegang(p, syPA.kod);   // v13.57: MIC: hanya Pengerusi Cawangan (Perkara 74.4)
     tambah({
       kod: 'perwakilan_bahagian', jenis: 'perwakilan', jawatan: 'Perwakilan Bahagian ke PAU', peringkat: 'bahagian', kumpulan: 'perwakilan', sayap: null,
       kerusi: kuotaBahagian(p), kesukaran: 0,
-      terbuka: !exPau.sah && (pc.layak || g10Sah),
+      terbuka: !exPau.sah && (pc.layak || g10Sah) && okPA,
       sebab: exPau.sah ? 'Anda hadir PAU secara automatik sebagai ' + exPau.sumber + '.'
+                       : !okPA ? syPA.sebab
                        : (pc.layak || g10Sah ? '' : 'Menangi Perwakilan Cawangan tahun ' + p.tahun + ' dahulu' + (pc.luput ? ' (mandat tahun lepas sudah luput).' : '.'))
     });
 
@@ -321,7 +325,7 @@
         var k = J.semakKelayakan(p, d);
         tambah({
           kod: d.kod, jenis: 'jawatan', jawatan: d.jawatan, peringkat: peringkatPemilihan(d), kumpulan: d.kumpulan, sayap: d.sayap,
-          kerusi: p.parti === 'MCA' && d.kod === 'naib_presiden' ? 4 : kerusiDAP(p, d) || d.kerusi, kesukaran: d.kesukaran, pangkat: d.pangkat, ipPerlu: d.ipMin,
+          kerusi: kerusiParti(p, d), kesukaran: d.kesukaran, pangkat: d.pangkat, ipPerlu: d.ipMin,
           pertahan: !!k.pertahan, terbuka: k.terbuka, sebab: k.sebab
         });
       });
@@ -426,7 +430,7 @@
     if (Et) { v += Et.bonusUndi(p); }                                // Modal Sosial (kempen bersih)
     if (p && p.parti === 'PKR') { var PKu = modKhas('MyPolitikPKR', 'pkr.js'); if (PKu && PKu.bonusUndi) { v += PKu.bonusUndi(p, pr); } }
     if (p && p.parti === 'DAP') { var DAu = modKhas('MyPolitikDAP', 'dap.js'); if (DAu && DAu.bonusJTP) { v += DAu.bonusJTP(p, d); } }   // v13.37: kuota wanita JTP (Fasal VIII.16)   // v13.36: Semangat Reformasi (Cabang & Pusat)
-    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
+    if (pr === 'pusat' && p && (p.parti === 'MCA' || p.parti === 'MIC' || p.parti === 'PPP' || p.parti === 'PBRS' || p.parti === 'PAS' || p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' || p.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(p.parti))) { var mc = mcaP(p); if (mc) { v += mc.M.bonusPusat(p, d); } }      // v13.1: sokongan perwakilan Bahagian & lantikan
     var um = umnoP(p, true); if (um) { if (pr === 'pusat' && !(d && d.kumpulan === 'sayap')) { v += um.M.bonusPusat(p); } v += um.M.bonusSayap(p, d); }      // v13.5: sokongan perwakilan Bahagian UMNO, lantikan dan pelapis muda
     return clamp(v, 0, 100);
   }
@@ -443,7 +447,7 @@
   function syMod() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikSayap) { return g.MyPolitikSayap; } try { return typeof require === 'function' ? require('./sayap.js') : null; } catch (x) { return null; } }
   function blokMod() { var g = typeof globalThis !== 'undefined' ? globalThis : null; if (g && g.MyPolitikBlok) { return g.MyPolitikBlok; } try { return typeof require === 'function' ? require('./blok.js') : null; } catch (x) { return null; } }
   function bonusKuota(p) { var m = syMod(); return m && m.bonusKuota ? m.bonusKuota(p) : 0; }              // v6.5: Kempen Outreach Belia
-  function kuotaCawangan(p) { return kuota(ahliCawangan(p), CONFIG.KUOTA_CAWANGAN) + bonusKuota(p); }              // wakil Cawangan ke Bahagian
+  function kuotaCawangan(p) { var St = modKhas('MyPolitikStruktur', 'struktur.js'), w = St ? St.wakilCawangan(p, ahliCawangan(p)) : null; return (w || kuota(ahliCawangan(p), CONFIG.KUOTA_CAWANGAN)) + bonusKuota(p); }   // v13.57: MCA Perkara 94              // wakil Cawangan ke Bahagian
   /** v6.3: bilangan ahli sayap dalam Cawangan pemain (Pemuda, Puteri atau Wanita); data silang jantina x umur atau anggaran. */
   function ahliSayap(p, sayap) {
     var sy = sayap || J.sayapPemain(p), info = p && p.cawanganInfo ? p.cawanganInfo : null;
@@ -509,8 +513,7 @@
   }
 
   function bina(p, st, d, opts) {
-    var peringkat = d.peringkat, kerusi = kerusiDAP(p, d) || d.kerusi || 1;   // v13.37: DAP: Ahli JTP 30, Naib Pengerusi 5
-    if (p && p.parti === 'MCA' && d.kod === 'naib_presiden') { kerusi = 4; }      // v13.1: 4 Naib Presiden dipilih (Perkara 21)
+    var peringkat = d.peringkat, kerusi = d.jenis === 'perwakilan' ? (d.kerusi || 1) : kerusiParti(p, d);   // v13.37: DAP: Ahli JTP 30; v13.57: struktur parti (MCA 4 Naib Presiden, MIC 21 CWC, ...)
     var bil = Math.max(4, kerusi + (d.pesaing || CONFIG.PESAING_TAMBAHAN));      // v13.4: jawatan berkerusi banyak (AJK) ada lebih ramai pesaing supaya peluang menang kekal
     var aras = (CONFIG.ARAS_PESAING[String(peringkat).replace(/^sayap_/, '').replace(/^pau$/, 'pusat')] || 0) + (d.kesukaran || 0) * CONFIG.GANDA_KESUKARAN;
     var SWk = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; if (SWk && SWk.ofsetJawatan) { aras += SWk.ofsetJawatan(p, d); }          // v9.0: imbangan blok Bumiputera/Pesaka (PBB)

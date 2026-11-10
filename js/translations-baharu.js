@@ -4540,5 +4540,23 @@
   ["bulan {a}-{b}", "months {a}-{b}"],
   ["{x} · {a} Kawasan · {b} perwakilan", "{x} · {a} Areas · {b} delegates"],
   ["{x} · {a} Bahagian · {b} perwakilan", "{x} · {a} Divisions · {b} delegates"],
+  /* v13.57: enjin pemilihan ikut parti (struktur.js), Restu Pengerusi Kehormat PBRS, Majlis Tertinggi PPP */
+  ["Mesyuarat Perwakilan Bahagian UMNO hanya memilih Pengerusi dan Timbalan Pengerusi (Perkara 33.3).", "The MIC Divisional Delegates Conference elects only the Chairman and Deputy Chairman (Article 33.3)."],
+  ["Tiada AJK Bahagian dipilih; Ketua Cawangan menganggotai Kongres Bahagian (Perkara 33.3, 36).", "No Division committee members are elected; Branch Chairmen sit on the Divisional Congress (Articles 33.3, 36)."],
+  ["Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).", "No Branch wing committee members are elected; Branch wings elect only a Leader and Deputy Leader (Articles 20.2.3, 20.2.4)."],
+  ["Hanya Ketua Cawangan boleh dipilih sebagai perwakilan ke Perhimpunan Agung, secara giliran (Perkara 74.4, 74.5).", "Only Branch Chairmen may be elected as General Assembly delegates, in rotation (Articles 74.4, 74.5)."],
+  ["Naib Ketua Putera Cawangan", "Branch Putera Wing Vice Chief"],
+  ["Bahagian UMNO memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).", "UMNO Divisions elect only a Chief, Deputy Chief and committee members (game assumption)."],
+  ["UMNO tiada jawatan Timbalan Presiden; barisan kepimpinan ialah Presiden dan Naib Presiden (Wikipedia).", "UMNO has no Deputy President post; the leadership is the President and Vice Presidents (Wikipedia)."],
+  ["Majlis Kerja Tertinggi UMNO bersidang untuk memutuskan pertikaian Presiden.", "The UMNO Supreme Council meets to settle the presidential dispute."],
+  ["Majlis Kerja Tertinggi UMNO bersidang untuk memutuskan pertikaian Presiden dan anda mengundi sebagai ahli Majlis Kerja Tertinggi.", "The UMNO Supreme Council meets to settle the presidential dispute, and you vote as a Supreme Council member."],
+  ["Bahagian UMNO memilih Pengerusi, Timbalan Pengerusi dan AJK sahaja (andaian permainan).", "UMNO Divisions elect only a Chairman, Deputy Chairman and committee members (game assumption)."],
+  ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
+  ["Restu", "Blessing"],
+  ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],
+  ["Pengasas UMNO kini Pengerusi Kehormat. Restu {a} ke atas menguatkan anda untuk Presiden dan Timbalan Presiden; di bawahnya melemahkan. Susut perlahan ke arah {b}.", "UMNO's founder is now Honorary Chairman. A Blessing of {a} or more strengthens you for President and Deputy President; below that it weakens you. It drifts slowly towards {b}."],
+  ["Perlu AJK Bahagian atau lebih.", "You must be a Division committee member or higher."],
+  ["Anda mengunjungi Pengerusi Kehormat UMNO dan meminta pandangannya. Restu {a} → {b}.", "You visit the UMNO Honorary Chairman and seek his views. Blessing {a} → {b}."],
+  ["Kunjungi Pengerusi Kehormat UMNO", "Visit the UMNO Honorary Chairman"],
   ]);
 })(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : this));

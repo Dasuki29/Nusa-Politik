@@ -7,7 +7,8 @@
      - Kesetiaan BN (mula 60) dan Muhibah GRS (mula 45), susut perlahan ke arah 50 setiap bulan.
      - Rundingan 12 bulan sebelum PRN: Kesetiaan BN >= 70 -> kuota DUN +1 (N.46 Nabawan), < 35 -> kuota DUN -1 (Sook sahaja).
      - Muhibah GRS >= 50: GRS tidak meletak calon di kerusi PBRS; < 50: pertandingan 3 penjuru, kekuatan kerusi -8.
-   State: p.pbrs = { setiaBN, muhibahGRS, lobiBulan, muhibahBulan, ma63Bulan, kuota:{prn, dun:[]}, pusat:{} }
+     - v13.57: Restu Pengerusi Kehormat (peralihan kepimpinan 2023): bonus calon Presiden / Timbalan Presiden.
+   State: p.pbrs = { setiaBN, muhibahGRS, restu, lobiBulan, muhibahBulan, ma63Bulan, restuBulan, kuota:{prn, dun:[]}, pusat:{} }
    SEMUA ANGKA BERTANDA ANDAIAN IALAH ANDAIAN PERMAINAN. Permainan simulasi; bukan laman rasmi parti.
    ========================================================================== */
 (function (root, factory) {
@@ -39,7 +40,8 @@
     MA63: { ap: 1, akarUmbi: 5 },
     RUNDING: { bulanSebelum: 12, tinggi: 70, rendah: 35 },
     GRS: { ambang: 50, ofset: -8 },
-    PUSAT: { sendiri: 60, lain: [30, 45], bonusSkala: 0.3, wakilBahagian: 10, mt: 30 }
+    PUSAT: { sendiri: 60, lain: [30, 45], bonusSkala: 0.3, wakilBahagian: 10, mt: 30 },
+    RESTU: { awal: 40, ap: 1, myr: 500, naik: 8, tengah: 40, susut: 1, ambang: 50, skala: 0.25, pangkatMin: 4 }   // v13.57: Restu Pengerusi Kehormat (peralihan 2023, Wikipedia) - ANDAIAN
   };
 
   function adalah(p) { return !!(p && p.parti === 'PBRS'); }
@@ -48,6 +50,7 @@
     if (typeof m.setiaBN !== 'number') { m.setiaBN = CONFIG.METER.setiaAwal; }
     if (typeof m.muhibahGRS !== 'number') { m.muhibahGRS = CONFIG.METER.muhibahAwal; }
     if (!m.pusat || typeof m.pusat !== 'object') { m.pusat = {}; }
+    if (typeof m.restu !== 'number') { m.restu = CONFIG.RESTU.awal; }
     return m;
   }
   function simpan(p, m, kesan, log) {
@@ -95,7 +98,9 @@
     var purata = ks.length ? jum / ks.length : 0, pengundi = ks.length * CONFIG.PUSAT.wakilBahagian + CONFIG.PUSAT.mt;
     return { purata: Math.round(purata * 10) / 10, pengundi: pengundi, bilBahagian: ks.length, sokongUndi: Math.round(pengundi * purata / 100) };
   }
-  function bonusPusat(p) { return adalah(p) ? Math.round((ringkasPusat(p).purata - 40) * CONFIG.PUSAT.bonusSkala * 10) / 10 : 0; }
+  function bonusPusat(p, d) { return adalah(p) ? Math.round(((ringkasPusat(p).purata - 40) * CONFIG.PUSAT.bonusSkala + bonusRestu(p, d)) * 10) / 10 : 0; }
+  /** v13.57: Restu Pengerusi Kehormat menguatkan calon Presiden / Timbalan Presiden (ANDAIAN: (restu - 50) x 0.25, -12.5 .. +12.5). */
+  function bonusRestu(p, d) { if (!adalah(p) || !d || (d.kod !== 'presiden' && d.kod !== 'timbalan_presiden')) { return 0; } return Math.round((st(p).restu - CONFIG.RESTU.ambang) * CONFIG.RESTU.skala * 10) / 10; }
 
   /* ---------- Tindakan: Lobi BN Sabah, Majlis Muhibah GRS, Kempen Hak Orang Asal & MA63 ---------- */
   function semakAsas(p, ap, myr, kunci) {
@@ -107,6 +112,13 @@
   }
   function statusLobi(p) { if (adalah(p) && pangkat(p) < CONFIG.LOBI.pangkatMin) { return { boleh: false, sebab: 'Perlu Ketua Bahagian atau lebih.' }; } return semakAsas(p, CONFIG.LOBI.ap, CONFIG.LOBI.myr, 'lobiBulan'); }
   function statusMuhibah(p) { return semakAsas(p, CONFIG.MUHIBAH.ap, CONFIG.MUHIBAH.myr, 'muhibahBulan'); }
+  function statusRestu(p) { if (adalah(p) && pangkat(p) < CONFIG.RESTU.pangkatMin) { return { boleh: false, sebab: 'Perlu AJK Bahagian atau lebih.' }; } return semakAsas(p, CONFIG.RESTU.ap, CONFIG.RESTU.myr, 'restuBulan'); }
+  function kunjungKehormat() {
+    var p = S().loadPlayer(), s0 = statusRestu(p); if (!s0.boleh) { return { ok: false, ralat: s0.sebab }; }
+    var m = st(p), a = m.restu; m.restu = clamp(a + CONFIG.RESTU.naik, 0, 100); m.restuBulan = sekarang(p);
+    var r = simpan(p, m, { ap: -CONFIG.RESTU.ap, myr: -CONFIG.RESTU.myr }, { kira: true, tindakan: 'pbrs_restu', nama: 'Kunjungi Pengerusi Kehormat PBRS' });
+    return r.ok ? { ok: true, mesej: 'Anda mengunjungi Pengerusi Kehormat PBRS dan meminta pandangannya. Restu ' + Math.round(a) + ' → ' + Math.round(m.restu) + '.' } : { ok: false, ralat: r.ralat };
+  }
   function statusMA63(p) { return semakAsas(p, CONFIG.MA63.ap, 0, 'ma63Bulan'); }
   function lobi() {
     var p = S().loadPlayer(), s0 = statusLobi(p); if (!s0.boleh) { return { ok: false, ralat: s0.sebab }; }
@@ -141,6 +153,7 @@
         (grsBertembung(p) ? ' Muhibah GRS rendah: GRS dijangka meletak calon di kerusi PBRS (pertandingan 3 penjuru).' : ' GRS bersetuju tidak meletak calon di kerusi PBRS.'));
     }
     // 2. meter susut perlahan ke arah 50
+    if (m.restu > C.RESTU.tengah) { m.restu = Math.max(C.RESTU.tengah, m.restu - C.RESTU.susut); } else if (m.restu < C.RESTU.tengah) { m.restu = Math.min(C.RESTU.tengah, m.restu + C.RESTU.susut); }   // v13.57
     ['setiaBN', 'muhibahGRS'].forEach(function (k) { var v = m[k]; if (v > C.METER.tengah) { m[k] = Math.max(C.METER.tengah, v - C.METER.susut); } else if (v < C.METER.tengah) { m[k] = Math.min(C.METER.tengah, v + C.METER.susut); } });
     simpan(p, m, {}, null);
     return { peristiwa: ev.map(function (t) { return { jenis: 'pbrs', mesej: t }; }) };
@@ -148,6 +161,6 @@
 
   return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, kuotaDUN: kuotaDUN, grsBertembung: grsBertembung, prnIdx: prnIdx,
     adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat,
-    meter: function (p) { var m = st(p); return { setiaBN: m.setiaBN, muhibahGRS: m.muhibahGRS }; },
+    meter: function (p) { var m = st(p); return { setiaBN: m.setiaBN, muhibahGRS: m.muhibahGRS, restu: m.restu }; }, bonusRestu: bonusRestu, statusRestu: statusRestu, kunjungKehormat: kunjungKehormat,
     statusLobi: statusLobi, lobi: lobi, statusMuhibah: statusMuhibah, muhibah: muhibah, statusMA63: statusMA63, ma63: ma63, prosesBulan: prosesBulan };
 });

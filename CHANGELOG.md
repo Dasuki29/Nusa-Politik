@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.57 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 1 (BN)**: setiap parti BN kini ada struktur jawatan sendiri, ikut perlembagaan parti atau Wikipedia (ikut mockup audit yang dipersetujui; ⚠️ andaian ditanda).
+  - **UMNO**: sudah selaras dengan Perlembagaan UMNO 2025; katalog asal kekal sebagai enjin UMNO.
+  - **MCA** (Perlembagaan 2019): Naib Pengerusi Cawangan (jawatan baharu, Perkara 102), 10 AJK Cawangan, 4 Naib Pengerusi Bahagian (76.4), 10 AJK Bahagian, 4 Naib Presiden, 25 Ahli JKP. Wakil Cawangan ke Bahagian ikut saiz Cawangan (Perkara 94: 3 bagi 50 ahli pertama …, maks 30, 1 dikhaskan Wanita).
+  - **MIC** (Perlembagaan 2017): 7 AJK Cawangan (20.2.2); sayap Cawangan Ketua + **Timbalan** Ketua, tiada AJK sayap (20.2.3–4); Bahagian hanya Pengerusi dan Timbalan (33.3), tiada Naib / AJK Bahagian; 21 Ahli CWC (47); hanya Pengerusi Cawangan boleh menjadi perwakilan ke Perhimpunan Agung (74.4). Tangga jawatan: Pengerusi Cawangan terus ke Pengerusi Bahagian / CWC.
+  - **PPP** (Wikipedia ⚠️): tiada Timbalan Presiden; 3 Naib Presiden, Majlis Tertinggi 15, AJK Cawangan 7, Bahagian tanpa Naib (AJK 9); istilah Pengerusi Cawangan / Bahagian. Krisis kepimpinan diputuskan **Majlis Tertinggi** (seperti 2023): pemain ahli MT mengundi (peluang ±15%).
+  - **PBRS** (Wikipedia ⚠️): 2 Naib Presiden, Majlis Tertinggi 15, AJK Cawangan 7, Bahagian tanpa Naib (AJK 9). Mekanik baharu **Restu Pengerusi Kehormat** (peralihan kepimpinan 2023): 🏛️ Kunjungi Pengerusi Kehormat (+8, 1 AP, RM 500); Restu ≥50 menguatkan calon Presiden / Timbalan Presiden, di bawahnya melemahkan.
+  - Jawatan yang ditutup bagi parti tidak lagi dipertandingkan; pemegang dalam simpanan lama kekal sehingga penggal tamat.
+- Fail baharu: `js/struktur.js` (jadual struktur ikut parti; Fasa 2–6 akan menambah PN, PH, GPS, GRS dan Lain-lain). Ujian baharu (189 ujian).
+
 ## v13.56 (2026-11-10)
 
 - **Maklum balas baris 31: Amanah (Parti Amanah Negara) mod penuh dalam PH** (ikut mockup yang dipersetujui; Perlembagaan Parti Amanah Negara 2022 daripada pengguna; ⚠️ andaian ditanda).

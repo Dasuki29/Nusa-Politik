@@ -35,7 +35,7 @@
     KUOTA_PARLIMEN: 0, KUOTA_DUN: 0,                                    // tiada kerusi tetap dalam BN
     PENGARUH: { awal: 20, lobiAP: 2, lobiMYR: 2000, lobiNaik: 6, pangkatMin: 7, jenteraAP: 2, jenteraMenang: 10, jenteraKalah: 3, peluangBNMenang: 0.55, susut: 0.5 },
     RUNDING: { bulanSebelum: 12, tolakPL: 30, maksPL: 60, tolakDUN: 15, maksDUN: 75, pangkatDUN: 3 },
-    KRISIS: { peluang: 0.15, tempoh: 2, presidenMenang: 0.6, beku: 0.2, bekuBulan: 6, gantungBulan: 6, rayuanAP: 1, rayuanPeluang: 0.6,
+    KRISIS: { peluang: 0.15, tempoh: 2, presidenMenang: 0.6, undiMT: 0.15, beku: 0.2, bekuBulan: 6, gantungBulan: 6, rayuanAP: 1, rayuanPeluang: 0.6,
       presiden: { ajk: 6, pengaruh: 3, kalahReputasi: -3 }, berkecuali: { pengaruh: -2 }, lantikan: { jawatan: 'Ahli Majlis Tertinggi (Lantikan)', ip: 6 } },
     PUSAT: { sendiri: 60, lain: [30, 45], bonusSkala: 0.3, wakilBahagian: 10, mt: 40 }
   };
@@ -182,9 +182,13 @@
     var patch = null; pusat.forEach(function (j) { var d = J0.cariDef(j.kod); if (d) { var pt = J0.terapkan(patch ? Object.assign({}, p, patch) : p, d, false); patch = Object.assign(patch || {}, pt); } });
     return patch;
   }
+  /** v13.57: pemain ahli Majlis Tertinggi (Ahli MT atau jawatan Pusat utama) mempunyai undi dalam krisis. */
+  function ahliMT(p) { var J0 = J(); return !!(J0 && J0.getJawatan(p).some(function (j) { return j.peringkat === 'pusat' && j.kumpulan === 'utama'; })); }
   function selesaiKrisis(p, m, r, ev, kes) {
-    var k = m.krisis, C = CONFIG.KRISIS, pres = r() < C.presidenMenang, pil = k.pilihan || 'berkecuali', patch = null;
+    var k = m.krisis, C = CONFIG.KRISIS, pil = k.pilihan || 'berkecuali', patch = null, undiMT = ahliMT(p);
+    var peluang = C.presidenMenang + (undiMT ? (pil === 'presiden' ? C.undiMT : pil === 'pencabar' ? -C.undiMT : 0) : 0), pres = r() < peluang;   // v13.57: Presiden dipilih Majlis Tertinggi semasa krisis (2023, Wikipedia)
     k.selesai = true; k.presidenMenang = pres;
+    ev.push('Majlis Tertinggi PPP bersidang untuk memutuskan pertikaian Presiden' + (undiMT ? ' dan anda mengundi sebagai ahli Majlis Tertinggi' : '') + '.');
     if (pil === 'presiden') {
       if (pres) { kes.kesetiaan = { ajk: C.presiden.ajk }; m.pengaruh = clamp(m.pengaruh + C.presiden.pengaruh, 0, 100); ev.push('Presiden PPP mengekalkan jawatannya. Anda di pihak yang menang: sokongan AJK +' + C.presiden.ajk + ', Pengaruh dalam BN +' + C.presiden.pengaruh + '.'); }
       else { kes.reputasi = (kes.reputasi || 0) + C.presiden.kalahReputasi; patch = lucutPusat(p, m); ev.push('Pencabar menang dan menjadi Presiden PPP. Anda di pihak yang kalah: Reputasi ' + C.presiden.kalahReputasi + (patch ? ' dan jawatan Pusat anda dilucutkan.' : '.')); }

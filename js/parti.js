@@ -65,7 +65,7 @@
      dan Persidangan Perwakilan Bahagian (bulan 5); Perhimpunan Agung bulan 9 (ANDAIAN). Sayap Pemuda, Wanita, Puteri dan Putera.
      ANDAIAN: kawasan operasi = semua 165 kawasan Parlimen Semenanjung (data/mic-semenanjung.csv, tools/build-mic.js). Logo daripada pengguna. */
   SENARAI.MIC = { kod: 'MIC', nama: 'MIC', penuh: 'Kongres India Se-Malaysia', logo: 'assets/images/logo-mic.png', sayap: ['pemuda', 'puteri', 'wanita', 'putera'], negeriTetap: null, data: 'data/mic-semenanjung.csv', bahagianJenis: 'Parlimen', mic: true,
-    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja Pusat (CWC)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja Pusat'], [/\bMKT\b/g, 'CWC'],
+    istilah: [[/\bNaib Ketua (Pemuda|Wanita|Putera|Puteri) Cawangan\b/g, 'Timbalan Ketua $1 Cawangan'], [/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Kerja Pusat (CWC)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Kerja Pusat'], [/\bMKT\b/g, 'CWC'],
       [/Perhimpunan Agung MIC \(PAU\)/g, 'Perhimpunan Agung MIC'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung MIC'], [/MIC General Assembly \(PAU\)/g, 'MIC General Assembly'], [/General Assembly \(PAU\)/g, 'MIC General Assembly'], [/\bPAU\b/g, 'PA'],
       [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Menara Manickavasagam, Kuala Lumpur'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at Menara Manickavasagam, Kuala Lumpur'],
       [/Persidangan Tahunan Sayap Cawangan/g, 'Mesyuarat Agung Sayap Cawangan'], [/Persidangan Tahunan Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan'], [/Mesyuarat Perwakilan Sayap Bahagian/g, 'Persidangan Perwakilan Sayap Bahagian'], [/Mesyuarat Perwakilan Bahagian/g, 'Persidangan Perwakilan Bahagian'],
@@ -75,7 +75,7 @@
       [/Badan Perhubungan Negeri/g, 'Kongres Negeri'], [/Badan Perhubungan/g, 'Kongres Negeri'], [/State Liaison Body/g, 'State Congress'], [/Liaison Body/g, 'State Congress'],
       [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 5'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 5'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
       [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
-    istilahSongsang: [[/Jawatankuasa Kerja Pusat \(CWC\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja Pusat/g, 'Majlis Kerja Tertinggi'], [/\bCWC\b/g, 'MKT'],
+    istilahSongsang: [[/\bTimbalan Ketua (Pemuda|Wanita|Putera|Puteri) Cawangan\b/g, 'Naib Ketua $1 Cawangan'], [/Jawatankuasa Kerja Pusat \(CWC\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja Pusat/g, 'Majlis Kerja Tertinggi'], [/\bCWC\b/g, 'MKT'],
       [/Perhimpunan Agung MIC(?! \()/g, 'Perhimpunan Agung MIC (PAU)'], [/\bPA\b/g, 'PAU'],
       [/ di Menara Manickavasagam, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"],
       [/Mesyuarat Agung Sayap Cawangan/g, 'Persidangan Tahunan Sayap Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan'], [/Persidangan Perwakilan Sayap Bahagian/g, 'Mesyuarat Perwakilan Sayap Bahagian'], [/Persidangan Perwakilan Bahagian/g, 'Mesyuarat Perwakilan Bahagian'],
@@ -87,11 +87,14 @@
      ANDAIAN: kawasan operasi = 39 kawasan Parlimen Semenanjung campuran (data/ppp-semenanjung.csv, tools/build-ppp.js); takwim bulan 3/5/9. Logo daripada pengguna. */
   SENARAI.PPP = { kod: 'PPP', nama: 'PPP', penuh: 'Parti Progresif Penduduk', logo: 'assets/images/logo-ppp.jpg', sayap: ['pemuda', 'puteri', 'wanita', 'putera'], negeriTetap: null, data: 'data/ppp-semenanjung.csv', bahagianJenis: 'Parlimen', ppp: true,
     istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Majlis Tertinggi (MT)'], [/Majlis Kerja Tertinggi/g, 'Majlis Tertinggi'], [/\bMKT\b/g, 'MT'],
+      [/\bTimbalan Ketua (Cawangan|Bahagian)\b/g, 'Timbalan Pengerusi $1'], [/\bNaib Ketua (Cawangan|Bahagian)\b/g, 'Naib Pengerusi $1'], [/\bKetua (Cawangan|Bahagian)\b/g, 'Pengerusi $1'], [/\bketua (cawangan|bahagian)\b/g, 'pengerusi $1'], [/Ketua-Ketua (Cawangan|Bahagian)/g, 'Pengerusi-Pengerusi $1'],
+      [/Deputy Branch Chief/g, 'Deputy Branch Chairman'], [/Branch Chief/g, 'Branch Chairman'], [/Deputy Division Chief/g, 'Deputy Division Chairman'], [/Vice Division Chief/g, 'Vice Division Chairman'], [/Division Chief/g, 'Division Chairman'],   // v13.57: PPP Pengerusi (andaian)
       [/Perhimpunan Agung PPP \(PAU\)/g, 'Perhimpunan Agung PPP'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Perhimpunan Agung PPP'], [/Perhimpunan Agung \(PAU\)/g, 'Perhimpunan Agung PPP'], [/PPP General Assembly \(PAU\)/g, 'PPP General Assembly'], [/General Assembly \(PAU\)/g, 'PPP General Assembly'], [/\bPAU\b/g, 'PA'],
       [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Wisma PPP, Kuala Lumpur'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' at Wisma PPP, Kuala Lumpur'],
       [/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 3'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 3'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 5'], [/\b([Mm])onths? 6\b(?![-–\d])(?! \(June\))/g, '$1onth 5'], [/\b([Bb])ulan 1-3\b/g, '$1ulan 1-2'], [/pada bulan 4\./g, 'pada bulan 3.'], [/sehingga bulan 3\b/g, 'sehingga bulan 2'],
       [/\b([Mm])onths 1-3\b/g, '$1onths 1-2'], [/in month 4\./g, 'in month 3.'], [/through month 3\b/g, 'through month 2'], [/until month 3\b/g, 'until month 2']],
     istilahSongsang: [[/Majlis Tertinggi \(MT\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Majlis Tertinggi/g, 'Majlis Kerja Tertinggi'], [/\bMT\b/g, 'MKT'],
+      [/\bTimbalan Pengerusi (Cawangan|Bahagian)\b/g, 'Timbalan Ketua $1'], [/\bNaib Pengerusi (Cawangan|Bahagian)\b/g, 'Naib Ketua $1'], [/\bPengerusi (Cawangan|Bahagian)\b/g, 'Ketua $1'], [/\bpengerusi (cawangan|bahagian)\b/g, 'ketua $1'], [/Pengerusi-Pengerusi (Cawangan|Bahagian)/g, 'Ketua-Ketua $1'], [/\b(Deputy |Vice |)Branch Chairman/g, '$1Branch Chief'], [/\b(Deputy |Vice |)Division Chairman/g, '$1Division Chief'],
       [/Perhimpunan Agung PPP(?! \()/g, 'Perhimpunan Agung PPP (PAU)'], [/\bPA\b/g, 'PAU'],
       [/ di Wisma PPP, Kuala Lumpur/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"],
       [/\b([Bb])ulan 3\b(?![-–\d])/g, '$1ulan 4-5'], [/\b([Bb])ulan 5\b(?![-–\d])/g, '$1ulan 6'], [/\b([Bb])ulan 1-2\b/g, '$1ulan 1-3'], [/sehingga bulan 2\b/g, 'sehingga bulan 3']] };
@@ -297,7 +300,8 @@
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
-    if (k === 'BERJASA' || k === 'AMANAH') { calon.push(a); }   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
+    if (k === 'BERJASA' || k === 'AMANAH') { calon.push(a); }
+    if (k === 'PPP') { calon.push(terap(a, i.istilahSongsang)); }   // v13.57: istilah Pengerusi PPP disongsang, nama parti kekal (kunci kamus lama "perlembagaan PPP ...")   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
     if (k === 'PAS' || k === 'BERJASA' || k === 'AMANAH') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
     if (k === 'DAP' || k === 'PKR' || k === 'AMANAH') { [d, tanpaBulan].forEach(function (x) { ['20.13', '20.10a', '20.10b', '20.10c', '20.10d', '20.12.2'].forEach(function (f0) { var y = x.replace(/Fasal 20\.(10|12|5)\b/, 'Fasal ' + f0); if (y !== x) { calon.push(y); } }); }); }   // v13.38: rujukan disiplin dipetakan banyak-ke-satu
     calon.forEach(function (x) {
