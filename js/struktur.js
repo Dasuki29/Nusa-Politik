@@ -193,7 +193,7 @@
       jawatan: { ajk_cawangan: { kerusi: 9 }, ajk_bahagian: { kerusi: 15 }, naib_ketua_bahagian: { tutup: 'Bahagian parti ini memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).' }, naib_presiden: { kerusi: 2 }, ahli_mkt: { kerusi: 10 } }
     },
     PCS: {
-      sumber: 'Wikipedia (Mesyuarat Agung Dwitahunan)', kitaran: { mula: 2026, tahun: 2 },
+      sumber: 'Wikipedia (Mesyuarat Agung Dwitahunan)', kitaran: { mula: 2026, tahun: 2 }, pusatBerkala: 'pemilihan',
       jawatan: { ajk_cawangan: { kerusi: 9 }, ajk_bahagian: { kerusi: 15 }, naib_ketua_bahagian: { tutup: 'Bahagian parti ini memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).' }, naib_presiden: { kerusi: 3 }, ahli_mkt: { kerusi: 15 } }
     },
     PPP: {

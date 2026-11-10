@@ -274,6 +274,36 @@
         { kod: 'amanah_keadilan', tajuk: 'Keadilan sosial: gaji wajar dan perumahan rakyat', penerangan: 'Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.', populariti: 66, nilai: 3 }
       ]
     },
+    GAGASAN: {
+      cawangan: [{ kod: 'gag_air', tajuk: 'Bekalan air dan elektrik yang stabil di Sabah', penerangan: 'Gangguan air dan elektrik masih kerap di kawasan ini.', populariti: 70, nilai: 4 }],
+      bahagian: [{ kod: 'gag_kerja', tajuk: 'Utamakan anak Sabah dalam peluang pekerjaan', penerangan: 'Belia Sabah terpaksa berhijrah ke Semenanjung untuk bekerja.', populariti: 66, nilai: 3 }],
+      pau: [{ kod: 'gag_40', tajuk: 'Tuntut 40% hasil persekutuan dari Sabah (MA63)', penerangan: 'Perhimpunan mendesak hak 40% hasil dibayar kepada Sabah.', populariti: 72, nilai: 4 }]
+    },
+    PBS: {
+      cawangan: [{ kod: 'pbs_bahasa', tajuk: 'Bahasa Kadazandusun di sekolah', penerangan: 'Ibu bapa mahu lebih banyak kelas Bahasa Kadazandusun.', populariti: 68, nilai: 3 }],
+      bahagian: [{ kod: 'pbs_ncr', tajuk: 'Selesaikan tuntutan tanah adat (NCR)', penerangan: 'Ramai penduduk kampung belum mendapat geran tanah adat.', populariti: 70, nilai: 4 }],
+      pau: [{ kod: 'pbs_ma63', tajuk: 'Pertahankan hak Sabah di bawah MA63', penerangan: 'PBS mahu autonomi Sabah dipulihkan sepenuhnya.', populariti: 70, nilai: 4 }]
+    },
+    UPKO: {
+      cawangan: [{ kod: 'upko_mahkamah', tajuk: 'Kukuhkan Mahkamah Anak Negeri', penerangan: 'Kes adat kampung memerlukan Mahkamah Anak Negeri yang lebih berkesan.', populariti: 64, nilai: 3 }],
+      bahagian: [{ kod: 'upko_geran', tajuk: 'Percepat geran tanah adat', penerangan: 'Bahagian mahu ukur dan geran tanah adat diselesaikan.', populariti: 68, nilai: 4 }],
+      pau: [{ kod: 'upko_pedalaman', tajuk: 'Pembangunan pedalaman Kadazandusun Murut', penerangan: 'Jalan, air dan sekolah untuk kawasan pedalaman.', populariti: 68, nilai: 3 }]
+    },
+    LDP: {
+      cawangan: [{ kod: 'ldp_keselamatan', tajuk: 'Keselamatan kawasan bandar', penerangan: 'Penduduk mahu rondaan polis yang lebih kerap.', populariti: 64, nilai: 3 }],
+      bahagian: [{ kod: 'ldp_sekolah', tajuk: 'Bantuan untuk sekolah Cina di Sabah', penerangan: 'Sekolah Cina memerlukan peruntukan baik pulih.', populariti: 66, nilai: 3 }],
+      pau: [{ kod: 'ldp_pelancongan', tajuk: 'PKS dan pelancongan Kota Kinabalu dan Sandakan', penerangan: 'LDP mahu insentif untuk peniaga kecil dan sektor pelancongan.', populariti: 66, nilai: 3 }]
+    },
+    PHRS: {
+      cawangan: [{ kod: 'phrs_nelayan', tajuk: 'Bantuan untuk nelayan Tawau', penerangan: 'Nelayan pantai timur memerlukan subsidi minyak dan peralatan.', populariti: 66, nilai: 3 }],
+      bahagian: [{ kod: 'phrs_pati', tajuk: 'Tangani isu PATI di pantai timur', penerangan: 'Penduduk mahu penguatkuasaan yang lebih tegas.', populariti: 66, nilai: 3 }],
+      pau: [{ kod: 'phrs_esszone', tajuk: 'Kukuhkan keselamatan pantai timur (ESSZONE)', penerangan: 'Kawalan keselamatan perairan Sabah perlu ditambah.', populariti: 66, nilai: 3 }]
+    },
+    PCS: {
+      cawangan: [{ kod: 'pcs_belia', tajuk: 'Program belia luar bandar', penerangan: 'Belia kampung memerlukan latihan kemahiran dan peluang kerja.', populariti: 64, nilai: 3 }],
+      bahagian: [{ kod: 'pcs_anak_negeri', tajuk: 'Lindungi identiti Anak Negeri Sabah', penerangan: 'Status Anak Negeri perlu dilindungi dalam dasar negeri.', populariti: 66, nilai: 3 }],
+      pau: [{ kod: 'pcs_autonomi', tajuk: 'Autonomi dan kedaulatan Sabah', penerangan: 'Mesyuarat mendesak lebih banyak kuasa dikembalikan kepada Sabah.', populariti: 68, nilai: 3 }]
+    },
     PBB: {
       cawangan: [
         { kod: 'pbb_elektrik', tajuk: 'Bekalan elektrik dan air ke kampung luar bandar', penerangan: 'Beberapa kampung masih menggunakan janakuasa sendiri dan air hujan.', populariti: 70, nilai: 4 },
@@ -348,6 +378,8 @@
     PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
     PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63'],
     PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera'],
+    GAGASAN: ['Sabah Maju Jaya', 'Parti Tempatan untuk Sabah'], PBS: ['Hak Anak Negeri Sabah', 'Perpaduan Masyarakat Sabah'], UPKO: ['Suara Kadazandusun Murut', 'Sabah Berautonomi'],
+    LDP: ['Ekonomi Terbuka Sabah', 'Liberal dan Demokratik'], PHRS: ['Sabah untuk Rakyat Sabah'], PCS: ['Demi Autonomi dan Kedaulatan Sabah'],
     PBB: ['Sarawak Maju dan Sejahtera', 'Hak Sarawak di bawah MA63'],
     PRS: ['Dayak Bersatu', 'Pembangunan Luar Bandar'],
     SUPP: ['Sarawak untuk Semua', 'Masyarakat Majmuk Sarawak'],
@@ -356,7 +388,7 @@
     DAP: ['Malaysian Malaysia', 'Integriti dan Kecekapan'],
     AMANAH: ['Rahmatan lil Alamin', 'Negara Rahmah']
   };
-  var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'], PRS: ['dewan_surau'], SUPP: ['dewan_surau'], PDP: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
+  var TIADA_UMUM = { PBS: ['dewan_surau'], UPKO: ['dewan_surau'], LDP: ['dewan_surau'], MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'], PRS: ['dewan_surau'], SUPP: ['dewan_surau'], PDP: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
      Kos 2 AP; perwakilan mengundi sokongan (>= 50% diterima: kesan penuh + IP 20; < 50%: Reputasi separuh, penentang +5). Angka ialah andaian. */
   var TEMA_PRESIDEN = [
@@ -459,7 +491,7 @@
       return g.exB.sah ? { ok: true } : { ok: false, sebab: 'Hanya ahli JPKP (Ahli Parlimen, ADUN, Ketua Pemuda / Wanita dan Pengerusi Cawangan) boleh hadir MB JPKP.' };
     }
     if ((peringkat === 'pau' || peringkat === 'sayap_pau') && mz(p, 'pusatBerkala') && !jenisPusat(p)) {
-      return { ok: false, sebab: mz(p, 'pusatBerkala') === 'pemilihan' ? 'Tiada Perhimpunan Agung UMNO (PAU) tahun ini: Perhimpunan Agung diadakan setiap 3 tahun, pada tahun pemilihan parti.' : 'Tiada Kongres Kebangsaan atau Persidangan Parti tahun ini: Kongres diadakan setiap 3 tahun dan Persidangan Parti 18 bulan selepasnya.' };
+      return { ok: false, sebab: mz(p, 'pusatBerkala') === 'pemilihan' ? 'Tiada Perhimpunan Agung UMNO (PAU) tahun ini: Perhimpunan Agung diadakan setiap ' + ((mz(p, 'kitaran') || {}).tahun || 3) + ' tahun, pada tahun pemilihan parti.' : 'Tiada Kongres Kebangsaan atau Persidangan Parti tahun ini: Kongres diadakan setiap 3 tahun dan Persidangan Parti 18 bulan selepasnya.' };
     }
     if (peringkat === 'bahagian') {
       return (g.pw.sah || g.exB.sah || (p.perwakilan && p.perwakilan.g10 === p.tahun)) ? { ok: true }
@@ -522,13 +554,14 @@
   /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
   function hadirKira(p, peringkat) {
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
-    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
+    var kodM = /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti || '') ? 'MyPolitikGRS' : { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
     var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
     var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null, rp = null;
     if (M && M.ringkasPusat) { try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } }
     if (!rp && mz(p, 'bilBahagian')) { rp = { bilBahagian: mz(p, 'bilBahagian') }; }   // v13.64: parti Sarawak tanpa modul Pusat (PBB 82, PRS 34, SUPP 20, PDP 15 DUN)
     var nB = rp && rp.bilBahagian; if (!nB) { return null; }
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
+    if (kodM === 'MyPolitikGRS' && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(30, Math.round(rp.pengundi / 4)); }   // v13.66: GRS: perwakilan modul GRS
     if (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') {      // v13.62: PH: PKR semua anggota Cabang (≈10% hadir, ANDAIAN); DAP ahli JPKP; Amanah 14.3; Pusat = perwakilan modul parti
       var nCw = (Eg.bilPemilih ? Eg.bilPemilih(p, 'bahagian') / Math.max(1, Eg.kuotaCawangan(p)) : 10);
       if (peringkat === 'bahagian') { return p.parti === 'PKR' ? Math.max(100, Math.round((Eg.ahliBahagian ? Eg.ahliBahagian(p) : 2000) * 0.1)) : p.parti === 'DAP' ? Math.max(10, Math.round(nCw) + 4) : Math.max(30, Math.round(nCw * 5) + 23 + 60); }
@@ -614,7 +647,7 @@
       agenda.push({
         id: 'pau-' + p.tahun + '-ucapan', jenis: 'ucapan_dasar', kod: 'ucapan_dasar', sumber: 'presiden',
         tajuk: 'Ucapan Dasar Presiden: ' + (function (t) { return t[Math.floor(rng() * t.length)]; })(TEMA_PARTI[p.parti] || TEMA_UCAPAN),
-        penerangan: 'Presiden menyampaikan hala tuju parti. Perwakilan berbahas dan mengundi sokongan terhadap ucapan.',
+        penerangan: 'Presiden menyampaikan hala tuju parti. Perwakilan berbahas dan mengundi sokongan terhadap ucapan.' + (p.parti === 'LDP' ? ' Perhimpunan dipengerusikan oleh Speaker LDP.' : ''),   // v13.66: LDP ada Speaker dan Timbalan Speaker (Wikipedia)
         populariti: 72, nilai: 3, status: 'terbuka', pilihan: null, keputusan: null
       });
     }

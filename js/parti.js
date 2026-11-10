@@ -289,6 +289,7 @@
     var asal = songsang ? SENARAI.PPP.istilahSongsang : SENARAI.PPP.istilah;
     var x = asal.map(function (r) { var src = r[0].source.replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, r[0].flags), typeof r[1] === 'string' ? r[1].replace(/PPP/g, kod).replace('Wisma ' + kod + ', Kuala Lumpur', 'Kota Kinabalu') : r[1]]; });
     if (kod === 'GAGASAN') { x = (songsang ? [[/\bBeliawanis\b/g, 'Puteri']] : [[/\bPuteri\b/g, 'Beliawanis']]).concat(x); }
+    if (kod === 'PCS') { x = songsang ? [[/Mesyuarat Agung Dwitahunan PCS/g, 'Perhimpunan Agung PCS'], [/PCS Biennial General Meeting/g, 'PCS General Assembly']].concat(x) : x.concat([[/Perhimpunan Agung PCS/g, 'Mesyuarat Agung Dwitahunan PCS'], [/PCS General Assembly/g, 'PCS Biennial General Meeting']]); }   // v13.66: Wikipedia (BGM)
     return x;
   }
   [['GAGASAN', 'Parti Gagasan Rakyat Sabah', 'logo-gagasan.png', ['pemuda', 'puteri', 'wanita'], null], ['PBS', 'Parti Bersatu Sabah', 'logo-pbs.png', ['pemuda', 'wanita'], 'Sabah'],

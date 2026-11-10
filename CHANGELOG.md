@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.66 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 5 (GRS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PCS**: **Mesyuarat Agung Dwitahunan PCS**, setiap 2 tahun (tahun pemilihan sahaja).
+  - **LDP**: Perhimpunan Agung dipengerusikan oleh **Speaker LDP** (nota agenda Ucapan Dasar).
+  - Hadir Perhimpunan Agung GRS dikira daripada perwakilan modul GRS (GAGASAN ≈ 290, PBS / UPKO ≈ 130, LDP ≈ 80, PHRS / PCS ≈ 70) dan bukan 1,500.
+  - Usul Sabah ikut parti ⚠️: GAGASAN (air / elektrik, pekerjaan anak Sabah, 40% hasil MA63), PBS (Bahasa Kadazandusun, NCR, MA63), UPKO (Mahkamah Anak Negeri, geran tanah adat, pedalaman), LDP (keselamatan bandar, sekolah Cina, PKS / pelancongan), PHRS (nelayan Tawau, PATI, ESSZONE), PCS (belia luar bandar, identiti Anak Negeri, autonomi). Usul surau dikeluarkan untuk PBS, UPKO, LDP. Tema Ucapan Dasar ikut parti (PCS: "Demi Autonomi dan Kedaulatan Sabah").
+- Ujian baharu (198 ujian).
+
 ## v13.65 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 5 (GRS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).

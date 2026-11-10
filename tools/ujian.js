@@ -3016,6 +3016,17 @@ ujian('v13.65 Enjin pemilihan GRS (Fasa 5): PBS ikut komuniti (borang + tukar se
   P.tetap({ parti: 'GAGASAN' }); sama(ST.kerusi(S.loadPlayer(), cd('ahli_mkt')), 18);
   S.clearPlayer();
 });
+ujian('v13.66 Enjin mesyuarat GRS (Fasa 5): PCS Mesyuarat Agung Dwitahunan, hadir dari modul GRS, usul Sabah, tiada usul surau PBS / UPKO / LDP, Speaker LDP', () => {
+  const M0 = g.MyPolitikMeeting, PT = g.MyPolitikParti;
+  const pau = (y) => { P.tetap({ tahun: y, bulan: 3, perwakilan: { cawangan: y, bahagian: y } }); return M0.getKeadaanMesyuarat(S.loadPlayer()).peringkat.find((z) => z.kod === 'pau'); };
+  P.daftar({}); P.tetap({ parti: 'PCS' }); sama(PT.ke('Perhimpunan Agung UMNO (PAU)'), 'Mesyuarat Agung Dwitahunan PCS');
+  betul(pau(2026).status !== 'tidak_layak'); const x = pau(2027); sama(x.status, 'tidak_layak'); betul(/setiap 2 tahun/.test(x.sebab), x.sebab);
+  P.tetap({ parti: 'GAGASAN', tahun: 2027 }); let p = S.loadPlayer(); const h = M0.bilHadir(p, 'pau'); betul(h > 100 && h < 600, 'hadir GAGASAN ' + h);
+  betul(/gag_/.test(M0.janaAgendaUji(p, 'pau').map((a) => a.kod).join()), 'usul GAGASAN');
+  P.tetap({ parti: 'PBS' }); betul(M0.janaAgendaUji(S.loadPlayer(), 'cawangan').every((a) => a.kod !== 'dewan_surau'), 'tiada usul surau PBS');
+  P.tetap({ parti: 'LDP' }); betul(/Speaker LDP/.test(M0.janaAgendaUji(S.loadPlayer(), 'pau').map((a) => a.penerangan || '').join()), 'Speaker LDP');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
