@@ -288,6 +288,9 @@
     var d = getDewan(p), P = PRU(), pr = P ? P.getPRU(p) : null;
     if (!aktif(p) || !adaKerajaan(p) || d.tp) { return false; }
     if ((pr && pr.aktif) || (p.prk && p.prk.aktif)) { return false; }
+    var PMm = modul('MyPolitikPM', 'pm.js');                                           // v13.75: Pejabat PM
+    if (PMm && PMm.daruratAktif && PMm.daruratAktif(p)) { return false; }               // darurat menyekat usul
+    if (PMm && PMm.majoritiKurang && PMm.majoritiKurang(p) && idx(p) - d.tpTerakhir >= PMm.CONFIG.TP_JEDA_MAJORITI) { return true; }   // majoriti < 112
     if (idx(p) - d.tpTerakhir < CONFIG.TP.JEDA_BULAN) { return false; }
     var rt = rating(p);
     return kestabilan(p) < CONFIG.TP.AMBANG || (rt !== null && rt < CONFIG.TP.AMBANG);
@@ -296,6 +299,8 @@
     var d = getDewan(p), k = kerusi(p), s = Math.min(kestabilan(p), (rating(p) !== null ? rating(p) : 100), 100);
     var frac = clamp(CONFIG.TP.GOYAH_ASAS + (CONFIG.TP.AMBANG - s) / 100, 0.35, 0.65), goyah = Math.round(k.BN * frac);
     d.tp = { hari: 1, setia: k.BN - goyah, goyah: goyah, tentang: k.jumlah - k.BN, mulaTahun: p.tahun, mulaBulan: p.bulan, log: [] };
+    var PMm = modul('MyPolitikPM', 'pm.js'), mj = PMm && PMm.isPrimeMinister && PMm.isPrimeMinister(p) && p.pm ? PMm.majoriti(p) : null;   // v13.75: blok yang menarik sokongan dan MP goyah mengundi menentang
+    if (mj !== null && mj < k.BN) { var hilang = k.BN - mj; d.tp.setia = Math.max(0, d.tp.setia - hilang); d.tp.tentang += hilang; }
     d.undi = null;                                                     // undian RUU dibatalkan
     return d;
   }

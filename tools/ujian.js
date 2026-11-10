@@ -3038,6 +3038,26 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.75 Pejabat PM: majoriti, blok tarik sokongan cetus usul, tuntutan, agih, dasar mega, tegas, darurat sekat usul', () => {
+  const K = g.MyPolitikKabinet, PM = g.MyPolitikPM, DW = g.MyPolitikDewan;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000, kerusiNasional: { parti: 70, rakan: 52, pembangkang: 95, bebas: 5, kerajaan: true, tahun: 2026, bulan: 11 } });
+  let p = S.loadPlayer(); betul(!PM.isPrimeMinister(p)); sama(PM.majoritiKurang(p), false);
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'PERDANA_MENTERI', portfolioName: 'Perdana Menteri' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(PM.isPrimeMinister(p)); sama(PM.majoriti(p), 122); const kb = PM.kerusiBlok(p); sama(kb.rakan + kb.borneo, 52); sama(PM.ringkasan(p).blok.length, 3);
+  let m = PM.getPM(p); m.tuntutan = { blok: 'borneo', jenis: 'jawatan', bulan: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { pm: m } });
+  const b0 = PM.getPM(S.loadPlayer()).blok.borneo.kepuasan; betul(PM.jawabTuntutan('terima').ok); p = S.loadPlayer(); betul(p.pm.blok.borneo.kepuasan === b0 + 20 && p.pm.tuntutan === null);
+  betul(PM.agihPortfolio('rakan').ok); sama(PM.agihPortfolio('borneo').ok, false, 'sekali 3 bulan');
+  const ip0 = S.loadPlayer().ip; betul(PM.umumDasar('mega').ok); betul(S.loadPlayer().ip > ip0); sama(PM.umumDasar('rmk').ok, false, 'sekali setahun');
+  const kr0 = S.loadPlayer().pm.nationalCrisisLevel; betul(PM.langkahTegas().ok); betul(S.loadPlayer().pm.nationalCrisisLevel < kr0); sama(PM.langkahTegas().ok, false);
+  sama(PM.isytiharDarurat().ok, false, 'krisis belum 60');
+  p = S.loadPlayer(); p.pm.blok.rakan.kepuasan = 20; S.applyEffects({}, { kiraTindakan: false, patch: { pm: p.pm } });
+  P.tetap({ bulan: 4 }); PM.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); betul(p.pm.blok.rakan.tarik); betul(PM.majoritiKurang(p), 'majoriti < 112');
+  p.pm.nationalCrisisLevel = 70; S.applyEffects({}, { kiraTindakan: false, patch: { pm: p.pm, reputasi: 50 } });
+  betul(PM.isytiharDarurat().ok); p = S.loadPlayer(); betul(PM.daruratAktif(p)); betul(p.reputasi < 50); sama(PM.isytiharDarurat().ok, false, 'sekali sepenggal');
+  DW.prosesBulan({ rng: () => 0.5 }); sama(DW.getDewan(S.loadPlayer()).tp, null, 'darurat sekat usul');
+  P.tetap({ tahun: 2028, bulan: 1 }); DW.prosesBulan({ rng: () => 0.5 }); const tp = DW.getDewan(S.loadPlayer()).tp; betul(!!tp, 'darurat tamat: usul dikemukakan'); betul(tp.tentang >= 100 + 31, 'blok tarik mengundi menentang');
+  S.clearPlayer();
+});
 ujian('v13.74 Modul KKDW: portfolio baharu, fokus agihan, projek infra/PPRS, kontraktor lewat, aduan rakyat, kesan bulanan', () => {
   const K = g.MyPolitikKabinet, W2 = g.MyPolitikKKDW;
   betul(g.MyPolitikKabinetData.menteri.some((m) => m.nama === 'Menteri Kemajuan Desa dan Wilayah'), 'portfolio dalam senarai kabinet');

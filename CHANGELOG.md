@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.75 (2026-11-10)
+
+- **Modul Pejabat Perdana Menteri** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan). Menyambung sistem sedia ada (jawatan PM, Jemaah Menteri, Dewan Rakyat), bukan menggantinya.
+  - Fail baharu `js/pm.js` dan `js/pm-ui.js`. Rekod `p.pm`: `cabinetStability`, `nationalCrisisLevel`, kepuasan blok gabungan, MP goyah, tuntutan, darurat. Dikira: `isPrimeMinister` dan `parliamentaryMajority` (kerusi kerajaan − blok yang menarik sokongan − MP goyah; ambang 112).
+  - **Tab "👑 Pejabat PM"**: majoriti, kestabilan kabinet, krisis nasional, jadual blok gabungan (parti anda, rakan Semenanjung, blok Sabah & Sarawak; pecahan 60/40 ialah anggaran ⚠️).
+  - **Tuntutan blok** (terima / runding / tolak); kepuasan bawah 25 = blok menarik sokongan sehingga pulih ke 45.
+  - **Kuasa eksekutif**: rombakan kabinet (skrin Jemaah Menteri sedia ada), agih portfolio kepada blok, dasar mega nasional sekali setahun.
+  - **Krisis**: langkah tegas (sekali sebulan) dan isytihar darurat (krisis 60+, sekali sepenggal, usul tidak percaya disekat 6 bulan).
+  - `js/dewan.js`: majoriti bawah 112 mencetuskan Usul Undi Tidak Percaya (jeda 3 bulan); blok yang menarik sokongan dan MP goyah mengundi menentang; darurat menyekat usul.
+  - Sambungan modul: tuntutan dan projek mega menolak rizab MOF; langkah drastik menurunkan kebebasan sivil KDN; krisis dipengaruhi ketenteraman KDN dan inflasi MOF.
+- Ujian baharu (207 ujian) dan ujian pelayar `tools/ujian-pm.js`.
+
 ## v13.74 (2026-11-10)
 
 - **Modul Kementerian Kemajuan Desa dan Wilayah (KKDW)** (mockup yang dipersetujui, ikut struktur sebenar; ⚠️ semua nilai ialah anggaran permainan, nama projek ialah label simulasi).
