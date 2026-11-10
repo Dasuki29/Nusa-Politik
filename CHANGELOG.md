@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.58 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 2 (PN): PAS** ikut Perlembagaan PAS (Pindaan 2025), mockup yang dipersetujui (⚠️ andaian ditanda). BERSATU kekal NPC sehingga perlembagaannya diterima.
+  - Cawangan: **Naib Ketua Cawangan** (tiada Timbalan, Fasal 44(1)(b)); AJK 8 dipilih + 4 lantikan (2/3 dipilih, 1/3 dilantik Ketua, 44(2), 44(4)). Sayap Cawangan: Ketua Jawatankuasa Pemuda / Muslimat sahaja (Naib dan AJK sayap Cawangan ditutup).
+  - Kawasan: AJK 16 dipilih + 8 lantikan (41(5)). JK Pusat: 18 dipilih di Muktamar + 8 lantikan Presiden (38(5)).
+  - Dewan Pemuda / Muslimat Kawasan dan Pusat: jawatan baharu **Timbalan Ketua Dewan** (57(4), 67(3)); AJK Dewan ⚠️ 12 (Kawasan) dan 22 (Pusat).
+  - Mekanik baharu **AJK Lantikan 1/3**: calon yang kalah tipis dalam lingkungan kerusi lantikan berpeluang dilantik (⚠️ 50% + sokongan Ketua Cawangan, atau Restu Majlis Syura untuk JK Pusat; 20–80%).
+- `js/struktur.js`: medan `lantikan` dan jawatan khas sayap Timbalan Ketua (boleh diguna semula dalam fasa seterusnya). Ujian baharu (190 ujian).
+
 ## v13.57 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 1 (BN)**: setiap parti BN kini ada struktur jawatan sendiri, ikut perlembagaan parti atau Wikipedia (ikut mockup audit yang dipersetujui; ⚠️ andaian ditanda).

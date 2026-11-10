@@ -8,6 +8,8 @@
      kerusi    : bilangan kerusi dipilih
      pangkatMin: syarat tangga jawatan (jika berbeza)
    Juga: wakilCawangan (bilangan wakil Cawangan ke Bahagian) dan perwakilanPA (siapa boleh menjadi perwakilan ke Perhimpunan Agung).
+     lantikan  : kerusi AJK lantikan; calon kalah dalam lingkungan kerusi + lantikan berpeluang dilantik (js/election.js)
+   Fasa 2 (PN): PAS (Perlembagaan PAS Pindaan 2025).
    Rujukan: Perlembagaan MCA (pindaan 2019), Perlembagaan MIC (2017); PPP dan PBRS daripada Wikipedia (ANDAIAN ⚠️).
    Permainan simulasi; bukan laman rasmi parti.
    ========================================================================== */
@@ -27,6 +29,8 @@
   }
 
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
+
+  var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
 
   var STRUKTUR = {
     MCA: {
@@ -53,6 +57,17 @@
         'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_AJK }
       },
       perwakilanPA: { kod: 'ketua_cawangan', sebab: 'Hanya Pengerusi Cawangan boleh dipilih sebagai perwakilan ke Perhimpunan Agung, secara giliran (Perkara 74.4, 74.5).' }
+    },
+    PAS: {
+      sumber: 'Perlembagaan PAS (Pindaan 2025)',
+      jawatan: {
+        ajk_cawangan: { kerusi: 8, lantikan: 4, fasal: 'Fasal 44(2), 44(4)' },              // 2/3 daripada 12 dipilih, 1/3 dilantik Ketua
+        ajk_bahagian: { kerusi: 16, lantikan: 8, fasal: 'Fasal 41(5)' },                    // 2/3 daripada 24 dipilih, 1/3 dilantik Yang Dipertua
+        ahli_mkt: { kerusi: 18, lantikan: 8, fasal: 'Fasal 38(5)' },                        // 18 dipilih Muktamar, 8 dilantik Presiden
+        'sayap_naib_cawangan_*': { tutup: TUTUP_SAYAP_PAS }, 'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_PAS },
+        'sayap_timbalan_bahagian_*': { buka: true, fasal: 'Fasal 67(3), 68' }, 'sayap_timbalan_pusat_*': { buka: true, fasal: 'Fasal 57(4), 58' },
+        'sayap_ajk_bahagian_*': { kerusi: 12 }, 'sayap_ajk_pusat_*': { kerusi: 22 }         // ANDAIAN: semua AJK Dewan dipilih
+      }
     },
     PPP: {
       sumber: 'Wikipedia (ANDAIAN)',
@@ -89,12 +104,14 @@
   function tersedia(p, d) { var e = entri(p, d); if (e && e.tutup) { return false; } return d && d.khas ? !!(e && e.buka) : true; }
   function sebabTutup(p, d) { var e = entri(p, d); return e && e.tutup ? e.tutup : ''; }
   function kerusi(p, d) { var e = entri(p, d); return e && e.kerusi ? e.kerusi : null; }
+  /** Bilangan kerusi AJK lantikan (1/3 dilantik Ketua / Yang Dipertua / Presiden) bagi jawatan d, atau 0. */
+  function lantikan(p, d) { var e = entri(p, d); return e && e.lantikan ? e.lantikan : 0; }
   function pangkatMin(p, d) { var e = entri(p, d); return e && typeof e.pangkatMin === 'number' ? e.pangkatMin : (d ? d.pangkatMin : 0); }
   /** Bilangan kerusi wakil Cawangan ke Bahagian ikut perlembagaan parti, atau null (guna enjin asas). */
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
   /** Syarat perwakilan ke Perhimpunan Agung: { kod, sebab } atau null. */
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
-  return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, pangkatMin: pangkatMin,
+  return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, pangkatMin: pangkatMin,
     wakilCawangan: wakilCawangan, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA };
 });

@@ -2868,6 +2868,21 @@ ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS ber
   betul(B.bonusRestu(pr, J.cariDef('presiden')) > 0 && B.bonusRestu(pr, J.cariDef('ahli_mkt')) === 0 && B.bonusRestu({ parti: 'PBRS', pbrs: { restu: 10 } }, J.cariDef('timbalan_presiden')) < 0);
   S.clearPlayer();
 });
+ujian('v13.57 Enjin pemilihan ikut parti (Fasa 2 PN): PAS (Fasal 38, 41, 44, 57, 67): AJK 2/3 dipilih + lantikan 1/3, Naib Ketua Cawangan, Timbalan Ketua Dewan', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti, pas = { parti: 'PAS', sayap: 'pemuda' };
+  const kp = J.katalogUntuk(pas).map((d) => d.kod), ku = J.katalogUntuk({ parti: 'UMNO', sayap: 'pemuda' }).map((d) => d.kod);
+  betul(kp.indexOf('sayap_timbalan_bahagian_pemuda') >= 0 && kp.indexOf('sayap_timbalan_pusat_pemuda') >= 0 && ku.indexOf('sayap_timbalan_pusat_pemuda') < 0, 'Timbalan Ketua Dewan PAS sahaja');
+  betul(kp.indexOf('sayap_naib_cawangan_pemuda') < 0 && kp.indexOf('sayap_ajk_cawangan_pemuda') < 0 && kp.indexOf('sayap_cawangan_pemuda') >= 0, 'sayap Cawangan: Ketua sahaja');
+  sama(ST.kerusi(pas, J.cariDef('ajk_cawangan')), 8); sama(ST.lantikan(pas, J.cariDef('ajk_cawangan')), 4); sama(ST.kerusi(pas, J.cariDef('ajk_bahagian')), 16); sama(ST.kerusi(pas, J.cariDef('ahli_mkt')), 18); sama(ST.lantikan(pas, J.cariDef('ahli_mkt')), 8);
+  sama(ST.kerusi(pas, J.cariDef('sayap_ajk_pusat_pemuda')), 22); sama(ST.lantikan({ parti: 'UMNO' }, J.cariDef('ajk_cawangan')), 0);
+  P.daftar({}); P.tetap({ parti: 'PAS' }); sama(PT.ke('Timbalan Ketua Cawangan'), 'Naib Ketua Cawangan'); sama(PT.ke('Timbalan Ketua Wanita Bahagian'), 'Timbalan Ketua Muslimat Kawasan');
+  // lantikan 1/3: kalah tipis dalam kuota lantikan -> boleh dilantik; peluang 50% + sokongan Ketua Cawangan (20-80%)
+  const p0 = Object.assign(S.loadPlayer(), { kesetiaan: Object.assign({}, S.loadPlayer().kesetiaan, { ketuaCawangan: 80 }) }), dA = J.cariDef('ajk_cawangan');
+  sama(E.peluangLantikan(p0, dA), 0.8); betul(E.lantikanBerlaku(p0, dA, 10, 8, () => 0.5), 'tempat 10 daripada 8 + 4 lantikan');
+  betul(!E.lantikanBerlaku(p0, dA, 13, 8, () => 0), 'tempat 13 di luar kuota'); betul(!E.lantikanBerlaku(p0, dA, 10, 8, () => 0.9), 'peluang tidak berjaya');
+  betul(!E.lantikanBerlaku(Object.assign({}, p0, { parti: 'UMNO' }), dA, 10, 8, () => 0), 'UMNO tiada lantikan');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

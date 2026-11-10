@@ -713,6 +713,18 @@
    */
   var KUNCI_PERWAKILAN = { perwakilan_cawangan: 'cawangan', perwakilan_bahagian: 'bahagian', perwakilan_sayap_cawangan: 'sayapCawangan', perwakilan_sayap_g10: 'g10', perwakilan_sayap_g2: 'g2' };
 
+  /** v13.57: peluang dilantik sebagai AJK lantikan selepas kalah tipis. ANDAIAN: 50% + sokongan Ketua Cawangan (Cawangan/Kawasan) atau Restu Majlis Syura (Pusat), 20-80%. */
+  function peluangLantikan(p, d) {
+    var b = 0;
+    if (d.peringkat === 'pusat') { var PA = p.parti === 'PAS' ? modKhas('MyPolitikPAS', 'pas.js') : null; b = PA && PA.restu ? (PA.restu(p) - 50) / 100 : 0; }
+    else { b = ((p.kesetiaan && Number(p.kesetiaan.ketuaCawangan)) || 50) / 100 - 0.5; }
+    return clamp(0.5 + b, 0.2, 0.8);
+  }
+  function lantikanBerlaku(p, d, kedudukan, kerusi, rng) {
+    var StL = modKhas('MyPolitikStruktur', 'struktur.js'), n = StL ? StL.lantikan(p, d) : 0;
+    return !!(n && kedudukan > kerusi && kedudukan <= kerusi + n && (rng || Math.random)() < peluangLantikan(p, d));
+  }
+  function pelantik(d) { return d.peringkat === 'pusat' ? 'Presiden' : d.peringkat === 'bahagian' ? 'Ketua Bahagian' : 'Ketua Cawangan'; }
   function jalankanPemilihan(kod, opts) {
     opts = opts || {};
     var p = S.loadPlayer();
@@ -731,6 +743,8 @@
     var rng = opts.rng || Math.random, b = bina(p, st, d, opts), h = undi(b.calon, b.kerusi, b.pemilih, rng);
     var sendiri = h.jadual.filter(function (j) { return j.pemain; })[0], menang = sendiri.menang;
     var jenis = d.jenis === 'perwakilan' ? 'perwakilan' : 'jawatan';
+    var dilantik = jenis === 'jawatan' && !menang && lantikanBerlaku(p, d, sendiri.kedudukan, b.kerusi, rng);   // v13.57: AJK lantikan 1/3 (PAS Fasal 38(5), 41(5), 44(4))
+    if (dilantik) { menang = true; sendiri.menang = true; }
     var kumpulanKod = function (k) { var df = J.cariDef(k); return df ? df.kumpulan || 'utama' : 'utama'; };
     if (jenis === 'jawatan') {                                                  // v6.8: satu jawatan setiap peringkat dalam satu pemilihan
       var sudahMenang = Object.keys(st.keputusan).filter(function (k) { return k !== kod && st.daftar[k] && st.daftar[k].jenis !== 'perwakilan' && st.daftar[k].peringkat === d.peringkat && kumpulanKod(k) === kumpulanKod(kod) && st.keputusan[k] && st.keputusan[k].menang; })[0];
@@ -740,7 +754,7 @@
 
     var keputusan = {
       kod: kod, jawatan: d.jawatan, peringkat: d.peringkat, kerusi: b.kerusi, pemilih: b.pemilih, hadir: h.hadir,
-      menang: menang, kedudukan: sendiri.kedudukan, undi: sendiri.undi, jumlahCalon: b.calon.length,
+      menang: menang, kedudukan: sendiri.kedudukan, undi: sendiri.undi, jumlahCalon: b.calon.length, dilantik: dilantik || undefined,
       jadual: h.jadual.filter(function (j, i) { return i < 10 || j.pemain; }), tahun: p.tahun, tarikh: new Date().toISOString()
     };
     st.keputusan[kod] = keputusan;
@@ -758,6 +772,7 @@
       if (def) { var pt = J.terapkan(p, def, menang); Object.keys(pt).forEach(function (k) { patch[k] = pt[k]; }); }
       var tidakDipegang = menang && def && !Object.keys(pt || {}).length && !pegangSebelum ? J.jawatanSamaPeringkat(p, def) : null;   // v13.39: menang tetapi jawatan lebih tinggi di peringkat sama dikekalkan
       if (tidakDipegang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Anda menang ' + d.jawatan + ', tetapi kekal sebagai ' + tidakDipegang.jawatan + ' kerana hanya satu jawatan bagi setiap peringkat. Jawatan ' + tidakDipegang.jawatan + ' tetap melayakkan anda bertanding di peringkat lebih tinggi.' }); }
+      else if (dilantik) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Anda tidak menang undian (kedudukan ' + sendiri.kedudukan + '), tetapi dilantik sebagai ' + d.jawatan + ' dalam kuota lantikan 1/3 oleh ' + pelantik(d) + '.' }); }
       else if (menang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Tahniah. ' + (pegangSebelum ? 'Anda kekal sebagai ' : 'Anda dipilih sebagai ') + d.jawatan + '.' }); }
       else if (pegangSebelum) { peristiwa.push({ jenis: 'jawatan_hilang', mesej: 'Anda kalah mempertahankan ' + d.jawatan + ' dan kehilangan jawatan itu.' }); }
       var cb = cabaranUntuk(p, d);                                               // v8.0: keputusan pemilihan menamatkan cabaran jawatan
@@ -777,7 +792,7 @@
     });
     if (!r.ok) { return r; }
 
-    var mesej = (menang ? 'Menang' : 'Kalah') + ' ' + d.jawatan + ': kedudukan ' + sendiri.kedudukan + ' daripada ' + b.calon.length +
+    var mesej = (dilantik ? 'Dilantik' : menang ? 'Menang' : 'Kalah') + ' ' + d.jawatan + ': kedudukan ' + sendiri.kedudukan + ' daripada ' + b.calon.length +
                 ' calon (' + sendiri.undi + ' undi, ' + b.kerusi + ' kerusi). ' + S.ringkasPerubahan(r.perubahan) + '.';
     return { ok: true, mesej: mesej, keputusan: keputusan, perubahan: r.perubahan, peristiwa: peristiwa, profil: r.profil };
   }
@@ -851,7 +866,7 @@
     getStatusModul: getStatusModul,
     senaraiPertandingan: senaraiPertandingan,
     kuotaCawangan: kuotaCawangan, kuotaBahagian: kuotaBahagian, kuotaSayapCawangan: kuotaSayapCawangan, ahliSayap: ahliSayap,
-    daftarBertanding: daftarBertanding,
+    daftarBertanding: daftarBertanding, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan,
     tarikBalik: tarikBalik,
     senaraiKempen: senaraiKempen,
     jalankanKempen: jalankanKempen,

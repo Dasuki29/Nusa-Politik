@@ -74,6 +74,9 @@
     tambah({ kod: 'sayap_naib_bahagian_' + w, jawatan: 'Naib Ketua ' + N + ' Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 4.5, ipMin: 145, pangkatMin: 1, perluBahagian: true, kesukaran: 10, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
     tambah({ kod: 'sayap_ajk_pusat_' + w,     jawatan: 'AJK ' + N + ' Pusat',            peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 7.5, kerusi: 20, pesaing: 5, ipMin: 230, pangkatMin: 4, perluPAU: true, kesukaran: 12, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
     tambah({ kod: 'sayap_naib_pusat_' + w,    jawatan: 'Naib Ketua ' + N,               peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 8.5, ipMin: 260, pangkatMin: 4, perluPAU: true, kesukaran: 18, keahlian: 36, fasal: 'Peraturan ' + N + ' (3 tahun ahli)' });
+    // v13.57: jawatan khas Timbalan Ketua sayap (PAS Fasal 57(4), 67(3)); tertutup kecuali dibuka js/struktur.js
+    tambah({ kod: 'sayap_timbalan_bahagian_' + w, jawatan: 'Timbalan Ketua ' + N + ' Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: w, pangkat: 4.8, ipMin: 155, pangkatMin: 1, perluBahagian: true, kesukaran: 12, keahlian: 36, khas: true });
+    tambah({ kod: 'sayap_timbalan_pusat_' + w,    jawatan: 'Timbalan Ketua ' + N,               peringkat: 'pusat',    kumpulan: 'sayap', sayap: w, pangkat: 9.2, ipMin: 270, pangkatMin: 4, perluPAU: true, kesukaran: 20, keahlian: 36, khas: true });
   });
 
   function cariDef(kod) { for (var i = 0; i < KATALOG.length; i++) { if (KATALOG[i].kod === kod) { return KATALOG[i]; } } return null; }

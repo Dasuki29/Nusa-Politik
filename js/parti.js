@@ -114,6 +114,7 @@
       [/Perhimpunan Agung PAS \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar Tahunan PAS'], [/Perhimpunan Agung PAS/g, 'Muktamar Tahunan PAS'],
       [/PAS General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/General Assembly \(PAU\)/g, 'PAS Annual Muktamar'], [/\bPAU\b/g, 'Muktamar'],
       [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di negeri tuan rumah Muktamar'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in the Muktamar host state'],
+      [/\bTimbalan Ketua Cawangan\b/g, 'Naib Ketua Cawangan'],   // v13.57: Fasal 44(1)(b)
       [/\bTimbalan Ketua Bahagian\b/g, 'Timbalan Yang Dipertua Kawasan'], [/\bNaib Ketua Bahagian\b/g, 'Naib Yang Dipertua Kawasan'], [/\bKetua Bahagian\b/g, 'Yang Dipertua Kawasan'], [/\bketua bahagian\b/g, 'yang dipertua kawasan'],
       [/Bahagian/g, 'Kawasan'], [/(peringkat|Peringkat) bahagian/g, '$1 kawasan'], [/\bDivisions\b/g, 'Areas'], [/\bDivision\b/g, 'Area'], [/\bdivisions\b/g, 'areas'], [/\bdivision\b/g, 'area'],
       [/Pengerusi Badan Perhubungan Negeri/g, 'Pesuruhjaya PAS Negeri'], [/Pengerusi Badan Perhubungan/g, 'Pesuruhjaya PAS'], [/Badan Perhubungan Negeri/g, 'Perhubungan PAS Negeri'], [/Badan Perhubungan/g, 'Perhubungan PAS'],
@@ -122,6 +123,7 @@
     istilahSongsang: [[/Jawatankuasa Kerja PAS Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Kerja PAS Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
       [/Muktamar Tahunan PAS/g, 'Perhimpunan Agung PAS (PAU)'], [/PAS Annual Muktamar/g, 'PAS General Assembly (PAU)'], [/\bMuktamar\b/g, 'PAU'],
       [/ di negeri tuan rumah PAU/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ in the PAU host state/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/\bNaib Ketua Cawangan\b/g, 'Timbalan Ketua Cawangan'],
       [/Timbalan Yang Dipertua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Yang Dipertua Kawasan/g, 'Naib Ketua Bahagian'], [/Yang Dipertua Kawasan/g, 'Ketua Bahagian'], [/yang dipertua kawasan/g, 'ketua bahagian'],
       [/(peringkat|Peringkat) kawasan/g, '$1 bahagian'], [/(?<!Peruntukan |Zon |Kaum |Lobi |Butiran |di )Kawasan(?! (campuran|operasi|anda|Pemain))/g, 'Bahagian'], [/\bAreas\b/g, 'Divisions'], [/\bArea\b/g, 'Division'],
       [/Pesuruhjaya PAS Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Pesuruhjaya PAS/g, 'Pengerusi Badan Perhubungan'], [/Perhubungan PAS Negeri/g, 'Badan Perhubungan Negeri'], [/Perhubungan PAS/g, 'Badan Perhubungan'],
