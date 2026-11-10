@@ -223,9 +223,14 @@
     }
     if (!k.hasGovernmentRole) { return smb + kadTiadaLobi(p); }
     h = smb + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
-    if (k.pejabat) {                                                    // v13.69: tab Pejabat EXCO / Portfolio Saya
-      h += '<div class="exco-tab" role="tablist"><button type="button" role="tab" data-pru="exco-tab" data-id="ringkasan"' + (tabEXCO === 'ringkasan' ? ' class="on" aria-selected="true"' : '') + '>Ringkasan</button><button type="button" role="tab" data-pru="exco-tab" data-id="pejabat"' + (tabEXCO === 'pejabat' ? ' class="on" aria-selected="true"' : '') + '>🏛️ Portfolio Saya</button></div>';
+    var tabK = [], MOFUI = W.MyPolitikMOFUI, adaMOF = !!(MOFUI && W.MyPolitikMOF && W.MyPolitikMOF.aktif(p));   // v13.69 Portfolio Saya; v13.70 Pejabat MOF
+    if (k.pejabat) { tabK.push(['pejabat', '🏛️ Portfolio Saya']); }
+    if (adaMOF) { tabK.push(['mof', '💰 Pejabat MOF']); }
+    if (tabK.length) {
+      if (tabEXCO !== 'ringkasan' && !tabK.some(function (x) { return x[0] === tabEXCO; })) { tabEXCO = 'ringkasan'; }
+      h += '<div class="exco-tab" role="tablist">' + [['ringkasan', 'Ringkasan']].concat(tabK).map(function (x) { return '<button type="button" role="tab" data-pru="exco-tab" data-id="' + x[0] + '"' + (tabEXCO === x[0] ? ' class="on" aria-selected="true"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>';
       if (tabEXCO === 'pejabat') { return h + kadPejabat(k.pejabat) + '</section>'; }
+      if (tabEXCO === 'mof') { return h + MOFUI.kad(p) + '</section>'; }
     }
     var arah = k.arah > 0 ? ' ▲ +' + k.arah : k.arah < 0 ? ' ▼ ' + k.arah : ' ▬';
     h += bar('KPI Portfolio · ' + k.kpiLabel + arah, k.governanceRating, k.governanceRating < 30) + bar('Tekanan politik', k.tekananPolitik, k.tekananPolitik >= 70) +
@@ -793,7 +798,7 @@
     var a = t.getAttribute('data-pru');
     if (a === 'buka') { alir(); } else if (a === 'tindak') { tindak(t.getAttribute('data-id')); } else if (a === 'jentera') { hantarJentera(t.getAttribute('data-i')); } else if (a === 'kejutan') { sibuk = true; kejutan().then(function () { sibuk = false; segarkan(); }, function () { sibuk = false; }); }
     else if (a === 'selesai') { selesai(); } else if (a === 'nasional') { nasional(); } else if (a === 'keputusan') { keputusan(); } else if (a === 'lobi') { lobi(); } else if (a === 'mb') { menteriBesar(); } else if (a === 'acara') { acara(); } else if (a === 'tarik') { tarikDiriPRU(); } else if (a === 'prk-tarik') { tarikDiriPRK(); } else if (a === 'prk-buka') { alirPRK(); } else if (a === 'prk-tindak') { tindakPRK(t.getAttribute('data-id')); } else if (a === 'prk-selesai') { selesaiPRK(); } else if (a === 'prk-keputusan') { keputusanPRK(); } else if (a === 'cdf') { salurCDF(t.getAttribute('data-jumlah')); } else if (a === 'janji') { majuJanji(t.getAttribute('data-id')); }
-    else if (a === 'exco-tab') { tabEXCO = t.getAttribute('data-id') === 'pejabat' ? 'pejabat' : 'ringkasan'; segarkan(); } else if (a === 'exco-tindak') { tindakEXCO(t.getAttribute('data-id')); }   // v13.69
+    else if (a === 'exco-tab') { tabEXCO = ['pejabat', 'mof'].indexOf(t.getAttribute('data-id')) >= 0 ? t.getAttribute('data-id') : 'ringkasan'; segarkan(); } else if (a === 'exco-tindak') { tindakEXCO(t.getAttribute('data-id')); }   // v13.69
   });
 
   W.NusaPRU_UI = {  nasional: nasional, musim: musim, kad: kad, lencana: lencana, selepasBulan: selepasBulan, alir: alir, kejutan: kejutan, keputusan: keputusan, lobi: lobi, acara: acara, selesai: selesai };

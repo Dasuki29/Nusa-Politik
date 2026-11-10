@@ -517,6 +517,8 @@
 
     var KAB = muat('MyPolitikKabinet', 'kabinet.js');                                           // v7.4: elaun & acara pentadbiran bulanan
     if (KAB && KAB.prosesBulan) { peristiwa = peristiwa.concat(KAB.prosesBulan().peristiwa || []); }
+    var MOF = muat('MyPolitikMOF', 'mof.js');                                                    // v13.70: rizab, inflasi dan kepuasan rakyat (Menteri Kewangan)
+    if (MOF && MOF.prosesBulan) { peristiwa = peristiwa.concat(MOF.prosesBulan().peristiwa || []); }
     var IGT = muat('MyPolitikIntegriti', 'integriti.js');                                       // v7.58: Whip, Disiplin Parti & Audit SPRM
     if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }
     var MDA = muat('MyPolitikMedia', 'media.js');                                                // v7.59: Jentera Media Digital (sidang media rawak, persepsi)

@@ -3038,6 +3038,25 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.70 Modul Kementerian Kewangan: Bajet Tahunan, cukai & subsidi, rizab/inflasi/kepuasan bulanan, Dewan', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikMOF;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 9, ap: 10, myr: 50000 }); let p = S.loadPlayer();
+  betul(!M.aktif(p), 'bukan Menteri Kewangan');
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Kewangan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(M.aktif(p)); const r0 = M.ringkasan(p); sama(r0.rizab, 50); sama(r0.bajet.kementerian.length, 6); betul(r0.bajet.buka);
+  betul(M.ubahBajet('pendidikan', 1).ok); betul(M.ubahBajet('pendidikan', 1).ok); betul(M.ubahBajet('pendidikan', 1).ok); sama(M.ubahBajet('pendidikan', 1).ok, false, 'had ±15%');
+  betul(M.ubahBajet('pertahanan', -1).ok); const h0 = M.getMOF(S.loadPlayer()).hubungan;
+  betul(M.muktamadBajet().ok); p = S.loadPlayer();
+  sama(p.mof.ministryBudgets.pendidikan, 73.6); betul(p.mof.hubungan.pendidikan > h0.pendidikan && p.mof.hubungan.pertahanan < h0.pertahanan, 'hubungan berubah');
+  betul(M.larasDewan(p) > 0, 'bajet rakyat lebih mudah lulus'); sama(M.ubahBajet('kesihatan', 1).ok, false, 'sekali setahun');
+  const sat0 = p.mof.publicSatisfaction; const d = M.ubahDasar('sst', '10'); betul(d.ok, d.ralat); p = S.loadPlayer(); betul(p.mof.publicSatisfaction < sat0, 'kenaikan SST menurunkan kepuasan');
+  sama(M.ubahDasar('minyak', 'apung').ok, false, 'satu perubahan sebulan');
+  const a = M.aliran(p.mof), riz = p.mof.nationalTreasury; M.prosesBulan(); p = S.loadPlayer(); sama(p.mof.nationalTreasury, Math.round((riz + a.bersih) * 10) / 10);
+  P.tetap({ bulan: 10 }); betul(M.ubahDasar('minyak', 'apung').ok); p = S.loadPlayer(); betul(M.sasaran(p.mof).inflasi > 3, 'subsidi ditarik: inflasi naik');
+  p.mof.nationalTreasury = 5; S.applyEffects({}, { kiraTindakan: false, patch: { mof: p.mof } }); const rt = K.getKabinet(S.loadPlayer()).governanceRating;
+  const ev = M.prosesBulan().peristiwa; betul(ev.some((e) => /Krisis fiskal/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt, 'KPI jatuh');
+  S.clearPlayer();
+});
 ujian('v13.69 Kepimpinan Negeri: MB/KM pegang portfolio 1, 9 portfolio EXCO ditapis IP, Agama ikut parti, Pejabat EXCO sebulan sekali', () => {
   const KB = g.MyPolitikKabinet;
   P.daftar({}); P.tetap({ tahun: 2027, ip: 130, myr: 50000, ap: 10 }); betul(KB.bukaLobi('DUN').ok);
@@ -3046,8 +3065,8 @@ ujian('v13.69 Kepimpinan Negeri: MB/KM pegang portfolio 1, 9 portfolio EXCO dita
   const pl = sn.find((x) => x.id === 'exco_pelaburan'); betul(!pl.boleh && pl.kurangIP === 70, 'Pelaburan dikunci, kurang 70 IP');
   betul(sn.find((x) => x.id === 'exco_luarbandar').boleh, 'Luar Bandar terbuka');
   betul(sn.some((x) => x.id === 'exco_agama'), 'UMNO nampak portfolio Agama');
-  let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('exco_kerjaraya', () => 0.01); }
-  betul(lj && lj.dilantik); p = S.loadPlayer();
+  P.tetap({ ip: 1000 }); let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('exco_kerjaraya', () => 0.01); }
+  betul(lj && lj.dilantik, JSON.stringify(lj)); p = S.loadPlayer();
   let kn = KB.kepimpinanNegeri(p); sama(kn.isStateLeader, false); sama(kn.stateExcoPortfolio, 'Kerja Raya, Infrastruktur & Kemudahan Awam');
   sama(g.MyPolitikDewan.kategoriPemain(p)[0], 'infra');
   let pj = KB.pejabatEXCO(p); sama(pj.tindakan.length, 3); const ap0 = p.ap, ak0 = p.kesetiaan.akarUmbi, ip0 = p.ip;

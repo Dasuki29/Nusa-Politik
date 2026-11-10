@@ -206,6 +206,7 @@
     if (sb.sebab) { return { ok: false, ralat: sb.sebab }; }
     if (id === 'bajet') { if (!sb.bajet) { return { ok: false, ralat: 'Bajet hanya dibentang bulan ' + CONFIG.BULAN_BAJET + ', sekali setahun.' }; } r = sb.bajet; }
     else { if (!sb.ruu.length) { return { ok: false, ralat: sb.sebabRUU || 'Tiada RUU boleh dibentang.' }; } r = cariRUU(id, p.tahun); if (!r || !sb.ruu.some(function (x) { return x.id === id; })) { return { ok: false, ralat: 'RUU tidak sah untuk portfolio anda.' }; } }
+    if (r.jenis === 'bajet') { var MF = modul('MyPolitikMOF', 'mof.js'), lm = MF && MF.larasDewan ? MF.larasDewan(p) : 0; if (lm) { r = Object.assign({}, r, { asas: r.asas + lm }); } }   // v13.70: Bajet Tahunan MOF
     var k = kerusi(p), b = bahagiUndi(k, r.asas, r.silang), d = getDewan(p);
     d.undi = { id: r.id, jenis: r.jenis === 'bajet' ? 'bajet' : 'ruu', tajuk: r.tajuk, kategori: r.kategori, sokong: b.sokong, atas: b.atas, bantah: b.bantah, lobi: 0, tahun: p.tahun, bulan: p.bulan };
     if (d.undi.jenis === 'bajet') { d.bajetTahun = p.tahun; } else { d.sesi = sesiKunci(p); }

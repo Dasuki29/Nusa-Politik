@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.70 (2026-11-10)
+
+- **Modul Kementerian Kewangan (MOF)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan).
+  - Fail baharu `js/mof.js` dan `js/mof-ui.js`. Rekod `p.mof`: `nationalTreasury` (rizab, RM bilion), `inflationRate`, `publicSatisfaction`, `ministryBudgets` dan hubungan dengan 6 menteri.
+  - **Tab "💰 Pejabat MOF"** pada kad kerajaan, hanya untuk pemegang portfolio Menteri Kewangan: rizab, inflasi, kepuasan rakyat dan aliran tunai bulanan.
+  - **Bajet Tahunan Negara** (bulan 9-10, sekali setahun): laras peruntukan 6 kementerian (langkah 5%, had ±15%); naikkan = hubungan menteri naik, potong = menteri tidak puas hati. Bajet yang menaikkan peruntukan rakyat (Pendidikan, Kesihatan, Luar Bandar) lebih mudah lulus di Dewan Rakyat; bajet berjimat lebih sukar.
+  - **Cukai & Subsidi**: SST, cukai pendapatan, subsidi bahan api dan subsidi barangan asas; satu perubahan sebulan.
+  - Bulanan: rizab dikemas kini; inflasi dan kepuasan bergerak ke arah sasaran dasar; kepuasan mempengaruhi populariti nasional; rizab bawah RM 10 bilion = krisis fiskal (KPI −5); menteri marah = risiko rombakan.
+- Ujian baharu (202 ujian) dan ujian pelayar `tools/ujian-mof.js`.
+
 ## v13.69 (2026-11-10)
 
 - **Sistem Kepimpinan Negeri** (mockup yang dipersetujui; ⚠️ nilai ialah andaian permainan).

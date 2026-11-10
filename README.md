@@ -85,6 +85,7 @@ Modul utama dalam `js/`:
 | `polling.js` | Kaji Selidik Pilihan Raya: unjuran undi, status kerusi, pengundi atas pagar, demografi |
 | `warroom.js` | Bilik Gerakan (War Room): zon kawasan, penghantaran jentera, pertempuran jentera, keletihan kempen |
 | `kabinet.js`, `jemaah.js` | Lobi portfolio, jawatan kerajaan, Kepimpinan Negeri (MB/KM, 10 portfolio EXCO, Pejabat EXCO) dan pembentukan Jemaah Menteri oleh Perdana Menteri |
+| `mof.js`, `mof-ui.js` | Modul Kementerian Kewangan: rizab, inflasi, kepuasan rakyat, Bajet Tahunan Negara, cukai dan subsidi (tab Pejabat MOF) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -192,6 +193,7 @@ node tools/ujian-pas.js          # pelayar: panel PN, daftar PAS (Kelantan), ist
 node tools/ujian-pbrs.js         # pelayar: daftar PBRS (Sabah sahaja, kad PBRS, Majlis Muhibah GRS, banner PRN Sabah, EN)
 node tools/ujian-letak.js        # pelayar: kad Wakil Rakyat & Kerajaan, skrin Letak Jawatan, senarai semak MB, EN
 node tools/ujian-exco.js         # pelayar: lobi 9 portfolio EXCO dengan bar IP, tab Pejabat EXCO / Portfolio Saya, EN
+node tools/ujian-mof.js          # pelayar: tab Pejabat MOF, laras bajet, muktamad, tukar dasar cukai/subsidi, EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN
