@@ -644,6 +644,15 @@
   ["Kenyataan berunsur fitnah terhadap pembangkang dalam sidang media (Tataetika)", "Defamatory statement against the opposition at a press conference (Code of Ethics)"],
   ["Pangkah", "Mark"],
   ["petak untuk bermula.", "box to begin."],
-  ["Tempoh 3 tahun selepas pemecatan telah tamat. Anda kini boleh menghantar rayuan: buka tab Tindakan Pemain dan tekan \"Hantar Rayuan Pemecatan\".", "The 3-year period after your expulsion has ended. You can now appeal: open the Player Actions tab and press \"Submit Expulsion Appeal\"."]
+  ["Tempoh 3 tahun selepas pemecatan telah tamat. Anda kini boleh menghantar rayuan: buka tab Tindakan Pemain dan tekan \"Hantar Rayuan Pemecatan\".", "The 3-year period after your expulsion has ended. You can now appeal: open the Player Actions tab and press \"Submit Expulsion Appeal\"."],
+  /* v13.53: BERJASA dan kumpulan Lain-lain */
+  ["BERJASA (mod ringan, tanpa gabungan): parti Islam yang ditubuhkan pada 1977. Kawasan operasi ialah kawasan Parlimen Semenanjung dengan Bumiputera 50% ke atas; Cawangan ialah Daerah Mengundi. Sayap Wanita BERJASA dan ANGKASA (had umur 40). Mekanik Parti Kecil: bina Kekuatan Parti, runding pakatan pilihan raya dan jadi penentu kerajaan. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "BERJASA (light mode, no coalition): an Islamic party founded in 1977. Its operating areas are the Peninsular parliamentary constituencies that are at least 50% Bumiputera; a branch is a polling district. Wings: Wanita BERJASA and ANGKASA (age limit 40). Small Party mechanic: build Party Strength, negotiate electoral pacts and become the kingmaker. Member counts are game estimates. A simulation, not official party data."],
+  ["Kawasan {x}: Bumiputera {a}%. BERJASA tiada gabungan: bertanding solo atau melalui pakatan pilihan raya.", "Area {x}: Bumiputera {a}%. BERJASA has no coalition: contest alone or through an electoral pact."],
+  ["BERJASA (Semenanjung, tanpa gabungan, mod ringan)", "BERJASA (Peninsula, no coalition, light mode)"],
+  ["Lain-lain", "Others"],
+  ["Parti tanpa gabungan · BERJASA", "Parties without a coalition · BERJASA"],
+  ["Parti tanpa gabungan · Semenanjung", "Parties without a coalition · Peninsula"],
+  ["Parti tanpa gabungan", "Parties without a coalition"],
+  ["BERJASA mod ringan (tiada perlembagaan; struktur diandaikan).", "BERJASA in light mode (no constitution; structure assumed)."]
   ]);
 })();

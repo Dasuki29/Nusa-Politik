@@ -40,7 +40,7 @@
   function SW(k) { return k === 'PBB' || k === 'PRS' || k === 'SUPP' || k === 'PDP' || k === 'PSB'; }
 
   var CONFIG = { JEDA_TAHUN: 5, MAKS: 2, REP_MIN: 20, IP_KEKAL: 0.5, REPUTASI: -10, KATAK_BULAN: 24, AKAR_UMBI: 30, PRK_BULAN: 1 };
-  var SENARAI = ['UMNO', 'MCA', 'MIC', 'PPP', 'PBRS', 'PAS', 'PKR', 'DAP', 'PBB', 'PRS', 'SUPP', 'PDP'];
+  var SENARAI = ['UMNO', 'MCA', 'MIC', 'PPP', 'PBRS', 'PAS', 'PKR', 'DAP', 'PBB', 'PRS', 'SUPP', 'PDP', 'BERJASA'];
   var KEKAL = ['nama', 'tahun', 'bulan', 'myr', 'ap', 'stress', 'kesihatan', 'settings', 'pendidikan', 'careerBackground', 'harta', 'log', 'dicipta', 'gelaran', 'jawatanTertinggi', 'tamat'];
 
   function aktifDi(kod, negeri) {
@@ -48,10 +48,10 @@
     if (SW(kod)) { return swk; }
     if (kod === 'PKR' || kod === 'DAP') { return true; }
     if (kod === 'PBRS') { return sbh; }
-    if (kod === 'PPP' || kod === 'PAS') { return !swk && !sbh; }
+    if (kod === 'PPP' || kod === 'PAS' || kod === 'BERJASA') { return !swk && !sbh; }
     return !swk;                                                          // UMNO, MCA, MIC: Semenanjung dan Sabah
   }
-  function gabParti(kod) { return SW(kod) ? 'GPS' : kod === 'PAS' ? 'PN' : kod === 'PKR' || kod === 'DAP' ? 'PH' : 'BN'; }
+  function gabParti(kod) { return SW(kod) ? 'GPS' : kod === 'PAS' ? 'PN' : kod === 'PKR' || kod === 'DAP' ? 'PH' : kod === 'BERJASA' ? 'LAIN' : 'BN'; }
   function nama(kod) { var P = PT(); var i = P && P.info ? P.info(kod) : null; return (i && (i.nama || i.singkatan)) || kod; }
   function getL(p) { var l = p && p.lompat && typeof p.lompat === 'object' ? salin(p.lompat) : {}; l.kali = l.kali || 0; l.sejarah = Array.isArray(l.sejarah) ? l.sejarah : []; l.prk = Array.isArray(l.prk) ? l.prk : []; l.katakSehingga = l.katakSehingga || 0; return l; }
   function dipecat(p) { return !!(p && p.etika && p.etika.status === 'dipecat'); }

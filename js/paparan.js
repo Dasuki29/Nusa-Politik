@@ -274,7 +274,7 @@
     }
     /* v13.33: pemain bukan Presiden: NPC Presiden parti membentuk gabungan jika gabungan sendiri kurang majoriti (js/rundingan.js). */
     var presidenP = p && (/^Presiden$/i.test(String(p.jawatan || '')) || (Array.isArray(p.jawatanList) ? p.jawatanList : []).some(function (j) { return /^Presiden$/i.test(String(j && j.jawatan || '')); }));
-    var RG = !Ngab && !kerajaan && !presidenP && !(N && N.tahun === rekod.tahun && N.bulan === rekod.bulan) ? (root.MyPolitikRundingan || (typeof require === 'function' ? (function () { try { return require('./rundingan.js'); } catch (e) { return null; } })() : null)) : null;
+    var RG = !Ngab && !kerajaan && !presidenP && !adalahBERJASA(p) && !(N && N.tahun === rekod.tahun && N.bulan === rekod.bulan) ? (root.MyPolitikRundingan || (typeof require === 'function' ? (function () { try { return require('./rundingan.js'); } catch (e) { return null; } })() : null)) : null;
     var hN = RG && RG.npc ? RG.npc(p, o) : null;
     if (hN) {
       o.rakan += hN.tambah; o.bebas = Math.max(0, o.bebas - hN.ambilBebas); o.pembangkang = J - o.parti - o.rakan - o.bebas;
@@ -315,10 +315,12 @@
   /** v13.34: pemain PKR = slot gabungan pemain ialah Pakatan Harapan; slot lawan 'PH' dalaman mewakili Barisan Nasional. */
   function adalahPH(p) { return !!p && (p.parti === 'PKR' || p.parti === 'DAP'); }   // v13.37: DAP juga
   function modGab(p) {
-    var n = adalahPN(p) ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'DAP' ? ['MyPolitikDAP', './dap.js'] : adalahPH(p) ? ['MyPolitikPKR', './pkr.js'] : null; if (!n) { return null; }
+    var n = adalahPN(p) ? ['MyPolitikPAS', './pas.js'] : p && p.parti === 'BERJASA' ? ['MyPolitikBERJASA', './berjasa.js'] : p && p.parti === 'DAP' ? ['MyPolitikDAP', './dap.js'] : adalahPH(p) ? ['MyPolitikPKR', './pkr.js'] : null; if (!n) { return null; }
     return root[n[0]] || (typeof require === 'function' ? (function () { try { return require(n[1]); } catch (e) { return null; } })() : null);
   }
-  function lawanGab(p) { return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : adalahPH(p) ? { PH: GABUNGAN.BN, PN: GABUNGAN.PN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
+  /** v13.53: BERJASA (tanpa gabungan): slot 'PH' = Kerajaan Perpaduan (PH + BN), slot 'PN' = Perikatan Nasional. */
+  function adalahBERJASA(p) { return !!p && p.parti === 'BERJASA'; }
+  function lawanGab(p) { if (adalahBERJASA(p)) { return { PH: { nama: 'Kerajaan Perpaduan (PH + BN)', pendek: 'PH+BN', warna: GABUNGAN.PH.warna }, PN: GABUNGAN.PN }; } return adalahPN(p) ? { PH: GABUNGAN.PH, PN: GABUNGAN.BN } : adalahPH(p) ? { PH: GABUNGAN.BN, PN: GABUNGAN.PN } : { PH: GABUNGAN.PH, PN: GABUNGAN.PN }; }
   /** Pecah kerusi pembangkang kepada PH/PN (anggaran deterministik). Jika parti anda kalah, PH diberi bahagian lebih besar (gabungan pembangkang utama). */
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
     var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
@@ -331,6 +333,7 @@
   function labelBN(p, dun) {
     if (p && p.parti === 'PSB' && !dun) { return { nama: 'Parti Sarawak Bersatu', pendek: 'PSB' }; }   // v10.3: pembangkang di luar Kerajaan Perpaduan
     if (p && SW(p.parti)) { return dun ? { nama: 'Gabungan Parti Sarawak', pendek: 'GPS' } : { nama: 'Kerajaan Perpaduan', pendek: 'Perpaduan' }; }
+    if (adalahBERJASA(p)) { return { nama: 'BERJASA', pendek: 'BERJASA', warna: '#76094A' }; }   // v13.53
     if (adalahPN(p)) { return { nama: 'Perikatan Nasional', pendek: 'PN', warna: '#0B2A5B' }; }   // v13.31
     if (adalahPH(p)) { return { nama: 'Pakatan Harapan', pendek: 'PH', warna: '#E10600' }; }   // v13.34
     return GABUNGAN.BN;

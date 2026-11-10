@@ -185,7 +185,7 @@
   /* ---------- Panel ---------- */
   function panel(p) {
     try {
-      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' ? 'PH' : 'BN' };
+      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' ? 'PH' : p.parti === 'BERJASA' ? 'BERJASA' : 'BN' };
       var sw = kedua(p) ? '<div class="dw-tukar" role="group" aria-label="Pilih dewan"><button type="button" class="btn btn--sm ' + (D === D0 ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="RAKYAT">🏛️ Dewan Rakyat</button> <button type="button" class="btn btn--sm ' + (D === N ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="DUN">🏢 DUN' + (p.negeri ? ' ' + esc(p.negeri) : '') + '</button></div>' : '';
       if (!r.aktif) { return '<div class="banner"><strong>Dewan Rakyat</strong>Tab ini terbuka apabila anda menjadi Ahli Parlimen, Menteri, ADUN atau EXCO Negeri.</div>'; }
       var k = r.kerusi, h = sw;

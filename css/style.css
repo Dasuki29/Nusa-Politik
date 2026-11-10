@@ -1126,3 +1126,10 @@ html, body { overflow-x: clip; }
 .tyt-ev { border: 2px solid #5B1A6E; border-radius: var(--radius); padding: 8px 10px; margin: 8px 0; background: rgba(91, 26, 110, .08); }
 .tyt-ev small { display: block; color: var(--text-muted); font-size: .8rem; margin-top: 2px; }
 .tyt-sy { list-style: none; padding: 0; margin: 0 0 4px; font-size: .85rem; }
+
+/* v13.53: kad BERJASA (Parti Kecil) */
+.bj-ban { display: flex; gap: 10px; align-items: center; background: #76094A; color: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
+.bj-ban img { width: 40px; height: 40px; border-radius: 8px; background: #fff; object-fit: contain; flex: none; }
+.bj-ban b { display: block; }
+.bj-ban small { color: #F3D1E3; font-size: .78rem; }
+.bj-bar i { background: #B0377A; }

@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.53 (2026-11-10)
+
+- **Maklum balas baris 27: BERJASA dan kumpulan "Lain-lain"** (ikut mockup yang dipersetujui; tiada perlembagaan BERJASA, jadi struktur, takwim dan semua nombor ⚠️ andaian).
+  - **Menu utama disusun semula:** BN, PH, PN, GPS dan kumpulan baharu **Lain-lain** (parti tanpa gabungan). BERJASA ialah parti pertama dalam Lain-lain.
+  - **BERJASA (Barisan Jemaah Islamiah Se-Malaysia), mod ringan:** Cawangan → Kawasan (kawasan Parlimen Semenanjung, ⚠️ Bumiputera 50% ke atas, 139 kawasan) → Pusat. Keahlian ~56,790 dibahagi ikut anggaran pengundi Melayu-Islam. Istilah: Ketua Kawasan, Jawatankuasa Pusat (AJK Pusat), Muktamar BERJASA, sayap Wanita BERJASA dan ANGKASA (⚠️ had umur 40). Pemilihan setiap 3 tahun dari 2027: Cawangan bulan 3, Kawasan bulan 5, Muktamar bulan 6.
+  - **Mekanik Parti Kecil** (kad 🌙 dalam tab Profil): Kekuatan Parti 0–100 (mula 8; undi parti 1% hingga 15%). 📣 Dakwah & rekrut ahli (2 AP + RM 2,000: Kekuatan +1, akar umbi +2). 🤝 Pakatan pilihan raya 6 bulan sebelum PRU dengan PN atau BN (1–3 kerusi tanpa pertembungan; gagal = solo). 🗳️ PRU solo di mana-mana kawasan operasi (ofset undi negatif; pakatan mengurangkannya). ⚖️ Penentu kerajaan: Ahli Parlimen BERJASA boleh menawarkan sokongan kepada BN, PN atau PH dalam 3 bulan selepas PRU untuk jawatan Timbalan Menteri.
+  - Kad kerusi: BERJASA (★ parti anda), Kerajaan Perpaduan (PH + BN) dan Perikatan Nasional. BERJASA juga tersedia dalam Lompat Parti (Semenanjung).
+- Fail baharu: `js/berjasa.js`, `js/berjasa-ui.js`, `js/berjasa-data.js`, `data/berjasa-semenanjung.csv`, `tools/build-berjasa.js`, `tools/ujian-berjasa.js`, `assets/images/logo-berjasa.png` (logo daripada pengguna). Ujian baharu (185 ujian).
+
 ## v13.52 (2026-11-10)
 
 - **Maklum balas Threads no. 5: Yang di-Pertua Negeri (TYT)** bagi Sarawak, Sabah, Melaka dan Pulau Pinang (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).

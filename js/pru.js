@@ -249,7 +249,7 @@
   function polling() { return modul('MyPolitikPolling', 'polling.js'); }                     // v12.7: kaji selidik kempen
   function warRoom() { return modul('MyPolitikWarRoom', 'warroom.js'); }                     // v12.8: Bilik Gerakan
   function tular() { return modul('MyPolitikTular', 'tular.js'); }
-  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } if (p && p.parti === 'PBRS') { return modul('MyPolitikPBRS', 'pbrs.js'); } if (p && p.parti === 'PAS') { return modul('MyPolitikPAS', 'pas.js'); } if (p && p.parti === 'PKR') { return modul('MyPolitikPKR', 'pkr.js'); } if (p && p.parti === 'DAP') { return modul('MyPolitikDAP', 'dap.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
+  function mca(p0) { var Sv = S(), p = p0 || (Sv && Sv.loadPlayer ? Sv.loadPlayer() : null); if (p && p.parti === 'MIC') { return modul('MyPolitikMIC', 'mic.js'); } if (p && p.parti === 'PPP') { return modul('MyPolitikPPP', 'ppp.js'); } if (p && p.parti === 'PBRS') { return modul('MyPolitikPBRS', 'pbrs.js'); } if (p && p.parti === 'PAS') { return modul('MyPolitikPAS', 'pas.js'); } if (p && p.parti === 'PKR') { return modul('MyPolitikPKR', 'pkr.js'); } if (p && p.parti === 'DAP') { return modul('MyPolitikDAP', 'dap.js'); } if (p && p.parti === 'BERJASA') { return modul('MyPolitikBERJASA', 'berjasa.js'); } var M = modul('MyPolitikMCA', 'mca.js'); return M; }      // v13.3: MIC guna antara muka yang sama (kuota, ofset, lawan)                      // v13.1: MCA (kuota BN, kitaran pemilihan)                           // v12.9: krisis tular
   /** v9.4: pemain PBB: musim semasa 'PRN' (kerusi DUN) atau 'PRU' (kerusi Parlimen). null = bukan PBB. */
   function sabah() { return modul('MyPolitikSabah', 'sabah.js'); }                           // v13.9: PRN Sabah (UMNO Sabah, PBRS)
   function diSabah(p) { var B = sabah(); return !!(B && B.adalah && B.adalah(p)); }
@@ -495,7 +495,7 @@
       a.calonImport = { tahap: kl.tahap, sokongan: kl.sokongan, negeriSama: kr.negeriSama };
       a.constituencyType = profilKawasan({ bahagian: kr.nama, dun: kr.nama, negeri: kr.negeri }); a.lawan = lawanPool(a.constituencyType);
     }
-    a.perluRunding = p.parti !== 'PSB' && (jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
+    a.perluRunding = p.parti !== 'PSB' && p.parti !== 'BERJASA' && (jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan: ' + a.kerusi.nama + ' (' + jenis + ')', peringkat: 'ahli' } });
     return { ok: true, diluluskan: true, perluRunding: a.perluRunding, lain: lain, mesej: 'Dicalonkan bertanding kerusi ' + a.kerusi.nama + ' (' + (jenis === 'DUN' ? 'DUN' : 'Parlimen') + ').' };
@@ -523,7 +523,7 @@
     var kodP = (p2.kod && p2.kod.parlimen) || p2.bahagian, kodD = (p2.kod && p2.kod.dun) || p2.dun;
     a.candidateType = 'PARLIMEN'; a.kerusi = { jenis: 'PARLIMEN', nama: p2.bahagian || 'Parlimen', kod: kodP || '' };
     a.candidateType2 = 'DUN'; a.kerusi2 = { jenis: 'DUN', nama: p2.dun || 'DUN', kod: kodD || '' };
-    a.perluRunding = p.parti !== 'PSB' && (r() < CONFIG.GABUNGAN.peluangRunding + 0.1);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
+    a.perluRunding = p.parti !== 'PSB' && p.parti !== 'BERJASA' && (r() < CONFIG.GABUNGAN.peluangRunding + 0.1);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan serentak: ' + a.kerusi.nama + ' (Parlimen) + ' + a.kerusi2.nama + ' (DUN)', peringkat: 'ahli' } });
     return { ok: true, diluluskan: true, dua: true, perluRunding: a.perluRunding, mesej: 'Dicalonkan bertanding serentak kerusi ' + a.kerusi.nama + ' (Parlimen) dan ' + a.kerusi2.nama + ' (DUN).' };
@@ -845,7 +845,8 @@
         else if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
         else if (SWg.kerusiPremier) { var kp0 = SWg.kerusiPremier(p); if (kp0) { g.kerajaan = kp0.gabungan >= kp0.ambang; } }   // v12.6: DUN Sarawak: status ikut kerusi GPS yang dipaparkan (70-78/82), bukan lambungan 60-90%
         kk.kerajaan = g.kerajaan;
-        if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
+        if (p.parti === 'PSB') { g.kerajaan = false; kk.kerajaan = false; }
+        if (p.parti === 'BERJASA') { g.kerajaan = false; kk.kerajaan = false; }                                  // v13.53: BERJASA tanpa gabungan (Penentu kerajaan di kad BERJASA)                                      // v10.3: PSB pembangkang tidak membentuk kerajaan
         if (!sekunder) {
           var siasat = a.siasatSprm || 0;
           if (siasat > 0 && r() < clamp(0.5 + 0.2 * (siasat - 1), 0.5, 0.9)) { g.petisyen = true; }
@@ -934,10 +935,10 @@
     var parti = bulat(N.JUMLAH * (0.18 + (pop - 30) / 40 * 0.42) + antara(r, -8, 8));
     parti = clamp(parti, 30, 150);
     var rakan = Math.min(N.JUMLAH - parti, bulat(N.JUMLAH * antara(r, 0.14, 0.26)));
-    var PASn = p && p.parti === 'PAS' ? modul('MyPolitikPAS', 'pas.js') : p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : p && p.parti === 'DAP' ? modul('MyPolitikDAP', 'dap.js') : null;   // v13.34: PKR (PH) juga; v13.37: DAP
+    var PASn = p && p.parti === 'PAS' ? modul('MyPolitikPAS', 'pas.js') : p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : p && p.parti === 'DAP' ? modul('MyPolitikDAP', 'dap.js') : p && p.parti === 'BERJASA' ? modul('MyPolitikBERJASA', 'berjasa.js') : null;   // v13.53: BERJASA (parti kecil); v13.34: PKR (PH) juga; v13.37: DAP
     if (PASn && PASn.kerusiParlimen) { var kpN = PASn.kerusiParlimen(pop, r); parti = kpN.parti; rakan = kpN.rakan; }   // v13.31: PN (PAS + rakan) ikut formula PAS
     var PBm = modul('MyPolitikPembangkang', 'pembangkang.js'), bkN = PBm && PBm.bonusKerusi ? PBm.bonusKerusi(p) : 0;   // v13.50: Naratif Pembangkang (+1 kerusi setiap 5 mata melebihi 50)
-    if (bkN) { parti = clamp(parti + bkN, 30, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }
+    if (bkN) { parti = clamp(parti + bkN, parti < 30 ? 0 : 30, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }
     var status = parti >= N.MAJORITI ? 'MAJORITI' : (parti + rakan >= N.MAJORITI ? 'GABUNGAN' : 'PEMBANGKANG');
     var kongsi = rakan > 0 ? parti / (parti + rakan) : 1;
     var adjPM = ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002;

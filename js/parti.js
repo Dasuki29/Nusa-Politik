@@ -191,6 +191,27 @@
       [/(peringkat|Peringkat) JPKP/g, '$1 bahagian'], [/JPKP/g, 'Bahagian'],
       [/Pengerusi Negeri/g, 'Pengerusi Badan Perhubungan Negeri'], [/Jawatankuasa Negeri/g, 'Badan Perhubungan Negeri'],
       [/\bDAPSY\b/g, 'Pemuda'], [/Perlembagaan DAP, Fasal VII\.3/g, 'Fasal 20.12'], [/Perlembagaan DAP, Fasal VII\.2/g, 'Fasal 20.10'], [/Perlembagaan DAP, Fasal VII\.1/g, 'Fasal 20.5'], [/Perlembagaan DAP, Fasal IV\.13\(c\)/g, 'Fasal 20.7']].concat(BULAN_DAP_S) };
+  /* v13.53: BERJASA (Barisan Jemaah Islamiah Se-Malaysia) = parti tanpa gabungan (kumpulan "Lain-lain"), MOD RINGAN (enjin yang sama seperti PPP; js/berjasa.js).
+     Tiada perlembagaan BERJASA: struktur diandaikan seperti PAS (parti asal BERJASA). Istilah: Kawasan dan Ketua Kawasan, Jawatankuasa Pusat (AJK Pusat),
+     Muktamar BERJASA, sayap Wanita BERJASA dan ANGKASA (Angkatan Pemuda-Pemudi, had umur 40). ANDAIAN: kawasan operasi = kawasan Parlimen Semenanjung
+     dengan Bumiputera 50% ke atas (data/berjasa-semenanjung.csv, tools/build-berjasa.js); takwim Cawangan 3, Kawasan 5, Muktamar 6. Logo daripada pengguna. */
+  var BULAN_BERJASA = BULAN_PPP.concat([[/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 6'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 6'],
+    [/\b([Bb])ulan 10[-–]12\b/g, '$1ulan 7-12'], [/\b([Bb])ulan 10 hingga 12\b/g, '$1ulan 7 hingga 12'], [/\b([Mm])onths 10[-–]12\b/g, '$1onths 7-12'], [/\b([Mm])onths 10 to 12\b/g, '$1onths 7 to 12']]);
+  var BULAN_BERJASA_S = [[/\b([Bb])ulan 7-12\b/g, '$1ulan 10-12'], [/\b([Bb])ulan 7 hingga 12\b/g, '$1ulan 10 hingga 12'], [/\b([Bb])ulan 6\b(?![-–\d])(?! \(Jun\))/g, '$1ulan 9']].concat(BULAN_PPP_S);
+  SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
+    istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (AJK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'AJK Pusat'], [/Supreme Council \(MKT\)/g, 'Central Committee (AJK Pusat)'], [/Supreme Council/g, 'Central Committee'],
+      [/Perhimpunan Agung BERJASA \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung BERJASA/g, 'Muktamar BERJASA'],
+      [/BERJASA General Assembly \(PAU\)/g, 'BERJASA Muktamar'], [/General Assembly \(PAU\)/g, 'BERJASA Muktamar'], [/BERJASA General Assembly/g, 'BERJASA Muktamar'], [/\bPAU\b/g, 'Muktamar'],
+      [/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Kota Bharu'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in Kota Bharu'],
+      [/\bTimbalan Ketua Bahagian\b/g, 'Timbalan Ketua Kawasan'], [/\bNaib Ketua Bahagian\b/g, 'Naib Ketua Kawasan'], [/\bKetua Bahagian\b/g, 'Ketua Kawasan'], [/\bketua bahagian\b/g, 'ketua kawasan'],
+      [/Bahagian/g, 'Kawasan'], [/(peringkat|Peringkat) bahagian/g, '$1 kawasan'], [/\bDivisions\b/g, 'Areas'], [/\bDivision\b/g, 'Area'], [/\bdivisions\b/g, 'areas'], [/\bdivision\b/g, 'area'],
+      [/\bPemuda\b/g, 'ANGKASA'], [/\bYouth\b/g, 'ANGKASA']].concat(BULAN_BERJASA),
+    istilahSongsang: [[/Jawatankuasa Pusat \(AJK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bAJK Pusat\b/g, 'MKT'], [/Central Committee/g, 'Supreme Council'],
+      [/Muktamar BERJASA/g, 'Perhimpunan Agung BERJASA (PAU)'], [/BERJASA Muktamar/g, 'BERJASA General Assembly (PAU)'], [/\bMuktamar\b/g, 'PAU'],
+      [/ di Kota Bharu/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"], [/ in Kota Bharu/g, " at WTC Kuala Lumpur (Menara Dato' Onn)"],
+      [/Timbalan Ketua Kawasan/g, 'Timbalan Ketua Bahagian'], [/Naib Ketua Kawasan/g, 'Naib Ketua Bahagian'], [/Ketua Kawasan/g, 'Ketua Bahagian'], [/ketua kawasan/g, 'ketua bahagian'],
+      [/(peringkat|Peringkat) kawasan/g, '$1 bahagian'], [/(?<!Peruntukan |Zon |Kaum |Lobi |Butiran |di )Kawasan(?! (campuran|operasi|anda|Pemain))/g, 'Bahagian'], [/\bAreas\b/g, 'Divisions'], [/\bArea\b/g, 'Division'],
+      [/\bANGKASA\b/g, 'Pemuda']].concat(BULAN_BERJASA_S) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -223,11 +244,12 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP') || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA') || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
-    if (k === 'PAS') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(/\bPAS\b/g, 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
+    if (k === 'BERJASA') { calon.push(a); }   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
+    if (k === 'PAS' || k === 'BERJASA') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
     if (k === 'DAP' || k === 'PKR') { [d, tanpaBulan].forEach(function (x) { ['20.13', '20.10a', '20.10b', '20.10c', '20.10d', '20.12.2'].forEach(function (f0) { var y = x.replace(/Fasal 20\.(10|12|5)\b/, 'Fasal ' + f0); if (y !== x) { calon.push(y); } }); }); }   // v13.38: rujukan disiplin dipetakan banyak-ke-satu
     calon.forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });

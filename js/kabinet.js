@@ -349,6 +349,8 @@
     k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilantik' }]).slice(-10);
     return simpan(k, {}, { log: { tindakan: log, nama: 'Dilantik: ' + nama, peringkat: 'ahli' } });
   }
+  /** v13.53: lantikan terus Timbalan Menteri (BERJASA: tawaran sokongan Penentu kerajaan diterima). */
+  function lantikTM(nama) { var p = S().loadPlayer(), k = getKabinet(p); if (k.hasGovernmentRole) { return { ok: false, ralat: 'Sudah memegang jawatan kerajaan.' }; } var r = lantikDi(p, k, 'TIMBALAN_MENTERI', nama || TAHAP.TIMBALAN_MENTERI.nama, 'lantik_tm'); return { ok: !!(r && r.ok), ralat: r && r.ralat }; }
   /** Tuntut Menteri Besar (v13.41: tiada kos AP atau Dana; angkat sumpah tidak boleh tersekat kerana AP habis). Majoriti sendiri = terus; gabungan = peluang. Gagal: hubungan gabungan -10 dan EXCO Kanan. */
   function tuntutMB(o) {
     var p = S().loadPlayer(), k = getKabinet(p), sy = syaratMB(p), r = rng(o);
@@ -591,7 +593,7 @@
   return {
     CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getKabinet: getKabinet, lantikKanan: lantikKanan, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
+    getKabinet: getKabinet, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
     laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
   };
 });

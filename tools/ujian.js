@@ -2709,6 +2709,36 @@ ujian('v13.52 Yang di-Pertua Negeri: syarat, tawaran, terima, tugas Istana, pemb
   betul(p.tamat.pilihanRaya.jawatanKerajaan.some((x) => /Yang di-Pertua Negeri Sarawak/.test(x)), 'legasi');
   S.clearPlayer();
 });
+ujian('v13.53 BERJASA: data Semenanjung, takwim 3/5/6, ANGKASA, Kekuatan Parti, pakatan, PRU solo, penentu kerajaan (baris 27)', () => {
+  const M = g.MyPolitikBERJASA, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'berjasa-semenanjung.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 139, '139 kawasan Bumiputera >= 50%'); const ahli = h.bahagian.reduce((a, b) => a + b.cawangan.reduce((x, c) => x + c.jumlahAhli, 0), 0);
+  betul(Math.abs(ahli - 56790) < 100, 'keahlian ~56,790 (' + ahli + ')'); betul(!SY.kelayakan('P', 25, 'BERJASA').puteri.boleh, 'tiada Puteri');
+  const kb = h.bahagian.find((b) => b.nama === 'Kota Bharu');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'BERJASA', nama: 'Uji BERJASA', demografik: D.tentukanDemografi('Lelaki', 39, 'BERJASA'), cawangan: kb.dun[0].cawangan[0], sayap: 'pemuda', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'BERJASA'); sama(p.sayap, 'pemuda'); sama(PT.info('BERJASA').gabungan, null);
+  sama(E.adalahTahunPemilihan(2026), false); sama(E.adalahTahunPemilihan(2027), true); sama(K.getTetingkap('cawangan', 1).mula, 3); sama(K.getTetingkap('bahagian', 1).mula, 5); sama(K.getTetingkap('pau', 1).mula, 6);
+  sama(PT.ke('Ketua Bahagian dan Pemuda Bahagian (bulan 6) ke Perhimpunan Agung UMNO (PAU) bulan 9'), 'Ketua Kawasan dan ANGKASA Kawasan (bulan 5) ke Muktamar BERJASA bulan 6');
+  const kw = M.kawasan(p); sama(kw.parlimen.n, 'Kota Bharu'); betul(kw.kuotaPL && kw.kuotaDUN, 'boleh bertanding solo');
+  sama(M.kekuatan(p), 8); sama(M.undiParti(p), 2.1); sama(M.ofset(p), -13);
+  // Dakwah
+  P.tetap({ ap: 20, myr: 50000 }); let r = M.dakwah(); betul(r.ok, r.ralat); sama(M.kekuatan(S.loadPlayer()), 9); sama(M.dakwah().ok, false, 'sekali sebulan');
+  // Pakatan: hanya 6 bulan sebelum PRU (PRU 2031/3)
+  sama(M.statusPakatan(S.loadPlayer()).boleh, false, 'terlalu awal'); P.tetap({ tahun: 2030, bulan: 10 });
+  betul(M.statusPakatan(S.loadPlayer()).boleh); r = M.runding('PN', { rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat || r.mesej);
+  p = S.loadPlayer(); sama(M.pakatanSah(p).gab, 'PN'); betul(M.ofset(p) > -13, 'ofset pakatan lebih baik'); sama(M.lawan(p)[0], 'BN'); sama(M.runding('BN').ok, false, 'sekali bagi setiap PRU');
+  // kerusi nasional kecil, tiada rakan
+  const kp = M.kerusiParlimen(45, () => 0.5); betul(kp.parti <= 3 && kp.rakan === 0, JSON.stringify(kp));
+  // ANGKASA: umur 41 => parti induk
+  P.tetap({ demografik: Object.assign({}, S.loadPlayer().demografik, { umur: 45 }) }); M.prosesBulan(); sama(S.loadPlayer().sayap, 'utama', 'had umur ANGKASA 40');
+  // Penentu kerajaan: Ahli Parlimen selepas PRU
+  const pru = Object.assign({}, PRU.getPRU(S.loadPlayer())); pru.riwayat = [{ tahun: 2031, bulan: 3, jenis: 'PRU' }]; pru.tahunPRU = 2036; pru.status = { jenis: 'MP', kerusi: 'Kota Bharu', sejakTahun: 2031, sejakBulan: 3, kerajaan: false };
+  P.tetap({ tahun: 2031, bulan: 4, pru: pru }); M.prosesBulan(); sama(M.kekuatan(S.loadPlayer()), 9 + M.CONFIG.KEKUATAN.menangMP, 'menang MP: Kekuatan +6'); sama(M.pakatanSah(S.loadPlayer()), null, 'pakatan tamat selepas PRU');
+  betul(M.statusPenentu(S.loadPlayer()).boleh); r = M.sokong('PH', { rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat || r.mesej);
+  p = S.loadPlayer(); sama(PRU.getPRU(p).status.kerajaan, true); sama(g.MyPolitikKabinet.getKabinet(p).roleLevel, 'TIMBALAN_MENTERI'); sama(M.sokong('BN').ok, false);
+  betul(g.MyPolitikLompat.aktifDi('BERJASA', 'Kelantan') && !g.MyPolitikLompat.aktifDi('BERJASA', 'Sabah'), 'lompat: Semenanjung sahaja');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
