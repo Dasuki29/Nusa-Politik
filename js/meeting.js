@@ -274,6 +274,16 @@
         { kod: 'amanah_keadilan', tajuk: 'Keadilan sosial: gaji wajar dan perumahan rakyat', penerangan: 'Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.', populariti: 66, nilai: 3 }
       ]
     },
+    BERJASA: {
+      cawangan: [{ kod: 'bj_fardu', tajuk: 'Kelas fardu ain dan tahfiz untuk anak-anak', penerangan: 'Ibu bapa mahu kelas agama yang tetap di kawasan ini.', populariti: 70, nilai: 3 }],
+      bahagian: [{ kod: 'bj_ekonomi', tajuk: 'Ekonomi Islam untuk peniaga kecil', penerangan: 'Pembiayaan patuh syariah dan koperasi untuk peniaga kecil Melayu.', populariti: 64, nilai: 3 }],
+      pau: [{ kod: 'bj_dasar', tajuk: 'Islam sebagai teras dasar negara', penerangan: 'Muktamar mendesak nilai Islam diterapkan dalam dasar awam.', populariti: 66, nilai: 3 }, { kod: 'bj_ummah', tajuk: 'Kerjasama ummah dalam PN dan GTA', penerangan: 'BERJASA mahu kerjasama parti Islam dan Melayu diperkukuh.', populariti: 62, nilai: 3 }]
+    },
+    WARISAN: {
+      cawangan: [{ kod: 'wr_air', tajuk: 'Air dan jalan untuk kampung luar bandar', penerangan: 'Penduduk masih bergantung kepada air tangki dan jalan tanah.', populariti: 68, nilai: 3 }],
+      bahagian: [{ kod: 'wr_kerja', tajuk: 'Peluang kerja untuk anak muda Sabah', penerangan: 'Bahagian mahu pelaburan yang membuka peluang kerja tempatan.', populariti: 66, nilai: 3 }, { kod: 'wr_semenanjung', tajuk: 'Kembangkan Warisan di Semenanjung', penerangan: 'Bahagian mahu Warisan membuka lebih banyak cawangan di Semenanjung.', populariti: 58, nilai: 2 }],
+      pau: [{ kod: 'wr_perpaduan', tajuk: 'Parti milik semua kaum', penerangan: 'Warisan memperjuangkan perpaduan tanpa mengira kaum dan agama.', populariti: 66, nilai: 3 }]
+    },
     GAGASAN: {
       cawangan: [{ kod: 'gag_air', tajuk: 'Bekalan air dan elektrik yang stabil di Sabah', penerangan: 'Gangguan air dan elektrik masih kerap di kawasan ini.', populariti: 70, nilai: 4 }],
       bahagian: [{ kod: 'gag_kerja', tajuk: 'Utamakan anak Sabah dalam peluang pekerjaan', penerangan: 'Belia Sabah terpaksa berhijrah ke Semenanjung untuk bekerja.', populariti: 66, nilai: 3 }],
@@ -378,6 +388,7 @@
     PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
     PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63'],
     PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera'],
+    BERJASA: ['Malaysia Bermaruah dan Berhikmat', 'Gandingan Profesional, Ulama dan Orang Muda'], WARISAN: ['Bangsa Kita, Warisan Kita, Masa Depan Kita'],
     GAGASAN: ['Sabah Maju Jaya', 'Parti Tempatan untuk Sabah'], PBS: ['Hak Anak Negeri Sabah', 'Perpaduan Masyarakat Sabah'], UPKO: ['Suara Kadazandusun Murut', 'Sabah Berautonomi'],
     LDP: ['Ekonomi Terbuka Sabah', 'Liberal dan Demokratik'], PHRS: ['Sabah untuk Rakyat Sabah'], PCS: ['Demi Autonomi dan Kedaulatan Sabah'],
     PBB: ['Sarawak Maju dan Sejahtera', 'Hak Sarawak di bawah MA63'],
@@ -554,13 +565,14 @@
   /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
   function hadirKira(p, peringkat) {
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
-    var kodM = /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti || '') ? 'MyPolitikGRS' : { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
+    var kodM = /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti || '') ? 'MyPolitikGRS' : { BERJASA: 'MyPolitikBERJASA', WARISAN: 'MyPolitikWarisan', MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
     var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
     var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null, rp = null;
     if (M && M.ringkasPusat) { try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } }
     if (!rp && mz(p, 'bilBahagian')) { rp = { bilBahagian: mz(p, 'bilBahagian') }; }   // v13.64: parti Sarawak tanpa modul Pusat (PBB 82, PRS 34, SUPP 20, PDP 15 DUN)
     var nB = rp && rp.bilBahagian; if (!nB) { return null; }
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
+    if ((kodM === 'MyPolitikBERJASA' || kodM === 'MyPolitikWarisan') && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(30, Math.round(rp.pengundi / 4)); }   // v13.68: BERJASA / Warisan: perwakilan modul parti
     if (kodM === 'MyPolitikGRS' && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(30, Math.round(rp.pengundi / 4)); }   // v13.66: GRS: perwakilan modul GRS
     if (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') {      // v13.62: PH: PKR semua anggota Cabang (≈10% hadir, ANDAIAN); DAP ahli JPKP; Amanah 14.3; Pusat = perwakilan modul parti
       var nCw = (Eg.bilPemilih ? Eg.bilPemilih(p, 'bahagian') / Math.max(1, Eg.kuotaCawangan(p)) : 10);

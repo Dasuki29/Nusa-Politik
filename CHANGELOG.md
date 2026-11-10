@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.68 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 6 (Lain-lain)** ikut mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **BERJASA**: bilangan hadir Muktamar dan sayap kini ikut modul parti (bukan angka lalai UMNO); usul parti sendiri (kelas fardu ain dan tahfiz, ekonomi Islam untuk peniaga kecil, Islam sebagai teras dasar, kerjasama ummah dalam PN/GTA); Ucapan Dasar bertema "Malaysia Bermaruah dan Berhikmat" atau "Gandingan Profesional, Ulama dan Orang Muda" ⚠️.
+  - **Warisan**: bilangan hadir Kongres ikut modul parti; usul parti sendiri (air dan jalan kampung, peluang kerja anak muda Sabah, kembangkan Warisan di Semenanjung, parti milik semua kaum); Ucapan Dasar bertema "Bangsa Kita, Warisan Kita, Masa Depan Kita".
+  - Terjemahan Inggeris untuk usul dan tema baharu.
+- Dengan ini audit enjin pemilihan dan enjin mesyuarat untuk keenam-enam fasa (BN, PN, PH, GPS, GRS, Lain-lain) selesai.
+- Ujian baharu (200 ujian).
+
 ## v13.67 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 6 (Lain-lain)** ikut Wikipedia Bahasa Melayu, mockup yang dipersetujui (⚠️ andaian ditanda).

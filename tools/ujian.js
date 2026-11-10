@@ -3038,6 +3038,14 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.68 Enjin mesyuarat Lain-lain (Fasa 6): BERJASA / Warisan hadir dari modul, usul dan slogan parti', () => {
+  const M0 = g.MyPolitikMeeting;
+  P.daftar({}); P.tetap({ parti: 'BERJASA', tahun: 2027 }); let p = S.loadPlayer(); betul(M0.bilHadir(p, 'pau') > 300 && M0.bilHadir(p, 'pau') < 1500, 'hadir Muktamar ' + M0.bilHadir(p, 'pau'));
+  let ag = M0.janaAgendaUji(p, 'pau'); betul(ag.some((a) => /^bj_/.test(a.kod)) && ag.some((a) => /Bermaruah|Gandingan/.test(a.tajuk)), ag.map((a) => a.tajuk).join('|'));
+  P.tetap({ parti: 'WARISAN' }); p = S.loadPlayer(); ag = M0.janaAgendaUji(p, 'pau'); betul(ag.some((a) => /^wr_/.test(a.kod)) && ag.some((a) => /Bangsa Kita/.test(a.tajuk)));
+  betul(M0.bilHadir(p, 'pau') !== 1500);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
