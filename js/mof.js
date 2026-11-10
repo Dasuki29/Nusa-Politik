@@ -79,8 +79,9 @@
   function pilihan(tuil, id) { var t = TUIL[tuil]; for (var i = 0; i < t.pilihan.length; i++) { if (t.pilihan[i].id === id) { return t.pilihan[i]; } } return t.pilihan[1]; }
 
   /* ---------- Pengiraan ---------- */
-  function aliran(m) {
-    var hasil = CONFIG.HASIL_ASAS + pilihan('sst', m.dasar.sst).hasil + pilihan('pendapatan', m.dasar.pendapatan).hasil;
+  function aliran(m, p) {
+    var KL = p ? modul('MyPolitikKLN', 'kln.js') : null;                                   // v13.76: dagangan Wisma Putra menambah hasil
+    var hasil = CONFIG.HASIL_ASAS + pilihan('sst', m.dasar.sst).hasil + pilihan('pendapatan', m.dasar.pendapatan).hasil + (KL && KL.hasilDagang ? KL.hasilDagang(p) : 0);
     var subsidi = pilihan('minyak', m.dasar.minyak).kos + pilihan('barang', m.dasar.barang).kos, belanja = 0;
     KEMENTERIAN.forEach(function (k) { belanja += Number(m.ministryBudgets[k.kod]) || 0; });
     belanja = belanja / 12;
@@ -145,7 +146,7 @@
   function prosesBulan() {
     var p = S() && S().loadPlayer(), ev = [];
     if (!p || p.tamat || (!p.mof && !aktif(p))) { return { peristiwa: ev }; }
-    var m = getMOF(p), a = aliran(m), K = KB(), on = aktif(p);
+    var m = getMOF(p), a = aliran(m, p), K = KB(), on = aktif(p);
     m.nationalTreasury = r1(m.nationalTreasury + a.bersih); m.aliranLalu = a.bersih;
     var s = sasaran(m);
     m.inflationRate = r1(m.inflationRate + (s.inflasi - m.inflationRate) * 0.3);
@@ -165,7 +166,7 @@
   }
 
   function ringkasan(p) {
-    var m = getMOF(p), a = aliran(m), s = sasaran(m), buka = bajetBuka(p), jumlah = 0, jumlahBaru = 0;
+    var m = getMOF(p), a = aliran(m, p), s = sasaran(m), buka = bajetBuka(p), jumlah = 0, jumlahBaru = 0;
     var kem = KEMENTERIAN.map(function (k) {
       var l = m.draf[k.kod] || 0, sek = m.ministryBudgets[k.kod], baru = r1(sek * (1 + CONFIG.LANGKAH * l)); jumlah += sek; jumlahBaru += baru;
       return { kod: k.kod, nama: k.nama, bajet: sek, baru: baru, langkah: l, peratus: Math.round(l * CONFIG.LANGKAH * 100), hubungan: m.hubungan[k.kod], marah: m.hubungan[k.kod] < CONFIG.HUB_MARAH, rakyat: !!k.rakyat };

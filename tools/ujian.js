@@ -3038,6 +3038,29 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.76 Wisma Putra: lawatan, isu, konsular, sidang kemuncak, FTA, kesan bulanan, sambungan MOF dan MINDEF', () => {
+  const K = g.MyPolitikKabinet, KL = g.MyPolitikKLN, MF = g.MyPolitikMOF, MD = g.MyPolitikMINDEF;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!KL.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Luar Negeri' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(KL.aktif(p)); sama(KL.ringkasan(p).blok.length, 4);
+  const h0 = KL.getKLN(p).hubungan.barat, ip0 = p.ip; betul(KL.lawatan('barat').ok); p = S.loadPlayer(); sama(p.kln.hubungan.barat, h0 + 8); betul(p.ip > ip0); sama(KL.lawatan('timur').ok, false, 'satu lawatan sebulan');
+  p.kln.isu = { id: 'konflik', bulan: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { kln: p.kln } });
+  const o0 = S.loadPlayer().kln.hubungan.oic; betul(KL.pendirian('kecam').ok); p = S.loadPlayer(); betul(p.kln.hubungan.oic === o0 + 10 && p.kln.isu === null);
+  p.kln.konsular = { id: 'terkandas', fasa: 'baru', siapIdx: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { kln: p.kln } });
+  betul(KL.tanganiKonsular('saluran').ok); sama(S.loadPlayer().kln.konsular.fasa, 'saluran');
+  p = S.loadPlayer(); p.kln.dana = 150; S.applyEffects({}, { kiraTindakan: false, patch: { kln: p.kln } });
+  betul(KL.sidangKemuncak().ok); sama(KL.sidangKemuncak().ok, false, 'sekali setahun');
+  betul(KL.mulaFTA('timur').ok); sama(KL.mulaFTA('asean').ok, false, 'satu FTA');
+  P.tetap({ bulan: 6 }); const d0 = S.loadPlayer().kln.tradeIndex; KL.prosesBulan({ rng: () => 0.01 }); p = S.loadPlayer();
+  sama(p.kln.fta, null); betul(p.kln.tradeIndex >= d0 + 8 - 2, 'FTA siap: dagangan naik'); sama(p.kln.konsular, null, 'saluran selesai');
+  p.kln.hubungan.barat = 10; p.kln.diplomaticStanding = 20; S.applyEffects({}, { kiraTindakan: false, patch: { kln: p.kln } });
+  const rt = K.getKabinet(S.loadPlayer()).governanceRating; P.tetap({ bulan: 7 }); const ev = KL.prosesBulan({ rng: () => 0.99 }).peristiwa;
+  betul(ev.some((e) => /membekukan hubungan/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt, 'beku & kedudukan rendah: KPI jatuh');
+  p = S.loadPlayer(); p.kln.tradeIndex = 80; p.kln.diplomaticStanding = 75; S.applyEffects({}, { kiraTindakan: false, patch: { kln: p.kln } }); p = S.loadPlayer();
+  sama(KL.hasilDagang(p), 0.6); sama(MF.aliran(MF.getMOF(p), p).hasil, MF.aliran(MF.getMOF(p)).hasil + 0.6, 'MOF: dagangan menambah hasil');
+  betul(KL.bonusDiplomatik(p), 'MINDEF: bonus diplomatik');
+  S.clearPlayer();
+});
 ujian('v13.75 Pejabat PM: majoriti, blok tarik sokongan cetus usul, tuntutan, agih, dasar mega, tegas, darurat sekat usul', () => {
   const K = g.MyPolitikKabinet, PM = g.MyPolitikPM, DW = g.MyPolitikDewan;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000, kerusiNasional: { parti: 70, rakan: 52, pembangkang: 95, bebas: 5, kerajaan: true, tahun: 2026, bulan: 11 } });

@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.76 (2026-11-11)
+
+- **Modul Kementerian Luar Negeri (Wisma Putra)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, blok dan isu ialah label simulasi, tiada negara atau konflik sebenar dinamakan).
+  - Fail baharu `js/kln.js` dan `js/kln-ui.js`. Rekod `p.kln`: kedudukan diplomatik, indeks dagangan & pelaburan asing, bajet diplomatik (RM 30 juta sebulan, had RM 150 juta) dan hubungan dengan 4 blok (ASEAN, Dunia Islam, rakan dagang Barat, rakan dagang Asia Timur).
+  - **Tab "🌐 Wisma Putra"**, hanya untuk pemegang portfolio Menteri Luar Negeri: lawatan rasmi (satu sebulan), isu antarabangsa (pilih pendirian), krisis konsular (pemindahan atau saluran diplomatik), sidang kemuncak serantau (sekali setahun), perjanjian perdagangan bebas (3 bulan).
+  - Bulanan: hubungan bawah 25 = hubungan dibekukan (dagangan dan KPI jatuh); kedudukan bawah 30 = KPI jatuh, 70 ke atas = populariti naik.
+  - Sambungan: indeks dagangan menambah hasil MOF; kedudukan diplomatik 70+ menjadikan jalan diplomatik insiden sempadan MINDEF tanpa kehilangan keselamatan dan populariti, dan separuh kehilangan sokongan jeneral; FTA menurunkan kepuasan rakan gabungan Pejabat PM.
+- Ujian baharu (208 ujian) dan ujian pelayar `tools/ujian-kln.js`.
+
 ## v13.75 (2026-11-10)
 
 - **Modul Pejabat Perdana Menteri** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan). Menyambung sistem sedia ada (jawatan PM, Jemaah Menteri, Dewan Rakyat), bukan menggantinya.

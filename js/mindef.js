@@ -106,7 +106,8 @@
       if (jaya) { laras(m, { keselamatan: C.TEGAS.keselamatan, jeneral: C.TEGAS.jeneral }); pop = C.TEGAS.pop; m.insiden = null; mesej = I.tegas + ': pencerobohan berjaya diusir. Keselamatan +' + C.TEGAS.keselamatan + ', sokongan jeneral +' + C.TEGAS.jeneral + '.'; }
       else { laras(m, { keselamatan: C.TEGAS.gagalKeselamatan }); pop = C.TEGAS.gagalPop; mesej = I.tegas + ' tidak berjaya: insiden masih berlarutan. Keselamatan ' + C.TEGAS.gagalKeselamatan + '.'; }
     } else if (cara === 'diplomatik') {
-      laras(m, { keselamatan: C.DIPLOMATIK.keselamatan, jeneral: C.DIPLOMATIK.jeneral }); pop = C.DIPLOMATIK.pop; m.insiden = null;
+      var KL = modul('MyPolitikKLN', 'kln.js'), bonus = !!(KL && KL.bonusDiplomatik && KL.bonusDiplomatik(p));   // v13.76: kedudukan diplomatik tinggi (Wisma Putra)
+      laras(m, { keselamatan: bonus ? 0 : C.DIPLOMATIK.keselamatan, jeneral: bonus ? Math.round(C.DIPLOMATIK.jeneral / 2) : C.DIPLOMATIK.jeneral }); pop = bonus ? 0 : C.DIPLOMATIK.pop; m.insiden = null;
       mesej = 'Nota bantahan dihantar dan rundingan diadakan: insiden tamat. Sokongan jeneral ' + C.DIPLOMATIK.jeneral + '.';
     } else { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
     m.insidenBulan = idx(p);

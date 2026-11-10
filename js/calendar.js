@@ -527,6 +527,8 @@
     if (KKW && KKW.prosesBulan) { peristiwa = peristiwa.concat(KKW.prosesBulan().peristiwa || []); }
     var PMO = muat('MyPolitikPM', 'pm.js');                                                      // v13.75: Pejabat Perdana Menteri (sebelum Dewan Rakyat)
     if (PMO && PMO.prosesBulan) { peristiwa = peristiwa.concat(PMO.prosesBulan().peristiwa || []); }
+    var KLN = muat('MyPolitikKLN', 'kln.js');                                                    // v13.76: Wisma Putra (Menteri Luar Negeri)
+    if (KLN && KLN.prosesBulan) { peristiwa = peristiwa.concat(KLN.prosesBulan().peristiwa || []); }
     var IGT = muat('MyPolitikIntegriti', 'integriti.js');                                       // v7.58: Whip, Disiplin Parti & Audit SPRM
     if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }
     var MDA = muat('MyPolitikMedia', 'media.js');                                                // v7.59: Jentera Media Digital (sidang media rawak, persepsi)
