@@ -53,6 +53,10 @@
   /** Amanah Fasal 14.1(d): 5 perwakilan termasuk Ketua (Cawangan ke Kawasan; Kawasan ke Konvensyen Nasional). */
   function wakilAmanah() { return 4; }
 
+  /** v13.63: blok PBB pemain ('pesaka' | 'bumiputera'); lalai Bumiputera. */
+  function blokPBB(p) { var SW = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; var b = SW && SW.blokPemain ? SW.blokPemain(p) : (p && p.blokPBB); return b === 'pesaka' ? 'pesaka' : 'bumiputera'; }
+  function ikutBlok(pesaka, bumi) { return function (p) { return blokPBB(p) === 'pesaka' ? pesaka : bumi; }; }
+
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
 
   var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
@@ -137,6 +141,33 @@
         'sayap_naib_cawangan_*': { tutup: TUTUP_SAYAP_AMANAH }, 'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_AMANAH }
       }
     },
+    PBB: {
+      sumber: 'Wikipedia (Majlis Tertinggi PBB 2025-2028)',
+      jawatan: {
+        naib_presiden_kanan: { buka: true },                                            // 1 setiap blok; pemain bertanding kerusi bloknya
+        naib_presiden: { kerusi: ikutBlok(3, 4) },                                      // Pesaka 3, Bumiputera 4
+        ahli_mkt: { kerusi: ikutBlok(14, 16), lantikan: ikutBlok(11, 9) }               // dipilih Pesaka 14 / Bumiputera 16; dilantik 11 / 9
+      }
+    },
+    PRS: {
+      sumber: 'Wikipedia (ANDAIAN)', kitaran: { mula: 2025, tahun: 3 },
+      jawatan: {
+        ajk_cawangan: { kerusi: 9 }, ajk_bahagian: { kerusi: 15 },
+        naib_ketua_bahagian: { tutup: 'Bahagian PRS memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).' },
+        ahli_mkt: { kerusi: 20 }
+      }
+    },
+    SUPP: {
+      sumber: 'Wikipedia (ANDAIAN)', hadPenggalPresiden: 3,
+      jawatan: {
+        timbalan_presiden: { kerusi: 2 }, naib_presiden: { kerusi: 4 },
+        ahli_mkt: { kerusi: 6, lantikan: 5, pemilih: 40 }                               // dipilih oleh Jawatankuasa Pusat; 3 cawangan bukan kawasan + 2 lantikan Presiden
+      }
+    },
+    PDP: {
+      sumber: 'Wikipedia (ANDAIAN)',
+      jawatan: { naib_presiden_kanan: { buka: true, kerusi: 3 }, naib_presiden: { kerusi: 2 }, ahli_mkt: { kerusi: 20 } }
+    },
     PPP: {
       sumber: 'Wikipedia (ANDAIAN)',
       jawatan: {
@@ -171,9 +202,10 @@
   /** Adakah jawatan d dipertandingkan dalam parti pemain? Jawatan khas (d.khas) tertutup kecuali dibuka. */
   function tersedia(p, d) { var e = entri(p, d); if (e && e.tutup) { return false; } return d && d.khas ? !!(e && e.buka) : true; }
   function sebabTutup(p, d) { var e = entri(p, d); return e && e.tutup ? e.tutup : ''; }
-  function kerusi(p, d) { var e = entri(p, d); return e && e.kerusi ? e.kerusi : null; }
+  function nilai(x, p) { return typeof x === 'function' ? x(p) : x; }
+  function kerusi(p, d) { var e = entri(p, d); return e && e.kerusi ? nilai(e.kerusi, p) : null; }
   /** Bilangan kerusi AJK lantikan (1/3 dilantik Ketua / Yang Dipertua / Presiden) bagi jawatan d, atau 0. */
-  function lantikan(p, d) { var e = entri(p, d); return e && e.lantikan ? e.lantikan : 0; }
+  function lantikan(p, d) { var e = entri(p, d); return e && e.lantikan ? nilai(e.lantikan, p) : 0; }
   /** Syarat jawatan mesti dipegang dahulu: { kod:[...], sebab } atau null. */
   function perlu(p, d) { var e = entri(p, d); return e && e.perlu ? e.perlu : null; }
   /** Pengundi khas: 'ahli' (semua anggota Bahagian), 'cawangan' (ahli jawatankuasa = bilangan Cawangan + 4), nombor tetap, atau null. */
@@ -191,5 +223,5 @@
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
   return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, perlu: perlu, pemilih: pemilih, pangkatMin: pangkatMin,
-    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, mesyuarat: mesyuarat, wakilPAS: wakilPAS, wakilPKR: wakilPKR, wakilDAP: wakilDAP, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
+    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, mesyuarat: mesyuarat, blokPBB: blokPBB, wakilPAS: wakilPAS, wakilPKR: wakilPKR, wakilDAP: wakilDAP, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
 });

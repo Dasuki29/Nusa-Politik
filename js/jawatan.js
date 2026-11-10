@@ -59,6 +59,7 @@
   tambah({ kod: 'ahli_mkt',          jawatan: 'Ahli MKT',         peringkat: 'pusat', pangkat: 8,  kerusi: 25, ipMin: 250, pangkatMin: 7, perluPAU: true, kesukaran: 14, penggal: true });
   tambah({ kod: 'naib_presiden',     jawatan: 'Naib Presiden',    peringkat: 'pusat', pangkat: 10, kerusi: 3,  ipMin: 300, pangkatMin: 8, perluPAU: true, kesukaran: 24, penggal: true });
   tambah({ kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', peringkat: 'pusat', pangkat: 11, ipMin: 350, pangkatMin: 8, perluPAU: true, kesukaran: 30, penggal: true });
+  tambah({ kod: 'naib_presiden_kanan', jawatan: 'Naib Presiden Kanan', peringkat: 'pusat', pangkat: 10.5, kerusi: 1, ipMin: 320, pangkatMin: 8, perluPAU: true, kesukaran: 27, penggal: true, khas: true });   // v13.63: jawatan khas (PBB, PDP; Wikipedia)
   tambah({ kod: 'presiden',          jawatan: 'Presiden',         peringkat: 'pusat', pangkat: 12, ipMin: 420, pangkatMin: 10, perluPAU: true, kesukaran: 36, penggal: true });
   // Sayap (satu set bagi setiap sayap, hanya sayap pemain dipaparkan)
   SAYAP.forEach(function (w) {
@@ -200,6 +201,8 @@
       if (!MIm) { try { MIm = require('./mic.js'); } catch (eM) { MIm = null; } }
       var ks = MIm && MIm.semakSyarat ? MIm.semakSyarat(p, d, pertahan) : null; if (ks) { return ks; }
     }
+    var StH = struktur(), hadP = d.kod === 'presiden' && StH && StH.mesyuarat ? StH.mesyuarat(p, 'hadPenggalPresiden') : null;   // v13.63: SUPP had penggal Presiden (ANDAIAN 3)
+    if (hadP && (Number(p.penggalPresiden) || 0) >= hadP) { return { terbuka: false, sebab: 'Had ' + hadP + ' penggal Presiden telah dicapai (pindaan perlembagaan parti).' }; }
     if (pertahan) { return { terbuka: true, sebab: '', pertahan: true }; }
     var pdh = (typeof globalThis !== 'undefined' && globalThis.MyPolitikPindah) || null;                  // v8.28: tempoh menunggu selepas Pindah Cawangan
     if (!pdh) { try { pdh = require('./pindah.js'); } catch (e) { pdh = null; } }

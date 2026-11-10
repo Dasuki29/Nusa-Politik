@@ -62,7 +62,7 @@
     var b = blokPemain(p); if (!b || !d || (d.peringkat !== 'pusat' && d.peringkat !== 'pau') || (d.kumpulan && d.kumpulan !== 'utama')) { return 0; }
     var g = giliran(p.tahun), s = sokongan(p), asas = 0, C = BLOK_CFG.PENALTI;
     if (d.kod === 'presiden') { asas = b === g ? C.presiden_giliran : C.presiden_bukan; }
-    else if (d.kod === 'timbalan_presiden') { asas = b !== g ? C.tp_giliran : C.tp_bukan; }
+    // v13.63: Timbalan Presiden kini seorang bagi setiap blok (Wikipedia 2025-2028): tiada penalti giliran
     var h = asas > 0 ? Math.max(0, asas - s * BLOK_CFG.KURANG_PENALTI) : asas - s * BLOK_CFG.BONUS_UMUM;
     return Math.round(h * 10) / 10;
   }

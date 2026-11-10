@@ -4752,6 +4752,12 @@
   ["Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.", "The Convention presses for fair-wage and affordable housing policies."],
   ["Ucapan Dasar Presiden: Rahmatan lil Alamin", "President's Policy Speech: Rahmatan lil Alamin"],
   ["Ucapan Dasar Presiden: Negara Rahmah", "President's Policy Speech: A Compassionate Nation"],
+  /* v13.63: enjin pemilihan GPS (PBB blok, PRS, SUPP, PDP) */
+  ["Naib Presiden Kanan", "Senior Vice President"],
+  ["{n} Naib Presiden Kanan", "{n} Senior Vice Presidents"],
+  ["Bahagian PRS memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).", "PRS Divisions elect only a Chief, Deputy Chief and committee members (game assumption)."],
+  ["Had {n} penggal Presiden telah dicapai (pindaan perlembagaan parti).", "The {n}-term limit for President has been reached (party constitution amendment)."],
+  ["Jawatan Pusat dibahagi antara dua blok. Presiden mengikut giliran; Timbalan Presiden, Naib Presiden Kanan, Naib Presiden dan Majlis Tertinggi ditandingi dalam blok sendiri.", "Central posts are shared between two blocs. The presidency rotates; the Deputy President, Senior Vice President, Vice President and Supreme Council seats are contested within your own bloc."],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

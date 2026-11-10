@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.63 (2026-11-10)
+
+- **Audit enjin pemilihan, Fasa 4 (GPS)** ikut Wikipedia (PDF daripada pengguna), mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PBB** (Majlis Tertinggi 2025–2028): jawatan Pusat dibahagi ikut blok; pemain bertanding kerusi blok sendiri. Timbalan Presiden seorang setiap blok (tiada lagi penalti giliran; giliran kekal untuk Presiden), jawatan baharu **Naib Presiden Kanan** (seorang setiap blok), Naib Presiden **Pesaka 3 / Bumiputera 4**, Majlis Tertinggi dipilih **14 / 16** + lantikan **11 / 9**.
+  - **PRS**: Majlis Tertinggi 20, AJK Cawangan 9, Bahagian (DUN) 15 AJK tanpa Naib ⚠️; kitaran pemilihan **2025, 2028, 2031** ⚠️.
+  - **SUPP**: **2 Timbalan Presiden**, **4 Naib Presiden**; Ahli JK Pusat 6 **diundi Jawatankuasa Pusat** (⚠️ 40 pengundi) + 5 lantikan; **had 3 penggal Presiden** ⚠️; sayap "Pengerusi Seksyen Pemuda / Wanita".
+  - **PDP**: **3 Naib Presiden Kanan** (jawatan baharu), 2 Naib Presiden, Majlis Tertinggi 20 ⚠️.
+- `js/struktur.js`: kerusi / lantikan boleh ikut blok (fungsi), kitaran pemilihan ikut parti, had penggal Presiden. Ujian baharu (195 ujian).
+
 ## v13.62 (2026-11-10)
 
 - **Audit enjin mesyuarat, Fasa 3 (PH)**, mockup yang dipersetujui (⚠️ andaian ditanda).

@@ -253,6 +253,9 @@
     [/Mesyuarat Perwakilan (Pemuda|AWAN|WARDA|Sayap) Kawasan/g, 'Mesyuarat Tahunan $1 Kawasan'], [/Perhimpunan (Pemuda|AWAN|WARDA|Sayap) \(Pra-Konvensyen\)/g, 'Konvensyen $1 Nasional']]);
   SENARAI.AMANAH.istilahSongsang = [[/Mesyuarat Tahunan Cawangan \((Pemuda|AWAN|WARDA|Sayap)\)/g, 'Persidangan Tahunan $1 Cawangan'], [/Mesyuarat Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan'],
     [/Mesyuarat Tahunan (Pemuda|AWAN|WARDA|Sayap) Kawasan/g, 'Mesyuarat Perwakilan $1 Kawasan'], [/Konvensyen (Pemuda|AWAN|WARDA|Sayap) Nasional/g, 'Perhimpunan $1 (Pra-Konvensyen)']].concat(SENARAI.AMANAH.istilahSongsang);
+  /* v13.63: SUPP: Pengerusi Seksyen Pemuda / Wanita (Wikipedia: Chairman of Youth Section, Chairwoman of Women Section). */
+  SENARAI.SUPP.istilah = (SENARAI.SUPP.istilah || []).concat([[/\bKetua (Pemuda|Wanita)\b/g, 'Pengerusi Seksyen $1']]);
+  SENARAI.SUPP.istilahSongsang = [[/\bPengerusi Seksyen (Pemuda|Wanita)\b/g, 'Ketua $1']].concat(SENARAI.SUPP.istilahSongsang || []);
   SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
     istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (AJK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'AJK Pusat'], [/Supreme Council \(MKT\)/g, 'Central Committee (AJK Pusat)'], [/Supreme Council/g, 'Central Committee'],
       [/Perhimpunan Agung BERJASA \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung BERJASA/g, 'Muktamar BERJASA'],

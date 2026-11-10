@@ -120,25 +120,31 @@
     if (!U || !U.adalah(p) || (baharuSahaja && !U.baharu(p))) { return null; }
     return { M: U, p: p };
   }
+  /** v13.63: kitaran pemilihan ikut parti (js/struktur.js kitaran, contoh PRS 2025 setiap 3 tahun), atau lalai. */
+  function kitaranParti() {
+    var p = null; try { p = S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { p = null; }
+    var St = modKhas('MyPolitikStruktur', 'struktur.js'), k = p && St && St.mesyuarat ? St.mesyuarat(p, 'kitaran') : null;
+    return k ? { TAHUN_MULA: k.mula, KITARAN_TAHUN: k.tahun } : CONFIG;
+  }
   function adalahTahunPemilihan(tahun) {
     var mc = mcaP() || umnoP(); if (mc) { return mc.M.adalahTahunPemilihan(mc.p, nomborTahun(tahun)); }
-    var t = nomborTahun(tahun);
-    return t >= CONFIG.TAHUN_MULA && (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN === 0;
+    var t = nomborTahun(tahun), C = kitaranParti();
+    return t >= C.TAHUN_MULA && (t - C.TAHUN_MULA) % C.KITARAN_TAHUN === 0;
   }
 
   /** Tahun pemilihan terdekat pada atau selepas tahun ini. */
   function tahunPemilihanSeterusnya(tahun) {
     var mc = mcaP() || umnoP(); if (mc) { return mc.M.tahunSeterusnya(mc.p, nomborTahun(tahun)); }
-    var t = nomborTahun(tahun);
-    if (t <= CONFIG.TAHUN_MULA) { return CONFIG.TAHUN_MULA; }
-    var baki = (t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN;
-    return baki === 0 ? t : t + (CONFIG.KITARAN_TAHUN - baki);
+    var t = nomborTahun(tahun), C = kitaranParti();
+    if (t <= C.TAHUN_MULA) { return C.TAHUN_MULA; }
+    var baki = (t - C.TAHUN_MULA) % C.KITARAN_TAHUN;
+    return baki === 0 ? t : t + (C.KITARAN_TAHUN - baki);
   }
 
   function tahunPemilihanLepas(tahun) {
     var mc = mcaP() || umnoP(); if (mc) { return mc.M.tahunLepas(mc.p, nomborTahun(tahun)); }
-    var t = nomborTahun(tahun);
-    return t < CONFIG.TAHUN_MULA ? null : t - ((t - CONFIG.TAHUN_MULA) % CONFIG.KITARAN_TAHUN);
+    var t = nomborTahun(tahun), C = kitaranParti();
+    return t < C.TAHUN_MULA ? null : t - ((t - C.TAHUN_MULA) % C.KITARAN_TAHUN);
   }
 
   function getKitaran(tahun) {
@@ -792,6 +798,7 @@
     } else {
       var def = J.cariDef(kod), pegangSebelum = J.pegang(p, kod);
       if (def) { var pt = J.terapkan(p, def, menang); Object.keys(pt).forEach(function (k) { patch[k] = pt[k]; }); }
+      var StH = modKhas('MyPolitikStruktur', 'struktur.js'); if (menang && kod === 'presiden' && StH && StH.mesyuarat && StH.mesyuarat(p, 'hadPenggalPresiden')) { patch.penggalPresiden = (Number(p.penggalPresiden) || 0) + 1; }   // v13.63: kiraan penggal Presiden (SUPP)
       var tidakDipegang = menang && def && !Object.keys(pt || {}).length && !pegangSebelum ? J.jawatanSamaPeringkat(p, def) : null;   // v13.39: menang tetapi jawatan lebih tinggi di peringkat sama dikekalkan
       if (tidakDipegang) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Anda menang ' + d.jawatan + ', tetapi kekal sebagai ' + tidakDipegang.jawatan + ' kerana hanya satu jawatan bagi setiap peringkat. Jawatan ' + tidakDipegang.jawatan + ' tetap melayakkan anda bertanding di peringkat lebih tinggi.' }); }
       else if (dilantik) { peristiwa.push({ jenis: 'jawatan_baharu', mesej: 'Anda tidak menang undian (kedudukan ' + sendiri.kedudukan + '), tetapi dilantik sebagai ' + d.jawatan + ' dalam kuota lantikan 1/3 oleh ' + pelantik(d) + '.' }); }

@@ -1134,7 +1134,7 @@ ujian('PBB v9.0: imbangan blok Bumiputera/Pesaka (giliran Presiden, ofset jawata
   let p = bina('bumiputera');
   sama(p.blokPBB, 'bumiputera'); sama(SW.sokongan(p), 30);
   sama(SW.ofsetJawatan(p, { kod: 'presiden', peringkat: 'pusat' }), -6 - 0.9, 'giliran sendiri: -6 dan bonus umum 30 x 0.03');
-  sama(SW.ofsetJawatan(p, { kod: 'timbalan_presiden', peringkat: 'pau', kumpulan: 'utama' }), 10 - 2.4, 'bukan giliran TP: +10 tolak 30 x 0.08');
+  sama(SW.ofsetJawatan(p, { kod: 'timbalan_presiden', peringkat: 'pau', kumpulan: 'utama' }), -0.9, 'v13.63: Timbalan Presiden seorang setiap blok: tiada penalti giliran, bonus umum sahaja');
   sama(SW.ofsetJawatan(p, { kod: 'ketua_bahagian', peringkat: 'bahagian' }), 0, 'bukan jawatan Pusat'); sama(SW.ofsetJawatan(p, { kod: 'sayap_pusat_pemuda', peringkat: 'pusat', kumpulan: 'sayap' }), 0, 'sayap tiada kesan');
   P.tetap({ tahun: 2031 }); p = S.loadPlayer(); sama(SW.giliran(p.tahun), 'pesaka');
   sama(SW.ofsetJawatan(p, { kod: 'presiden', peringkat: 'pusat' }), Math.round((10 - 2.4) * 10) / 10, 'giliran Pesaka: Bumiputera +10');
@@ -2972,6 +2972,19 @@ ujian('v13.62 Enjin mesyuarat PH (Fasa 3): PKR semua anggota Cabang + 5/40 wakil
   sn = E.senaraiPertandingan(p); sama(sn.find((x) => x.kod === 'perwakilan_sayap_g10').kerusi, 20); sama(sn.find((x) => x.kod === 'perwakilan_dewan_muktamar').kerusi, 20);
   sama(PT.ke('Persidangan Tahunan Cawangan'), 'Mesyuarat Tahunan Cawangan'); sama(PT.ke('Perhimpunan Pemuda (Pra-PAU)'), 'Konvensyen Pemuda Nasional');
   betul(M0.bilHadir(p, 'pau') > 500 && M0.bilHadir(p, 'pau') !== 1500, 'hadir Konvensyen dikira');
+  S.clearPlayer();
+});
+ujian('v13.63 Enjin pemilihan GPS (Fasa 4): PBB ikut blok, PRS kitaran 2025, SUPP 2 Timbalan / 4 Naib / had penggal, PDP Naib Presiden Kanan', () => {
+  const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, M0 = g.MyPolitikMeeting, SW = g.MyPolitikSarawak, cd = (k) => J.cariDef(k);
+  const pes = { parti: 'PBB', blokPBB: 'pesaka' }, bum = { parti: 'PBB', blokPBB: 'bumiputera' };
+  sama(ST.kerusi(pes, cd('naib_presiden')), 3); sama(ST.kerusi(bum, cd('naib_presiden')), 4); sama(ST.kerusi(pes, cd('ahli_mkt')), 14); sama(ST.kerusi(bum, cd('ahli_mkt')), 16); sama(ST.lantikan(pes, cd('ahli_mkt')), 11); sama(ST.lantikan(bum, cd('ahli_mkt')), 9);
+  betul(J.katalogUntuk(pes).some((d) => d.kod === 'naib_presiden_kanan') && !J.katalogUntuk({ parti: 'UMNO' }).some((d) => d.kod === 'naib_presiden_kanan'), 'Naib Presiden Kanan PBB sahaja (bukan UMNO)');
+  sama(SW.ofsetJawatan(Object.assign({ tahun: 2026 }, pes), { kod: 'timbalan_presiden', peringkat: 'pusat' }) > 0, false, 'tiada penalti giliran Timbalan');
+  P.daftar({}); P.tetap({ parti: 'PRS' }); sama(E.adalahTahunPemilihan(2025), true); sama(E.adalahTahunPemilihan(2028), true); sama(E.adalahTahunPemilihan(2026), false); sama(E.tahunPemilihanSeterusnya(2026), 2028);
+  P.tetap({ parti: 'SUPP' }); let p = S.loadPlayer(); sama(M0.senaraiPusat(p), 'Presiden, 2 Timbalan Presiden, 4 Naib Presiden, MKT'); sama(ST.pemilih(p, cd('ahli_mkt')), 40);
+  sama(g.MyPolitikParti.ke('Ketua Pemuda Cawangan'), 'Pengerusi Seksyen Pemuda Cawangan');
+  P.tetap({ penggalPresiden: 3, jawatanList: [pegang('presiden', 2026)], ip: 999 }); const k = J.semakKelayakan(S.loadPlayer(), cd('presiden')); sama(k.terbuka, false); betul(/3 penggal/.test(k.sebab), k.sebab);
+  P.tetap({ parti: 'PDP', penggalPresiden: 0 }); sama(M0.senaraiPusat(S.loadPlayer()), 'Presiden, Timbalan Presiden, 3 Naib Presiden Kanan, 2 Naib Presiden, MKT');
   S.clearPlayer();
 });
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {

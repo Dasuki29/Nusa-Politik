@@ -1202,7 +1202,7 @@
     var SW = W.MyPolitikSarawak, r = SW && SW.ringkasBlok ? SW.ringkasBlok(p) : null; if (!r) { return ''; }
     function ef(n) { return n === 0 ? 'Sama rata' : n < 0 ? 'Lebih mudah (' + n + ')' : 'Lebih sukar (+' + n + ')'; }
     var h = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">⚖️ Imbangan Bumiputera &amp; Pesaka</h2>' +
-      '<p class="note" style="font-size:.78rem">Jawatan Pusat dibahagi antara dua blok. Presiden mengikut giliran, Timbalan Presiden daripada blok yang satu lagi.</p>' +
+      '<p class="note" style="font-size:.78rem">Jawatan Pusat dibahagi antara dua blok. Presiden mengikut giliran; Timbalan Presiden, Naib Presiden Kanan, Naib Presiden dan Majlis Tertinggi ditandingi dalam blok sendiri.</p>' +
       '<div class="kv"><span>Blok anda</span><b>' + r.ikon + ' ' + esc(r.nama) + '</b></div>' +
       '<div class="kv"><span>Giliran Presiden (setiap ' + r.giliranTahun + ' tahun)</span><b>' + esc(r.giliranNama) + '</b></div>' +
       '<div class="kv"><span>Presiden</span><b>' + esc(ef(r.ofsetPresiden)) + '</b></div>' +
