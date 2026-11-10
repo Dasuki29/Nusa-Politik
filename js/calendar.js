@@ -523,6 +523,8 @@
     if (LTK && LTK.prosesBulan) { peristiwa = peristiwa.concat(LTK.prosesBulan().peristiwa || []); }
     var LPT = muat('MyPolitikLompat', 'lompat.js');                                            // v13.51: PRK kerusi dikosongkan selepas lompat parti (Perkara 49A)
     if (LPT && LPT.prosesBulan) { peristiwa = peristiwa.concat(LPT.prosesBulan().peristiwa || []); }
+    var TYTm = muat('MyPolitikTYT', 'tyt.js');                                                // v13.52: Yang di-Pertua Negeri (tawaran, Istana, elaun, tamat penggal)
+    if (TYTm && TYTm.prosesBulan) { peristiwa = peristiwa.concat(TYTm.prosesBulan().peristiwa || []); }
     var PRK = muat('MyPolitikPRK', 'prk.js');                                                   // v7.6: sentimen nasional & PRK pertengahan penggal
     if (PRK && PRK.prosesBulan) { peristiwa = peristiwa.concat(PRK.prosesBulan().peristiwa || []); }
 

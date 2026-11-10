@@ -20,7 +20,7 @@ const path = require('path');
 const JS = path.join(__dirname, '..', 'js');
 
 /* Susunan sama seperti dashboard.html, tanpa modul yang bergantung pada DOM (app, pru-ui, dewan-ui, lagu, pwa, menu, slotpanel, tema, map). */
-const SUSUNAN = ['data', 'parti', 'sarawak', 'sayap', 'blok', 'misi', 'save', 'pencapaian', 'sfx', 'krisis-peta', 'kerjaya', 'harta', 'kawasan', 'glc', 'komuniti', 'pindah', 'lompat', 'undo', 'infra', 'calendar', 'avatar', 'ordinaryMember', 'incumbent', 'jawatan', 'etika',
+const SUSUNAN = ['data', 'parti', 'sarawak', 'sayap', 'blok', 'misi', 'save', 'pencapaian', 'sfx', 'krisis-peta', 'kerjaya', 'harta', 'kawasan', 'glc', 'komuniti', 'pindah', 'lompat', 'tyt', 'undo', 'infra', 'calendar', 'avatar', 'ordinaryMember', 'incumbent', 'jawatan', 'etika',
   'election', 'rival', 'negeri', 'meeting', 'EventDatabase', 'events', 'geo', 'slot', 'latihan', 'tutorial', 'watak', 'perlembagaan',
   'organisasi', 'stress', 'hayat', 'polling', 'warroom', 'pru', 'kabinet-data', 'kabinet', 'jemaah', 'isu', 'prk', 'ElectionEngine', 'CabinetEngine', 'WingEngine', 'dewan', 'pembangkang', 'dun', 'paparan', 'tular', 'mca-data', 'mca', 'mic-data', 'mic', 'umno-data', 'umno', 'ppp-data', 'ppp', 'sabah', 'pbrs-data', 'pbrs', 'pas-data', 'pas', 'pkr-data', 'pkr', 'dap-data', 'dap', 'letak', 'pendidikan', 'friends-bn', 'sabah-bn', 'npc', 'kerusi-semasa', 'prk-luar', 'rundingan'];
 

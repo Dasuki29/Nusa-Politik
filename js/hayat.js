@@ -119,11 +119,12 @@
     return senarai.length ? senarai : [GELARAN_LALAI];
   }
 
-  var TAJUK_SEBAB = { meninggal: 'Tamat Hayat', bersara_kesihatan: 'Bersara Paksa (Kesihatan)', had_umur: 'Mencapai Usia 100 Tahun', bersara_sukarela: 'Bersara Secara Sukarela', kesihatan_merosot: 'Kesihatan Merosot (Tekanan Kerja)' };
+  var TAJUK_SEBAB = { meninggal: 'Tamat Hayat', bersara_kesihatan: 'Bersara Paksa (Kesihatan)', had_umur: 'Mencapai Usia 100 Tahun', bersara_sukarela: 'Bersara Secara Sukarela', kesihatan_merosot: 'Kesihatan Merosot (Tekanan Kerja)', tyt: 'Tamat Perkhidmatan Yang di-Pertua Negeri' };
 
   function mesejSebab(sebab, umur) {
     if (sebab === 'meninggal') { return 'Anda telah meninggal dunia pada usia ' + umur + ' tahun. Al-Fatihah. Perjalanan politik anda berakhir di sini.'; }
     if (sebab === 'kesihatan_merosot') { return 'Tekanan kerja bertahun-tahun meruntuhkan kesihatan anda. Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun.'; }
+    if (sebab === 'tyt') { return 'Anda menamatkan perkhidmatan sebagai Yang di-Pertua Negeri pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam dengan penuh kehormatan.'; }   // v13.52
     if (sebab === 'bersara_sukarela') { return 'Anda memutuskan untuk bersara daripada politik pada usia ' + umur + ' tahun. Terima kasih atas khidmat anda kepada parti.'; }
     if (sebab === 'bersara_kesihatan') { return 'Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun kerana masalah kesihatan.'; }
     return 'Anda mencapai usia ' + umur + ' tahun, had umur permainan ini. Perjalanan politik anda ditutup dengan penuh kehormatan.';
@@ -169,7 +170,7 @@
       umur: umur, tahun: p.tahun, bulan: p.bulan, tahunMula: CONFIG.TAHUN_MULA,
       tahunBerkhidmat: Math.max(0, p.tahun - CONFIG.TAHUN_MULA),
       umurMula: p.demografik ? p.demografik.umur : null,
-      jawatanAkhir: p.jawatan, jawatanTertinggi: top.jawatan, pangkatTertinggi: top.pangkat || 0, gelaran: gelaranPangkat(top.pangkat || 0),
+      jawatanAkhir: p.tyt && p.tyt.aktif && root.MyPolitikTYT ? 'Yang di-Pertua Negeri ' + ((root.MyPolitikTYT.NEGERI[p.tyt.aktif.negeri] || {}).nama || '') : p.jawatan,   // v13.52 jawatanTertinggi: top.jawatan, pangkatTertinggi: top.pangkat || 0, gelaran: gelaranPangkat(top.pangkat || 0),
       gaya: w ? w.nama : null, gayaHuraian: w ? w.huraian : null,
       ip: p.ip, myr: p.myr, reputasi: p.reputasi, bilTindakan: p.bilTindakan || 0,
       modalSosial: et ? et.modal : null, hukumanDisiplin: et ? et.salah : 0,

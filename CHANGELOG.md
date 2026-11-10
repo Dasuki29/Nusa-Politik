@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.52 (2026-11-10)
+
+- **Maklum balas Threads no. 5: Yang di-Pertua Negeri (TYT)** bagi Sarawak, Sabah, Melaka dan Pulau Pinang (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).
+  - **Laluan:** kad 👑 dalam tab Profil bagi bekas Premier / Ketua Menteri negeri itu. Syarat: umur ≥ 55, status disiplin baik, bukan Ketua Menteri sekarang. Kekosongan setiap 4 tahun (⚠️ tahun pertama: Sarawak 2027, Sabah 2028, Melaka 2029, Pulau Pinang 2030), bulan 1. Peluang tawaran 40–80% (Reputasi, gelaran, akar umbi).
+  - **Terima:** semua jawatan parti dan kerajaan dilepaskan, kerusi dikosongkan (PRK calon parti), keahlian parti digantung (tidak boleh bertanding / lompat parti), gelaran Tun.
+  - **Tab baharu 🏰 Istana:** elaun RM 25,000 sebulan; Kewibawaan Istana dan Hubungan dengan Premier / Ketua Menteri. Tugas: Menghadap bulanan (Sokong / Tegur / Dengar), Majlis rasmi (2 AP), Mesyuarat Majlis Raja-Raja (setahun sekali), Kurnia darjah (pilih 3 daripada 6 calon; senarai seimbang +5, terlalu ramai ahli politik −5), Perkenan pembubaran DUN (Perkenan / Tangguh).
+  - **Tamat penggal (4 tahun):** Kewibawaan ≥ 60 = penggal kedua ditawarkan (sekali); selain itu kerjaya tamat dengan legasi "Tamat Perkhidmatan Yang di-Pertua Negeri".
+- Fail baharu: `js/tyt.js`, `js/tyt-ui.js`, `tools/ujian-tyt.js`. Ujian baharu (184 ujian).
+
 ## v13.51 (2026-11-10)
 
 - **Maklum balas Threads no. 4: Lompat Parti** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).

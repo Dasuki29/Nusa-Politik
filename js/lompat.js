@@ -62,6 +62,7 @@
   function kunci(p) {
     if (!p || p.tamat) { return 'Tiada profil aktif.'; }
     if (p.lompatTertunda) { return 'Lompat parti sedang diproses.'; }
+    if (p.tyt && p.tyt.aktif) { return 'Yang di-Pertua Negeri tidak berparti.'; }   // v13.52
     var R = PRU(), pr = R && R.getPRU ? R.getPRU(p) : null; if (pr && pr.aktif) { return 'Tidak boleh lompat parti semasa PRU.'; }
     var K = PRK(), pk = K && K.getPRK ? K.getPRK(p) : null; if (pk && pk.aktif) { return 'Tidak boleh lompat parti semasa PRK.'; }
     var l = getL(p), akhir = l.sejarah[l.sejarah.length - 1];

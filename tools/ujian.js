@@ -2683,6 +2683,32 @@ ujian('v13.51 Lompat Parti: pilihan ikut negeri, syarat, gabung profil, Perkara 
   P.daftar({}); P.tetap({ reputasi: 10 }); betul(LP.pilihan(S.loadPlayer()).every((x) => !x.boleh)); betul(!LP.mula('PKR').ok);
   S.clearPlayer();
 });
+ujian('v13.52 Yang di-Pertua Negeri: syarat, tawaran, terima, tugas Istana, pembubaran DUN, penggal kedua dan legasi (Threads no. 5)', () => {
+  const T = g.MyPolitikTYT, C = T.CONFIG; P.daftar({ umur: 50 }); P.tetap({ tahun: 2031, bulan: 1, reputasi: 70, ap: 10, myr: 1000, negeri: 'Sarawak',
+    jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', pangkat: 12 }], tyt: { bekas: { sarawak: { dari: 2027, hingga: 2030 } } } });
+  P.tetap({ pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { aktif: null, status: { jenis: 'ADUN', kerusi: 'N.01', kerajaan: true } }) });
+  let p = S.loadPlayer(); sama(T.kosongSeterusnya('sarawak', 2031), 2031); sama(T.kosongSeterusnya('sarawak', 2032), 2035);
+  let sy = T.syarat(p, 'sarawak'); betul(sy.layak, JSON.stringify(sy.item)); betul(T.peluang(p) >= 0.4 && T.peluang(p) <= 0.8);
+  sama(T.syarat(Object.assign({}, p, { demografik: Object.assign({}, p.demografik, { umur: 30 }) }), 'sarawak').layak, false, 'umur < 55');
+  let ev = T.prosesBulan({ rng: () => 0 }).peristiwa; betul(ev.some((x) => /Tawaran Istana/.test(x.mesej)), ev.map((x) => x.mesej).join());
+  const r = T.terima(); betul(r.ok, r.ralat); p = S.loadPlayer(); betul(T.aktif(p)); sama(p.jawatanList.length, 0); sama(PRU.getPRU(p).status, null); sama(p.gelaran.tun, true);
+  sama(p.letak.prk.length, 1, 'PRK calon parti'); betul(!E.daftarBertanding('ketua_cawangan').ok, 'TYT tidak bertanding'); betul(/tidak berparti/.test(g.MyPolitikLompat.kunci(p)));
+  betul(T.menghadap('tegur').ok); betul(!T.menghadap('sokong').ok, 'sekali sebulan'); betul(T.majlis().ok); betul(T.majlisRaja().ok); betul(!T.majlisRaja().ok);
+  let a = T.getT(S.loadPlayer()).aktif; sama(a.kewibawaan, 60 + 3 + 2 + 3); sama(a.hubungan, 58);
+  const cal = a.calon.senarai, pilih = [cal.find((x) => x.kategori === 'politik').id].concat(cal.filter((x) => x.kategori !== 'politik').slice(0, 2).map((x) => x.id));
+  betul(!T.kurnia(pilih.slice(0, 2)).ok, 'mesti 3'); betul(T.kurnia(pilih).ok); betul(!T.kurnia(pilih).ok, 'sekali setahun');
+  const myr0 = S.loadPlayer().myr; P.tetap({ bulan: 2 }); T.prosesBulan({ rng: () => 0.99 }); sama(S.loadPlayer().myr - myr0, C.ELAUN, 'elaun');
+  P.tetap({ tyt: Object.assign({}, T.getT(S.loadPlayer()), { aktif: Object.assign({}, T.getT(S.loadPlayer()).aktif, { bubar: { stabil: true, ketuaBaru: 'X' } }) }) });
+  const k0 = T.getT(S.loadPlayer()).aktif.kewibawaan; betul(T.bubar('tangguh').ok); sama(T.getT(S.loadPlayer()).aktif.kewibawaan, Math.min(100, k0 + 8));
+  // tamat penggal 1 dengan Kewibawaan tinggi: penggal kedua
+  a = T.getT(S.loadPlayer()).aktif; P.tetap({ tyt: Object.assign({}, T.getT(S.loadPlayer()), { aktif: Object.assign({}, a, { kewibawaan: 80, tamat: 0 }) }) });
+  ev = T.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /penggal kedua/.test(x.mesej))); betul(T.terimaLanjut(true).ok); sama(T.getT(S.loadPlayer()).aktif.penggal, 2);
+  // tamat penggal 2: legasi
+  a = T.getT(S.loadPlayer()).aktif; P.tetap({ tyt: Object.assign({}, T.getT(S.loadPlayer()), { aktif: Object.assign({}, a, { tamat: 0 }) }) });
+  ev = T.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /tamat dengan penuh kehormatan/.test(x.mesej))); p = S.loadPlayer(); betul(p.tamat && p.tamat.sebab === 'tyt', JSON.stringify(p.tamat && p.tamat.sebab));
+  betul(p.tamat.pilihanRaya.jawatanKerajaan.some((x) => /Yang di-Pertua Negeri Sarawak/.test(x)), 'legasi');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

@@ -1118,3 +1118,11 @@ html, body { overflow-x: clip; }
 .lp-opt small { display: block; color: var(--text-muted); font-size: .78rem; } .lp-opt--x { opacity: .5; cursor: default; }
 .lp-amaran { background: rgba(179, 18, 43, .12); border: 2px solid var(--danger); border-radius: var(--radius); padding: 8px 10px; font-size: .85rem; margin: 6px 0; }
 .lp-k { display: flex; justify-content: space-between; gap: 8px; font-size: .85rem; padding: 4px 0; border-top: 1.5px dashed var(--border); } .lp-k b { text-align: right; }
+
+/* v13.52: Yang di-Pertua Negeri (Istana) */
+.tyt-ban { background: linear-gradient(135deg, #5B1A6E, #2B0F3A); color: #fff; border-radius: var(--radius); padding: 10px; margin-bottom: 8px; }
+.tyt-ban small { display: block; color: #E8D5F2; font-size: .78rem; }
+.tyt-bar i { background: #F5C518 !important; }
+.tyt-ev { border: 2px solid #5B1A6E; border-radius: var(--radius); padding: 8px 10px; margin: 8px 0; background: rgba(91, 26, 110, .08); }
+.tyt-ev small { display: block; color: var(--text-muted); font-size: .8rem; margin-top: 2px; }
+.tyt-sy { list-style: none; padding: 0; margin: 0 0 4px; font-size: .85rem; }

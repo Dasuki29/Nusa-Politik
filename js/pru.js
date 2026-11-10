@@ -363,6 +363,7 @@
     var ip = Number(p.ip) || 0, ada = (p.jawatanList || []).length > 0;
     function semak(jenis) {
       var c = CONFIG[jenis], sebab = [];
+      if (p.tyt && p.tyt.aktif) { sebab.push('Yang di-Pertua Negeri tidak boleh bertanding'); }   // v13.52
       if (ip < c.ipMin) { sebab.push('Perlu IP ' + c.ipMin + ' (anda ' + ip + ')'); }
       if (jenis === 'DUN' && !p.dun && !lain) { sebab.push('Wilayah Persekutuan tiada DUN'); }
       if (jenis === 'DUN' && !ada) { sebab.push('Perlu pegang jawatan Cawangan atau lebih'); }
