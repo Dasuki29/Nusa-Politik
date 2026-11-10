@@ -274,6 +274,41 @@
         { kod: 'amanah_keadilan', tajuk: 'Keadilan sosial: gaji wajar dan perumahan rakyat', penerangan: 'Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.', populariti: 66, nilai: 3 }
       ]
     },
+    PBB: {
+      cawangan: [
+        { kod: 'pbb_elektrik', tajuk: 'Bekalan elektrik dan air ke kampung luar bandar', penerangan: 'Beberapa kampung masih menggunakan janakuasa sendiri dan air hujan.', populariti: 70, nilai: 4 },
+        { kod: 'pbb_jalan', tajuk: 'Jalan penghubung kampung ke bandar', penerangan: 'Penduduk mengambil masa berjam-jam ke klinik dan sekolah.', populariti: 66, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'pbb_ncr', tajuk: 'Percepat ukur dan geran tanah adat (NCR)', penerangan: 'Cawangan mahu tanah adat penduduk diukur di bawah Seksyen 6 Kanun Tanah.', populariti: 68, nilai: 4 },
+        { kod: 'pbb_belia', tajuk: 'Peluang kerja belia dalam ekonomi hijau Sarawak', penerangan: 'Belia mahu latihan dalam projek tenaga hidrogen dan hidro.', populariti: 62, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'pbb_ma63', tajuk: 'Tuntutan hak Sarawak di bawah MA63', penerangan: 'Perhimpunan menuntut hak hasil minyak dan gas serta autonomi Sarawak.', populariti: 72, nilai: 4 },
+        { kod: 'pbb_pcds', tajuk: 'Strategi Pembangunan Pasca-COVID 2030 (PCDS)', penerangan: 'Sarawak maju berpendapatan tinggi menjelang 2030.', populariti: 64, nilai: 3 }
+      ]
+    },
+    PRS: {
+      cawangan: [
+        { kod: 'prs_rumah_panjang', tajuk: 'Baik pulih rumah panjang dan bekalan air graviti', penerangan: 'Rumah panjang usang memerlukan bantuan dan bekalan air bersih.', populariti: 70, nilai: 4 },
+        { kod: 'prs_jalan', tajuk: 'Jalan ke rumah panjang di hulu sungai', penerangan: 'Penduduk masih bergantung kepada bot dan jalan balak.', populariti: 66, nilai: 3 }
+      ],
+      bahagian: [{ kod: 'prs_ncr', tajuk: 'Lindungi tanah adat (NCR) masyarakat Dayak', penerangan: 'Bahagian mahu pertikaian tanah adat diselesaikan dengan adil.', populariti: 68, nilai: 4 }],
+      pau: [{ kod: 'prs_dayak', tajuk: 'Penyatuan politik masyarakat Dayak dalam GPS', penerangan: 'PRS mahu suara Dayak lebih kuat dalam kerajaan Sarawak.', populariti: 64, nilai: 3 }]
+    },
+    SUPP: {
+      cawangan: [
+        { kod: 'supp_sekolah', tajuk: 'Peruntukan negeri untuk sekolah Cina di Sarawak', penerangan: 'Sekolah Cina bantuan dan persendirian memerlukan geran tahunan negeri.', populariti: 70, nilai: 4 },
+        { kod: 'supp_pasar', tajuk: 'Naik taraf pasar dan tapak penjaja bandar', penerangan: 'Peniaga kecil mahu kemudahan pasar yang bersih dan selamat.', populariti: 64, nilai: 3 }
+      ],
+      bahagian: [{ kod: 'supp_uec', tajuk: 'Kekalkan pengiktirafan UEC oleh kerajaan Sarawak', penerangan: 'Lepasan UEC boleh berkhidmat dalam perkhidmatan awam negeri.', populariti: 68, nilai: 3 }],
+      pau: [{ kod: 'supp_pks', tajuk: 'Insentif PKS dan pelaburan di bandar Sarawak', penerangan: 'SUPP mahu peniaga kecil mendapat manfaat daripada pertumbuhan ekonomi negeri.', populariti: 64, nilai: 3 }]
+    },
+    PDP: {
+      cawangan: [{ kod: 'pdp_rumah', tajuk: 'Rumah mampu milik di Miri dan Bintulu', penerangan: 'Harga rumah di bandar industri terlalu tinggi bagi pekerja tempatan.', populariti: 66, nilai: 3 }],
+      bahagian: [{ kod: 'pdp_kerja', tajuk: 'Utamakan pekerja tempatan dalam projek industri', penerangan: 'Projek petrokimia dan tenaga perlu mengambil anak Sarawak.', populariti: 66, nilai: 3 }],
+      pau: [{ kod: 'pdp_bandar', tajuk: 'Pembangunan seimbang bandar dan luar bandar utara Sarawak', penerangan: 'Kemudahan di Miri, Bintulu dan pedalaman Baram perlu ditambah.', populariti: 64, nilai: 3 }]
+    },
     PAS: {
       cawangan: [
         { kod: 'pas_tahfiz', tajuk: 'Kelas pengajian dan tahfiz di surau kawasan', penerangan: 'Ibu bapa mahu kelas al-Quran dan fardu ain yang tetap untuk anak-anak.', populariti: 72, nilai: 4 },
@@ -313,11 +348,15 @@
     PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
     PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63'],
     PAS: ['Islam Memimpin', 'Kepimpinan Ulamak', 'Malaysia Sejahtera'],
+    PBB: ['Sarawak Maju dan Sejahtera', 'Hak Sarawak di bawah MA63'],
+    PRS: ['Dayak Bersatu', 'Pembangunan Luar Bandar'],
+    SUPP: ['Sarawak untuk Semua', 'Masyarakat Majmuk Sarawak'],
+    PDP: ['Perjuangan Rakyat, Sarawak Diutamakan'],
     PKR: ['Reformasi', 'Malaysia MADANI'],
     DAP: ['Malaysian Malaysia', 'Integriti dan Kecekapan'],
     AMANAH: ['Rahmatan lil Alamin', 'Negara Rahmah']
   };
-  var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
+  var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'], PRS: ['dewan_surau'], SUPP: ['dewan_surau'], PDP: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
      Kos 2 AP; perwakilan mengundi sokongan (>= 50% diterima: kesan penuh + IP 20; < 50%: Reputasi separuh, penentang +5). Angka ialah andaian. */
   var TEMA_PRESIDEN = [
@@ -379,8 +418,9 @@
   function mz(p, k) { var St = typeof globalThis !== 'undefined' ? globalThis.MyPolitikStruktur : null; return St && St.mesyuarat ? St.mesyuarat(p, k) : null; }
   /** v13.62: DAP Fasal VIII.1(b), IX.1: 'kongres' (tahun pemilihan), 'persidangan' (tahun berikutnya, ANDAIAN) atau null. Parti lain: 'kongres'. */
   function jenisPusat(p) {
-    if (!mz(p, 'pusatBerkala')) { return 'kongres'; }
+    var pb = mz(p, 'pusatBerkala'); if (!pb) { return 'kongres'; }
     if (E && E.adalahTahunPemilihan(p.tahun)) { return 'kongres'; }
+    if (pb === 'pemilihan') { return null; }                                       // v13.64: PBB: Perhimpunan Agung setiap 3 tahun (tahun pemilihan sahaja)
     return E && E.adalahTahunPemilihan(p.tahun - 1) ? 'persidangan' : null;
   }
   function pusatDiBahagian(p) { var U = umnoM(); return !!(U && U.baharu && U.baharu(p)); }
@@ -418,7 +458,9 @@
     if (peringkat === 'bahagian' && mz(p, 'jpkpSahaja')) {                                                  // v13.62: DAP Fasal XIX.1: ahli JPKP sahaja
       return g.exB.sah ? { ok: true } : { ok: false, sebab: 'Hanya ahli JPKP (Ahli Parlimen, ADUN, Ketua Pemuda / Wanita dan Pengerusi Cawangan) boleh hadir MB JPKP.' };
     }
-    if (peringkat === 'pau' && mz(p, 'pusatBerkala') && !jenisPusat(p)) { return { ok: false, sebab: 'Tiada Kongres Kebangsaan atau Persidangan Parti tahun ini: Kongres diadakan setiap 3 tahun dan Persidangan Parti 18 bulan selepasnya.' }; }
+    if ((peringkat === 'pau' || peringkat === 'sayap_pau') && mz(p, 'pusatBerkala') && !jenisPusat(p)) {
+      return { ok: false, sebab: mz(p, 'pusatBerkala') === 'pemilihan' ? 'Tiada Perhimpunan Agung UMNO (PAU) tahun ini: Perhimpunan Agung diadakan setiap 3 tahun, pada tahun pemilihan parti.' : 'Tiada Kongres Kebangsaan atau Persidangan Parti tahun ini: Kongres diadakan setiap 3 tahun dan Persidangan Parti 18 bulan selepasnya.' };
+    }
     if (peringkat === 'bahagian') {
       return (g.pw.sah || g.exB.sah || (p.perwakilan && p.perwakilan.g10 === p.tahun)) ? { ok: true }
         : { ok: false, sebab: 'Hanya Perwakilan Cawangan atau G10 sayap tahun ' + p.tahun + ' yang terpilih, Ketua Cawangan dan pemegang jawatan Bahagian/Pusat boleh hadir. Mandat tahun lepas sudah luput.' };
@@ -482,8 +524,10 @@
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
     var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
     var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
-    var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null; if (!M || !M.ringkasPusat) { return null; }
-    var rp = null; try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } var nB = rp && rp.bilBahagian; if (!nB) { return null; }
+    var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null, rp = null;
+    if (M && M.ringkasPusat) { try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } }
+    if (!rp && mz(p, 'bilBahagian')) { rp = { bilBahagian: mz(p, 'bilBahagian') }; }   // v13.64: parti Sarawak tanpa modul Pusat (PBB 82, PRS 34, SUPP 20, PDP 15 DUN)
+    var nB = rp && rp.bilBahagian; if (!nB) { return null; }
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
     if (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') {      // v13.62: PH: PKR semua anggota Cabang (≈10% hadir, ANDAIAN); DAP ahli JPKP; Amanah 14.3; Pusat = perwakilan modul parti
       var nCw = (Eg.bilPemilih ? Eg.bilPemilih(p, 'bahagian') / Math.max(1, Eg.kuotaCawangan(p)) : 10);

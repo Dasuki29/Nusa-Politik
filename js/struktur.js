@@ -142,7 +142,7 @@
       }
     },
     PBB: {
-      sumber: 'Wikipedia (Majlis Tertinggi PBB 2025-2028)',
+      sumber: 'Wikipedia (Majlis Tertinggi PBB 2025-2028)', pusatBerkala: 'pemilihan', bilBahagian: 82,   // v13.64: Perhimpunan Agung setiap 3 tahun (Wikipedia)
       jawatan: {
         naib_presiden_kanan: { buka: true },                                            // 1 setiap blok; pemain bertanding kerusi bloknya
         naib_presiden: { kerusi: ikutBlok(3, 4) },                                      // Pesaka 3, Bumiputera 4
@@ -150,7 +150,7 @@
       }
     },
     PRS: {
-      sumber: 'Wikipedia (ANDAIAN)', kitaran: { mula: 2025, tahun: 3 },
+      sumber: 'Wikipedia (ANDAIAN)', kitaran: { mula: 2025, tahun: 3 }, bilBahagian: 34,
       jawatan: {
         ajk_cawangan: { kerusi: 9 }, ajk_bahagian: { kerusi: 15 },
         naib_ketua_bahagian: { tutup: 'Bahagian PRS memilih Ketua, Timbalan Ketua dan AJK sahaja (andaian permainan).' },
@@ -158,14 +158,14 @@
       }
     },
     SUPP: {
-      sumber: 'Wikipedia (ANDAIAN)', hadPenggalPresiden: 3,
+      sumber: 'Wikipedia (ANDAIAN)', hadPenggalPresiden: 3, bilBahagian: 20,
       jawatan: {
         timbalan_presiden: { kerusi: 2 }, naib_presiden: { kerusi: 4 },
         ahli_mkt: { kerusi: 6, lantikan: 5, pemilih: 40 }                               // dipilih oleh Jawatankuasa Pusat; 3 cawangan bukan kawasan + 2 lantikan Presiden
       }
     },
     PDP: {
-      sumber: 'Wikipedia (ANDAIAN)',
+      sumber: 'Wikipedia (ANDAIAN)', bilBahagian: 15,
       jawatan: { naib_presiden_kanan: { buka: true, kerusi: 3 }, naib_presiden: { kerusi: 2 }, ahli_mkt: { kerusi: 20 } }
     },
     PPP: {

@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.64 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 4 (GPS)** ikut Wikipedia, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - **PBB**: Perhimpunan Agung **setiap 3 tahun** (tahun pemilihan sahaja); tahun lain tiada Perhimpunan Agung atau Perhimpunan sayap Pusat. Hadir dikira daripada 82 Cawangan (DUN) (≈ 600).
+  - **PRS / PDP**: istilah "Perhimpunan Agung (PA)" dan "Majlis Tertinggi (MT)"; **SUPP**: "Persidangan Perwakilan SUPP" dan "Jawatankuasa Pusat (JK Pusat)" ⚠️.
+  - Hadir dikira untuk parti Sarawak (PRS 34, SUPP 20, PDP 15 DUN) dan bukan 1,500 tetap.
+  - Usul Sarawak: PBB (elektrik / air luar bandar, NCR, ekonomi hijau, MA63, PCDS 2030), PRS (rumah panjang, NCR Dayak), SUPP (sekolah Cina Sarawak, UEC, PKS), PDP (rumah Miri / Bintulu, pekerja tempatan); usul surau dikeluarkan untuk PRS, SUPP, PDP. Tema Ucapan Dasar ikut parti (PDP: "Perjuangan Rakyat, Sarawak Diutamakan").
+- Ujian baharu (196 ujian).
+
 ## v13.63 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 4 (GPS)** ikut Wikipedia (PDF daripada pengguna), mockup yang dipersetujui (⚠️ andaian ditanda).

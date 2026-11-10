@@ -256,6 +256,18 @@
   /* v13.63: SUPP: Pengerusi Seksyen Pemuda / Wanita (Wikipedia: Chairman of Youth Section, Chairwoman of Women Section). */
   SENARAI.SUPP.istilah = (SENARAI.SUPP.istilah || []).concat([[/\bKetua (Pemuda|Wanita)\b/g, 'Pengerusi Seksyen $1']]);
   SENARAI.SUPP.istilahSongsang = [[/\bPengerusi Seksyen (Pemuda|Wanita)\b/g, 'Ketua $1']].concat(SENARAI.SUPP.istilahSongsang || []);
+  /* v13.64 (audit enjin mesyuarat Fasa 4): PRS dan PDP: Perhimpunan Agung (PA), Majlis Tertinggi (MT) (klon istilah PPP tanpa Pengerusi / bulan); SUPP: Persidangan Perwakilan, Jawatankuasa Pusat. */
+  function klonPPP(kod, songsang) {
+    return SENARAI.PPP[songsang ? 'istilahSongsang' : 'istilah'].filter(bukanPPPkhas).filter(function (x) { return !/WTC|Wisma/.test(x[0].source); }).map(function (x) {
+      return [new RegExp(x[0].source.replace(/PPP/g, kod), x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, kod) : x[1]];
+    });
+  }
+  SENARAI.PRS.istilah = klonPPP('PRS').concat(SENARAI.PRS.istilah || []); SENARAI.PRS.istilahSongsang = klonPPP('PRS', true).concat(SENARAI.PRS.istilahSongsang || []);
+  SENARAI.PDP.istilah = klonPPP('PDP').concat(SENARAI.PDP.istilah || []); SENARAI.PDP.istilahSongsang = klonPPP('PDP', true).concat(SENARAI.PDP.istilahSongsang || []);
+  SENARAI.SUPP.istilah = [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (JK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'JK Pusat'],
+    [/Perhimpunan Agung (UMNO|SUPP) \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/Perhimpunan Agung \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/(UMNO|SUPP) General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/\bPAU\b/g, 'Persidangan Perwakilan']].concat(SENARAI.SUPP.istilah || []);
+  SENARAI.SUPP.istilahSongsang = (SENARAI.SUPP.istilahSongsang || []).concat([[/Jawatankuasa Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
+    [/Persidangan Perwakilan SUPP/g, 'Perhimpunan Agung SUPP (PAU)'], [/SUPP Delegates Conference/g, 'SUPP General Assembly (PAU)'], [/Persidangan Perwakilan(?! SUPP)/g, 'PAU']]);
   SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
     istilah: [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (AJK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'AJK Pusat'], [/Supreme Council \(MKT\)/g, 'Central Committee (AJK Pusat)'], [/Supreme Council/g, 'Central Committee'],
       [/Perhimpunan Agung BERJASA \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung UMNO \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung \(PAU\)/g, 'Muktamar BERJASA'], [/Perhimpunan Agung BERJASA/g, 'Muktamar BERJASA'],

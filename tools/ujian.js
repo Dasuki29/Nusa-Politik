@@ -2987,6 +2987,20 @@ ujian('v13.63 Enjin pemilihan GPS (Fasa 4): PBB ikut blok, PRS kitaran 2025, SUP
   P.tetap({ parti: 'PDP', penggalPresiden: 0 }); sama(M0.senaraiPusat(S.loadPlayer()), 'Presiden, Timbalan Presiden, 3 Naib Presiden Kanan, 2 Naib Presiden, MKT');
   S.clearPlayer();
 });
+ujian('v13.64 Enjin mesyuarat GPS (Fasa 4): PBB Perhimpunan Agung 3 tahun, istilah PRS / SUPP / PDP, hadir dikira, usul Sarawak', () => {
+  const M0 = g.MyPolitikMeeting, PT = g.MyPolitikParti;
+  const pau = (y) => { P.tetap({ tahun: y, bulan: 3, perwakilan: { cawangan: y, bahagian: y } }); return M0.getKeadaanMesyuarat(S.loadPlayer()).peringkat.find((z) => z.kod === 'pau'); };
+  P.daftar({}); P.tetap({ parti: 'PBB', blokPBB: 'pesaka' });
+  const tP = [2026, 2027, 2028, 2029].filter((y) => E.adalahTahunPemilihan(y)); betul(tP.length >= 1);
+  betul(pau(tP[0]).status !== 'tidak_layak', 'tahun pemilihan: Perhimpunan Agung'); const x = pau(tP[0] + 1); sama(x.status, 'tidak_layak'); betul(/setiap 3 tahun/.test(x.sebab), x.sebab);
+  P.tetap({ tahun: tP[0] }); const p = S.loadPlayer(); betul(M0.bilHadir(p, 'pau') > 300 && M0.bilHadir(p, 'pau') < 1500, 'hadir PBB dikira: ' + M0.bilHadir(p, 'pau'));
+  betul(/pbb_|Ucapan Dasar/.test(M0.janaAgendaUji(p, 'pau').map((a) => a.kod + a.tajuk).join('|')));
+  P.tetap({ parti: 'PRS' }); sama(PT.ke('Perhimpunan Agung UMNO (PAU)'), 'Perhimpunan Agung PRS'); sama(PT.ke('Majlis Kerja Tertinggi (MKT)'), 'Majlis Tertinggi (MT)');
+  P.tetap({ parti: 'SUPP' }); sama(PT.ke('Perhimpunan Agung UMNO (PAU)'), 'Persidangan Perwakilan SUPP'); sama(PT.ke('Ahli MKT'), 'Ahli JK Pusat');
+  betul(M0.janaAgendaUji(S.loadPlayer(), 'cawangan').every((a) => a.kod !== 'dewan_surau'), 'tiada usul surau SUPP');
+  P.tetap({ parti: 'PDP' }); sama(PT.ke('Perhimpunan Agung UMNO (PAU)'), 'Perhimpunan Agung PDP'); betul(M0.bilHadir(S.loadPlayer(), 'pau') < 400);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
