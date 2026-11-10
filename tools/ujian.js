@@ -2656,6 +2656,33 @@ ujian('v13.50 Ketua Pembangkang: status, elaun, Soalan Lisan, Bahas RUU, Bajet A
   if (u.jaya) { betul(PRU.getPRU(S.loadPlayer()).aktif, 'PRU mengejut'); } else { sama(S.loadPlayer().reputasi, 50 - 4); }
   S.clearPlayer();
 });
+ujian('v13.51 Lompat Parti: pilihan ikut negeri, syarat, gabung profil, Perkara 49A dan PRK tiket parti baharu (Threads no. 4)', () => {
+  const LP = g.MyPolitikLompat, D = g.MyPolitikData; P.daftar({}); P.tetap({ ip: 1000, myr: 50000, reputasi: 60, tahun: 2031, bulan: 4, jawatanList: [{ kod: 'ketua_cawangan', jawatan: 'Ketua Cawangan', peringkat: 'cawangan', pangkat: 3 }], jawatan: 'Ketua Cawangan', gelaran: { dato: true } });
+  P.tetap({ pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { aktif: null, status: { jenis: 'MP', kerusi: 'Pekan', kerajaan: true } }) });
+  let p = S.loadPlayer(); const neg = p.negeri;
+  const pl = LP.pilihan(p); betul(!pl.some((x) => x.kod === p.parti), 'parti sendiri tiada'); sama(pl.find((x) => x.kod === 'PBB').boleh, /sarawak/i.test(neg));
+  betul(LP.aktifDi('PKR', 'Sarawak') && !LP.aktifDi('UMNO', 'Sarawak') && LP.aktifDi('PBRS', 'Sabah') && !LP.aktifDi('PAS', 'Sabah') && LP.aktifDi('PAS', 'Kelantan'));
+  const k = LP.kesan(p); sama(k.kerusi.length, 1); sama(k.ip, 500);
+  const m = LP.mula('PAS'); betul(m.ok && /index\.html#daftar/.test(m.url), m.ralat); betul(/sedang diproses/.test(LP.kunci(S.loadPlayer())));
+  const lama = S.loadPlayer(), dt = D.getFallbackData(), c = dt.negeri[0].bahagian[0].dun[0].cawangan[0];
+  const baru = S.buildPlayerProfile({ nama: 'X', demografik: D.tentukanDemografi('L', 35, 'PAS'), cawangan: c, sayap: 'utama', parti: 'PAS', tahunAhli: 3 });
+  const n = LP.gabung(lama, baru);
+  sama(n.parti, 'PAS'); sama(n.nama, lama.nama); sama(n.tahun, 2031); sama(n.myr, 50000); sama(n.ip, 500); sama(n.reputasi, 50); sama(n.kesetiaan.akarUmbi, 30);
+  sama(n.jawatan, 'Ahli Biasa'); sama(n.jawatanList.length, 0); sama(n.keahlian.sejakTahun, 2031); sama(n.dicipta, lama.dicipta, 'trofi kekal'); sama(n.gelaran.dato, true);
+  sama(n.demografik.umur, lama.demografik.umur, 'umur permulaan kekal'); sama(n.pru.status, null, 'Perkara 49A: kerusi dikosongkan'); sama(n.lompat.prk.length, 1); sama(n.lompat.kali, 1); betul(!n.lompatTertunda);
+  betul(S.savePlayer(n).ok); p = S.loadPlayer(); betul(LP.katak(p)); betul(/sekali setiap 5 tahun/.test(LP.kunci(p)));
+  // PRK bulan depan: pemain dijamin dicalonkan
+  sama(LP.prosesBulan().peristiwa.length, 0, 'belum tiba'); P.tetap({ bulan: 5 }); const ev = LP.prosesBulan().peristiwa; betul(ev.some((x) => /Perkara 49A/.test(x.mesej)), ev.map((x) => x.mesej).join());
+  const a = PRK.getPRK(S.loadPlayer()).aktif; betul(a && a.lompat); sama(PRK.kelayakan(S.loadPlayer()).peluang, 100); betul(PRK.mohonCalon({ rng: () => 0.99 }).diluluskan);
+  sama(LP.getL(S.loadPlayer()).prk.length, 0);
+  // dipecat: kerusi kekal, tiada penalti
+  P.daftar({}); P.tetap({ reputasi: 60, etika: Object.assign({}, S.loadPlayer().etika, { status: 'dipecat' }) });
+  P.tetap({ pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { aktif: null, status: { jenis: 'MP', kerusi: 'Pekan', kerajaan: false } }) });
+  const n2 = LP.gabung(S.loadPlayer(), Object.assign({}, baru)); sama(n2.pru.status.kerusi, 'Pekan'); sama(n2.reputasi, 60); sama(n2.lompat.katakSehingga, 0);
+  // syarat: Reputasi < 20 ditolak
+  P.daftar({}); P.tetap({ reputasi: 10 }); betul(LP.pilihan(S.loadPlayer()).every((x) => !x.boleh)); betul(!LP.mula('PKR').ok);
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);

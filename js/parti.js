@@ -203,6 +203,7 @@
   function kini() {
     var S = W.MyPolitikSave, p = null;
     try { p = S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { p = null; }
+    if (p && p.lompatTertunda && sah(p.lompatTertunda.ke) && W.document && W.document.getElementById && W.document.getElementById('reg-form')) { return p.lompatTertunda.ke; }   // v13.51: borang lompat parti
     return p ? kod(p) : (pilihan() || 'UMNO');
   }
 

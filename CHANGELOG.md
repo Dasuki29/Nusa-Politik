@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.51 (2026-11-10)
+
+- **Maklum balas Threads no. 4: Lompat Parti** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).
+  - Kad baharu **🔀 Lompat Parti** dalam tab Profil (sebelah Pindah Cawangan). Pilih parti yang bergerak di negeri anda: ⚠️ Sarawak = parti Sarawak, PKR, DAP; Sabah / Labuan = UMNO, MCA, MIC, PBRS, PKR, DAP; Semenanjung = UMNO, MCA, MIC, PPP, PAS, PKR, DAP.
+  - Sekali setiap 5 tahun; tidak semasa PRU / PRK. Parti menolak jika Reputasi < 20 atau pemain sudah lompat 2 kali.
+  - Selepas pengesahan, borang pendaftaran dibuka dalam mod lompat: parti baharu dipilih, nama / jantina / umur / pendidikan dikunci, negeri dan bahagian lama dipilih automatik; pemain memilih cawangan baharu.
+  - **Kekal:** nama, umur, Dana, AP, harta, gelaran, pendidikan, rekod pilihan raya dan kerajaan, jawatan tertinggi kerjaya, trofi. **Bermula semula:** jawatan parti (Ahli Biasa), tempoh keahlian dan keadaan parti. IP −50%, Reputasi −10, Sokongan akar umbi 30%, label "Katak Politik" 24 bulan.
+  - **Perkara 49A:** wakil rakyat yang lompat parti hilang kerusi; PRK diadakan bulan depan dan pemain dijamin dicalonkan atas tiket parti baharu (kerusi kedua: PRK calon parti). Ahli Politik Bebas (dipecat) kekal kerusi tanpa penalti Reputasi.
+  - Trofi baharu 🐸 Katak Politik.
+- Fail baharu: `js/lompat.js`, `js/lompat-ui.js`, `tools/ujian-lompat.js` (ujian hujung ke hujung: dashboard → borang → dashboard). Ujian baharu (183 ujian).
+
 ## v13.50 (2026-11-10)
 
 - **Maklum balas Threads no. 1: Ketua Pembangkang** (ikut mockup yang dipersetujui; semua nombor ⚠️ andaian).

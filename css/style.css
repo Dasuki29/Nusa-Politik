@@ -1112,3 +1112,9 @@ html, body { overflow-x: clip; }
 .pbg-ban { background: #1D3A6E; color: #fff; border-radius: var(--radius); padding: 8px 10px; margin-bottom: 8px; }
 .pbg-ban small { display: block; color: #DBE4FF; font-size: .78rem; }
 .pbg-3 { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* v13.51: Lompat Parti */
+.lp-opt { display: flex; gap: 8px; align-items: center; border: 2px solid var(--border); border-radius: var(--radius); padding: 7px 10px; margin: 6px 0; cursor: pointer; }
+.lp-opt small { display: block; color: var(--text-muted); font-size: .78rem; } .lp-opt--x { opacity: .5; cursor: default; }
+.lp-amaran { background: rgba(179, 18, 43, .12); border: 2px solid var(--danger); border-radius: var(--radius); padding: 8px 10px; font-size: .85rem; margin: 6px 0; }
+.lp-k { display: flex; justify-content: space-between; gap: 8px; font-size: .85rem; padding: 4px 0; border-top: 1.5px dashed var(--border); } .lp-k b { text-align: right; }

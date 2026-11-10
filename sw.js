@@ -4,7 +4,7 @@
           permainan boleh dibuka luar talian sejak lawatan pertama. Satu fail yang gagal dimuat tidak lagi
           menggagalkan pemasangan. Fail data besar lain (data/dun.json, data/dm-*.json) dicache selepas dimuat.
    Tukar VERSI apabila senarai ASAS berubah supaya cache lama dibuang. */
-var VERSI = 'nusa-v13.50';
+var VERSI = 'nusa-v13.51';
 var ASAS = [
   'index.html', 'dashboard.html', '404.html', 'manifest.webmanifest',
   'css/style.css', 'css/responsive.css', 'css/tema.css', 'css/tema-index.css', 'css/rival.css', 'css/map.css', 'css/paparan.css',
@@ -18,7 +18,7 @@ var ASAS = [
   'js/i18n.js', 'js/translations.js', 'js/translations-acara.js', 'js/translations-data.js', 'js/translations-ui.js', 'js/translations-baharu.js', 'js/translations-perlembagaan.js', 'js/translations-pindah.js', 'js/tutorial-en.js', 'js/integriti.js', 'js/integriti-ui.js', 'js/media.js', 'js/media-ui.js', 'js/tular.js', 'js/tular-ui.js', 'js/mca-data.js', 'js/mca.js', 'js/mca-ui.js', 'js/mic-data.js', 'js/mic.js', 'js/mic-ui.js', 'js/ppp-data.js', 'js/ppp.js', 'js/ppp-ui.js', 'js/sabah.js', 'js/pbrs-data.js', 'js/pbrs.js', 'js/pbrs-ui.js', 'js/pas-data.js', 'js/pas.js', 'js/pas-ui.js', 'js/pkr-data.js', 'js/pkr.js', 'js/pkr-ui.js', 'js/dap-data.js', 'js/dap.js', 'js/dap-ui.js', 'assets/images/logo-ph.jpg', 'assets/images/logo-pkr.png', 'assets/images/logo-dap.svg', 'assets/images/logo-amanah.png', 'assets/images/logo-pas.svg', 'assets/images/logo-pn.svg', 'assets/images/logo-bersatu.png', 'assets/images/logo-gerakan.png', 'assets/images/logo-mipp.jpg', 'assets/images/logo-wawasan.jpg', 'js/umno-data.js', 'js/umno.js', 'js/umno-ui.js', 'js/letak.js', 'js/letak-ui.js', 'js/pendidikan.js', 'js/pendidikan-ui.js', 'js/friends-bn.js', 'js/friends-bn-ui.js', 'js/sabah-bn.js', 'js/sabah-bn-ui.js', 'js/npc.js', 'js/npc-ui.js', 'js/kerusi-semasa.js', 'js/prk-luar.js', 'js/prk-luar-ui.js', 'js/rundingan.js', 'js/maklumbalas.js', 'js/sampingan.js', 'js/gelaran.js', 'js/sampingan-ui.js', 'js/kawasan.js', 'js/kawasan-ui.js', 'js/glc.js', 'js/glc-ui.js', 'js/komuniti.js', 'js/komuniti-ui.js',
   'js/parti.js', 'js/sarawak.js', 'js/translations-parti.js',
   'js/pindah.js',
-  'js/pindah-ui.js',
+  'js/pindah-ui.js', 'js/lompat.js', 'js/lompat-ui.js',
   'assets/images/favicon.svg', 'assets/images/favicon-32.png', 'assets/images/favicon-192.png', 'assets/images/apple-touch-icon.png',
   'assets/images/icon-512.png', 'assets/images/icon-maskable-512.png', 'assets/images/logo.png', 'assets/images/logo-nusa.svg', 'assets/images/logo-pbb.png', 'assets/images/logo-bn.png', 'assets/images/logo-ppp.jpg', 'assets/images/logo-pbrs.jpg', 'assets/images/logo-kimma.png', 'assets/images/logo-mmsp.png', 'assets/images/logo-ipf.png', 'assets/images/logo-miup.png', 'assets/images/logo-gps.png', 'assets/images/logo-prs.jpg', 'assets/images/logo-supp.svg', 'assets/images/logo-pdp.jpg', 'assets/images/logo-psb.png', 'assets/images/logo-mca.jpg', 'assets/images/logo-mic.png', 'assets/images/logo-placeholder.svg',
   'assets/images/menara-dato-onn.jpg', 'assets/images/menara-dato-onn.svg', 'assets/fonts/anton.woff', 'assets/fonts/plus-jakarta-sans.woff',

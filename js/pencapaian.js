@@ -58,7 +58,8 @@
     { id: 'suara_rakyat', ikon: '📢', nama: 'Suara Rakyat', huraian: 'Selesaikan 20 keluhan / isu tempatan.' },
     { id: 'penggubal', ikon: '📜', nama: 'Penggubal Undang-undang', huraian: 'Bentang 5 RUU yang lulus di Dewan.' },
     { id: 'doktor_falsafah', ikon: '🎓', nama: 'Doktor Falsafah', huraian: 'Tamatkan PhD (gelaran Dr.).' },
-    { id: 'jutawan_politik', ikon: '💰', nama: 'Jutawan Politik', huraian: 'Dana peribadi mencecah RM 1 juta tanpa kes SPRM.' }
+    { id: 'jutawan_politik', ikon: '💰', nama: 'Jutawan Politik', huraian: 'Dana peribadi mencecah RM 1 juta tanpa kes SPRM.' },
+    { id: 'katak_politik', ikon: '🐸', nama: 'Katak Politik', huraian: 'Lompat ke parti lain.' }   // v13.51
   ];
   var KELUHAN_SASAR = 20, RUU_SASAR = 5, NEGERI_SASAR = 3, JUTA = 1000000;
 
@@ -182,6 +183,7 @@
     }
     if (jej.ruu >= RUU_SASAR) { buka('penggubal'); }
     if (p.pendidikan && p.pendidikan.tahap === 'phd') { buka('doktor_falsafah'); }
+    if (p.lompat && p.lompat.kali > 0) { buka('katak_politik'); }   // v13.51: Lompat Parti
     if ((Number(p.myr) || 0) >= JUTA && !(p.integriti && p.integriti.audit) && !(p.etika && p.etika.siasatan)) { buka('jutawan_politik'); }
 
     baru.forEach(function (id) { delete st.dilihat[id]; });

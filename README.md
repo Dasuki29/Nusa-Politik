@@ -99,6 +99,8 @@ Modul utama dalam `js/`:
 | `prk-luar-ui.js` | Kad 🗳️ PRK Luar Kawasan dalam tab Pemilihan |
 | `pembangkang.js` | Ketua Pembangkang dan MP pembangkang: Naratif, Soalan Lisan, Bahas RUU, Bajet Alternatif, Undi Tidak Percaya, Kabinet Bayangan |
 | `pembangkang-ui.js` | Kad pembangkang dalam tab Dewan |
+| `lompat.js` | Lompat Parti: syarat, gabung profil lama dan cawangan parti baharu, Perkara 49A dan PRK |
+| `lompat-ui.js` | Kad 🔀 Lompat Parti dalam tab Profil |
 | `rundingan.js` | Rundingan Gabungan selepas Parlimen tergantung: calon rakan (PH, PN / BN, GPS, GRS, Bebas), kesediaan, lawan tradisi, Restu PAS, pilihan automatik NPC bagi pemain bukan Presiden |
 | `ppp.js`, `ppp-ui.js`, `ppp-data.js` | Peraturan PPP mod ringan (Tuntut Kerusi BN, krisis kepimpinan & ROS) dan data kawasan (`node tools/build-ppp.js`) |
 | `pas.js`, `pas-ui.js`, `pas-data.js` | PAS (Perikatan Nasional) mod penuh: Kawasan, Muktamar setiap 2 tahun, perwakilan Kawasan (Fasal 18), kuota PN, kerusi PN; Fasa 2: Restu Majlis Syura, Ceramah, Dewan Ulamak / As-Sabiqun / Himpunan Pendukung, Ahli Bersekutu; data kawasan (`node tools/build-pas.js`) |
@@ -155,6 +157,7 @@ node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
 node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri (pilih TPM, 29 portfolio, calon struktur parti)
 node tools/ujian-prk-luar.js     # pelayar: PRK luar kawasan (kad tab Pemilihan, bantu kempen, EN)
 node tools/ujian-pembangkang.js  # pelayar: Ketua Pembangkang (kad tab Dewan, tindakan, Kabinet Bayangan, EN)
+node tools/ujian-lompat.js       # pelayar: Lompat Parti hujung ke hujung (kad Profil, borang cawangan baharu, EN)
 node tools/ujian-isu.js          # pelayar: Isu Semasa dan Sidang Media
 node tools/ujian-mca.js          # pelayar: daftar sebagai ahli MCA (istilah, kad MCA, Perlembagaan MCA, peta)
 node tools/ujian-mic.js          # pelayar: daftar sebagai ahli MIC (sayap Putera, kad MIC, Perlembagaan MIC, EN)

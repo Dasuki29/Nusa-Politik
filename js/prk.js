@@ -120,6 +120,7 @@
       hari: 0, hariBaki: CONFIG.HARI, voterSupport: 0, campaignFunds: 0, jentera: 70, dermaGuna: 0, log: [],
       partiPopulariti: clamp(Math.round(45 + ((Number(p.reputasi) || 50) - 50) * 0.3 + sentimenNasional(p) * 0.3), 25, 75), sentimenSemasa: sentimenNasional(p)
     };
+    if (o.lompat) { prk.aktif.lompat = true; }                                  // v13.51: kerusi dikosongkan selepas lompat parti (pencalonan dijamin)
     var kes = simpan(prk, {}, { log: { tindakan: 'prk_isytihar', nama: 'Kekosongan kerusi ' + (jenis === 'DUN' ? 'DUN ' : 'Parlimen ') + prk.aktif.nama + ': ' + SEBAB[sebab], peringkat: 'bulan' } });
     var mesej = SEBAB[sebab] + ' (kerusi ' + (jenis === 'DUN' ? 'DUN ' : 'Parlimen ') + prk.aktif.nama + '). Pilihan Raya Kecil diadakan dalam 7 hari' + (pertahan ? '; kerusi ini dipertahankan oleh parti anda.' : '; kerusi ini dimenangi pihak lawan sebelum ini.');
     return { ok: !!(kes && kes.ok), peristiwa: [{ jenis: 'prk_isytihar', mesej: mesej }], aktif: prk.aktif };
@@ -140,6 +141,7 @@
     var prk = getPRK(p), a = prk.aktif;
     if (!a) { return null; }
     var kl = PRU().kelayakan(p)[a.jenis], c = CONFIG[a.jenis];
+    if (a.lompat) { return { boleh: true, sebab: [], ipMin: 0, minPeruntukan: c.minPeruntukan, peluang: 100 }; }   // v13.51: bekas penyandang yang lompat parti
     return { boleh: kl.boleh, sebab: kl.sebab, ipMin: kl.ipMin, minPeruntukan: c.minPeruntukan, peluang: clamp(kl.peluang + Math.round(CONFIG.TERIMA_BONUS * 100), 20, 95) };
   }
   function mohonCalon(o) {

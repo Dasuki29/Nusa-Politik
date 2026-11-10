@@ -476,7 +476,7 @@
     if (nama.length < 3) { setError('nama', 'Masukkan nama sekurang-kurangnya 3 huruf.'); salah.push(el.nama); }
     if (!jantinaEl) { setError('jantina', 'Pilih jantina.'); salah.push(el.form.querySelector('input[name="jantina"]')); }
     var umurMin = state.parti === 'DAP' ? 17 : 18;   // v13.37: DAP umur minimum ahli 17 tahun (Fasal III.2)
-    if (!isFinite(umur) || umur < umurMin || umur > 60) { setError('umur', umurMin === 17 ? 'Umur permulaan mesti antara 17 dan 60 tahun.' : 'Umur permulaan mesti antara 18 dan 60 tahun.'); salah.push(el.umur); }
+    if (!isFinite(umur) || umur < umurMin || umur > (LOMPAT ? 120 : 60)) { setError('umur', umurMin === 17 ? 'Umur permulaan mesti antara 17 dan 60 tahun.' : 'Umur permulaan mesti antara 18 dan 60 tahun.'); salah.push(el.umur); }
     if (!state.negeri) { setError('negeri', 'Pilih negeri.'); salah.push(el.negeri); }
     else if (!state.bahagian) { setError('bahagian', 'Pilih bahagian.'); salah.push(el.bahagian); }
     else if (!state.dun) { setError('dun', 'Pilih DUN.'); salah.push(el.dun); }
@@ -499,6 +499,7 @@
     var pdEl = document.getElementById('s-pendidikan');                                          // v13.13
     var bdEl = $('s-bidang'), jaEl = $('s-jenis-ahli');
     var profil = S.buildPlayerProfile({ pendidikan: pdEl ? pdEl.value : null, bidang: state.parti === 'PAS' && bdEl ? bdEl.value : null, keahlianJenis: state.parti === 'PAS' && jaEl ? jaEl.value : null, parti: state.parti, blokPBB: state.parti === 'PBB' ? (state.blok || 'bumiputera') : null, dunInfo: esSW(state.parti) && state.dunData && state.bahagian ? state.dunData[parseInt(state.bahagian.kod, 10)] : null, nama: v.nama, demografik: demografik, cawangan: state.cawangan, avatar: avatarTerpilih(), sayap: sayapTerpilih(), difficultyLevel: (el.form.querySelector('input[name="kesukaran"]:checked') || {}).value, careerBackground: (el.form.querySelector('input[name="kerjaya"]:checked') || {}).value, tahunAhli: ahliEl ? ahliEl.value : 0 });
+    if (LOMPAT && window.MyPolitikLompat) { var lamaLp = S.loadPlayer(); if (lamaLp && lamaLp.lompatTertunda) { profil = window.MyPolitikLompat.gabung(lamaLp, profil); } }   // v13.51: lompat parti
     var hasil = S.savePlayer(profil);
     if (!hasil.ok) { el.formError.textContent = hasil.ralat; return; }
 
@@ -507,8 +508,40 @@
     window.location.assign(DASHBOARD_URL);
   });
 
+  /* ---------- v13.51: mod Lompat Parti (dari dashboard; js/lompat.js) ---------- */
+  var LOMPAT = null;
+  try { var pLp = S.loadPlayer(); if (pLp && pLp.lompatTertunda && window.MyPolitikLompat) { LOMPAT = pLp; } } catch (eLp) { LOMPAT = null; }
+  function tungguPilihan(sel, n) { return new Promise(function (ok) { var t0 = Date.now(); (function cuba() { if (sel && sel.options.length > 1) { return ok(true); } if (Date.now() - t0 > (n || 6000)) { return ok(false); } setTimeout(cuba, 120); })(); }); }
+  function pilihIkutNama(sel, nama) {
+    if (!sel || !nama) { return false; }
+    var x = String(nama).toLowerCase().trim(), o = Array.prototype.filter.call(sel.options, function (op) { return op.value && op.textContent.toLowerCase().trim() === x; })[0]
+      || Array.prototype.filter.call(sel.options, function (op) { return op.value && op.textContent.toLowerCase().indexOf(x) >= 0; })[0];
+    if (!o) { return false; }
+    sel.value = o.value; sel.dispatchEvent(new Event('change')); return true;
+  }
+  if (LOMPAT && selParti) {
+    var keLp = LOMPAT.lompatTertunda.ke, namaLp = PT && PT.info ? (PT.info(keLp).nama || keLp) : keLp;
+    var umurLp = (parseInt(LOMPAT.demografik && LOMPAT.demografik.umur, 10) || 30) + Math.max(0, (parseInt(LOMPAT.tahun, 10) || 2026) - 2026);
+    var banLp = document.createElement('div'); banLp.className = 'info lompat-banner';
+    banLp.innerHTML = '<p><b>🔀 Lompat ke ' + namaLp + '</b></p><p>Pilih cawangan baharu anda. Nama, jantina, umur, Dana, harta, gelaran dan trofi kekal.</p><button type="button" class="btn btn--ghost btn--sm" id="lp-batal">Batal lompat parti</button>';
+    el.form.insertBefore(banLp, el.form.firstChild); setTimeout(function () { try { banLp.scrollIntoView({ block: 'start' }); } catch (eS) { /* abaikan */ } }, 300);
+    $('lp-batal').addEventListener('click', function () { window.MyPolitikLompat.batal(); window.location.assign(DASHBOARD_URL); });
+    el.nama.value = LOMPAT.nama; el.nama.readOnly = true;
+    var pdLp = $('s-pendidikan'); if (pdLp && LOMPAT.pendidikan && LOMPAT.pendidikan.tahap) { pdLp.value = LOMPAT.pendidikan.tahap; pdLp.disabled = true; }   // pendidikan kekal
+    el.umur.value = String(umurLp); el.umur.readOnly = true;
+    Array.prototype.forEach.call(el.form.querySelectorAll('input[name="jantina"]'), function (r) { r.checked = r.value === String((LOMPAT.demografik && LOMPAT.demografik.jantina) || '').charAt(0).toUpperCase(); r.disabled = !r.checked; });
+    selParti.value = keLp; selParti.disabled = true;
+    state.parti = keLp; state.blok = null; state.blokManual = false; if (PT) { PT.tetapPilihan(keLp); }
+    suaikanBorangParti();
+    Promise.resolve(muatData()).then(function () { return tungguPilihan(el.negeri); }).then(function () {
+      if (!pilihIkutNama(el.negeri, LOMPAT.negeri)) { return; }
+      return tungguPilihan(el.bahagian).then(function () { if (pilihIkutNama(el.bahagian, LOMPAT.bahagian)) { return tungguPilihan(el.dun).then(function () { pilihIkutNama(el.dun, LOMPAT.dun); }); } });
+    });
+  }
+
   /* ---------- Pemain sedia ada ---------- */
   function semakPemain() {
+    if (LOMPAT) { el.resume.hidden = true; return; }                     // v13.51: mod lompat parti
     var p = S.loadPlayer();
     if (!p) { el.resume.hidden = true; return; }
     el.resumeText.textContent = p.nama + ', ' + p.jawatan + ' Cawangan ' + p.cawangan + ' (' + p.bahagian + ', ' + p.negeri + ')';
@@ -1210,7 +1243,7 @@
     return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikDAPUI ? lipatKad('pf-dap', W.MyPolitikDAPUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
       (W.MyPolitikPendidikanUI ? lipatKad('pf-pendidikan', W.MyPolitikPendidikanUI.kad(p), { buka: true }) : '') +   // v13.13: Pendidikan
       (W.MyPolitikLetakUI ? lipatKad('pf-letak', W.MyPolitikLetakUI.kad(p), { buka: true }) : '') +   // v13.12: Letak Jawatan
-      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +
+      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + (W.MyPolitikLompatUI ? lipatKad('pf-lompat', W.MyPolitikLompatUI.kad(p)) : '') + lipatKad('pf-gaya', kadWatak(p)) +   // v13.51: Lompat Parti
       (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
       (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
   }
