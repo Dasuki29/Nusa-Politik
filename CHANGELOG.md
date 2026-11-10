@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.60 (2026-11-10)
+
+- **Audit enjin mesyuarat, Fasa 1 (BN)**, mockup yang dipersetujui (⚠️ andaian ditanda).
+  - Wakil Bahagian ke Perhimpunan Agung ikut perlembagaan: **MCA Perkara 67** (berperingkat, maks 30, 1 dikhaskan Wanita), **MIC Perkara 74.1** (1 bagi 250 ahli, had 2,000). Wakil Cawangan ke Bahagian MIC: **1 bagi setiap 60 ahli**, tanpa had (Perkara 75.1).
+  - Bilangan hadir Mesyuarat Bahagian dan Perhimpunan Agung **dikira** daripada kuota wakil dan bilangan Bahagian parti (bukan 125 / 1,500 tetap untuk semua).
+  - Tajuk agenda pemilihan dibina daripada struktur jawatan parti (MCA 4 Naib Presiden; PPP tanpa Timbalan Presiden; PBRS 2 Naib Presiden; sayap MIC Ketua + Timbalan).
+  - **Usul ikut komuniti** (diutamakan, maks 2 setiap mesyuarat): MCA (SJK(C), UEC, PKS), MIC (sekolah Tamil, kerakyatan, kuil), PPP (PPR, B40 berbilang kaum), PBRS (air dan jalan pedalaman, tanah adat NCR, MA63). Usul surau dikeluarkan untuk parti ini. Tema Ucapan Dasar ikut parti.
+  - **Takwim PBRS 4/6/10** ⚠️ (selepas musim PRN Sabah), bukan lagi salinan MIC. Pembetulan: PBRS tidak lagi mewarisi istilah "Pengerusi" PPP (v13.57).
+- Ujian baharu (192 ujian).
+
 ## v13.59 (2026-11-10)
 
 - **Audit enjin pemilihan, Fasa 3 (PH)**, mockup yang dipersetujui (⚠️ andaian ditanda).

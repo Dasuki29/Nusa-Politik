@@ -101,9 +101,13 @@
   /* v13.9: PBRS = parti komponen BN di Sabah, MOD RINGAN (enjin yang sama seperti MIC/PPP, tanpa perlembagaan khas; perlembagaan PBRS tidak tersedia).
      Istilah: Majlis Tertinggi (MT), Perhimpunan Agung PBRS, Kota Kinabalu. Sayap Pemuda dan Wanita. DUN dipilih dalam PRN Sabah (js/sabah.js).
      ANDAIAN: kawasan operasi = 7 kawasan Parlimen pedalaman Sabah (data/pbrs-sabah.csv, tools/build-pbrs.js); takwim bulan 3/5/9. Logo daripada pengguna. */
+  /* v13.60: PBRS tidak mewarisi istilah Pengerusi dan bulan PPP (v13.57); takwim PBRS 4/6/10. */
+  function bukanPPPkhas(x) { return !/Ketua|Chief|Chairman|Pengerusi|ulan|onth/.test(x[0].source); }
+  var BULAN_PBRS = [[/\b([Bb])ulan 4[-–]5\b/g, '$1ulan 4'], [/\b([Mm])onths? 4[-–]5\b/g, '$1onth 4'], [/\b([Bb])ulan 9\b(?![-–\d])(?! \(September\))/g, '$1ulan 10'], [/\b([Mm])onths? 9\b(?![-–\d])(?! \(September\))/g, '$1onth 10']];
+  var BULAN_PBRS_S = [[/\b([Bb])ulan 4\b(?![-–\d])(?! \(April\))/g, '$1ulan 4-5'], [/\b([Bb])ulan 10\b(?![-–\d])(?! \(Oktober\))/g, '$1ulan 9']];
   SENARAI.PBRS = { kod: 'PBRS', nama: 'PBRS', penuh: 'Parti Bersatu Rakyat Sabah', logo: 'assets/images/logo-pbrs.jpg', sayap: ['pemuda', 'wanita'], negeriTetap: 'Sabah', data: 'data/pbrs-sabah.csv', bahagianJenis: 'Parlimen', pbrs: true,
-    istilah: SENARAI.PPP.istilah.map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace("Wisma PBRS, Kuala Lumpur", 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu') : x[1]]; }),
-    istilahSongsang: SENARAI.PPP.istilahSongsang.map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS') : x[1]]; }) };
+    istilah: SENARAI.PPP.istilah.filter(bukanPPPkhas).map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace("Wisma PBRS, Kuala Lumpur", 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu') : x[1]]; }).concat(BULAN_PBRS),
+    istilahSongsang: SENARAI.PPP.istilahSongsang.filter(bukanPPPkhas).map(function (x) { var src = x[0].source.replace(/PPP/g, 'PBRS').replace('Wisma PBRS, Kuala Lumpur', 'Kota Kinabalu'); return [new RegExp(src, x[0].flags), typeof x[1] === 'string' ? x[1].replace(/PPP/g, 'PBRS') : x[1]]; }).concat(BULAN_PBRS_S) };
   /* v13.31: PAS = parti komponen Perikatan Nasional (PN) di Semenanjung, MOD PENUH (enjin UMNO seperti MCA; js/pas.js). Istilah ikut
      Perlembagaan PAS (Pindaan 2025): Kawasan dan Yang Dipertua Kawasan (Fasal 41), Perhubungan PAS Negeri dan Pesuruhjaya (Fasal 53),
      Jawatankuasa Kerja PAS Pusat (Fasal 38), Muktamar Tahunan (Fasal 18), Dewan Muslimat (Fasal 58). Sayap Pemuda dan Muslimat (tiada Puteri).

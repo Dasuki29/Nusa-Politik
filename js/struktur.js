@@ -29,6 +29,17 @@
     return Math.max(2, Math.min(30, w) - 1);
   }
 
+  /** MCA Perkara 67: 3 wakil bagi 500 ahli pertama, kemudian 1/300 (1,500 seterusnya), 1/500 (3,000), 1/1,000 (10,000), 1/3,000 (6,000), 1/5,000 (baki); maks 30; 1 dikhaskan Wanita. */
+  function wakilPAMCA(ahli) {
+    var n = Math.max(0, Number(ahli) || 0), w = 3, baki = Math.max(0, n - 500);
+    [[1500, 300], [3000, 500], [10000, 1000], [6000, 3000], [Infinity, 5000]].forEach(function (t) { var a = Math.min(baki, t[0]); w += Math.floor(a / t[1]); baki -= a; });
+    return Math.max(2, Math.min(30, w) - 1);
+  }
+  /** MIC Perkara 75.1: 1 wakil bagi 60 ahli pertama dan 1 bagi setiap 60 ahli seterusnya (tiada had). */
+  function wakilMIC(ahli) { return Math.max(1, Math.floor((Number(ahli) || 0) / 60)); }
+  /** MIC Perkara 74.1: 1 wakil Perhimpunan Agung bagi setiap 250 ahli Bahagian. */
+  function wakilPAMIC(ahli) { return Math.max(1, Math.floor((Number(ahli) || 0) / 250)); }
+
   var TUTUP_SAYAP_AJK = 'Tiada AJK sayap Cawangan dipilih; sayap Cawangan hanya memilih Ketua dan Timbalan Ketua (Perkara 20.2.3, 20.2.4).';
 
   var TUTUP_SAYAP_PAS = 'Cawangan PAS hanya memilih Ketua Jawatankuasa Pemuda dan Muslimat dalam Mesyuarat Agung Cawangan.';
@@ -49,7 +60,7 @@
         naib_presiden: { kerusi: 4, fasal: 'Perkara 20' },
         ahli_mkt: { kerusi: 25, fasal: 'Perkara 20' }
       },
-      wakilCawangan: wakilMCA
+      wakilCawangan: wakilMCA, wakilBahagian: wakilPAMCA
     },
     MIC: {
       sumber: 'Perlembagaan MIC (2017)',
@@ -62,6 +73,7 @@
         ahli_mkt: { kerusi: 21, pangkatMin: 3, fasal: 'Perkara 47' },               // 21 Ahli CWC dipilih
         'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_AJK }
       },
+      wakilCawangan: wakilMIC, wakilBahagian: wakilPAMIC, hadPA: 2000,
       perwakilanPA: { kod: 'ketua_cawangan', sebab: 'Hanya Pengerusi Cawangan boleh dipilih sebagai perwakilan ke Perhimpunan Agung, secara giliran (Perkara 74.4, 74.5).' }
     },
     PAS: {
@@ -151,9 +163,13 @@
   function pangkatMin(p, d) { var e = entri(p, d); return e && typeof e.pangkatMin === 'number' ? e.pangkatMin : (d ? d.pangkatMin : 0); }
   /** Bilangan kerusi wakil Cawangan ke Bahagian ikut perlembagaan parti, atau null (guna enjin asas). */
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
+  /** Bilangan wakil Bahagian ke Perhimpunan Agung ikut perlembagaan parti, atau null. */
+  function wakilBahagian(p, ahli) { var s = untuk(p); return s && s.wakilBahagian ? s.wakilBahagian(ahli) : null; }
+  /** Had jumlah perwakilan Perhimpunan Agung (MIC Perkara 74.1: 2,000), atau null. */
+  function hadPA(p) { var s = untuk(p); return s && s.hadPA ? s.hadPA : null; }
   /** Syarat perwakilan ke Perhimpunan Agung: { kod, sebab } atau null. */
   function perwakilanPA(p) { var s = untuk(p); return s && s.perwakilanPA ? s.perwakilanPA : null; }
 
   return { STRUKTUR: STRUKTUR, untuk: untuk, entri: entri, tersedia: tersedia, sebabTutup: sebabTutup, kerusi: kerusi, lantikan: lantikan, perlu: perlu, pemilih: pemilih, pangkatMin: pangkatMin,
-    wakilCawangan: wakilCawangan, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA };
+    wakilCawangan: wakilCawangan, wakilBahagian: wakilBahagian, hadPA: hadPA, perwakilanPA: perwakilanPA, wakilMCA: wakilMCA, wakilPAMCA: wakilPAMCA, wakilMIC: wakilMIC, wakilPAMIC: wakilPAMIC };
 });

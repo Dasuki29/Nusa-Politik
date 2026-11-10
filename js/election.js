@@ -461,7 +461,7 @@
     return kg && kg[sy] !== undefined ? kg[sy] : Math.round(ahliCawangan(p) * 0.2);
   }
   function kuotaSayapCawangan(p) { return kuota(ahliSayap(p), CONFIG.KUOTA_SAYAP_CAWANGAN) + bonusKuota(p); }   // v6.3: 1 wakil / 10 ahli sayap, maks 3
-  function kuotaBahagian(p, opts) { return kuota(ahliBahagian(p, opts), CONFIG.KUOTA_BAHAGIAN); }   // wakil Bahagian ke PAU
+  function kuotaBahagian(p, opts) { var St = modKhas('MyPolitikStruktur', 'struktur.js'), w = St ? St.wakilBahagian(p, ahliBahagian(p, opts)) : null; return w || kuota(ahliBahagian(p, opts), CONFIG.KUOTA_BAHAGIAN); }   // v13.60: MCA Perkara 67, MIC 74.1   // wakil Bahagian ke PAU
 
   function bilPemilih(p, peringkat, opts) {
     if (peringkat === 'sayap_cawangan') { return Math.max(10, ahliSayap(p)); }      // v6.2: pengundi mesyuarat sayap
@@ -874,7 +874,7 @@
     getStatusModul: getStatusModul,
     senaraiPertandingan: senaraiPertandingan,
     kuotaCawangan: kuotaCawangan, kuotaBahagian: kuotaBahagian, kuotaSayapCawangan: kuotaSayapCawangan, ahliSayap: ahliSayap,
-    daftarBertanding: daftarBertanding, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan, pemilihParti: pemilihParti,
+    daftarBertanding: daftarBertanding, bilPemilih: bilPemilih, kerusiParti: kerusiParti, lantikanBerlaku: lantikanBerlaku, peluangLantikan: peluangLantikan, pemilihParti: pemilihParti,
     tarikBalik: tarikBalik,
     senaraiKempen: senaraiKempen,
     jalankanKempen: jalankanKempen,

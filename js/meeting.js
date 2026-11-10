@@ -180,6 +180,79 @@
   };
 
   var TEMA_UCAPAN = ['Perpaduan dan Pembangunan', 'Ekonomi Rakyat', 'Kesinambungan dan Pembaharuan', 'Parti Dekat dengan Akar Umbi'];
+  /* v13.60 (audit enjin mesyuarat Fasa 1, mockup dipersetujui): usul dan tema Ucapan Dasar ikut komuniti parti. Usul parti diutamakan (maks 2), baki daripada kolam umum. */
+  var KOLAM_PARTI = {
+    MCA: {
+      cawangan: [
+        { kod: 'mca_sjkc', tajuk: 'Peruntukan baik pulih sekolah jenis kebangsaan Cina di kawasan ini', penerangan: 'Bangunan SJK(C) setempat usang dan memerlukan peruntukan segera.', populariti: 72, nilai: 4 },
+        { kod: 'mca_penjaja', tajuk: 'Tapak niaga dan lesen penjaja yang lebih mudah', penerangan: 'Penjaja dan peniaga kecil mahu proses lesen pihak berkuasa tempatan dipermudah.', populariti: 66, nilai: 3 },
+        { kod: 'mca_rukun', tajuk: 'Rondaan rukun tetangga di taman perumahan', penerangan: 'Kes pecah rumah meningkat; penduduk mahu rondaan bersama polis.', populariti: 63, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'mca_uec', tajuk: 'Desak pengiktirafan Sijil UEC secara berperingkat', penerangan: 'Bahagian mahu MCA membawa isu pengiktirafan UEC ke peringkat kerajaan.', populariti: 68, nilai: 3 },
+        { kod: 'mca_pks', tajuk: 'Geran digital dan pinjaman mudah untuk PKS', penerangan: 'Perniagaan kecil keluarga terjejas oleh kos operasi dan persaingan dalam talian.', populariti: 65, nilai: 3 },
+        { kod: 'mca_kerusi_bn', tajuk: 'Tuntut kerusi tradisional MCA dikembalikan dalam BN', penerangan: 'Bahagian mahu kerusi majoriti campuran diserahkan semula kepada calon MCA.', populariti: 60, nilai: 2 }
+      ],
+      pau: [
+        { kod: 'mca_pendidikan', tajuk: 'Dasar pendidikan yang adil untuk sekolah vernakular', penerangan: 'Peruntukan tetap tahunan untuk SJK(C) dan sekolah menengah persendirian Cina.', populariti: 70, nilai: 4 },
+        { kod: 'mca_ekonomi', tajuk: 'Pelan pemulihan ekonomi PKS dan peniaga Cina', penerangan: 'Insentif cukai dan pembiayaan bagi perniagaan kecil dan sederhana.', populariti: 66, nilai: 3 },
+        { kod: 'mca_suara', tajuk: 'Kukuhkan suara MCA dalam kerajaan dan BN', penerangan: 'MCA mahu jawatan kabinet dan kerusi yang setimpal dengan sokongannya.', populariti: 62, nilai: 2 }
+      ]
+    },
+    MIC: {
+      cawangan: [
+        { kod: 'mic_sjkt', tajuk: 'Bantuan peralatan dan pengangkutan murid sekolah Tamil', penerangan: 'Murid SJK(T) setempat kekurangan peralatan dan bas sekolah.', populariti: 72, nilai: 4 },
+        { kod: 'mic_dokumen', tajuk: 'Klinik bantuan dokumen kerakyatan dan MyKad', penerangan: 'Ramai keluarga masih tidak mempunyai dokumen pengenalan yang lengkap.', populariti: 68, nilai: 4 },
+        { kod: 'mic_kuil', tajuk: 'Tanah tetap untuk kuil dan tanah perkuburan', penerangan: 'Kuil kecil di kawasan ini berdepan notis pindah tanpa tapak ganti.', populariti: 64, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'mic_tvet', tajuk: 'Kuota latihan TVET untuk belia India', penerangan: 'Bahagian mahu tempat latihan teknikal dikhaskan untuk belia India B40.', populariti: 67, nilai: 3 },
+        { kod: 'mic_usahawan', tajuk: 'Dana usahawan India melalui agensi kerajaan', penerangan: 'Usahawan kecil sukar mendapat pembiayaan tanpa cagaran.', populariti: 63, nilai: 3 },
+        { kod: 'mic_kerusi_bn', tajuk: 'Kembalikan kerusi tradisional MIC dalam BN', penerangan: 'Bahagian mahu MIC bertanding semula di kerusi bercampur yang pernah dimenanginya.', populariti: 60, nilai: 2 }
+      ],
+      pau: [
+        { kod: 'mic_pelan', tajuk: 'Pelan tindakan ekonomi masyarakat India', penerangan: 'Sasaran pemilikan ekuiti, pekerjaan dan pendidikan yang boleh diukur.', populariti: 70, nilai: 4 },
+        { kod: 'mic_tamil', tajuk: 'Naik taraf semua sekolah Tamil separa bantuan', penerangan: 'Sekolah Tamil separa bantuan memerlukan status bantuan penuh.', populariti: 67, nilai: 3 },
+        { kod: 'mic_kerakyatan', tajuk: 'Selesaikan isu kerakyatan tertunggak', penerangan: 'MIC mahu pasukan khas menyelesaikan permohonan kerakyatan yang lama tertangguh.', populariti: 64, nilai: 3 }
+      ]
+    },
+    PPP: {
+      cawangan: [
+        { kod: 'ppp_ppr', tajuk: 'Penyelenggaraan rumah PPR dan flat kos rendah', penerangan: 'Lif rosak dan sampah tidak dikutip di blok kediaman kos rendah.', populariti: 68, nilai: 3 },
+        { kod: 'ppp_sara', tajuk: 'Bantuan sara hidup tanpa mengira kaum untuk B40', penerangan: 'Keluarga B40 bandar daripada semua kaum memerlukan bantuan bersasar.', populariti: 66, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'ppp_graduan', tajuk: 'Program penempatan kerja graduan bandar', penerangan: 'Graduan muda berbilang kaum sukar mendapat pekerjaan setimpal.', populariti: 64, nilai: 3 },
+        { kod: 'ppp_kerusi', tajuk: 'Tuntut satu kerusi untuk PPP dalam rundingan BN', penerangan: 'Bahagian mahu PPP diberi peluang bertanding di kawasan bercampur.', populariti: 58, nilai: 2 }
+      ],
+      pau: [
+        { kod: 'ppp_majmuk', tajuk: 'Politik berbilang kaum sebagai teras BN', penerangan: 'PPP mahu BN kembali kepada perkongsian kuasa berbilang kaum yang sebenar.', populariti: 66, nilai: 3 },
+        { kod: 'ppp_rumah', tajuk: 'Rumah mampu milik bandar untuk semua kaum', penerangan: 'Skim perumahan bandar yang terbuka kepada semua isi rumah berpendapatan rendah.', populariti: 64, nilai: 3 }
+      ]
+    },
+    PBRS: {
+      cawangan: [
+        { kod: 'pbrs_air', tajuk: 'Bekalan air bersih untuk kampung pedalaman', penerangan: 'Kampung di pedalaman Pensiangan masih bergantung kepada air sungai.', populariti: 72, nilai: 4 },
+        { kod: 'pbrs_jalan', tajuk: 'Naik taraf jalan balak ke jalan berturap', penerangan: 'Jalan kampung sukar dilalui pada musim hujan.', populariti: 68, nilai: 3 },
+        { kod: 'pbrs_ketua_kampung', tajuk: 'Naikkan elaun ketua kampung dan JKKK', penerangan: 'Ketua kampung menanggung kos sendiri untuk urusan penduduk.', populariti: 62, nilai: 2 }
+      ],
+      bahagian: [
+        { kod: 'pbrs_ncr', tajuk: 'Percepat pengukuran dan geran tanah adat (NCR)', penerangan: 'Ramai penduduk asal masih menunggu geran tanah adat mereka.', populariti: 70, nilai: 4 },
+        { kod: 'pbrs_internet', tajuk: 'Menara telekomunikasi di kawasan pedalaman', penerangan: 'Pelajar dan peniaga kecil tidak mendapat liputan internet.', populariti: 64, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'pbrs_ma63', tajuk: 'Tuntutan hak Sabah di bawah MA63', penerangan: 'PBRS mahu hak hasil dan autonomi Sabah dipulihkan sepenuhnya.', populariti: 70, nilai: 4 },
+        { kod: 'pbrs_orang_asal', tajuk: 'Dasar pembangunan masyarakat Orang Asal Sabah', penerangan: 'Pendidikan, kesihatan dan ekonomi luar bandar untuk masyarakat Kadazandusun dan Murut.', populariti: 67, nilai: 3 }
+      ]
+    }
+  };
+  var TEMA_PARTI = {
+    MCA: ['Suara Masyarakat Cina dalam Kerajaan', 'Ekonomi dan Pendidikan untuk Semua', 'MCA Bangkit Semula'],
+    MIC: ['Memperkasa Masyarakat India', 'Pendidikan dan Peluang untuk Generasi Baharu', 'MIC Bersama Rakyat'],
+    PPP: ['Politik Berbilang Kaum', 'Keadilan Sosial untuk Rakyat Bandar'],
+    PBRS: ['Hak Orang Asal Sabah', 'Pembangunan Pedalaman dan MA63']
+  };
+  var TIADA_UMUM = { MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
      Kos 2 AP; perwakilan mengundi sokongan (>= 50% diterima: kesan penuh + IP 20; < 50%: Reputasi separuh, penentang +5). Angka ialah andaian. */
   var TEMA_PRESIDEN = [
@@ -305,7 +378,37 @@
     return { status: 'boleh_mula', sebab: '' };
   }
 
+  /** v13.60: senarai jawatan Pusat utama parti untuk tajuk agenda (UMNO: "Presiden, Timbalan Presiden, 3 Naib Presiden, MKT"). dan=true: "... dan MKT". */
+  function senaraiPusat(p, dan) {
+    var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null;
+    var x = J ? J.katalogUntuk(p).filter(function (d) { return d.peringkat === 'pusat' && d.kumpulan === 'utama'; }).sort(function (a, b) { return b.pangkat - a.pangkat; }).map(function (d) {
+      if (d.kod === 'ahli_mkt') { return 'MKT'; }
+      var n = Eg && Eg.kerusiParti ? Eg.kerusiParti(p, d) : d.kerusi || 1; return n > 1 ? n + ' ' + d.jawatan : d.jawatan;
+    }) : ['Presiden', 'Timbalan Presiden', '3 Naib Presiden', 'MKT'];
+    return dan && x.length > 1 ? x.slice(0, -1).join(', ') + ' dan ' + x[x.length - 1] : x.join(', ');
+  }
+  /** v13.60: peranan jawatan sayap yang dipertandingkan pada aras itu (UMNO: "Ketua, Naib Ketua, AJK"). dan=true: "Ketua, Naib Ketua dan AJK". */
+  function peranSayap(p, aras, dan) {
+    var w = sayapPemain(p), PR = [['sayap_' + aras + '_', 'Ketua'], ['sayap_timbalan_' + aras + '_', 'Timbalan Ketua'], ['sayap_naib_' + aras + '_', 'Naib Ketua'], ['sayap_ajk_' + aras + '_', 'AJK']];
+    var ada = J ? J.katalogUntuk(p).map(function (d) { return d.kod; }) : null;
+    var x = PR.filter(function (r) { return !ada || ada.indexOf(r[0] + w) >= 0; }).map(function (r) { return r[1]; });
+    if (!x.length) { x = ['Ketua']; }
+    return dan && x.length > 1 ? x.slice(0, -1).join(', ') + ' dan ' + x[x.length - 1] : x.join(', ');
+  }
+  /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
+  function hadirKira(p, peringkat) {
+    var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
+    var kodM = { MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO' }[p.parti || 'UMNO'];
+    var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null; if (!M || !M.ringkasPusat) { return null; }
+    var rp = null; try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } var nB = rp && rp.bilBahagian; if (!nB) { return null; }
+    var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
+    if (peringkat === 'bahagian') { return Eg.bilPemilih ? Math.max(30, Math.round(Eg.bilPemilih(p, 'bahagian')) + 20) : null; }
+    if (peringkat === 'pau') { var n = Eg.kuotaBahagian(p) * nB + 40; return had ? Math.min(had, n) : n; }
+    if (peringkat === 'sayap_pau') { return Math.max(40, Math.round((Eg.kuotaBahagian(p) * nB + 40) / 4)); }
+    return null;
+  }
   function bilHadir(p, peringkat) {
+    var hk = (peringkat === 'bahagian' || peringkat === 'pau' || peringkat === 'sayap_pau') ? hadirKira(p, peringkat) : null; if (hk) { return hk; }
     if (peringkat === 'sayap_cawangan') {
       var Eh = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null;     // v6.3: hadir = 35% ahli sayap dalam Cawangan
       if (Eh && Eh.ahliSayap) { return Math.max(10, Math.round(Eh.ahliSayap(p) * CONFIG.TAHAP_HADIR_CAWANGAN)); }
@@ -331,6 +434,8 @@
   function janaAgenda(p, peringkat) {
     var rng = S.rngBerbenih(p.id + '|' + p.tahun + '|mesyuarat|' + peringkat);
     var agenda = [], pool = (adalahSayap(peringkat) ? (KOLAM[peringkat + '_' + sayapPemain(p)] || KOLAM[peringkat + '_pemuda']) : KOLAM[peringkat]).slice(), dipakai = {};
+    var kp = !adalahSayap(peringkat) && KOLAM_PARTI[p.parti] ? (KOLAM_PARTI[p.parti][peringkat] || []).slice() : [], buang = TIADA_UMUM[p.parti] || [];   // v13.60: usul ikut komuniti parti
+    if (buang.length) { pool = pool.filter(function (u) { return buang.indexOf(u.kod) < 0; }); }
 
     // Usul Lokaliti bermula daripada isu tempatan yang dicatat melalui Sembang Warung.
     if (peringkat === 'cawangan') {
@@ -358,6 +463,10 @@
     for (var i = pool.length - 1; i > 0; i--) {
       var j = Math.floor(rng() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t;
     }
+    if (kp.length) {
+      for (var i2 = kp.length - 1; i2 > 0; i2--) { var j2 = Math.floor(rng() * (i2 + 1)), t2 = kp[i2]; kp[i2] = kp[j2]; kp[j2] = t2; }
+      pool = kp.slice(0, 2).concat(pool, kp.slice(2));
+    }
     for (var k = 0; k < pool.length && agenda.length < CONFIG.BIL_USUL; k++) {
       var u = pool[k];
       agenda.push({
@@ -371,7 +480,7 @@
     if (peringkat === 'pau') {
       agenda.push({
         id: 'pau-' + p.tahun + '-ucapan', jenis: 'ucapan_dasar', kod: 'ucapan_dasar', sumber: 'presiden',
-        tajuk: 'Ucapan Dasar Presiden: ' + TEMA_UCAPAN[Math.floor(rng() * TEMA_UCAPAN.length)],
+        tajuk: 'Ucapan Dasar Presiden: ' + (function (t) { return t[Math.floor(rng() * t.length)]; })(TEMA_PARTI[p.parti] || TEMA_UCAPAN),
         penerangan: 'Presiden menyampaikan hala tuju parti. Perwakilan berbahas dan mengundi sokongan terhadap ucapan.',
         populariti: 72, nilai: 3, status: 'terbuka', pilihan: null, keputusan: null
       });
@@ -381,9 +490,9 @@
       var Ns = NAMA_SAYAP[sayapPemain(p)], Es = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null;
       agenda.push({
         id: peringkat + '-' + p.tahun + '-pemilihan', jenis: 'pemilihan', kod: 'pemilihan_' + peringkat, sumber: 'pemilihan',
-        tajuk: peringkat === 'sayap_cawangan' ? 'Pemilihan ' + (pemilihanAktif(p) ? 'Ketua, Naib Ketua, AJK ' + Ns + ' Cawangan dan ' : '') + 'wakil ' + Ns + ' Cawangan ke Mesyuarat Perwakilan ' + Ns + ' Bahagian (' + (Es && Es.kuotaSayapCawangan ? Es.kuotaSayapCawangan(p) : 3) + ' kerusi)'
-                                              : peringkat === 'sayap_pau' ? 'Pemilihan Ketua, Naib Ketua dan AJK ' + Ns + ' (Pusat)'
-                                              : 'Pemilihan ' + (pemilihanAktif(p) ? 'Ketua, Naib Ketua, AJK ' + Ns + ' Bahagian, ' + (pusatDiBahagian(p) ? 'undi Ketua, Naib Ketua dan AJK ' + Ns + ' Pusat, ' : '') : '') + 'G10 (10 wakil ke Mesyuarat Perwakilan Bahagian) dan G2 (2 wakil ke Perhimpunan ' + Ns + ' Pusat)',
+        tajuk: peringkat === 'sayap_cawangan' ? 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'cawangan') + ' ' + Ns + ' Cawangan dan ' : '') + 'wakil ' + Ns + ' Cawangan ke Mesyuarat Perwakilan ' + Ns + ' Bahagian (' + (Es && Es.kuotaSayapCawangan ? Es.kuotaSayapCawangan(p) : 3) + ' kerusi)'
+                                              : peringkat === 'sayap_pau' ? 'Pemilihan ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' (Pusat)'
+                                              : 'Pemilihan ' + (pemilihanAktif(p) ? peranSayap(p, 'bahagian') + ' ' + Ns + ' Bahagian, ' + (pusatDiBahagian(p) ? 'undi ' + peranSayap(p, 'pusat', true) + ' ' + Ns + ' Pusat, ' : '') : '') + 'G10 (10 wakil ke Mesyuarat Perwakilan Bahagian) dan G2 (2 wakil ke Perhimpunan ' + Ns + ' Pusat)',
         penerangan: 'Pengundian dijalankan apabila mesyuarat ditutup. Daftar pencalonan anda melalui tab Pemilihan sebelum itu.',
         kerusi: null, status: 'menunggu', keputusan: null
       });
@@ -393,8 +502,8 @@
       var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null;      // kuota sebenar (Fasal 14.4.4 / 8.4.3)
       if (perw && Eg && Eg.kuotaCawangan) { perw = { kerusi: peringkat === 'cawangan' ? Eg.kuotaCawangan(p) : Eg.kuotaBahagian(p) }; }
       if (peringkat === 'cawangan') { tajuk = 'Pemilihan Cawangan: ' + (buka ? 'jawatan Cawangan, serta ' : '') + 'perwakilan ke Bahagian (' + perw.kerusi + ' kerusi)'; }
-      else if (peringkat === 'bahagian') { tajuk = 'Pemilihan Bahagian: ' + (buka ? 'jawatan Bahagian, ' + (pusatDiBahagian(p) ? 'undi jawatan Pusat (Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT), ' : '') + 'serta ' : '') + 'perwakilan ke PAU (' + perw.kerusi + ' kerusi)'; }
-      else { tajuk = 'Pemilihan Pusat: Presiden, Timbalan Presiden, 3 Naib Presiden, MKT dan Ketua Sayap'; }
+      else if (peringkat === 'bahagian') { tajuk = 'Pemilihan Bahagian: ' + (buka ? 'jawatan Bahagian, ' + (pusatDiBahagian(p) ? 'undi jawatan Pusat (' + senaraiPusat(p, true) + '), ' : '') + 'serta ' : '') + 'perwakilan ke PAU (' + perw.kerusi + ' kerusi)'; }
+      else { tajuk = 'Pemilihan Pusat: ' + senaraiPusat(p) + ' dan Ketua Sayap'; }
       agenda.push({
         id: peringkat + '-' + p.tahun + '-pemilihan', jenis: 'pemilihan', kod: 'pemilihan_' + peringkat, sumber: 'pemilihan', tajuk: tajuk,
         penerangan: 'Pengundian dijalankan apabila mesyuarat ditutup. Daftar pencalonan anda melalui tab Pemilihan sebelum itu.',
@@ -771,7 +880,7 @@
     CONFIG: CONFIG,
     TEMA_PRESIDEN: TEMA_PRESIDEN, UCAPAN: UCAPAN, presidenPemain: presidenPemain, ucapanPresiden: ucapanPresiden,
     PERINGKAT: PERINGKAT,
-    KOLAM: KOLAM,
+    KOLAM: KOLAM, KOLAM_PARTI: KOLAM_PARTI, TEMA_PARTI: TEMA_PARTI, senaraiPusat: senaraiPusat, peranSayap: peranSayap, bilHadir: bilHadir, janaAgendaUji: janaAgenda,
     senaraiPeranan: senaraiPeranan,
     getKeadaanMesyuarat: getKeadaanMesyuarat,
     getStatusPerwakilan: getStatusPerwakilan,

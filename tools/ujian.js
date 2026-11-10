@@ -1576,7 +1576,7 @@ ujian('v13.9: PBRS: data 7 Parlimen/20 DUN, kuota 1+2, Kesetiaan BN & Muhibah GR
   const pen = h.bahagian.find((b) => b.nama === 'Pensiangan'), dSook = pen.dun.find((d) => d.nama === 'Sook');
   S.savePlayer(S.buildPlayerProfile({ parti: 'PBRS', nama: 'Uji PBRS', demografik: D.tentukanDemografi('Lelaki', 40, 'PBRS'), cawangan: dSook.cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 5 }));
   let p = S.loadPlayer(); sama(p.parti, 'PBRS'); sama(p.negeri, 'Sabah'); sama(PRU.getPRU(p).jenisPBB, 'PRN', 'PBRS ikut PRN Sabah');
-  sama(E.adalahTahunPemilihan(2026), true); sama(E.adalahTahunPemilihan(2027), false); sama(K.getTetingkap('bahagian', 1).mula, 5);
+  sama(E.adalahTahunPemilihan(2026), true); sama(E.adalahTahunPemilihan(2027), false); sama(K.getTetingkap('bahagian', 1).mula, 6);   // v13.60: takwim PBRS 4/6/10
   let kw = M.kawasan(p); betul(kw.kuotaPL && kw.kuotaDUN, 'Pensiangan dan Sook dalam kuota');
   sama(M.ofset(p), -8, 'Muhibah GRS 45: GRS bertembung'); sama(M.lawan(p, 'DUN')[1], 'GRS');
   P.tetap({ ap: 20, myr: 50000, jawatan: 'Ketua Bahagian', jawatanList: [pegang('ketua_bahagian', 2026)] });
@@ -2905,6 +2905,30 @@ ujian('v13.59 Enjin pemilihan ikut parti (Fasa 3 PH): PKR (Cabang diundi anggota
   P.tetap({ parti: 'DAP', jawatanList: [pegang('ajk_cawangan', 2025)] }); k = J.semakKelayakan(S.loadPlayer(), cd('ketua_bahagian')); sama(k.terbuka, false); betul(/Pengerusi Cawangan/.test(k.sebab), k.sebab);
   P.tetap({ parti: 'PKR' }); betul(E.pemilihParti(S.loadPlayer(), { kod: 'ketua_bahagian', jenis: 'jawatan' }) >= 100, 'PKR: semua anggota Cabang');
   P.tetap({ parti: 'DAP' }); sama(PT.ke('Naib Ketua Bahagian'), 'Setiausaha Organisasi JPKP');
+  S.clearPlayer();
+});
+ujian('v13.60 Enjin mesyuarat ikut parti (Fasa 1 BN): wakil, bilangan hadir, tajuk agenda, usul komuniti, takwim PBRS 4/6/10', () => {
+  const ST = g.MyPolitikStruktur, M0 = g.MyPolitikMeeting, K0 = g.MyPolitikCalendar;
+  sama(ST.wakilPAMCA(500), 2); sama(ST.wakilPAMCA(2000), 7); sama(ST.wakilPAMCA(5000), 13); sama(ST.wakilPAMCA(1e6), 29);
+  sama(ST.wakilMIC(59), 1); sama(ST.wakilMIC(300), 5); sama(ST.wakilPAMIC(2600), 10);
+  P.daftar({}); let p = S.loadPlayer();
+  const tajuk = (pp, per) => (M0.janaAgendaUji ? M0.janaAgendaUji(pp, per) : []).map((a) => a.tajuk).join(' | ');
+  // UMNO kekal
+  betul(/Presiden, Timbalan Presiden, 3 Naib Presiden, MKT/.test(M0.senaraiPusat(p)), M0.senaraiPusat(p));
+  sama(M0.peranSayap(Object.assign({}, p, { sayap: 'pemuda' }), 'cawangan'), 'Ketua, Naib Ketua, AJK');
+  // MCA 4 Naib, MIC sayap Timbalan tanpa AJK, PPP tanpa Timbalan Presiden, PBRS 2 Naib
+  sama(M0.senaraiPusat(Object.assign({}, p, { parti: 'MCA' })), 'Presiden, Timbalan Presiden, 4 Naib Presiden, MKT');
+  sama(M0.peranSayap(Object.assign({}, p, { parti: 'MIC', sayap: 'pemuda' }), 'cawangan'), 'Ketua, Naib Ketua');
+  sama(M0.senaraiPusat(Object.assign({}, p, { parti: 'PPP' })), 'Presiden, 3 Naib Presiden, MKT');
+  sama(M0.senaraiPusat(Object.assign({}, p, { parti: 'PBRS' }), true), 'Presiden, Timbalan Presiden, 2 Naib Presiden dan MKT');
+  // usul komuniti: MCA tiada usul surau, ada usul MCA
+  P.tetap({ parti: 'MCA' }); p = S.loadPlayer();
+  const ag = M0.janaAgendaUji(p, 'cawangan').filter((a) => a.jenis === 'usul').map((a) => a.kod);
+  betul(ag.some((k) => /^mca_/.test(k)) && ag.indexOf('dewan_surau') < 0, ag.join());
+  betul(/Ucapan Dasar Presiden: (Suara|Ekonomi dan|MCA)/.test(M0.janaAgendaUji(p, 'pau').map((a) => a.tajuk).join('|')), 'tema MCA');
+  // takwim PBRS 4/6/10
+  P.tetap({ parti: 'PBRS' }); sama(K0.getTetingkap('cawangan', 1).mula, 4); sama(K0.getTetingkap('bahagian', 1).mula, 6); sama(K0.getTetingkap('pau', 1).mula, 10);
+  sama(g.MyPolitikParti.ke('Ketua Cawangan'), 'Ketua Cawangan', 'PBRS tidak mewarisi istilah Pengerusi PPP');
   S.clearPlayer();
 });
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {

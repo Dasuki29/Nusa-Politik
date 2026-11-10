@@ -32,7 +32,7 @@
   function hash(s) { var h = 2166136261; s = String(s); for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 
   var CONFIG = {
-    TAHUN_MULA: 2026, KITARAN_TAHUN: 3, BULAN_PUSAT: 9,                 // ANDAIAN: takwim bulan 3/5/9; pemilihan setiap 3 tahun dari 2026
+    TAHUN_MULA: 2026, KITARAN_TAHUN: 3, BULAN_PUSAT: 10,                // ANDAIAN: takwim bulan 4/6/10 (v13.60); pemilihan setiap 3 tahun dari 2026
     KUOTA_PARLIMEN: 1, KUOTA_DUN: 2, DUN_TAMBAH: '12_N.46', DUN_KEKAL: '12_N.45',
     METER: { setiaAwal: 60, muhibahAwal: 45, tengah: 50, susut: 1 },
     LOBI: { ap: 2, myr: 1500, naik: 6, pangkatMin: 7 },

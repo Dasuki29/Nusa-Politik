@@ -113,7 +113,11 @@
   };
   /* v13.8: kalendar PPP (ANDAIAN): Cawangan bulan 3, Bahagian bulan 5, Perhimpunan Agung Tahunan bulan 9 (pemilihan Presiden 1-9-2024). */
   CONFIG.PPP = { FASA: CONFIG.MIC.FASA, TETINGKAP: CONFIG.MIC.TETINGKAP, ppp: true };
-  CONFIG.PBRS = { FASA: CONFIG.MIC.FASA, TETINGKAP: CONFIG.MIC.TETINGKAP, ppp: true };
+  /* v13.60 (audit enjin mesyuarat Fasa 1, ANDAIAN): PBRS Cawangan bulan 4, Bahagian bulan 6, Perhimpunan Agung bulan 10 (selepas musim PRN Sabah). */
+  CONFIG.PBRS = {
+    FASA: [bulanPBB(F0[0], 1, 3), bulanPBB(F0[1], 4, 4), antaraBulan(5, 5), bulanPBB(F0[2], 6, 6), antaraBulan(7, 9), bulanPBB(F0[3], 10, 10), bulanPBB(F0[4], 11, 12)],
+    TETINGKAP: { sayap_cawangan: tt('sayap_cawangan', 4, 4), cawangan: tt('cawangan', 4, 4), sayap_bahagian: tt('sayap_bahagian', 6, 6), bahagian: tt('bahagian', 6, 6), sayap_pau: tt('sayap_pau', 10, 10), pau: tt('pau', 10, 10) }, ppp: true, pbrs: true
+  };
   CONFIG.PAS = { FASA: CONFIG.MIC.FASA, TETINGKAP: CONFIG.MIC.TETINGKAP, ppp: true };              // v13.31: PAS (ANDAIAN takwim: Mesyuarat Agung Cawangan 3, Kawasan 5, Muktamar 9)             // v13.9: PBRS (ANDAIAN takwim 3/5/9)
   /* v13.53: kalendar BERJASA (ANDAIAN, tiada perlembagaan): Cawangan bulan 3, Kawasan bulan 5, Muktamar BERJASA bulan 6. */
   CONFIG.BERJASA = {
@@ -292,7 +296,13 @@
   function mesejMasuk(bulan, tahun, tahunBaharu) {
     var f = getFasa(bulan), nb = namaBulan(bulan), out = [];
     var pbb = takwimSet() === CONFIG.PBB, mca = takwimSet() === CONFIG.MCA, mic = takwimSet() === CONFIG.MIC;
-    if (takwimSet() === CONFIG.PPP || takwimSet() === CONFIG.PBRS) {                                            // v13.8: PPP (bulan sudah dalam bulan PPP; Ogos/Jun dilindungi daripada penukaran js/parti.js)
+    if (takwimSet() === CONFIG.PBRS) {                                                   // v13.60: PBRS 4/6/10 (bulan sudah dalam bulan PBRS; (Jun)/(Oktober) dilindungi daripada penukaran js/parti.js)
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 3. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 4).' }); }
+      else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 6) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 6 (Jun): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
+      else if (bulan === 10) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 10 (Oktober): Perhimpunan Agung UMNO (PAU) dan Pemilihan Pusat. Hanya bulan ini.' }); }
+      else if (bulan === 11) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 11 (November): Pasca-PAU. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
+    } else if (takwimSet() === CONFIG.PPP) {                                            // v13.8: PPP (bulan sudah dalam bulan PPP; Ogos/Jun dilindungi daripada penukaran js/parti.js)
       if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
       else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }
       else if (bulan === 5) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 5 (' + nb + '): Mesyuarat & Pemilihan Bahagian dan Sayap dibuka. Hanya bulan ini.' }); }
