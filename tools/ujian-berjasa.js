@@ -28,7 +28,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('[data-gab="LAIN"]'); await pg.waitForTimeout(300);
   const ln = await pg.evaluate(() => { const p = document.querySelector('#gab-lain'); return p && !p.hidden ? p.textContent : ''; });
   semak(/BERJASA/.test(ln) && /tanpa gabungan/.test(ln), 'panel Lain-lain: ' + ln.slice(0, 120));
-  semak(await pg.$$eval('#gab-lain img, [data-gab="LAIN"] img', (l) => l.length === 2 && l.every((i) => i.complete && i.naturalWidth > 0)), 'logo BERJASA dimuat');
+  semak(await pg.$$eval('#gab-lain img, [data-gab="LAIN"] img', (l) => l.length === 3 && l.every((i) => i.complete && i.naturalWidth > 0)), 'logo BERJASA dimuat');
   await pg.click('#gab-lain .poster__chip[data-parti="BERJASA"]'); await pg.waitForTimeout(2500);
   semak(await pg.$eval('#s-parti', (x) => x.value) === 'BERJASA', 'cip BERJASA terus ke pendaftaran BERJASA');
   semak(/tanpa gabungan/.test(await pg.textContent('#h-parti')), 'nota BERJASA pada skrin pendaftaran');

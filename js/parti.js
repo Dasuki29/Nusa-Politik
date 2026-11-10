@@ -227,6 +227,11 @@
     SENARAI[x[0]] = { kod: x[0], nama: x[0], penuh: x[1], logo: 'assets/images/' + x[2], sayap: x[3], negeriTetap: x[4], data: 'data/grs-' + x[0].toLowerCase() + '.csv', bahagianJenis: 'Parlimen', grs: true, gabungan: 'GRS',
       istilah: istilahGRS(x[0], false), istilahSongsang: istilahGRS(x[0], true) };
   });
+  /* v13.55: Parti Warisan (WARISAN) = parti tanpa gabungan (Lain-lain), MOD RINGAN (js/warisan.js). Istilah seperti PBRS (Majlis Tertinggi, Perhimpunan Agung WARISAN,
+     Kota Kinabalu); sayap Wira Warisan (Pemuda), Wanita Warisan dan Wirawati Warisan (Puteri). ANDAIAN: kawasan operasi Sabah, Labuan dan Semenanjung
+     (data/warisan-malaysia.csv, tools/build-warisan.js); takwim 3/5/9. Logo daripada pengguna. */
+  SENARAI.WARISAN = { kod: 'WARISAN', nama: 'WARISAN', penuh: 'Parti Warisan', logo: 'assets/images/logo-warisan.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: 'data/warisan-malaysia.csv', bahagianJenis: 'Parlimen', warisan: true, gabungan: null,
+    istilah: [[/\bPemuda\b/g, 'Wira'], [/\bYouth\b/g, 'Wira'], [/\bPuteri\b/g, 'Wirawati']].concat(istilahGRS('WARISAN', false)), istilahSongsang: [[/\bWirawati\b/g, 'Puteri'], [/\bWira\b/g, 'Pemuda']].concat(istilahGRS('WARISAN', true)) };
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }
@@ -259,7 +264,7 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(k)) || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = [d, tanpaBulan];
@@ -279,7 +284,7 @@
 
   /* ---------- Penjenamaan DOM ---------- */
   var D = W.document, pemerhati = null, ATTR = ['title', 'aria-label', 'placeholder', 'alt', 'content'];
-  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Puteri|Beliawanis|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
+  var RE_PERLU = /JPKP|JTP|DAPSY|Setiausaha Agung|Pengerusi|Presiden|President|Ranting|Cabang|Kongres|KEADILAN|\bMPP\b|\bMPN\b|Majlis Pimpinan|Angkatan Muda|Leadership Council|National Congress|Pemuda|Cawangan|cawangan|Bahagian|Branch|Division|bulan 4|Bulan 4|bulan 7|Bulan 7|[Mm]onths? (4|7)|General Assembly|UMNO|Liaison|Perhubungan|Naib Presiden|Vice Presidents|WTC|Fasal \d|Perkara \d|Perlembagaan|Clause|Article \d|\bPBB\b|Parti Pesaka|Pertubuhan Kebangsaan|\bMKT\b|\bPAU\b|Wanita|Women|Muktamar|Kawasan|Pesuruhjaya|JK Pusat|Muslimat|Area|Puteri|Beliawanis|Wira|Majlis Kerja Tertinggi|bulan 8|Bulan 8|[Mm]onth 8|[Bb]ulan (6|9|10)|[Mm]onths? (6|9|10)|bulan 1-3|Bulan 1-3|bulan 3|[Mm]onths 1-3|month 3/;
   function nod(n) {
     var v = n.nodeValue; if (!v || !RE_PERLU.test(v)) { return; }
     var p = n.parentElement; if (p && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || (p.closest && p.closest('[data-jenama-skip]')))) { return; }

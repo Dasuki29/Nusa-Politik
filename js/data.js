@@ -88,7 +88,7 @@
     if ((j !== 'L' && j !== 'P') || !isFinite(umur) || umur < (parti === 'DAP' ? 17 : 18)) { return null; }   // v13.37: DAP umur minimum 17 (Fasal III.2)
     if (umur >= 60) { return 'veteran'; }
     if (j === 'L') { return umur <= (parti === 'PKR' || parti === 'DAP' ? 35 : 40) ? 'pemuda' : 'biasa'; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
-    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP' && parti !== 'GAGASAN') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
+    return umur <= 35 && !(parti && parti !== 'UMNO' && parti !== 'MIC' && parti !== 'PPP' && parti !== 'GAGASAN' && parti !== 'WARISAN') ? 'puteri' : 'wanita';        // v10.6: parti selain UMNO tiada Puteri; v13.3: MIC ada Puteri (bawah 35)
   }
 
   /** Tentukan kategori demografi pemain. jantina: 'L' | 'P'. Pulang null jika tidak sah. */
@@ -730,7 +730,7 @@
   var INDIA_P = ['Kavitha', 'Saraswathy', 'Devi', 'Shanthi', 'Malar', 'Revathi', 'Uma', 'Vasantha', 'Thilaga', 'Priya', 'Kalaivani', 'Mangai', 'Sumathi', 'Jayanthi'];
   var KDM_ASLI = ['Gontili', 'Sondoh', 'Majalan', 'Lojungin', 'Ansibin', 'Sintoh', 'Moujing', 'Gaanin', 'Kinsun', 'Gimbang', 'Sapadan', 'Lingkapo', 'Tingkalor', 'Mojinun', 'Gunsalam', 'Ambotang'];
   /** Pemberat kaum nama NPC bagi parti bukan Sarawak (andaian ikut kaum majoriti ahli). */
-  var KAUM_PARTI = { MCA: { cina: 1 }, MIC: { india: 1 }, PPP: { india: 0.6, cina: 0.25, melayu: 0.15 }, PBRS: { kdm: 0.9, cina: 0.1 }, SUPP: { cina: 0.75, dayak: 0.25 }, DAP: { cina: 0.75, india: 0.15, melayu: 0.1 }, PKR: { melayu: 0.6, cina: 0.2, india: 0.2 }, GAGASAN: { melayu: 0.55, kdm: 0.4, cina: 0.05 }, PBS: { kdm: 0.85, cina: 0.15 }, UPKO: { kdm: 0.85, cina: 0.15 }, LDP: { cina: 0.9, kdm: 0.1 }, PHRS: { melayu: 0.6, cina: 0.4 }, PCS: { kdm: 0.6, melayu: 0.4 } };   // v13.54: GRS (ANDAIAN)   // v13.42: DAP / PKR (ANDAIAN campuran kaum ahli)
+  var KAUM_PARTI = { MCA: { cina: 1 }, MIC: { india: 1 }, PPP: { india: 0.6, cina: 0.25, melayu: 0.15 }, PBRS: { kdm: 0.9, cina: 0.1 }, SUPP: { cina: 0.75, dayak: 0.25 }, DAP: { cina: 0.75, india: 0.15, melayu: 0.1 }, PKR: { melayu: 0.6, cina: 0.2, india: 0.2 }, GAGASAN: { melayu: 0.55, kdm: 0.4, cina: 0.05 }, PBS: { kdm: 0.85, cina: 0.15 }, UPKO: { kdm: 0.85, cina: 0.15 }, LDP: { cina: 0.9, kdm: 0.1 }, PHRS: { melayu: 0.6, cina: 0.4 }, PCS: { kdm: 0.6, melayu: 0.4 }, WARISAN: { melayu: 0.45, kdm: 0.3, cina: 0.2, india: 0.05 } };   // v13.54: GRS (ANDAIAN)   // v13.42: DAP / PKR (ANDAIAN campuran kaum ahli)
   function partiPemain() { var S = globalThis.MyPolitikSave, p = null; try { p = S && S.loadPlayer ? S.loadPlayer() : null; } catch (e) { p = null; } return p ? p.parti : null; }
   function namaCina(rng, jantina) {
     var kel = pick(rng, CINA_KELUARGA), a = pick(rng, jantina === 'L' ? CINA_L : CINA_P), b = pick(rng, jantina === 'L' ? CINA_L : CINA_P), ing = rng() < 0.25 ? pick(rng, jantina === 'L' ? INGGERIS_L : INGGERIS_P) + ' ' : '';

@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.55 (2026-11-10)
+
+- **Maklum balas baris 31: Parti Warisan dalam Lain-lain** (ikut mockup yang dipersetujui; sumber: Wikipedia Bahasa Melayu daripada pengguna; semua nombor mekanik ⚠️ andaian).
+  - Warisan boleh dimain (mod ringan) di **Sabah, Labuan dan Semenanjung** (191 Bahagian = kawasan Parlimen ⚠️). Keahlian ~548,200 (2025; ⚠️ 90% di Sabah dan Labuan). Sayap **Wira** (Pemuda), Wanita dan **Wirawati** (Puteri). Logo daripada pengguna.
+  - Tiada kuota gabungan: calon Warisan bertanding di semua kerusi kawasan operasi; di Semenanjung sangat sukar (ofset undi −14).
+  - **Mekanik Pembangkang Utama Sabah** (kad ⛵ tab Profil): Gelombang Warisan (mula 40, susut ke 40; setiap 10 mata melebihi 40 = kerusi Warisan +2 dalam PRN Sabah, maks +12); ⛵ Jelajah Sabah (+4), 📢 Serang isu kerajaan GRS (+3, 30% gagal: Reputasi −1), 🤝 Pikat ADUN goyah (sekali setahun, 25%: kerusi +1).
+  - PRN Sabah: Warisan + separuh kerusi lain ≥ 37 = Warisan membentuk kerajaan negeri (laluan Ketua Menteri melalui aliran sedia ada). Persekutuan: Ahli Parlimen Warisan di blok pembangkang.
+  - Lompat Parti: Warisan tersedia di semua negeri kecuali Sarawak.
+- Fail baharu: `js/warisan.js`, `js/warisan-ui.js`, `js/warisan-data.js`, `data/warisan-malaysia.csv`, `tools/build-warisan.js`, `tools/ujian-warisan.js`, `assets/images/logo-warisan.png`. Ujian baharu (187 ujian).
+
 ## v13.54 (2026-11-10)
 
 - **Maklum balas baris 34 (dan sebahagian baris 31): GRS (Gabungan Rakyat Sabah)** (ikut mockup v2 yang dipersetujui; sumber: PDF Wikipedia daripada pengguna; semua nombor mekanik ⚠️ andaian).

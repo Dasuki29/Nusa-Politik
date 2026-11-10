@@ -51,9 +51,14 @@
     if (G) {                                                                         // v13.54: pemain GRS: UPKO dalam GRS (Jun 2026); populariti, Sabah untuk Sabahan dan Kestabilan menggeser kerusi GRS
       grs = clamp(grs + upko + Math.round(((Number(pop) || 45) - 45) / 5) + G.bonusPRN(p), 15, 50); upko = 0; war = Math.min(war, CONFIG.JUMLAH - grs - bn);
     }
+    if (p.parti === 'WARISAN') {                                                     // v13.55: pemain Warisan: populariti, Gelombang Warisan dan ADUN dipikat menambah kerusi Warisan
+      var Wm = root.MyPolitikWarisan || (typeof require === 'function' ? (function () { try { return require('./warisan.js'); } catch (e) { return null; } })() : null);
+      var tambahW = Math.round(((Number(pop) || 45) - 45) / 5) + (Wm ? Wm.bonusPRN(p) : 0);
+      war = clamp(war + tambahW, 10, 50); grs = clamp(grs - Math.max(0, tambahW), 10, 40);
+    }
     var lain = Math.max(0, CONFIG.JUMLAH - bn - grs - war - upko);
     var ambang = Math.floor(CONFIG.JUMLAH / 2) + 1, kerajaanGRS = grs + upko + bn + Math.floor(lain / 2) >= ambang;   // ANDAIAN: GRS membentuk kerajaan bersama BN, UPKO dan separuh kerusi lain
-    return { tahun: parseInt(p.tahun, 10), GRS: grs, Warisan: war, BN: bn, UPKO: upko, lain: lain, kerajaanBN: bn >= CONFIG.BN_AMBANG, kerajaanGRS: kerajaanGRS };
+    return { tahun: parseInt(p.tahun, 10), GRS: grs, Warisan: war, BN: bn, UPKO: upko, lain: lain, kerajaanBN: bn >= CONFIG.BN_AMBANG, kerajaanGRS: kerajaanGRS && !(war + Math.floor(lain / 2) >= ambang), kerajaanWarisan: war + Math.floor(lain / 2) >= ambang };   // v13.55: Warisan + separuh kerusi lain
   }
   return { CONFIG: CONFIG, GRSk: GRSk, adalah: adalah, jadual: jadual, jadualBerikut: jadualBerikut, jadualAwal: jadualAwal, lawan: lawan, kerusiPRN: kerusiPRN };
 });

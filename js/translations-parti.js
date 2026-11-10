@@ -672,6 +672,13 @@
   ["UPKO (Sabah, GRS, mod ringan)", "UPKO (Sabah, GRS, light mode)"],
   ["LDP (Sabah, GRS, parti kecil)", "LDP (Sabah, GRS, small party)"],
   ["PHRS (Sabah, GRS, parti kecil)", "PHRS (Sabah, GRS, small party)"],
-  ["PCS (Sabah, GRS, parti kecil)", "PCS (Sabah, GRS, small party)"]
+  ["PCS (Sabah, GRS, parti kecil)", "PCS (Sabah, GRS, small party)"],
+  /* v13.55: Warisan */
+  ["Warisan (mod ringan, tanpa gabungan): parti berbilang kaum yang ditubuhkan pada 2016, pembangkang utama Sabah (25 kerusi DUN). Kawasan operasi ialah Sabah, Labuan dan Semenanjung; Cawangan ialah Daerah Mengundi. Sayap Wira, Wanita dan Wirawati Warisan. Mekanik Pembangkang Utama Sabah: bina Gelombang Warisan dan tumbangkan GRS dalam PRN Sabah. Bilangan ahli ialah anggaran permainan. Simulasi, bukan data rasmi parti.", "Warisan (light mode, no coalition): a multiracial party founded in 2016, Sabah's main opposition (25 state seats). Its operating areas are Sabah, Labuan and the Peninsula; a branch is a polling district. Wings: Wira, Wanita and Wirawati Warisan. Sabah's Main Opposition mechanic: build the Warisan Wave and topple GRS in the Sabah state election. Member counts are game estimates. A simulation, not official party data."],
+  ["Kawasan Sabah: kubu Warisan, bertanding tanpa kuota gabungan.", "Sabah area: a Warisan stronghold, contesting without a coalition quota."],
+  ["Kawasan Semenanjung: Warisan sedang berkembang; calon sangat sukar menang.", "Peninsula area: Warisan is still expanding; candidates rarely win."],
+  ["Warisan (Sabah, Labuan & Semenanjung, tanpa gabungan, mod ringan)", "Warisan (Sabah, Labuan & Peninsula, no coalition, light mode)"],
+  ["Parti tanpa gabungan · BERJASA · Warisan", "Parties without a coalition · BERJASA · Warisan"],
+  ["BERJASA (Semenanjung) dan Warisan (Sabah, Labuan dan Semenanjung) mod ringan.", "BERJASA (Peninsula) and Warisan (Sabah, Labuan and Peninsula) in light mode."]
   ]);
 })();

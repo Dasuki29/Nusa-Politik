@@ -2778,6 +2778,29 @@ ujian('v13.54 GRS: enam parti Sabah, Gagasan (Beliawanis, Labuan), kuota GRS, Ke
   betul(g.MyPolitikLompat.aktifDi('PBS', 'Sabah') && !g.MyPolitikLompat.aktifDi('PBS', 'Selangor'), 'lompat: Sabah sahaja');
   S.clearPlayer();
 });
+ujian('v13.55 Warisan: Sabah, Labuan dan Semenanjung, Wira / Wirawati, Gelombang Warisan, Pikat ADUN, kerajaan Warisan dalam PRN Sabah (baris 31)', () => {
+  const M = g.MyPolitikWarisan, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, B = g.MyPolitikSabah, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'warisan-malaysia.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 191, 'Sabah 25 + Labuan + Semenanjung 165'); betul(Math.abs(h.jumlah.ahli - 548200) < 5000, 'keahlian ~548,200: ' + h.jumlah.ahli);
+  betul(SY.kelayakan('P', 25, 'WARISAN').puteri.boleh, 'Wirawati'); sama(PT.info('WARISAN').gabungan, null);
+  const sb = h.bahagian.find((b) => b.nama === 'Semporna');
+  S.savePlayer(S.buildPlayerProfile({ parti: 'WARISAN', nama: 'Uji Warisan', demografik: D.tentukanDemografi('Lelaki', 30, 'WARISAN'), cawangan: sb.dun[0].cawangan[0], sayap: 'pemuda', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'WARISAN'); betul(B.adalah(p), 'pemain PRN Sabah'); betul(M.diSabah(p));
+  sama(PT.ke('Ketua Pemuda dan Ketua Puteri ke Perhimpunan Agung UMNO (PAU)'), 'Ketua Wira dan Ketua Wirawati ke Perhimpunan Agung WARISAN');
+  sama(K.getTetingkap('pau', 1).mula, 9); const kw = M.kawasan(p); betul(kw.kuotaPL && kw.kuotaDUN, 'tiada kuota gabungan'); sama(M.ofset(p), 0);
+  P.tetap({ ap: 20, myr: 50000 }); let r = M.jelajah(); betul(r.ok, r.ralat); sama(M.gelombang(S.loadPlayer()), 44); sama(M.jelajah().ok, false);
+  r = M.serang({ rng: () => 0.9 }); betul(r.ok && r.jaya, r.ralat); sama(M.gelombang(S.loadPlayer()), 47);
+  r = M.pikat({ rng: () => 0.01 }); betul(r.ok && r.jaya, r.ralat); sama(M.pikat().ok, false, 'sekali setahun');
+  P.tetap({ warisan: Object.assign(S.loadPlayer().warisan, { gelombang: 100 }) }); sama(M.bonusPRN(S.loadPlayer()), 13, '+12 Gelombang + 1 pikat');
+  const prn = B.kerusiPRN(S.loadPlayer(), 70); betul(prn.Warisan >= 30, JSON.stringify(prn)); sama(prn.GRS + prn.Warisan + prn.BN + prn.UPKO + prn.lain, 73); betul(typeof prn.kerajaanWarisan === 'boolean');
+  betul(!(prn.kerajaanWarisan && prn.kerajaanGRS), 'satu kerajaan sahaja');
+  const kp = M.kerusiParlimen(45, () => 0.5); betul(kp.parti >= 1 && kp.parti <= 10 && kp.rakan === 0, JSON.stringify(kp));
+  // Semenanjung: ofset negatif
+  const sl = h.bahagian.find((b) => b.negeri === 'Selangor'); S.savePlayer(S.buildPlayerProfile({ parti: 'WARISAN', nama: 'Uji W2', demografik: D.tentukanDemografi('Lelaki', 30, 'WARISAN'), cawangan: sl.dun[0].cawangan[0], sayap: 'utama', avatar: 'biasa', tahunAhli: 3 }));
+  p = S.loadPlayer(); betul(!M.diSabah(p)); sama(M.ofset(p), -14); betul(!B.adalah(p), 'bukan PRN Sabah');
+  betul(g.MyPolitikLompat.aktifDi('WARISAN', 'Selangor') && g.MyPolitikLompat.aktifDi('WARISAN', 'Sabah') && !g.MyPolitikLompat.aktifDi('WARISAN', 'Sarawak'), 'lompat: bukan Sarawak');
+  S.clearPlayer();
+});
 ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi persekutuan tamat (mbTertunda)', () => {
   const KB = g.MyPolitikKabinet; P.daftar({}); P.tetap({ parti: 'UMNO', kabinet: { mbTertunda: true, lobi: null } });
   const s = KB.syaratMB(S.loadPlayer()); betul(!/Tiada pembentukan kerajaan negeri/.test(s.sebab), 'mbTertunda menggantikan syarat lobi: ' + s.sebab);
