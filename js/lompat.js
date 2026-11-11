@@ -79,7 +79,7 @@
     var asal = p.parti || 'UMNO', g = gabParti(asal);
     return SENARAI.filter(function (k) { return k !== asal; }).map(function (k) {
       var sebab = !aktifDi(k, p.negeri) ? (SW(k) ? 'Hanya di Sarawak.' : k === 'PBRS' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(k) ? 'Hanya di Sabah.' : 'Tidak bergerak di negeri anda.') : tolak;
-      return { kod: k, nama: nama(k), boleh: !sebab, sebab: sebab, mesra: gabParti(k) === g };
+      return { kod: k, nama: nama(k), boleh: !sebab, sebab: sebab, mesra: gabParti(k) === g, gab: gabParti(k), aktif: aktifDi(k, p.negeri) };   // v13.90: gab, aktif untuk grid
     });
   }
   /** Ringkasan kesan untuk dialog pengesahan. */

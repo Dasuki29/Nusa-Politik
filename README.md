@@ -115,7 +115,7 @@ Modul utama dalam `js/`:
 | `pembangkang.js` | Ketua Pembangkang dan MP pembangkang: Naratif, Soalan Lisan, Bahas RUU, Bajet Alternatif, Undi Tidak Percaya, Kabinet Bayangan |
 | `pembangkang-ui.js` | Kad pembangkang dalam tab Dewan |
 | `lompat.js` | Lompat Parti: syarat, gabung profil lama dan cawangan parti baharu, Perkara 49A dan PRK |
-| `lompat-ui.js` | Kad 🔀 Lompat Parti dalam tab Profil |
+| `lompat-ui.js` | Kad 🔀 Lompat Parti dalam tab Profil (v13.90: grid cip ikut gabungan, parti luar negeri dan jadual kesan dilipat) |
 | `tyt.js` | Yang di-Pertua Negeri: syarat, tawaran, tugas Istana, pembubaran DUN, tamat penggal |
 | `tyt-ui.js` | Kad laluan TYT (tab Profil) dan tab 🏰 Istana |
 | `berjasa.js` | BERJASA (Lain-lain, mod ringan): Kekuatan Parti, Dakwah, pakatan pilihan raya, PRU solo, Penentu kerajaan |

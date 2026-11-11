@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.90 (2026-11-11)
+
+- **Kad 🔀 Lompat Parti lebih ringkas** (mockup dipersetujui; paparan sahaja, logik tidak berubah).
+  - Parti yang sedia menerima dipaparkan sebagai cip berlogo dalam grid 3 lajur, dikumpul ikut gabungan (BN, PN, PH, GRS, GPS, Lain-lain); 🤝 menandakan gabungan sama (sambutan lebih mesra).
+  - Parti yang tidak bergerak di negeri pemain dilipat dalam satu baris "🔒 n parti tidak bergerak di negeri anda".
+  - Kesan: amaran Perkara 49A dan ringkasan (IP, Reputasi, Katak Politik) kekal kelihatan; jadual penuh dilipat dalam "Lihat kesan penuh". Tetingkap pengesahan masih menunjukkan semua kesan.
+  - Kad kini kira-kira satu skrin telefon (sebelum ini hampir tiga).
+
 ## v13.89 (2026-11-11)
 
 - **BERSATU mod penuh dalam Perikatan Nasional** (maklum balas pemain baris 35, 37; mockup dipersetujui; struktur ikut Perlembagaan BERSATU; ⚠️ takwim, kuota kerusi, Kesepaduan PN dan sayap Srikandi Muda ialah andaian permainan).
