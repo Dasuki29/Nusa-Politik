@@ -530,7 +530,7 @@
     var KLN = muat('MyPolitikKLN', 'kln.js');                                                    // v13.76: Wisma Putra (Menteri Luar Negeri)
     if (KLN && KLN.prosesBulan) { peristiwa = peristiwa.concat(KLN.prosesBulan().peristiwa || []); }
     var KEM = muat('MyPolitikKementerian', 'kementerian.js');                                    // v13.77: kementerian generik (Pendidikan, Kesihatan, Ekonomi)
-    [['MyPolitikKPM', 'kpm.js'], ['MyPolitikKKM', 'kkm.js'], ['MyPolitikKE', 'ke.js'], ['MyPolitikKPKT', 'kpkt.js'], ['MyPolitikSabahKM', 'sabah-km.js'], ['MyPolitikSarawakPremier', 'sarawak-premier.js']].forEach(function (x) { muat(x[0], x[1]); });
+    [['MyPolitikKPM', 'kpm.js'], ['MyPolitikKKM', 'kkm.js'], ['MyPolitikKE', 'ke.js'], ['MyPolitikKPKT', 'kpkt.js'], ['MyPolitikSabahKM', 'sabah-km.js'], ['MyPolitikSarawakPremier', 'sarawak-premier.js'], ['MyPolitikMBKM', 'mb-km.js']].forEach(function (x) { muat(x[0], x[1]); });
     if (KEM && KEM.senarai) { KEM.senarai().forEach(function (mk) { peristiwa = peristiwa.concat(mk.prosesBulan().peristiwa || []); }); }
     var IGT = muat('MyPolitikIntegriti', 'integriti.js');                                       // v7.58: Whip, Disiplin Parti & Audit SPRM
     if (IGT && IGT.prosesBulan) { peristiwa = peristiwa.concat(IGT.prosesBulan().peristiwa || []); }

@@ -43,6 +43,7 @@
       for (f in b) { if (m[f] === undefined) { m[f] = b[f]; } }
       for (f in def.meter) { if (m.bonus[f] === undefined) { m.bonus[f] = 0; } }
       for (f in def.dasar) { if (m.dasar[f] === undefined) { m.dasar[f] = def.dasar[f].lalai; } }
+      if (def.mula && !m.mula) { def.mula(m, p || {}); m.mula = 1; }                  // v13.84: nilai awal ikut keadaan pemain
       return m;
     }
     function aktif(p) {
@@ -60,6 +61,7 @@
         else if (k === 'ip' || k === 'reputasi') { ctx.kes[k] = (ctx.kes[k] || 0) + v; }
         else if (k === 'akar') { ctx.kes.kesetiaan = { akarUmbi: ((ctx.kes.kesetiaan && ctx.kes.kesetiaan.akarUmbi) || 0) + v }; }
         else if (k === 'pop' || k === 'rating') { ctx.d[k] = (ctx.d[k] || 0) + v; }
+        else if (k === 'dana') { m.dana = clamp(m.dana + v, 0, def.dana.had); }          // v13.84: tindakan menambah dana
         else if (k === 'rizab' && p.mof && typeof p.mof === 'object') { var mf = ctx.patch.mof || p.mof; mf.nationalTreasury = Math.round(((Number(mf.nationalTreasury) || 0) - v) * 10) / 10; ctx.patch.mof = mf; }
       });
     }
@@ -93,7 +95,8 @@
       if (t.kumpulan) { m.kump = m.kump || {}; m.kump[t.kumpulan] = ini; } else { m.tindakanBulan = ini; }
       if (t.selang) { m.selangIdx = m.selangIdx || {}; m.selangIdx[t.id] = ini; }
       if (t.ap) { ctx.kes.ap = -t.ap; }
-      var jaya = t.peluang == null ? null : rng(o)() < t.peluang, kesan = def.ubahKesan ? def.ubahKesan(t, m, p) : t.kesan;
+      var pl = def.ubahPeluang ? def.ubahPeluang(t, m, p) : t.peluang;              // v13.84: peluang ikut keadaan
+      var jaya = pl == null ? null : rng(o)() < pl, kesan = def.ubahKesan ? def.ubahKesan(t, m, p) : t.kesan;
       if (t.siap) { m.projek.push({ id: id, siapIdx: ini + t.siap }); } else { guna(p, m, jaya === false ? (t.gagal || {}) : kesan, ctx, true); }
       var r = simpan(p, m, ctx, { tindakan: def.kunci + '_tindakan', nama: t.nama, peringkat: 'ahli' });
       if (!r || !r.ok) { return { ok: false, ralat: r && r.ralat }; }
@@ -177,7 +180,7 @@
       var I = m.isu ? def.isu[m.isu.id] : null;
       return { aktif: aktif(p), meter: meter, dana: m.dana, danaBulan: tambah, danaHad: def.dana.had, tindakanSudah: m.tindakanBulan === ini, dasarBoleh: m.dasarBulan !== ini,
         tindakan: def.tindakan.map(function (t) { var sebab = sebabTindakan(p, m, t, ini), kes = def.ubahKesan ? def.ubahKesan(t, m, p) : t.kesan;
-          return { id: t.id, ikon: t.ikon, nama: t.nama, kos: t.kos, siap: t.siap || 0, kesan: kes, ap: t.ap || 0, selang: t.selang || 0, peluang: t.peluang == null ? null : Math.round(t.peluang * 100), gagal: t.gagal || null, kumpulan: t.kumpulan || '', boleh: !sebab, sebab: sebab }; }),
+          return { id: t.id, ikon: t.ikon, nama: t.nama, kos: t.kos, siap: t.siap || 0, kesan: kes, ap: t.ap || 0, selang: t.selang || 0, peluang: (function (pl) { return pl == null ? null : Math.round(pl * 100); })(def.ubahPeluang ? def.ubahPeluang(t, m, p) : t.peluang), gagal: t.gagal || null, kumpulan: t.kumpulan || '', boleh: !sebab, sebab: sebab }; }),
         kumpulan: Object.keys(def.kumpulan || {}).map(function (g) { return { kod: g, nama: def.kumpulan[g], sudah: !!(m.kump && m.kump[g] === ini) }; }),
         projek: m.projek.map(function (x) { var t = cariTindakan(x.id); return { nama: t ? t.nama : x.id, siap: bt(x.siapIdx) }; }),
         dasar: Object.keys(def.dasar).map(function (kod) { var T = def.dasar[kod]; return { kod: kod, nama: T.nama, ikon: T.ikon, nota: T.nota || '', semasa: m.dasar[kod], pilihan: T.pilihan.map(function (c) { return { id: c.id, label: c.label, tutup: !!(def.sahDasar && def.sahDasar(kod, c.id, m, p)) }; }) }; }),

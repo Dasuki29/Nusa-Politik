@@ -3056,6 +3056,28 @@ ujian('v13.82 Pejabat Premier Sarawak: fokus perkara MA63, tindakan, perkara sel
   P.tetap({ bulan: 8 }); const ev2 = SP.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev2.some((e) => /GPS pecah/.test(e.mesej))); sama(K.getKabinet(S.loadPlayer()).hasGovernmentRole, false);
   S.clearPlayer();
 });
+ujian('v13.84 Pejabat MB/KM Semenanjung: varian Istana / YDP Negeri, kumpulan, Persekutuan sejajar / pembangkang, dana, hilang jawatan', () => {
+  const K = g.MyPolitikKabinet, X = g.MyPolitikMBKM, MB = X.mb, KMS = X.km, PR = g.MyPolitikPRU, asal = PR.kerajaanSemasa;
+  P.daftar({}); P.tetap({ parti: 'UMNO', negeri: 'Johor', tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!MB.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR', portfolioName: 'Menteri Besar Johor', portfolioId: 'exco_tanah' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(MB.aktif(p)); betul(!KMS.aktif(p) && !g.MyPolitikSabahKM.aktif(p) && !g.MyPolitikSarawakPremier.aktif(p), 'satu varian sahaja'); betul(K.pejabatEXCO(p), 'Portfolio Saya kekal');
+  PR.kerajaanSemasa = () => true; sama(MB.get(p).persekutuan, 65); sama(MB.ringkasan(p).kumpulan.length, 2); betul(Object.keys(MB.def.isu).indexOf('istana') >= 0);
+  const ap0 = p.ap; betul(MB.laksana('hadap').ok); p = S.loadPlayer(); sama(p.ap, ap0 - 1); sama(p.mb.istana, 68); sama(MB.laksana('runding').ok, false, 'satu tindakan kumpulan sebulan');
+  betul(MB.laksana('mmkn').ok, 'kumpulan pentadbiran berasingan'); P.tetap({ bulan: 4 }); const d0 = S.loadPlayer().mb.dana; betul(MB.laksana('runding').ok); sama(S.loadPlayer().mb.dana, d0 + 20, 'sejajar: dana +20');
+  PR.kerajaanSemasa = () => false; P.tetap({ bulan: 5 }); sama(MB.ringkasan(S.loadPlayer()).tindakan.find((t) => t.id === 'runding').peluang, 50); const d1 = S.loadPlayer().mb.dana;
+  betul(MB.laksana('runding', { rng: () => 0.9 }).ok); sama(S.loadPlayer().mb.dana, d1, 'pembangkang gagal: tiada dana');
+  p = S.loadPlayer(); p.mb.persekutuan = 20; S.applyEffects({}, { kiraTindakan: false, patch: { mb: p.mb } }); sama(MB.ringkasan(S.loadPlayer()).danaBulan, 20, 'Persekutuan < 30: dana −10');
+  betul(MB.ubahDasar('hasil', 'sumber').ok); sama(MB.ringkasan(S.loadPlayer()).danaBulan, 35);
+  p = S.loadPlayer(); p.mb.istana = 10; p.mb.bonus.istana = -80; S.applyEffects({}, { kiraTindakan: false, patch: { mb: p.mb } }); P.tetap({ bulan: 6 }); const s0 = S.loadPlayer().mb.kestabilan;
+  const ev = MB.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /Istana dingin/.test(e.mesej))); betul(S.loadPlayer().mb.kestabilan < s0);
+  p = S.loadPlayer(); p.mb.kestabilan = 0; p.mb.bonus.kestabilan = -80; S.applyEffects({}, { kiraTindakan: false, patch: { mb: p.mb } }); P.tetap({ bulan: 7 });
+  MB.prosesBulan({ rng: () => 0.99 }); sama(K.getKabinet(S.loadPlayer()).hasGovernmentRole, false, 'hilang jawatan');
+  PR.kerajaanSemasa = () => false; P.daftar({}); P.tetap({ parti: 'UMNO', negeri: 'Melaka', tahun: 2027, bulan: 3, ap: 10 }); p = S.loadPlayer();
+  const k2 = K.getKabinet(p); Object.assign(k2, { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR', portfolioName: 'Ketua Menteri Melaka', portfolioId: 'exco_tanah' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k2 } });
+  p = S.loadPlayer(); betul(KMS.aktif(p) && !MB.aktif(p), 'varian Ketua Menteri'); sama(KMS.get(p).persekutuan, 35, 'pembangkang: awal 35');
+  betul(/Yang di-Pertua Negeri/.test(KMS.ringkasan(p).meter[1].nama)); betul(Object.keys(KMS.def.isu).indexOf('istana') < 0, 'tiada isu Istana');
+  PR.kerajaanSemasa = asal; S.clearPlayer();
+});
 ujian('v13.83 Sarawak: senarai 10 Menteri sebenar, set tindakan Pejabat, ID lama dipetakan', () => {
   const K = g.MyPolitikKabinet, L = K.PORTFOLIO.SARAWAK;
   sama(L.length, 10); betul(L.every((d) => /Menteri .*Sarawak$/.test(d.nama) && K.TINDAKAN_EXCO[d.tindakan]), 'nama dan set tindakan');

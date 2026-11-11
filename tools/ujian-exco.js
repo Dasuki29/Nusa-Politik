@@ -47,7 +47,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(), k = MyPolitikKabinet.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR', portfolioName: 'Menteri Besar Perlis', portfolioId: 'exco_tanah', lobi: null, acara: null });
     MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } }); NusaUI.render(); });
   await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(400);
-  semak(await pg.$$eval('[data-pru="exco-tab"]', (l) => l.length) === 2, 'tab Ringkasan / Portfolio Saya');
+  semak(await pg.$$eval('[data-pru="exco-tab"]', (l) => l.length) === 3 && await pg.$('[data-pru="exco-tab"][data-id="mb"]') !== null, 'tab Ringkasan / Portfolio Saya / Pejabat Menteri Besar');
   await pg.click('[data-pru="exco-tab"][data-id="pejabat"]'); await pg.waitForTimeout(400);
   semak(await pg.$$eval('.exco-tx', (l) => l.length) === 3 && /Luluskan geran tanah kampung/.test(await pg.textContent('.exco-tx')), '3 tindakan portfolio Tanah');
   if (process.env.SKRIN2) { await (await pg.$('.exco-tab')).evaluate((e) => e.closest('section').scrollIntoView()); await (await pg.$('.exco-tab')).evaluate((e) => e.closest('section').id = 'skr-exco'); await (await pg.$('#skr-exco')).screenshot({ path: process.env.SKRIN2 }).catch(() => {}); }

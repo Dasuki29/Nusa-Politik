@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.84 (2026-11-11)
+
+- **Semenanjung: Pejabat Menteri Besar / Ketua Menteri** (fasa 3 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu Istana ialah label simulasi umum).
+  - `js/mb-km.js`, dua varian atas enjin kementerian generik: **"🏛️ Pejabat Menteri Besar"** (9 negeri beraja, rekod `p.mb`) dan **"🏛️ Pejabat Ketua Menteri"** (Melaka, Pulau Pinang, rekod `p.kmsj`). Tab Portfolio Saya (Tanah, Mineral, Perhutanan & Kewangan) kekal.
+  - Tiga hubungan: kestabilan kerajaan negeri (sokongan ADUN), hubungan dengan Istana (Ketua Menteri: Yang di-Pertua Negeri), hubungan dengan Persekutuan (awal dan sasaran 65 jika parti dalam Kerajaan Persekutuan, 35 jika pembangkang; ⚠️ dikira daripada status kerajaan kerusi Parlimen). Dana negeri RM 30 juta sebulan, had RM 200 juta.
+  - Pentadbiran negeri (MMKN, peruntukan kawasan ADUN sekali 3 bulan, projek berimpak tinggi 6 bulan) dan Istana & Persekutuan (menghadap 1 AP, rundingan peruntukan: dana +RM 20 juta jika sejajar, 50% dana +RM 10 juta jika pembangkang, desak hak negeri); satu tindakan sebulan bagi setiap kumpulan.
+  - Dasar: hasil negeri (berhemat / hasil sumber asli / rakyat didahulukan) dan pendekatan dengan Persekutuan (kerjasama / seimbang / tegas hak negeri). Isu: ADUN bertelagah, banjir besar, pertikaian air, dan (negeri beraja) Istana tidak memperkenan calon EXCO.
+  - Akibat: kestabilan bawah 30 = KPI −5; kestabilan 0 = hilang jawatan; Istana bawah 25 = kestabilan −2 sebulan; Persekutuan bawah 30 = dana −RM 10 juta sebulan.
+- Enjin kementerian generik: nilai awal ikut keadaan pemain (`mula`), kesan `dana` untuk tindakan, peluang ikut keadaan (`ubahPeluang`).
+- Ujian baharu (216 ujian); ujian pelayar kementerian merangkumi Pejabat Menteri Besar dan Pejabat Ketua Menteri.
+
 ## v13.83 (2026-11-11)
 
 - **Kabinet Negeri Sarawak dikemas kini ikut susunan sebenar** (Premier + 10 Menteri; ⚠️ IP, kos dan peluang ialah nilai permainan). Senarai lama 8 portfolio diganti dengan 10 jawatan Menteri yang boleh dilobi oleh pemain parti GPS:

@@ -19,6 +19,7 @@
   function cari(kunci) { return KM.senarai().filter(function (x) { return x.def.kunci === kunci; })[0] || null; }
   function kesan(mod, x) {
     return Object.keys(x || {}).map(function (k) {
+      if (k === 'dana') { return '<small>Dana ' + (x[k] < 0 ? '−' : '+') + jt(Math.abs(x[k])) + '</small>'; }   // v13.84
       if (k === 'rizab') { return '<small>Rizab MOF −RM ' + Number(x[k]).toFixed(1) + ' bilion</small>'; }
       var M = mod.def.meter[k], n = M ? M.nama : (KHAS[k] || k);
       return '<small>' + n + ' ' + tanda(x[k]) + (M && M.unit ? M.unit : '') + '</small>';
