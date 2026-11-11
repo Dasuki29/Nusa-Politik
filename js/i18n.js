@@ -99,13 +99,14 @@
     return tukar ? out.join(' ') : null;
   }
   /** Terjemah satu rentetan BM (tanpa ruang hujung). Pulang EN atau null jika tiada terjemahan. */
+  var RE_BM_SISA = /\b(dan|yang|ditutup|anda|kerana|secara|usul|tahun|bulan|Kongres|Mesyuarat|Kebangsaan|Sayap|dibuka|Sekarang)\b/;
   function terjemah(s) {
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();
     var PT = W.MyPolitikParti, d = PT ? PT.dari(s) : s;                               // v8.32: teks dijenamakan (PBB) -> kunci kamus (UMNO)
     if (PT && PT.dariAlt) {                                                            // v11.1: padanan tepat dahulu (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan selepas dijenamakan)
       var cal = PT.dariAlt(s);
-      for (var ci = 0; ci < cal.length; ci++) { var cx = cal[ci]; T.NORMAL.forEach(function (n) { cx = cx.replace(n[0], n[1]); }); var rt = tepat(cx); if (rt !== null) { return PT.ke(rt); } }
+      for (var ci = 0; ci < cal.length; ci++) { var cx = cal[ci]; T.NORMAL.forEach(function (n) { cx = cx.replace(n[0], n[1]); }); var rt = tepat(cx); if (rt !== null && (cal[ci] !== s || !RE_BM_SISA.test(rt))) { return PT.ke(rt); } }   // v13.93: calon teks asal (DAP) mesti diterjemah sepenuhnya
     }
     var hasil = dalam(d); if (hasil === null && d !== s) { hasil = dalam(s); }
     if (hasil === null && PT && PT.dariAlt) { var al = PT.dariAlt(s); for (var ai = 0; ai < al.length && hasil === null; ai++) { if (al[ai] !== d && al[ai] !== s) { hasil = dalam(al[ai]); } } }   // v11.1: calon songsangan PBB (PAU/Konvensyen, bulan)          // v9.6: jika songsangan istilah gagal (cth "Majlis Tertinggi" asli), cuba teks asal

@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.93 (2026-11-12)
+
+- **Audit DAP, Fasa 2: DAP berdiri sendiri** (mockup dipersetujui; ⚠️ saiz kongres sayap dan peraturan wakil ialah andaian permainan).
+  - Sayap DAPSY / Wanita DAP: sistem G10 / G2 dan "Perhimpunan Sayap (Pra-Kongres)" UMNO dibuang. Laluan baharu: Mesyuarat Agung Tahunan Sayap Cawangan (bulan 1, pilih Wakil ke Kongres sayap) → Mesyuarat DAPSY / Wanita JPKP (bulan 2, usul sayap ke MB JPKP) → Kongres DAPSY Kebangsaan / Kongres Wanita DAP Kebangsaan (bulan 3; memilih kepimpinan sayap kebangsaan dalam tahun pemilihan, usul sahaja pada tahun lain).
+  - Tetapan baharu `tanpaG10`, `sayapKongres` dalam `js/struktur.js` (DAP).
+  - Jawatan Komuniti untuk pemain DAP: "Masjid & PIBG" → "Persatuan Penduduk & PIBG", "Pengerusi Masjid" → "Pengerusi Persatuan Penduduk" (ganjaran sama); acara gotong-royong "surau" → "rumah ibadat". Parti lain tidak berubah.
+  - Kad DAP: "Pengundi Bumiputera x% · kedudukan n" → "Pengundi bukan Bumiputera x% · kubu DAP #n".
+  - EN: kunci kamus DAP sendiri didahulukan (teks mesti diterjemah sepenuhnya), terjemahan baharu untuk Kongres sayap.
+- Ujian baharu (223 ujian).
+
 ## v13.92 (2026-11-12)
 
 - **Audit DAP, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).

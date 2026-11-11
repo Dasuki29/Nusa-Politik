@@ -134,7 +134,8 @@
     },
     DAP: {
       sumber: 'Perlembagaan DAP (2019)',
-      wakilCawangan: wakilDAP, wakilTerusPA: true, jpkpSahaja: true, pusatBerkala: true,        // v13.62: Fasal VIII.1(b), VIII.3, IX.1, XIX.1
+      wakilCawangan: wakilDAP, wakilTerusPA: true, jpkpSahaja: true, pusatBerkala: true, tanpaG10: true, tanpaG2: true, sayapKongres: true,   // v13.93: Kongres DAPSY / Wanita DAP Kebangsaan (ANDAIAN)
+             // v13.62: Fasal VIII.1(b), VIII.3, IX.1, XIX.1
       jawatan: {
         ajk_cawangan: { kerusi: 7, lantikan: 6, fasal: 'Fasal XXI.3, XXII.1' },             // SU, Pen. SU, Bendahari, SU Publisiti, SU Hal Ehwal Wanita, 2 AJK
         ajk_bahagian: { tutup: 'Ahli JPKP tidak dipilih: Ahli Parlimen, ADUN, Ketua Pemuda, Ketua Wanita dan Pengerusi Cawangan menganggotai JPKP secara automatik' },
@@ -264,7 +265,7 @@
   function wakilCawangan(p, ahli) { var s = untuk(p); return s && s.wakilCawangan ? s.wakilCawangan(ahli) : null; }
   /** Bilangan wakil Bahagian ke Perhimpunan Agung ikut perlembagaan parti, atau null. */
   function wakilBahagian(p, ahli) { var s = untuk(p); return s && s.wakilBahagian ? s.wakilBahagian(ahli, p) : null; }
-  /** v13.61: tetapan mesyuarat parti: gabungMesyuarat, wakilSayapDilantik, g10, tanpaG2, wakilDewanPA (atau null). */
+  /** v13.61: tetapan mesyuarat parti: gabungMesyuarat, wakilSayapDilantik, g10, tanpaG2, wakilDewanPA (atau null). v13.93: tanpaG10, sayapKongres (DAP). */
   function mesyuarat(p, k) { var s = untuk(p); return s && s[k] != null ? s[k] : null; }
   /** Had jumlah perwakilan Perhimpunan Agung (MIC Perkara 74.1: 2,000), atau null. */
   function hadPA(p) { var s = untuk(p); return s && s.hadPA ? s.hadPA : null; }

@@ -27,7 +27,7 @@
       // Kawasan & kuota
       h += '<h3 class="pkr-h">Kawasan &amp; kuota PH</h3>';
       if (k.parlimen) {
-        h += kv('Kawasan ' + esc(k.parlimen.n), 'Pengundi Bumiputera ' + k.parlimen.m + '% · kedudukan ' + k.parlimen.r + '/' + k.bilBahagian) +
+        h += kv('Kawasan ' + esc(k.parlimen.n), 'Pengundi bukan Bumiputera ' + Math.round((100 - k.parlimen.m) * 10) / 10 + '% · kubu DAP #' + k.parlimen.r + ' / ' + k.bilBahagian) +   // v13.93
           kv('Wakil Kongres kawasan ini', M.perwakilan(k.parlimen.kod) + ' wakil · ' + (k.parlimen.c || 0) + ' Cawangan layak') +
           kv('Penyelaras JPKP', M.penyelaras(p) ? '✅ Anda (Ahli Parlimen)' : M.ahliParlimen(p) ? 'Ahli Parlimen DAP kawasan ini' : 'Ahli Parlimen DAP kawasan ini (NPC)') +
           kv('Kerusi Parlimen', k.kuotaPL ? '✅ dalam kuota DAP (' + C.KUOTA_PARLIMEN + ')' : '⛔ untuk rakan PH (kuota DAP ' + C.KUOTA_PARLIMEN + ')') +

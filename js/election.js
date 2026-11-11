@@ -307,19 +307,21 @@
       var StM = modKhas('MyPolitikStruktur', 'struktur.js'), mz = function (k) { return StM && StM.mesyuarat ? StM.mesyuarat(p, k) : null; };   // v13.61: mesyuarat ikut parti (PAS)
       var dilantikSy = !!mz('wakilSayapDilantik'), nG10 = mz('g10') || CONFIG.SAYAP_G10;
       tambah({
-        kod: 'perwakilan_sayap_cawangan', jenis: 'perwakilan', jawatan: 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian', peringkat: 'sayap_cawangan', kumpulan: 'perwakilan', sayap: sy,
+        kod: 'perwakilan_sayap_cawangan', jenis: 'perwakilan', jawatan: mz('sayapKongres') ? 'Wakil ' + NS + ' Cawangan ke Kongres ' + NS + ' Kebangsaan' : 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian', peringkat: 'sayap_cawangan', kumpulan: 'perwakilan', sayap: sy,
         kerusi: kuotaSayapCawangan(p), kesukaran: 0,
         terbuka: !exBhg.sah && !ketuaSy && !dilantikSy,
         sebab: dilantikSy && !ketuaSy && !exBhg.sah ? 'Wakil ' + NS + ' Cawangan ke Mesyuarat Perwakilan ' + NS + ' Bahagian dilantik oleh Ketua ' + NS + ' Cawangan, bukan diundi. Dilantik semasa Persidangan Tahunan Cawangan jika sokongan anda mencukupi.' : ketuaSy ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai Ketua ' + NS + ' Cawangan.' : (exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan ' + NS + ' Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : '')
       });
       var ketuaSyB = J.pegang(p, 'sayap_bahagian_' + sy);                       // Ketua sayap Bahagian hadir Perhimpunan Sayap Pusat automatik
       var layakB = swSah || exBhg.sah || ketuaSy;
+      if (!mz('tanpaG10')) {                                                        // v13.93: DAP tiada G10
       tambah({
         kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G' + nG10 + ' ' + NS + ': ' + nG10 + ' wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
         kerusi: nG10, kesukaran: 0,
         terbuka: layakB && !exBhg.sah,
         sebab: exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });
+      }
       if (!mz('tanpaG2')) {
       tambah({
         kod: 'perwakilan_sayap_g2', jenis: 'perwakilan', jawatan: 'G2 ' + NS + ': 2 wakil ke Perhimpunan ' + NS + ' Pusat', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,

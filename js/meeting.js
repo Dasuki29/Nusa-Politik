@@ -508,6 +508,10 @@
         return (pws.sayapCawangan === p.tahun || gs.exB.sah || (J && J.pegang && J.pegang(p, 'sayap_cawangan_' + sayapPemain(p)))) ? { ok: true }
           : { ok: false, sebab: 'Hanya wakil ' + N + ' Cawangan tahun ' + p.tahun + ' yang terpilih, Ketua ' + N + ' Cawangan dan pemegang jawatan Bahagian/Pusat boleh hadir Mesyuarat Perwakilan ' + N + ' Bahagian.' };
       }
+      if (mz(p, 'sayapKongres')) {                                            // v13.93: DAP: Kongres sayap kebangsaan dihadiri Wakil sayap Cawangan tahun ini
+        return (pws.sayapCawangan === p.tahun || gs.exP.sah || (J && J.pegang && (J.pegang(p, 'sayap_cawangan_' + sayapPemain(p)) || J.pegang(p, 'sayap_bahagian_' + sayapPemain(p))))) ? { ok: true }
+          : { ok: false, sebab: 'Hanya Wakil ' + N + ' Cawangan tahun ' + p.tahun + ', Ketua ' + N + ' Cawangan / JPKP dan pemegang jawatan Pusat boleh hadir Kongres ' + N + ' Kebangsaan.' };
+      }
       return (pws.g2 === p.tahun || gs.exP.sah || (J && J.pegang && J.pegang(p, 'sayap_bahagian_' + sayapPemain(p)))) ? { ok: true }               // sayap_pau: G2 tahun ini atau pemegang jawatan ex-officio
         : { ok: false, sebab: 'Hanya G2 ' + N + ' (2 wakil Bahagian) tahun ' + p.tahun + ', Ketua ' + N + ' Bahagian, Ketua Bahagian dan pemegang jawatan Pusat boleh hadir Perhimpunan ' + N + ' Pusat.' };
     }
@@ -780,8 +784,9 @@
       var ut = INDUK[peringkat], db = usulDibawa(p, ut), wu = tetingkap(p, ut);
       langkah.push(db ? 'Usul "' + db.tajuk + '" diluluskan dan akan dibawa oleh sayap anda ke ' + PERINGKAT[ut].nama + '.' : 'Tiada usul sayap yang diluluskan, jadi tiada usul sayap dibawa ke ' + PERINGKAT[ut].nama + '.');
       var pw = p.perwakilan || {}, Nn = NAMA_SAYAP[sayapPemain(p)] || 'Sayap';
-      if (peringkat === 'sayap_cawangan') { langkah.push(pw.sayapCawangan === p.tahun ? 'Anda terpilih sebagai wakil ' + Nn + ' Cawangan ke Mesyuarat Perwakilan ' + Nn + ' Bahagian (bulan 6).' : 'Anda bukan wakil ' + Nn + ' Cawangan tahun ini, jadi tidak boleh hadir Mesyuarat Perwakilan ' + Nn + ' Bahagian kecuali memegang jawatan Bahagian/Pusat.'); }
-      if (peringkat === 'sayap_bahagian') {
+      if (peringkat === 'sayap_cawangan' && mz(p, 'sayapKongres')) { langkah.push(pw.sayapCawangan === p.tahun ? 'Anda terpilih sebagai Wakil ' + Nn + ' Cawangan ke Kongres ' + Nn + ' Kebangsaan.' : 'Anda bukan Wakil ' + Nn + ' Cawangan tahun ini.'); }   // v13.93: DAP
+      else if (peringkat === 'sayap_cawangan') { langkah.push(pw.sayapCawangan === p.tahun ? 'Anda terpilih sebagai wakil ' + Nn + ' Cawangan ke Mesyuarat Perwakilan ' + Nn + ' Bahagian (bulan 6).' : 'Anda bukan wakil ' + Nn + ' Cawangan tahun ini, jadi tidak boleh hadir Mesyuarat Perwakilan ' + Nn + ' Bahagian kecuali memegang jawatan Bahagian/Pusat.'); }
+      if (peringkat === 'sayap_bahagian' && !mz(p, 'tanpaG10')) {
         langkah.push(pw.g10 === p.tahun ? 'Anda terpilih dalam G10 ' + Nn + ' dan layak hadir Mesyuarat Perwakilan Bahagian.' : 'Anda tidak termasuk dalam G10 ' + Nn + ' tahun ini.');
         langkah.push(pw.g2 === p.tahun ? 'Anda terpilih dalam G2 ' + Nn + ' dan layak hadir Perhimpunan ' + Nn + ' Pusat (bulan 9).' : 'Anda tidak termasuk dalam G2 ' + Nn + ' tahun ini.');
       }

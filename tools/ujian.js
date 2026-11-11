@@ -2968,6 +2968,16 @@ ujian('v13.92 audit DAP: istilah tanpa sisa UMNO (Pengerusi Cawangan, Kongres, J
   betul((r.peristiwa || []).some((x) => /Bulan 4 \(April\): Pasca-Kongres/.test(x.mesej)), 'mesej Pasca-Kongres bulan 4');
   betul(!(r.peristiwa || []).some((x) => /PAU|Bahagian|WTC/.test(x.mesej)), 'tiada mesej bulan UMNO');
 });
+ujian('v13.93 DAP berdiri sendiri: tiada G10 / G2, Kongres DAPSY Kebangsaan, Persatuan Penduduk, kubu DAP', () => {
+  const PT = g.MyPolitikParti, ST = g.MyPolitikStruktur; P.daftar(); let p = P.tetap({ parti: 'DAP', sayap: 'pemuda', jawatanSayap: 'pemuda' });
+  sama(ST.mesyuarat(p, 'tanpaG10'), true); sama(ST.mesyuarat(p, 'tanpaG2'), true); sama(ST.mesyuarat(p, 'sayapKongres'), true);
+  sama(PT.ke('Perhimpunan Pemuda (Pra-PAU)'), 'Kongres DAPSY Kebangsaan'); sama(PT.ke('Perhimpunan Wanita Pusat'), 'Kongres Wanita DAP Kebangsaan');
+  sama(PT.ke('Mesyuarat Perwakilan Pemuda Bahagian'), 'Mesyuarat DAPSY JPKP');
+  sama(PT.ke('Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan), G10 (10 wakil) ke Mesyuarat Perwakilan Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat.'), 'Bulan 2 · Ketua, Naib Ketua dan AJK Sayap JPKP (tahun pemilihan) dan usul sayap ke MB JPKP.');
+  sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk'); sama(PT.ke('🕌 Masjid & PIBG'), '🏘️ Persatuan Penduduk & PIBG');
+  sama(PT.dari('🏘️ Pengerusi Persatuan Penduduk'), '🕌 Pengerusi Masjid');
+  P.tetap({ parti: 'UMNO' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🕌 Pengerusi Masjid', 'parti lain tidak berubah');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);
