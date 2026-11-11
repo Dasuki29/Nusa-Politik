@@ -3038,6 +3038,21 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.78 Kementerian Kesihatan: tindakan, dasar caj dan cukai gula (dana bulanan), wabak ikut kapasiti, mogok', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikKKM;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Kesihatan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(M.aktif(p)); betul(!g.MyPolitikKPM.aktif(p), 'bukan KPM');
+  betul(M.laksana('doktor').ok); p = S.loadPlayer(); sama(p.kkm.petugas, 46);
+  betul(M.ubahDasar('caj', 'insurans').ok); sama(M.ringkasan(S.loadPlayer()).danaBulan, 85, 'insurans: dana +25 sebulan');
+  p = S.loadPlayer(); p.kkm.isu = { id: 'denggi', bulan: 0 }; p.kkm.kapasiti = 90; S.applyEffects({}, { kiraTindakan: false, patch: { kkm: p.kkm } });
+  sama(M.ringkasan(S.loadPlayer()).isu.pilihan[0].peluang, 90, 'peluang ikut kapasiti');
+  const g1 = M.jawabIsu('nasihat', { rng: () => 0.99 }); betul(g1.ok && g1.jaya === false); betul(!!S.loadPlayer().kkm.isu, 'gagal: wabak kekal');
+  P.tetap({ bulan: 4 }); const o = M.jawabIsu('operasi', { rng: () => 0.01 }); betul(o.ok && o.jaya); sama(S.loadPlayer().kkm.isu, null);
+  p = S.loadPlayer(); p.kkm.petugas = 10; p.kkm.bonus.petugas = -40; S.applyEffects({}, { kiraTindakan: false, patch: { kkm: p.kkm } }); const rt = K.getKabinet(S.loadPlayer()).governanceRating;
+  P.tetap({ bulan: 5 }); const ev = M.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /mogok/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt);
+  S.clearPlayer();
+});
 ujian('v13.77 Kementerian Pendidikan (enjin generik): tindakan, projek bertangguh, dasar, isu, akibat bulanan', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikKPM;
   betul(g.MyPolitikKementerian.senarai().some((x) => x.def.kunci === 'kpm'), 'berdaftar');

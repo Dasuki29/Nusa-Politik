@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.78 (2026-11-11)
+
+- **Modul Kementerian Kesihatan** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu dan wabak ialah label simulasi), dibina atas enjin kementerian generik.
+  - Takrif `js/kkm.js` (rekod `p.kkm`): kapasiti hospital awam, kepuasan petugas kesihatan, indeks kesihatan awam, dana kesihatan (RM 60 juta sebulan, had RM 300 juta).
+  - **Tab "🏥 Pejabat KKM"**: tindakan (lantik tetap doktor kontrak, tambah katil & klinik 4 bulan, naik taraf peralatan, kempen kesihatan awam), dasar (caj hospital awam: kekal RM1 / bersasar / insurans kesihatan nasional; cukai minuman bergula) yang menambah dana bulanan, isu rawak (denggi dan penyakit pernafasan: peluang kawalan ikut kapasiti hospital; kesesakan zon kecemasan).
+  - Akibat bulanan: petugas bawah 30 = mogok doktor kontrak (KPI −4); kesihatan awam bawah 40 = populariti −2.
+- Pembetulan EN: gelaran "Timbalan Menteri …" bagi 26 portfolio kini diterjemah, dan tajuk kad "Menteri Kesihatan" tidak lagi keluar separuh BM ("Menteri Health").
+- Ujian baharu (210 ujian).
+
 ## v13.77 (2026-11-11)
 
 - **Modul Kementerian Pendidikan** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, dasar dipermudahkan dan tidak menyatakan pendirian).

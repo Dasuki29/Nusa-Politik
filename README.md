@@ -93,6 +93,7 @@ Modul utama dalam `js/`:
 | `kln.js`, `kln-ui.js` | Kementerian Luar Negeri (Wisma Putra): kedudukan diplomatik, dagangan, hubungan blok, isu antarabangsa, krisis konsular, sidang kemuncak dan FTA (tab Wisma Putra) |
 | `kementerian.js`, `kementerian-ui.js` | Enjin dan paparan kementerian generik (dipacu takrif) |
 | `kpm.js` | Takrif Kementerian Pendidikan: kualiti, guru, ibu bapa, tindakan, dasar pentaksiran dan bahasa, isu (tab Pejabat KPM) |
+| `kkm.js` | Takrif Kementerian Kesihatan: kapasiti hospital, petugas, kesihatan awam, tindakan, dasar caj dan cukai gula, wabak (tab Pejabat KKM) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
