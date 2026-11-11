@@ -221,7 +221,7 @@
   ["Menteri Kesihatan Awam, Perumahan & Kerajaan Tempatan Sarawak", "Sarawak Minister of Public Health, Housing & Local Government"],
   ["Menteri Pembangunan Sosial & Perbandaran Sarawak", "Sarawak Minister of Social Development & Urbanisation"],
   ["Menteri Pendidikan, Inovasi & Pembangunan Bakat Sarawak", "Sarawak Minister of Education, Innovation & Talent Development"],
-  ["Menteri Pengangkutan Sarawak", "Sarawak Minister of Transport"],
+  ["Menteri Pengangkutan Sarawak", "Minister of Transport, Sarawak"],
   ["Menteri Utiliti & Telekomunikasi Sarawak", "Sarawak Minister of Utility & Telecommunication"],
   ["Menteri Pelancongan, Industri Kreatif & Seni Persembahan Sarawak", "Sarawak Minister of Tourism, Creative Industries & Performing Arts"],
   ["Menteri Sumber Asli & Pembangunan Bandar Sarawak", "Sarawak Minister of Natural Resources & Urban Development"],

@@ -5842,6 +5842,16 @@
   /* v13.82c (bentuk songsang PBB) */
   ["Mesyuarat Majlis Kerja Tertinggi GPS", "GPS Supreme Council meeting"],
   ["🏛️ Mesyuarat Majlis Kerja Tertinggi GPS", "🏛️ GPS Supreme Council meeting"],
+  /* v13.83: Kabinet Negeri Sarawak */
+  ["Timbalan Premier & Menteri Infrastruktur dan Pembangunan Pelabuhan Sarawak", "Deputy Premier & Minister of Infrastructure and Port Development, Sarawak"],
+  ["Timbalan Premier & Menteri Perdagangan Antarabangsa, Industri dan Pelaburan Sarawak", "Deputy Premier & Minister of International Trade, Industry and Investment, Sarawak"],
+  ["Timbalan Premier & Menteri Kesihatan Awam, Perumahan dan Kerajaan Tempatan Sarawak", "Deputy Premier & Minister of Public Health, Housing and Local Government, Sarawak"],
+  ["Menteri di Jabatan Premier Sarawak", "Minister in the Premier's Department, Sarawak"],
+  ["Menteri Industri Makanan, Komoditi dan Pembangunan Wilayah Sarawak", "Minister of Food Industry, Commodities and Regional Development, Sarawak"],
+  ["Menteri Utiliti dan Telekomunikasi Sarawak", "Minister of Utilities and Telecommunication, Sarawak"],
+  ["Menteri Pelancongan, Industri Kreatif dan Seni Persembahan Sarawak", "Minister of Tourism, Creative Industry and Performing Arts, Sarawak"],
+  ["Menteri Wanita, Kanak-kanak dan Pembangunan Kesejahteraan Komuniti Sarawak", "Minister of Women, Childhood and Community Wellbeing Development, Sarawak"],
+  ["Menteri Pendidikan, Inovasi dan Pembangunan Bakat Sarawak", "Minister of Education, Innovation and Talent Development, Sarawak"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

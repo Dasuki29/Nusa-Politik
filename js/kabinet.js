@@ -71,16 +71,20 @@
       { id: 'exco_ktp',       tahap: 'EXCO_NEGERI', nama: 'EXCO Kerajaan Tempatan, Perumahan & Pengangkutan', ip: 150, myr: 2500, asas: 0.58, risiko: 'sederhana', kategori: 'infra', ikon: '🏙️' },
       { id: 'exco_pelaburan', tahap: 'EXCO_NEGERI', nama: 'EXCO Pelaburan, Perdagangan, Perindustrian & PKS', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'ekonomi', ikon: '🏭' }
     ],
-    /* v9.2: portfolio kabinet negeri Sarawak (untuk pemain PBB). Nama kementerian ialah label simulasi; IP/kos/peluang ialah andaian permainan. */
+    /* v13.83: Kabinet Negeri Sarawak ikut susunan sebenar (Premier + 10 Menteri; 3 disertai Timbalan Premier). Kewangan dan Ekonomi Baharu,
+       Sumber Asli dan Pembangunan Bandar, serta Tenaga dan Kelestarian Alam Sekitar dipegang Premier (tidak boleh dilobi).
+       'tindakan' = set tindakan Pejabat EXCO yang dikongsi. ANDAIAN: IP, kos dan peluang ialah nilai permainan. */
     SARAWAK: [
-      { id: 'sw_kesihatan',  tahap: 'EXCO_NEGERI', nama: 'Menteri Kesihatan Awam, Perumahan & Kerajaan Tempatan Sarawak', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
-      { id: 'sw_pembangunan_sosial', tahap: 'EXCO_NEGERI', nama: 'Menteri Pembangunan Sosial & Perbandaran Sarawak', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah' },
-      { id: 'sw_pendidikan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pendidikan, Inovasi & Pembangunan Bakat Sarawak', ip: 110, myr: 1800, asas: 0.70, risiko: 'rendah' },
-      { id: 'sw_pengangkutan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pengangkutan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
-      { id: 'sw_utiliti',    tahap: 'EXCO_NEGERI', nama: 'Menteri Utiliti & Telekomunikasi Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
-      { id: 'sw_pelancongan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pelancongan, Industri Kreatif & Seni Persembahan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana' },
-      { id: 'sw_sumber_asli', tahap: 'EXCO_NEGERI', nama: 'Menteri Sumber Asli & Pembangunan Bandar Sarawak', ip: 160, myr: 3000, asas: 0.50, risiko: 'sederhana' },
-      { id: 'sw_kewangan',   tahap: 'EXCO_NEGERI', nama: 'Menteri Kewangan Sarawak', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi' }
+      { id: 'sw_infra', tahap: 'EXCO_NEGERI', nama: 'Timbalan Premier & Menteri Infrastruktur dan Pembangunan Pelabuhan Sarawak', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'infra', ikon: '🏗️', tindakan: 'exco_kerjaraya' },
+      { id: 'sw_perdagangan', tahap: 'EXCO_NEGERI', nama: 'Timbalan Premier & Menteri Perdagangan Antarabangsa, Industri dan Pelaburan Sarawak', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'ekonomi', ikon: '🏭', tindakan: 'exco_pelaburan' },
+      { id: 'sw_kesihatan', tahap: 'EXCO_NEGERI', nama: 'Timbalan Premier & Menteri Kesihatan Awam, Perumahan dan Kerajaan Tempatan Sarawak', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'kesihatan', ikon: '🏥', tindakan: 'exco_ktp' },
+      { id: 'sw_jpm', tahap: 'EXCO_NEGERI', nama: 'Menteri di Jabatan Premier Sarawak', ip: 150, myr: 2500, asas: 0.58, risiko: 'sederhana', kategori: 'kesihatan', ikon: '🏛️', tindakan: 'exco_kebajikan' },
+      { id: 'sw_wilayah', tahap: 'EXCO_NEGERI', nama: 'Menteri Industri Makanan, Komoditi dan Pembangunan Wilayah Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'ekonomi', ikon: '🌾', tindakan: 'exco_luarbandar' },
+      { id: 'sw_pengangkutan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pengangkutan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '🚌', tindakan: 'exco_kerjaraya' },
+      { id: 'sw_utiliti', tahap: 'EXCO_NEGERI', nama: 'Menteri Utiliti dan Telekomunikasi Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '💡', tindakan: 'exco_kerjaraya' },
+      { id: 'sw_pelancongan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pelancongan, Industri Kreatif dan Seni Persembahan Sarawak', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '🎭', tindakan: 'exco_pelancongan' },
+      { id: 'sw_wanita', tahap: 'EXCO_NEGERI', nama: 'Menteri Wanita, Kanak-kanak dan Pembangunan Kesejahteraan Komuniti Sarawak', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'kesihatan', ikon: '🤝', tindakan: 'exco_kebajikan' },
+      { id: 'sw_pendidikan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pendidikan, Inovasi dan Pembangunan Bakat Sarawak', ip: 130, myr: 2200, asas: 0.62, risiko: 'sederhana', kategori: 'pendidikan', ikon: '🎓', tindakan: 'exco_pendidikan' }
     ],
     /* v13.81: Kabinet Negeri Sabah (anggota bergelar Menteri), ikut susunan kabinet 2 Dis 2025. ANDAIAN: IP, kos dan peluang ialah nilai permainan.
        'tindakan' = set tindakan Pejabat EXCO yang dikongsi (TINDAKAN_EXCO). */
@@ -126,8 +130,11 @@
   function bolehAgama(p) { if (!p) { return true; } if (p.parti === 'PBS') { return p.komunitiPBS === 'bi'; } return !TANPA_AGAMA[p.parti]; }
   /** v13.81: pemain di Sabah (bukan parti Sarawak) menggunakan Kabinet Negeri Sabah. */
   function SB(p) { return !!(p && !SW(p.parti) && String(p.negeri || '').toLowerCase() === 'sabah'); }
+  /* v13.83: ID portfolio Sarawak lama (simpanan lama) dipetakan ke portfolio sebenar yang terdekat. */
+  var ID_LAMA = { sw_pembangunan_sosial: 'sw_wanita', sw_sumber_asli: 'sw_perdagangan', sw_kewangan: 'sw_infra' };
   function cariPortfolio(id) {
     if (id === PORTFOLIO_MB.id) { return PORTFOLIO_MB; }
+    if (ID_LAMA[id]) { id = ID_LAMA[id]; }
     var s = PORTFOLIO.DUN.concat(PORTFOLIO.SARAWAK, PORTFOLIO.SABAH, PORTFOLIO.PARLIMEN);
     for (var i = 0; i < s.length; i++) { if (s[i].id === id) { return s[i]; } }
     return null;

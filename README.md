@@ -179,7 +179,7 @@ node tools/simulasi.js 30 600 1000   # 30 kerjaya, maksimum 600 bulan, benih raw
 ```
 node tools/ujian-bahasa.js       # ujian dwibahasa tanpa pelayar: kamus dan teks data permainan ada EN (-v untuk senarai penuh)
 node tools/ujian-pelayar.js      # asap pelayar dalam EN (perlu Playwright; dilangkau jika tiada). BULAN=12 untuk lebih lama
-node tools/ujian-pbb.js          # pelayar: daftar sebagai ahli PBB (penjenamaan, peta Sarawak, istilah)
+node tools/ujian-pbb.js          # pelayar: daftar sebagai ahli PBB (penjenamaan, peta Sarawak, istilah, lobi dan Pejabat Menteri Sarawak)
 PARTI=SUPP node tools/ujian-prs.js   # pelayar: parti mod ringan (PRS lalai; SUPP atau PDP)
 node tools/ujian-indeks.js       # pelayar: halaman utama dan pendaftaran
 node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri (pilih TPM, 29 portfolio, calon struktur parti)

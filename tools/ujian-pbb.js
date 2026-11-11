@@ -89,6 +89,23 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.click('[data-tab="dewan"]').catch(() => {}); await pg.waitForTimeout(500);
   const dw = await pg.evaluate(() => { const b = document.querySelector('.dw-hemi .dw-hemi-leg'); return b ? b.textContent + ' | ' + b.closest('section').textContent : ''; });   // v13.25: carta hemisikal
   semak(/GPS/.test(dw.split(' | ')[0]) && !/\bBN\b/.test(dw.split(' | ')[0]) && /GPS \(pembangkang\) \d+/.test(dw), 'carta kerusi DUN berlabel GPS (' + dw.slice(0, 160) + ')');
+  // v13.83: Kabinet Negeri Sarawak (10 Menteri) dalam lobi dan Pejabat Menteri, EN
+  const BOC = () => pg.evaluate(() => { const re = /\b(Menteri|Timbalan|dan|Sarawak Minister|Pembangunan|Kerajaan|Perdagangan|Pelancongan|Pendidikan|Wanita|bulan|tindakan)\b/, out = []; document.querySelectorAll('#modal, .exco-tab, .exco-tx').forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; });
+  await pg.evaluate(() => { MyPolitikI18n.setLanguage('EN'); MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { tahun: 2027, bulan: 1, ip: 300, myr: 50000, ap: 10 } }); MyPolitikKabinet.bukaLobi('DUN'); NusaUI.render(); });
+  await pg.waitForTimeout(600); await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(400);
+  await pg.click('[data-pru="lobi"]').catch(() => {}); await pg.waitForTimeout(600);
+  const lb = await pg.textContent('#modal').catch(() => '');
+  semak((lb.match(/Sarawak/g) || []).length >= 10 && /Deputy Premier/.test(lb) && /Premier's Department/.test(lb), 'lobi 10 Menteri Sarawak (EN) (' + lb.slice(0, 200) + ')');
+  const bl = await BOC(); semak(bl.length === 0, 'EN: BM bocor di lobi Sarawak:\n    ' + bl.slice(0, 10).join('\n    '));
+  if (process.env.SKRIN) { await (await pg.$('#modal .modal__kotak, #modal > *')).screenshot({ path: process.env.SKRIN }).catch(() => {}); }
+  await pg.click('#modal button[data-pilih="TANGGUH"]').catch(() => {}); await pg.waitForTimeout(400);
+  await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(), k = MyPolitikKabinet.getKabinet(p), d = MyPolitikKabinet.cariPortfolio('sw_wilayah'); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'EXCO_NEGERI', portfolioName: d.nama, portfolioId: d.id, lobi: null, acara: null });
+    MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } }); NusaUI.render(); });
+  await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(400);
+  await pg.click('[data-pru="exco-tab"][data-id="pejabat"]').catch(() => {}); await pg.waitForTimeout(400);
+  semak(await pg.$$eval('.exco-tx', (l) => l.length) === 3, 'Pejabat Menteri Sarawak: 3 tindakan');
+  const bp = await BOC(); semak(bp.length === 0, 'EN: BM bocor di Pejabat Menteri Sarawak:\n    ' + bp.slice(0, 10).join('\n    '));
+  if (process.env.SKRIN2) { await (await pg.$('.exco-tab')).evaluate((e) => { e.closest('section').id = 'skr-sw'; }); await (await pg.$('#skr-sw')).screenshot({ path: process.env.SKRIN2 }).catch(() => {}); }
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));
   await br.close(); srv.close();
   console.log(gagal.length ? 'GAGAL:\n - ' + gagal.join('\n - ') : 'Ujian PBB lulus.'); process.exit(gagal.length ? 1 : 0);

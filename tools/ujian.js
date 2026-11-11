@@ -1178,7 +1178,7 @@ ujian('PBB v9.2: portfolio Menteri Sarawak untuk lobi DUN (UMNO kekal portfolio 
   const dem = D.tentukanDemografi('Lelaki', 40), c = h.bahagian[0].dun[0].cawangan[0];
   S.savePlayer(S.buildPlayerProfile({ parti: 'PBB', blokPBB: 'pesaka', nama: 'Uji', demografik: dem, cawangan: c, sayap: 'utama', avatar: 'biasa' }));
   P.tetap({ tahun: 2027, ip: 1000, myr: 50000, ap: 10 }); betul(KB.bukaLobi('DUN').ok, 'lobi dibuka');
-  let sn = KB.senaraiPortfolio(S.loadPlayer()); sama(sn.length, 8, '8 portfolio Sarawak'); betul(sn.every((x) => /^sw_/.test(x.id) && /Sarawak$/.test(x.nama)), 'semua nama Sarawak');
+  let sn = KB.senaraiPortfolio(S.loadPlayer()); sama(sn.length, 10, '10 portfolio Sarawak'); betul(sn.every((x) => /^sw_/.test(x.id) && /Sarawak$/.test(x.nama)), 'semua nama Sarawak');
   betul(sn.every((x) => x.tahap === 'EXCO_NEGERI'), 'tahap EXCO_NEGERI kekal');
   let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = KB.lobiPortfolio('sw_kesihatan', () => 0.01); if (!lj.ok) { break; } }
   betul(lj.ok && lj.dilantik, lj.ralat); const k = KB.getKabinet(S.loadPlayer()); sama(k.portfolioId, 'sw_kesihatan'); betul(/Sarawak/.test(k.portfolioName));
@@ -3054,6 +3054,17 @@ ujian('v13.82 Pejabat Premier Sarawak: fokus perkara MA63, tindakan, perkara sel
   p = S.loadPlayer(); p.premier.perpaduan = 40; p.premier.bonus.perpaduan = 0; S.applyEffects({}, { kiraTindakan: false, patch: { premier: p.premier } }); P.tetap({ bulan: 7 }); sama(SP.laksana('tekanan').ok, false, 'tekanan perlukan perpaduan 50');
   p = S.loadPlayer(); p.premier.perpaduan = 0; p.premier.bonus.perpaduan = -80; S.applyEffects({}, { kiraTindakan: false, patch: { premier: p.premier } });
   P.tetap({ bulan: 8 }); const ev2 = SP.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev2.some((e) => /GPS pecah/.test(e.mesej))); sama(K.getKabinet(S.loadPlayer()).hasGovernmentRole, false);
+  S.clearPlayer();
+});
+ujian('v13.83 Sarawak: senarai 10 Menteri sebenar, set tindakan Pejabat, ID lama dipetakan', () => {
+  const K = g.MyPolitikKabinet, L = K.PORTFOLIO.SARAWAK;
+  sama(L.length, 10); betul(L.every((d) => /Menteri .*Sarawak$/.test(d.nama) && K.TINDAKAN_EXCO[d.tindakan]), 'nama dan set tindakan');
+  sama(L.filter((d) => /^Timbalan Premier/.test(d.nama)).length, 3, '3 Timbalan Premier');
+  betul(!L.some((d) => /Kewangan|Sumber Asli|Tenaga/.test(d.nama)), 'portfolio Premier tidak dilobi');
+  sama(K.cariPortfolio('sw_kewangan').id, 'sw_infra'); sama(K.cariPortfolio('sw_pembangunan_sosial').id, 'sw_wanita'); sama(K.cariPortfolio('sw_sumber_asli').id, 'sw_perdagangan');
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000, parti: 'PBB' }); let p = S.loadPlayer();
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'EXCO_NEGERI', portfolioName: L[4].nama, portfolioId: 'sw_wilayah' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); const pj = K.pejabatEXCO(p); betul(pj && pj.tindakan.length > 0, 'Pejabat Menteri Sarawak'); sama(K.kepimpinanNegeri(p).stateExcoPortfolio, L[4].nama);
   S.clearPlayer();
 });
 ujian('v13.81 Sabah: Kabinet Negeri (Menteri), Pejabat Ketua Menteri, tuntutan MA63, kestabilan dan hilang jawatan', () => {

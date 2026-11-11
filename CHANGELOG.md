@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.83 (2026-11-11)
+
+- **Kabinet Negeri Sarawak dikemas kini ikut susunan sebenar** (Premier + 10 Menteri; ⚠️ IP, kos dan peluang ialah nilai permainan). Senarai lama 8 portfolio diganti dengan 10 jawatan Menteri yang boleh dilobi oleh pemain parti GPS:
+  - 3 Timbalan Premier: Infrastruktur dan Pembangunan Pelabuhan; Perdagangan Antarabangsa, Industri dan Pelaburan; Kesihatan Awam, Perumahan dan Kerajaan Tempatan.
+  - Menteri di Jabatan Premier; Industri Makanan, Komoditi dan Pembangunan Wilayah; Pengangkutan; Utiliti dan Telekomunikasi; Pelancongan, Industri Kreatif dan Seni Persembahan; Wanita, Kanak-kanak dan Pembangunan Kesejahteraan Komuniti; Pendidikan, Inovasi dan Pembangunan Bakat.
+  - Kewangan dan Ekonomi Baharu, Sumber Asli dan Pembangunan Bandar, serta Tenaga dan Kelestarian Alam Sekitar dipegang Premier dan tidak boleh dilobi.
+- Menteri Sarawak kini mendapat tab **Pejabat Menteri** (set tindakan Pejabat EXCO yang sepadan dan kategori Enakmen DUN), seperti Menteri Sabah.
+- Simpanan lama: ID portfolio Sarawak yang dibuang dipetakan ke portfolio terdekat (Kewangan → Infrastruktur, Sumber Asli → Perdagangan, Pembangunan Sosial → Wanita).
+- Terjemahan EN untuk gelaran baharu. Ujian baharu (215 ujian); ujian pelayar PBB merangkumi lobi dan Pejabat Menteri Sarawak dalam EN.
+
 ## v13.82 (2026-11-11)
 
 - **Sarawak: Pejabat Premier** (fasa 2 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, perkara MA63 dirujuk dengan nama umum tanpa angka sebenar).
