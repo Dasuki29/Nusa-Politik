@@ -716,7 +716,7 @@
   }
 
   return {
-    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, SB: SB, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
+    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, SB: SB, SW: SW, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
     kepimpinanNegeri: kepimpinanNegeri, pejabatEXCO: pejabatEXCO, tindakanEXCO: tindakanEXCO,
     setRng: function (f) { rngLalai = f || Math.random; },
     getKabinet: getKabinet, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,

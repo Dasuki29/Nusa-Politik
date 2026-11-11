@@ -81,6 +81,7 @@
       if (t.ap && (Number(p.ap) || 0) < t.ap) { return 'AP tidak mencukupi.'; }
       if (m.dana < t.kos) { return 'Dana tidak cukup.'; }
       if (t.siap && m.projek.some(function (x) { return x.id === t.id; })) { return 'Projek ini sedang berjalan.'; }
+      if (def.sebabTambahan) { return def.sebabTambahan(t, m, p) || ''; }               // v13.82: syarat khas takrif
       return '';
     }
     function laksana(id, o) {
@@ -105,6 +106,7 @@
       if (!T || !T.pilihan.some(function (x) { return x.id === id; })) { return { ok: false, ralat: 'Dasar tidak sah.' }; }
       if (m.dasar[kod] === id) { return { ok: false, ralat: 'Dasar itu sedang berkuat kuasa.' }; }
       if (m.dasarBulan === idx(p)) { return { ok: false, ralat: 'Satu perubahan dasar sebulan.' }; }
+      if (def.sahDasar) { var sd = def.sahDasar(kod, id, m, p); if (sd) { return { ok: false, ralat: sd }; } }   // v13.82
       var c = pilihanDasar(kod, id); m.dasar[kod] = id; m.dasarBulan = idx(p); guna(p, m, c.kejut, ctx, false);
       var r = simpan(p, m, ctx, { tindakan: def.kunci + '_dasar', nama: T.nama + ': ' + c.label, peringkat: 'ahli' });
       return r && r.ok ? { ok: true, mesej: T.nama + ' ditukar kepada ' + c.label + '.' } : { ok: false, ralat: r && r.ralat };
@@ -178,7 +180,7 @@
           return { id: t.id, ikon: t.ikon, nama: t.nama, kos: t.kos, siap: t.siap || 0, kesan: kes, ap: t.ap || 0, selang: t.selang || 0, peluang: t.peluang == null ? null : Math.round(t.peluang * 100), gagal: t.gagal || null, kumpulan: t.kumpulan || '', boleh: !sebab, sebab: sebab }; }),
         kumpulan: Object.keys(def.kumpulan || {}).map(function (g) { return { kod: g, nama: def.kumpulan[g], sudah: !!(m.kump && m.kump[g] === ini) }; }),
         projek: m.projek.map(function (x) { var t = cariTindakan(x.id); return { nama: t ? t.nama : x.id, siap: bt(x.siapIdx) }; }),
-        dasar: Object.keys(def.dasar).map(function (kod) { var T = def.dasar[kod]; return { kod: kod, nama: T.nama, ikon: T.ikon, nota: T.nota || '', semasa: m.dasar[kod], pilihan: T.pilihan.map(function (c) { return { id: c.id, label: c.label }; }) }; }),
+        dasar: Object.keys(def.dasar).map(function (kod) { var T = def.dasar[kod]; return { kod: kod, nama: T.nama, ikon: T.ikon, nota: T.nota || '', semasa: m.dasar[kod], pilihan: T.pilihan.map(function (c) { return { id: c.id, label: c.label, tutup: !!(def.sahDasar && def.sahDasar(kod, c.id, m, p)) }; }) }; }),
         isu: I ? { nama: I.nama, ikon: I.ikon, abai: I.abai, bulan: m.isu.bulan, sudah: m.isuBulan === ini, pilihan: I.pilihan.map(function (c) { return { id: c.id, ikon: c.ikon, label: c.label, kos: c.kos || 0, peluang: c.peluang == null ? null : Math.round(peluang(m, c) * 100), kesan: c.kesan, gagal: c.gagal || null, boleh: m.dana >= (c.kos || 0) && m.isuBulan !== ini }; }) } : null };
     }
 

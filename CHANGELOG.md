@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.82 (2026-11-11)
+
+- **Sarawak: Pejabat Premier** (fasa 2 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, perkara MA63 dirujuk dengan nama umum tanpa angka sebenar).
+  - Premier Sarawak (pemain parti Sarawak dengan jawatan Ketua Kerajaan Negeri) kini mendapat **tab "🦅 Pejabat Premier"** (`js/sarawak-premier.js`, rekod `p.premier`): perpaduan GPS (PBB, PRS, SUPP, PDP), hubungan dengan Persekutuan, dana negeri (RM 50 juta sebulan, had RM 300 juta) dan 5 perkara agenda MA63 (formula geran khas, autonomi kesihatan, autonomi pendidikan, kuasa alam sekitar, pemilikan entiti strategik).
+  - **Agenda MA63 Sarawak**: pilih fokus rundingan (satu perubahan sebulan); satu tindakan sebulan (rundingan jawatankuasa 1 AP, tekanan GPS bersatu jika perpaduan 50 ke atas, pinda ordinan negeri 60%) memajukan perkara yang difokus. Perkara selesai (100) memberi ganjaran kekal dan tidak boleh difokus lagi. Hubungan 70 ke atas = perkara difokus +2 sebulan.
+  - **Perpaduan GPS** (satu tindakan sebulan): mesyuarat Majlis Tertinggi GPS, agih peruntukan kepada parti komponen (sekali 3 bulan), kempen "Sarawak First". Isu rawak: agihan kerusi PRN, hak sumber, peruntukan Persekutuan lewat.
+  - Akibat: perpaduan bawah 30 = KPI −5; perpaduan 0 = GPS pecah dan Premier hilang jawatan; hubungan bawah 30 = dana −RM 20 juta sebulan.
+- Enjin kementerian generik: semakan tambahan tindakan (`sebabTambahan`) dan dasar (`sahDasar`); pilihan dasar yang ditutup dipaparkan tetapi tidak boleh dipilih.
+- Terjemahan EN untuk Pejabat Premier (termasuk bentuk istilah PBB "Majlis Tertinggi").
+- Ujian baharu (214 ujian); ujian pelayar kementerian merangkumi Pejabat Premier Sarawak.
+
 ## v13.81 (2026-11-11)
 
 - **Sabah: Kabinet Negeri dan Pejabat Ketua Menteri** (fasa 1 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan).

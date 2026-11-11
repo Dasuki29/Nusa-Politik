@@ -34,14 +34,14 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   const BOCOR = async (sel) => pg.evaluate(([src, s]) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll(s).forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, [BM.source, sel]);
-  const SENARAI = { kpm: 'Menteri Pendidikan', kkm: 'Menteri Kesihatan', ke: 'Menteri Ekonomi', kpkt: 'Menteri Perumahan dan Kerajaan Tempatan', sabahkm: { nama: 'Ketua Menteri Sabah', role: 'MENTERI_BESAR', negeri: 'Sabah' } };
+  const SENARAI = { kpm: 'Menteri Pendidikan', kkm: 'Menteri Kesihatan', ke: 'Menteri Ekonomi', kpkt: 'Menteri Perumahan dan Kerajaan Tempatan', sabahkm: { nama: 'Ketua Menteri Sabah', role: 'MENTERI_BESAR', negeri: 'Sabah' }, premier: { nama: 'Premier Sarawak', role: 'MENTERI_BESAR', negeri: 'Sarawak', parti: 'PBB' } };
   const pilih = process.argv[2] ? [process.argv[2]] : Object.keys(SENARAI);
   for (const kunci of pilih) {
     const ada = await pg.evaluate((k) => MyPolitikKementerian.senarai().some((x) => x.def.kunci === k), kunci);
     if (!ada) { continue; }
     await pg.evaluate(([kunci, nama]) => { MyPolitikI18n.setLanguage('BM'); const p = MyPolitikSave.loadPlayer(), k = MyPolitikKabinet.getKabinet(p); const sp = typeof nama === 'object' ? nama : { nama: nama, role: 'MENTERI_PENUH' }; Object.assign(k, { hasGovernmentRole: true, roleLevel: sp.role, portfolioName: sp.nama, portfolioId: '', lobi: null, acara: null });
       const mod = MyPolitikKementerian.senarai().find((x) => x.def.kunci === kunci), st = mod.get({}); st.dana = 200; st.isu = { id: Object.keys(mod.def.isu)[0], bulan: 0 };
-      const patch = { kabinet: k, tahun: 2027, bulan: 4, ap: 10 }; if (sp.negeri) { patch.negeri = sp.negeri; } patch[kunci] = st; MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: patch }); NusaUI.render(); }, [kunci, SENARAI[kunci]]);
+      const patch = { kabinet: k, tahun: 2027, bulan: 4, ap: 10 }; if (sp.negeri) { patch.negeri = sp.negeri; } if (sp.parti) { patch.parti = sp.parti; } patch[kunci] = st; MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: patch }); NusaUI.render(); }, [kunci, SENARAI[kunci]]);
     await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(400);
     semak(await pg.$('[data-pru="exco-tab"][data-id="' + kunci + '"]') !== null, kunci + ': tab');
     await pg.click('[data-pru="exco-tab"][data-id="' + kunci + '"]'); await pg.waitForTimeout(400);

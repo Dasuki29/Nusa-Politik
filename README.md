@@ -97,6 +97,7 @@ Modul utama dalam `js/`:
 | `ke.js` | Takrif Kementerian Ekonomi: KDNK, pengangguran, pelabur, jurang pendapatan, fokus, inisiatif, kemelesetan (tab Pejabat Ekonomi) |
 | `kpkt.js` | Takrif Kementerian Perumahan dan Kerajaan Tempatan: PPR bandar, PBT, bomba, dasar sewa dan majlis PBT, isu (tab Pejabat KPKT) |
 | `sabah-km.js` | Pejabat Ketua Menteri Sabah: tuntutan MA63 (hak 40% hasil), kestabilan kerajaan negeri, hubungan Persekutuan (tab Pejabat Ketua Menteri) |
+| `sarawak-premier.js` | Pejabat Premier Sarawak: agenda MA63 (5 perkara, fokus rundingan), perpaduan GPS, hubungan Persekutuan (tab Pejabat Premier) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -210,7 +211,7 @@ node tools/ujian-mindef.js       # pelayar: tab Pejabat MINDEF, insiden, kontrak
 node tools/ujian-kkdw.js         # pelayar: tab Pejabat KKDW, fokus agihan, kelulusan projek, aduan rakyat, EN
 node tools/ujian-pm.js           # pelayar: tab Pejabat PM, tuntutan blok, agih portfolio, darurat, EN
 node tools/ujian-kln.js          # pelayar: tab Wisma Putra, lawatan, isu, konsular, FTA, EN
-node tools/ujian-kementerian.js  # pelayar: tab kementerian generik (Pendidikan, Kesihatan, Ekonomi), EN
+node tools/ujian-kementerian.js  # pelayar: tab kementerian generik (Pendidikan, Kesihatan, Ekonomi, KPKT, KM Sabah, Premier Sarawak), EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN

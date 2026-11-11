@@ -52,7 +52,7 @@
     h += r.dasar.map(function (t) {
       return '<div class="mof-tuil"><b>' + t.ikon + ' ' + esc(t.nama) + '</b>' + (t.nota ? '<p class="note">' + esc(t.nota) + '</p>' : '') + '<div class="mof-seg">' + t.pilihan.map(function (c) {
         var on = c.id === t.semasa;
-        return '<button type="button" class="btn btn--sm' + (on ? ' on' : '') + '" data-kem="dasar" data-mod="' + kunci + '" data-d="' + t.kod + '" data-id="' + c.id + '"' + (on || !r.dasarBoleh ? ' disabled' : '') + (on ? ' aria-pressed="true"' : '') + '>' + esc(c.label) + '</button>';
+        return '<button type="button" class="btn btn--sm' + (on ? ' on' : '') + '" data-kem="dasar" data-mod="' + kunci + '" data-d="' + t.kod + '" data-id="' + c.id + '"' + (on || !r.dasarBoleh || c.tutup ? ' disabled' : '') + (on ? ' aria-pressed="true"' : '') + '>' + esc(c.label) + '</button>';
       }).join('') + '</div></div>';
     }).join('');
     }

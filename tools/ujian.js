@@ -3038,6 +3038,24 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.82 Pejabat Premier Sarawak: fokus perkara MA63, tindakan, perkara selesai, perpaduan GPS, hilang jawatan', () => {
+  const K = g.MyPolitikKabinet, SP = g.MyPolitikSarawakPremier;
+  P.daftar({}); P.tetap({ parti: 'PBB', negeri: 'Sarawak', tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!SP.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR', portfolioName: 'Premier Sarawak', portfolioId: '' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(SP.aktif(p)); betul(!g.MyPolitikSabahKM.aktif(p), 'bukan KM Sabah'); sama(K.labelKetua ? 'x' : 'x', 'x');
+  sama(SP.ringkasan(p).meter.length, 7); sama(SP.ringkasan(p).kumpulan.length, 2);
+  const g0 = SP.get(p).geran; betul(SP.laksana('runding').ok); p = S.loadPlayer(); sama(p.premier.geran, g0 + 10, 'fokus lalai: geran');
+  betul(SP.ubahDasar('fokus', 'pendidikan').ok); P.tetap({ bulan: 4 }); betul(SP.laksana('tekanan').ok); p = S.loadPlayer(); sama(p.premier.pendidikan, 23);
+  betul(SP.laksana('agih').ok, 'kumpulan GPS'); P.tetap({ bulan: 5 }); sama(SP.laksana('agih').ok, false, 'sekali 3 bulan');
+  p = S.loadPlayer(); p.premier.pendidikan = 99; S.applyEffects({}, { kiraTindakan: false, patch: { premier: p.premier } }); betul(SP.laksana('runding').ok);
+  const ip0 = S.loadPlayer().ip; const ev = SP.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /Perkara MA63 selesai: Autonomi pendidikan/.test(e.mesej))); betul(S.loadPlayer().ip > ip0);
+  P.tetap({ bulan: 6 }); sama(SP.laksana('runding').ok, false, 'perkara selesai: tukar fokus'); sama(SP.ubahDasar('fokus', 'pendidikan').ok, false);
+  betul(SP.ubahDasar('fokus', 'entiti').ok);
+  p = S.loadPlayer(); p.premier.perpaduan = 40; p.premier.bonus.perpaduan = 0; S.applyEffects({}, { kiraTindakan: false, patch: { premier: p.premier } }); P.tetap({ bulan: 7 }); sama(SP.laksana('tekanan').ok, false, 'tekanan perlukan perpaduan 50');
+  p = S.loadPlayer(); p.premier.perpaduan = 0; p.premier.bonus.perpaduan = -80; S.applyEffects({}, { kiraTindakan: false, patch: { premier: p.premier } });
+  P.tetap({ bulan: 8 }); const ev2 = SP.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev2.some((e) => /GPS pecah/.test(e.mesej))); sama(K.getKabinet(S.loadPlayer()).hasGovernmentRole, false);
+  S.clearPlayer();
+});
 ujian('v13.81 Sabah: Kabinet Negeri (Menteri), Pejabat Ketua Menteri, tuntutan MA63, kestabilan dan hilang jawatan', () => {
   const K = g.MyPolitikKabinet, SK = g.MyPolitikSabahKM;
   sama(K.PORTFOLIO.SABAH.length, 10); betul(K.PORTFOLIO.SABAH.every((d) => /Menteri .* Sabah$/.test(d.nama)), 'gelaran Menteri');
