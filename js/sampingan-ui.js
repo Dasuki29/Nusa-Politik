@@ -43,17 +43,22 @@
     r.anugerah.forEach(function (a) {
       h += '<li' + (a.diperoleh ? '' : ' style="opacity:.55"') + '>' + esc(a.ikon) + ' <b>' + esc(a.nama) + '</b> · ' + (a.diperoleh ? 'diperoleh' : 'perlu: ' + esc(a.syarat)) + '</li>';
     });
-    h += '</ul><h3 style="margin:10px 0 4px;font-size:.9rem">🎖️ Gelaran Kurniaan</h3><ul style="list-style:none;padding:0;margin:6px 0">';
+    h += '</ul><h3 style="margin:10px 0 4px;font-size:.9rem">🎖️ Gelaran Kurniaan</h3>';
+    var TD = r.tahapDatuk, TP = r.tahapDatukPerlu, cukup = TD >= TP;                                       // v13.88: kiraan gelaran tahap Datuk
+    h += '<p class="note" style="margin:2px 0"><b>Gelaran tahap Datuk: ' + Math.min(TD, 5) + ' / ' + TP + '</b> · ' + (cukup ? '✓ syarat Tan Sri dan gelaran negeri tahap 2 dipenuhi' : 'perlu ' + TP + ' untuk Tan Sri dan gelaran negeri tahap 2') + '</p>' +
+      '<div style="height:8px;background:var(--bg-elev-1);border-radius:9px;overflow:hidden;margin:2px 0 6px"><i style="display:block;height:100%;width:' + Math.round(Math.min(1, TD / TP) * 100) + '%;background:var(--ok, #1f7a4d)"></i></div>' +
+      '<p class="note" style="font-size:.76rem;margin:0 0 4px">Datuk (persekutuan), gelaran tahap 1 negeri sendiri dan gelaran negeri lain (maks. 5).</p><ul style="list-style:none;padding:0;margin:6px 0">';
+    function kurangD() { return cukup ? '' : ' · gelaran tahap Datuk ' + TD + ' / ' + TP; }
     h += '<li' + (r.dato ? '' : ' style="opacity:.55"') + '>' + (r.dato ? '✅' : '🔒') + ' <b>Datuk</b> · Ketua Sayap Pusat / Menteri, selepas 3 tahun berkhidmat' + (r.dato ? ' · <i>dikurniakan</i>' : (r.bulanDato ? ' · ' + Math.min(r.bulanDato, r.bulanLayak) + '/' + r.bulanLayak + ' bulan' : '')) + '</li>';
-    h += '<li' + (r.tansri ? '' : ' style="opacity:.55"') + '>' + (r.tansri ? '✅' : '🔒') + ' <b>Tan Sri</b> · Naib Presiden / Presiden / Timbalan PM / PM, Integriti ≥ 70' + (r.tansri ? ' · <i>dikurniakan</i>' : (r.bulanTan ? ' · ' + Math.min(r.bulanTan, r.bulanLayak) + '/' + r.bulanLayak + ' bulan' : '')) + '</li>';
+    h += '<li' + (r.tansri ? '' : ' style="opacity:.55"') + '>' + (r.tansri ? '✅' : '🔒') + ' <b>Tan Sri</b> · Naib Presiden / Presiden / Timbalan PM / PM, Integriti ≥ 70, ' + TP + ' gelaran tahap Datuk' + (r.tansri ? ' · <i>dikurniakan</i>' : (r.bulanTan ? ' · ' + Math.min(r.bulanTan, r.bulanLayak) + '/' + r.bulanLayak + ' bulan' : '') + kurangD()) + '</li>';
     var T = GL.CONFIG.TUN, N = GL.CONFIG.NEGERI;                                                         // v13.13: Tun dan gelaran negeri
     h += '<li' + (r.tun ? '' : ' style="opacity:.55"') + '>' + (r.tun ? '✅' : '🔒') + ' <b>Tun</b> · bekas / penyandang Perdana Menteri ' + T.bulanPM + ' bulan, Integriti ≥ ' + T.integriti + ', tiada hukuman disiplin' + (r.tun ? ' · <i>dikurniakan</i>' : (r.bulanPM ? ' · PM ' + Math.min(r.bulanPM, T.bulanPM) + '/' + T.bulanPM + ' bulan' : '')) + '</li></ul>';
-    var syarat = r.sarawak ? { t1: 'ADUN / Menteri Negeri ' + N.bulan + ' bulan, Integriti ≥ ' + N.int1, amar: 'Menteri Kanan / Premier ' + N.amar + ' bulan', patinggi: 'Premier ' + N.patinggi + ' bulan', pehin: 'Premier ' + N.pehin + ' bulan (jumlah)' }
-      : { t1: 'ADUN / EXCO ' + N.bulan + ' bulan, Integriti ≥ ' + N.int1, t2: 'MB / Ketua Menteri ' + N.bulan + ' bulan, Integriti ≥ ' + N.int2 };
+    var syarat = r.sarawak ? { t1: 'ADUN / Menteri Negeri ' + N.bulan + ' bulan, Integriti ≥ ' + N.int1, amar: 'Menteri Kanan / Premier ' + N.amar + ' bulan, ' + TP + ' gelaran tahap Datuk', patinggi: 'Premier ' + N.patinggi + ' bulan', pehin: 'Premier ' + N.pehin + ' bulan (jumlah)' }
+      : { t1: 'ADUN / EXCO ' + N.bulan + ' bulan, Integriti ≥ ' + N.int1, t2: 'MB / Ketua Menteri ' + N.bulan + ' bulan, Integriti ≥ ' + N.int2 + ', ' + TP + ' gelaran tahap Datuk' };
     var kira = { t1: r.bulanN1, t2: r.bulanN2, amar: r.bulanAmar, patinggi: r.bulanPremier, pehin: r.bulanPremier }, had = { t1: N.bulan, t2: N.bulan, amar: N.amar, patinggi: N.patinggi, pehin: N.pehin };
     h += '<h3 style="margin:10px 0 4px;font-size:.9rem">🏵️ Gelaran Negeri ' + esc(r.negeriNama) + '</h3><ul style="list-style:none;padding:0;margin:6px 0">';
     r.negeri.forEach(function (x) {
-      h += '<li' + (x.diperoleh ? '' : ' style="opacity:.55"') + '>' + (x.diperoleh ? '✅' : '🔒') + ' <b>' + esc(x.nama) + '</b> · ' + esc(syarat[x.kod]) + (x.diperoleh ? ' · <i>dikurniakan</i>' : (kira[x.kod] ? ' · ' + Math.min(kira[x.kod], had[x.kod]) + '/' + had[x.kod] + ' bulan' : '')) + '</li>';
+      h += '<li' + (x.diperoleh ? '' : ' style="opacity:.55"') + '>' + (x.diperoleh ? '✅' : '🔒') + ' <b>' + esc(x.nama) + '</b> · ' + esc(syarat[x.kod]) + (x.diperoleh ? ' · <i>dikurniakan</i>' : (kira[x.kod] ? ' · ' + Math.min(kira[x.kod], had[x.kod]) + '/' + had[x.kod] + ' bulan' : '') + (x.kod === 't2' || x.kod === 'amar' ? kurangD() : '')) + '</li>';
     });
     h += '</ul>';
     var LU = GL.CONFIG.LUAR;                                                                              // v13.30: gelaran negeri lain

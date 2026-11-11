@@ -47,7 +47,8 @@
     PANGKAT_DATO: 9, PANGKAT_TAN: 10, INTEGRITI_TAN: 70,
     KERAJAAN_DATO: ['MENTERI_PENUH', 'MENTERI_BESAR', 'TIMBALAN_PM', 'PERDANA_MENTERI'],
     KERAJAAN_TAN: ['TIMBALAN_PM', 'PERDANA_MENTERI'],
-    TUN: { bulanPM: 36, integriti: 75, reputasi: 3 },                                      // v13.13
+    TUN: { bulanPM: 36, integriti: 75, reputasi: 3 },
+    TAHAP_DATUK: 3,                                                                         // v13.88: syarat Dato' Seri / Datuk Amar / Tan Sri (maklum balas pemain)                                      // v13.13
     NEGERI: { bulan: 36, int1: 60, int2: 70, reputasi: 2, amar: 36, patinggi: 24, pehin: 60 },
     LUAR: { fed: 24, parti: 36, integriti: 65, had: 3, reputasi: 1, pangkat: 10, jelajah: 6, berat: 3, KERAJAAN: ['MENTERI_PENUH', 'TIMBALAN_PM', 'PERDANA_MENTERI'] },   // v13.30
     ANUGERAH: [
@@ -75,6 +76,9 @@
   function statusEtika(p) { var E = ET(); return E ? E.getEtika(p).status : 'baik'; }
   function skorIntegriti(p) { var I = IG(); return I ? I.getIntegriti(p).skor : 70; }
   function tahunBerkhidmat(p) { return Math.max(0, (parseInt(p.tahun, 10) || CONFIG.TAHUN_MULA) - CONFIG.TAHUN_MULA); }
+  /** v13.88: bilangan gelaran tahap Datuk (Datuk persekutuan + Dato' negeri sendiri + Dato' negeri lain, maks. 5). */
+  function kiraDatuk(d) { return (d.dato ? 1 : 0) + (d.negeri && d.negeri.t1 ? 1 : 0) + (Array.isArray(d.luar) ? d.luar.length : 0); }
+  function cukupDatuk(d) { return kiraDatuk(d) >= CONFIG.TAHAP_DATUK; }
   function bersihRekod(p) { var E = ET(); return !E || (E.getEtika(p).salah || 0) === 0; }
 
   function layakDato(p) { return pangkatSemasa(p) >= CONFIG.PANGKAT_DATO || CONFIG.KERAJAAN_DATO.indexOf(tahapKerajaan(p)) >= 0; }
@@ -124,7 +128,7 @@
       ditarik: d.ditarik, ditahan: !d.ditarik && !!(d.dato || d.tansri || d.tun || negeriTertinggi(p, d)) && (statusEtika(p) === 'digantung' || statusEtika(p) === 'dipecat'), bulanDato: d.bulanDato, bulanTan: d.bulanTan, bulanLayak: CONFIG.BULAN_LAYAK,
       anugerah: CONFIG.ANUGERAH.map(function (a) { return { kod: a.kod, ikon: a.ikon, nama: a.nama, syarat: a.syarat, diperoleh: d.anugerah[a.kod] || null }; }),
       sejarah: d.sejarah || [], tahun: tahun, skor: skor, pangkat: pangkat,
-      luar: (d.luar || []).slice(), bulanLuarF: d.bulanLuarF || 0, bulanLuarP: d.bulanLuarP || 0 };
+      luar: (d.luar || []).slice(), bulanLuarF: d.bulanLuarF || 0, bulanLuarP: d.bulanLuarP || 0, tahapDatuk: kiraDatuk(d), tahapDatukPerlu: CONFIG.TAHAP_DATUK };
   }
 
   function prosesBulan(o) {
@@ -144,7 +148,7 @@
         d.dato = { tahun: p.tahun, bulan: p.bulan }; kes.reputasi = (kes.reputasi || 0) + CONFIG.REPUTASI; rekod(d, p, 'Dikurniakan Datuk');
         ev.push({ jenis: 'gelaran_kurniaan', mesej: 'Anda dikurniakan gelaran Datuk (fiksyen permainan) atas khidmat cemerlang. Reputasi +' + CONFIG.REPUTASI + '.' });
       }
-      if (d.dato && !d.tansri && d.bulanTan >= CONFIG.BULAN_LAYAK) {
+      if (d.dato && !d.tansri && d.bulanTan >= CONFIG.BULAN_LAYAK && cukupDatuk(d)) {   // v13.88: >= 3 gelaran tahap Datuk
         d.tansri = { tahun: p.tahun, bulan: p.bulan }; kes.reputasi = (kes.reputasi || 0) + CONFIG.REPUTASI; rekod(d, p, 'Dikurniakan Tan Sri');
         ev.push({ jenis: 'gelaran_kurniaan', mesej: 'Anda dikurniakan gelaran Tan Sri (fiksyen permainan). Reputasi +' + CONFIG.REPUTASI + '.' });
       }
@@ -167,10 +171,10 @@
       }
       if (!d.negeri.t1 && d.bulanN1 >= N.bulan && skor >= N.int1) { kurnia('t1'); }
       if (SWp(p)) {
-        if (d.negeri.t1 && !d.negeri.amar && d.bulanAmar >= N.amar) { kurnia('amar'); }
+        if (d.negeri.t1 && !d.negeri.amar && d.bulanAmar >= N.amar && cukupDatuk(d)) { kurnia('amar'); }
         if (d.negeri.amar && !d.negeri.patinggi && d.bulanPremier >= N.patinggi) { kurnia('patinggi'); }
         if (d.negeri.patinggi && !d.negeri.pehin && d.bulanPremier >= N.pehin) { kurnia('pehin'); }
-      } else if (d.negeri.t1 && !d.negeri.t2 && d.bulanN2 >= N.bulan && skor >= N.int2) { kurnia('t2'); }
+      } else if (d.negeri.t1 && !d.negeri.t2 && d.bulanN2 >= N.bulan && skor >= N.int2 && cukupDatuk(d)) { kurnia('t2'); }
       // v13.30: gelaran negeri lain (kehormat)
       var LU = CONFIG.LUAR; d.luar = Array.isArray(d.luar) ? d.luar : [];
       if (d.luar.length < LU.had) {

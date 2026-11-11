@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.88 (2026-11-11)
+
+- **Gelaran Dato' Seri / Tan Sri lebih sukar** (maklum balas pemain baris 38; mockup dipersetujui; ⚠️ syarat ialah rekaan permainan).
+  - Kiraan baharu "gelaran tahap Datuk": Datuk persekutuan, gelaran tahap 1 negeri sendiri dan gelaran negeri lain (maks. 5).
+  - Tan Sri, gelaran negeri tahap 2 (Dato' Seri / Datuk Seri / Dato' Sri / Datuk Seri Panglima) dan Datuk Amar (Sarawak) kini juga memerlukan sekurang-kurangnya 3 gelaran tahap Datuk. Bulan khidmat terus dikira; gelaran dikurniakan sebaik kiraan mencapai 3. Tun, Datuk Patinggi dan Pehin Sri tidak berubah.
+  - Gelaran yang sudah dimiliki tidak ditarik balik (simpanan lama).
+  - Kad Anugerah & Gelaran: bar "Gelaran tahap Datuk: x / 3" dan syarat yang masih kurang pada setiap gelaran.
+- Ujian baharu (220 ujian).
+
 ## v13.87 (2026-11-11)
 
 - **Calon Bebas dalam PRU / PRN** (maklum balas pemain baris 41; mockup dipersetujui; ⚠️ angka ialah andaian permainan kecuali deposit dan had hangus 1/8 yang mengikut peraturan pilihan raya Malaysia).

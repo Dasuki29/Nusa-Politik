@@ -2165,6 +2165,22 @@ ujian('status kerajaan: baiki ADUN "bukan kerajaan" yang bercanggah dengan kad k
   sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN'), false); sama(PRU.kerajaanSemasa(S.loadPlayer(), 'ADUN', { rampas: true }), false, '16 < 22');
 });
 /* ---------- v13.30: gelaran negeri lain dan pencapaian kerjaya tambahan ---------- */
+ujian('v13.88 Gelaran: Tan Sri, gelaran negeri tahap 2 dan Datuk Amar perlu 3 gelaran tahap Datuk (maklum balas pemain); gelaran sedia ada kekal', () => {
+  const GL = g.MyPolitikGelaran || require('../js/gelaran.js'), KB = g.MyPolitikKabinet, x = { tahun: 2030, bulan: 1 }, L1 = { negeri: 'Perak', nama: "Dato'", sebab: 'fed', tahun: 2031, bulan: 1 };
+  function jadi(role) { const k = KB.getKabinet(S.loadPlayer()); Object.assign(k, { hasGovernmentRole: true, roleLevel: role, portfolioName: role === 'MENTERI_BESAR' ? 'Menteri Besar' : 'Timbalan Perdana Menteri' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } }); }
+  P.daftar({}); P.tetap({ tahun: 2040, bulan: 1, gelaran: { dato: x, negeri: { t1: x }, bulanTan: 40, bulanN2: 40, luar: [], bulanLuarF: 0 } }); jadi('TIMBALAN_PM');
+  sama(GL.ringkasan(S.loadPlayer()).tahapDatuk, 2); GL.prosesBulan({ rng: () => 0.99 });
+  let d = GL.getGelaran(S.loadPlayer()); betul(!d.tansri, 'Tan Sri belum: 2 gelaran'); betul(d.bulanTan > 40, 'bulan khidmat terus dikira');
+  P.tetap({ gelaran: Object.assign(d, { luar: [L1] }) }); GL.prosesBulan({ rng: () => 0.99 }); d = GL.getGelaran(S.loadPlayer());
+  betul(d.tansri, 'Tan Sri: 3 gelaran'); sama(GL.ringkasan(S.loadPlayer()).tahapDatuk, 3);
+  // gelaran negeri tahap 2 (MB)
+  P.daftar({}); P.tetap({ tahun: 2040, bulan: 1, gelaran: { dato: x, negeri: { t1: x }, bulanN2: 40, luar: [] } }); jadi('MENTERI_BESAR');
+  GL.prosesBulan({ rng: () => 0.99 }); betul(!GL.getGelaran(S.loadPlayer()).negeri.t2, 't2 belum: 2 gelaran');
+  d = GL.getGelaran(S.loadPlayer()); P.tetap({ gelaran: Object.assign(d, { luar: [L1] }) }); GL.prosesBulan({ rng: () => 0.99 }); betul(GL.getGelaran(S.loadPlayer()).negeri.t2, 't2: 3 gelaran');
+  // simpanan lama: Tan Sri dengan 1 gelaran tahap Datuk kekal
+  P.tetap({ gelaran: { dato: x, tansri: x, negeri: {}, luar: [] } }); GL.prosesBulan({ rng: () => 0.99 }); betul(GL.getGelaran(S.loadPlayer()).tansri, 'tidak ditarik balik');
+  S.clearPlayer();
+});
 ujian('v13.30: gelaran negeri lain: Menteri 24 bulan, maksimum 3, bukan negeri sendiri, jelajah diutamakan', () => {
   const GL = g.MyPolitikGelaran || require('../js/gelaran.js');
   P.daftar({}); P.tetap({ negeri: 'Johor', tahun: 2035, bulan: 1, integriti: { skor: 80 }, gelaran: { bulanLuarF: 23 },
