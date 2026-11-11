@@ -2712,6 +2712,12 @@ ujian('v13.85 Lompat parti (maklum balas pemain): kerusi PRU kekal ikut perspekt
   betul(['PAS', 'Bersatu', 'Gerakan'].indexOf(PRK.getPRK(S.loadPlayer()).aktif.lawan) < 0, PRK.getPRK(S.loadPlayer()).aktif.lawan);
   S.clearPlayer();
 });
+ujian('v13.86 Lompat parti: ahli yang dipecat boleh menyertai parti lain walaupun pernah lompat dalam 5 tahun (maklum balas pemain)', () => {
+  const LP = g.MyPolitikLompat; P.daftar({}); P.tetap({ parti: 'PAS', reputasi: 60, tahun: 2066, bulan: 4, lompat: { kali: 1, sejarah: [{ dari: 'UMNO', ke: 'PAS', tahun: 2065, bulan: 4 }], katakSehingga: 0, prk: [] } });
+  betul(/sekali setiap 5 tahun/.test(LP.kunci(S.loadPlayer())), 'belum dipecat: tempoh menunggu');
+  P.tetap({ etika: Object.assign({}, S.loadPlayer().etika, { status: 'dipecat' }) }); sama(LP.kunci(S.loadPlayer()), '', 'dipecat: boleh');
+  betul(LP.pilihan(S.loadPlayer()).some((x) => x.boleh)); S.clearPlayer();
+});
 ujian('v13.52 Yang di-Pertua Negeri: syarat, tawaran, terima, tugas Istana, pembubaran DUN, penggal kedua dan legasi (Threads no. 5)', () => {
   const T = g.MyPolitikTYT, C = T.CONFIG; P.daftar({ umur: 50 }); P.tetap({ tahun: 2031, bulan: 1, reputasi: 70, ap: 10, myr: 1000, negeri: 'Sarawak',
     jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', pangkat: 12 }], tyt: { bekas: { sarawak: { dari: 2027, hingga: 2030 } } } });

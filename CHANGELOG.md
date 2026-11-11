@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v13.86 (2026-11-11)
+
+- **Lompat parti selepas dipecat** (maklum balas pemain, baris 42): ahli yang dipecat kini boleh menyertai parti lain walaupun pernah lompat parti dalam 5 tahun terakhir. Had 2 kali lompat dan syarat Reputasi kekal. Seperti sebelum ini, ahli yang dipecat kekal kerusi dan tiada penalti Reputasi atau label "Katak Politik".
+- Ujian baharu (218 ujian).
+
 ## v13.85 (2026-11-11)
 
 Pembaikan pepijat daripada maklum balas pemain (borang maklum balas, 11 November 2026):

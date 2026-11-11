@@ -68,7 +68,8 @@
     var R = PRU(), pr = R && R.getPRU ? R.getPRU(p) : null; if (pr && pr.aktif) { return 'Tidak boleh lompat parti semasa PRU.'; }
     var K = PRK(), pk = K && K.getPRK ? K.getPRK(p) : null; if (pk && pk.aktif) { return 'Tidak boleh lompat parti semasa PRK.'; }
     var l = getL(p), akhir = l.sejarah[l.sejarah.length - 1];
-    if (akhir && (parseInt(p.tahun, 10) - akhir.tahun) < CONFIG.JEDA_TAHUN) { return 'Lompat parti hanya sekali setiap ' + CONFIG.JEDA_TAHUN + ' tahun (terakhir ' + akhir.tahun + ').'; }
+    // v13.86: ahli yang dipecat bebas menyertai parti lain tanpa tempoh menunggu
+    if (akhir && !dipecat(p) && (parseInt(p.tahun, 10) - akhir.tahun) < CONFIG.JEDA_TAHUN) { return 'Lompat parti hanya sekali setiap ' + CONFIG.JEDA_TAHUN + ' tahun (terakhir ' + akhir.tahun + ').'; }
     return '';
   }
   function pilihan(p) {
