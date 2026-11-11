@@ -2683,6 +2683,35 @@ ujian('v13.51 Lompat Parti: pilihan ikut negeri, syarat, gabung profil, Perkara 
   P.daftar({}); P.tetap({ reputasi: 10 }); betul(LP.pilihan(S.loadPlayer()).every((x) => !x.boleh)); betul(!LP.mula('PKR').ok);
   S.clearPlayer();
 });
+ujian('v13.85 Lompat parti (maklum balas pemain): kerusi PRU kekal ikut perspektif parti baharu; lawan PRK bukan parti sendiri', () => {
+  const LP = g.MyPolitikLompat, D = g.MyPolitikData, A = g.NusaPaparan, dt = D.getFallbackData(), c = dt.negeri[0].bahagian[0].dun[0].cawangan[0];
+  function sediakan(parti, kn) {
+    P.daftar({ parti }); P.tetap({ ip: 1000, myr: 50000, reputasi: 60, tahun: 2065, bulan: 4 });
+    const pr = PRU.getPRU(S.loadPlayer()); pr.sejarah = [{ tahun: 2063, bulan: 5 }]; pr.aktif = null; pr.status = { jenis: 'ADUN', kerusi: S.loadPlayer().dun, kerajaan: true }; P.tetap({ pru: pr });
+    if (kn) { P.tetap({ kerusiNasional: kn }); } else { A.kemaskiniKerusi(S.loadPlayer()); }
+    return A.kerusiGabungan(S.loadPlayer());
+  }
+  function lompat(ke) {
+    P.tetap({ lompatTertunda: { ke, tahun: 2065, bulan: 4 } });
+    const baru = S.buildPlayerProfile({ nama: 'X', demografik: D.tentukanDemografi('L', 35, ke), cawangan: c, sayap: 'utama', parti: ke, tahunAhli: 3 });
+    betul(S.savePlayer(LP.gabung(S.loadPlayer(), baru)).ok); A.kemaskiniKerusi(S.loadPlayer()); const p = S.loadPlayer(); betul(!p.lompatKerusi); return A.kerusiGabungan(p);
+  }
+  // UMNO (BN, kerajaan) -> PAS: kerusi BN kekal di slot BN (PN dalaman), PAS = kerusi PN lama
+  const u = sediakan('UMNO'), a = lompat('PAS');
+  sama(a.BN, u.PN); sama(a.PN, u.BN); sama(a.PH, u.PH); sama(a.LAIN, u.LAIN); sama(a.kerajaanBN, false);
+  sama(a.dun.BN, u.dun.PN); sama(a.dun.PN, u.dun.BN); sama(a.dun.PH, u.dun.PH); sama(a.dun.jumlah, u.dun.jumlah);
+  // PRK selepas lompat: parti lama (UMNO) lawan utama; bukan PAS
+  P.tetap({ bulan: 5 }); LP.prosesBulan({ rng: () => 0.5 }); const ak = PRK.getPRK(S.loadPlayer()).aktif; betul(ak && ak.lompat); sama(ak.lawan, 'UMNO');
+  // kerajaan gabungan BN + PH -> PKR: kekal dalam blok kerajaan
+  const kn = { tahun: 2063, bulan: 5, parti: 60, rakan: 30, pembangkang: 129, bebas: 3, kerajaan: false, ubah: { PH: 0, PN: 0 } };
+  const u0 = sediakan('UMNO', kn); Object.assign(kn, { rakan: 30 + u0.PH, pembangkang: 129 - u0.PH, kerajaan: true, gabungan: ['PH'], ubah: { PH: -u0.PH, PN: 0 }, pecahTetap: false });
+  const u2 = sediakan('UMNO', kn); sama(u2.PH, 0); const b = lompat('PKR');
+  sama(b.BN, u2.BN, 'blok kerajaan sama'); betul(b.kerajaanBN); sama(b.PH, 0, 'slot BN (pemain PH) dalam kerajaan'); sama(b.PN, u2.PN); sama(b.BN + b.PH + b.PN + b.LAIN, 222);
+  // PRK biasa pemain PAS: tiada lawan PAS / PN
+  P.daftar({}); P.tetap({ parti: 'PAS', tahun: 2065, bulan: 4 }); const r = PRK.triggerByElection({ paksa: true, jenis: 'DUN', rng: () => 0.1 }); betul(r.ok, r.ralat);
+  betul(['PAS', 'Bersatu', 'Gerakan'].indexOf(PRK.getPRK(S.loadPlayer()).aktif.lawan) < 0, PRK.getPRK(S.loadPlayer()).aktif.lawan);
+  S.clearPlayer();
+});
 ujian('v13.52 Yang di-Pertua Negeri: syarat, tawaran, terima, tugas Istana, pembubaran DUN, penggal kedua dan legasi (Threads no. 5)', () => {
   const T = g.MyPolitikTYT, C = T.CONFIG; P.daftar({ umur: 50 }); P.tetap({ tahun: 2031, bulan: 1, reputasi: 70, ap: 10, myr: 1000, negeri: 'Sarawak',
     jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', pangkat: 12 }], tyt: { bekas: { sarawak: { dari: 2027, hingga: 2030 } } } });

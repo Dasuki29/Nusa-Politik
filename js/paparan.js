@@ -293,13 +293,38 @@
     var sj = p && p.pru && Array.isArray(p.pru.sejarah) ? p.pru.sejarah : [];
     return sj.length ? sj[sj.length - 1] : null;
   }
+  /* v13.85 (maklum balas pemain): selepas lompat parti, kerusi PRU terakhir kekal sama; hanya label blok bertukar ikut parti baharu.
+     Slot paparan: BN = gabungan parti pemain; PH / PN = dua gabungan lain (pemain PN: slot PN = BN; pemain PH: slot PH = BN).
+     ANDAIAN: hanya BN, PH dan PN; jika parti lama berada dalam kerajaan berbilang gabungan dan parti baharu di luarnya,
+     seluruh blok kerajaan dipaparkan di bawah label gabungan parti lama. */
+  function gabKod(kod) { return /^(PAS|BERSATU)$/.test(kod) ? 'PN' : /^(PKR|DAP|AMANAH)$/.test(kod) ? 'PH' : /^(UMNO|MCA|MIC|PPP)$/.test(kod) ? 'BN' : null; }
+  function slotGab(G) { return { BN: G, PH: G === 'PH' ? 'BN' : 'PH', PN: G === 'PN' ? 'BN' : 'PN' }; }
+  function tukarLompat(p, r) {
+    var L = p.lompatKerusi, go = L && gabKod(L.dari), gn = gabKod(p.parti);
+    if (!L || !L.k || !go || !gn || L.k.tahun !== r.tahun || L.k.bulan !== r.bulan) { return null; }
+    var v = kerusiGabungan(Object.assign({}, p, { parti: L.dari, id: L.id || p.id, kerusiNasional: L.k })); if (!v) { return null; }
+    if (go === gn) { return Object.assign(JSON.parse(JSON.stringify(L.k)), { lompatDari: L.dari }); }
+    var so = slotGab(go), sn = slotGab(gn);
+    function nyata(x) { var o = {}; ['BN', 'PH', 'PN'].forEach(function (s) { o[so[s]] = x[s]; }); return o; }
+    var R = nyata(v), gov = v.kerajaanBN && Array.isArray(L.k.gabungan) && L.k.gabungan.length ? [go].concat(L.k.gabungan) : [go];
+    var k = { tahun: r.tahun, bulan: r.bulan, bebas: v.LAIN, ubah: { PH: 0, PN: 0 }, lompatDari: L.dari };
+    if (v.kerajaanBN && gov.indexOf(gn) >= 0) {                                       // parti baharu dalam blok kerajaan yang sama
+      k.parti = L.k.parti + (R[gn] || 0); k.rakan = L.k.rakan; k.gabungan = gov.filter(function (x) { return x !== gn; });
+      k.pecah = { PH: sn.PH === go ? 0 : R[sn.PH] || 0, PN: sn.PN === go ? 0 : R[sn.PN] || 0 };
+    } else { k.parti = R[gn] || 0; k.rakan = 0; k.pecah = { PH: R[sn.PH] || 0, PN: R[sn.PN] || 0 }; }
+    k.pembangkang = k.pecah.PH + k.pecah.PN; k.kerajaan = k.parti + k.rakan >= CONFIG.MAJORITI;
+    if (v.dun && L.k.dun) { var D = nyata(v.dun); k.dun = { jumlah: v.dun.jumlah, kerajaan: D[gn] || 0, bebas: v.dun.LAIN, negeri: L.k.dun.negeri, pecah: { PH: D[sn.PH] || 0, PN: D[sn.PN] || 0 }, ubah: { PH: 0, PN: 0 } }; k.dun.pembangkang = k.dun.pecah.PH + k.dun.pecah.PN; }
+    return k;
+  }
   /** Jana & simpan anggaran bagi PRU terakhir jika belum ada (idempotent). Pulang p.kerusiNasional atau null. */
   function kemaskiniKerusi(p) {
     if (!p || !S()) { return null; }
     var r = kunciRekod(p); if (!r) { return null; }
     var k = p.kerusiNasional;
     if (k && k.tahun === r.tahun && k.bulan === r.bulan) { return k; }
-    var baru = anggarKerusi(p, r);
+    var baru = p.lompatKerusi ? tukarLompat(p, r) : null;                                // v13.85: lompat parti: kerusi sama, perspektif parti baharu
+    if (baru) { var hl = S().applyEffects({}, { kiraTindakan: false, patch: { kerusiNasional: baru, lompatKerusi: null } }); return hl && hl.ok ? baru : null; }
+    baru = anggarKerusi(p, r);
     var h = S().applyEffects({}, { kiraTindakan: false, patch: { kerusiNasional: baru } });
     return h && h.ok ? baru : null;
   }
@@ -331,6 +356,8 @@
   /** Pecah kerusi pembangkang kepada PH/PN (anggaran deterministik). Jika parti anda kalah, PH diberi bahagian lebih besar (gabungan pembangkang utama). */
   function pecahPembangkang(p, k, jumlah, kerajaan, kunci) {
     var u = kunci === 'dun' ? (k.dun && k.dun.ubah) : k.ubah, uPH = u ? Number(u.PH) || 0 : 0, uPN = u ? Number(u.PN) || 0 : 0;   // v13.26: pelarasan PRK (js/kerusi-semasa.js)
+    var pc = kunci === 'dun' ? (k.dun && k.dun.pecah) : k.pecah;                      // v13.85: pecahan tetap selepas lompat parti
+    if (pc) { var PHt = clamp((Number(pc.PH) || 0) + uPH, 0, jumlah); return { PH: PHt, PN: Math.max(0, jumlah - PHt) }; }
     var asal = jumlah - uPH - uPN;
     if (kunci === 'parlimen' && k.pecahTetap != null) { kerajaan = k.pecahTetap; }                    // v13.33: pecahan asal sebelum rundingan gabungan
     var rng = S().rngBerbenih(hash((p.id || '') + '|' + k.tahun + '|' + k.bulan + '|' + kunci)), r = adalahPH(p) && kunci === 'parlimen' ? 0.22 + rng() * 0.12 : kerajaan ? 0.4 + rng() * 0.3 : 0.6 + rng() * 0.25, ph = Math.round(asal * r);   // v13.34: PKR: slot 'PH' = BN (~25-40 kerusi)

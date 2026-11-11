@@ -122,6 +122,7 @@
       pr.hubunganGabungan = 50; pr.aktif = null;
       n.pru = pr;
     }
+    if (lama.kerusiNasional) { n.lompatKerusi = { dari: lama.parti || 'UMNO', id: lama.id || '', k: salin(lama.kerusiNasional) }; }   // v13.85: kerusi kekal, ditukar perspektif di dashboard (paparan.js)
     var l = getL(lama);
     l.kali += 1; l.sejarah = l.sejarah.concat([{ dari: lama.parti || 'UMNO', ke: n.parti, tahun: parseInt(lama.tahun, 10), bulan: parseInt(lama.bulan, 10) || 1 }]);
     if (!dp) { l.katakSehingga = mula + CONFIG.KATAK_BULAN; }

@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v13.85 (2026-11-11)
+
+Pembaikan pepijat daripada maklum balas pemain (borang maklum balas, 11 November 2026):
+- **Lompat parti: kerusi parti bertukar label** (baris 40). Selepas lompat (cth. UMNO → PAS), kerusi PRU terakhir dianggar semula dari perspektif parti baharu, jadi kerusi blok lama "berpindah" kepada parti baharu (UMNO 10 kerusi → PAS 10 kerusi). Kini kerusi Parlimen dan DUN kekal sama; hanya label blok bertukar (parti baharu memegang kerusi gabungannya sendiri, BN kekal dengan kerusi BN). Jika parti baharu berada dalam blok kerajaan yang sama, blok kerajaan kekal. ⚠️ Hanya BN, PH dan PN; parti Sabah / Sarawak guna anggaran lama.
+- **Lompat parti: lawan PRK parti sendiri** (baris 39). Lawan PRK kini tidak boleh dari parti atau gabungan pemain (dahulu pemain PAS di kawasan luar bandar berdepan "PAS"). Selepas lompat parti, parti lama menjadi lawan utama di kerusi yang dikosongkan.
+- Ujian baharu (217 ujian).
+
 ## v13.84 (2026-11-11)
 
 - **Semenanjung: Pejabat Menteri Besar / Ketua Menteri** (fasa 3 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu Istana ialah label simulasi umum).

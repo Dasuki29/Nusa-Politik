@@ -92,6 +92,22 @@
     if (sts.some(function (s) { return s.jenis === 'MP'; })) { senarai = senarai.filter(function (x) { return x !== 'PARLIMEN'; }); }
     return senarai;
   }
+  /* v13.85 (maklum balas pemain): lawan PRK tidak boleh dari parti / gabungan pemain sendiri (dahulu pemain PAS berdepan PAS).
+     Selepas lompat parti, parti lama mempertahankan kerusi yang dikosongkan dan menjadi lawan utama. */
+  var GAB_LAWAN = { PAS: 'PN', Bersatu: 'PN', Gerakan: 'PN', DAP: 'PH', PKR: 'PH', Amanah: 'PH', UMNO: 'BN', MCA: 'BN', MIC: 'BN' };
+  var LABEL_LAWAN = { BERSATU: 'Bersatu', AMANAH: 'Amanah', GERAKAN: 'Gerakan' };
+  function gabPemainPRK(kod) { return GAB_LAWAN[LABEL_LAWAN[kod] || kod] || null; }
+  function lawanPRK(p, profil, lompat) {
+    var kod = p && p.parti, g = gabPemainPRK(kod), L;
+    if (g === 'PH') { L = { RURAL: ['PAS', 'Bersatu'], URBAN: ['Gerakan', 'Bersatu'], MIXED: ['Bersatu', 'PAS'] }[profil] || ['Bersatu', 'PAS']; }   // v13.37: pemain PH tidak berdepan rakan sendiri
+    else if (g === 'PN') { L = { RURAL: ['UMNO', 'PKR'], URBAN: ['DAP', 'PKR'], MIXED: ['UMNO', 'PKR'] }[profil] || ['UMNO', 'PKR']; }
+    else { L = { RURAL: ['PAS', 'Bersatu'], URBAN: ['DAP', 'PKR'], MIXED: ['PKR', 'PAS'] }[profil] || ['PKR', 'PAS']; }
+    var sj = lompat && p.lompat && Array.isArray(p.lompat.sejarah) ? p.lompat.sejarah : [], dari = sj.length ? sj[sj.length - 1].dari : '';
+    var lbl = LABEL_LAWAN[dari] || dari, gd = GAB_LAWAN[lbl];
+    if (gd && gd !== g && (g === 'PN' || g === 'PH' || gd !== 'BN')) { L = [lbl].concat(L); }   // parti lama mempertahankan kerusi
+    var t = L.filter(function (x, i) { return L.indexOf(x) === i && x !== kod && !(g && GAB_LAWAN[x] === g); });
+    return t.length ? t : L;
+  }
   /**
    * Cetuskan kekosongan kerusi. o.paksa melangkau syarat tetingkap/peluang (untuk ujian & peristiwa khas);
    * o.jenis ('DUN'|'PARLIMEN') dan o.sebab ('kematian'|'peletakan') boleh ditetapkan.
@@ -112,8 +128,7 @@
     var sebab = o.sebab === 'kematian' || o.sebab === 'peletakan' ? o.sebab : (r() < CONFIG.PELUANG_KEMATIAN ? 'kematian' : 'peletakan');
     var pertahan = o.pertahan !== undefined ? !!o.pertahan : r() < CONFIG.PELUANG_PERTAHAN;
     var profil = PRU().profilKawasan(p);
-    var lawanSenarai = { RURAL: ['PAS', 'Bersatu'], URBAN: ['DAP', 'PKR'], MIXED: ['PKR', 'PAS'] }[profil] || ['PKR', 'PAS'];
-    if (p && (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH')) { lawanSenarai = { RURAL: ['PAS', 'Bersatu'], URBAN: ['Gerakan', 'Bersatu'], MIXED: ['Bersatu', 'PAS'] }[profil] || ['Bersatu', 'PAS']; }   // v13.37: pemain PH tidak berdepan rakan sendiri
+    var lawanSenarai = lawanPRK(p, profil, o.lompat);
     prk.aktif = {
       fasa: 'isytihar', jenis: jenis, sebab: sebab, pertahan: pertahan, constituencyType: profil, lawan: lawanSenarai[0],
       nama: jenis === 'DUN' ? (p.dun || 'DUN') : (p.bahagian || 'Parlimen'), kod: jenis === 'DUN' ? ((p.kod && p.kod.dun) || p.dun || '') : ((p.kod && p.kod.parlimen) || p.bahagian || ''),
