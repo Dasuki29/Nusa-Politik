@@ -3038,6 +3038,21 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.79 Kementerian Ekonomi: meter perpuluhan, fokus, inisiatif, kemelesetan (rangsangan tolak rizab MOF), akibat, sambungan MOF', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikKE, MF = g.MyPolitikMOF;
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Ekonomi' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(M.aktif(p)); const r0 = M.ringkasan(p); sama(r0.meter[0].nilai, 4.2); sama(r0.meter[0].unit, '%');
+  betul(M.laksana('upah').ok); p = S.loadPlayer(); sama(p.ke.pengangguran, 3.3, 'subsidi upah −0.3');
+  betul(M.ubahDasar('fokus', 'agihan').ok);
+  p = S.loadPlayer(); p.ke.isu = { id: 'meleset', bulan: 0 }; p.mof = MF.getMOF(p); S.applyEffects({}, { kiraTindakan: false, patch: { ke: p.ke, mof: p.mof } });
+  const kd = S.loadPlayer().ke.kdnk, rz = S.loadPlayer().mof.nationalTreasury; betul(M.jawabIsu('rangsangan').ok); p = S.loadPlayer();
+  sama(p.ke.kdnk, Math.round((kd + 0.8) * 10) / 10); sama(p.mof.nationalTreasury, rz - 2, 'rizab MOF −RM 2 bilion');
+  p.ke.kdnk = 6; S.applyEffects({}, { kiraTindakan: false, patch: { ke: p.ke } }); p = S.loadPlayer(); sama(M.hasilKDNK(p), 0.2); sama(MF.aliran(MF.getMOF(p), p).hasil, Math.round((MF.aliran(MF.getMOF(p)).hasil + 0.2) * 10) / 10, 'MOF: KDNK menambah hasil');
+  p.ke.pengangguran = 7; p.ke.bonus.pengangguran = 4; S.applyEffects({}, { kiraTindakan: false, patch: { ke: p.ke } }); const rt = K.getKabinet(S.loadPlayer()).governanceRating;
+  P.tetap({ bulan: 4 }); const ev = M.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /Pengangguran melebihi 5%/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt);
+  S.clearPlayer();
+});
 ujian('v13.78 Kementerian Kesihatan: tindakan, dasar caj dan cukai gula (dana bulanan), wabak ikut kapasiti, mogok', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikKKM;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));

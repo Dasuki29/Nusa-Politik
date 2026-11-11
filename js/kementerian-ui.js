@@ -28,7 +28,7 @@
     var mod = cari(kunci); if (!mod || !mod.aktif(p)) { return ''; }
     var r = mod.ringkasan(p), h = '<div class="mof-stat">';
     h += r.meter.map(function (x) {
-      return '<div class="kdn-m' + (x.bahaya ? ' bahaya' : '') + '"><span>' + esc(x.nama) + '</span><b>' + x.nilai + x.unit + '</b><s><i style="width:' + Math.max(0, Math.min(100, Math.round(x.isi))) + '%"></i></s><span>' + (x.nota ? esc(x.nota) + ' · ' : '') + (x.arah > 0 ? '▲ ' : x.arah < 0 ? '▼ ' : '▬ ') + tanda(x.arah) + x.unit + ' bulan lalu</span></div>';
+      return '<div class="kdn-m' + (x.bahaya ? ' bahaya' : '') + '"><span>' + esc(x.nama) + '</span><b>' + x.nilai + x.unit + '</b><s><i style="width:' + Math.max(0, Math.min(100, Math.round(x.isi))) + '%"></i></s>' + (x.nota ? '<span>' + esc(x.nota) + '</span>' : '') + '<span>' + (x.arah > 0 ? '▲ ' : x.arah < 0 ? '▼ ' : '▬ ') + tanda(x.arah) + x.unit + ' bulan lalu</span></div>';
     }).join('');
     h += '<div class="kdn-m"><span>Dana</span><b>' + jt(r.dana) + '</b><span>+' + jt(r.danaBulan) + ' sebulan · had ' + jt(r.danaHad) + '</span></div></div>';
     h += '<h3 class="mof-h">🏗️ Tindakan bulanan</h3><p class="note">' + (r.tindakanSudah ? 'Tindakan bulan ini sudah dibuat.' : 'Satu tindakan utama sebulan.') + '</p>';

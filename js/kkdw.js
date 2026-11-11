@@ -47,7 +47,7 @@
   ];
   var FOKUS = [
     { id: 'infra', label: 'Infrastruktur', luar: 2, rumah: -2 },
-    { id: 'seimbang', label: 'Seimbang', luar: 0, rumah: 0 },
+    { id: 'seimbang', label: 'Agihan seimbang', luar: 0, rumah: 0 },
     { id: 'pprs', label: 'Perumahan PPRS', luar: -2, rumah: 2 }
   ];
   var ADUAN = {

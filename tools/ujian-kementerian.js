@@ -55,7 +55,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
     await pg.evaluate((kunci) => { const p = MyPolitikSave.loadPlayer(), mod = MyPolitikKementerian.senarai().find((x) => x.def.kunci === kunci), ks = Object.keys(mod.def.isu); p[kunci].isu = { id: ks[ks.length - 1], bulan: 0 }; p[kunci].isuBulan = 0; p[kunci].tindakanBulan = 0; p[kunci].projek = [{ id: (mod.def.tindakan.find((t) => t.siap) || mod.def.tindakan[0]).id, siapIdx: 2027 * 12 + 9 }];
       const pt = {}; pt[kunci] = p[kunci]; MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: pt }); MyPolitikI18n.setLanguage('EN'); }, kunci);
     await pg.waitForTimeout(700); await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(400);
-    const b1 = await pg.evaluate(([src]) => { const re = new RegExp(src + "|\\b(sebulan|juta|bilion|kepuasan|siap|isu|dasar|tindakan|kualiti|berjaya|gagal|kos|dana)\\b", "i"), out = []; const s = document.querySelector(".kdn-m").closest('section'); const w = document.createTreeWalker(s, 4); let x; while ((x = w.nextNode())) { const t = x.textContent.trim(); if (t && re.test(t)) { out.push(t); } } return out; }, [BM.source]);
+    const b1 = await pg.evaluate(([src]) => { const re = new RegExp(src + "|\\b(sebulan|juta|bilion|kepuasan|siap|isu|dasar|tindakan|kualiti|berjaya|gagal|kos|dana|sasaran|seimbang|rendah)\\b", "i"), out = []; const s = document.querySelector(".kdn-m").closest('section'); const w = document.createTreeWalker(s, 4); let x; while ((x = w.nextNode())) { const t = x.textContent.trim(); if (t && re.test(t)) { out.push(t); } } return out; }, [BM.source]);
     semak(b1.length === 0, kunci + ' EN: BM bocor:\n    ' + b1.slice(0, 12).join('\n    '));
     await SK(process.env.SKRIN2);
   }

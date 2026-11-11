@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.79 (2026-11-11)
+
+- **Modul Kementerian Ekonomi** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, krisis ialah label simulasi), dibina atas enjin kementerian generik.
+  - Takrif `js/ke.js` (rekod `p.ke`): pertumbuhan KDNK (%), kadar pengangguran (%), keyakinan pelabur, jurang pendapatan, dana inisiatif (RM 40 juta sebulan, had RM 200 juta).
+  - **Tab "📈 Pejabat Ekonomi"**: fokus ekonomi (pertumbuhan / pendekatan seimbang / agihan saksama), inisiatif (zon ekonomi khas 6 bulan, subsidi upah graduan, pelan peralihan tenaga, program usahawan B40), isu rawak (kemelesetan global: pakej rangsangan atau disiplin fiskal; pemberhentian pekerja; prospek kredit diturunkan).
+  - Akibat bulanan: pengangguran melebihi 5% = KPI −3 dan populariti −2; jurang melebihi 60 = populariti −1; KDNK mengalir ke populariti.
+  - Sambungan MOF: KDNK menambah hasil negara; pakej rangsangan menolak rizab RM 2 bilion.
+- Enjin generik: nota meter dipaparkan pada baris sendiri (terjemahan EN tidak lagi tersekat).
+- Label "Seimbang" dalam KKDW dan Ekonomi ditukar kepada "Agihan seimbang" / "Pendekatan seimbang" (EN dahulu keluar sebagai "Even").
+- Ujian baharu (211 ujian).
+
 ## v13.78 (2026-11-11)
 
 - **Modul Kementerian Kesihatan** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu dan wabak ialah label simulasi), dibina atas enjin kementerian generik.

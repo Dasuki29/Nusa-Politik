@@ -80,8 +80,8 @@
 
   /* ---------- Pengiraan ---------- */
   function aliran(m, p) {
-    var KL = p ? modul('MyPolitikKLN', 'kln.js') : null;                                   // v13.76: dagangan Wisma Putra menambah hasil
-    var hasil = CONFIG.HASIL_ASAS + pilihan('sst', m.dasar.sst).hasil + pilihan('pendapatan', m.dasar.pendapatan).hasil + (KL && KL.hasilDagang ? KL.hasilDagang(p) : 0);
+    var KL = p ? modul('MyPolitikKLN', 'kln.js') : null, KE = p ? modul('MyPolitikKE', 'ke.js') : null;   // v13.76: dagangan Wisma Putra; v13.79: KDNK (Ekonomi)
+    var hasil = CONFIG.HASIL_ASAS + pilihan('sst', m.dasar.sst).hasil + pilihan('pendapatan', m.dasar.pendapatan).hasil + (KL && KL.hasilDagang ? KL.hasilDagang(p) : 0) + (KE && KE.hasilKDNK ? KE.hasilKDNK(p) : 0);
     var subsidi = pilihan('minyak', m.dasar.minyak).kos + pilihan('barang', m.dasar.barang).kos, belanja = 0;
     KEMENTERIAN.forEach(function (k) { belanja += Number(m.ministryBudgets[k.kod]) || 0; });
     belanja = belanja / 12;
