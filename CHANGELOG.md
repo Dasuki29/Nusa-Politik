@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v13.92 (2026-11-12)
+
+- **Audit DAP, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
+  - Takwim: mesej bulan DAP kini ikut takwim DAP sebenar (Cawangan bulan 1, JPKP bulan 2, Kongres bulan 3, Pasca-Kongres bulan 4). Sebelum ini DAP menerima mesej UMNO bulan 4/6/9/10, termasuk "PAU di WTC Kuala Lumpur" pada bulan September.
+  - Istilah: "Ketua, Naib Ketua dan AJK Cawangan" → "Pengerusi, Naib Pengerusi dan AJK Cawangan"; "Puteri" dibuang daripada laluan sayap DAP; "Perhimpunan Agung" → "Kongres Kebangsaan"; "Lembaga Disiplin" → "Jawatankuasa Tatatertib"; "Ketua ranting" → "Pengerusi cawangan"; "bahagian" huruf kecil (kos operasi jawatan, usul DAPSY, borang daftar, peta) → JPKP.
+  - EN: "Division" → "JPKP", "Division Delegates Meeting" → "JPKP General Meeting", "Kongres" → "Congress"; terjemahan baharu untuk langkah mesyuarat, keputusan usul, cabaran jawatan dan mesej bulan DAP (juga membaiki teks yang sama bagi parti lain).
+- Ujian baharu (222 ujian).
+
 ## v13.91 (2026-11-12)
 
 - **Ujian pelayar: amaran palsu "Padang Besar" diselesaikan.** "Padang Besar" ialah nama kerusi Parlimen (nama khas) yang memang kekal dalam EN, tetapi `tools/ujian-pelayar.js` mengambil literal daripada fail data lokasi yang dijana (amanah-data, berjasa-data, bersatu-data, warisan-data, dll.) lalu menganggapnya teks BM. Kini semua fail `*-data.js` dikecualikan; ujian pelayar lulus tanpa kebocoran.

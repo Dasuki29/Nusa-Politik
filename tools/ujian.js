@@ -2955,6 +2955,19 @@ ujian('v13.89 BERSATU mod penuh: data, istilah, takwim 6/8/11, kuota PN, struktu
   betul(g.MyPolitikLompat.aktifDi('BERSATU', 'Johor') && !g.MyPolitikLompat.aktifDi('BERSATU', 'Sarawak'), 'lompat');
   S.clearPlayer();
 });
+ujian('v13.92 audit DAP: istilah tanpa sisa UMNO (Pengerusi Cawangan, Kongres, Jawatankuasa Tatatertib, JPKP) dan mesej takwim bulan 1-4', () => {
+  const PT = g.MyPolitikParti; P.daftar(); P.tetap({ parti: 'DAP', bulan: 3 });
+  sama(PT.ke('Bulan 4-5 · Ketua, Naib Ketua dan AJK Cawangan'), 'Bulan 1 · Pengerusi, Naib Pengerusi dan AJK Cawangan');
+  sama(PT.ke('Jika anda dalam laluan Pemuda, Puteri atau Wanita'), 'Jika anda dalam laluan DAPSY atau Wanita');
+  sama(PT.ke('Perhimpunan Agung: Perhimpunan Agung UMNO (PAU) & Pemilihan Pusat'), 'Kongres Kebangsaan DAP & Pemilihan Pusat');
+  sama(PT.ke('Amaran rasmi Lembaga Disiplin'), 'Amaran rasmi Jawatankuasa Tatatertib');
+  sama(PT.ke('Kos operasi jawatan bahagian -RM 150'), 'Kos operasi jawatan JPKP -RM 150');
+  sama(PT.ke('Division Delegates Meeting'), 'JPKP General Meeting'); sama(PT.ke('+8 PAU Delegate Support'), '+8 Congress Delegate Support');
+  sama(PT.dari('Kos operasi jawatan JPKP -RM 150'), 'Kos operasi jawatan bahagian -RM 150');
+  const r = K.majuBulan(); betul(r.ok, r.ralat);
+  betul((r.peristiwa || []).some((x) => /Bulan 4 \(April\): Pasca-Kongres/.test(x.mesej)), 'mesej Pasca-Kongres bulan 4');
+  betul(!(r.peristiwa || []).some((x) => /PAU|Bahagian|WTC/.test(x.mesej)), 'tiada mesej bulan UMNO');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

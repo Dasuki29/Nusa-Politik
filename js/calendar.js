@@ -319,6 +319,11 @@
       if (bulan === 6) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 6 (Jun): Persidangan Cawangan: pemilihan Cawangan serta Ketua, Timbalan dan Naib Ketua Bahagian oleh ahli. Hanya bulan ini.' }); }
       else if (bulan === 8) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 8 (Ogos): Persidangan Bahagian: wakil Perhimpunan Agung dipilih dan Bahagian membuat undian Majlis Pimpinan Tertinggi. Hanya bulan ini.' }); }
       else if (bulan === 11) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 11 (November): Perhimpunan Agung BERSATU: keputusan pemilihan Presiden dan Majlis Pimpinan Tertinggi diumumkan. Hanya bulan ini.' }); }
+    } else if (takwimSet() === CONFIG.DAP) {                                            // v13.92: DAP 1/2/3 (sebelum ini jatuh ke mesej UMNO bulan 4/6/9/10)
+      if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): Mesyuarat Agung Tahunan Cawangan dan Sayap: pemilihan Cawangan dan Perwakilan ke JPKP. Hanya bulan ini.' }); }
+      else if (bulan === 2) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 2 (' + nb + '): MB JPKP dan Sayap: pemilihan Perwakilan ke Kongres. Hanya bulan ini.' }); }
+      else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Kongres Kebangsaan DAP (setiap 3 tahun) atau Persidangan Parti DAP. Hanya bulan ini.' }); }
+      else if (bulan === 4) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 4 (' + nb + '): Pasca-Kongres. Kembali ke akar umbi dan laksana tanggungjawab jawatan anda.' }); }
     } else if (takwimSet() === CONFIG.BERJASA) {                                       // v13.53: BERJASA (bulan sudah dalam bulan BERJASA; (Jun) dilindungi daripada penukaran js/parti.js)
       if (bulan === 1) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 1 (' + nb + ' ' + tahun + '): ' + f.tajuk + '. ' + f.ringkas + '. Bonus +' + Math.round(CONFIG.BONUS_AKAR_UMBI * 100) + '% IP dan sokongan bagi tindakan sehingga bulan 2. Mandat perwakilan tahun lalu telah tamat; bertanding semula di Cawangan (bulan 3).' }); }
       else if (bulan === 3) { out.push({ jenis: 'fasa_bulan', mesej: 'Bulan 3 (' + nb + '): Musim Mesyuarat & Pemilihan Cawangan dan Sayap dibuka. Hanya bulan ini.' }); }

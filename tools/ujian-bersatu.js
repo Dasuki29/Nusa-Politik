@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* ==========================================================================
-   Nusa Politik — tools/ujian-pkr.js   (v13.37)
-   Ujian pelayar (Playwright): cip BERSATU dalam panel PH, daftar BERSATU (Selangor, WARDA), istilah (Kawasan, JPN, AWAN), kad BERSATU
-   (Naratif Rahmah, Konvensyen Negeri, Mesyuarat JPN 44 orang), dan EN tanpa teks BM bocor. Dilangkau (kod keluar 0) jika Playwright atau Chromium tiada.
+   Nusa Politik — tools/ujian-bersatu.js   (v13.89)
+   Ujian pelayar (Playwright): cip BERSATU dalam panel PN, daftar BERSATU (Ahli Biasa / Bersekutu), istilah MPT / Armada / Srikandi, kad BERSATU,
+   Jelajah Bahagian, rundingan PAS, sekatan jawatan, dan EN tanpa teks BM bocor. Dilangkau (kod keluar 0) jika Playwright atau Chromium tiada.
    Guna: node tools/ujian-bersatu.js
    ========================================================================== */
 'use strict';
