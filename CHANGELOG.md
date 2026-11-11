@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v13.91 (2026-11-12)
+
+- **Ujian pelayar: amaran palsu "Padang Besar" diselesaikan.** "Padang Besar" ialah nama kerusi Parlimen (nama khas) yang memang kekal dalam EN, tetapi `tools/ujian-pelayar.js` mengambil literal daripada fail data lokasi yang dijana (amanah-data, berjasa-data, bersatu-data, warisan-data, dll.) lalu menganggapnya teks BM. Kini semua fail `*-data.js` dikecualikan; ujian pelayar lulus tanpa kebocoran.
+
 ## v13.90 (2026-11-11)
 
 - **Kad 🔀 Lompat Parti lebih ringkas** (mockup dipersetujui; paparan sahaja, logik tidak berubah).
