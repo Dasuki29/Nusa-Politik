@@ -2718,6 +2718,47 @@ ujian('v13.86 Lompat parti: ahli yang dipecat boleh menyertai parti lain walaupu
   P.tetap({ etika: Object.assign({}, S.loadPlayer().etika, { status: 'dipecat' }) }); sama(LP.kunci(S.loadPlayer()), '', 'dipecat: boleh');
   betul(LP.pilihan(S.loadPlayer()).some((x) => x.boleh)); S.clearPlayer();
 });
+ujian('v13.87 Calon Bebas PRU: ditolak parti -> Bebas (keahlian terlucut), deposit, kempen tanpa jentera, keputusan; dipecat; beli undi; Perkara 49A', () => {
+  const B = PRU.CONFIG.BEBAS, LP = g.MyPolitikLompat, Et = g.MyPolitikEtika;
+  function kempenHabis(kuat) {
+    if (kuat !== undefined) { const p = S.loadPlayer(), pru = PRU.getPRU(p); pru.aktif.voterSupport = kuat; S.applyEffects({}, { kiraTindakan: false, patch: { pru } }); }
+    for (let i = 0; i < 40; i++) {
+      const ck = PRU.keadaanKempen(S.loadPlayer()); if (!ck || ck.hariBaki <= 0 && !ck.kejutan) { break; }
+      if (ck.kejutan) { const c = ck.kejutan.pilihan.filter((x) => x.boleh)[0]; betul(PRU.jawabKejutan(c.id, { rng: sedikit }).ok); continue; }
+      betul(PRU.tindakanKempen('rehat').ok);
+    }
+  }
+  PRU.setRng(sedikit);
+  try {
+    // 1. ahli: permohonan DUN ditolak -> Bebas
+    P.daftar({}); P.tetap({ ip: 400, jawatan: 'AJK Cawangan', jawatanList: [pegang('ajk_cawangan')], myr: 30000 });
+    PRU.isytihar('tamat_penggal', { rng: sedikit }); let p = S.loadPlayer();
+    sama(PRU.kelayakanBebas(p).DUN.boleh, false, 'mohon parti dahulu');
+    const t = PRU.pilihKerusi('DUN', { rng: () => 0.999 }); betul(t.ok && !t.diluluskan);
+    const kb = PRU.kelayakanBebas(S.loadPlayer()).DUN; betul(kb.boleh, kb.sebab.join()); betul(kb.keluarParti); sama(kb.deposit, 5000);
+    const r = PRU.bertandingBebas('DUN'); betul(r.ok, r.ralat); p = S.loadPlayer();
+    sama(p.myr, 25000, 'deposit'); sama(Et.getEtika(p).status, 'dipecat'); sama(p.jawatanList.length, 0); betul(PRU.pengkhianat(p));
+    let a = PRU.getPRU(p).aktif; sama(a.fasa, 'manifesto'); betul(a.bebas && a.isThreeCorneredFight);
+    betul(PRU.mulaKempen(JANJI3(), 5000).ok); a = PRU.getPRU(S.loadPlayer()).aktif; betul(a.jentera <= 45, 'jentera ' + a.jentera);
+    betul(PRU.keadaanKempen(S.loadPlayer()).pecahan.some((x) => /^Calon /.test(x.nama)), 'calon parti lama');
+    kempenHabis(100); const myr0 = S.loadPlayer().myr, k = PRU.selesaikan({ rng: sedikit }); betul(k.ok, k.ralat);
+    betul(k.keputusan.menang, 'sokongan penuh: menang'); sama(k.keputusan.bebas.hangus, false); p = S.loadPlayer();
+    const st = PRU.getPRU(p).status; betul(st.bebas && st.kerajaan === false, JSON.stringify(st)); betul(p.myr - myr0 >= 5000, 'deposit dipulangkan');
+    // 2. Perkara 49A: wakil Bebas menyertai parti -> kerusi dikosongkan
+    PRU.tutupKeputusan(); betul(LP.kesan(S.loadPlayer()).kerusi.length === 1, 'kesan lompat: kerusi hilang');
+    // 3. dipecat: terus Bebas; deposit hangus jika undi < 1/8
+    P.daftar({}); P.tetap({ ip: 1000, myr: 30000, etika: Object.assign({}, S.loadPlayer().etika, { status: 'dipecat' }) });
+    PRU.isytihar('tamat_penggal', { rng: sedikit }); p = S.loadPlayer();
+    betul(!PRU.kelayakan(p).DUN.boleh && /Bebas/.test(PRU.kelayakan(p).DUN.sebab.join()), 'tiada pencalonan parti');
+    const kd = PRU.kelayakanBebas(p).PARLIMEN; betul(kd.boleh && !kd.keluarParti, kd.sebab.join()); betul(PRU.bertandingBebas('PARLIMEN').ok); sama(S.loadPlayer().myr, 20000);
+    betul(PRU.mulaKempen(JANJI3(), 5000).ok); kempenHabis(0);
+    p = S.loadPlayer(); const pr = PRU.getPRU(p); pr.aktif.voterSupport = -80; S.applyEffects({}, { kiraTindakan: false, patch: { pru: pr } });
+    const myr1 = S.loadPlayer().myr, k2 = PRU.selesaikan({ rng: sedikit }); betul(k2.ok); betul(!k2.keputusan.menang); sama(k2.keputusan.bebas.hangus, true, 'undi ' + k2.keputusan.anda);
+    betul(S.loadPlayer().myr - myr1 < 5000, 'deposit hangus');
+    // 4. War Room: beli undi
+    sama(PRU.FINAL.beli.risiko, 0.55); betul(PRU.FINAL.beli.politikWang);
+  } finally { PRU.setRng(null); S.clearPlayer(); }
+});
 ujian('v13.52 Yang di-Pertua Negeri: syarat, tawaran, terima, tugas Istana, pembubaran DUN, penggal kedua dan legasi (Threads no. 5)', () => {
   const T = g.MyPolitikTYT, C = T.CONFIG; P.daftar({ umur: 50 }); P.tetap({ tahun: 2031, bulan: 1, reputasi: 70, ap: 10, myr: 1000, negeri: 'Sarawak',
     jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', pangkat: 12 }], tyt: { bekas: { sarawak: { dari: 2027, hingga: 2030 } } } });

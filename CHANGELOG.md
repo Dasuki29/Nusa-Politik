@@ -1,5 +1,17 @@
 # Catatan Perubahan
 
+## v13.87 (2026-11-11)
+
+- **Calon Bebas dalam PRU / PRN** (maklum balas pemain baris 41; mockup dipersetujui; ⚠️ angka ialah andaian permainan kecuali deposit dan had hangus 1/8 yang mengikut peraturan pilihan raya Malaysia).
+  - Ahli yang dipecat tidak lagi boleh dicalonkan parti; pilihan "🧍 Calon Bebas" (DUN / Parlimen) terus tersedia.
+  - Ahli parti yang permohonan calonnya ditolak (atau tidak layak) boleh bertanding sebagai Bebas selepas pengesahan: keahlian parti terlucut automatik, semua jawatan parti hilang, label "Pengkhianat Parti" 24 bulan.
+  - Deposit Parlimen RM 10,000 / DUN RM 5,000 daripada Dana; dipulangkan kecuali undi kurang daripada 1/8 (hangus).
+  - Kempen tanpa jentera parti (tenaga jentera awal sekitar 30), sokongan asas daripada Reputasi dan akar umbi peribadi (+8 jika penyandang kerusi), sentiasa 3 penjuru menentang calon parti lama dan lawan utama.
+  - Menang = wakil rakyat Bebas (di luar kerajaan, Reputasi +5); kalah Reputasi −2, deposit hangus −4. Wakil Bebas yang kemudian menyertai parti melalui Lompat Parti hilang kerusi (Perkara 49A).
+- **War Room: 💵 Beli undi (politik wang)** untuk semua calon: RM 8,000, sokongan +10 hingga +18, risiko SPRM 55% (bertambah jika diulang) dan aduan kepada Jawatankuasa Disiplin parti. Jika menang dan petisyen berjaya: kerusi dibatalkan, Reputasi −15, Integriti −20.
+- Pembaikan EN kecil dalam kad kempen (label 3 penjuru, populariti parti / sokongan peribadi, nama dalam pecahan undi).
+- Ujian baharu (219 ujian) dan ujian pelayar `tools/ujian-bebas.js`.
+
 ## v13.86 (2026-11-11)
 
 - **Lompat parti selepas dipecat** (maklum balas pemain, baris 42): ahli yang dipecat kini boleh menyertai parti lain walaupun pernah lompat parti dalam 5 tahun terakhir. Had 2 kali lompat dan syarat Reputasi kekal. Seperti sebelum ini, ahli yang dipecat kekal kerusi dan tiada penalti Reputasi atau label "Katak Politik".

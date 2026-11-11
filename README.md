@@ -187,6 +187,7 @@ node tools/ujian-jemaah.js       # pelayar: Jemaah Menteri (pilih TPM, 29 portfo
 node tools/ujian-prk-luar.js     # pelayar: PRK luar kawasan (kad tab Pemilihan, bantu kempen, EN)
 node tools/ujian-pembangkang.js  # pelayar: Ketua Pembangkang (kad tab Dewan, tindakan, Kabinet Bayangan, EN)
 node tools/ujian-lompat.js       # pelayar: Lompat Parti hujung ke hujung (kad Profil, borang cawangan baharu, EN)
+node tools/ujian-bebas.js        # pelayar: Calon Bebas PRU (pencalonan, kempen, EN)
 node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab Istana, tugas, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
 node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN

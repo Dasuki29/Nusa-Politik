@@ -58,6 +58,8 @@
   function getL(p) { var l = p && p.lompat && typeof p.lompat === 'object' ? salin(p.lompat) : {}; l.kali = l.kali || 0; l.sejarah = Array.isArray(l.sejarah) ? l.sejarah : []; l.prk = Array.isArray(l.prk) ? l.prk : []; l.katakSehingga = l.katakSehingga || 0; return l; }
   function dipecat(p) { return !!(p && p.etika && p.etika.status === 'dipecat'); }
   function kerusi(p) { var R = PRU(), pr = R && R.getPRU ? R.getPRU(p) : (p.pru || {}); return [pr.status, pr.statusKedua].filter(function (s) { return s && (s.jenis === 'MP' || s.jenis === 'ADUN'); }); }
+  /** v13.87: wakil rakyat Bebas (menang sebagai calon Bebas) yang menyertai parti hilang kerusi (Perkara 49A). */
+  function wakilBebas(p) { return kerusi(p).some(function (s) { return s.bebas; }); }
   function katak(p) { return idx(p) < getL(p).katakSehingga; }
 
   /** Sebab global tidak boleh lompat ('' jika boleh). */
@@ -82,7 +84,7 @@
   }
   /** Ringkasan kesan untuk dialog pengesahan. */
   function kesan(p) {
-    var ks = dipecat(p) ? [] : kerusi(p), jl = Array.isArray(p.jawatanList) ? p.jawatanList.map(function (j) { return j.jawatan; }) : [];
+    var ks = dipecat(p) && !wakilBebas(p) ? [] : kerusi(p), jl = Array.isArray(p.jawatanList) ? p.jawatanList.map(function (j) { return j.jawatan; }) : [];
     var K = modul('MyPolitikKabinet', 'kabinet.js'), kb = K && K.getKabinet ? K.getKabinet(p) : null;
     return { dipecat: dipecat(p), kerusi: ks.map(function (s) { return { jenis: s.jenis, nama: s.kerusi || '' }; }), jawatan: jl, kerajaan: kb && kb.hasGovernmentRole ? kb.portfolioName : '',
       ip: Math.round((Number(p.ip) || 0) * CONFIG.IP_KEKAL), reputasi: dipecat(p) ? 0 : CONFIG.REPUTASI, akarUmbi: CONFIG.AKAR_UMBI, katakBulan: dipecat(p) ? 0 : CONFIG.KATAK_BULAN };
@@ -114,7 +116,7 @@
     // pilihan raya: sejarah kekal; kerusi dikosongkan (Perkara 49A) kecuali dipecat
     var pr = lama.pru && typeof lama.pru === 'object' ? salin(lama.pru) : null, kos = [];
     if (pr) {
-      if (!dp) {
+      if (!dp || wakilBebas(lama)) {                                       // v13.87: wakil Bebas yang menyertai parti juga hilang kerusi
         [pr.status, pr.statusKedua].forEach(function (s) { if (s && (s.jenis === 'MP' || s.jenis === 'ADUN')) { kos.push({ jenis: s.jenis === 'ADUN' ? 'DUN' : 'PARLIMEN', nama: s.kerusi || '', i: mula + CONFIG.PRK_BULAN }); } });
         if (pr.status && (pr.status.jenis === 'MP' || pr.status.jenis === 'ADUN')) { pr.status = null; }
         if (pr.statusKedua && (pr.statusKedua.jenis === 'MP' || pr.statusKedua.jenis === 'ADUN')) { pr.statusKedua = null; }

@@ -69,7 +69,7 @@
       '<div class="progress progress--sm' + (bahaya ? ' progress--danger' : '') + '" role="progressbar" aria-label="' + esc(label) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + nilai + '"><div class="progress__bar" style="width:' + nilai + '%"></div></div></div>';
   }
   function pecahHtml(pk) {
-    return '<div class="pru-pecah">' + pk.map(function (x) { return '<div class="' + x.ke + '" style="width:' + Math.max(8, x.nilai) + '%" title="' + esc(x.nama) + '">' + esc(x.nama.replace(' (UMNO)', '')) + ' ' + Math.round(x.nilai) + '%</div>'; }).join('') + '</div>';
+    return '<div class="pru-pecah">' + pk.map(function (x) { return '<div class="' + x.ke + '" style="width:' + Math.max(8, x.nilai) + '%" title="' + esc(x.nama) + '"><span>' + esc(x.nama.replace(' (UMNO)', '')) + '</span> ' + Math.round(x.nilai) + '%</div>'; }).join('') + '</div>';
   }
   function fx(r) { return r ? '<span class="badge badge--gold">' + esc(r) + '</span>' : ''; }
 
@@ -294,7 +294,8 @@
   }
   function lencana(p) {
     var h = '', pru = PRU.getPRU(p), kb = KB ? KB.getKabinet(p) : null;
-    PRU.semuaStatus(p).forEach(function (s) { h += '<span class="badge-office badge-office--menteri" title="Kerusi ' + esc(s.kerusi) + '">' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + '</span> '; });    // v7.55: dua jawatan wakil rakyat dipapar serentak
+    PRU.semuaStatus(p).forEach(function (s) { h += '<span class="badge-office badge-office--menteri" title="Kerusi ' + esc(s.kerusi) + '">' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + (s.bebas ? ' (Bebas)' : '') + '</span> '; });
+    if (PRU.pengkhianat && PRU.pengkhianat(p)) { h += '<span class="badge-office badge-office--gantung" title="Bertanding sebagai calon Bebas menentang calon parti">Pengkhianat Parti</span> '; }   // v13.87    // v7.55: dua jawatan wakil rakyat dipapar serentak
     if (kb && kb.hasGovernmentRole) { h += '<span class="badge-office badge-office--menteri">' + esc(kb.portfolioName) + '</span>'; }
     if (W.MyPolitikSabahBN && W.MyPolitikSabahBN.adalah(p) && W.MyPolitikSabahBN.senatorAktif(p)) { h += ' <span class="badge-office badge-office--menteri">Senator</span>'; }   // v13.16: MIC Sabah
     return h;
@@ -308,6 +309,12 @@
     var r = PRU.ringkasan(p), a = r.aktif, kl = r.kelayakan, kl2 = PRU.kelayakan(p, true);
     var bolehLain = ['DUN', 'PARLIMEN'].some(function (z) { return kl2[z].boleh && !a.ditolak[z]; });          // v8.17
     var sebabLawan = a.sebab === 'krisis' ? 'Krisis Pembubaran Dewan' : 'Tamat penggal 5 tahun';
+    var kb = PRU.kelayakanBebas ? PRU.kelayakanBebas(p) : null, pecat = PRU.dipecat && PRU.dipecat(p);   // v13.87: calon Bebas
+    function barisBebas(jenis, nama) {
+      var x = kb && kb[jenis]; if (!x || (!pecat && !a.ditolak[jenis] && kl[jenis].boleh) || (jenis === 'DUN' && !p.dun)) { return ''; }
+      return opsi('BEBAS_' + jenis, '🧍 Calon Bebas: ' + nama, 'Deposit RM ' + fmt(x.deposit) + ' (hangus jika undi kurang daripada 1/8) · tanpa jentera parti · pertandingan 3 penjuru' +
+        (x.keluarParti ? '<br><b>Keahlian parti terlucut automatik.</b>' : '') + (x.boleh ? '' : '<br>' + esc(x.sebab.join('; '))), x.boleh);
+    }
     function baris(jenis, nama) {
       var k = kl[jenis], ditolak = a.ditolak[jenis];
       return opsi(jenis, (jenis === 'DUN' ? '🏛️ ' : '🏢 ') + 'Kerusi ' + nama + ' <span class="badge">' + r.ikonProfil + ' ' + esc(r.profilNama) + '</span>',
@@ -316,7 +323,7 @@
     return modal({
       tajuk: 'Pengisytiharan Pilihan Raya',
       isi: '<p class="acara__ikon" aria-hidden="true">🗳️</p><p><b>' + sebabLawan + '.</b> Hari mengundi dalam 14 hari. Populariti parti: <b>' + a.partiPopulariti + '%</b>. Mohon dicalonkan bertanding:</p>' +
-        '<ul class="acara__pil">' + baris('DUN', 'DUN') + baris('PARLIMEN', 'Parlimen') + (kl.DUN.boleh && kl.PARLIMEN.boleh && !a.ditolak.DUN && !a.ditolak.PARLIMEN ? opsi('KEDUA', '🏛️🏢 Kedua-dua: Parlimen + DUN (serentak)', 'Satu kempen 14 hari, dua keputusan. Tumpuan terbahagi: sokongan -3%, jentera -8. Peluang diluluskan: Parlimen ' + kl.PARLIMEN.peluang + '%, DUN ' + kl.DUN.peluang + '%. Menang kedua-dua = dua jawatan wakil rakyat.', true) : '') + opsi('NONE', 'Tidak bertanding', 'Fokus jawatan parti. Tiada risiko kehilangan IP.', true) + '</ul>' +
+        '<ul class="acara__pil">' + baris('DUN', 'DUN') + baris('PARLIMEN', 'Parlimen') + (kl.DUN.boleh && kl.PARLIMEN.boleh && !a.ditolak.DUN && !a.ditolak.PARLIMEN ? opsi('KEDUA', '🏛️🏢 Kedua-dua: Parlimen + DUN (serentak)', 'Satu kempen 14 hari, dua keputusan. Tumpuan terbahagi: sokongan -3%, jentera -8. Peluang diluluskan: Parlimen ' + kl.PARLIMEN.peluang + '%, DUN ' + kl.DUN.peluang + '%. Menang kedua-dua = dua jawatan wakil rakyat.', true) : '') + barisBebas('DUN', 'DUN') + barisBebas('PARLIMEN', 'Parlimen') + opsi('NONE', 'Tidak bertanding', 'Fokus jawatan parti. Tiada risiko kehilangan IP.', true) + '</ul>' +
         (bolehLain ? opsi('LAIN', '🗺️ Kerusi lain…', 'Bertanding di Parlimen atau DUN lain (calon dari luar). Peluang diluluskan lebih rendah, sokongan awal dan kos kempen terjejas; kerusi sukar memberi ganjaran IP lebih tinggi.', true) : '') +
         '<p style="font-size:.8rem">Keputusan pencalonan oleh Majlis Tertinggi bergantung IP, reputasi dan kedudukan parti.</p>',
       butang: []
@@ -429,6 +436,15 @@
           var j = await modPencalonan(p), lk = null;
           if (!j) { break; }
           if (j === 'LAIN') { lk = await modKerusiLain(p); if (!lk) { continue; } j = lk.jenis; }                 // v8.17: kerusi lain
+          if (/^BEBAS_/.test(j)) {                                                   // v13.87: calon Bebas
+            var jb = j.slice(6), xb = PRU.kelayakanBebas(p)[jb];
+            if (xb.keluarParti) {
+              var sah = await modal({ tajuk: '🧍 Bertanding sebagai Calon Bebas?', isi: '<p>Anda akan bertanding menentang calon parti sendiri. <b>Keahlian parti anda akan terlucut dan semua jawatan parti hilang.</b> Label "Pengkhianat Parti" selama 24 bulan.</p><p>Deposit RM ' + fmt(xb.deposit) + ' dibayar daripada Dana dan hangus jika undi kurang daripada 1/8.</p>', butang: [{ label: 'Batal', nilai: false }, { label: 'Ya, Teruskan', nilai: true, kelas: 'btn--danger' }] });
+              if (!sah) { continue; }
+            }
+            var rb = PRU.bertandingBebas(jb); toast(rb.mesej || rb.ralat, rb.ok ? 'ok' : 'ralat'); segarkan(); if (!rb.ok) { continue; }
+            continue;
+          }
           if (j === 'NONE') {
             var tb = PRU.tidakBertanding(); toast(tb.mesej || tb.ralat, tb.ok ? 'ok' : 'ralat'); segarkan(); if (tb.nasional) { await nasional(); } break;
           }
@@ -438,7 +454,8 @@
           if (r.lain && r.diluluskan) { toast('Calon dari luar: sokongan awal lebih rendah dan kos kempen lebih tinggi.', 'ok'); }
           if (!r.diluluskan) {
             var p2 = S.loadPlayer(), k2 = PRU.kelayakan(p2), a2 = PRU.getPRU(p2).aktif;
-            var masihBoleh = ['DUN', 'PARLIMEN'].some(function (z) { return !a2.ditolak[z] && k2[z].boleh; });
+            var kb2 = PRU.kelayakanBebas ? PRU.kelayakanBebas(p2) : null;
+            var masihBoleh = ['DUN', 'PARLIMEN'].some(function (z) { return (!a2.ditolak[z] && k2[z].boleh) || (kb2 && kb2[z].boleh); });   // v13.87: pilihan Bebas
             if (!masihBoleh) { var t2 = PRU.tidakBertanding(); toast('Tiada kerusi lain yang layak. ' + (t2.mesej || ''), 'ralat'); segarkan(); if (t2.nasional) { await nasional(); } break; }
           }
         } else if (a.fasa === 'runding') {
