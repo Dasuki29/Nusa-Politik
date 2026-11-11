@@ -1,5 +1,16 @@
 # Catatan Perubahan
 
+## v13.81 (2026-11-11)
+
+- **Sabah: Kabinet Negeri dan Pejabat Ketua Menteri** (fasa 1 modul ketua kerajaan negeri; mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan).
+  - **Kabinet Negeri Sabah** (`PORTFOLIO.SABAH` dalam `js/kabinet.js`): pemain yang DUN-nya di Sabah (termasuk parti nasional) kini melobi 10 portfolio **Menteri** ikut susunan kabinet 2 Disember 2025 (3 disertai Timbalan Ketua Menteri), bukan senarai "EXCO". Setiap portfolio berkongsi set tindakan Pejabat EXCO yang sepadan dan kategori Enakmen DUN.
+  - Ketua Menteri Sabah tidak lagi diberi portfolio Tanah & Kewangan (Kewangan dipegang Timbalan Ketua Menteri II); sebaliknya mendapat **tab "🌴 Pejabat Ketua Menteri"** (`js/sabah-km.js`, rekod `p.sabahkm`): kemajuan tuntutan MA63 (hak 40% hasil), kestabilan kerajaan negeri, hubungan dengan Persekutuan, dana negeri.
+  - Tuntutan MA63 (rundingan, tekanan politik, laluan undang-undang; satu sebulan): kemajuan 100 = pelan pembayaran dipersetujui (dana negeri kekal +RM 30 juta sebulan). MA63 dan hak 40% hasil dirujuk dengan nama sebenar tanpa angka sebenar dan tanpa meramal keputusan mahkamah.
+  - Kestabilan (tawar jawatan, majlis ADUN, pembangunan kawasan; satu sebulan) dan krisis ADUN menarik sokongan. Kestabilan bawah 30 = KPI −5; kestabilan 0 = Ketua Menteri hilang jawatan.
+- Enjin kementerian generik: syarat aktif khas, kumpulan tindakan (had sebulan setiap kumpulan), selang, kos AP, tindakan berpeluang, laras dana dan langkah selepas simpan; bahagian Dasar disembunyikan bila tiada dasar.
+- Pembetulan: sari kata kad kerajaan kini memaparkan "Ketua Menteri" (Sabah, Melaka, Pulau Pinang) atau "Premier" (Sarawak), bukan "Menteri Besar"; anggota kabinet Sabah bergelar "Menteri Negeri".
+- Ujian baharu (213 ujian); ujian pelayar kementerian merangkumi Pejabat Ketua Menteri Sabah.
+
 ## v13.80 (2026-11-11)
 
 - **Modul Kementerian Perumahan dan Kerajaan Tempatan (KPKT)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu ialah label simulasi), dibina atas enjin kementerian generik.

@@ -82,6 +82,20 @@
       { id: 'sw_sumber_asli', tahap: 'EXCO_NEGERI', nama: 'Menteri Sumber Asli & Pembangunan Bandar Sarawak', ip: 160, myr: 3000, asas: 0.50, risiko: 'sederhana' },
       { id: 'sw_kewangan',   tahap: 'EXCO_NEGERI', nama: 'Menteri Kewangan Sarawak', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi' }
     ],
+    /* v13.81: Kabinet Negeri Sabah (anggota bergelar Menteri), ikut susunan kabinet 2 Dis 2025. ANDAIAN: IP, kos dan peluang ialah nilai permainan.
+       'tindakan' = set tindakan Pejabat EXCO yang dikongsi (TINDAKAN_EXCO). */
+    SABAH: [
+      { id: 'sb_kerjaraya', tahap: 'EXCO_NEGERI', nama: 'Timbalan Ketua Menteri I & Menteri Kerja Raya dan Utiliti Sabah', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'infra', ikon: '🏗️', tindakan: 'exco_kerjaraya' },
+      { id: 'sb_kewangan', tahap: 'EXCO_NEGERI', nama: 'Timbalan Ketua Menteri II & Menteri Kewangan Sabah', ip: 250, myr: 5000, asas: 0.35, risiko: 'tinggi', kategori: 'ekonomi', ikon: '💰', tindakan: 'exco_tanah' },
+      { id: 'sb_industri', tahap: 'EXCO_NEGERI', nama: 'Timbalan Ketua Menteri III & Menteri Perindustrian, Keusahawanan dan Pengangkutan Sabah', ip: 200, myr: 3500, asas: 0.5, risiko: 'sederhana', kategori: 'ekonomi', ikon: '🏭', tindakan: 'exco_pelaburan' },
+      { id: 'sb_ktp', tahap: 'EXCO_NEGERI', nama: 'Menteri Kerajaan Tempatan dan Perumahan Sabah', ip: 150, myr: 2500, asas: 0.58, risiko: 'sederhana', kategori: 'infra', ikon: '🏙️', tindakan: 'exco_ktp' },
+      { id: 'sb_luarbandar', tahap: 'EXCO_NEGERI', nama: 'Menteri Pembangunan Luar Bandar Sabah', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'ekonomi', ikon: '🌾', tindakan: 'exco_luarbandar' },
+      { id: 'sb_pertanian', tahap: 'EXCO_NEGERI', nama: 'Menteri Pertanian, Perikanan dan Industri Makanan Sabah', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'ekonomi', ikon: '🐟', tindakan: 'exco_luarbandar' },
+      { id: 'sb_pendidikan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pendidikan, Sains, Teknologi dan Inovasi Sabah', ip: 130, myr: 2200, asas: 0.62, risiko: 'sederhana', kategori: 'pendidikan', ikon: '🎓', tindakan: 'exco_pendidikan' },
+      { id: 'sb_pelancongan', tahap: 'EXCO_NEGERI', nama: 'Menteri Pelancongan, Kebudayaan dan Alam Sekitar Sabah', ip: 120, myr: 2000, asas: 0.65, risiko: 'sederhana', kategori: 'infra', ikon: '🎭', tindakan: 'exco_pelancongan' },
+      { id: 'sb_wanita', tahap: 'EXCO_NEGERI', nama: 'Menteri Wanita, Kesihatan dan Kesejahteraan Rakyat Sabah', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'kesihatan', ikon: '🤝', tindakan: 'exco_kebajikan' },
+      { id: 'sb_belia', tahap: 'EXCO_NEGERI', nama: 'Menteri Pembangunan Belia, Kemajuan Sukan dan Ekonomi Kreatif Sabah', ip: 100, myr: 1500, asas: 0.75, risiko: 'rendah', kategori: 'pendidikan', ikon: '⚽', tindakan: 'exco_belia' }
+    ],
     PARLIMEN: [
       { id: 'tm_pendidikan', tahap: 'TIMBALAN_MENTERI', nama: 'Timbalan Menteri Pendidikan', ip: 250, myr: 4000, asas: 0.80, risiko: 'rendah' },
       { id: 'tm_kesihatan',  tahap: 'TIMBALAN_MENTERI', nama: 'Timbalan Menteri Kesihatan', ip: 280, myr: 4500, asas: 0.70, risiko: 'sederhana' },
@@ -110,9 +124,11 @@
   /* v13.69: portfolio Agama Islam tidak dibuka untuk parti berasaskan bukan Islam (ANDAIAN). PBS: hanya komuniti Bumiputera Islam. */
   var TANPA_AGAMA = { MCA: 1, MIC: 1, DAP: 1, PPP: 1, LDP: 1, UPKO: 1, PBRS: 1, PCS: 1, PHRS: 1 };
   function bolehAgama(p) { if (!p) { return true; } if (p.parti === 'PBS') { return p.komunitiPBS === 'bi'; } return !TANPA_AGAMA[p.parti]; }
+  /** v13.81: pemain di Sabah (bukan parti Sarawak) menggunakan Kabinet Negeri Sabah. */
+  function SB(p) { return !!(p && !SW(p.parti) && String(p.negeri || '').toLowerCase() === 'sabah'); }
   function cariPortfolio(id) {
     if (id === PORTFOLIO_MB.id) { return PORTFOLIO_MB; }
-    var s = PORTFOLIO.DUN.concat(PORTFOLIO.SARAWAK, PORTFOLIO.PARLIMEN);
+    var s = PORTFOLIO.DUN.concat(PORTFOLIO.SARAWAK, PORTFOLIO.SABAH, PORTFOLIO.PARLIMEN);
     for (var i = 0; i < s.length; i++) { if (s[i].id === id) { return s[i]; } }
     return null;
   }
@@ -219,6 +235,7 @@
   /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */
   function kolamSumber(p, sumber) {
     if (sumber === 'DUN' && p && SW(p.parti)) { return PORTFOLIO.SARAWAK; }
+    if (sumber === 'DUN' && SB(p)) { return PORTFOLIO.SABAH; }                     // v13.81
     if (sumber === 'DUN') { return PORTFOLIO.DUN.filter(function (d) { return !d.islam || bolehAgama(p); }); }   // v13.69
     return PORTFOLIO[sumber];
   }
@@ -284,7 +301,11 @@
   /* ---------- v7.63: Menteri Besar / Ketua Menteri ---------- */
   var KETUA_MENTERI = ['melaka', 'pulau pinang', 'sabah', 'sarawak'];
   /** v9.3: di Sarawak anggota kabinet negeri dipanggil Menteri (bukan EXCO). Tahap dalaman kekal EXCO_NEGERI; hanya label berubah. */
-  function namaTahap(p, tahap) { var t = TAHAP[tahap]; if (!t) { return ''; } return p && SW(p.parti) && tahap === 'EXCO_NEGERI' ? 'Menteri Negeri' : t.nama; }
+  function namaTahap(p, tahap) {
+    var t = TAHAP[tahap]; if (!t) { return ''; }
+    if (tahap === 'MENTERI_BESAR' && p) { return labelKetua(p); }                     // v13.81: Ketua Menteri / Premier ikut negeri
+    return p && (SW(p.parti) || SB(p)) && tahap === 'EXCO_NEGERI' ? 'Menteri Negeri' : t.nama;   // v13.81: Sabah juga Menteri Negeri
+  }
   function SWk() { return modul('MyPolitikSarawak', 'sarawak.js'); }
   function labelKetua(p) { if (p && SW(p.parti)) { return 'Premier'; } var n = String((p && p.negeri) || '').toLowerCase(); return KETUA_MENTERI.indexOf(n) >= 0 ? 'Ketua Menteri' : 'Menteri Besar'; }
   /** Syarat: lobi DUN dibuka (parti membentuk kerajaan negeri), pemain ADUN, Pengerusi Badan Perhubungan Negeri (induk), bukan Sarawak. */
@@ -358,7 +379,7 @@
     return { label: label, negeri: p.negeri || '', item: item, semua: semua, sedia: !!(mb && mb.boleh), peluang: mb ? mb.peluang : null, sendiri: !!(mb && mb.sendiri) };
   }
   function lantikDi(p, k, tahap, nama, log) {
-    k.mbTertunda = false; k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = tahap === 'MENTERI_BESAR' && !SW(p.parti) ? PORTFOLIO_MB.id : '';   // v13.69: MB/KM pegang portfolio 1 k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
+    k.mbTertunda = false; k.hasGovernmentRole = true; k.roleLevel = tahap; k.portfolioName = nama; k.portfolioId = tahap === 'MENTERI_BESAR' && !SW(p.parti) && !SB(p) ? PORTFOLIO_MB.id : '';   // v13.81: KM Sabah mendapat Pejabat Ketua Menteri   // v13.69: MB/KM pegang portfolio 1 k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
     k.bulanBerjawatan = 0; k.ratingRendah = 0; k.lobi = null; k.acara = null;
     k.popularitiNasional = CONFIG.POP_AWAL; k.risikoRombak = 0; k.ratingLalu = CONFIG.RATING_AWAL; k.cdfBaki = CONFIG.CDF.BULANAN[tahap]; k.cdfBulan = 0; k.cdfJumlah = 0;
     k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilantik' }]).slice(-10);
@@ -646,11 +667,11 @@
   /** Status kepimpinan negeri (dikira daripada p.kabinet supaya tidak bercanggah). */
   function kepimpinanNegeri(p) {
     var k = getKabinet(p), d = k.portfolioId ? cariPortfolio(k.portfolioId) : null, ldr = !!(k.hasGovernmentRole && k.roleLevel === 'MENTERI_BESAR');
-    var negeri = !!(d && (d === PORTFOLIO_MB || PORTFOLIO.DUN.indexOf(d) >= 0 || PORTFOLIO.SARAWAK.indexOf(d) >= 0));
+    var negeri = !!(d && (d === PORTFOLIO_MB || PORTFOLIO.DUN.indexOf(d) >= 0 || PORTFOLIO.SARAWAK.indexOf(d) >= 0 || PORTFOLIO.SABAH.indexOf(d) >= 0));
     return { isStateLeader: ldr, stateExcoPortfolio: k.hasGovernmentRole && negeri ? String(d.nama).replace(/^EXCO /, '') : '', portfolioId: negeri ? d.id : '' };
   }
   function pejabatEXCO(p) {
-    var k = getKabinet(p), kn = kepimpinanNegeri(p), senarai = TINDAKAN_EXCO[kn.portfolioId];
+    var k = getKabinet(p), kn = kepimpinanNegeri(p), dk = kn.portfolioId ? cariPortfolio(kn.portfolioId) : null, senarai = TINDAKAN_EXCO[(dk && dk.tindakan) || kn.portfolioId];   // v13.81: Sabah kongsi set tindakan
     if (!k.hasGovernmentRole || !senarai) { return null; }
     var sudah = k.excoTindakan === idxBulan(p), d = cariPortfolio(kn.portfolioId);
     return { portfolioId: kn.portfolioId, nama: kn.stateExcoPortfolio, ikon: d.ikon || '🏛️', sudah: sudah, ap: EXCO_TINDAKAN_AP,
@@ -695,7 +716,7 @@
   }
 
   return {
-    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
+    CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, SB: SB, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
     kepimpinanNegeri: kepimpinanNegeri, pejabatEXCO: pejabatEXCO, tindakanEXCO: tindakanEXCO,
     setRng: function (f) { rngLalai = f || Math.random; },
     getKabinet: getKabinet, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,

@@ -48,6 +48,7 @@
     function aktif(p) {
       var K = KB(); if (!p || !K) { return false; }
       var k = K.getKabinet(p);
+      if (def.aktif) { return !!def.aktif(p, k); }                                     // v13.81: syarat khas (cth. Ketua Menteri Sabah)
       return !!(k.hasGovernmentRole && k.roleLevel === 'MENTERI_PENUH' && def.portfolio.test(String(k.portfolioName || '')));
     }
     function pilihanDasar(kod, id) { var t = def.dasar[kod]; for (var i = 0; i < t.pilihan.length; i++) { if (t.pilihan[i].id === id) { return t.pilihan[i]; } } return t.pilihan[0]; }
@@ -55,14 +56,14 @@
     function guna(p, m, x, ctx, kekal) {
       Object.keys(x || {}).forEach(function (k) {
         var v = x[k];
-        if (def.meter[k]) { var M = def.meter[k]; m[k] = clamp(bulat(k, m[k] + v), M.min, M.maks); if (kekal) { m.bonus[k] = bulat(k, m.bonus[k] + v * 0.5); } }
+        if (def.meter[k]) { var M = def.meter[k]; m[k] = clamp(bulat(k, m[k] + v), M.min, M.maks); if (kekal && !def.tanpaBonus) { m.bonus[k] = bulat(k, m.bonus[k] + v * 0.5); } }
         else if (k === 'ip' || k === 'reputasi') { ctx.kes[k] = (ctx.kes[k] || 0) + v; }
         else if (k === 'akar') { ctx.kes.kesetiaan = { akarUmbi: ((ctx.kes.kesetiaan && ctx.kes.kesetiaan.akarUmbi) || 0) + v }; }
         else if (k === 'pop' || k === 'rating') { ctx.d[k] = (ctx.d[k] || 0) + v; }
         else if (k === 'rizab' && p.mof && typeof p.mof === 'object') { var mf = ctx.patch.mof || p.mof; mf.nationalTreasury = Math.round(((Number(mf.nationalTreasury) || 0) - v) * 10) / 10; ctx.patch.mof = mf; }
       });
     }
-    function ctxBaru() { return { kes: {}, patch: {}, d: { pop: 0, rating: 0 } }; }
+    function ctxBaru() { return { kes: {}, patch: {}, d: { pop: 0, rating: 0 }, selepas: [] }; }
     function simpan(p, m, ctx, log) {
       var pt = ctx.patch; pt[def.kunci] = m;
       var r = S().applyEffects(ctx.kes, { kiraTindakan: false, patch: pt, log: log });
@@ -72,18 +73,31 @@
     function ralatAm(p) { return aktif(p) ? '' : def.ralat; }
     function cariTindakan(id) { return def.tindakan.filter(function (t) { return t.id === id; })[0] || null; }
 
-    function laksana(id) {
+    /** v13.81: sebab tindakan tidak boleh (had sebulan ikut kumpulan, selang, AP, dana, projek berjalan). */
+    function sebabTindakan(p, m, t, ini) {
+      var g = t.kumpulan, kump = m.kump || {}, sl = m.selangIdx || {};
+      if (g ? kump[g] === ini : m.tindakanBulan === ini) { return g ? 'Satu tindakan ' + def.kumpulan[g] + ' sebulan.' : 'Satu tindakan utama sebulan.'; }
+      if (t.selang && ini - (sl[t.id] == null ? -999 : sl[t.id]) < t.selang) { return 'Tindakan ini hanya sekali setiap ' + t.selang + ' bulan.'; }
+      if (t.ap && (Number(p.ap) || 0) < t.ap) { return 'AP tidak mencukupi.'; }
+      if (m.dana < t.kos) { return 'Dana tidak cukup.'; }
+      if (t.siap && m.projek.some(function (x) { return x.id === t.id; })) { return 'Projek ini sedang berjalan.'; }
+      return '';
+    }
+    function laksana(id, o) {
       var p = S().loadPlayer(), m = get(p), e = ralatAm(p), t = cariTindakan(id), ini = idx(p), ctx = ctxBaru();
       if (e) { return { ok: false, ralat: e }; }
       if (!t) { return { ok: false, ralat: 'Tindakan tidak sah.' }; }
-      if (m.tindakanBulan === ini) { return { ok: false, ralat: 'Satu tindakan utama sebulan.' }; }
-      if (m.dana < t.kos) { return { ok: false, ralat: 'Dana tidak cukup.' }; }
-      if (t.siap && m.projek.some(function (x) { return x.id === id; })) { return { ok: false, ralat: 'Projek ini sedang berjalan.' }; }
-      m.dana -= t.kos; m.tindakanBulan = ini;
-      if (t.siap) { m.projek.push({ id: id, siapIdx: ini + t.siap }); } else { guna(p, m, t.kesan, ctx, true); }
+      var sb = sebabTindakan(p, m, t, ini); if (sb) { return { ok: false, ralat: sb }; }
+      m.dana -= t.kos;
+      if (t.kumpulan) { m.kump = m.kump || {}; m.kump[t.kumpulan] = ini; } else { m.tindakanBulan = ini; }
+      if (t.selang) { m.selangIdx = m.selangIdx || {}; m.selangIdx[t.id] = ini; }
+      if (t.ap) { ctx.kes.ap = -t.ap; }
+      var jaya = t.peluang == null ? null : rng(o)() < t.peluang, kesan = def.ubahKesan ? def.ubahKesan(t, m, p) : t.kesan;
+      if (t.siap) { m.projek.push({ id: id, siapIdx: ini + t.siap }); } else { guna(p, m, jaya === false ? (t.gagal || {}) : kesan, ctx, true); }
       var r = simpan(p, m, ctx, { tindakan: def.kunci + '_tindakan', nama: t.nama, peringkat: 'ahli' });
       if (!r || !r.ok) { return { ok: false, ralat: r && r.ralat }; }
-      return { ok: true, mesej: t.siap ? 'Diluluskan: ' + t.nama + '. Siap bulan ' + bt(ini + t.siap) + '.' : 'Dilaksanakan: ' + t.nama + '.' };
+      if (jaya === false) { return { ok: true, jaya: false, mesej: t.mesejGagal || ('Tidak berjaya: ' + t.nama + '.') }; }
+      return { ok: true, jaya: jaya, mesej: t.siap ? 'Diluluskan: ' + t.nama + '. Siap bulan ' + bt(ini + t.siap) + '.' : (t.mesej || 'Dilaksanakan: ' + t.nama + '.') };
     }
     function ubahDasar(kod, id) {
       var p = S().loadPlayer(), m = get(p), e = ralatAm(p), T = def.dasar[kod], ctx = ctxBaru();
@@ -118,7 +132,8 @@
       if (!p || p.tamat || (!p[def.kunci] && !aktif(p))) { return { peristiwa: ev }; }
       var m = get(p), r = rng(o), on = aktif(p), ini = idx(p), ctx = ctxBaru(), k, kod;
       m.lalu = {}; for (k in def.meter) { m.lalu[k] = m[k]; }
-      var tambah = def.dana.bulan; for (kod in def.dasar) { tambah += pilihanDasar(kod, m.dasar[kod]).dana || 0; }
+      var tambah = def.dana.bulan + (m.danaTambah || 0); for (kod in def.dasar) { tambah += pilihanDasar(kod, m.dasar[kod]).dana || 0; }
+      if (def.ubahDana) { tambah = def.ubahDana(tambah, m, p); }
       m.dana = Math.min(def.dana.had, m.dana + tambah);
       m.projek = m.projek.filter(function (x) {
         if (x.siapIdx > ini) { return true; }
@@ -129,14 +144,14 @@
         var M = def.meter[k], sas = M.asas + m.bonus[k];
         for (kod in def.dasar) { var sp = pilihanDasar(kod, m.dasar[kod]).sas; if (sp && sp[k]) { sas += sp[k]; } }
         if (def.sasaran) { sas += def.sasaran(k, m, p) || 0; }
-        m[k] = clamp(bulat(k, m[k] + (clamp(sas, M.min, M.maks) - m[k]) * (M.alir || 0.2)), M.min, M.maks);
+        m[k] = clamp(bulat(k, m[k] + (clamp(sas, M.min, M.maks) - m[k]) * (M.alir == null ? 0.2 : M.alir)), M.min, M.maks);
         if (M.desimal === 0 || !M.desimal) { m[k] = Math.round(m[k]); }
       }
       if (m.isu) {
         var I = def.isu[m.isu.id]; m.isu.bulan += 1; guna(p, m, I.abai, ctx, false);
         if (I.tamat && m.isu.bulan >= I.tamat) { if (on) { ev.push({ jenis: 'kabinet', mesej: 'Isu berlalu: ' + I.nama + '.' }); } m.isu = null; }
         else if (on) { ev.push({ jenis: 'kabinet', mesej: 'Isu belum diselesaikan: ' + I.nama + '.' }); }
-      } else if (on && r() < def.isuPeluang) {
+      } else if (on && r() < (typeof def.isuPeluang === 'function' ? def.isuPeluang(m, p) : def.isuPeluang)) {
         var ks = Object.keys(def.isu), id = ks[Math.floor(r() * ks.length)]; m.isu = { id: id, bulan: 0 };
         ev.push({ jenis: 'kabinet', mesej: 'Isu baharu: ' + def.isu[id].nama + '. Buat keputusan di ' + def.pejabat + '.' });
       }
@@ -148,17 +163,20 @@
         if (def.bulanan) { def.bulanan(m, p, ctx, ev); }
       }
       simpan(p, m, ctx);
+      ctx.selepas.forEach(function (fn) { var x = fn(); if (x && x.mesej) { ev.push(x); } });   // v13.81: cth. hilang jawatan
       return { peristiwa: ev };
     }
 
     function ringkasan(p) {
       var m = get(p), ini = idx(p), l = m.lalu || {};
       var meter = Object.keys(def.meter).map(function (k) { var M = def.meter[k]; return { kod: k, nama: M.nama, nilai: m[k], unit: M.unit || '', isi: M.isi ? M.isi(m[k]) : m[k], arah: l[k] == null ? 0 : bulat(k, m[k] - l[k]), bahaya: !!(M.bahaya && M.bahaya(m[k])), nota: M.nota || '' }; });
-      var tambah = def.dana.bulan; for (var kod in def.dasar) { tambah += pilihanDasar(kod, m.dasar[kod]).dana || 0; }
+      var tambah = def.dana.bulan + (m.danaTambah || 0); for (var kod in def.dasar) { tambah += pilihanDasar(kod, m.dasar[kod]).dana || 0; }
+      if (def.ubahDana) { tambah = def.ubahDana(tambah, m, p); }
       var I = m.isu ? def.isu[m.isu.id] : null;
       return { aktif: aktif(p), meter: meter, dana: m.dana, danaBulan: tambah, danaHad: def.dana.had, tindakanSudah: m.tindakanBulan === ini, dasarBoleh: m.dasarBulan !== ini,
-        tindakan: def.tindakan.map(function (t) { var jalan = t.siap && m.projek.some(function (x) { return x.id === t.id; }), sebab = m.tindakanBulan === ini ? 'Satu tindakan utama sebulan.' : jalan ? 'Projek ini sedang berjalan.' : m.dana < t.kos ? 'Dana tidak cukup.' : '';
-          return { id: t.id, ikon: t.ikon, nama: t.nama, kos: t.kos, siap: t.siap || 0, kesan: t.kesan, boleh: !sebab, sebab: sebab }; }),
+        tindakan: def.tindakan.map(function (t) { var sebab = sebabTindakan(p, m, t, ini), kes = def.ubahKesan ? def.ubahKesan(t, m, p) : t.kesan;
+          return { id: t.id, ikon: t.ikon, nama: t.nama, kos: t.kos, siap: t.siap || 0, kesan: kes, ap: t.ap || 0, selang: t.selang || 0, peluang: t.peluang == null ? null : Math.round(t.peluang * 100), gagal: t.gagal || null, kumpulan: t.kumpulan || '', boleh: !sebab, sebab: sebab }; }),
+        kumpulan: Object.keys(def.kumpulan || {}).map(function (g) { return { kod: g, nama: def.kumpulan[g], sudah: !!(m.kump && m.kump[g] === ini) }; }),
         projek: m.projek.map(function (x) { var t = cariTindakan(x.id); return { nama: t ? t.nama : x.id, siap: bt(x.siapIdx) }; }),
         dasar: Object.keys(def.dasar).map(function (kod) { var T = def.dasar[kod]; return { kod: kod, nama: T.nama, ikon: T.ikon, nota: T.nota || '', semasa: m.dasar[kod], pilihan: T.pilihan.map(function (c) { return { id: c.id, label: c.label }; }) }; }),
         isu: I ? { nama: I.nama, ikon: I.ikon, abai: I.abai, bulan: m.isu.bulan, sudah: m.isuBulan === ini, pilihan: I.pilihan.map(function (c) { return { id: c.id, ikon: c.ikon, label: c.label, kos: c.kos || 0, peluang: c.peluang == null ? null : Math.round(peluang(m, c) * 100), kesan: c.kesan, gagal: c.gagal || null, boleh: m.dana >= (c.kos || 0) && m.isuBulan !== ini }; }) } : null };

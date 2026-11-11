@@ -14,7 +14,7 @@
   function jt(n) { return 'RM ' + Math.round(Number(n) || 0).toLocaleString('ms-MY') + ' juta'; }
   function tanda(n) { return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n); }
   (function () { var st = W.document.createElement('style'); st.textContent = '.kem-abai small{display:inline-block;background:var(--bg-elev-1);border-radius:6px;padding:1px 6px;margin:2px 4px 0 0;font-size:.72rem}'; W.document.head.appendChild(st); })();
-  var KHAS = { ip: 'IP', pop: 'Populariti', rating: 'KPI', reputasi: 'Reputasi', akar: 'Akar umbi' };
+  var KHAS = { ap: 'AP', ip: 'IP', pop: 'Populariti', rating: 'KPI', reputasi: 'Reputasi', akar: 'Akar umbi' };
 
   function cari(kunci) { return KM.senarai().filter(function (x) { return x.def.kunci === kunci; })[0] || null; }
   function kesan(mod, x) {
@@ -31,12 +31,23 @@
       return '<div class="kdn-m' + (x.bahaya ? ' bahaya' : '') + '"><span>' + esc(x.nama) + '</span><b>' + x.nilai + x.unit + '</b><s><i style="width:' + Math.max(0, Math.min(100, Math.round(x.isi))) + '%"></i></s>' + (x.nota ? '<span>' + esc(x.nota) + '</span>' : '') + '<span>' + (x.arah > 0 ? '▲ ' : x.arah < 0 ? '▼ ' : '▬ ') + tanda(x.arah) + x.unit + ' bulan lalu</span></div>';
     }).join('');
     h += '<div class="kdn-m"><span>Dana</span><b>' + jt(r.dana) + '</b><span>+' + jt(r.danaBulan) + ' sebulan · had ' + jt(r.danaHad) + '</span></div></div>';
-    h += '<h3 class="mof-h">🏗️ Tindakan bulanan</h3><p class="note">' + (r.tindakanSudah ? 'Tindakan bulan ini sudah dibuat.' : 'Satu tindakan utama sebulan.') + '</p>';
-    h += r.tindakan.map(function (t) {
-      return '<div class="kdn-ag"><div><b>' + t.ikon + ' ' + esc(t.nama) + '</b><p>' + jt(t.kos) + (t.siap ? ' · siap ' + t.siap + ' bulan' : '') + '</p>' + kesan(mod, t.kesan) + '</div>' +
+    function kadT(t) {                                                                 // v13.81: AP, selang, peluang dan kesan gagal
+      var info = [t.kos ? jt(t.kos) : 'Tanpa kos'];
+      if (t.ap) { info.push(t.ap + ' AP'); } if (t.siap) { info.push('siap ' + t.siap + ' bulan'); } if (t.selang) { info.push('sekali setiap ' + t.selang + ' bulan'); } if (t.peluang != null) { info.push(t.peluang + '% berjaya'); }
+      return '<div class="kdn-ag"><div><b>' + t.ikon + ' ' + esc(t.nama) + '</b><p>' + info.join(' · ') + '</p>' + kesan(mod, t.kesan) + (t.gagal && Object.keys(t.gagal).length ? '<small>Gagal:</small>' + kesan(mod, t.gagal) : '') + '</div>' +
         '<button type="button" class="btn btn--sm" data-kem="laksana" data-mod="' + kunci + '" data-id="' + t.id + '"' + (t.boleh ? '' : ' disabled title="' + esc(t.sebab) + '"') + '>Laksana</button></div>';
-    }).join('');
+    }
+    if (r.kumpulan && r.kumpulan.length) {
+      r.kumpulan.forEach(function (g) {
+        h += '<h3 class="mof-h">' + esc(g.nama) + '</h3><p class="note">' + (g.sudah ? 'Tindakan bulan ini sudah dibuat.' : 'Satu tindakan sebulan.') + '</p>';
+        h += r.tindakan.filter(function (t) { return t.kumpulan === g.kod; }).map(kadT).join('');
+      });
+    } else {
+      h += '<h3 class="mof-h">🏗️ Tindakan bulanan</h3><p class="note">' + (r.tindakanSudah ? 'Tindakan bulan ini sudah dibuat.' : 'Satu tindakan utama sebulan.') + '</p>';
+      h += r.tindakan.map(kadT).join('');
+    }
     if (r.projek.length) { h += '<p class="note">Projek dalam pembinaan: ' + r.projek.map(function (x) { return '<b>' + esc(x.nama) + '</b> (siap bulan ' + x.siap + ')'; }).join(' · ') + '</p>'; }
+    if (r.dasar.length) {                                                              // v13.81: tiada dasar = tiada bahagian
     h += '<h3 class="mof-h">📜 Dasar</h3><p class="note">' + (r.dasarBoleh ? 'Satu perubahan dasar sebulan.' : 'Perubahan dasar bulan ini sudah dibuat.') + '</p>';
     h += r.dasar.map(function (t) {
       return '<div class="mof-tuil"><b>' + t.ikon + ' ' + esc(t.nama) + '</b>' + (t.nota ? '<p class="note">' + esc(t.nota) + '</p>' : '') + '<div class="mof-seg">' + t.pilihan.map(function (c) {
@@ -44,6 +55,7 @@
         return '<button type="button" class="btn btn--sm' + (on ? ' on' : '') + '" data-kem="dasar" data-mod="' + kunci + '" data-d="' + t.kod + '" data-id="' + c.id + '"' + (on || !r.dasarBoleh ? ' disabled' : '') + (on ? ' aria-pressed="true"' : '') + '>' + esc(c.label) + '</button>';
       }).join('') + '</div></div>';
     }).join('');
+    }
     if (r.isu) {
       h += '<div class="banner banner--warn" role="alert"><strong>' + r.isu.ikon + ' Isu: ' + esc(r.isu.nama) + '</strong>Setiap bulan jika tidak diselesaikan: <span class="kem-abai">' + kesan(mod, r.isu.abai) + '</span></div>';
       h += r.isu.pilihan.map(function (c) {

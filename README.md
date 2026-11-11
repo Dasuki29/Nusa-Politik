@@ -96,6 +96,7 @@ Modul utama dalam `js/`:
 | `kkm.js` | Takrif Kementerian Kesihatan: kapasiti hospital, petugas, kesihatan awam, tindakan, dasar caj dan cukai gula, wabak (tab Pejabat KKM) |
 | `ke.js` | Takrif Kementerian Ekonomi: KDNK, pengangguran, pelabur, jurang pendapatan, fokus, inisiatif, kemelesetan (tab Pejabat Ekonomi) |
 | `kpkt.js` | Takrif Kementerian Perumahan dan Kerajaan Tempatan: PPR bandar, PBT, bomba, dasar sewa dan majlis PBT, isu (tab Pejabat KPKT) |
+| `sabah-km.js` | Pejabat Ketua Menteri Sabah: tuntutan MA63 (hak 40% hasil), kestabilan kerajaan negeri, hubungan Persekutuan (tab Pejabat Ketua Menteri) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |

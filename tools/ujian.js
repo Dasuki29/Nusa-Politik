@@ -3038,6 +3038,26 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.81 Sabah: Kabinet Negeri (Menteri), Pejabat Ketua Menteri, tuntutan MA63, kestabilan dan hilang jawatan', () => {
+  const K = g.MyPolitikKabinet, SK = g.MyPolitikSabahKM;
+  sama(K.PORTFOLIO.SABAH.length, 10); betul(K.PORTFOLIO.SABAH.every((d) => /Menteri .* Sabah$/.test(d.nama)), 'gelaran Menteri');
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000, negeri: 'Sabah', ip: 1000 }); let p = S.loadPlayer(); betul(K.SB(p));
+  betul(K.bukaLobi('DUN').ok); let sn = K.senaraiPortfolio(S.loadPlayer()); betul(sn.length === 10 && sn.every((x) => /^sb_/.test(x.id)), 'lobi Sabah');
+  let lj = null; for (let i = 0; i < 3 && !(lj && lj.dilantik); i++) { lj = K.lobiPortfolio('sb_pendidikan', () => 0.01); } betul(lj && lj.dilantik);
+  p = S.loadPlayer(); sama(K.kepimpinanNegeri(p).stateExcoPortfolio, 'Menteri Pendidikan, Sains, Teknologi dan Inovasi Sabah'); betul(K.pejabatEXCO(p).tindakan.some((t) => t.id === 'biasiswa'), 'kongsi set tindakan EXCO');
+  sama(g.MyPolitikDewan.kategoriPemain(p)[0], 'pendidikan'); betul(!SK.aktif(p), 'Menteri biasa: tiada Pejabat KM');
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_BESAR', portfolioName: 'Ketua Menteri Sabah', portfolioId: '' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(SK.aktif(p)); sama(K.pejabatEXCO(p), null, 'KM Sabah tiada portfolio Tanah');
+  const ap0 = p.ap; betul(SK.laksana('runding').ok); p = S.loadPlayer(); sama(p.ap, ap0 - 1); sama(p.sabahkm.ma63, 36); sama(SK.laksana('tekanan').ok, false, 'satu tuntutan sebulan');
+  betul(SK.laksana('jawatan').ok, 'kumpulan kestabilan berasingan'); P.tetap({ bulan: 4 }); sama(SK.laksana('jawatan').ok, false, 'sekali 3 bulan');
+  p = S.loadPlayer(); p.sabahkm.ma63 = 98; S.applyEffects({}, { kiraTindakan: false, patch: { sabahkm: p.sabahkm } }); betul(SK.laksana('tekanan').ok);
+  const ev = SK.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /pelan pembayaran/.test(e.mesej))); p = S.loadPlayer(); sama(p.sabahkm.ma63, 0); sama(SK.ringkasan(p).danaBulan, 70);
+  p.sabahkm.hubungan = 10; p.sabahkm.bonus.hubungan = -50; S.applyEffects({}, { kiraTindakan: false, patch: { sabahkm: p.sabahkm } }); sama(SK.ringkasan(S.loadPlayer()).danaBulan, 50, 'hubungan rendah: peruntukan tertangguh');
+  p = S.loadPlayer(); p.sabahkm.kestabilan = 0; p.sabahkm.bonus.kestabilan = -80; S.applyEffects({}, { kiraTindakan: false, patch: { sabahkm: p.sabahkm } });
+  P.tetap({ bulan: 5 }); const ev2 = SK.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev2.some((e) => /hilang kepercayaan/.test(e.mesej))); sama(K.getKabinet(S.loadPlayer()).hasGovernmentRole, false, 'hilang jawatan');
+  P.daftar({}); P.tetap({ negeri: 'Johor' }); betul(!K.SB(S.loadPlayer()), 'Johor bukan Sabah');
+  S.clearPlayer();
+});
 ujian('v13.80 KPKT: nama baharu portfolio, PPR bandar, dasar sewa (dana) dan majlis PBT (suis), isu, akibat, nama lama diterima', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikKPKT;
   betul(g.MyPolitikKabinetData.menteri.some((m) => m.nama === 'Menteri Perumahan dan Kerajaan Tempatan'), 'nama baharu');
