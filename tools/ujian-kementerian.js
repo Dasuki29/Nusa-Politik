@@ -34,7 +34,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   const BOCOR = async (sel) => pg.evaluate(([src, s]) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll(s).forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, [BM.source, sel]);
-  const SENARAI = { kpm: 'Menteri Pendidikan', kkm: 'Menteri Kesihatan', ke: 'Menteri Ekonomi' };
+  const SENARAI = { kpm: 'Menteri Pendidikan', kkm: 'Menteri Kesihatan', ke: 'Menteri Ekonomi', kpkt: 'Menteri Perumahan dan Kerajaan Tempatan' };
   const pilih = process.argv[2] ? [process.argv[2]] : Object.keys(SENARAI);
   for (const kunci of pilih) {
     const ada = await pg.evaluate((k) => MyPolitikKementerian.senarai().some((x) => x.def.kunci === k), kunci);

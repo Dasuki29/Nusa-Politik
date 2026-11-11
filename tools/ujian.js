@@ -3038,6 +3038,23 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.80 KPKT: nama baharu portfolio, PPR bandar, dasar sewa (dana) dan majlis PBT (suis), isu, akibat, nama lama diterima', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikKPKT;
+  betul(g.MyPolitikKabinetData.menteri.some((m) => m.nama === 'Menteri Perumahan dan Kerajaan Tempatan'), 'nama baharu');
+  betul(!g.MyPolitikKabinetData.menteri.some((m) => m.nama === 'Menteri Pembangunan Kerajaan Tempatan'), 'nama lama dibuang');
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Pembangunan Kerajaan Tempatan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  betul(M.aktif(S.loadPlayer()), 'simpanan lama (nama lama) diterima');
+  Object.assign(k, { portfolioName: 'Menteri Perumahan dan Kerajaan Tempatan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } }); p = S.loadPlayer(); betul(M.aktif(p));
+  betul(M.laksana('ppr').ok); sama(S.loadPlayer().kpkt.projek.length, 1); sama(S.loadPlayer().kpkt.dana, 70);
+  betul(M.ubahDasar('sewa', 'sasar').ok); sama(M.ringkasan(S.loadPlayer()).danaBulan, 70, 'sewa bersasar: dana +10');
+  P.tetap({ bulan: 4 }); const ak = S.loadPlayer().kesetiaan.akarUmbi; betul(M.ubahDasar('majlis', 'undi').ok); betul(S.loadPlayer().kesetiaan.akarUmbi < ak, 'pilihan raya PBT: akar umbi −2');
+  P.tetap({ bulan: 9 }); const u0 = S.loadPlayer().kpkt.urbanHousingSatisfaction; M.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); sama(p.kpkt.projek.length, 0, 'PPR siap'); betul(p.kpkt.urbanHousingSatisfaction > u0 - 3, 'PPR siap menaikkan perumahan');
+  p.kpkt.isu = { id: 'lif', bulan: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { kpkt: p.kpkt } }); betul(M.jawabIsu('baiki').ok); sama(S.loadPlayer().kpkt.isu, null);
+  p = S.loadPlayer(); p.kpkt.pbt = 10; p.kpkt.bonus.pbt = -40; S.applyEffects({}, { kiraTindakan: false, patch: { kpkt: p.kpkt } }); const rt = K.getKabinet(S.loadPlayer()).governanceRating;
+  P.tetap({ bulan: 10 }); const ev = M.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /PBT melimpah/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt);
+  S.clearPlayer();
+});
 ujian('v13.79 Kementerian Ekonomi: meter perpuluhan, fokus, inisiatif, kemelesetan (rangsangan tolak rizab MOF), akibat, sambungan MOF', () => {
   const K = g.MyPolitikKabinet, M = g.MyPolitikKE, MF = g.MyPolitikMOF;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));

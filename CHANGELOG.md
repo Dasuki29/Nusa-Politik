@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v13.80 (2026-11-11)
+
+- **Modul Kementerian Perumahan dan Kerajaan Tempatan (KPKT)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, isu ialah label simulasi), dibina atas enjin kementerian generik.
+  - Nama portfolio dibetulkan kepada **Menteri Perumahan dan Kerajaan Tempatan** (nama rasmi sejak keputusan Kabinet 13 Disember 2023; dahulu "Pembangunan Kerajaan Tempatan"). ID portfolio tidak berubah; simpanan lama yang memegang nama lama masih mendapat tab. Terjemahan EN untuk nama baharu dan Timbalan Menteri.
+  - Takrif `js/kpkt.js` (rekod `p.kpkt`): `urbanHousingSatisfaction` (PPR bandar), perkhidmatan PBT, kesiapsiagaan bomba, dana (RM 60 juta sebulan, had RM 300 juta).
+  - **Tab "🏙️ Pejabat KPKT"**: tindakan (bina PPR baharu 6 bulan, penyelenggaraan PPR, kebersihan PBT, balai bomba 4 bulan), dasar (sewa PPR: rendah / sewa-beli / bersasar; ahli majlis PBT: dilantik / pilihan raya kerajaan tempatan, sebagai suis dasar sahaja), isu rawak (lif PPR rosak, banjir kilat, kebakaran kawasan perindustrian, kontraktor PPR lari).
+  - Akibat bulanan: perumahan bandar bawah 30 = populariti −2; PBT bawah 30 = KPI −3; bomba bawah 35 = KPI −2.
+- `data/js/` (sandaran luar talian) dijana semula supaya senarai kabinet termasuk Menteri Kemajuan Desa dan Wilayah dan nama baharu KPKT.
+- Ujian baharu (212 ujian).
+
 ## v13.79 (2026-11-11)
 
 - **Modul Kementerian Ekonomi** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, krisis ialah label simulasi), dibina atas enjin kementerian generik.
