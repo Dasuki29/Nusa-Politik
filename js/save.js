@@ -191,10 +191,10 @@
       cawanganInfo: ik.cawanganInfo,
       settings: { currentLang: input.currentLang === 'EN' ? 'EN' : 'BM', difficultyLevel: input.difficultyLevel === 'EASY' || input.difficultyLevel === 'HARDCORE' ? input.difficultyLevel : 'NORMAL' },   // v7.28: dikunci selepas daftar
       pendidikan: { tahap: ['spm', 'diploma', 'ijazah', 'sarjana', 'phd'].indexOf(input.pendidikan) >= 0 ? input.pendidikan : 'ijazah', bidang: input.bidang === 'islam' && input.pendidikan !== 'spm' ? 'islam' : 'umum' },   // v13.32: bidang pengajian (Dewan Ulamak PAS)
-      keahlianJenis: input.parti === 'PAS' && input.keahlianJenis === 'bersekutu' ? 'bersekutu' : undefined,   // v13.32: Ahli Bersekutu PAS (Fasal 11(2))   // v13.13: pendidikan tertinggi
+      keahlianJenis: (input.parti === 'PAS' || input.parti === 'BERSATU') && input.keahlianJenis === 'bersekutu' ? 'bersekutu' : undefined,   // v13.89: Ahli Bersekutu BERSATU (Fasal 7.4)   // v13.32: Ahli Bersekutu PAS (Fasal 11(2))   // v13.13: pendidikan tertinggi
       careerBackground: KERJAYA_SAH.indexOf(input.careerBackground) >= 0 ? input.careerBackground : 'korporat',   // v8.12: latar belakang profesional (dikunci)
       avatar: avatarSah(input.avatar) ? input.avatar : (avatarSah(d.kod) ? d.kod : 'pemuda'),   // pilihan watak (kosmetik)
-      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' || input.parti === 'DAP' || input.parti === 'AMANAH' || input.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(input.parti) ? input.parti : 'UMNO',   // v13.31: PAS                // v13.8: PPP                // v13.1: MCA; v13.3: MIC
+      parti: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' || input.parti === 'DAP' || input.parti === 'AMANAH' || input.parti === 'BERSATU' || input.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(input.parti) ? input.parti : 'UMNO',   // v13.31: PAS                // v13.8: PPP                // v13.1: MCA; v13.3: MIC
       blokPBB: input.parti === 'PBB' && (input.blokPBB === 'bumiputera' || input.blokPBB === 'pesaka') ? input.blokPBB : undefined,   // v9.0
       komunitiPBS: input.parti === 'PBS' && /^(bbi|bi|cina)$/.test(input.komunitiPBS || '') ? input.komunitiPBS : undefined,   // v13.65: komuniti dalam PBS
       dunInfo: SW(input.parti) && input.dunInfo && typeof input.dunInfo === 'object' ? input.dunInfo : undefined,   // v8.33: ringkasan DUN (etnik, pemilih) untuk PRN Sarawak            // v8.32: PBB = parti regional Sarawak (lalai UMNO)
@@ -207,7 +207,7 @@
       bulan: DEFAULTS.bulan,
       kesetiaan: salin(KESETIAAN_LALAI),
       keahlian: { sejakTahun: DEFAULTS.tahun - tahunAhli(input.tahunAhli, d.umur), sejakBulan: 1 },
-      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' || input.parti === 'DAP' || input.parti === 'AMANAH' || input.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(input.parti) ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
+      umno: SW(input.parti) || input.parti === 'MCA' || input.parti === 'MIC' || input.parti === 'PPP' || input.parti === 'PBRS' || input.parti === 'PAS' || input.parti === 'PKR' || input.parti === 'DAP' || input.parti === 'AMANAH' || input.parti === 'BERSATU' || input.parti === 'BERJASA' || /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(input.parti) ? undefined : { v: 135 },   // v13.5: penanda profil baharu (takwim Fasa B)
       dicipta: new Date().toISOString()
     });
   }

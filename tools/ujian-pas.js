@@ -24,7 +24,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.goto(base + '/index.html'); await pg.waitForTimeout(1200);
   await pg.click('[data-gab="PN"]'); await pg.waitForTimeout(300);
   const pn = await pg.evaluate(() => { const p = document.querySelector('#gab-pn'); return p && !p.hidden ? p.textContent : ''; });
-  semak(/PAS/.test(pn) && /Bersatu/.test(pn) && /Gerakan/.test(pn) && /MIPP/.test(pn), 'panel PN di menu utama: ' + pn.slice(0, 120));
+  semak(/PAS/.test(pn) && /BERSATU/.test(pn) && /Gerakan/.test(pn) && /MIPP/.test(pn), 'panel PN di menu utama: ' + pn.slice(0, 120));
   await pg.click('text=Permainan baharu'); await pg.waitForTimeout(1000);
   await pg.selectOption('#s-parti', 'PAS'); await pg.waitForTimeout(2500);
   semak(/Perikatan Nasional/.test(await pg.textContent('#h-parti')), 'nota PAS pada skrin pendaftaran');

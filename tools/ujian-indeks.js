@@ -15,7 +15,7 @@ let gagal = 0; const betul = (c, m) => { console.log((c ? '  ✓ ' : '  ✗ ') +
   betul(!/Lagu Rasmi/.test(t), 'kad Lagu Rasmi dibuang dari indeks');
   betul(await pg.evaluate(() => document.querySelector('.brand').innerText.trim()) === 'Nusa Politik', 'jenama pengepala = Nusa Politik sahaja');
   betul(await pg.evaluate(() => [].every.call(document.querySelectorAll('img[data-netral]'), (i) => /logo-nusa\.svg$/.test(i.getAttribute('src')))), 'logo neutral Nusa Politik');
-  betul(await pg.evaluate(() => document.querySelectorAll('#s-parti option').length) === 21, 'pilihan parti 21 pilihan (v13.56: Amanah) dalam Maklumat anda');
+  betul(await pg.evaluate(() => document.querySelectorAll('#s-parti option').length) === 22, 'pilihan parti 22 pilihan (v13.89: BERSATU) dalam Maklumat anda');
   betul(await pg.evaluate(() => !!document.querySelector('fieldset.form-section #s-parti')) && await pg.evaluate(() => document.querySelector('#s-parti').closest('fieldset').innerText.toLowerCase().indexOf('maklumat anda') >= 0), 's-parti di dalam Maklumat anda');
   betul(/mana-mana parti politik/.test(t) && !/cawangan rasmi UMNO/.test(t), 'nota cawangan neutral');
   betul(await pg.evaluate(() => !!document.querySelector('#avatar-grid [data-kod=puteri]')), 'UMNO: Puteri ada (avatar)');

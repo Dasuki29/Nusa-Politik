@@ -52,6 +52,10 @@
   function wakilDAP(ahli) { var n = Number(ahli) || 0; if (n < 25) { return 1; } if (n <= 50) { return 2; } return 3 + Math.floor(Math.max(0, n - 100) / 100) + (n > 100 && (n - 100) % 100 ? 1 : 0); }
   /** Amanah Fasal 14.1(d): 5 perwakilan termasuk Ketua (Cawangan ke Kawasan; Kawasan ke Konvensyen Nasional). */
   function wakilAmanah() { return 4; }
+  /** v13.89: BERSATU Fasal 18.4.4: seorang wakil Cawangan ke Persidangan Bahagian bagi setiap 30 ahli, maksimum 6 (tambahan jika hadir melebihi 180, dipermudahkan). */
+  function wakilBersatuC(ahli) { return Math.max(1, Math.min(6, Math.floor((Number(ahli) || 0) / 30))); }
+  /** Fasal 12.4.3: seorang wakil Bahagian ke Perhimpunan Agung bagi setiap 300 ahli, maksimum 7. */
+  function wakilBersatuB(ahli) { return Math.max(1, Math.min(7, Math.ceil((Number(ahli) || 0) / 300))); }
 
   /** v13.63: blok PBB pemain ('pesaka' | 'bumiputera'); lalai Bumiputera. */
   function blokPBB(p) { var SW = typeof globalThis !== 'undefined' ? globalThis.MyPolitikSarawak : null; var b = SW && SW.blokPemain ? SW.blokPemain(p) : (p && p.blokPBB); return b === 'pesaka' ? 'pesaka' : 'bumiputera'; }
@@ -136,6 +140,18 @@
         ajk_bahagian: { tutup: 'Ahli JPKP tidak dipilih: Ahli Parlimen, ADUN, Ketua Pemuda, Ketua Wanita dan Pengerusi Cawangan menganggotai JPKP secara automatik' },
         ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' }, timbalan_ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' }, naib_ketua_bahagian: { perlu: PERLU_DAP, pemilih: 'cawangan' },
         ahli_mkt: { lantikan: 10, fasal: 'Fasal X.1(b)' }
+      }
+    },
+    BERSATU: {
+      sumber: 'Perlembagaan BERSATU',
+      wakilCawangan: wakilBersatuC, wakilBahagian: wakilBersatuB, wakilDewanPA: 20,                                       // v13.89: Fasal 12.4.3, 12.4.5, 18.4.4
+      jawatan: {
+        ajk_cawangan: { kerusi: 8, lantikan: 3, fasal: 'Fasal 21.1.8, 21.1.9' },
+        ajk_bahagian: { kerusi: 10, lantikan: 4, pemilih: 'ahli', fasal: 'Fasal 19.1.7, 19.1.8, 20.5.2' },
+        naib_ketua_bahagian: { kerusi: 1, pemilih: 'ahli', fasal: 'Fasal 19.1.3, 20.5.2' },        // 3 Naib Ketua termasuk Ketua Srikandi dan Ketua Armada
+        timbalan_ketua_bahagian: { pemilih: 'ahli' }, ketua_bahagian: { pemilih: 'ahli' },     // dipilih oleh ahli di Persidangan Cawangan (Fasal 20.5.2)
+        naib_presiden: { kerusi: 3, fasal: 'Fasal 13.2.4, 13.3' },
+        ahli_mkt: { kerusi: 20, lantikan: 7, fasal: 'Fasal 13.2.8, 13.2.10' }
       }
     },
     AMANAH: {

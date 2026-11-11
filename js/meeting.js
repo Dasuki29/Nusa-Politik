@@ -274,6 +274,20 @@
         { kod: 'amanah_keadilan', tajuk: 'Keadilan sosial: gaji wajar dan perumahan rakyat', penerangan: 'Konvensyen mendesak dasar gaji wajar dan rumah mampu milik.', populariti: 66, nilai: 3 }
       ]
     },
+    BERSATU: {                                                                      // v13.89: isu simulasi BERSATU (ANDAIAN)
+      cawangan: [
+        { kod: 'bersatu_ahli', tajuk: 'Kempen tambah ahli baharu di daerah mengundi', penerangan: 'Cawangan perlu menarik pengundi muda Melayu menyertai parti.', populariti: 64, nilai: 3 },
+        { kod: 'bersatu_kebajikan', tajuk: 'Bantuan kebajikan untuk keluarga B40', penerangan: 'Penduduk meminta bantuan makanan dan yuran sekolah.', populariti: 66, nilai: 3 }
+      ],
+      bahagian: [
+        { kod: 'bersatu_pn', tajuk: 'Kukuhkan jentera bersama PAS di kerusi campuran', penerangan: 'Bahagian mahu persefahaman agihan kerusi PN lebih awal.', populariti: 62, nilai: 3 },
+        { kod: 'bersatu_armada', tajuk: 'Program kepimpinan Armada dan Srikandi Muda', penerangan: 'Anak muda mahu latihan kepimpinan dan keusahawanan.', populariti: 60, nilai: 3 }
+      ],
+      pau: [
+        { kod: 'bersatu_rasuah', tajuk: 'Membasmi rasuah dan salah guna kuasa', penerangan: 'Perhimpunan Agung menegaskan cogan perjuangan parti (Mukadimah).', populariti: 66, nilai: 4 },
+        { kod: 'bersatu_ekonomi', tajuk: 'Ekonomi mapan dan kos sara hidup', penerangan: 'Perhimpunan Agung mendesak dasar harga barang dan pekerjaan.', populariti: 64, nilai: 3 }
+      ]
+    },
     BERJASA: {
       cawangan: [{ kod: 'bj_fardu', tajuk: 'Kelas fardu ain dan tahfiz untuk anak-anak', penerangan: 'Ibu bapa mahu kelas agama yang tetap di kawasan ini.', populariti: 70, nilai: 3 }],
       bahagian: [{ kod: 'bj_ekonomi', tajuk: 'Ekonomi Islam untuk peniaga kecil', penerangan: 'Pembiayaan patuh syariah dan koperasi untuk peniaga kecil Melayu.', populariti: 64, nilai: 3 }],
@@ -397,7 +411,8 @@
     PDP: ['Perjuangan Rakyat, Sarawak Diutamakan'],
     PKR: ['Reformasi', 'Malaysia MADANI'],
     DAP: ['Malaysian Malaysia', 'Integriti dan Kecekapan'],
-    AMANAH: ['Rahmatan lil Alamin', 'Negara Rahmah']
+    AMANAH: ['Rahmatan lil Alamin', 'Negara Rahmah'],
+    BERSATU: ['Bersatu Membela Rakyat', 'Membasmi Rasuah dan Salah Guna Kuasa']
   };
   var TIADA_UMUM = { PBS: ['dewan_surau'], UPKO: ['dewan_surau'], LDP: ['dewan_surau'], MCA: ['dewan_surau'], MIC: ['dewan_surau'], PPP: ['dewan_surau'], PBRS: ['dewan_surau'], PRS: ['dewan_surau'], SUPP: ['dewan_surau'], PDP: ['dewan_surau'] };   // usul umum yang tidak sesuai dengan komuniti parti
   /* v13.22 (mockup "Ucapan Dasar Presiden", dipersetujui; maklum balas 3 pemain): pemain Presiden menyampaikan Ucapan Dasar sendiri.
@@ -565,7 +580,7 @@
   /** v13.60: bilangan hadir Mesyuarat Bahagian / Perhimpunan Agung dikira daripada kuota wakil sebenar parti (bukan 125 / 1,500 tetap). */
   function hadirKira(p, peringkat) {
     var Eg = typeof globalThis !== 'undefined' ? globalThis.MyPolitikElection : null; if (!Eg || !Eg.kuotaBahagian) { return null; }
-    var kodM = /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti || '') ? 'MyPolitikGRS' : { BERJASA: 'MyPolitikBERJASA', WARISAN: 'MyPolitikWarisan', MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
+    var kodM = /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti || '') ? 'MyPolitikGRS' : { BERJASA: 'MyPolitikBERJASA', WARISAN: 'MyPolitikWarisan', MCA: 'MyPolitikMCA', MIC: 'MyPolitikMIC', PPP: 'MyPolitikPPP', PBRS: 'MyPolitikPBRS', UMNO: 'MyPolitikUMNO', PAS: 'MyPolitikPAS', PKR: 'MyPolitikPKR', DAP: 'MyPolitikDAP', BERSATU: 'MyPolitikBersatu', AMANAH: 'MyPolitikAmanah' }[p.parti || 'UMNO'];
     var pas = p.parti === 'PAS';                                                   // v13.61: PAS Fasal 18(4): + Yang Dipertua Kawasan, 100 wakil Dewan, JK Pusat dan Majlis Syura; 19(4)(e): 45 wakil Dewan di Kawasan
     var M = kodM && typeof globalThis !== 'undefined' ? globalThis[kodM] : null, rp = null;
     if (M && M.ringkasPusat) { try { rp = M.ringkasPusat(p); } catch (e) { rp = null; } }
@@ -574,6 +589,7 @@
     var St = globalThis.MyPolitikStruktur, had = St && St.hadPA ? St.hadPA(p) : null;
     if ((kodM === 'MyPolitikBERJASA' || kodM === 'MyPolitikWarisan') && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(30, Math.round(rp.pengundi / 4)); }   // v13.68: BERJASA / Warisan: perwakilan modul parti
     if (kodM === 'MyPolitikGRS' && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(30, Math.round(rp.pengundi / 4)); }   // v13.66: GRS: perwakilan modul GRS
+    if (p.parti === 'BERSATU' && rp && rp.pengundi && (peringkat === 'pau' || peringkat === 'sayap_pau')) { return peringkat === 'pau' ? rp.pengundi : Math.max(40, Math.round(rp.pengundi / 5)); }   // v13.89: Fasal 12.4
     if (p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH') {      // v13.62: PH: PKR semua anggota Cabang (≈10% hadir, ANDAIAN); DAP ahli JPKP; Amanah 14.3; Pusat = perwakilan modul parti
       var nCw = (Eg.bilPemilih ? Eg.bilPemilih(p, 'bahagian') / Math.max(1, Eg.kuotaCawangan(p)) : 10);
       if (peringkat === 'bahagian') { return p.parti === 'PKR' ? Math.max(100, Math.round((Eg.ahliBahagian ? Eg.ahliBahagian(p) : 2000) * 0.1)) : p.parti === 'DAP' ? Math.max(10, Math.round(nCw) + 4) : Math.max(30, Math.round(nCw * 5) + 23 + 60); }

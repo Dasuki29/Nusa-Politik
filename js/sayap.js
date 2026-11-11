@@ -67,7 +67,7 @@
   /** Laluan dicadangkan: sayap mengikut kategori, atau 'utama' (Biasa / Veteran). */
   /** v8.32: PBB tiada sayap Puteri; perempuan 18 hingga 35 tahun masuk sayap Wanita. */
   function tanpaPuteri(k) { return SW(k) || k === 'MCA' || k === 'PBRS' || k === 'PAS' || k === 'PKR' || k === 'DAP' || /^(PBS|UPKO|LDP|PHRS|PCS)$/.test(k); }   // v13.31: PAS (Dewan Pemuda dan Muslimat)      // v13.9: PBRS (Pemuda dan Wanita sahaja)                  // v13.1: MCA (Pemuda dan Wanita sahaja)
-  function katParti(jantina, umur, parti) { var k = kategori(jantina, umur, parti); if ((parti === 'PKR' || parti === 'DAP') && k === 'pemuda' && parseInt(umur, 10) > 35) { k = 'biasa'; } return tanpaPuteri(parti) && k === 'puteri' ? 'wanita' : k; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)
+  function katParti(jantina, umur, parti) { var k = kategori(jantina, umur, parti); if ((parti === 'PKR' || parti === 'DAP' || parti === 'BERSATU') && k === 'pemuda' && parseInt(umur, 10) > 35) { k = 'biasa'; } return tanpaPuteri(parti) && k === 'puteri' ? 'wanita' : k; }   // v13.34: Angkatan Muda PKR had umur 35 tahun (Fasal 25.1); v13.37: DAPSY 35 (ANDAIAN)   // v13.89: BERSATU Armada 35 tahun ke bawah (Fasal 22.3)
   function cadangan(jantina, umur, parti) { var k = katParti(jantina, umur, parti); return SAYAP.indexOf(k) >= 0 ? k : 'utama'; }
 
   /** Kelayakan semua laluan bagi jantina dan umur: { utama:{boleh,sebab}, pemuda:{...}, ... }. */

@@ -72,7 +72,7 @@
   /* v13.34: pemain PKR: parti = merah PH, rakan (GPS, GRS) = ungu, slot lawan 'PH' dalaman = Barisan Nasional (biru). */
   var WARNA_PKR = { PARTI: '#E10600', RAKAN: '#7A4FD0', BN: '#E10600', LAIN: '#9AA0AA', PH: '#2D50B8', PN: '#0F7B5F', LAWAN: '#B5838D' };
   function pemainParti(p, k) { try { var q = p || (S && S.loadPlayer ? S.loadPlayer() : null); return !!q && q.parti === k; } catch (e) { return false; } }
-  function pemainPAS(p) { return pemainParti(p, 'PAS'); }
+  function pemainPAS(p) { return pemainParti(p, 'PAS') || pemainParti(p, 'BERSATU'); }   // v13.89: pemain PN
   function pemainPH(p) { return pemainParti(p, 'PKR') || pemainParti(p, 'DAP') || pemainParti(p, 'AMANAH'); }   // v13.37: DAP juga
   function warnaH(kod, p) { return (pemainPAS(p) ? WARNA_PAS : pemainPH(p) ? WARNA_PKR : WARNA_H)[kod]; }
   function lawanPN(p) { return pemainPAS(p) ? 'BN' : 'PN'; }
@@ -185,7 +185,7 @@
   /* ---------- Panel ---------- */
   function panel(p) {
     try {
-      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' ? 'PH' : p.parti === 'BERJASA' ? 'BERJASA' : p.parti === 'WARISAN' ? 'Warisan' : /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti) ? 'Perpaduan' : 'BN' };
+      var r = pilih(p).ringkasan(p), L = r.label || { dewan: 'Dewan Rakyat', usul: 'RUU', ketua: 'kerajaan', gab: SW(p.parti) ? 'Perpaduan' : p.parti === 'PAS' || p.parti === 'BERSATU' ? 'PN' : p.parti === 'PKR' || p.parti === 'DAP' || p.parti === 'AMANAH' ? 'PH' : p.parti === 'BERJASA' ? 'BERJASA' : p.parti === 'WARISAN' ? 'Warisan' : /^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS)$/.test(p.parti) ? 'Perpaduan' : 'BN' };
       var sw = kedua(p) ? '<div class="dw-tukar" role="group" aria-label="Pilih dewan"><button type="button" class="btn btn--sm ' + (D === D0 ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="RAKYAT">🏛️ Dewan Rakyat</button> <button type="button" class="btn btn--sm ' + (D === N ? 'btn--primary' : 'btn--ghost') + '" data-dewan="tukar" data-id="DUN">🏢 DUN' + (p.negeri ? ' ' + esc(p.negeri) : '') + '</button></div>' : '';
       if (!r.aktif) { return '<div class="banner"><strong>Dewan Rakyat</strong>Tab ini terbuka apabila anda menjadi Ahli Parlimen, Menteri, ADUN atau EXCO Negeri.</div>'; }
       var k = r.kerusi, h = sw;

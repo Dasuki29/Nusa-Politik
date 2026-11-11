@@ -1313,11 +1313,11 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
           <p class="gab__kaki">PBB mod penuh; PRS, SUPP dan PDP mod ringan.</p>
         </div>
         <div class="gab__panel" id="gab-pn" data-gab-panel="PN" hidden>
-          <h4>Parti dalam Perikatan Nasional · Semenanjung</h4>
-          <div class="poster__parti" role="group" aria-label="Parti PN"><button type="button" class="poster__chip" data-menu="parti" data-parti="PAS"><img src="assets/images/logo-pas.svg" alt="" width="22" height="22" style="object-fit:cover">PAS</button></div>
-          <p class="gab__kaki">PAS mod penuh (Perlembagaan PAS Pindaan 2025).</p>
+          <h4>Parti dalam Perikatan Nasional · Semenanjung &amp; Sabah</h4>
+          <div class="poster__parti" role="group" aria-label="Parti PN"><button type="button" class="poster__chip" data-menu="parti" data-parti="PAS"><img src="assets/images/logo-pas.svg" alt="" width="22" height="22" style="object-fit:cover">PAS</button><button type="button" class="poster__chip" data-menu="parti" data-parti="BERSATU"><img src="assets/images/logo-bersatu.png" alt="" width="22" height="22" style="object-fit:contain">BERSATU</button></div>
+          <p class="gab__kaki">PAS dan BERSATU mod penuh (Perlembagaan PAS Pindaan 2025; Perlembagaan BERSATU).</p>
           <p class="gab__kaki gab__rakan-t"><b>Rakan PN</b> (NPC):</p>
-          <div class="poster__parti gab__rakan" role="list" aria-label="Rakan PN"><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-bersatu.png" alt="" width="22" height="22" style="object-fit:contain">Bersatu</span><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-gerakan.png" alt="" width="22" height="22" style="object-fit:contain">Gerakan</span><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-mipp.jpg" alt="" width="22" height="22" style="object-fit:contain">MIPP</span><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-wawasan.jpg" alt="" width="22" height="22" style="object-fit:contain">Wawasan</span></div>
+          <div class="poster__parti gab__rakan" role="list" aria-label="Rakan PN"><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-gerakan.png" alt="" width="22" height="22" style="object-fit:contain">Gerakan</span><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-mipp.jpg" alt="" width="22" height="22" style="object-fit:contain">MIPP</span><span class="poster__chip poster__chip--rakan" role="listitem"><img src="assets/images/logo-wawasan.jpg" alt="" width="22" height="22" style="object-fit:contain">Wawasan</span></div>
         </div>
         <div class="gab__panel" id="gab-ph" data-gab-panel="PH" hidden>
           <h4>Parti dalam Pakatan Harapan · seluruh Malaysia</h4>
@@ -1503,6 +1503,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                   <option value="PPP">PPP (Semenanjung, BN, mod ringan)</option>
                   <option value="PBRS">PBRS (Sabah, BN, mod ringan)</option>
                   <option value="PAS">PAS (Semenanjung, PN, mod penuh)</option>
+                  <option value="BERSATU">BERSATU (seluruh Malaysia kecuali Sarawak, PN, mod penuh)</option>
                   <option value="PKR">PKR (seluruh Malaysia, PH, mod penuh)</option>
                   <option value="DAP">DAP (seluruh Malaysia, PH, mod penuh)</option>
                   <option value="PBB">PBB (Sarawak, GPS, mod penuh)</option>
@@ -1579,6 +1580,14 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
                   <option value="bersekutu">Ahli Bersekutu (bukan Islam)</option>
                 </select>
                 <p class="note" style="margin:4px 0 0;font-size:.78rem">Ahli Bersekutu hanya boleh memegang jawatan dalam Dewan Himpunan Pendukung (Fasal 11(2), 16(2), 60).</p>
+              </div>
+              <div class="field" id="f-bersatu-jenis" hidden>
+                <label for="s-jenis-ahli-bersatu">Jenis keahlian BERSATU</label>
+                <select class="select" id="s-jenis-ahli-bersatu" name="keahlianJenisBersatu">
+                  <option value="ahli" selected>Ahli Biasa (Pribumi)</option>
+                  <option value="bersekutu">Ahli Bersekutu (bukan Pribumi)</option>
+                </select>
+                <p class="note" style="margin:4px 0 0;font-size:.78rem">Hanya Ahli Biasa boleh mengundi dan bertanding jawatan parti (Perlembagaan BERSATU, Fasal 7.5).</p>
               </div>
               <div class="field" style="grid-column:1/-1">
                 <label for="s-ahli" id="l-ahli">Menjadi ahli UMNO sejak</label>
@@ -1760,6 +1769,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   <script src="js/struktur.js"></script>
   <script src="js/warisan-data.js"></script>
   <script src="js/amanah-data.js"></script>
+  <script src="js/bersatu-data.js"></script>
   <script src="js/pbrs-data.js"></script>
   <script src="js/pas-data.js"></script>
   <script src="js/pkr-data.js"></script>

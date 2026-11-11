@@ -2925,6 +2925,36 @@ ujian('v13.56 Amanah: data, istilah, takwim 6/8/11, kuota PH, Naratif Rahmah, Ko
   betul(g.MyPolitikLompat.aktifDi('AMANAH', 'Selangor') && !g.MyPolitikLompat.aktifDi('AMANAH', 'Sarawak'), 'lompat');
   S.clearPlayer();
 });
+ujian('v13.89 BERSATU mod penuh: data, istilah, takwim 6/8/11, kuota PN, struktur (Fasal 13, 19, 20), Ahli Bersekutu, syarat Presiden, Kesepaduan PN', () => {
+  const M = g.MyPolitikBersatu, D = g.MyPolitikData, SY = g.MyPolitikSayap, PT = g.MyPolitikParti, J = g.MyPolitikJawatan, ST = g.MyPolitikStruktur, fs = require('fs'), path = require('path');
+  const h = D.rowsToHierarchy(D.teksKeBaris(fs.readFileSync(path.join(__dirname, '..', 'data', 'bersatu-malaysia.csv'), 'utf8')));
+  sama(h.jumlah.bahagian, 181); betul(Math.abs(h.jumlah.ahli - 700000) < 5000, 'ahli ~700,000: ' + h.jumlah.ahli); betul(SY.kelayakan('P', 25, 'BERSATU').puteri.boleh, 'Srikandi Muda');
+  betul(!SY.kelayakan('L', 38, 'BERSATU').pemuda.boleh, 'Armada 35 tahun ke bawah');
+  const b0 = h.bahagian[0];
+  S.savePlayer(S.buildPlayerProfile({ parti: 'BERSATU', nama: 'Uji Bersatu', demografik: D.tentukanDemografi('Lelaki', 32, 'BERSATU'), cawangan: b0.dun[0].cawangan[0], sayap: 'pemuda', avatar: 'pemuda', tahunAhli: 3 }));
+  let p = S.loadPlayer(); sama(p.parti, 'BERSATU'); sama(PT.info('BERSATU').gabungan, 'PN');
+  sama(PT.ke('Ketua Bahagian dan Ketua Puteri ke Perhimpunan Agung UMNO (PAU) bulan 9; Majlis Kerja Tertinggi (MKT); Pengerusi Badan Perhubungan Negeri; Ketua Pemuda dan Ketua Wanita'),
+    'Ketua Bahagian dan Ketua Srikandi Muda ke Perhimpunan Agung BERSATU bulan 11; Majlis Pimpinan Tertinggi (MPT); Ketua Badan Pimpinan Negeri; Ketua Armada dan Ketua Srikandi');
+  sama(PT.ke('Fasal 20.13'), 'Perlembagaan BERSATU, Fasal 23.1');
+  sama(K.getTetingkap('cawangan', 1).mula, 6); sama(K.getTetingkap('bahagian', 1).mula, 8); sama(K.getTetingkap('pau', 1).mula, 11);
+  sama(E.adalahTahunPemilihan(2026), false); sama(E.adalahTahunPemilihan(2027), true); sama(E.adalahTahunPemilihan(2030), true);
+  // struktur: Bahagian dipilih ahli (Fasal 20.5.2), MPT 20 + 3 Naib Presiden (Fasal 13.3), AJK Cawangan 8 + 3
+  sama(ST.pemilih(p, J.cariDef('ketua_bahagian')), 'ahli'); sama(M.kerusiJawatan(p, J.cariDef('ahli_mkt')), 20); sama(M.kerusiJawatan(p, J.cariDef('naib_presiden')), 3);
+  sama(ST.kerusi(p, J.cariDef('ajk_cawangan')), 8);
+  // syarat Presiden (Fasal 13.6)
+  betul(/Ahli MPT atau Ketua Bahagian/.test(M.sekatanJawatan(p, J.cariDef('presiden')) || ''), 'perlu pernah Ahli MPT / Ketua Bahagian');
+  P.tetap({ jawatanList: [pegang('ketua_bahagian', 2027)] }); M.prosesBulan(); sama(M.sekatanJawatan(S.loadPlayer(), J.cariDef('presiden')), null);
+  // Ahli Bersekutu (Fasal 7.5)
+  P.tetap({ keahlianJenis: 'bersekutu' }); betul(/Fasal 7\.5/.test(M.sekatanJawatan(S.loadPlayer(), J.cariDef('ajk_cawangan'))), 'Ahli Bersekutu'); P.tetap({ keahlianJenis: undefined });
+  // Kesepaduan PN
+  P.tetap({ ap: 20, myr: 50000 }); let r = M.runding(); betul(r.ok, r.ralat); sama(M.kesepaduan(S.loadPlayer()), 61); sama(M.runding().ok, false, 'sebulan sekali');
+  P.tetap({ bersatu: Object.assign({}, S.loadPlayer().bersatu, { kesepaduan: 20 }) }); betul(M.lawan(S.loadPlayer(), 'PARLIMEN').indexOf('PAS') >= 0, '3 penjuru dengan PAS');
+  const kw = M.kawasan(S.loadPlayer()); betul(kw.parlimen && typeof kw.kuotaPL === 'boolean');
+  // PN: anggaran kerusi, gabungan, lompat
+  const ka = g.NusaPaparan.anggarKerusi(S.loadPlayer(), { tahun: 2031, bulan: 3 }, {}); betul(ka.parti >= 10 && ka.parti <= 100, JSON.stringify(ka));
+  betul(g.MyPolitikLompat.aktifDi('BERSATU', 'Johor') && !g.MyPolitikLompat.aktifDi('BERSATU', 'Sarawak'), 'lompat');
+  S.clearPlayer();
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

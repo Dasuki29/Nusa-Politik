@@ -1,5 +1,18 @@
 # Catatan Perubahan
 
+## v13.89 (2026-11-11)
+
+- **BERSATU mod penuh dalam Perikatan Nasional** (maklum balas pemain baris 35, 37; mockup dipersetujui; struktur ikut Perlembagaan BERSATU; ⚠️ takwim, kuota kerusi, Kesepaduan PN dan sayap Srikandi Muda ialah andaian permainan).
+  - BERSATU kini boleh dipilih semasa daftar (cip PN di menu utama), dengan pilihan Ahli Biasa atau Ahli Bersekutu (Bersekutu tidak boleh mengundi atau bertanding jawatan parti, Fasal 7.5).
+  - Struktur: Cawangan → Bahagian (181 kawasan Parlimen Semenanjung, Sabah dan WP; tiada Sarawak) → Badan Pimpinan Negeri (Ketua dilantik Presiden) → Majlis Pimpinan Tertinggi (Presiden, Timbalan, 3 Naib Presiden, 20 Ahli MPT) → Perhimpunan Agung. Tiada jawatan Pengerusi.
+  - Pemilihan setiap 3 tahun bermula 2027; takwim Persidangan Cawangan Jun, Persidangan Bahagian Ogos, Perhimpunan Agung November. Setiap Bahagian menghantar sehingga 7 wakil.
+  - Syarat calon Presiden / Timbalan: 3 tahun keahlian dan pernah Ahli MPT atau Ketua Bahagian; had 3 penggal Presiden.
+  - Sayap Armada, Srikandi dan Srikandi Muda (≤35 tahun, andaian).
+  - Kuota PN 60 Parlimen / 150 DUN; kerajaan negeri PN awal: Perlis, Kedah, Kelantan, Terengganu.
+  - Kad "🔴 BERSATU: Parti & Perhimpunan Agung" di tab Profil: meter Kesepaduan PN, Rundingan kerusi bersama PAS, Jelajah Bahagian, syarat Presiden.
+  - PAS, Gerakan, MIPP dan Wawasan dimainkan sebagai NPC rakan PN.
+- Ujian baharu `tools/ujian-bersatu.js` dan satu ujian dalam `tools/ujian.js` (221 ujian).
+
 ## v13.88 (2026-11-11)
 
 - **Gelaran Dato' Seri / Tan Sri lebih sukar** (maklum balas pemain baris 38; mockup dipersetujui; ⚠️ syarat ialah rekaan permainan).
