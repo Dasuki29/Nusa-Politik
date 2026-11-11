@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.77 (2026-11-11)
+
+- **Modul Kementerian Pendidikan** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, dasar dipermudahkan dan tidak menyatakan pendirian).
+  - **Enjin kementerian generik** baharu `js/kementerian.js` dan `js/kementerian-ui.js`: setiap kementerian ditakrif sebagai data (meter, dana, tindakan bulanan, dasar, isu, akibat), supaya Pendidikan, Kesihatan dan Ekonomi berkongsi satu enjin dan satu paparan.
+  - Takrif `js/kpm.js` (rekod `p.kpm`): kualiti pendidikan, kepuasan guru, kepuasan ibu bapa, dana pembangunan (RM 50 juta sebulan, had RM 250 juta).
+  - **Tab "📚 Pejabat KPM"**: tindakan (sekolah daif 3 bulan, rekrut guru, pembelajaran digital, kurangkan beban tugas guru), dasar (pentaksiran; bahasa pengantar Sains & Matematik), isu rawak (sekolah daif tular, buli di asrama, kebocoran soalan).
+  - Akibat bulanan: kepuasan guru bawah 30 = protes kesatuan (KPI −3); ibu bapa bawah 30 = populariti −2.
+- Ujian baharu (209 ujian) dan ujian pelayar `tools/ujian-kementerian.js` (untuk semua kementerian generik).
+
 ## v13.76 (2026-11-11)
 
 - **Modul Kementerian Luar Negeri (Wisma Putra)** (mockup yang dipersetujui; ⚠️ semua nilai ialah anggaran permainan, blok dan isu ialah label simulasi, tiada negara atau konflik sebenar dinamakan).

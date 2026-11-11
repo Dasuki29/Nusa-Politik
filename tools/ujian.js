@@ -3038,6 +3038,21 @@ ujian('v13.67 Enjin pemilihan Lain-lain (Fasa 6): BERJASA Pemudi ANGKASA (bawah 
   P.tetap({ parti: 'GAGASAN' }); sama(PT.ke('Ketua Bahagian'), 'Pengerusi Bahagian');
   S.clearPlayer();
 });
+ujian('v13.77 Kementerian Pendidikan (enjin generik): tindakan, projek bertangguh, dasar, isu, akibat bulanan', () => {
+  const K = g.MyPolitikKabinet, M = g.MyPolitikKPM;
+  betul(g.MyPolitikKementerian.senarai().some((x) => x.def.kunci === 'kpm'), 'berdaftar');
+  P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!M.aktif(p));
+  const k = K.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Pendidikan' }); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: k } });
+  p = S.loadPlayer(); betul(M.aktif(p)); const r0 = M.ringkasan(p); sama(r0.meter.length, 3); sama(r0.tindakan.length, 4); sama(r0.dasar.length, 2);
+  const g0 = M.get(p).guru; betul(M.laksana('guru').ok); p = S.loadPlayer(); sama(p.kpm.guru, g0 + 6); sama(p.kpm.dana, 85); sama(M.laksana('beban').ok, false, 'satu tindakan sebulan');
+  const ak0 = p.kesetiaan.akarUmbi; betul(M.ubahDasar('bahasa', 'bi').ok); p = S.loadPlayer(); betul(p.kesetiaan.akarUmbi < ak0, 'BI: akar umbi −2'); sama(M.ubahDasar('pentaksiran', 'awam').ok, false, 'satu dasar sebulan');
+  P.tetap({ bulan: 4 }); betul(M.laksana('sekolah').ok); sama(S.loadPlayer().kpm.projek.length, 1);
+  P.tetap({ bulan: 7 }); M.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); sama(p.kpm.projek.length, 0, 'sekolah siap');
+  p.kpm.isu = { id: 'buli', bulan: 0 }; S.applyEffects({}, { kiraTindakan: false, patch: { kpm: p.kpm } }); betul(M.jawabIsu('tegas').ok); sama(S.loadPlayer().kpm.isu, null);
+  p = S.loadPlayer(); p.kpm.guru = 10; p.kpm.bonus.guru = -40; S.applyEffects({}, { kiraTindakan: false, patch: { kpm: p.kpm } }); const rt = K.getKabinet(S.loadPlayer()).governanceRating;
+  P.tetap({ bulan: 8 }); const ev = M.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((e) => /Kesatuan guru/.test(e.mesej))); betul(K.getKabinet(S.loadPlayer()).governanceRating < rt);
+  S.clearPlayer();
+});
 ujian('v13.76 Wisma Putra: lawatan, isu, konsular, sidang kemuncak, FTA, kesan bulanan, sambungan MOF dan MINDEF', () => {
   const K = g.MyPolitikKabinet, KL = g.MyPolitikKLN, MF = g.MyPolitikMOF, MD = g.MyPolitikMINDEF;
   P.daftar({}); P.tetap({ tahun: 2027, bulan: 3, ap: 10, myr: 50000 }); let p = S.loadPlayer(); betul(!KL.aktif(p));

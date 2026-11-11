@@ -91,6 +91,8 @@ Modul utama dalam `js/`:
 | `kkdw.js`, `kkdw-ui.js` | Modul Kementerian Kemajuan Desa dan Wilayah: sokongan luar bandar, perumahan rakyat PPRS, dana infrastruktur, projek mini dan aduan rakyat (tab Pejabat KKDW) |
 | `pm.js`, `pm-ui.js` | Pejabat Perdana Menteri: majoriti Parlimen, kestabilan kabinet, krisis nasional, blok gabungan dan tuntutan, dasar mega, langkah tegas dan darurat (tab Pejabat PM) |
 | `kln.js`, `kln-ui.js` | Kementerian Luar Negeri (Wisma Putra): kedudukan diplomatik, dagangan, hubungan blok, isu antarabangsa, krisis konsular, sidang kemuncak dan FTA (tab Wisma Putra) |
+| `kementerian.js`, `kementerian-ui.js` | Enjin dan paparan kementerian generik (dipacu takrif) |
+| `kpm.js` | Takrif Kementerian Pendidikan: kualiti, guru, ibu bapa, tindakan, dasar pentaksiran dan bahasa, isu (tab Pejabat KPM) |
 | `isu.js`, `media.js` | Isu Semasa (pendirian pemain) dan Jentera Media Digital (persepsi, Sokongan Belia, sidang media) |
 | `tular.js` | Krisis tular media sosial dan pertahanan digital |
 | `umno.js`, `umno-ui.js`, `umno-data.js` | Peraturan pemilihan UMNO 2025 (Pusat di Bahagian, tangguh selepas PRU, lantikan, Perhimpunan Agung Khas, Tempoh Pemilihan) dan jadual 191 Bahagian (`node tools/build-umno.js`) |
@@ -204,6 +206,7 @@ node tools/ujian-mindef.js       # pelayar: tab Pejabat MINDEF, insiden, kontrak
 node tools/ujian-kkdw.js         # pelayar: tab Pejabat KKDW, fokus agihan, kelulusan projek, aduan rakyat, EN
 node tools/ujian-pm.js           # pelayar: tab Pejabat PM, tuntutan blok, agih portfolio, darurat, EN
 node tools/ujian-kln.js          # pelayar: tab Wisma Putra, lawatan, isu, konsular, FTA, EN
+node tools/ujian-kementerian.js  # pelayar: tab kementerian generik (Pendidikan, Kesihatan, Ekonomi), EN
 node tools/ujian-gelaran.js      # pelayar: daftar dengan PhD (Dr.), kad Pendidikan, kad Anugerah & Gelaran (Datuk, Tun, negeri), EN
 node tools/ujian-fbn.js          # pelayar: Friends of BN (nota kuota, usul Majlis Tertinggi BN, menu, EN)
 node tools/ujian-sabah-bn.js     # pelayar: daftar MCA di Sabah, kad MCA Sabah: Membina Semula, Khidmat Masyarakat Bandar, EN
