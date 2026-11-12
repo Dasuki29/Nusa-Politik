@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v13.94 (2026-11-12)
+
+- **Audit MCA, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
+  - Istilah: "Ketua, Naib Ketua dan AJK Cawangan" → "Pengerusi, Naib Pengerusi dan AJK Cawangan"; "Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian" → "Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian"; "Puteri" dibuang daripada laluan sayap MCA; "Lembaga Disiplin" → "Jawatankuasa Disiplin Pusat"; "Mesyuarat Perwakilan Pemuda / Wanita Bahagian" → "Perhimpunan Pemuda / Wanita Bahagian" (seragam dengan "Perhimpunan Sayap Bahagian").
+  - EN: terjemahan baharu untuk lantikan dan peletakan jawatan Ketua sayap Negeri, kelayakan Pengerusi Jawatankuasa Perhubungan, "Anda tidak bertanding untuk", "Kedekatan dengan Presiden", hilang kerusi kerana tidak hadir, mesyuarat terlepas (juga membaiki "Congressyears" / "Pre-PA)years").
+- Ujian baharu (224 ujian).
+
 ## v13.93 (2026-11-12)
 
 - **Audit DAP, Fasa 2: DAP berdiri sendiri** (mockup dipersetujui; ⚠️ saiz kongres sayap dan peraturan wakil ialah andaian permainan).

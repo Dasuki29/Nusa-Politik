@@ -271,6 +271,14 @@
     [/Mesyuarat (Angkatan Muda|Wanita|Sayap) Ranting/g, 'Persidangan Tahunan $1 Ranting'], [/Mesyuarat Ranting/g, 'Persidangan Tahunan Ranting'], [/Kongres (Angkatan Muda|Wanita|Sayap)\b/g, 'Perhimpunan $1 (Pra-Kongres)']].concat(SENARAI.PKR.istilahSongsang);
   SENARAI.DAP.istilah = SENARAI.DAP.istilah.concat([[/Persidangan Tahunan (DAPSY|Wanita|Sayap) Cawangan/g, 'Mesyuarat Agung Tahunan $1 Cawangan'], [/Persidangan Tahunan Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan']]);
   SENARAI.DAP.istilahSongsang = [[/Mesyuarat Agung Tahunan (DAPSY|Wanita|Sayap) Cawangan/g, 'Persidangan Tahunan $1 Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan']].concat(SENARAI.DAP.istilahSongsang);
+  /* v13.94: audit MCA: sisa istilah UMNO (Ketua/Naib Ketua Cawangan & Bahagian, Puteri, Lembaga Disiplin, Mesyuarat Perwakilan sayap). */
+  SENARAI.MCA.istilah = SENARAI.MCA.istilah.concat([[/Ketua, Naib Ketua dan AJK Cawangan/g, 'Pengerusi, Naib Pengerusi dan AJK Cawangan'], [/Branch Chairman, Deputy Chief and AJK/g, 'Branch Chairman, Vice Chairman and AJK'],
+    [/Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian/g, 'Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian'], [/Division Chairman, Deputy Chief, Vice Chiefs/g, 'Division Chairman, Deputy Chairman, Vice Chairmen'],
+    [/Pemuda, Puteri atau Wanita/g, 'Pemuda atau Wanita'], [/Pemuda, Puteri or Wanita/g, 'Pemuda or Wanita'],
+    [/Lembaga Disiplin/g, 'Jawatankuasa Disiplin Pusat'], [/Disciplinary Board/g, 'Central Disciplinary Committee'],
+    [/Mesyuarat Perwakilan (Pemuda|Wanita) Bahagian/g, 'Perhimpunan $1 Bahagian'], [/(Pemuda|Wanita) Wing Division Delegates'? Meeting/g, '$1 Wing Division Assembly']]);
+  SENARAI.MCA.istilahSongsang = [[/Pengerusi, Naib Pengerusi dan AJK Cawangan/g, 'Ketua, Naib Ketua dan AJK Cawangan'], [/Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian/g, 'Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian'],
+    [/Jawatankuasa Disiplin Pusat/g, 'Lembaga Disiplin'], [/Perhimpunan (Pemuda|Wanita) Bahagian/g, 'Mesyuarat Perwakilan $1 Bahagian']].concat(SENARAI.MCA.istilahSongsang);
   /* v13.92: audit DAP: sisa istilah UMNO (Ketua/Naib Ketua Cawangan, Puteri, Perhimpunan Agung, Lembaga Disiplin, ranting, "bahagian" huruf kecil). */
   SENARAI.DAP.istilah = SENARAI.DAP.istilah.concat([[/Ketua, Naib Ketua dan AJK Cawangan/g, 'Pengerusi, Naib Pengerusi dan AJK Cawangan'], [/Branch Chairman, Deputy Chief and AJK/g, 'Branch Chairman, Vice Chairman and AJK'],
     [/DAPSY, Puteri atau Wanita/g, 'DAPSY atau Wanita'], [/DAPSY, Puteri or Wom[ae]n/g, 'DAPSY or Women'],

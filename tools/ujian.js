@@ -2978,6 +2978,15 @@ ujian('v13.93 DAP berdiri sendiri: tiada G10 / G2, Kongres DAPSY Kebangsaan, Per
   sama(PT.dari('🏘️ Pengerusi Persatuan Penduduk'), '🕌 Pengerusi Masjid');
   P.tetap({ parti: 'UMNO' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🕌 Pengerusi Masjid', 'parti lain tidak berubah');
 });
+ujian('v13.94 audit MCA: Pengerusi Cawangan / Bahagian, tiada Puteri, Jawatankuasa Disiplin Pusat, Perhimpunan sayap Bahagian', () => {
+  const PT = g.MyPolitikParti; P.daftar(); P.tetap({ parti: 'MCA' });
+  sama(PT.ke('Bulan 4-5 · Ketua, Naib Ketua dan AJK Cawangan'), 'Bulan 4 · Pengerusi, Naib Pengerusi dan AJK Cawangan');
+  sama(PT.ke('Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian'), 'Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian');
+  sama(PT.ke('Jika anda dalam laluan Pemuda, Puteri atau Wanita'), 'Jika anda dalam laluan Pemuda atau Wanita');
+  sama(PT.ke('Amaran rasmi Lembaga Disiplin'), 'Amaran rasmi Jawatankuasa Disiplin Pusat');
+  sama(PT.ke('Mesyuarat Perwakilan Pemuda Bahagian'), 'Perhimpunan Pemuda Bahagian');
+  sama(PT.dari('Amaran rasmi Jawatankuasa Disiplin Pusat'), 'Amaran rasmi Lembaga Disiplin');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);
