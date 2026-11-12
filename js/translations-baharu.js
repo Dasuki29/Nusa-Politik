@@ -6182,6 +6182,10 @@
   ["Pengerusi Persatuan {a} Daerah", "District {a} Association Chairman"],
   ["{a} Himpunan menjadi tegang dan disorot media. Reputasi -3, Stress +6.", "{a} The rally turned tense and drew media attention. Reputation -3, Stress +6."],
   ["{a} Kempen tular atas sebab salah dan dikritik netizen. Reputasi -2, Stress +5.", "{a} The campaign went viral for the wrong reasons and was criticised by netizens. Reputation -2, Stress +5."],
+  /* v13.97 MIC: perwakilan sayap */
+  ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} MIC", "{a} Division Delegates to the MIC {b} General Assembly"],
+  /* v13.97 isu subsidi */
+  ["Subsidi minyak akan disasarkan. Golongan pertengahan bimbang tidak layak menerima bantuan. Nyatakan pendirian anda sebelum bulan depan.", "Fuel subsidies will be targeted. The middle class worry they will not qualify for aid. State your position before next month."],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

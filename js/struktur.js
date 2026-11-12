@@ -105,6 +105,7 @@
         'sayap_ajk_cawangan_*': { tutup: TUTUP_SAYAP_AJK }
       },
       wakilCawangan: wakilMIC, wakilBahagian: wakilPAMIC, hadPA: 2000,
+      tanpaG10: true, g2Kerusi: 5,                                               // v13.97: Perhimpunan Agung Pemuda / Puteri / Wanita / Putera MIC (ANDAIAN 5 perwakilan)
       perwakilanPA: { kod: 'ketua_cawangan', sebab: 'Hanya Pengerusi Cawangan boleh dipilih sebagai perwakilan ke Perhimpunan Agung, secara giliran (Perkara 74.4, 74.5).' }
     },
     PAS: {

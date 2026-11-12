@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.97 (2026-11-12)
+
+- **Audit MIC, Fasa 2: MIC berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan).
+  - Sayap Pemuda / Puteri / Wanita / Putera MIC: G10 dibuang; G2 diganti "Perwakilan Pemuda Bahagian ke Perhimpunan Agung Pemuda MIC" (5 kerusi); "Perhimpunan Pemuda (Pra-PA)" / "Perhimpunan Pemuda Pusat" → "Perhimpunan Agung Pemuda MIC" (begitu juga Puteri, Wanita, Putera).
+  - `js/struktur.js` MIC: `tanpaG10: true, g2Kerusi: 5`.
+  - Jawatan Komuniti untuk pemain MIC: "Pengerusi Masjid" → "Pengerusi Persatuan Penduduk"; acara gotong-royong "surau" → "rumah ibadat" (sama seperti DAP dan MCA).
+  - EN: "MIC Pemuda General Assembly"; terjemahan isu subsidi minyak.
+- Ujian baharu (227 ujian).
+
 ## v13.96 (2026-11-12)
 
 - **Audit MIC, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
