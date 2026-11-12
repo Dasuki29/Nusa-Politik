@@ -6175,6 +6175,13 @@
   ["Himpunan Belia: {a}", "Youth Rally: {a}"],
   /* v13.95 MCA: perwakilan sayap */
   ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} MCA", "{a} Division Delegates to the MCA {b} General Assembly"],
+  /* v13.96 audit MIC: EN */
+  ["🤝 Rangkaian Pengerusi Cawangan ({a})", "🤝 Branch Chairmen Network ({a})"],
+  ["Pengerusi Persatuan {a} Kebangsaan", "National {a} Association Chairman"],
+  ["Pengerusi Persatuan {a} Negeri", "State {a} Association Chairman"],
+  ["Pengerusi Persatuan {a} Daerah", "District {a} Association Chairman"],
+  ["{a} Himpunan menjadi tegang dan disorot media. Reputasi -3, Stress +6.", "{a} The rally turned tense and drew media attention. Reputation -3, Stress +6."],
+  ["{a} Kempen tular atas sebab salah dan dikritik netizen. Reputasi -2, Stress +5.", "{a} The campaign went viral for the wrong reasons and was criticised by netizens. Reputation -2, Stress +5."],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

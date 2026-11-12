@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v13.96 (2026-11-12)
+
+- **Audit MIC, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
+  - Istilah: "Ketua, Naib Ketua dan AJK Cawangan" → "Pengerusi, Naib Pengerusi dan AJK Cawangan"; "Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian" → "Pengerusi dan Timbalan Pengerusi Bahagian" (Perkara 33.3: Persidangan Perwakilan Bahagian hanya memilih dua jawatan ini); laluan sayap kini menyebut Putera ("Pemuda, Puteri, Putera atau Wanita"); "Lembaga Disiplin" → "Jawatankuasa Disiplin MIC".
+  - EN: kunci kamus MIC sendiri didahulukan; terjemahan baharu untuk Rangkaian Pengerusi Cawangan, jawatan persatuan sukan ("National Hockey Association Chairman") dan risiko misi sayap (Himpunan Belia, kempen tular) untuk semua parti.
+- Ujian baharu (226 ujian).
+
 ## v13.95 (2026-11-12)
 
 - **Audit MCA, Fasa 2: MCA berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap dan kehadiran ex-officio ialah andaian permainan).
