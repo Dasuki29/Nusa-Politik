@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.99 (2026-11-12)
+
+- **Audit PPP, Fasa 2: PPP berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan; struktur PPP ikut Wikipedia).
+  - Sayap Pemuda / Puteri / Wanita / Putera PPP: G10 dibuang; G2 diganti "Perwakilan Pemuda Bahagian ke Perhimpunan Agung Pemuda PPP" (5 kerusi); "Perhimpunan Pemuda (Pra-PA)" / "Perhimpunan Pemuda Pusat" → "Perhimpunan Agung Pemuda PPP" (begitu juga Puteri, Wanita, Putera).
+  - `js/struktur.js` PPP: `tanpaG10: true, g2Kerusi: 5`.
+  - Jawatan Komuniti untuk pemain PPP: "Pengerusi Masjid" → "Pengerusi Persatuan Penduduk"; acara gotong-royong "surau" → "rumah ibadat" (sama seperti DAP, MCA dan MIC).
+  - Pembetulan: peraturan songsang "Presiden, 3 Naib Presiden" tidak lagi digunakan dua kali.
+- Ujian baharu (229 ujian).
+
 ## v13.98 (2026-11-12)
 
 - **Audit PPP, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).

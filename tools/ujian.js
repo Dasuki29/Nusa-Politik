@@ -3018,6 +3018,14 @@ ujian('v13.98 audit PPP: Pengerusi Cawangan / Bahagian, tiada Timbalan Presiden,
   sama(PT.ke('Jika anda dalam laluan Pemuda, Puteri atau Wanita'), 'Jika anda dalam laluan Pemuda, Puteri, Putera atau Wanita');
   sama(PT.ke('Amaran rasmi Lembaga Disiplin'), 'Amaran rasmi Jawatankuasa Disiplin PPP'); sama(PT.dari('Presiden, 3 Naib Presiden dan MT'), 'Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT');
 });
+ujian('v13.99 PPP berdiri sendiri: tiada G10, 5 Perwakilan ke Perhimpunan Agung Pemuda PPP, Persatuan Penduduk', () => {
+  const PT = g.MyPolitikParti; P.daftar(); const p = P.tetap({ parti: 'PPP', sayap: 'pemuda', jawatanSayap: 'pemuda' });
+  const k = E.senaraiPertandingan(p), g2 = k.filter((x) => x.kod === 'perwakilan_sayap_g2')[0];
+  betul(!k.some((x) => x.kod === 'perwakilan_sayap_g10'), 'tiada G10'); betul(g2 && g2.kerusi === 5 && g2.peringkat === 'sayap_bahagian', 'G2 → 5 perwakilan sayap Bahagian');
+  sama(PT.ke(g2.jawatan), 'Perwakilan Pemuda Bahagian ke Perhimpunan Agung Pemuda PPP');
+  sama(PT.ke('Perhimpunan Wanita (Pra-PAU)'), 'Perhimpunan Agung Wanita PPP'); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
+  sama(PT.dari('Perhimpunan Agung Putera PPP'), 'Perhimpunan Putera Pusat');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

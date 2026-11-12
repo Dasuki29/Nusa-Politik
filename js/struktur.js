@@ -229,7 +229,8 @@
         timbalan_presiden: { tutup: 'PPP tiada jawatan Timbalan Presiden; barisan kepimpinan ialah Presiden dan Naib Presiden (Wikipedia).' },
         naib_presiden: { kerusi: 3 },
         ahli_mkt: { kerusi: 15 }                                                       // Majlis Tertinggi
-      }
+      },
+      tanpaG10: true, g2Kerusi: 5                                                 // v13.99: Perhimpunan Agung Pemuda / Puteri / Wanita / Putera PPP (ANDAIAN 5 perwakilan)
     },
     PBRS: {
       sumber: 'Wikipedia (ANDAIAN)',
