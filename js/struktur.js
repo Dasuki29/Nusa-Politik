@@ -90,7 +90,8 @@
         naib_presiden: { kerusi: 4, fasal: 'Perkara 20' },
         ahli_mkt: { kerusi: 25, fasal: 'Perkara 20' }
       },
-      wakilCawangan: wakilMCA, wakilBahagian: wakilPAMCA
+      wakilCawangan: wakilMCA, wakilBahagian: wakilPAMCA,
+      tanpaG10: true, g2Kerusi: 5                                                // v13.95: Perhimpunan Agung Pemuda / Wanita MCA (ANDAIAN 5 perwakilan)
     },
     MIC: {
       sumber: 'Perlembagaan MIC (2017)',

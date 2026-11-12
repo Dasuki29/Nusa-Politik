@@ -322,10 +322,10 @@
         sebab: exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });
       }
-      if (!mz('tanpaG2')) {
+      if (!mz('tanpaG2')) {                                                         // v13.95: MCA g2Kerusi = Perwakilan sayap Bahagian ke Perhimpunan Agung sayap
       tambah({
-        kod: 'perwakilan_sayap_g2', jenis: 'perwakilan', jawatan: 'G2 ' + NS + ': 2 wakil ke Perhimpunan ' + NS + ' Pusat', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
-        kerusi: CONFIG.SAYAP_G2, kesukaran: 0,
+        kod: 'perwakilan_sayap_g2', jenis: 'perwakilan', jawatan: mz('g2Kerusi') ? 'Perwakilan ' + NS + ' Bahagian ke Perhimpunan ' + NS + ' Pusat' : 'G2 ' + NS + ': 2 wakil ke Perhimpunan ' + NS + ' Pusat', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
+        kerusi: mz('g2Kerusi') || CONFIG.SAYAP_G2, kesukaran: 0,
         terbuka: layakB && !exPau.sah && !ketuaSyB,
         sebab: ketuaSyB ? 'Anda hadir Perhimpunan ' + NS + ' Pusat secara automatik sebagai Ketua ' + NS + ' Bahagian.' : exPau.sah ? 'Anda hadir Perhimpunan ' + NS + ' Pusat secara automatik sebagai ' + exPau.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')
       });

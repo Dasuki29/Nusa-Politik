@@ -277,6 +277,19 @@
     [/Pemuda, Puteri atau Wanita/g, 'Pemuda atau Wanita'], [/Pemuda, Puteri or Wanita/g, 'Pemuda or Wanita'],
     [/Lembaga Disiplin/g, 'Jawatankuasa Disiplin Pusat'], [/Disciplinary Board/g, 'Central Disciplinary Committee'],
     [/Mesyuarat Perwakilan (Pemuda|Wanita) Bahagian/g, 'Perhimpunan $1 Bahagian'], [/(Pemuda|Wanita) Wing Division Delegates'? Meeting/g, '$1 Wing Division Assembly']]);
+  /* v13.95: MCA berdiri sendiri: Perhimpunan Agung Pemuda / Wanita MCA (tanpa G10, G2 → Perwakilan sayap Bahagian), Jawatan Komuniti bukan masjid. */
+  SENARAI.MCA.istilah = [[/Perhimpunan (Pemuda|Wanita) (\(Pra-PAU\)|Pusat)/g, 'Perhimpunan Agung $1 MCA'], [/Perhimpunan Sayap (\(Pra-PAU\)|Pusat)/g, 'Perhimpunan Agung Sayap']].concat(SENARAI.MCA.istilah).concat([
+    [/(Pemuda|Wanita) Wing (Central )?Assembly( \(Pre-PAU?\))?/g, 'MCA $1 General Assembly'], [/Central (Pemuda|Wanita) Wing Assembly/g, 'MCA $1 General Assembly'], [/Central Wing Assembly|Wing Assembly \(Pre-PAU?\)/g, 'Wing General Assembly'], [/(Youth|Pemuda Wing) Central Assembly/g, 'MCA Pemuda General Assembly'], [/(Women|Wanita Wing|Wanita) Central Assembly/g, 'MCA Wanita General Assembly'], [/Wing Division Chairman, Deputy Chief/g, 'Wing Division Chief, Vice Chief'], [/Branch Chairman, Vice Chief/g, 'Branch Chairman, Vice Chairman'], [/Division Chairman, Deputy Chief, Vice Chief/g, 'Division Chairman, Deputy Chairman, Vice Chairman'],
+    [/, G10 \(10 wakil\) ke [^,]*? dan G2 \(2 wakil\) ke Perhimpunan Agung Sayap/g, ' dan 5 Perwakilan ke Perhimpunan Agung Sayap'], [/, G10 \(10 delegates\) to the [^,]*? and G2 \(2 delegates\) to the Wing General Assembly/g, ' and 5 Delegates to the Wing General Assembly'],
+    [/Perwakilan Cawangan atau G10 sayap/g, 'Perwakilan Cawangan'], [/Branch [Dd]elegates or [Ww]ing G10 members/g, 'Branch delegates'],
+    [/G2 (Pemuda|Wanita) \(2 wakil Bahagian\)/g, 'Perwakilan $1 Bahagian'], [/(Pemuda|Wanita) Wing G2 \(2 Division delegates\)/g, '$1 Wing Division Delegates'],
+    [/terpilih dalam G2 (Pemuda|Wanita)/g, 'terpilih sebagai Perwakilan $1 Bahagian'], [/tidak termasuk dalam G2 (Pemuda|Wanita)/g, 'bukan Perwakilan $1 Bahagian'],
+    [/🕌 ?Masjid & PIBG/g, '🏘️ Persatuan Penduduk & PIBG'], [/Masjid & PIBG/g, 'Persatuan Penduduk & PIBG'], [/🕌 ?Pengerusi Masjid/g, '🏘️ Pengerusi Persatuan Penduduk'], [/Pengerusi Masjid/g, 'Pengerusi Persatuan Penduduk'],
+    [/(🕌 )?Mosque & PTA/g, '🏘️ Residents\' Association & PTA'], [/(🕌 )?Mosque Chairman/g, '🏘️ Residents\' Association Chairman'], [/surau dan balairaya/g, 'rumah ibadat dan balai raya'], [/the surau and community hall/g, 'places of worship and the community hall']]);
+  SENARAI.MCA.istilahSongsang = [[/dipilih dalam Perhimpunan Agung Sayap/g, 'dipilih dalam Perhimpunan Sayap (Pra-PAU)'], [/Perhimpunan Agung (Pemuda|Wanita) MCA/g, 'Perhimpunan $1 Pusat'], [/Perhimpunan Agung Sayap/g, 'Perhimpunan Sayap Pusat'], [/ dan 5 Perwakilan ke Perhimpunan Sayap Pusat/g, ', G10 (10 wakil) ke Mesyuarat Perwakilan Bahagian dan G2 (2 wakil) ke Perhimpunan Sayap Pusat'],
+    [/Hanya Perwakilan Cawangan tahun/g, 'Hanya Perwakilan Cawangan atau G10 sayap tahun'], [/Hanya Perwakilan (Pemuda|Wanita) Bahagian tahun/g, 'Hanya G2 $1 (2 wakil Bahagian) tahun'],
+    [/terpilih sebagai Perwakilan (Pemuda|Wanita) Bahagian/g, 'terpilih dalam G2 $1'], [/bukan Perwakilan (Pemuda|Wanita) Bahagian tahun ini/g, 'tidak termasuk dalam G2 $1 tahun ini'],
+    [/Persatuan Penduduk & PIBG/g, 'Masjid & PIBG'], [/Pengerusi Persatuan Penduduk/g, 'Pengerusi Masjid'], [/🏘️ (Masjid|Pengerusi Masjid)/g, '🕌 $1'], [/rumah ibadat dan balai raya/g, 'surau dan balairaya']].concat(SENARAI.MCA.istilahSongsang);
   SENARAI.MCA.istilahSongsang = [[/Pengerusi, Naib Pengerusi dan AJK Cawangan/g, 'Ketua, Naib Ketua dan AJK Cawangan'], [/Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian/g, 'Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian'],
     [/Jawatankuasa Disiplin Pusat/g, 'Lembaga Disiplin'], [/Perhimpunan (Pemuda|Wanita) Bahagian/g, 'Mesyuarat Perwakilan $1 Bahagian']].concat(SENARAI.MCA.istilahSongsang);
   /* v13.92: audit DAP: sisa istilah UMNO (Ketua/Naib Ketua Cawangan, Puteri, Perhimpunan Agung, Lembaga Disiplin, ranting, "bahagian" huruf kecil). */
@@ -391,7 +404,7 @@
     var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'AMANAH' && k !== 'BERSATU' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
-    var calon = k === 'DAP' ? [a, d, tanpaBulan] : [d, tanpaBulan];   // v13.93: DAP: kunci kamus DAP sendiri didahulukan
+    var calon = k === 'DAP' || k === 'MCA' ? [a, d, tanpaBulan] : [d, tanpaBulan];   // v13.93: DAP: kunci kamus DAP sendiri didahulukan
     if (k === 'BERJASA' || k === 'AMANAH' || k === 'BERSATU') { calon.push(a); }
     if (k === 'PPP') { calon.push(terap(a, i.istilahSongsang)); }   // v13.57: istilah Pengerusi PPP disongsang, nama parti kekal (kunci kamus lama "perlembagaan PPP ...")   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
     if (k === 'PAS' || k === 'BERJASA' || k === 'AMANAH' || k === 'BERSATU') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)

@@ -6173,6 +6173,8 @@
   ["Ketua Wanita Dato' {a}", "Wanita Chief Dato' {a}"],
   ["Ketua Wanita Datin {a}", "Wanita Chief Datin {a}"],
   ["Himpunan Belia: {a}", "Youth Rally: {a}"],
+  /* v13.95 MCA: perwakilan sayap */
+  ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} MCA", "{a} Division Delegates to the MCA {b} General Assembly"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

@@ -2987,6 +2987,14 @@ ujian('v13.94 audit MCA: Pengerusi Cawangan / Bahagian, tiada Puteri, Jawatankua
   sama(PT.ke('Mesyuarat Perwakilan Pemuda Bahagian'), 'Perhimpunan Pemuda Bahagian');
   sama(PT.dari('Amaran rasmi Jawatankuasa Disiplin Pusat'), 'Amaran rasmi Lembaga Disiplin');
 });
+ujian('v13.95 MCA berdiri sendiri: tiada G10, 5 Perwakilan ke Perhimpunan Agung Pemuda MCA, Persatuan Penduduk', () => {
+  const PT = g.MyPolitikParti; P.daftar(); const p = P.tetap({ parti: 'MCA', sayap: 'pemuda', jawatanSayap: 'pemuda' });
+  const k = E.senaraiPertandingan(p), g2 = k.filter((x) => x.kod === 'perwakilan_sayap_g2')[0];
+  betul(!k.some((x) => x.kod === 'perwakilan_sayap_g10'), 'tiada G10'); betul(g2 && g2.kerusi === 5 && g2.peringkat === 'sayap_bahagian', 'G2 → 5 perwakilan sayap Bahagian');
+  sama(PT.ke(g2.jawatan), 'Perwakilan Pemuda Bahagian ke Perhimpunan Agung Pemuda MCA');
+  sama(PT.ke('Perhimpunan Pemuda (Pra-PAU)'), 'Perhimpunan Agung Pemuda MCA'); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
+  sama(PT.dari('Perhimpunan Agung Pemuda MCA'), 'Perhimpunan Pemuda Pusat');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

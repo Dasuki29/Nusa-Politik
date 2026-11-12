@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v13.95 (2026-11-12)
+
+- **Audit MCA, Fasa 2: MCA berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap dan kehadiran ex-officio ialah andaian permainan).
+  - Sayap Pemuda / Wanita MCA: G10 dibuang (Ketua dan Naib Ketua sayap Bahagian sudah hadir Perhimpunan Bahagian secara ex-officio). G2 diganti "Perwakilan Pemuda / Wanita Bahagian ke Perhimpunan Agung Pemuda / Wanita MCA" (5 kerusi). "Perhimpunan Pemuda (Pra-PA)" / "Perhimpunan Pemuda Pusat" → "Perhimpunan Agung Pemuda MCA"; "Perhimpunan Sayap (Pra-PA)" → "Perhimpunan Agung Sayap".
+  - Tetapan baharu `g2Kerusi` dalam `js/struktur.js` (MCA: `tanpaG10: true, g2Kerusi: 5`).
+  - Jawatan Komuniti untuk pemain MCA: "Masjid & PIBG" → "Persatuan Penduduk & PIBG", "Pengerusi Masjid" → "Pengerusi Persatuan Penduduk"; acara gotong-royong "surau" → "rumah ibadat" (sama seperti DAP).
+  - EN: kunci kamus MCA sendiri didahulukan; "Branch Chairman, Vice Chairman", "MCA Pemuda General Assembly".
+- Ujian baharu (225 ujian).
+
 ## v13.94 (2026-11-12)
 
 - **Audit MCA, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
