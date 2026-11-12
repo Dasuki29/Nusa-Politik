@@ -3026,6 +3026,13 @@ ujian('v13.99 PPP berdiri sendiri: tiada G10, 5 Perwakilan ke Perhimpunan Agung 
   sama(PT.ke('Perhimpunan Wanita (Pra-PAU)'), 'Perhimpunan Agung Wanita PPP'); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
   sama(PT.dari('Perhimpunan Agung Putera PPP'), 'Perhimpunan Putera Pusat');
 });
+ujian('v14.0 audit PBRS: Ketua / Timbalan Ketua Cawangan & Bahagian, tiada Puteri, Jawatankuasa Disiplin PBRS', () => {
+  const PT = g.MyPolitikParti; P.daftar(); P.tetap({ parti: 'PBRS' });
+  sama(PT.ke('Bulan 4-5 · Ketua, Naib Ketua dan AJK Cawangan'), 'Bulan 4 · Ketua, Timbalan Ketua dan AJK Cawangan');
+  sama(PT.ke('Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian'), 'Ketua, Timbalan Ketua dan AJK Bahagian');
+  sama(PT.ke('Jika anda dalam laluan Pemuda, Puteri atau Wanita'), 'Jika anda dalam laluan Pemuda atau Wanita');
+  sama(PT.ke('Amaran rasmi Lembaga Disiplin'), 'Amaran rasmi Jawatankuasa Disiplin PBRS'); sama(PT.dari('Ketua, Timbalan Ketua dan AJK Bahagian'), 'Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

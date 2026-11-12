@@ -6196,6 +6196,9 @@
   ["Ketua Whip PBT", "Local Council Chief Whip"],
   /* v13.99 PPP: perwakilan sayap */
   ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} PPP", "{a} Division Delegates to the PPP {b} General Assembly"],
+  /* v14.0 PBRS: Badan Perhubungan */
+  ["Pengerusi Badan Perhubungan {a} {b}", "{a} {b} Liaison Body Chairman"],
+  ["Pengerusi Badan Perhubungan UMNO {a}", "UMNO {a} Liaison Body Chairman"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

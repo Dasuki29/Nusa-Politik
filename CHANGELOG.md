@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v14.0 (2026-11-12)
+
+- **Audit PBRS, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
+  - Istilah: tajuk Pemilihan Cawangan kini "Ketua, Timbalan Ketua dan AJK Cawangan" (seragam dengan kad Timbalan Ketua Cawangan); "Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian" → "Ketua, Timbalan Ketua dan AJK Bahagian" (Bahagian PBRS tiada Naib Ketua); "Puteri" dibuang (PBRS hanya ada sayap Pemuda dan Wanita); "Lembaga Disiplin" → "Jawatankuasa Disiplin PBRS".
+  - EN: kunci kamus PBRS sendiri didahulukan; terjemahan baharu untuk "Pengerusi Badan Perhubungan" parti lain.
+- Ujian baharu (230 ujian).
+
 ## v13.99 (2026-11-12)
 
 - **Audit PPP, Fasa 2: PPP berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan; struktur PPP ikut Wikipedia).
