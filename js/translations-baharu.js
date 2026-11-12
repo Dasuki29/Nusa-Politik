@@ -6186,6 +6186,14 @@
   ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} MIC", "{a} Division Delegates to the MIC {b} General Assembly"],
   /* v13.97 isu subsidi */
   ["Subsidi minyak akan disasarkan. Golongan pertengahan bimbang tidak layak menerima bantuan. Nyatakan pendirian anda sebelum bulan depan.", "Fuel subsidies will be targeted. The middle class worry they will not qualify for aid. State your position before next month."],
+  /* v13.98 audit PPP: EN */
+  ["{a} tahun {b} bulan (perlu 3 tahun untuk Bahagian, peraturan parti)", "{a} years {b} months (3 years needed for the Division, party rule)"],
+  ["Doktor kontrak merancang mogok kerana tiada laluan jawatan tetap. Hospital kerajaan semakin sesak. Nyatakan pendirian anda sebelum bulan depan.", "Contract doctors plan a strike over the lack of a path to permanent posts. Government hospitals are increasingly crowded. State your position before next month."],
+  ["{a} menarik diri daripada mencabar jawatan {b} kerana Sokongan Akar Umbi anda pulih ({c}%).", "{a} withdrew from challenging your {b} post because your Grassroots Support recovered ({c}%)."],
+  ["Pengerusi Majlis Belia Negeri", "State Youth Council Chairman"],
+  ["Lembaga Agensi Pendapatan Tinggi", "High-Income Agency Board"],
+  ["Agensi Berpendapatan Tinggi", "High-Income Agency"],
+  ["Ketua Whip PBT", "Local Council Chief Whip"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

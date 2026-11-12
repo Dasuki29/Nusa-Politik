@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v13.98 (2026-11-12)
+
+- **Audit PPP, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
+  - Istilah: "Ketua, Naib Ketua dan AJK Cawangan" → "Pengerusi, Naib Pengerusi dan AJK Cawangan"; "Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian" → "Pengerusi, Timbalan Pengerusi dan AJK Bahagian"; "Presiden, Timbalan Presiden, 3 Naib Presiden" → "Presiden, 3 Naib Presiden" (PPP tiada Timbalan Presiden); laluan sayap kini menyebut Putera; "Lembaga Disiplin" → "Jawatankuasa Disiplin PPP".
+  - EN: kunci kamus PPP sendiri didahulukan; semakan teks asal diperketat (pencapaian "Akar Umbi Teguh" tidak lagi separuh BM); terjemahan baharu untuk tempoh keahlian, pencabar menarik diri, isu doktor kontrak, Majlis Belia Negeri dan Lembaga Agensi Pendapatan Tinggi (semua parti).
+- Ujian baharu (228 ujian).
+
 ## v13.97 (2026-11-12)
 
 - **Audit MIC, Fasa 2: MIC berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan).

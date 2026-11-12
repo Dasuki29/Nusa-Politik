@@ -99,7 +99,7 @@
     return tukar ? out.join(' ') : null;
   }
   /** Terjemah satu rentetan BM (tanpa ruang hujung). Pulang EN atau null jika tiada terjemahan. */
-  var RE_BM_SISA = /\b(dan|yang|ditutup|anda|kerana|secara|usul|tahun|bulan|Kongres|Mesyuarat|Kebangsaan|Sayap|dibuka|Sekarang)\b/;
+  var RE_BM_SISA = /\b(dan|yang|ditutup|anda|kerana|secara|usul|tahun|bulan|Kongres|Mesyuarat|Kebangsaan|Sayap|dibuka|Sekarang|jawatan|tanpa|kekalahan|pemilihan|dengan|untuk|kepada|perlu|boleh|tidak|sebagai|ke)\b/;
   function terjemah(s) {
     if (!s) { return null; }
     s = String(s).replace(/\s+/g, ' ').trim();

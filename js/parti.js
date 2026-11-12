@@ -291,6 +291,14 @@
     [/Hanya Perwakilan Cawangan tahun/g, 'Hanya Perwakilan Cawangan atau G10 sayap tahun'], [/Hanya Perwakilan (Pemuda|Wanita|Puteri|Putera) Bahagian tahun/g, 'Hanya G2 $1 (2 wakil Bahagian) tahun'],
     [/terpilih sebagai Perwakilan (Pemuda|Wanita|Puteri|Putera) Bahagian/g, 'terpilih dalam G2 $1'], [/bukan Perwakilan (Pemuda|Wanita|Puteri|Putera) Bahagian tahun ini/g, 'tidak termasuk dalam G2 $1 tahun ini'],
     [/Persatuan Penduduk & PIBG/g, 'Masjid & PIBG'], [/Pengerusi Persatuan Penduduk/g, 'Pengerusi Masjid'], [/🏘️ (Masjid|Pengerusi Masjid)/g, '🕌 $1'], [/rumah ibadat dan balai raya/g, 'surau dan balairaya']].concat(SENARAI.MIC.istilahSongsang);
+  /* v13.98: audit PPP: sisa istilah UMNO (Ketua/Naib Ketua Cawangan & Bahagian, Timbalan Presiden, sayap Putera, Lembaga Disiplin). */
+  SENARAI.PPP.istilah = SENARAI.PPP.istilah.concat([[/Ketua, Naib Ketua dan AJK Cawangan/g, 'Pengerusi, Naib Pengerusi dan AJK Cawangan'], [/Branch Chairman, (Deputy|Vice) Chief( and| and Committee Members)/g, 'Branch Chairman, Vice Chairman$2'],
+    [/Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian/g, 'Pengerusi, Timbalan Pengerusi dan AJK Bahagian'], [/Division Chairman, Deputy Chief, Vice Chiefs? and/g, 'Division Chairman, Deputy Chairman and'],
+    [/Presiden, Timbalan Presiden, 3 Naib Presiden/g, 'Presiden, 3 Naib Presiden'], [/President, Deputy President, 3 Vice Presidents/g, 'President, 3 Vice Presidents'],
+    [/Pemuda, Puteri atau Wanita/g, 'Pemuda, Puteri, Putera atau Wanita'], [/Pemuda, Puteri or Wanita/g, 'Pemuda, Puteri, Putera or Wanita'], [/Youth, Puteri or Women/g, 'Youth, Puteri, Putera or Women'],
+    [/Lembaga Disiplin/g, 'Jawatankuasa Disiplin PPP'], [/Disciplinary Board/g, 'PPP Disciplinary Committee']]);
+  SENARAI.PPP.istilahSongsang = [[/Pengerusi, Naib Pengerusi dan AJK Cawangan/g, 'Ketua, Naib Ketua dan AJK Cawangan'], [/Pengerusi, Timbalan Pengerusi dan AJK Bahagian/g, 'Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian'],
+    [/Presiden, 3 Naib Presiden/g, 'Presiden, Timbalan Presiden, 3 Naib Presiden'], [/Pemuda, Puteri, Putera atau Wanita/g, 'Pemuda, Puteri atau Wanita'], [/Jawatankuasa Disiplin PPP/g, 'Lembaga Disiplin']].concat(SENARAI.PPP.istilahSongsang);
   /* v13.94: audit MCA: sisa istilah UMNO (Ketua/Naib Ketua Cawangan & Bahagian, Puteri, Lembaga Disiplin, Mesyuarat Perwakilan sayap). */
   SENARAI.MCA.istilah = SENARAI.MCA.istilah.concat([[/Ketua, Naib Ketua dan AJK Cawangan/g, 'Pengerusi, Naib Pengerusi dan AJK Cawangan'], [/Branch Chairman, Deputy Chief and AJK/g, 'Branch Chairman, Vice Chairman and AJK'],
     [/Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian/g, 'Pengerusi, Timbalan Pengerusi, Naib Pengerusi dan AJK Bahagian'], [/Division Chairman, Deputy Chief, Vice Chiefs/g, 'Division Chairman, Deputy Chairman, Vice Chairmen'],
@@ -424,7 +432,7 @@
     var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'AMANAH' && k !== 'BERSATU' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
-    var calon = k === 'DAP' || k === 'MCA' || k === 'MIC' ? [a, d, tanpaBulan] : [d, tanpaBulan];   // v13.93: DAP: kunci kamus DAP sendiri didahulukan
+    var calon = k === 'DAP' || k === 'MCA' || k === 'MIC' || k === 'PPP' ? [a, d, tanpaBulan] : [d, tanpaBulan];   // v13.93: DAP: kunci kamus DAP sendiri didahulukan
     if (k === 'BERJASA' || k === 'AMANAH' || k === 'BERSATU') { calon.push(a); }
     if (k === 'PPP') { calon.push(terap(a, i.istilahSongsang)); }   // v13.57: istilah Pengerusi PPP disongsang, nama parti kekal (kunci kamus lama "perlembagaan PPP ...")   // v13.53: teks khas BERJASA (kunci kamus asal, cth "Kawasan ...", "Muktamar BERJASA")
     if (k === 'PAS' || k === 'BERJASA' || k === 'AMANAH' || k === 'BERSATU') { calon.push(terap(a, i.istilahSongsang.filter(function (x) { return !/Kawasan\(|\(\?<!/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + k + '\\b', 'g'), 'UMNO')); }   // v13.31: "Kawasan" asal (Peruntukan Kawasan dll.)
