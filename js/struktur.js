@@ -240,7 +240,8 @@
         ajk_bahagian: { kerusi: 9 },
         naib_presiden: { kerusi: 2 },
         ahli_mkt: { kerusi: 15 }                                                       // Majlis Tertinggi
-      }
+      },
+      tanpaG10: true, g2Kerusi: 5                                                 // v14.1: Perhimpunan Agung Pemuda / Wanita PBRS (ANDAIAN 5 perwakilan)
     }
   };
 

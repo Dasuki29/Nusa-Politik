@@ -6199,6 +6199,8 @@
   /* v14.0 PBRS: Badan Perhubungan */
   ["Pengerusi Badan Perhubungan {a} {b}", "{a} {b} Liaison Body Chairman"],
   ["Pengerusi Badan Perhubungan UMNO {a}", "UMNO {a} Liaison Body Chairman"],
+  /* v14.1 PBRS: perwakilan sayap */
+  ["Perwakilan {a} Bahagian ke Perhimpunan Agung {b} PBRS", "{a} Division Delegates to the PBRS {b} General Assembly"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

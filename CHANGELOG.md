@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v14.1 (2026-11-12)
+
+- **Audit PBRS, Fasa 2: PBRS berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan; struktur PBRS ikut Wikipedia).
+  - Sayap Pemuda / Wanita PBRS: G10 dibuang; G2 diganti "Perwakilan Pemuda Bahagian ke Perhimpunan Agung Pemuda PBRS" (5 kerusi); "Perhimpunan Pemuda (Pra-PA)" / "Perhimpunan Pemuda Pusat" → "Perhimpunan Agung Pemuda PBRS" (begitu juga Wanita).
+  - `js/struktur.js` PBRS: `tanpaG10: true, g2Kerusi: 5`.
+  - Jawatan Komuniti untuk pemain PBRS: "Pengerusi Masjid" → "Pengerusi Persatuan Penduduk"; acara gotong-royong "surau" → "rumah ibadat".
+- Ujian baharu (231 ujian).
+
 ## v14.0 (2026-11-12)
 
 - **Audit PBRS, Fasa 1: sisa UMNO dibuang** (pembetulan; tiada perubahan permainan).
