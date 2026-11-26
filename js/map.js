@@ -79,6 +79,28 @@
   var SENTIMEN_WARNA = ['#B3261E', '#E8803A', '#F2B705', '#7BC96F', '#1E8E5A'];
   var SAYAP_WARNA = { pemuda: '#FFD84D', wanita: '#FFC2D1', puteri: '#D9C7FF', putera: '#FFB347' };
   var TAHAP_NAMA = { negeri: 'Negeri', bahagian: 'Bahagian', dun: 'DUN', cawangan: 'Cawangan' };
+  /* v14.9 (audit peta): lapisan baharu. Peluang = di mana tindakan anda paling berkesan; Kerusi PRU = status kerusi daripada Kekuatan Parti. */
+  var PELUANG_LABEL = ['Sangat rendah', 'Rendah', 'Sederhana', 'Tinggi', 'Sangat tinggi'];
+  var PELUANG_WARNA = ['#C9D1DB', '#F6D776', '#F2B705', '#E8803A', '#D4152F'];
+  var KERUSI_LABEL = ['Kubu lawan', 'Condong lawan', 'Marginal', 'Condong parti', 'Kubu parti'];
+  var PERWAKILAN_LABEL = ['Sangat sedikit', 'Sedikit', 'Sederhana', 'Ramai', 'Paling ramai'];
+  var PERWAKILAN_WARNA = ['#D9DEE6', '#AFC6E9', '#6E9BD6', '#3A6FB7', '#1B4787'];
+  /* v14.9: Kekuatan Parti asas setiap negeri ikut kubu umum parti (nilai permainan, bukan data pilihan raya rasmi).
+     Susunan: perlis kedah kelantan terengganu pulaupinang perak pahang selangor wp n9 melaka johor sarawak sabah */
+  var KUBU_SUSUN = ['perlis', 'kedah', 'kelantan', 'terengganu', 'pulaupinang', 'perak', 'pahang', 'selangor', 'wp', 'n9', 'melaka', 'johor', 'sarawak', 'sabah'];
+  var KUBU = {
+    UMNO: [56, 44, 38, 40, 36, 52, 60, 40, 40, 55, 60, 64, 30, 45], MCA: [30, 34, 22, 22, 42, 50, 46, 44, 44, 50, 52, 52, 30, 36], MIC: [28, 34, 20, 20, 44, 52, 44, 48, 44, 52, 48, 48, 26, 30],
+    PPP: [26, 30, 20, 20, 42, 52, 40, 42, 42, 46, 44, 44, 26, 30], PAS: [58, 62, 70, 68, 35, 45, 48, 42, 33, 36, 40, 38, 20, 25], BERSATU: [54, 56, 58, 58, 38, 48, 46, 46, 38, 42, 44, 46, 22, 30],
+    BERJASA: [34, 36, 46, 42, 26, 30, 32, 30, 26, 28, 28, 28, 18, 20], PKR: [35, 40, 30, 30, 60, 50, 40, 64, 62, 56, 48, 45, 35, 40], DAP: [25, 35, 22, 20, 70, 58, 40, 62, 66, 55, 52, 50, 45, 40],
+    AMANAH: [32, 38, 30, 28, 52, 46, 36, 56, 54, 50, 44, 42, 26, 30]
+  };
+  function kubuParti(parti, kod) {
+    var k = KUBU[parti], i = KUBU_SUSUN.indexOf(kod);
+    if (k && i >= 0) { return k[i]; }
+    if (parti && /^(PBB|PRS|SUPP|PDP)$/.test(parti)) { return kod === 'sarawak' ? 62 : 25; }          // parti Sarawak (GPS)
+    if (parti && /^(PBRS|PBS|UPKO|LDP|PHRS|PCS|GAGASAN|WARISAN)$/.test(parti)) { return kod === 'sabah' ? 56 : 25; }   // parti Sabah
+    return null;
+  }
 
   /** 14 negeri; pos = [lajur, baris] pada peta jubin. */
   var NEGERI14 = [
@@ -181,14 +203,14 @@
    * Bina model negeri > bahagian > cawangan daripada hierarki data.js.
    * Nilai asas (kekuatan parti) berbenih mengikut seed supaya tetap sepanjang permainan.
    */
-  function binaModel(data, seed) {
+  function binaModel(data, seed, parti) {
     seed = seed || 'mypolitik';
     var m = { negeri: [], bahagian: [], cawangan: [], dun: [], idxN: {}, idxB: {}, idxC: {}, idxD: {}, seed: seed };
 
     NEGERI14.forEach(function (d) {
       var r = rngBerbenih(seed + '|N|' + d.kod);
       var n = { tahap: 'negeri', id: d.kod, kod: d.kod, nama: d.nama, pendek: d.pendek, pos: d.pos,
-        bahagian: [], offset: 38 + r() * 24 };
+        bahagian: [], offset: kubuParti(parti, d.kod) != null ? kubuParti(parti, d.kod) + (r() - 0.5) * 8 : 38 + r() * 24 };   // v14.9: ikut kubu parti
       m.negeri.push(n); m.idxN[d.kod] = n;
     });
 
@@ -245,6 +267,7 @@
     var rumah = cariRumah(m, profil);
     m.rumah = rumah;
     var akarUmbi = profil && profil.kesetiaan ? profil.kesetiaan.akarUmbi : 50;
+    var rep = profil ? ((Number(profil.reputasi) || 50) - 50) * 0.2 : 0;   // v14.9: sokongan peribadi ikut jarak dari kawasan anda + reputasi
 
     m.negeri.forEach(function (n) {
       var bn = bonus['N:' + n.id] || 0, sN = 0, kN = 0, wN = 0, ahliN = 0, cawN = 0, perwN = 0;
@@ -255,7 +278,8 @@
         b.cawangan.forEach(function (c) {
           var bc = bonus['C:' + c.id] || 0;
           var tambah = bc + bb * CONFIG.KESAN_BONUS_BAHAGIAN_KE_CAWANGAN + bn * CONFIG.KESAN_BONUS_NEGERI_KE_CAWANGAN;
-          var eff = clamp(c.asas + tambah, 0, 100);
+          var prox = !rumah.cawangan ? 1 : c.bahagian === rumah.bahagian ? 1 : c.negeri === rumah.negeri ? 0.7 : 0.45;
+          var eff = clamp(15 + (c.asas - 15) * prox + rep + tambah, 0, 100);
           if (rumah.cawangan === c) { eff = eff * (1 - CONFIG.GAUN_RUMAH) + akarUmbi * CONFIG.GAUN_RUMAH; }
           c.bonusSendiri = bc; c.tambah = Math.round(tambah);
           c.sokonganRaw = eff; c.sokongan = Math.round(eff); c.kekuatan = Math.round(c.asas);
@@ -284,6 +308,10 @@
       n.perwakilan = perwN; n.perwakilanPAU = n.bahagian.reduce(function (a, b) { return a + b.perwakilanPAU; }, 0);
       n.adaData = n.bahagian.length > 0;
     });
+    var mx = function (a) { return a.reduce(function (t, x) { return Math.max(t, x.jumlahAhli || 0); }, 1); };   // v14.9: untuk lapisan Peluang
+    m.maksAhli = { negeri: mx(m.negeri), bahagian: mx(m.bahagian), dun: mx(m.dun), cawangan: mx(m.cawangan) };
+    m.maksWakil = { negeri: m.negeri.reduce(function (t, x) { return Math.max(t, x.perwakilanPAU || 0); }, 1), bahagian: m.bahagian.reduce(function (t, x) { return Math.max(t, x.perwakilanPAU || 0); }, 1),
+      dun: m.dun.reduce(function (t, x) { return Math.max(t, x.cawangan.reduce(function (a, c) { return a + (c.perwakilan || 0); }, 0)); }, 1), cawangan: m.cawangan.reduce(function (t, x) { return Math.max(t, x.perwakilan || 0); }, 1) };
     return m;
   }
 
@@ -524,6 +552,21 @@
     '.mpm-aksi{display:grid;gap:8px;margin-top:6px}',
     '.mpm-btn{min-height:46px;padding:8px 14px;border-radius:12px;border:1px solid var(--mpm-bd);background:var(--mpm-bg2);color:var(--mpm-tx);font:700 .9rem inherit;font-family:inherit;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}',
     '.mpm-btn small{font-weight:500;font-size:.74rem;opacity:.85}',
+    /* v14.9 (audit peta): laluan navigasi, lapisan, Peluang, senarai teratas */
+    '.mpm-tabs:has(.mpm-crumb){background:transparent;border:0;padding:0}',
+    '.mpm-crumb{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}',
+    '.mpm-crumb i{font-style:normal;color:var(--mpm-mut)}',
+    '.mpm-crumb-b{min-height:36px;padding:5px 12px;border-radius:99px;border:1px solid var(--mpm-bd);background:var(--mpm-bg);color:var(--mpm-tx);font:700 .84rem inherit;font-family:inherit;cursor:pointer}',
+    '.mpm-crumb-b.is-kini{background:linear-gradient(135deg,var(--mpm-red),#9B0C23);color:#fff;border-color:transparent}',
+    '.mpm-crumb-cadang{padding:5px 12px;border-radius:99px;border:1px dashed var(--mpm-bd);color:var(--mpm-mut);font-size:.8rem}',
+    '.mpm-lapisan-pilih{display:none}',
+    '@media (max-width:640px){.mpm-lapisan{display:none}.mpm-lapisan-pilih{display:flex}}',
+    '.mpm-peluang{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:0 0 10px}.mpm-peluang small{font-size:.76rem;color:var(--mpm-mut)}',
+    '.mpm-butir{margin:10px 0 0;font-size:.84rem}.mpm-butir summary{cursor:pointer;font-weight:700;color:var(--mpm-mut)}.mpm-butir .mpm-dl{margin-top:8px}',
+    '.mpm-top{margin-top:12px;border-top:1px dashed var(--mpm-bd);padding-top:8px;font-size:.84rem}',
+    '.mpm-top button{display:flex;width:100%;justify-content:space-between;gap:8px;padding:6px 2px;border:0;border-bottom:1px dashed var(--mpm-bd);background:transparent;color:var(--mpm-tx);font:600 .84rem inherit;font-family:inherit;cursor:pointer;text-align:left}',
+    '.mpm-top button small{color:var(--mpm-mut);font-weight:600;white-space:nowrap}',
+    '.mpm-legend-nota{flex-basis:100%;font-style:italic}',
     '.mpm-btn--lobi{background:linear-gradient(135deg,var(--mpm-red),#9B0C23);border-color:transparent;color:#fff}',
     '.mpm-btn--jelajah{background:linear-gradient(135deg,#FFD84D,var(--mpm-gold) 55%,#C99700);border-color:transparent;color:#2B2100}',
     '.mpm-btn--projek{background:linear-gradient(135deg,#2F9E6B,#1F7550);border-color:transparent;color:#fff}',
@@ -570,7 +613,7 @@
 
     var inst = {
       el: el, opts: opts, model: null, profil: null, svg: {},
-      state: { mode: opts.mode || 'negeri', metrik: 'sokongan', negeriTapis: '', wp: '', pdmNegeri: '', pdmBahagian: '', pdmPaparan: 'peta', dipilih: null, rantau: 'semua', dunDipilih: '', dunBhg: '' }
+      state: { mode: opts.mode || 'negeri', metrik: 'peluang', negeriTapis: '', wp: '', pdmNegeri: '', pdmBahagian: '', pdmPaparan: 'peta', dipilih: null, rantau: 'semua', dunDipilih: '', dunBhg: '' }
     };
     el.classList.add('mpm');
     el.innerHTML =
@@ -597,7 +640,7 @@
     }
     inst.data = data;
     var profil0 = S ? S.loadPlayer() : null;
-    inst.model = binaModel(data, opts.seed || (profil0 && profil0.id ? 'peta|' + profil0.id : 'mypolitik'));
+    inst.model = binaModel(data, opts.seed || (profil0 && profil0.id ? 'peta|' + profil0.id : 'mypolitik'), opts.parti || (profil0 && profil0.parti) || null);
     inst.profil = profil0;
     kira(inst.model, profil0);
 
@@ -647,15 +690,33 @@
     }
 
     /* ----- pembantu paparan ----- */
-    function nilaiMetrik(nod) { return st.metrik === 'kekuatan' || st.metrik === 'sentimen' ? nod.kekuatan : nod.sokongan; }
+    /* v14.9 (audit peta): Peluang = sokongan rendah x ramai ahli x dekat kawasan anda; Perwakilan = anggaran wakil; Kerusi = status ikut Kekuatan Parti. */
+    var cachePel = { kunci: null, maks: 1 };
+    function skorPeluang(nod) {                                                            // relatif kepada kawasan terbaik pada aras semasa (0-100)
+      var kunci = [st.mode, st.negeriTapis, st.pdmNegeri, st.pdmBahagian, st.dunBhg, M.versi || 0].join('|');
+      if (cachePel.kunci !== kunci) { cachePel = { kunci: kunci, maks: Math.max(1, nodAras().reduce(function (t, x) { return Math.max(t, peluangMentah(x)); }, 0)) }; }
+      return clamp(Math.round(peluangMentah(nod) / cachePel.maks * 100), 0, 100);
+    }
+    function peluangMentah(nod) {
+      var r = M.rumah || {}, ng = nod.negeri || (nod.bahagian && nod.bahagian.negeri), bh = nod.tahap === 'bahagian' ? nod : nod.bahagian;
+      var prox = !r.cawangan ? 1 : nod.tahap === 'negeri' ? (r.negeri === nod ? 1 : 0.55) : bh === r.bahagian ? 1 : ng === r.negeri ? 0.72 : 0.45;
+      var saiz = Math.sqrt((nod.jumlahAhli || 0) / ((M.maksAhli && M.maksAhli[nod.tahap]) || 1));
+      return Math.max(0, (100 - nod.sokongan) * (0.45 + 0.55 * saiz) * prox);
+    }
+    function wakilNod(nod) { return nod.tahap === 'cawangan' ? nod.perwakilan || 0 : nod.tahap === 'dun' ? nod.cawangan.reduce(function (a, c) { return a + (c.perwakilan || 0); }, 0) : nod.perwakilanPAU || 0; }
+    function skorWakil(nod) { return clamp(Math.round(wakilNod(nod) / ((M.maksWakil && M.maksWakil[nod.tahap]) || 1) * 100), 0, 100); }
+    function nilaiMetrik(nod) { return st.metrik === 'peluang' ? skorPeluang(nod) : st.metrik === 'perwakilan' ? skorWakil(nod) : st.metrik === 'kekuatan' || st.metrik === 'sentimen' || st.metrik === 'kerusi' ? nod.kekuatan : nod.sokongan; }
     function jenisLabel() { return (st.mode === 'bahagian' && st.metrik === 'sokongan') ? 'lobi' : 'sokongan'; }
     function tahapNod(nod) {
       if (st.metrik === 'sentimen') { return tahapSentimen(nod); }
+      if (st.metrik === 'peluang') { var ip = tahapIndeks(skorPeluang(nod)); return { indeks: ip, label: 'Peluang ' + PELUANG_LABEL[ip].toLowerCase(), warna: PELUANG_WARNA[ip] }; }
+      if (st.metrik === 'perwakilan') { var iw = tahapIndeks(skorWakil(nod)); return { indeks: iw, label: PERWAKILAN_LABEL[iw] + ' perwakilan', warna: PERWAKILAN_WARNA[iw] }; }
+      if (st.metrik === 'kerusi') { var k = nod.kekuatan, ik = k < 36 ? 0 : k < 43 ? 1 : k < 50 ? 2 : k < 58 ? 3 : 4; return { indeks: ik, label: KERUSI_LABEL[ik], warna: SENTIMEN_WARNA[ik] }; }
       if (st.metrik === 'sayap' || st.metrik === 'pemain') { return tahapLapisan(nod); }
       return tahapSokongan(nilaiMetrik(nod), nod.tahap === 'bahagian' ? jenisLabel() : 'sokongan');
     }
     function jenisMetrikLabel() {
-      return st.metrik === 'sentimen' ? 'Sentimen Undi' : st.metrik === 'sayap' ? 'Kawasan Sayap' : st.metrik === 'pemain' ? 'Kawasan Pemain'
+      return st.metrik === 'peluang' ? 'Peluang' : st.metrik === 'perwakilan' ? 'Perwakilan' : st.metrik === 'kerusi' ? 'Kerusi PRU' : st.metrik === 'sentimen' ? 'Sentimen Undi' : st.metrik === 'sayap' ? 'Kawasan Sayap' : st.metrik === 'pemain' ? 'Kawasan Pemain'
         : st.metrik === 'kekuatan' ? 'Kekuatan Parti' : (st.mode === 'bahagian' ? 'Sokongan Perwakilan' : 'Sokongan Anda');
     }
 
@@ -819,22 +880,25 @@
       return r.filter(function (x) { return x[1] != null; }).map(function (x) { return '<dt>' + x[0] + '</dt><dd>' + x[1] + '</dd>'; }).join('');
     }
 
+    /** v14.9 (audit peta): laluan navigasi (Malaysia › Negeri › Bahagian) menggantikan 4 tab mod, dropdown dan butang rantau. */
     function renderTabs() {
-      var defs = SW ? [
-        ['bahagian', 'Peta Bahagian', fmt(M.bahagian.length) + ' DUN'],
-        ['pdm', 'Peta PDM / Lokaliti', fmt(M.cawangan.length) + ' Daerah Mengundi']
-      ] : [
-        ['negeri', 'Peta Negeri', M.negeri.filter(function (n) { return n.pos; }).length + ' negeri'],
-        ['bahagian', 'Peta Bahagian', fmt(M.bahagian.length) + ' bahagian'],
-        ['dun', 'Peta DUN', fmt(M.dun.length) + ' DUN'],
-        ['pdm', 'Peta PDM / Lokaliti', fmt(M.cawangan.length) + ' cawangan']
-      ];
-      $tabs.innerHTML = defs.map(function (d) {
-        var pilih = st.mode === d[0];
-        return '<button class="mpm-tab" role="tab" id="mpm-tab-' + d[0] + '" data-act="mode" data-v="' + d[0] + '" aria-selected="' + pilih +
-          '" tabindex="' + (pilih ? 0 : -1) + '">' + d[1] + '<small>' + d[2] + '</small></button>';
-      }).join('');
-      $stage.setAttribute('role', 'tabpanel'); $stage.setAttribute('aria-labelledby', 'mpm-tab-' + st.mode);
+      var c = [], nmN = function (id) { var n = M.idxN[id]; return n ? n.nama : id; };
+      if (SW) {
+        c.push(['bahagian', '🗺️ Sarawak']);
+        if (st.mode === 'pdm' && M.idxB[st.pdmBahagian]) { c.push(['pdm', kodBhg(M.idxB[st.pdmBahagian]) + ' ' + M.idxB[st.pdmBahagian].nama]); }
+      } else {
+        c.push(['negeri', '🇲🇾 Malaysia']);
+        if (st.mode === 'bahagian') { c.push(['bhg:' + (st.negeriTapis || ''), st.negeriTapis ? nmN(st.negeriTapis) : 'Semua bahagian']); }
+        if (st.mode === 'dun' || st.mode === 'pdm') { c.push(['bhg:' + st.pdmNegeri, nmN(st.pdmNegeri)]); }
+        if (st.mode === 'dun') { c.push(['dun', 'DUN']); }
+        if (st.mode === 'pdm' && M.idxB[st.pdmBahagian]) { c.push(['pdm', kodBhg(M.idxB[st.pdmBahagian]) + ' ' + M.idxB[st.pdmBahagian].nama]); }
+      }
+      var akhir = st.mode === 'pdm' ? '' : '<span class="mpm-crumb-cadang">' + (st.mode === 'negeri' ? 'Bahagian' : st.mode === 'dun' ? 'Cawangan' : 'Cawangan') + '</span>';
+      $tabs.innerHTML = '<nav class="mpm-crumb" aria-label="Aras peta">' + c.map(function (x, i) {
+        var kini = i === c.length - 1;
+        return (i ? '<i aria-hidden="true">›</i>' : '') + '<button type="button" class="mpm-crumb-b' + (kini ? ' is-kini' : '') + '" data-act="crumb" data-v="' + esc(x[0]) + '"' + (kini ? ' aria-current="page"' : '') + '>' + esc(x[1]) + '</button>';
+      }).join('') + (akhir ? '<i aria-hidden="true">›</i>' + akhir : '') + '</nav>';
+      $stage.removeAttribute('role'); $stage.removeAttribute('aria-labelledby');
     }
 
     function opsiNegeri(terpilih, semua) {
@@ -849,37 +913,14 @@
       return sahkanLaluan(typeof c === 'function' ? c(bid) : c[bid]);
     }
 
+    /** v14.9 (audit peta): 5 lapisan (butang di desktop, dropdown di telefon) menggantikan 3 metrik, 3 lapisan, rantau dan WP. */
+    function lapisanDefs() { return [['peluang', '🎯 Peluang'], ['sokongan', st.mode === 'bahagian' ? '💪 Sokongan Perwakilan' : '💪 Sokongan Anda'], ['kekuatan', '🏛️ Kekuatan Parti'], ['perwakilan', '🗳️ Perwakilan'], ['kerusi', '📍 Kerusi PRU']]; }
     function renderToolbar() {
-      var h = '<div class="mpm-seg" role="group" aria-label="Ukuran warna">' +
-        '<button data-act="metrik" data-v="sokongan" aria-pressed="' + (st.metrik === 'sokongan') + '">' + (st.mode === 'bahagian' ? 'Status Lobi' : 'Sokongan Anda') + '</button>' +
-        '<button data-act="metrik" data-v="kekuatan" aria-pressed="' + (st.metrik === 'kekuatan') + '">Kekuatan Parti</button>' +
-        (geoSedia ? '<button data-act="metrik" data-v="pemilih" aria-pressed="' + (st.metrik === 'pemilih') + '">Saiz Pemilih</button>' : '') + '</div>' +
-        '<div class="mpm-seg" role="group" aria-label="Lapisan peta">' + [['sentimen', '🗳️ Sentimen Undi'], ['sayap', '🧩 Kawasan Sayap'], ['pemain', '⭐ Kawasan Pemain']].map(function (x) {
-          return '<button data-act="metrik" data-v="' + x[0] + '" aria-pressed="' + (st.metrik === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
-      if (!SW && geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && !st.negeriTapis))) {
-        h += '<div class="mpm-seg" role="group" aria-label="Rantau">' + [['semua', 'Semua'], ['semenanjung', 'Semenanjung'], ['timur', 'Sabah &amp; Sarawak']].map(function (r) {
-          return '<button data-act="rantau" data-v="' + r[0] + '" aria-pressed="' + (st.rantau === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
-      }
-      if (!SW && geoSedia && (st.mode === 'negeri' || (st.mode === 'bahagian' && (!st.negeriTapis || st.negeriTapis === 'wp')))) {          // v8.21: pilih wilayah WP dengan butang besar (poligon KL, Putrajaya, Labuan terlalu kecil)
-        h += '<div class="mpm-seg" role="group" aria-label="Wilayah Persekutuan">' + [['semua', 'WP (semua)'], ['14', 'Kuala Lumpur'], ['16', 'Putrajaya'], ['15', 'Labuan']].map(function (r) {
-          return '<button data-act="wp" data-v="' + r[0] + '" aria-pressed="' + (st.mode === 'bahagian' && st.negeriTapis === 'wp' && (st.wp || 'semua') === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</div>';
-      }
-      if (st.mode === 'bahagian' && SW) {
-        h += '';
-      } else if (st.mode === 'bahagian') {
-        h += '<label class="mpm-field">Negeri <select data-act="tapis">' + opsiNegeri(st.negeriTapis, true) + '</select></label>';
-      } else if (st.mode === 'dun') {
-        var nd = M.idxN[st.pdmNegeri];
-        h += '<label class="mpm-field">Negeri <select data-act="dun-negeri">' + opsiNegeri(st.pdmNegeri, false) + '</select></label>';
-        h += '<label class="mpm-field">Bahagian <select data-act="dun-bhg"><option value="">Semua bahagian</option>' + (nd ? nd.bahagian.map(function (b) {
-          return '<option value="' + esc(b.id) + '"' + (b.id === st.dunBhg ? ' selected' : '') + '>P.' + esc(b.kod) + ' ' + esc(b.nama) + '</option>';
-        }).join('') : '') + '</select></label>';
-      } else if (st.mode === 'pdm') {
-        var n = M.idxN[st.pdmNegeri];
-        if (!SW) { h += '<label class="mpm-field">Negeri <select data-act="pdm-negeri">' + opsiNegeri(st.pdmNegeri, false) + '</select></label>'; }
-        h += '<label class="mpm-field">Bahagian <select data-act="pdm-bahagian">' + (n ? n.bahagian.map(function (b) {
-          return '<option value="' + esc(b.id) + '"' + (b.id === st.pdmBahagian ? ' selected' : '') + '>' + (SW ? 'N.' + dua(b.kod) : 'P.' + esc(b.kod)) + ' ' + esc(b.nama) + '</option>';
-        }).join('') : '') + '</select></label>';
+      var L = lapisanDefs();
+      var h = '<div class="mpm-seg mpm-lapisan" role="group" aria-label="Lapisan peta">' + L.map(function (x) {
+        return '<button data-act="metrik" data-v="' + x[0] + '" aria-pressed="' + (st.metrik === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
+        '<label class="mpm-field mpm-lapisan-pilih">Lapisan <select data-act="lapisan">' + L.map(function (x) { return '<option value="' + x[0] + '"' + (st.metrik === x[0] ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select></label>';
+      if (st.mode === 'pdm') {
         var pp = [];
         if (geoSedia) { pp.push(['peta', 'Peta']); }
         if (adaSvg(st.pdmBahagian)) { pp.push(['svg', 'Peta SVG']); }
@@ -892,6 +933,13 @@
     }
 
     function renderLegend() {
+      if (st.metrik === 'peluang' || st.metrik === 'perwakilan' || st.metrik === 'kerusi') {           // v14.9
+        var lb = st.metrik === 'peluang' ? PELUANG_LABEL : st.metrik === 'perwakilan' ? PERWAKILAN_LABEL : KERUSI_LABEL, wr = st.metrik === 'peluang' ? PELUANG_WARNA : st.metrik === 'perwakilan' ? PERWAKILAN_WARNA : SENTIMEN_WARNA;
+        var nota = st.metrik === 'peluang' ? 'Di mana Lobi / Ziarah paling berkesan: sokongan rendah, ramai ahli, dekat kawasan anda.' : st.metrik === 'perwakilan' ? 'Bilangan perwakilan (undi pemilihan parti) berbanding kawasan lain.' : 'Anggaran status kerusi daripada Kekuatan Parti.';
+        $legend.innerHTML = '<strong style="color:var(--mpm-tx)">' + jenisMetrikLabel() + ':</strong>' + lb.map(function (l, i) { return '<span><i style="background:' + wr[i] + '"></i>' + l + '</span>'; }).join('') +
+          (rumah0.cawangan ? '<span>★ Kawasan anda</span>' : '') + '<span class="mpm-legend-nota">' + nota + '</span>' + legendKrisis();
+        return;
+      }
       if (st.metrik === 'pemilih' && geoSedia) {
         $legend.innerHTML = '<strong style="color:var(--mpm-tx)">Saiz Pemilih:</strong><span>Rendah <i class="mpm-skala" style="height:10px;width:120px;border:0"></i> Tinggi</span><span>' +
           (st.mode === 'pdm' && G.getFitur('dm').length ? 'Pemilih sebenar (Daerah Mengundi)' : 'Anggaran daripada banci 2020') + '</span>' + (rumah0.cawangan ? '<span>★ Kawasan anda</span>' : '') + legendKrisis();
@@ -1296,8 +1344,7 @@
     }
 
     function stagePoligon() {
-      var tip = st.mode === 'negeri' ? 'Klik negeri untuk butiran. ' : st.mode === 'dun' ? 'Klik DUN untuk butiran. ' : SW ? 'Klik DUN untuk butiran. ' : 'Klik bahagian (parlimen) untuk butiran. ';
-      return '<div class="mpm-pelan"><span>' + tip + 'Seret untuk alih; Ctrl + roda tetikus atau butang +/&minus; untuk zum.</span></div>' +
+      return '<div class="mpm-pelan"><span>Klik kawasan untuk butiran; dwiklik atau 🔍 Zum masuk untuk turun aras. Seret untuk alih.</span></div>' +
         '<div class="mpm-kanvas" data-kanvas></div><p class="mpm-kredit">' + esc(G.KREDIT) + '</p>';
     }
 
@@ -1325,10 +1372,24 @@
       return '<div class="mpm-bar"><div class="l"><span>' + label + '</span><strong>' + nilai + '%</strong></div><div class="t"><b style="width:' + clamp(nilai, 0, 100) + '%;background:' + warna + '"></b></div></div>';
     }
 
+    /** v14.9: kawasan pada aras semasa (untuk senarai 5 kawasan paling berbaloi). */
+    function nodAras() {
+      if (st.mode === 'negeri') { return M.negeri.filter(function (n) { return n.adaData; }); }
+      if (st.mode === 'bahagian') { return M.bahagian.filter(function (b) { return !st.negeriTapis || b.negeri.id === st.negeriTapis; }); }
+      if (st.mode === 'dun') { var nd = M.idxN[st.pdmNegeri]; return nd ? M.dun.filter(function (d) { return d.bahagian.negeri === nd && (!st.dunBhg || d.bahagian.id === st.dunBhg) && d.cawangan.length; }) : []; }
+      var b = M.idxB[st.pdmBahagian]; return b ? b.cawangan : [];
+    }
+    function senaraiTeratas() {
+      var a = nodAras().slice().sort(function (x, y) { return skorPeluang(y) - skorPeluang(x); }).slice(0, 5); if (!a.length) { return ''; }
+      return '<div class="mpm-top"><b>🎯 5 kawasan paling berbaloi</b>' + a.map(function (n, i) {
+        var nm = (n.tahap === 'bahagian' ? kodBhg(n) + ' ' : '') + n.nama, rm = M.rumah && M.rumah[n.tahap] === n;
+        return '<button type="button" data-act="pilih" data-tahap="' + n.tahap + '" data-id="' + esc(n.id) + '"><span>' + (i + 1) + '. ' + esc(nm) + (rm ? ' ★' : '') + '</span><small>' + PELUANG_LABEL[tahapIndeks(skorPeluang(n))] + '</small></button>';
+      }).join('') + '</div>';
+    }
     function renderPanel(mesej, ralat) {
       var d = st.dipilih, nod = d && dapatkanNod(M, d.tahap, d.id);
       if (!nod) {
-        $panel.innerHTML = '<h3>Butiran Kawasan</h3><p class="mpm-kosong">Klik mana-mana kawasan pada peta untuk melihat butiran, kemudian Lobi atau Anjur Jelajah.</p>';
+        $panel.innerHTML = '<h3>Butiran Kawasan</h3><p class="mpm-kosong">Klik mana-mana kawasan pada peta untuk melihat butiran, kemudian Lobi atau Ziarah.</p>' + senaraiTeratas();
         return;
       }
       var t = tahapNod(nod), tS = tahapSokongan(nod.sokongan, nod.tahap === 'bahagian' ? 'lobi' : 'sokongan'), tK = tahapSokongan(nod.kekuatan, 'sokongan');
@@ -1355,17 +1416,20 @@
         return '<button type="button" class="mpm-btn mpm-btn--' + jenis + '" data-act="tindakan" data-v="' + jenis + '"' + (s.boleh ? '' : ' disabled title="' + esc(s.sebab) + '"') + '>' +
           def.nama + '<small>' + kos.ap + ' AP · MYR ' + fmt(kos.myr) + (s.boleh ? ' · baki ' + s.baki + 'x tahun ini' : ' · ' + esc(s.sebab)) + '</small></button>';
       };
-      var drill = nod.tahap === 'negeri' ? '<button type="button" class="mpm-btn" data-act="drill">Lihat Bahagian di ' + esc(nod.nama) + '</button>' :
-        nod.tahap === 'bahagian' ? '<button type="button" class="mpm-btn" data-act="drill">Lihat Cawangan (PDM)</button>' : '';
+      var drill = nod.tahap === 'negeri' ? '<button type="button" class="mpm-btn mpm-btn--zum" data-act="drill">🔍 Zum masuk: Bahagian di ' + esc(nod.nama) + '</button>' :
+        nod.tahap === 'bahagian' ? '<button type="button" class="mpm-btn mpm-btn--zum" data-act="drill">🔍 Zum masuk: Cawangan</button>' : '';
+      var ipl = tahapIndeks(skorPeluang(nod)), kL = TINDAKAN.lobi.bonus[nod.tahap], kJ = TINDAKAN.jelajah.bonus[nod.tahap];   // v14.9: Peluang
+      var peluangH = '<p class="mpm-peluang"><span class="mpm-chip" style="background:' + PELUANG_WARNA[ipl] + ';color:#111">🎯 Peluang ' + PELUANG_LABEL[ipl].toLowerCase() + '</span>' +
+        (kL ? '<small>Lobi +' + kL + ' · Ziarah +' + kJ + ' mata sokongan</small>' : '') + '</p>';
 
       $panel.innerHTML = '<h3>' + esc(nod.nama) + (rm ? ' <span title="Kawasan anda" style="color:var(--mpm-gold)">★</span>' : '') + '</h3><p class="mpm-sub">' + esc(sub) + '</p>' +
-        '<p><span class="mpm-chip" style="background:' + t.warna + ';' + (t.indeks === 4 ? 'color:#2B2100' : '') + '">' + t.label + '</span></p>' + dl +
+        (st.metrik === 'peluang' ? '' : '<p><span class="mpm-chip" style="background:' + t.warna + ';' + (t.indeks === 4 ? 'color:#2B2100' : '') + '">' + t.label + '</span></p>') + peluangH +
         bar(nod.tahap === 'bahagian' ? '% Sokongan Perwakilan' : '% Sokongan Anda', nod.sokongan, tS.warna) +
         bar('Kekuatan Parti', nod.kekuatan, tK.warna) +
         (nod.tambah ? '<p class="mpm-sub">Usaha anda menambah kira-kira +' + nod.tambah + ' mata sokongan di sini.</p>' : '') +
         isuPanel(nod, p) + krisisPanel(nod) +
         (nod.tahap === 'dun' ? '<p class="mpm-sub">Lobi dan Ziarah dilakukan pada peringkat cawangan atau bahagian. Pilih cawangan dalam DUN ini.</p>' + (projekBtn(nod, p) ? '<div class="mpm-aksi">' + projekBtn(nod, p) + '</div>' : '') : '<div class="mpm-aksi">' + btn('lobi') + btn('jelajah') + projekBtn(nod, p) + drill + '</div>') +
-        '<div class="mpm-msg' + (ralat ? ' ralat' : '') + '" role="status">' + esc(mesej || '') + '</div>';
+        '<div class="mpm-msg' + (ralat ? ' ralat' : '') + '" role="status">' + esc(mesej || '') + '</div>' + '<details class="mpm-butir"><summary>Butiran kawasan</summary>' + dl + '</details>' + senaraiTeratas();
     }
 
     function renderSemua() { renderTabs(); renderToolbar(); renderStage(); renderLegend(); renderPanel(); }
@@ -1415,7 +1479,7 @@
 
     function refresh() {
       inst.profil = S ? S.loadPlayer() : null;
-      kira(M, inst.profil);
+      kira(M, inst.profil); M.versi = (M.versi || 0) + 1;
       renderToolbar(); renderStage(); renderLegend();
       var d = st.dipilih; if (d && !dapatkanNod(M, d.tahap, d.id)) { st.dipilih = null; }
       renderPanel();
@@ -1428,6 +1492,10 @@
       if (t.hasAttribute('data-cid') && !t.hasAttribute('data-act')) { pilih('cawangan', t.getAttribute('data-cid')); return; }
       var act = t.getAttribute('data-act'), v = t.getAttribute('data-v');
       if (act === 'mode') { setMode(v); }
+      else if (act === 'crumb') {                                                         // v14.9: laluan navigasi
+        if (v === 'negeri' || v === 'bahagian' || v === 'dun' || v === 'pdm') { if (v !== st.mode) { inst._vb = null; setMode(v); } }
+        else if (v.indexOf('bhg:') === 0) { st.mode = 'bahagian'; st.negeriTapis = v.slice(4); st.wp = ''; st.dipilih = null; inst._vb = null; ensurePdmDefault(); renderSemua(); }
+      }
       else if (act === 'metrik') { st.metrik = v; renderToolbar(); renderStage(); renderLegend(); renderPanel(); }
       else if (act === 'pilih') { pilih(t.getAttribute('data-tahap'), t.getAttribute('data-id')); }
       else if (act === 'tindakan') { lakukan(v); }
@@ -1441,11 +1509,17 @@
     });
     el.addEventListener('change', function (ev) {
       var t = ev.target, act = t.getAttribute && t.getAttribute('data-act');
-      if (act === 'tapis') { st.negeriTapis = t.value; st.wp = ''; st.dipilih = null; renderStage(); renderPanel(); }
+      if (act === 'lapisan') { st.metrik = t.value; renderToolbar(); renderStage(); renderLegend(); renderPanel(); }   // v14.9: dropdown lapisan (telefon)
+      else if (act === 'tapis') { st.negeriTapis = t.value; st.wp = ''; st.dipilih = null; renderStage(); renderPanel(); }
       else if (act === 'dun-negeri') { st.pdmNegeri = t.value; st.pdmBahagian = ''; st.dunBhg = ''; ensurePdmDefault(); st.dipilih = null; inst._vb = null; renderToolbar(); renderStage(); renderPanel(); }
       else if (act === 'dun-bhg') { st.dunBhg = t.value; st.dipilih = null; inst._vb = null; renderToolbar(); renderStage(); renderPanel(); }
       else if (act === 'pdm-negeri') { st.pdmNegeri = t.value; st.pdmBahagian = ''; ensurePdmDefault(); st.dipilih = null; st.dunDipilih = ''; st.pdmPaparan = (st.pdmPaparan === 'svg' && !adaSvg(st.pdmBahagian)) ? paparanLalai() : st.pdmPaparan; renderToolbar(); renderStage(); renderPanel(); }
       else if (act === 'pdm-bahagian') { st.pdmBahagian = t.value; st.dipilih = null; st.dunDipilih = ''; if (st.pdmPaparan === 'svg' && !adaSvg(st.pdmBahagian)) { st.pdmPaparan = paparanLalai(); } renderToolbar(); renderStage(); renderPanel(); }
+    });
+    el.addEventListener('dblclick', function (ev) {                                       // v14.9: dwiklik kawasan = zum masuk
+      var t = ev.target.closest ? ev.target.closest('.mpm-poli[data-id]') : null; if (!t || !el.contains(t)) { return; }
+      var th = t.getAttribute('data-tahap'); if (th !== 'negeri' && th !== 'bahagian') { return; }
+      pilih(th, t.getAttribute('data-id'), true); inst._vb = null; setMode(th === 'negeri' ? 'bahagian' : 'pdm');
     });
     el.addEventListener('keydown', function (ev) {
       var t = ev.target;
@@ -1465,7 +1539,7 @@
 
     /* ----- API pemasangan ----- */
     inst.setMode = setMode;
-    inst.setMetrik = function (m) { if (['sokongan', 'kekuatan', 'sentimen', 'sayap', 'pemain'].indexOf(m) >= 0) { st.metrik = m; renderToolbar(); renderStage(); renderLegend(); renderPanel(); } };
+    inst.setMetrik = function (m) { if (['peluang', 'sokongan', 'kekuatan', 'perwakilan', 'kerusi', 'sentimen', 'sayap', 'pemain', 'pemilih'].indexOf(m) >= 0) { st.metrik = m; renderToolbar(); renderStage(); renderLegend(); renderPanel(); } };
     inst.pilih = function (tahap, id) {
       if (tahap === 'cawangan' && M.idxC[id]) { var c = M.idxC[id]; st.pdmNegeri = c.negeri.id; st.pdmBahagian = c.bahagian.id; if (st.mode !== 'pdm') { st.mode = 'pdm'; } st.dipilih = null; renderSemua(); }
       else if (tahap === 'bahagian' && M.idxB[id]) { if (st.mode === 'pdm') { st.pdmNegeri = M.idxB[id].negeri.id; st.pdmBahagian = id; ensurePdmDefault(); renderToolbar(); renderStage(); } else if (st.mode === 'negeri') { st.mode = 'bahagian'; st.negeriTapis = ''; renderSemua(); } }
@@ -1482,6 +1556,11 @@
     inst.renderToolbar = renderToolbar;
     inst.destroy = function () { inst.unsub(); el.innerHTML = ''; el.classList.remove('mpm'); if (aktif === inst) { aktif = null; } };
 
+    /* v14.9 (audit peta): buka di aras bahagian negeri anda dengan bahagian anda dipilih */
+    if (rumah0 && rumah0.bahagian) {
+      if (!SW && rumah0.negeri && (st.mode === 'negeri' || st.mode === 'bahagian')) { st.mode = 'bahagian'; st.negeriTapis = rumah0.negeri.id; }
+      if (st.mode === 'bahagian') { st.dipilih = { tahap: 'bahagian', id: rumah0.bahagian.id }; }
+    }
     renderSemua();
     aktif = inst;
     return inst;

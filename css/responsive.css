@@ -121,6 +121,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
     align-items: start;
   }
   .dashboard-layout__side { position: sticky; top: calc(var(--header-h) + var(--space-4)); }
+  .dashboard-layout.is-peta { grid-template-columns: minmax(0, 1fr); }   /* v14.9: tab Peta lebar penuh */
 
   .stat-grid--wide { grid-template-columns: repeat(4, 1fr); }
 
@@ -132,6 +133,7 @@ h1, h2, h3, p { overflow-wrap: anywhere; }
   .container { padding: var(--space-6) var(--space-5); }
   .grid--4 { grid-template-columns: repeat(4, 1fr); }
   .dashboard-layout { grid-template-columns: minmax(0, 1fr) 380px; }
+  .dashboard-layout.is-peta { grid-template-columns: minmax(0, 1fr); }
   .hero h1 { font-size: 3rem; }
 }
 

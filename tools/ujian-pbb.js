@@ -74,7 +74,7 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   semak((await pg.$$('#peta-host .mpm-krisis [data-act="krisis"]')).length === 1, 'bar krisis tempatan di Peta Pengaruh Sarawak');
   await pg.click('#peta-host .mpm-krisis [data-act="krisis"]'); await pg.waitForTimeout(500); await pg.click('#modal [data-pilih="abai"]'); await pg.waitForTimeout(800);
   semak((await pg.$$('#peta-host .mpm-krisis')).length === 0, 'krisis diselesaikan dari bar');
-  semak((await pg.$$('#mpm-tab-pdm')).length === 1 && (await pg.$$('#mpm-tab-negeri')).length === 0, 'Peta Pengaruh Sarawak: tab DUN dan DM sahaja');
+  semak(await pg.evaluate(() => { const c = Array.from(document.querySelectorAll('#peta-host .mpm-crumb-b')).map((e) => e.getAttribute('data-v')); return c[0] === 'bahagian' && c.indexOf('negeri') < 0; }), 'Peta Pengaruh Sarawak: laluan bermula di Sarawak (tiada aras Malaysia)');   // v14.9
   /* v11.4: butang "Turun Padang (Ziarah)" di peta tidak lagi mencetuskan tindakan dashboard ("Tindakan tidak dikenali: null") */
   await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { ap: 20, myr: 50000 } }); });
   await pg.evaluate(() => { const x = document.querySelector('#peta-host svg [data-act="pilih"].is-rumah') || document.querySelector('#peta-host svg [data-act="pilih"]'); x.dispatchEvent(new MouseEvent('click', { bubbles: true })); }); await pg.waitForTimeout(600);

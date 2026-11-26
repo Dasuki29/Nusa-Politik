@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v14.9: Tab Peta direka semula (audit peta)
+- Laluan navigasi (Malaysia › Negeri › Bahagian › Cawangan) menggantikan 4 tab mod, dropdown Negeri/Bahagian dan 7 butang rantau/WP. Dwiklik kawasan atau 🔍 Zum masuk untuk turun aras.
+- 5 lapisan: 🎯 Peluang (baharu, lalai: di mana Lobi/Ziarah paling berkesan), 💪 Sokongan Anda, 🏛️ Kekuatan Parti, 🗳️ Perwakilan, 📍 Kerusi PRU. Dropdown lapisan di telefon.
+- Kekuatan Parti kini ikut kubu sebenar setiap parti (cth PAS: Kelantan/Terengganu, DAP: Pulau Pinang/KL), bukan nilai rawak. Sokongan Anda kini bergantung pada jarak dari kawasan anda dan Reputasi (dahulu sama dengan Kekuatan Parti).
+- Panel butiran di sisi peta (desktop) dengan Peluang, butang Lobi/Ziarah/Projek, butiran boleh lipat dan senarai 5 kawasan paling berbaloi. Peta dibuka di negeri anda dengan bahagian anda dipilih.
+- Kad sisi (Sokongan & Reputasi, Isu, Log) disembunyikan di tab Peta supaya peta lebar penuh.
+
 ## v14.8: Sokong Calon Pertandingan Lain (maklum balas baris 50)
 - Kad baharu 🗳️ Pertandingan Lain di tab Pemilihan (tahun pemilihan): calon Presiden, Timbalan Presiden, Ketua Sayap Pusat, Ketua Bahagian dan Ketua Cawangan yang anda tidak bertanding, dengan bar anggaran peluang.
 - Sokong seorang calon setiap jawatan: 2 AP, kekuatan calon +3 hingga +8, had 3 setahun, Pesaing utama tidak boleh disokong.

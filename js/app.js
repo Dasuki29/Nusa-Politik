@@ -1520,6 +1520,7 @@
     if (dt && !state.dutaLalu) { state.tab = 'kedutaan'; } state.dutaLalu = dt;
     if (!dt && state.tab === 'kedutaan') { state.tab = 'tindakan'; }
     $('tab-kedutaan').hidden = !dt; $('nav-kedutaan').hidden = !dt;
+    var dl = document.querySelector('.dashboard-layout'); if (dl) { dl.classList.toggle('is-peta', state.tab === 'peta'); }   // v14.9: tab Peta lebar penuh (kad sisi disembunyikan)
     TABS.forEach(function (t) {
       var b = $('tab-' + t), a = t === state.tab;
       b.setAttribute('aria-selected', String(a)); b.tabIndex = a ? 0 : -1;

@@ -1173,3 +1173,6 @@ html, body { overflow-x: clip; }
 .war-ban b { display: block; }
 .war-ban small { color: #BFE3F7; font-size: .78rem; }
 .war-bar i { background: #4FB3E8; }
+
+/* v14.9: tab Peta: kad sisi (Sokongan, Isu, Log) disembunyikan; kekal di tab lain */
+.dashboard-layout.is-peta .dashboard-layout__side { display: none; }

@@ -103,9 +103,13 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
 
   /* Tab Peta: setiap mod, kemudian hover dan klik beberapa kawasan serta tekan butang tindakan. */
   const jelajahPeta = async () => {
-    const mod = pg.locator('.mpm-tab'), n = await mod.count();
+    /* v14.9: laluan navigasi + lapisan (dahulu 4 tab mod): aras Malaysia, negeri, bahagian (drill), setiap lapisan */
+    const n = 5;
     for (let m = 0; m < n; m++) {
-      await mod.nth(m).evaluate((e) => e.click()); await pg.waitForTimeout(900); await imbas('peta mod ' + m);
+      if (m === 0) { await pg.locator('.mpm-crumb-b').first().evaluate((e) => e.click()); }
+      else if (m === 1 || m === 2) { await pg.evaluate(() => { const i = MyPolitikMap.getInstance(), M = i.getModel(), r = M.rumah; if (r && r[m === 1 ? 'negeri' : 'bahagian']) { i.pilih(m === 1 ? 'negeri' : 'bahagian', r[m === 1 ? 'negeri' : 'bahagian'].id); } }).catch(() => {}); await pg.locator('[data-act="drill"]').first().evaluate((e) => e.click()).catch(() => {}); }
+      else { await pg.locator('.mpm-lapisan button').nth(m - 1).evaluate((e) => e.click()).catch(() => {}); }
+      await pg.waitForTimeout(900); await imbas('peta mod ' + m);
       for (const sel of ['.mpm-poli', '.mpm-baris']) {
         const l = pg.locator(sel), c = await l.count();
         for (let k = 0; k < Math.min(c, 3); k++) {
@@ -142,13 +146,14 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
     if (tab === 'peta') {
       await jelajahPeta();
       /* v8.21: pilihan Wilayah Persekutuan (EN): butang besar, penapis ke satu wilayah. */
-      await pg.locator('.mpm-tab').first().evaluate((e) => e.click()); await pg.waitForTimeout(900);
-      const wpTeks = await pg.evaluate(() => Array.from(document.querySelectorAll('[data-act="wp"]')).map((e) => e.textContent.trim()).join('|'));
-      if (wpTeks !== 'WP (all)|Kuala Lumpur|Putrajaya|Labuan') { ralat.push('butang WP salah: ' + wpTeks); }
-      await pg.locator('[data-act="wp"][data-v="16"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(1500);
-      const nPoli = await pg.locator('.mpm-poli').count();
-      if (nPoli !== 1) { ralat.push('Putrajaya sepatutnya 1 kawasan, dapat ' + nPoli); }
-      await pg.selectOption('[data-act="tapis"]', '').catch(() => {}); await pg.locator('.mpm-tab').last().evaluate((e) => e.click()); await pg.waitForTimeout(900);      // pulihkan keadaan peta untuk ujian krisis
+      /* v14.9: Wilayah Persekutuan melalui laluan navigasi: pilih WP di aras Malaysia, kemudian Zum masuk (KL 11 + Putrajaya 1 + Labuan 1). */
+      await pg.locator('.mpm-crumb-b').first().evaluate((e) => e.click()); await pg.waitForTimeout(900);
+      const ngA = await pg.evaluate(() => { const i = MyPolitikMap.getInstance(), n = i.getModel().negeri.filter((x) => x.adaData && x.id !== (i.getModel().rumah.negeri || {}).id)[0]; i.pilih('negeri', n.id); return { id: n.id, b: n.bahagian.length }; }); await pg.waitForTimeout(300);
+      await pg.locator('[data-act="drill"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(1500);
+      const nPoli = await pg.locator('.mpm-poli[data-id]').count(), crumbT = await pg.evaluate(() => Array.from(document.querySelectorAll('.mpm-crumb-b')).map((e) => e.textContent.trim()).join('|')), stP = await pg.evaluate(() => MyPolitikMap.getInstance().getState());
+      if (stP.mode !== 'bahagian' || stP.negeriTapis !== ngA.id || nPoli < 1) { ralat.push('Zum masuk negeri gagal: ' + JSON.stringify({ ngA, nPoli, mode: stP.mode, t: stP.negeriTapis })); }
+      if (!/^🇲🇾 Malaysia\|[^|]+$/.test(crumbT) || /All divisions/.test(crumbT)) { ralat.push('laluan navigasi EN salah: ' + crumbT); }
+      await pg.evaluate(() => MyPolitikMap.getInstance().setMode('pdm')); await pg.waitForTimeout(900);      // pulihkan keadaan peta untuk ujian krisis
       /* v8.8: krisis tempatan di peta (ikon berkedip, klik, selesai) + lapisan sentimen. */
       await pg.evaluate(() => { const S = window.MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { krisisPeta: { aktif: [{ id: 'kt1', jenis: 'banjir', cid: p.id, tempat: p.cawangan || 'Cawangan', tahun: p.tahun, bulan: p.bulan }], selesai: 0, terabai: 0, akhir: '' } } }); });
       await pg.waitForSelector('.mpm-kanvas', { timeout: 25000 }).catch(() => {}); await pg.waitForTimeout(800); await imbas('peta krisis');
@@ -156,7 +161,7 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
       const pin = await pg.locator('.mpm-pin').count(), strip = await pg.locator('.mpm-krisis-btn').count();
       if (!strip) { ralat.push('bar krisis peta tiada'); }
       if (!pin) { ralat.push('ikon krisis ⚠️ tiada di peta'); }
-      await pg.locator('.mpm-seg [data-v="sentimen"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(400); await imbas('lapisan sentimen');
+      await pg.locator('.mpm-seg [data-v="kerusi"]').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(400); await imbas('lapisan kerusi');
       await pg.locator('.mpm-krisis-btn').first().evaluate((e) => e.click()); await pg.waitForTimeout(500); await imbas('modal krisis');
       const mt = await pg.evaluate(() => (document.querySelector('.acara__pil') || {}).innerText || '');
       if (!/Go to the ground|help the victims/i.test(mt)) { ralat.push('modal krisis EN salah: ' + mt.slice(0, 120)); }
