@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.10: Gerakan Parti Negeri (maklum balas baris 49)
+- Kad baharu 📣 Gerakan Parti Negeri di tab Tindakan: jadual negeri (Kekuatan asas, Gerakan, status Lemah/Swing/Kubu). Jawatan Pusat: semua negeri; Ketua Bahagian: negeri sendiri.
+- 3 program: Jelajah Negeri (3 AP, RM 10,000, +3, bulanan), Buka Cawangan Baharu (RM 20,000, +2 tidak susut, Ahli +150, setahun sekali), Program Komuniti & Media Tempatan (2 AP, RM 5,000, +2, bulanan). Negeri lemah x1.5, had +15 setiap negeri, susut 1 setiap 3 bulan.
+- Kesan: Kekuatan Parti dan Sokongan di peta; PRU +1 kerusi Parlimen setiap 5 mata di negeri Lemah/Swing (maks +10); negeri pemain: undi kerusi dan peluang kerajaan negeri +1% setiap 5 mata.
+- Ujian baharu: tools/ujian-gerakan.js dan ujian unit v14.10.
+
 ## v14.9: Tab Peta direka semula (audit peta)
 - Laluan navigasi (Malaysia › Negeri › Bahagian › Cawangan) menggantikan 4 tab mod, dropdown Negeri/Bahagian dan 7 butang rantau/WP. Dwiklik kawasan atau 🔍 Zum masuk untuk turun aras.
 - 5 lapisan: 🎯 Peluang (baharu, lalai: di mana Lobi/Ziarah paling berkesan, ikut persentil kawasan pada aras semasa), 💪 Sokongan Anda, 🏛️ Kekuatan Parti, 🗳️ Perwakilan, 📍 Kerusi PRU. Dropdown lapisan di telefon.

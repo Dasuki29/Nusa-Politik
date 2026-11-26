@@ -123,6 +123,8 @@ Modul utama dalam `js/`:
 | `selepas-ui.js` | Modal Bersara (3 laluan), kad 🌅 Selepas Politik dan tab 🌏 Kedutaan |
 | `sokong.js` | Sokong calon pertandingan lain: senarai calon, sokongan, keputusan, sekutu |
 | `sokong-ui.js` | Kad 🗳️ Pertandingan Lain (tab Pemilihan) |
+| `gerakan.js` | Gerakan Parti Negeri: program, had, susut, kesan peta dan PRU |
+| `gerakan-ui.js` | Kad 📣 Gerakan Parti Negeri (tab Tindakan) |
 | `berjasa.js` | BERJASA (Lain-lain, mod ringan): Kekuatan Parti, Dakwah, pakatan pilihan raya, PRU solo, Penentu kerajaan |
 | `berjasa-ui.js` | Kad 🌙 BERJASA: Parti Kecil (tab Profil) |
 | `berjasa-data.js` | Dijana oleh `tools/build-berjasa.js`: kawasan operasi BERJASA |
@@ -197,6 +199,7 @@ node tools/ujian-bebas.js        # pelayar: Calon Bebas PRU (pencalonan, kempen,
 node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab Istana, tugas, EN)
 node tools/ujian-selepas.js      # pelayar: Pilihan Selepas Politik (modal Bersara, pos Duta, tab Kedutaan, EN)
 node tools/ujian-sokong.js       # pelayar: Sokong Calon Pertandingan Lain (kad tab Pemilihan, EN)
+node tools/ujian-gerakan.js      # pelayar: Gerakan Parti Negeri (kad tab Tindakan, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
 node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN
 node tools/ujian-warisan.js      # pelayar: cip Warisan, daftar Sabah (Wira / Wirawati), kad Warisan, kerusi, EN

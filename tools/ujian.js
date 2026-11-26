@@ -3651,6 +3651,27 @@ ujian('v14.8 Sokong calon pertandingan lain (baris 50): senarai, sokong, had, pe
   S.clearPlayer();
 });
 
+ujian('v14.10 Gerakan Parti Negeri (baris 49): akses, program, ganda lemah, had, susut, kerusi PRU', () => {
+  const G = g.MyPolitikGerakan, C = G.CONFIG; P.daftar({ umur: 40 }); P.tetap({ tahun: 2030, bulan: 3, ap: 20, myr: 200000, negeri: 'Johor', jawatanList: [] });
+  let sn = G.senarai(S.loadPlayer()); sama(sn.akses, null); betul(!G.jalankan('johor', 'jelajah').ok, 'tanpa jawatan');
+  P.tetap({ jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', pangkat: 7 }] });
+  sn = G.senarai(S.loadPlayer()); sama(sn.akses, 'negeri'); sama(sn.rumah, 'johor'); betul(sn.negeri.length >= 12);
+  betul(/negeri sendiri/.test(G.jalankan('kelantan', 'jelajah').ralat || ''), 'Ketua Bahagian: negeri sendiri');
+  const j0 = sn.negeri.find((n) => n.kod === 'johor'); let r = G.jalankan('johor', 'jelajah'); betul(r.ok, r.ralat);
+  sama(G.mata(S.loadPlayer(), 'johor'), j0.lemah ? 5 : 3); betul(!G.jalankan('johor', 'jelajah').ok, 'bulanan');
+  P.tetap({ jawatanList: [{ kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', pangkat: 12 }] });
+  const lemah = G.senarai(S.loadPlayer()).negeri.find((n) => n.lemah); betul(!!lemah, 'ada negeri lemah');
+  r = G.jalankan(lemah.kod, 'cawangan'); betul(r.ok, r.ralat); sama(G.mata(S.loadPlayer(), lemah.kod), 3, 'lemah x1.5 (2 -> 3)'); sama(G.ahliTambah(S.loadPlayer(), lemah.kod), 150);
+  betul(!G.jalankan(lemah.kod, 'cawangan').ok, 'sekali setahun');
+  for (let b = 4; b <= 12; b++) { P.tetap({ bulan: b, ap: 20, myr: 200000 }); G.jalankan(lemah.kod, 'jelajah'); G.jalankan(lemah.kod, 'komuniti'); }
+  sama(G.mata(S.loadPlayer(), lemah.kod), C.HAD, 'had'); betul(/Had/.test(G.jalankan(lemah.kod, 'komuniti').ralat || G.semakProgram(S.loadPlayer(), lemah.kod, 'komuniti').sebab));
+  betul(G.bonusKerusi(S.loadPlayer()) >= 3, 'kerusi PRU ' + G.bonusKerusi(S.loadPlayer()));
+  // susut: bonus biasa -1 setiap 3 bulan, bahagian tetap kekal
+  const gg = S.loadPlayer().gerakan; P.tetap({ gerakan: Object.assign({}, gg, { susut: (2030 * 12 + 12) - 3 }) }); G.prosesBulan();
+  sama(G.mata(S.loadPlayer(), lemah.kod), C.HAD - 1); sama(S.loadPlayer().gerakan.n[lemah.kod].t, 3, 'tetap');
+  S.clearPlayer();
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

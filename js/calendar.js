@@ -597,6 +597,8 @@
     var DTm = muat('MyPolitikDuta', 'duta.js'), SLm = muat('MyPolitikSelepas', 'selepas.js');   // v14.6: Duta Malaysia dan Pilihan Selepas Politik
     if (DTm && DTm.prosesBulan) { peristiwa = peristiwa.concat(DTm.prosesBulan().peristiwa || []); }
     if (SLm && SLm.prosesBulan) { peristiwa = peristiwa.concat(SLm.prosesBulan().peristiwa || []); }
+    var GKm = muat('MyPolitikGerakan', 'gerakan.js');                                          // v14.10: Gerakan Parti Negeri (susut bonus)
+    if (GKm && GKm.prosesBulan) { peristiwa = peristiwa.concat(GKm.prosesBulan().peristiwa || []); }
     var SKm = muat('MyPolitikSokong', 'sokong.js');                                           // v14.8: sokong calon pertandingan lain
     if (SKm && SKm.prosesBulan) { peristiwa = peristiwa.concat(SKm.prosesBulan().peristiwa || []); }
     var PRK = muat('MyPolitikPRK', 'prk.js');                                                   // v7.6: sentimen nasional & PRK pertengahan penggal

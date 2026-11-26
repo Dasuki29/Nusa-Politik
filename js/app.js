@@ -988,10 +988,12 @@
     var gKaw = ui('NusaKawasan_UI'), nKel = (gKaw.match(/data-act="kawasan-selesai"/g) || []).length;
     var gAset = ui('NusaKomuniti_UI') + ui('NusaGLC_UI') + ui('NusaSampingan_UI');
     var gMedia = ui('NusaMedia_UI') + ui('NusaIntegriti_UI');
+    var gGerak = ui('NusaGerakan_UI');                                             // v14.10: Gerakan Parti Negeri
     h += PUIh(p, 'tindakan') + bannerDisiplin(p) + bannerUndiTP(p);
     /* v8.31: kad dikumpulkan dan dilipat (keadaan diingat dalam pelayar sahaja). */
     var kumpul = [
       ['tn-kawasan', '<span>🏛️ Kawasan &amp; Rakyat</span>', gKaw, { buka: nKel > 0, lencana: nKel ? nKel + ' keluhan' : '' }],
+      ['tn-gerakan', '<span>📣 Gerakan Parti Negeri</span>', gGerak, {}],
       ['tn-aset', '<span>💼 Jawatan &amp; Aset Luar</span>', gAset, {}],
       ['tn-media', '<span>📡 Media &amp; Integriti</span>', gMedia, {}]
     ];

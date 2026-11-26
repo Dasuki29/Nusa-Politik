@@ -665,7 +665,8 @@
     var r = rng(o), profil = a.constituencyType, mb = bonusManifesto(profil, ids);
     var asas = 0.40 * a.partiPopulariti + 8 + Math.min(11, (Number(p.ip) || 0) / 80) + ((p.kesetiaan && p.kesetiaan.akarUmbi || 50) - 50) * 0.25 + ((Number(p.reputasi) || 50) - 50) * 0.05 + mb;
     a.manifestoChoice = ids.slice();
-    a.voterSupport = clamp(bulat(asas * 0.8), 15, 70);
+    var GRk = modul('MyPolitikGerakan', 'gerakan.js'), gbN = GRk && GRk.bonusNegeriPemain ? GRk.bonusNegeriPemain(p) : 0;   // v14.10: Gerakan Parti Negeri (+1 setiap 5 mata)
+    a.voterSupport = clamp(bulat(asas * 0.8) + gbN, 15, 70);
     a.campaignFunds = dana; a.jentera = clamp(55 + bulat((Number(p.kesetiaan && p.kesetiaan.akarUmbi) || 50) * 0.35), 40, 85);
     if (pil.bawahMin) { a.voterSupport = clamp(a.voterSupport - pil.penalti.sokongan, 10, 70); a.jentera = clamp(a.jentera - pil.penalti.jentera, 25, 85); a.bajetRendah = true; }
     if (a.calonImport) {                                                       // v8.17: calon import: penalti awal (hilang jika pernah menang kerusi itu) dan tahap kerusi
@@ -899,7 +900,8 @@
         if (a.calonImport && !sekunder) { bonus = Math.round(bonus * (CONFIG.KERUSI_LAIN.TAHAP[a.calonImport.tahap] || { bonus: 1 }).bonus); }   // v8.17: kerusi lebih sukar = ganjaran lebih tinggi
         g.ip = bonus; g.rep = CONFIG.MENANG.reputasi; kk.bonusIp = bonus;
         var SWg = SW(p.parti) && jenis === 'DUN' ? modul('MyPolitikSarawak', 'sarawak.js') : null;                  // v9.1: GPS dominan di Sarawak
-        g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) : clamp((a.partiPopulariti + 5) / 100, 0.25, 0.8));
+        var GRn = modul('MyPolitikGerakan', 'gerakan.js'), gbK = GRn && GRn.bonusNegeriPemain ? GRn.bonusNegeriPemain(p) / 100 : 0;   // v14.10: Gerakan Parti Negeri
+        g.kerajaan = r() < (SWg && SWg.peluangKerajaan ? SWg.peluangKerajaan(a.partiPopulariti) + gbK : clamp((a.partiPopulariti + 5) / 100 + gbK, 0.25, 0.85));
         var SBk = !SWg && jenis === 'DUN' ? a.sabahPRN : null;                                     // v13.9: kerajaan negeri Sabah (GRS + BN jika BN >= 3 kerusi)
         if (SBk) { g.kerajaan = GRSk(p.parti) ? !!SBk.kerajaanGRS : p.parti === 'WARISAN' ? !!SBk.kerajaanWarisan : SBk.kerajaanBN; }   // v13.55: Warisan   // v13.54: GRS
         else if (!SWg) { var tk = kerajaanDariKerusi(jenis, sekunder); if (tk !== null) { g.kerajaan = tk; } }      // v11.4: status kerajaan ikut anggaran kerusi yang dipaparkan (bukan lambungan berasingan)
@@ -1009,6 +1011,8 @@
     if (PASn && PASn.kerusiParlimen) { var kpN = PASn.kerusiParlimen(pop, r); parti = kpN.parti; rakan = kpN.rakan; }   // v13.31: PN (PAS + rakan) ikut formula PAS
     var PBm = modul('MyPolitikPembangkang', 'pembangkang.js'), bkN = PBm && PBm.bonusKerusi ? PBm.bonusKerusi(p) : 0;   // v13.50: Naratif Pembangkang (+1 kerusi setiap 5 mata melebihi 50)
     if (bkN) { parti = clamp(parti + bkN, parti < 30 ? 0 : 30, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }
+    var GRs = modul('MyPolitikGerakan', 'gerakan.js'), gkN = GRs && GRs.bonusKerusi ? GRs.bonusKerusi(p) : 0;   // v14.10: Gerakan Parti Negeri (+1 kerusi setiap 5 mata di negeri Lemah/Swing, maks +10)
+    if (gkN) { parti = clamp(parti + gkN, 0, 150); rakan = Math.min(N.JUMLAH - parti, rakan); }
     var status = parti >= N.MAJORITI ? 'MAJORITI' : (parti + rakan >= N.MAJORITI ? 'GABUNGAN' : 'PEMBANGKANG');
     var kongsi = rakan > 0 ? parti / (parti + rakan) : 1;
     var adjPM = ((Number(pru.hubunganGabungan) || 50) - 50) * 0.004 + ((Number(p.reputasi) || 50) - 50) * 0.002;

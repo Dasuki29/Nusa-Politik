@@ -203,6 +203,9 @@
    * Bina model negeri > bahagian > cawangan daripada hierarki data.js.
    * Nilai asas (kekuatan parti) berbenih mengikut seed supaya tetap sepanjang permainan.
    */
+  function asasDariRng(parti, kod, r) { var k = kubuParti(parti, kod); return k != null ? k + (r() - 0.5) * 8 : 38 + r() * 24; }
+  /** v14.9: Kekuatan Parti asas negeri (sama seperti model peta) untuk modul lain (js/gerakan.js). seed lalai = 'peta|' + id pemain. */
+  function asasNegeri(parti, kod, seed) { return asasDariRng(parti, kod, rngBerbenih((seed || 'mypolitik') + '|N|' + kod)); }
   function binaModel(data, seed, parti) {
     seed = seed || 'mypolitik';
     var m = { negeri: [], bahagian: [], cawangan: [], dun: [], idxN: {}, idxB: {}, idxC: {}, idxD: {}, seed: seed };
@@ -210,7 +213,7 @@
     NEGERI14.forEach(function (d) {
       var r = rngBerbenih(seed + '|N|' + d.kod);
       var n = { tahap: 'negeri', id: d.kod, kod: d.kod, nama: d.nama, pendek: d.pendek, pos: d.pos,
-        bahagian: [], offset: kubuParti(parti, d.kod) != null ? kubuParti(parti, d.kod) + (r() - 0.5) * 8 : 38 + r() * 24 };   // v14.9: ikut kubu parti
+        bahagian: [], offset: asasDariRng(parti, d.kod, r) };   // v14.9: ikut kubu parti
       m.negeri.push(n); m.idxN[d.kod] = n;
     });
 
@@ -271,6 +274,7 @@
 
     m.negeri.forEach(function (n) {
       var bn = bonus['N:' + n.id] || 0, sN = 0, kN = 0, wN = 0, ahliN = 0, cawN = 0, perwN = 0;
+      var GKr = root.MyPolitikGerakan, gN = GKr && GKr.mata && profil ? GKr.mata(profil, n.id) : 0;   // v14.10: Gerakan Parti Negeri menaikkan Kekuatan Parti
       n.bonusSendiri = bn;
       n.bahagian.forEach(function (b) {
         var bb = bonus['B:' + b.id] || 0, sB = 0, kB = 0, wB = 0, ahliB = 0;
@@ -279,17 +283,18 @@
           var bc = bonus['C:' + c.id] || 0;
           var tambah = bc + bb * CONFIG.KESAN_BONUS_BAHAGIAN_KE_CAWANGAN + bn * CONFIG.KESAN_BONUS_NEGERI_KE_CAWANGAN;
           var prox = !rumah.cawangan ? 1 : c.bahagian === rumah.bahagian ? 1 : c.negeri === rumah.negeri ? 0.7 : 0.45;
-          var eff = clamp(15 + (c.asas - 15) * prox + rep + tambah, 0, 100);
+          c.asasG = clamp(c.asas + gN, 0, 100);
+          var eff = clamp(15 + (c.asasG - 15) * prox + rep + tambah, 0, 100);
           if (rumah.cawangan === c) { eff = eff * (1 - CONFIG.GAUN_RUMAH) + akarUmbi * CONFIG.GAUN_RUMAH; }
           c.bonusSendiri = bc; c.tambah = Math.round(tambah);
-          c.sokonganRaw = eff; c.sokongan = Math.round(eff); c.kekuatan = Math.round(c.asas);
+          c.sokonganRaw = eff; c.sokongan = Math.round(eff); c.kekuatan = Math.round(c.asasG);
           c.perwakilan = kuotaWakil(c.jumlahAhli, CONFIG.KUOTA_CAWANGAN); c.perwakilanPAU = 0;
           var w = Math.max(1, c.jumlahAhli);
-          sB += eff * w; kB += c.asas * w; wB += w; ahliB += c.jumlahAhli;
+          sB += eff * w; kB += c.asasG * w; wB += w; ahliB += c.jumlahAhli;
         });
         b.dun.forEach(function (d) {
           var s2 = 0, k2 = 0, w2 = 0, a2 = 0;
-          d.cawangan.forEach(function (c) { var ww = Math.max(1, c.jumlahAhli); s2 += c.sokonganRaw * ww; k2 += c.asas * ww; w2 += ww; a2 += c.jumlahAhli; });
+          d.cawangan.forEach(function (c) { var ww = Math.max(1, c.jumlahAhli); s2 += c.sokonganRaw * ww; k2 += c.asasG * ww; w2 += ww; a2 += c.jumlahAhli; });
           d.jumlahAhli = a2; d.bilCawangan = d.cawangan.length;
           d.sokongan = w2 ? Math.round(s2 / w2) : 0; d.kekuatan = w2 ? Math.round(k2 / w2) : 0;
           d.tambah = d.cawangan.length ? Math.round(d.cawangan.reduce(function (a, c) { return a + c.tambah; }, 0) / d.cawangan.length) : 0;
@@ -302,7 +307,7 @@
         sN += b.sokonganRaw * Math.max(1, b.jumlahAhli); kN += b.kekuatan * Math.max(1, b.jumlahAhli);
         wN += Math.max(1, b.jumlahAhli); ahliN += b.jumlahAhli; cawN += b.bilCawangan; perwN += b.perwakilan;
       });
-      n.jumlahAhli = ahliN; n.bilCawangan = cawN; n.bilBahagian = n.bahagian.length;
+      n.jumlahAhli = ahliN + (GKr && GKr.ahliTambah && profil ? GKr.ahliTambah(profil, n.id) : 0); n.bilCawangan = cawN; n.bilBahagian = n.bahagian.length;
       n.sokongan = wN ? Math.round(sN / wN) : 0; n.kekuatan = wN ? Math.round(kN / wN) : 0;
       n.tambah = Math.round(n.bahagian.length ? n.bahagian.reduce(function (a, b) { return a + b.tambah; }, 0) / n.bahagian.length : bn);
       n.perwakilan = perwN; n.perwakilanPAU = n.bahagian.reduce(function (a, b) { return a + b.perwakilanPAU; }, 0);
@@ -1637,6 +1642,7 @@
     jalankanTindakan: jalankanTindakan,
     semakTindakan: semakTindakan,
     binaModel: binaModel,
+    asasNegeri: asasNegeri, kubuParti: kubuParti,
     kira: kira,
     tahapSokongan: tahapSokongan,
     padanNegeri: padanNegeri,
