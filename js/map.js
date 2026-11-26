@@ -691,12 +691,15 @@
 
     /* ----- pembantu paparan ----- */
     /* v14.9 (audit peta): Peluang = sokongan rendah x ramai ahli x dekat kawasan anda; Perwakilan = anggaran wakil; Kerusi = status ikut Kekuatan Parti. */
-    var cachePel = { kunci: null, maks: 1 };
-    function skorPeluang(nod) {                                                            // relatif kepada kawasan terbaik pada aras semasa (0-100)
+    var cachePel = { kunci: null, nilai: [] };
+    function skorPeluang(nod) {                                                            // persentil pada aras semasa (0-100): 20% teratas = Sangat tinggi
       var kunci = [st.mode, st.negeriTapis, st.pdmNegeri, st.pdmBahagian, st.dunBhg, M.versi || 0].join('|');
-      if (cachePel.kunci !== kunci) { cachePel = { kunci: kunci, maks: Math.max(1, nodAras().reduce(function (t, x) { return Math.max(t, peluangMentah(x)); }, 0)) }; }
-      return clamp(Math.round(peluangMentah(nod) / cachePel.maks * 100), 0, 100);
+      if (cachePel.kunci !== kunci) { cachePel = { kunci: kunci, nilai: nodAras().map(peluangMentah).sort(function (a, b) { return a - b; }) }; }
+      var v = peluangMentah(nod), a = cachePel.nilai, n = a.length; if (n < 2) { return 60; }
+      var bawah = 0; while (bawah < n && a[bawah] < v) { bawah++; }
+      return clamp(Math.round(bawah / (n - 1) * 100), 0, 100);
     }
+    function indeksPeluang(nod) { var p = skorPeluang(nod); return p >= 80 ? 4 : p >= 60 ? 3 : p >= 40 ? 2 : p >= 20 ? 1 : 0; }
     function peluangMentah(nod) {
       var r = M.rumah || {}, ng = nod.negeri || (nod.bahagian && nod.bahagian.negeri), bh = nod.tahap === 'bahagian' ? nod : nod.bahagian;
       var prox = !r.cawangan ? 1 : nod.tahap === 'negeri' ? (r.negeri === nod ? 1 : 0.55) : bh === r.bahagian ? 1 : ng === r.negeri ? 0.72 : 0.45;
@@ -709,7 +712,7 @@
     function jenisLabel() { return (st.mode === 'bahagian' && st.metrik === 'sokongan') ? 'lobi' : 'sokongan'; }
     function tahapNod(nod) {
       if (st.metrik === 'sentimen') { return tahapSentimen(nod); }
-      if (st.metrik === 'peluang') { var ip = tahapIndeks(skorPeluang(nod)); return { indeks: ip, label: 'Peluang ' + PELUANG_LABEL[ip].toLowerCase(), warna: PELUANG_WARNA[ip] }; }
+      if (st.metrik === 'peluang') { var ip = indeksPeluang(nod); return { indeks: ip, label: 'Peluang ' + PELUANG_LABEL[ip].toLowerCase(), warna: PELUANG_WARNA[ip] }; }
       if (st.metrik === 'perwakilan') { var iw = tahapIndeks(skorWakil(nod)); return { indeks: iw, label: PERWAKILAN_LABEL[iw] + ' perwakilan', warna: PERWAKILAN_WARNA[iw] }; }
       if (st.metrik === 'kerusi') { var k = nod.kekuatan, ik = k < 36 ? 0 : k < 43 ? 1 : k < 50 ? 2 : k < 58 ? 3 : 4; return { indeks: ik, label: KERUSI_LABEL[ik], warna: SENTIMEN_WARNA[ik] }; }
       if (st.metrik === 'sayap' || st.metrik === 'pemain') { return tahapLapisan(nod); }
@@ -1383,7 +1386,7 @@
       var a = nodAras().slice().sort(function (x, y) { return skorPeluang(y) - skorPeluang(x); }).slice(0, 5); if (!a.length) { return ''; }
       return '<div class="mpm-top"><b>🎯 5 kawasan paling berbaloi</b>' + a.map(function (n, i) {
         var nm = (n.tahap === 'bahagian' ? kodBhg(n) + ' ' : '') + n.nama, rm = M.rumah && M.rumah[n.tahap] === n;
-        return '<button type="button" data-act="pilih" data-tahap="' + n.tahap + '" data-id="' + esc(n.id) + '"><span>' + (i + 1) + '. ' + esc(nm) + (rm ? ' ★' : '') + '</span><small>' + PELUANG_LABEL[tahapIndeks(skorPeluang(n))] + '</small></button>';
+        return '<button type="button" data-act="pilih" data-tahap="' + n.tahap + '" data-id="' + esc(n.id) + '"><span>' + (i + 1) + '. ' + esc(nm) + (rm ? ' ★' : '') + '</span><small>' + PELUANG_LABEL[indeksPeluang(n)] + '</small></button>';
       }).join('') + '</div>';
     }
     function renderPanel(mesej, ralat) {
@@ -1418,7 +1421,7 @@
       };
       var drill = nod.tahap === 'negeri' ? '<button type="button" class="mpm-btn mpm-btn--zum" data-act="drill">🔍 Zum masuk: Bahagian di ' + esc(nod.nama) + '</button>' :
         nod.tahap === 'bahagian' ? '<button type="button" class="mpm-btn mpm-btn--zum" data-act="drill">🔍 Zum masuk: Cawangan</button>' : '';
-      var ipl = tahapIndeks(skorPeluang(nod)), kL = TINDAKAN.lobi.bonus[nod.tahap], kJ = TINDAKAN.jelajah.bonus[nod.tahap];   // v14.9: Peluang
+      var ipl = indeksPeluang(nod), kL = TINDAKAN.lobi.bonus[nod.tahap], kJ = TINDAKAN.jelajah.bonus[nod.tahap];   // v14.9: Peluang
       var peluangH = '<p class="mpm-peluang"><span class="mpm-chip" style="background:' + PELUANG_WARNA[ipl] + ';color:#111">🎯 Peluang ' + PELUANG_LABEL[ipl].toLowerCase() + '</span>' +
         (kL ? '<small>Lobi +' + kL + ' · Ziarah +' + kJ + ' mata sokongan</small>' : '') + '</p>';
 
