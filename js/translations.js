@@ -331,7 +331,7 @@
     [/^Avatar (Pemuda|Puteri|Wanita|Biasa|Veteran)$/, function (m, tr) { return 'Avatar ' + tr(m[1]); }],
     /* v9.5: sejarah etika "bulan/tahun: [hukuman: ]perkara" dan kenyataan keahlian digantung (peristiwa disiplin rawak) */
     [/^(\d{1,2}\/\d{4}): (.+)$/, function (m, tr) { var bhg = m[2].split(': '), out = [], i, r; for (i = 0; i < bhg.length; i++) { r = tr(bhg[i], true); if (r === null) { return null; } out.push(r); } return m[1] + ': ' + out.join(': '); }],
-    [/^Sehingga bulan (\d{1,2}\/\d{4}) \(Fasal 20\.10b\)\. Semua jawatan anda telah dilucutkan(?: \((.+)\))?\. Anda tidak boleh mencalon, mengundi atau bertanding dalam pemilihan parti, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan\.$/, function (m, tr) { return 'Until month ' + m[1] + ' (Clause 20.10b). All your posts have been stripped' + (m[2] ? ' (' + tr(m[2]) + ')' : '') + '. You cannot stand, vote or contest in party elections, and cannot use AP for official duties of a post.'; }],
+    [/^Sehingga bulan (\d{1,2}\/\d{4})( \(Fasal 20\.10b\))?\. Semua jawatan anda telah dilucutkan(?: \((.+)\))?\. Anda tidak boleh mencalon, mengundi atau bertanding dalam pemilihan parti, dan tidak boleh menggunakan AP untuk tugas rasmi jawatan\.$/, function (m, tr) { return 'Until month ' + m[1] + (m[2] ? ' (Clause 20.10b)' : '') + '. All your posts have been stripped' + (m[3] ? ' (' + tr(m[3]) + ')' : '')   /* v14.2: Fasal pilihan (parti bukan UMNO) */ + '. You cannot stand, vote or contest in party elections, and cannot use AP for official duties of a post.'; }],
     [/^Sumber:$/, function () { return 'Source:'; }]
   ];
 

@@ -271,6 +271,10 @@
     [/Mesyuarat (Angkatan Muda|Wanita|Sayap) Ranting/g, 'Persidangan Tahunan $1 Ranting'], [/Mesyuarat Ranting/g, 'Persidangan Tahunan Ranting'], [/Kongres (Angkatan Muda|Wanita|Sayap)\b/g, 'Perhimpunan $1 (Pra-Kongres)']].concat(SENARAI.PKR.istilahSongsang);
   SENARAI.DAP.istilah = SENARAI.DAP.istilah.concat([[/Persidangan Tahunan (DAPSY|Wanita|Sayap) Cawangan/g, 'Mesyuarat Agung Tahunan $1 Cawangan'], [/Persidangan Tahunan Cawangan/g, 'Mesyuarat Agung Tahunan Cawangan']]);
   SENARAI.DAP.istilahSongsang = [[/Mesyuarat Agung Tahunan (DAPSY|Wanita|Sayap) Cawangan/g, 'Persidangan Tahunan $1 Cawangan'], [/Mesyuarat Agung Tahunan Cawangan/g, 'Persidangan Tahunan Cawangan']].concat(SENARAI.DAP.istilahSongsang);
+  /* v14.2: audit: BERSATU EN: "Perhimpunan Agung" (daripada PAU) dalam ayat Inggeris → "General Assembly". */
+  SENARAI.BERSATU.istilah = SENARAI.BERSATU.istilah.concat([[/Perhimpunan Agung: (BERSATU General Assembly)/g, '$1'], [/Perhimpunan Agung (Delegates?|Delegate Support)/g, 'General Assembly $1'],
+    [/(Post|Pre)-Perhimpunan Agung/g, '$1-General Assembly'], [/(Month \d+) Perhimpunan Agung/g, '$1 General Assembly'], [/\((Perhimpunan Agung)\)/g, '(General Assembly)'],
+    [/\b(to|the|attend) Perhimpunan Agung\b/g, '$1 the General Assembly'], [/the the General Assembly/g, 'the General Assembly'], [/(Elections|Delegates) \(Perhimpunan Agung\)/g, '$1 (General Assembly)']]);
   /* v13.96: audit MIC: sisa istilah UMNO (Ketua/Naib Ketua Cawangan & Bahagian, sayap Putera, Lembaga Disiplin). */
   SENARAI.MIC.istilah = SENARAI.MIC.istilah.concat([[/Ketua, Naib Ketua dan AJK Cawangan/g, 'Pengerusi, Naib Pengerusi dan AJK Cawangan'], [/Branch Chairman, (Deputy|Vice) Chief( and| and Committee Members)/g, 'Branch Chairman, Vice Chairman$2'],
     [/Ketua, Timbalan Ketua, Naib Ketua dan AJK Bahagian/g, 'Pengerusi dan Timbalan Pengerusi Bahagian'], [/Division Chairman, Deputy Chief, Vice Chiefs? and (Committee Members \(AJK\)|AJK)/g, 'Division Chairman and Deputy Chairman'],
@@ -391,6 +395,13 @@
   SENARAI.PDP.istilah = klonPPP('PDP').concat(SENARAI.PDP.istilah || []); SENARAI.PDP.istilahSongsang = klonPPP('PDP', true).concat(SENARAI.PDP.istilahSongsang || []);
   SENARAI.SUPP.istilah = [[/Majlis Kerja Tertinggi \(MKT\)/g, 'Jawatankuasa Pusat (JK Pusat)'], [/Majlis Kerja Tertinggi/g, 'Jawatankuasa Pusat'], [/\bMKT\b/g, 'JK Pusat'],
     [/Perhimpunan Agung (UMNO|SUPP) \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/Perhimpunan Agung \(PAU\)/g, 'Persidangan Perwakilan SUPP'], [/(UMNO|SUPP) General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/General Assembly \(PAU\)/g, 'SUPP Delegates Conference'], [/\bPAU\b/g, 'Persidangan Perwakilan']].concat(SENARAI.SUPP.istilah || []);
+  /* v14.2: audit: lokasi Perhimpunan Agung parti Sarawak mod ringan (klonPPP membuang peraturan WTC) dan SUPP EN "Persidangan Perwakilan" → "Delegates Conference". */
+  ['PRS', 'PDP', 'SUPP'].forEach(function (k) {
+    SENARAI[k].istilah = SENARAI[k].istilah.concat([[/ di WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' di Kuching'], [/ at WTC Kuala Lumpur \(Menara Dato' Onn\)/g, ' in Kuching']]);
+    SENARAI[k].istilahSongsang = [[/ di Kuching(?=:)/g, " di WTC Kuala Lumpur (Menara Dato' Onn)"]].concat(SENARAI[k].istilahSongsang || []);
+  });
+  SENARAI.SUPP.istilah = SENARAI.SUPP.istilah.concat([[/(Pre|Post)-Persidangan Perwakilan\b/g, '$1-Conference'], [/Persidangan Perwakilan (Delegate Support|Delegates?)/g, 'Conference $1'],
+    [/\(Persidangan Perwakilan\)/g, '(Delegates Conference)'], [/\b(Month \d+|the|to) Persidangan Perwakilan\b/g, '$1 Delegates Conference'], [/the the Delegates Conference/g, 'the Delegates Conference'], [/to Delegates Conference/g, 'to the Delegates Conference']]);
   SENARAI.SUPP.istilahSongsang = (SENARAI.SUPP.istilahSongsang || []).concat([[/Jawatankuasa Pusat \(JK Pusat\)/g, 'Majlis Kerja Tertinggi (MKT)'], [/Jawatankuasa Pusat/g, 'Majlis Kerja Tertinggi'], [/\bJK Pusat\b/g, 'MKT'],
     [/Persidangan Perwakilan SUPP/g, 'Perhimpunan Agung SUPP (PAU)'], [/SUPP Delegates Conference/g, 'SUPP General Assembly (PAU)'], [/Persidangan Perwakilan(?! SUPP)/g, 'PAU']]);
   SENARAI.BERJASA = { kod: 'BERJASA', nama: 'BERJASA', penuh: 'Barisan Jemaah Islamiah Se-Malaysia', logo: 'assets/images/logo-berjasa.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: 'data/berjasa-semenanjung.csv', bahagianJenis: 'Parlimen', berjasa: true, gabungan: null,
@@ -462,7 +473,7 @@
   }
   /** v11.1: calon songsangan alternatif (PAU / Perhimpunan Agung UMNO / (PAU) tidak boleh dibezakan; bulan mungkin asli). */
   function dariAlt(s) {
-    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'AMANAH' && k !== 'BERSATU' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN)$/.test(k)) || s == null) { return []; }
+    var k = kini(); if ((k !== 'PBB' && k !== 'MCA' && k !== 'MIC' && k !== 'PPP' && k !== 'PBRS' && k !== 'PAS' && k !== 'PKR' && k !== 'DAP' && k !== 'AMANAH' && k !== 'BERSATU' && k !== 'BERJASA' && !/^(GAGASAN|PBS|UPKO|LDP|PHRS|PCS|WARISAN|PRS|PDP|SUPP)$/.test(k)) || s == null) { return []; }
     var i = info(k), a = String(s), out = [], d = dari(a);
     var tanpaBulan = terap(a, i.istilahSongsang.filter(function (x) { return !/ulan/.test(x[0].source); })).split(i.penuh).join(SENARAI.UMNO.penuh).replace(new RegExp('\\b' + i.nama + '\\b', 'g'), 'UMNO');
     var calon = k === 'DAP' || k === 'MCA' || k === 'MIC' || k === 'PPP' || k === 'PBRS' ? [a, d, tanpaBulan] : [d, tanpaBulan];   // v13.93: DAP: kunci kamus DAP sendiri didahulukan
@@ -473,6 +484,8 @@
     calon.forEach(function (x) {
       [x, x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung UMNO'), x.replace('Perhimpunan Agung UMNO (PAU)', 'PAU'), x.replace('Perhimpunan Agung UMNO (PAU)', 'Perhimpunan Agung (PAU)')].forEach(function (y) { if (out.indexOf(y) < 0) { out.push(y); } });
     });
+    var TU = W.MyPolitikTranslations && W.MyPolitikTranslations.UMUM;                                   // v14.2: calon akhir tanpa rujukan Perlembagaan/Fasal (kunci umum)
+    if (TU && /Perlembagaan|Fasal \d|Perkara \d/.test(a)) { out.ketat = []; out.slice().forEach(function (y) { var z = TU.bm(y); if (out.indexOf(z) < 0) { out.push(z); out.ketat.push(z); } }); }
     return out;
   }
   /** Songsang: teks yang sudah dijenamakan -> UMNO (untuk carian kamus terjemahan). */

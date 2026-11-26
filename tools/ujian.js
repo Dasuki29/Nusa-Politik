@@ -3041,6 +3041,12 @@ ujian('v14.1 PBRS berdiri sendiri: tiada G10, 5 Perwakilan ke Perhimpunan Agung 
   sama(PT.ke('Perhimpunan Wanita (Pra-PAU)'), 'Perhimpunan Agung Wanita PBRS'); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
   sama(PT.dari('Perhimpunan Agung Pemuda PBRS'), 'Perhimpunan Pemuda Pusat');
 });
+ujian('v14.2 audit menyeluruh: lokasi PA parti Sarawak, EN Perhimpunan Agung BERSATU / Persidangan Perwakilan SUPP', () => {
+  const PT = g.MyPolitikParti; P.daftar();
+  P.tetap({ parti: 'PDP', negeri: 'Sarawak' }); betul(/di Kuching/.test(PT.ke("Bulan 9 (September): Perhimpunan Agung UMNO (PAU) di WTC Kuala Lumpur (Menara Dato' Onn): Ucapan Dasar Presiden dan usul. Hanya bulan ini.")), 'PDP: PA di Kuching');
+  P.tetap({ parti: 'BERSATU' }); sama(PT.ke('+8 PAU Delegate Support'), '+8 General Assembly Delegate Support'); sama(PT.ke('Month 11 PAU'), 'Month 11 General Assembly');
+  P.tetap({ parti: 'SUPP', negeri: 'Sarawak' }); sama(PT.ke('+8 PAU Delegate Support'), '+8 Conference Delegate Support'); sama(PT.ke('Post-PAU & Community Service'), 'Post-Conference & Community Service');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

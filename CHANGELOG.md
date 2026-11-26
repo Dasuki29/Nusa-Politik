@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v14.2 (2026-11-26)
+
+- **Audit menyeluruh Nusa Politik, Fasa 1** (pembetulan; tiada perubahan permainan). Semua 22 parti dimain 12 bulan dalam BM dan EN; 0 ralat JavaScript.
+  - Lokasi: Perhimpunan Agung PRS, PDP dan SUPP tidak lagi diadakan "di WTC Kuala Lumpur (Menara Dato' Onn)" tetapi di Kuching.
+  - EN BERSATU / SUPP: "Perhimpunan Agung" / "Persidangan Perwakilan" dalam ayat Inggeris kini "General Assembly" / "Delegates Conference" (sokongan perwakilan, takwim, pasca-PA).
+  - EN semua parti: isu bulanan ("Nyatakan pendirian anda sebelum bulan depan"), keputusan usul Pembawa / Pembahas / Mengundi, keluhan dibawa sebagai usul, sidang Dewan Rakyat / DUN dengan bajet, jawatan komuniti, takwim PA parti Sabah, rundingan kerusi gabungan, mesyuarat musim tamat, pendengaran Jawatankuasa Disiplin, mesej penggantungan keahlian parti lain, kad gelaran tahap Datuk.
+  - Enjin terjemahan: calon tanpa rujukan Perlembagaan/Fasal ditambah (mesti diterjemah sepenuhnya); PRS, PDP dan SUPP kini mendapat calon kamus alternatif.
+- Ujian baharu (232 ujian).
+
 ## v14.1 (2026-11-12)
 
 - **Audit PBRS, Fasa 2: PBRS berdiri sendiri** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap ialah andaian permainan; struktur PBRS ikut Wikipedia).

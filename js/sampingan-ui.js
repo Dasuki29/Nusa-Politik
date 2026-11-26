@@ -45,7 +45,7 @@
     });
     h += '</ul><h3 style="margin:10px 0 4px;font-size:.9rem">🎖️ Gelaran Kurniaan</h3>';
     var TD = r.tahapDatuk, TP = r.tahapDatukPerlu, cukup = TD >= TP;                                       // v13.88: kiraan gelaran tahap Datuk
-    h += '<p class="note" style="margin:2px 0"><b>Gelaran tahap Datuk: ' + Math.min(TD, 5) + ' / ' + TP + '</b> · ' + (cukup ? '✓ syarat Tan Sri dan gelaran negeri tahap 2 dipenuhi' : 'perlu ' + TP + ' untuk Tan Sri dan gelaran negeri tahap 2') + '</p>' +
+    h += '<p class="note" style="margin:2px 0"><b>Gelaran tahap Datuk: ' + Math.min(TD, 5) + ' / ' + TP + '</b> · <span>' + (cukup ? '✓ syarat Tan Sri dan gelaran negeri tahap 2 dipenuhi' : 'perlu ' + TP + ' untuk Tan Sri dan gelaran negeri tahap 2') + '</span></p>' +
       '<div style="height:8px;background:var(--bg-elev-1);border-radius:9px;overflow:hidden;margin:2px 0 6px"><i style="display:block;height:100%;width:' + Math.round(Math.min(1, TD / TP) * 100) + '%;background:var(--ok, #1f7a4d)"></i></div>' +
       '<p class="note" style="font-size:.76rem;margin:0 0 4px">Datuk (persekutuan), gelaran tahap 1 negeri sendiri dan gelaran negeri lain (maks. 5).</p><ul style="list-style:none;padding:0;margin:6px 0">';
     function kurangD() { return cukup ? '' : ' · gelaran tahap Datuk ' + TD + ' / ' + TP; }
