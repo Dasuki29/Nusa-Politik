@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.8: Sokong Calon Pertandingan Lain (maklum balas baris 50)
+- Kad baharu 🗳️ Pertandingan Lain di tab Pemilihan (tahun pemilihan): calon Presiden, Timbalan Presiden, Ketua Sayap Pusat, Ketua Bahagian dan Ketua Cawangan yang anda tidak bertanding, dengan bar anggaran peluang.
+- Sokong seorang calon setiap jawatan: 2 AP, kekuatan calon +3 hingga +8, had 3 setahun, Pesaing utama tidak boleh disokong.
+- Keputusan apabila musim peringkat tamat (atau Disember): calon anda menang = IP +20, Reputasi +2, sekutu (+1 kekuatan dalam pemilihan anda sendiri, maks +3); kalah = Hubungan dengan pemenang −10. Pemenang mengisi jawatan dalam Struktur parti.
+- Ujian baharu: tools/ujian-sokong.js dan ujian unit v14.8.
+
 ## v14.7: Lobi Timbalan Menteri (maklum balas baris 51)
 - Senarai lobi portfolio Parlimen kini sentiasa memaparkan sekurang-kurangnya 2 jawatan Timbalan Menteri. Dahulu pemain ber-IP tinggi hanya melihat Menteri Penuh.
 

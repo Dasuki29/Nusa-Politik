@@ -1140,6 +1140,15 @@ html, body { overflow-x: clip; }
 .sl-pil small { display: block; color: var(--text-muted); font-size: .8rem; margin-top: 2px; }
 .sl-ban { background: linear-gradient(135deg, #0E4D64, #082A3A); }
 .sl-ban small { color: #CFE8F2; }
+.sk-pt { border: 2px solid var(--border); border-radius: var(--radius); padding: 6px 10px; margin: 8px 0; }
+.sk-pt.is-on { border-color: #F5C518; }
+.sk-pt h3 { display: flex; justify-content: space-between; align-items: baseline; font-size: .9rem; margin: 0 0 4px; }
+.sk-pt h3 small { font-size: .72rem; color: var(--text-muted); font-weight: 600; }
+.sk-cl { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-top: 1px dashed var(--border); }
+.sk-cl:first-of-type { border-top: 0; }
+.sk-n { flex: 1; min-width: 0; font-size: .85rem; } .sk-n small { display: block; color: var(--text-muted); font-size: .74rem; }
+.sk-bar { width: 70px; flex: none; } .sk-bar i { background: #F5C518 !important; }
+.sk-tag { font-size: .66rem; font-weight: 800; border-radius: 6px; padding: 1px 6px; background: #F5C518; color: #111; }
 .sl-ev { border-color: #0E4D64; background: rgba(14, 77, 100, .08); }
 
 /* v13.53: kad BERJASA (Parti Kecil) */

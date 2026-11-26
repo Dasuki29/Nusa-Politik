@@ -1310,6 +1310,7 @@
       var aktifLv = baris.some(function (e) { return !e.selesai && (e.didaftar || (e.tetingkap && e.tetingkap.status === 'dibuka')); });   // v8.30: hanya peringkat aktif dibuka
       h += lipatKad('pm-' + lv, cLv, { buka: aktifLv, lencana: baris.some(function (e) { return e.didaftar && !e.selesai; }) ? 'Didaftar' : '' });
     });
+    if (W.MyPolitikSokongUI) { var cSk = W.MyPolitikSokongUI.kad(p); if (cSk) { h += lipatKad('pm-sokong', cSk, { buka: true }); } }   // v14.8: sokong calon pertandingan lain
 
     var cKm = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">Kempen Pemilihan</h2><p class="note">Mata kempen terkumpul: <b>' + fmt(st.mataKempen) + '</b>. Kempen meningkatkan kekuatan anda dalam pengundian.</p>';
     if (daftar.length) {

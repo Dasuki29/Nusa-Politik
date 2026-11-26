@@ -3625,6 +3625,32 @@ ujian('v14.6 baris 51: senarai lobi Parlimen IP tinggi masih memaparkan Timbalan
   betul(s.some((x) => x.tahap === 'MENTERI_PENUH')); S.clearPlayer();
 });
 
+ujian('v14.8 Sokong calon pertandingan lain (baris 50): senarai, sokong, had, pesaing, keputusan, sekutu', () => {
+  const SK = g.MyPolitikSokong; P.daftar({ umur: 40 }); P.tetap({ tahun: 2026, bulan: 3, ap: 10, ip: 300 });
+  let p = S.loadPlayer(), s = SK.senarai(p);
+  betul(s.length >= 3, JSON.stringify(s.map((x) => x.kod))); betul(s.some((x) => x.kod === 'presiden'));
+  s.forEach((x) => { betul(x.calon.length >= 2, x.kod); sama(x.calon.reduce((t, c) => t + c.peluang, 0) >= 98, true); });
+  sama(JSON.stringify(SK.senarai(p)), JSON.stringify(s), 'deterministik');
+  const pr = s.find((x) => x.kod === 'presiden'), c0 = pr.calon[0].nama;
+  let r = SK.sokong('presiden', c0); betul(r.ok, r.ralat); sama(S.loadPlayer().ap, 8);
+  betul(!SK.sokong('presiden', pr.calon[1].nama).ok, 'satu calon sejawatan');
+  const pz = SK.senarai(S.loadPlayer()).find((x) => x.kod === 'presiden'); betul(pz.calon[0].disokong && pz.calon[0].kekuatan > pr.calon[0].kekuatan);
+  // pesaing utama tidak boleh disokong
+  const lain = s.filter((x) => x.kod !== 'presiden'), k1 = lain[0];
+  P.tetap({ rival: { siri: 1, senaraiPencabar: { cawangan: { nama: k1.calon[0].nama, kuasa: 50 } }, amaran: [] } });
+  betul(/Pesaing/.test(SK.sokong(k1.kod, k1.calon[0].nama).ralat || ''));
+  betul(SK.sokong(k1.kod, k1.calon[1].nama).ok); betul(SK.sokong(lain[1].kod, lain[1].calon[0].nama).ok);
+  if (lain[2]) { betul(/Had/.test(SK.sokong(lain[2].kod, lain[2].calon[0].nama).ralat || ''), 'had 3'); }
+  // keputusan Disember
+  const ip0 = S.loadPlayer().ip; P.tetap({ bulan: 12 }); const ev = SK.prosesBulan().peristiwa; sama(ev.length, 3, ev.map((x) => x.mesej).join(' | '));
+  p = S.loadPlayer(); const kp = p.sokong.keputusan, menang = Object.keys(kp).filter((k) => kp[k].menang).length;
+  sama(p.ip - ip0, menang * SK.CONFIG.MENANG.ip); sama(SK.bonusSekutu(p), Math.min(3, menang)); sama(SK.prosesBulan().peristiwa.length, 0, 'sekali sahaja');
+  if (menang) { const k = Object.keys(kp).find((x) => kp[x].menang && x !== 'timbalan_presiden'); if (k) { const sl = g.MyPolitikOrganisasi.calonStruktur(p, k); sama(sl.penyandang, kp[k].pemenang, 'Struktur dikemas kini'); } }
+  // bukan tahun pemilihan: tiada senarai
+  P.tetap({ tahun: 2027, bulan: 3 }); sama(SK.senarai(S.loadPlayer()).length, 0);
+  S.clearPlayer();
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
