@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v14.6: Pilihan Selepas Politik (maklum balas baris 47)
+- Butang Bersara kini membuka tiga laluan: Bersara sepenuhnya, Yang di-Pertua Negeri, atau Duta Malaysia.
+- TYT laluan tokoh: umur 55+, bekas Menteri / Presiden / Timbalan Presiden parti (atau bekas Ketua Menteri), disiplin baik, kekosongan dalam 12 bulan. Jawatan dilepaskan; butang ⏩ Langkau ke Januari. Tiada tawaran = pilih semula Duta atau bersara.
+- Duta Malaysia (js/duta.js): 3 daripada 8 pos ikut Reputasi, tab 🌏 Kedutaan (Hubungan Dua Hala, Kepercayaan Wisma Putra, Kebajikan Rakyat Malaysia), 4 tugas bulanan, krisis konsular, lawatan PM, elaun RM 18,000, penggal 3 tahun (penggal kedua jika prestasi baik), legasi "Duta". Selepas Duta, TYT masih boleh dipilih jika layak.
+- Duta dan pemain yang sudah bersara tidak boleh bertanding dalam pemilihan parti.
+- Ujian baharu: tools/ujian-selepas.js dan ujian unit v14.6.
+
 ## v14.5: Pembetulan maklum balas (baris 43, 46, 48, 52, 54)
 - Lompat parti: nama parti asal pada cip tidak lagi ditukar oleh penjenamaan (baris 43).
 - Rujukan Fasal/Perkara dalam teks umum dipaparkan sebagai "peraturan parti" (kecuali Perkara 49A).

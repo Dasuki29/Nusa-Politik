@@ -259,7 +259,9 @@
 
     var Et = etika();
     function tambah(e) {
-      if (p.tyt && p.tyt.aktif && e.terbuka) { e.terbuka = false; e.sebab = 'Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti.'; }   // v14.5: butang dikunci (maklum balas baris 48)
+      if (p.tyt && p.tyt.aktif && e.terbuka) { e.terbuka = false; e.sebab = 'Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti.'; }
+      if (p.duta && p.duta.aktif && e.terbuka) { e.terbuka = false; e.sebab = 'Duta Malaysia tidak boleh bertanding dalam pemilihan parti.'; }   // v14.6
+      if (p.selepas && (p.selepas.jalur === 'tyt' || p.selepas.limbo) && e.terbuka) { e.terbuka = false; e.sebab = 'Anda sudah bersara daripada politik.'; }   // v14.5: butang dikunci (maklum balas baris 48)
       if (Et && e.terbuka) {                                          // hak keahlian (Fasal 20.10)
         var hak = Et.semakHak(p, e.jenis === 'jawatan' ? 'jawatan' : 'perwakilan');
         if (!hak.boleh) { e.terbuka = false; e.sebab = hak.sebab; }
@@ -387,7 +389,9 @@
   function daftarBertanding(kod) {
     var p = S.loadPlayer();
     if (!p) { return gagal('tiada_profil', 'Tiada profil pemain.'); }
-    if (p.tyt && p.tyt.aktif) { return gagal('tyt', 'Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti.'); }   // v13.52
+    if (p.tyt && p.tyt.aktif) { return gagal('tyt', 'Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti.'); }
+    if (p.duta && p.duta.aktif) { return gagal('duta', 'Duta Malaysia tidak boleh bertanding dalam pemilihan parti.'); }   // v14.6
+    if (p.selepas && (p.selepas.jalur === 'tyt' || p.selepas.limbo)) { return gagal('selepas', 'Anda sudah bersara daripada politik.'); }   // v14.6   // v13.52
     var e = cariPertandingan(p, kod);
     if (!e) {
       return adalahTahunPemilihan(p.tahun) ? gagal('tidak_dikenali', 'Pertandingan tidak dikenali atau tidak dibuka untuk anda: ' + kod)

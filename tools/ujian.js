@@ -3582,6 +3582,43 @@ ujian('v13.40 Laluan Kerajaan: MB masih boleh dituntut sekali selepas lobi perse
 
 
 
+ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, limbo, Duta Malaysia, tugas, krisis, penggal dan legasi', () => {
+  const SL = g.MyPolitikSelepas, D = g.MyPolitikDuta, T = g.MyPolitikTYT; P.daftar({ umur: 55 });
+  P.tetap({ tahun: 2030, bulan: 6, reputasi: 70, ap: 10, myr: 20000, jawatanList: [{ kod: 'timbalan_presiden', jawatan: 'Timbalan Presiden', peringkat: 'pusat', pangkat: 11 }] });
+  P.tetap({ pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { aktif: null, status: { jenis: 'MP', kerusi: 'P.001', kerajaan: true } }) });
+  let p = S.loadPlayer(), pl = SL.pilihan(p);
+  betul(SL.tokohNasional(p)); betul(pl.tyt.boleh, JSON.stringify(pl.tyt.item)); betul(pl.duta.boleh, JSON.stringify(pl.duta.item)); sama(pl.duta.pos.length, 3);
+  betul(pl.tyt.kosong.bulan <= 12 && pl.tyt.kosong.bulan > 0, JSON.stringify(pl.tyt.kosong));
+  sama(SL.pilihan(Object.assign({}, p, { jawatanList: [], jawatanTertinggi: null })).tyt.boleh, false, 'bukan tokoh nasional');
+  // laluan TYT: lepaskan semua, menunggu, tawaran pada Januari
+  const k = pl.tyt.kosong, r = SL.pilihTYT(); betul(r.ok, r.ralat); p = S.loadPlayer();
+  sama(p.jawatanList.length, 0); sama(PRU.getPRU(p).status, null); sama(p.letak.prk.length, 1); betul(SL.luarPolitik(p)); betul(!E.daftarBertanding('ketua_cawangan').ok, 'tidak bertanding');
+  betul(!SL.pilihan(p).tyt.boleh && !SL.pilihan(p).duta.boleh, 'sudah memilih');
+  P.tetap({ tahun: k.kosong, bulan: 1 }); betul(T.syarat(S.loadPlayer(), k.negeri).layak, JSON.stringify(T.syarat(S.loadPlayer(), k.negeri).item));
+  T.prosesBulan({ rng: () => 0 }); betul(T.getT(S.loadPlayer()).tawaran, 'tawaran'); sama(SL.prosesBulan().peristiwa.length, 0, 'menunggu jawapan');
+  betul(T.tolak().ok); let ev = SL.prosesBulan().peristiwa; betul(ev.some((x) => /tidak berjaya/.test(x.mesej))); p = S.loadPlayer(); betul(p.selepas.limbo); betul(SL.luarPolitik(p));
+  // limbo: Duta
+  pl = SL.pilihan(p); betul(pl.duta.boleh, JSON.stringify(pl.duta.item)); betul(!SL.pilihDuta('xx').ok);
+  const pos = pl.duta.pos[0].kod, rd = SL.pilihDuta(pos); betul(rd.ok, rd.ralat); p = S.loadPlayer(); betul(D.aktif(p)); sama(p.selepas.limbo, false);
+  betul(!E.daftarBertanding('ketua_cawangan').ok, 'Duta tidak bertanding');
+  const h0 = D.getD(p).aktif.hubungan; betul(D.tindak('kunjungan').ok); betul(!D.tindak('kunjungan').ok, 'sekali sebulan'); sama(D.getD(S.loadPlayer()).aktif.hubungan, h0 + 4);
+  betul(D.tindak('konsular').ok); betul(!D.tindak('hari').ok, 'Ogos sahaja');
+  const myr0 = S.loadPlayer().myr; P.tetap({ bulan: 2, ap: 10 }); ev = D.prosesBulan({ rng: () => 0 }).peristiwa; sama(S.loadPlayer().myr - myr0, D.CONFIG.ELAUN, 'elaun');
+  betul(ev.some((x) => /Krisis konsular/.test(x.mesej))); betul(D.krisis('senyap').ok); betul(!D.krisis('senyap').ok);
+  // tamat penggal 1 dengan prestasi baik: penggal kedua; tamat penggal 2: kembali ke pilihan (TYT) atau legasi
+  let a = D.getD(S.loadPlayer()).aktif; P.tetap({ duta: { aktif: Object.assign({}, a, { hubungan: 80, kepercayaan: 80, tamat: 0 }), sejarah: [] } });
+  ev = D.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /penggal kedua/.test(x.mesej))); betul(D.terimaLanjut(true).ok); sama(D.getD(S.loadPlayer()).aktif.penggal, 2);
+  a = D.getD(S.loadPlayer()).aktif; P.tetap({ duta: { aktif: Object.assign({}, a, { tamat: 0 }), sejarah: [] }, tyt: { bekas: {}, tolak: {}, sejarah: [] } });
+  ev = D.prosesBulan({ rng: () => 0.99 }).peristiwa; p = S.loadPlayer(); betul(!D.aktif(p)); betul(p.selepas.dutaSelesai);
+  if (p.tamat) { sama(p.tamat.sebab, 'duta'); } else { betul(p.selepas.limbo && SL.pilihan(p).tyt.boleh && !SL.pilihan(p).duta.boleh, JSON.stringify(p.selepas)); betul(SL.bersara().ok); sama(S.loadPlayer().tamat.sebab, 'bersara_sukarela'); }
+  // tanpa syarat TYT: tamat terus dengan legasi Duta
+  P.daftar({ umur: 46 }); P.tetap({ tahun: 2030, bulan: 6, reputasi: 50, jawatanTertinggi: { jawatan: 'Ketua Pemuda', pangkat: 9, peringkat: 'pusat', tahun: 2029 } });
+  pl = SL.pilihan(S.loadPlayer()); betul(pl.duta.boleh, JSON.stringify(pl.duta.item)); betul(!pl.tyt.boleh); betul(pl.duta.pos.every((x) => x.rep <= 50), 'pos ikut Reputasi');
+  betul(SL.pilihDuta(pl.duta.pos[0].kod).ok); a = D.getD(S.loadPlayer()).aktif; P.tetap({ duta: { aktif: Object.assign({}, a, { tamat: 0 }), sejarah: [] } });
+  D.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); betul(p.tamat && p.tamat.sebab === 'duta', JSON.stringify(p.tamat && p.tamat.sebab));
+  S.clearPlayer();
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

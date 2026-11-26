@@ -119,12 +119,13 @@
     return senarai.length ? senarai : [GELARAN_LALAI];
   }
 
-  var TAJUK_SEBAB = { meninggal: 'Tamat Hayat', bersara_kesihatan: 'Bersara Paksa (Kesihatan)', had_umur: 'Mencapai Usia 100 Tahun', bersara_sukarela: 'Bersara Secara Sukarela', kesihatan_merosot: 'Kesihatan Merosot (Tekanan Kerja)', tyt: 'Tamat Perkhidmatan Yang di-Pertua Negeri' };
+  var TAJUK_SEBAB = { meninggal: 'Tamat Hayat', bersara_kesihatan: 'Bersara Paksa (Kesihatan)', had_umur: 'Mencapai Usia 100 Tahun', bersara_sukarela: 'Bersara Secara Sukarela', kesihatan_merosot: 'Kesihatan Merosot (Tekanan Kerja)', tyt: 'Tamat Perkhidmatan Yang di-Pertua Negeri', duta: 'Tamat Perkhidmatan Duta Malaysia' };
 
   function mesejSebab(sebab, umur) {
     if (sebab === 'meninggal') { return 'Anda telah meninggal dunia pada usia ' + umur + ' tahun. Al-Fatihah. Perjalanan politik anda berakhir di sini.'; }
     if (sebab === 'kesihatan_merosot') { return 'Tekanan kerja bertahun-tahun meruntuhkan kesihatan anda. Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun.'; }
     if (sebab === 'tyt') { return 'Anda menamatkan perkhidmatan sebagai Yang di-Pertua Negeri pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam dengan penuh kehormatan.'; }   // v13.52
+    if (sebab === 'duta') { return 'Anda menamatkan perkhidmatan sebagai Duta Malaysia pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam.'; }   // v14.6
     if (sebab === 'bersara_sukarela') { return 'Anda memutuskan untuk bersara daripada politik pada usia ' + umur + ' tahun. Terima kasih atas khidmat anda kepada parti.'; }
     if (sebab === 'bersara_kesihatan') { return 'Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun kerana masalah kesihatan.'; }
     return 'Anda mencapai usia ' + umur + ' tahun, had umur permainan ini. Perjalanan politik anda ditutup dengan penuh kehormatan.';

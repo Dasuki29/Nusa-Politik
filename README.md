@@ -118,6 +118,9 @@ Modul utama dalam `js/`:
 | `lompat-ui.js` | Kad 🔀 Lompat Parti dalam tab Profil (v13.90: grid cip ikut gabungan, parti luar negeri dan jadual kesan dilipat) |
 | `tyt.js` | Yang di-Pertua Negeri: syarat, tawaran, tugas Istana, pembubaran DUN, tamat penggal |
 | `tyt-ui.js` | Kad laluan TYT (tab Profil) dan tab 🏰 Istana |
+| `duta.js` | Duta Malaysia: pos, tugas Kedutaan, krisis konsular, penggal, elaun |
+| `selepas.js` | Pilihan Selepas Politik: TYT (laluan tokoh), Duta, bersara; penantian dan limbo |
+| `selepas-ui.js` | Modal Bersara (3 laluan), kad 🌅 Selepas Politik dan tab 🌏 Kedutaan |
 | `berjasa.js` | BERJASA (Lain-lain, mod ringan): Kekuatan Parti, Dakwah, pakatan pilihan raya, PRU solo, Penentu kerajaan |
 | `berjasa-ui.js` | Kad 🌙 BERJASA: Parti Kecil (tab Profil) |
 | `berjasa-data.js` | Dijana oleh `tools/build-berjasa.js`: kawasan operasi BERJASA |
@@ -190,6 +193,7 @@ node tools/ujian-pembangkang.js  # pelayar: Ketua Pembangkang (kad tab Dewan, ti
 node tools/ujian-lompat.js       # pelayar: Lompat Parti hujung ke hujung (kad Profil, borang cawangan baharu, EN)
 node tools/ujian-bebas.js        # pelayar: Calon Bebas PRU (pencalonan, kempen, EN)
 node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab Istana, tugas, EN)
+node tools/ujian-selepas.js      # pelayar: Pilihan Selepas Politik (modal Bersara, pos Duta, tab Kedutaan, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
 node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN
 node tools/ujian-warisan.js      # pelayar: cip Warisan, daftar Sabah (Wira / Wirawati), kad Warisan, kerusi, EN

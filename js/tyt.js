@@ -65,10 +65,11 @@
   function bekas(p) { var t = getT(p), o = Object.assign(bekasDariSejarah(p), t.bekas), s = ketuaSemasa(p); if (s) { delete o[s]; } return o; }
   /** Syarat tawaran bagi negeri k. */
   function syarat(p, k) {
+    var vet = !!(p.selepas && p.selepas.jalur === 'tyt' && p.selepas.negeri === k);   // v14.6: laluan tokoh (js/selepas.js)
     var b = bekas(p)[k], u = umur(p), bersih = !(p.etika && p.etika.status && p.etika.status !== 'baik'), t = getT(p);
     var kosong = kosongSeterusnya(k, parseInt(p.tahun, 10) || 2026);
     var item = [
-      { ok: !!b, teks: 'Pernah ' + NEGERI[k].ketua + ' ' + NEGERI[k].nama + (b ? ' (' + b.dari + (b.hingga && b.hingga !== b.dari ? '–' + b.hingga : '') + ')' : '') },
+      vet && !b ? { ok: true, teks: 'Tokoh nasional (laluan selepas politik)' } : { ok: !!b, teks: 'Pernah ' + NEGERI[k].ketua + ' ' + NEGERI[k].nama + (b ? ' (' + b.dari + (b.hingga && b.hingga !== b.dari ? '–' + b.hingga : '') + ')' : '') },
       { ok: u >= CONFIG.UMUR, teks: 'Umur sekurang-kurangnya ' + CONFIG.UMUR + ' (anda ' + u + ')' },
       { ok: bersih, teks: 'Status disiplin baik' },
       { ok: !ketuaSemasa(p), teks: 'Bukan ' + NEGERI[k].ketua + ' sekarang' }
