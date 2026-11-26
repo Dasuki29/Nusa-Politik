@@ -6669,6 +6669,11 @@
   ["Wanita DAP: tudung merah, kebaya putih (bertudung)", "Wanita DAP: red headscarf, white kebaya (with headscarf)"],
   ["Lelaki pertengahan umur, kemeja putih, tali leher merah", "Middle-aged man, white shirt, red tie"],
   ["Lelaki berusia, blazer biru tua, tali leher merah, berkaca mata", "Older man, dark-blue blazer, red tie, glasses"],
+  /* v14.13 Avatar AMANAH */
+  ["Pemuda AMANAH: lelaki muda, baju Melayu oren, songkok hitam", "Pemuda AMANAH: young man, orange baju Melayu, black songkok"],
+  ["AWAN: tudung oren, baju kurung putih", "AWAN: orange headscarf, white baju kurung"],
+  ["Lelaki pertengahan umur, baju Melayu putih, samping oren, songkok hitam", "Middle-aged man, white baju Melayu, orange samping, black songkok"],
+  ["Lelaki berusia, baju Melayu krim, songkok, janggut pendek uban, berkaca mata", "Older man, cream baju Melayu, songkok, short grey beard, glasses"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

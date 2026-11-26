@@ -1,5 +1,8 @@
 # Catatan Perubahan
 
+## v14.13: Avatar khas AMANAH
+- Set avatar AMANAH dalam warna parti (oren, putih) dengan lencana A: Pemuda AMANAH (baju Melayu oren, songkok), AWAN (tudung oren, baju kurung putih; sentiasa bertudung), induk dewasa (baju Melayu putih, samping oren, songkok), veteran (baju Melayu krim, songkok, janggut uban, berkaca mata), veteran perempuan (tudung oren lembut, baju kurung putih).
+
 ## v14.12: Avatar khas DAP
 - Set avatar DAP dalam warna parti (merah, putih, biru tua) dengan lencana roket: DAPSY (polo merah berkolar putih), Wanita DAP (rambut paras bahu, blazer merah), induk dewasa (kemeja putih, tali leher merah), veteran (blazer biru tua, berkaca mata), veteran perempuan (rambut uban pendek, kardigan merah, berkaca mata).
 - Pilihan kedua untuk pemain perempuan DAP: Wanita DAP bertudung (tudung merah, kebaya putih).

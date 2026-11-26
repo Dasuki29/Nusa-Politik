@@ -3687,6 +3687,14 @@ ujian('v14.12 Avatar DAP: set khas (merah, lencana roket), Wanita bertudung seba
   betul(!A.svg('wanita2', { parti: 'MCA' }).includes('#D71920'), 'parti lain: wanita2 -> umum');
 });
 
+ujian('v14.13 Avatar AMANAH: set khas (oren, lencana), AWAN sentiasa bertudung', () => {
+  const A = g.MyPolitikAvatar;
+  sama(A.senarai('AMANAH').map((a) => a.kod).join(','), 'pemuda,wanita,biasa,veteran', 'tiada pilihan tanpa tudung');
+  ['pemuda', 'wanita', 'biasa', 'veteran', 'veteran_p'].forEach((k) => { const sv = A.svg(k, { parti: 'AMANAH' }); betul(sv.includes('#F28C28'), k + ': warna AMANAH'); });
+  betul(/<path d="M2[01] 4[68] C/.test(A.svg('wanita', { parti: 'AMANAH' })) || A.svg('wanita', { parti: 'AMANAH' }).includes('#C1601A'), 'tudung');
+  betul(!A.svg('wanita2', { parti: 'AMANAH' }).includes('#2A1A12'), 'wanita2 -> AWAN bertudung');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
