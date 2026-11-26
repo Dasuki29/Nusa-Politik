@@ -1,5 +1,8 @@
 # Catatan Perubahan
 
+## v14.7: Lobi Timbalan Menteri (maklum balas baris 51)
+- Senarai lobi portfolio Parlimen kini sentiasa memaparkan sekurang-kurangnya 2 jawatan Timbalan Menteri. Dahulu pemain ber-IP tinggi hanya melihat Menteri Penuh.
+
 ## v14.6: Pilihan Selepas Politik (maklum balas baris 47)
 - Butang Bersara kini membuka tiga laluan: Bersara sepenuhnya, Yang di-Pertua Negeri, atau Duta Malaysia.
 - TYT laluan tokoh: umur 55+, bekas Menteri / Presiden / Timbalan Presiden parti (atau bekas Ketua Menteri), disiplin baik, kekosongan dalam 12 bulan. Jawatan dilepaskan; butang ⏩ Langkau ke Januari. Tiada tawaran = pilih semula Duta atau bersara.

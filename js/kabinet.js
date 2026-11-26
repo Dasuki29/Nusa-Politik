@@ -251,9 +251,10 @@
     if (sumber !== 'PARLIMEN' || !DARI_CSV) { return semua; }
     var ip = Number(p.ip) || 0, rg = S().rngBerbenih(String(p.id) + '|kabinet|' + p.tahun), kunci = {};
     semua.forEach(function (d) { kunci[d.id] = rg(); });
-    return semua.filter(function (d) { return d.ip <= ip; })
-      .sort(function (x, y) { return (y.ip - x.ip) || (kunci[x.id] - kunci[y.id]); })
-      .slice(0, CONFIG.HAD_PILIHAN);
+    var ok = semua.filter(function (d) { return d.ip <= ip; }).sort(function (x, y) { return (y.ip - x.ip) || (kunci[x.id] - kunci[y.id]); });
+    // v14.6 (maklum balas baris 51): sekurang-kurangnya 2 Timbalan Menteri sentiasa dipaparkan (dahulu IP tinggi = Menteri Penuh sahaja)
+    var tm = ok.filter(function (d) { return d.tahap === 'TIMBALAN_MENTERI'; }).slice(0, 2), lain = ok.filter(function (d) { return tm.indexOf(d) < 0; }).slice(0, CONFIG.HAD_PILIHAN - tm.length);
+    return lain.concat(tm);
   }
   function senaraiPortfolio(p) {
     var k = getKabinet(p);

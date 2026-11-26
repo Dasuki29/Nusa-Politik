@@ -3619,6 +3619,12 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   S.clearPlayer();
 });
 
+ujian('v14.6 baris 51: senarai lobi Parlimen IP tinggi masih memaparkan Timbalan Menteri', () => {
+  const KB = g.MyPolitikKabinet; P.daftar({ umur: 40 }); P.tetap({ ip: 5000, myr: 100000, kabinet: Object.assign({}, KB.getKabinet(S.loadPlayer()), { lobi: { sumber: 'PARLIMEN' } }) });
+  const s = KB.senaraiPortfolio(S.loadPlayer()); sama(s.length, KB.CONFIG.HAD_PILIHAN); betul(s.filter((x) => x.tahap === 'TIMBALAN_MENTERI').length >= 2, JSON.stringify(s.map((x) => x.nama)));
+  betul(s.some((x) => x.tahap === 'MENTERI_PENUH')); S.clearPlayer();
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
