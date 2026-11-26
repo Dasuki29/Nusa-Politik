@@ -295,9 +295,17 @@
     var rt = rating(p);
     return kestabilan(p) < CONFIG.TP.AMBANG || (rt !== null && rt < CONFIG.TP.AMBANG);
   }
+  /** v14.5 (maklum balas baris 52): sebab usul dikemukakan, supaya pemain faham walaupun kestabilan tinggi. */
+  function sebabTP(p) {
+    var PMm = modul('MyPolitikPM', 'pm.js'), rt = rating(p), ks = kestabilan(p);
+    if (PMm && PMm.majoritiKurang && PMm.majoritiKurang(p)) { return 'Sebab: kerajaan hilang majoriti (bawah ' + CONFIG.AMBANG + ' kerusi) selepas blok menarik sokongan.'; }
+    if (ks < CONFIG.TP.AMBANG) { return 'Sebab: kestabilan gabungan ' + Math.round(ks) + '% (bawah ' + CONFIG.TP.AMBANG + '%).'; }
+    if (rt !== null && rt < CONFIG.TP.AMBANG) { return 'Sebab: Tadbir Urus ' + Math.round(rt) + '% (bawah ' + CONFIG.TP.AMBANG + '%), walaupun kestabilan gabungan ' + Math.round(ks) + '%.'; }
+    return '';
+  }
   function mulaTP(p) {
     var d = getDewan(p), k = kerusi(p), s = Math.min(kestabilan(p), (rating(p) !== null ? rating(p) : 100), 100);
-    var frac = clamp(CONFIG.TP.GOYAH_ASAS + (CONFIG.TP.AMBANG - s) / 100, 0.35, 0.65), goyah = Math.round(k.BN * frac);
+    var frac = clamp(CONFIG.TP.GOYAH_ASAS + (CONFIG.TP.AMBANG - s) / 100, kestabilan(p) >= 70 ? 0.15 : 0.35, 0.65)   , goyah = Math.round(k.BN * frac);   // v14.5 (baris 52): gabungan stabil (>= 70%) kurang MP goyah
     d.tp = { hari: 1, setia: k.BN - goyah, goyah: goyah, tentang: k.jumlah - k.BN, mulaTahun: p.tahun, mulaBulan: p.bulan, log: [] };
     var PMm = modul('MyPolitikPM', 'pm.js'), mj = PMm && PMm.isPrimeMinister && PMm.isPrimeMinister(p) && p.pm ? PMm.majoriti(p) : null;   // v13.75: blok yang menarik sokongan dan MP goyah mengundi menentang
     if (mj !== null && mj < k.BN) { var hilang = k.BN - mj; d.tp.setia = Math.max(0, d.tp.setia - hilang); d.tp.tentang += hilang; }
@@ -410,7 +418,7 @@
     if (CONFIG.SESI.indexOf(parseInt(p.bulan, 10)) >= 0) { ev.push({ jenis: 'dewan_sesi', mesej: 'Sidang Dewan Rakyat dibuka' + (parseInt(p.bulan, 10) === CONFIG.BULAN_BAJET ? ' (Bajet Negara dibentangkan bulan ini).' : '.') }); }
     if (bolehPicuTP(p)) {
       d = mulaTP(p); simpan(d, {}, { log: { tindakan: 'dewan_tp_mula', nama: 'Usul Undi Tidak Percaya dikemukakan', peringkat: 'ahli' } });
-      ev.push({ jenis: 'dewan_tp', mesej: 'Pembangkang mengemukakan Usul Undi Tidak Percaya! Anda ada ' + CONFIG.TP.HARI + ' hari untuk mengumpul ' + CONFIG.AMBANG + ' kerusi.' });
+      ev.push({ jenis: 'dewan_tp', mesej: 'Pembangkang mengemukakan Usul Undi Tidak Percaya! Anda ada ' + CONFIG.TP.HARI + ' hari untuk mengumpul ' + CONFIG.AMBANG + ' kerusi.' + (sebabTP(p) ? ' ' + sebabTP(p) : '') });
       return { peristiwa: ev };
     }
     if (menteriParlimen(p) && adaKerajaan(p)) {

@@ -3061,6 +3061,14 @@ ujian('v14.3 audit Fasa 2: tiada G10 / G2 bagi parti selain UMNO, perhimpunan sa
   P.tetap({ parti: 'PBS', negeri: 'Sabah' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
   P.tetap({ parti: 'PAS', negeri: 'Kelantan' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🕌 Pengerusi Masjid', 'PAS kekal masjid');
 });
+ujian('v14.5 maklum balas 43 / 48: TYT tidak boleh daftar bertanding (butang dikunci); Perkara 49A tidak dipotong', () => {
+  P.daftar(); const p = P.tetap({ parti: 'PPP', tyt: { aktif: { negeri: 'Pulau Pinang', sejak: 2026 } } });
+  const k = E.senaraiPertandingan(p); betul(k.length > 0 && k.every((x) => !x.terbuka), 'semua pertandingan ditutup untuk TYT');
+  betul(k.some((x) => /Yang di-Pertua Negeri/.test(x.sebab || '')), 'sebab TYT dipaparkan');
+  const vm = require('vm'), kt = { window: {} }; kt.self = kt.window; vm.createContext(kt); vm.runInContext(require('fs').readFileSync(__dirname + '/../js/translations.js', 'utf8'), kt);
+  const TU = (kt.window.MyPolitikTranslations || kt.MyPolitikTranslations || {}).UMUM; betul(!!TU, 'UMUM dimuat'); sama(TU.bm('Perkara 49A: anda ADUN Air Putih.'), 'Perkara 49A: anda ADUN Air Putih.'); sama(TU.en('Article 49A: you are ADUN.'), 'Article 49A: you are ADUN.');
+  sama(TU.bm('Fasal 20.7 dan 20.8 berkuat kuasa.'), 'peraturan parti berkuat kuasa.');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

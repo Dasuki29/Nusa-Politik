@@ -342,9 +342,9 @@
      Setiap baris kamus yang berubah selepas ditukar didaftar juga (kunci umum), supaya terjemahan EN kekal berfungsi. */
   var UMUM = (function () {
     var BM_R = [[/\s*\((?:Tataetika |Perlembagaan )?(?:Fasal|Perkara)[^)]*\)/g, ''], [/\s*\(Perlembagaan[^)]*\)/g, ''], [/Tataetika Ahli UMNO(?: 20\d\d)?/g, 'Tataetika parti'], [/Perlembagaan UMNO/g, 'perlembagaan parti'],
-      [/\b(?:Fasal|Perkara) \d+(?:\.\d+)*[a-z]?(?:[ ,]+(?:dan )?\d+(?:\.\d+)*)*/g, 'peraturan parti'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
+      [/\b(?:Fasal|Perkara) (?!49A\b)\d+(?:\.\d+)*[a-z]?(?:[ ,]+(?:dan )?\d+(?:\.\d+)*)*/g, 'peraturan parti'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
     var EN_R = [[/\s*\((?:Code of Ethics |Code of Conduct )?(?:Clause|Article)s?[^)]*\)/g, ''], [/UMNO Members.? Code of (?:Ethics|Conduct)|UMNO Code of (?:Ethics|Conduct)|Code of (?:Ethics|Conduct) for UMNO Members/g, 'party code of ethics'], [/UMNO Constitution/g, 'party constitution'],
-      [/\b(?:Clause|Article)s? [\d.]+[a-z]?(?:[ ,]+(?:and )?[\d.]+)*/g, 'party rules'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
+      [/\b(?:Clause|Article)s? (?!49A\b)[\d.]+[a-z]?(?:[ ,]+(?:and )?[\d.]+)*/g, 'party rules'], [/ {2,}/g, ' '], [/ ([,.;:])/g, '$1']];
     function terap(t, R) { for (var i = 0; i < R.length; i++) { t = t.replace(R[i][0], R[i][1]); } return t; }
     return { RE: /Fasal \d|Perkara \d|Perlembagaan|Tataetika Ahli UMNO|Clause|Article \d|UMNO Constitution|Code of (?:Ethics|Conduct)/, bm: function (t) { return t == null ? t : terap(String(t), BM_R); }, en: function (t) { return t == null ? t : terap(String(t), EN_R); } };
   })();

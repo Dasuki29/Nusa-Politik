@@ -259,6 +259,7 @@
 
     var Et = etika();
     function tambah(e) {
+      if (p.tyt && p.tyt.aktif && e.terbuka) { e.terbuka = false; e.sebab = 'Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti.'; }   // v14.5: butang dikunci (maklum balas baris 48)
       if (Et && e.terbuka) {                                          // hak keahlian (Fasal 20.10)
         var hak = Et.semakHak(p, e.jenis === 'jawatan' ? 'jawatan' : 'perwakilan');
         if (!hak.boleh) { e.terbuka = false; e.sebab = hak.sebab; }
@@ -891,8 +892,11 @@
       log: { tindakan: 'tahun_baharu', nama: 'Tahun ' + baru + ' bermula', peringkat: 'tahun' }
     });
     if (!r.ok) { return r; }
-    var fokus = getFokusTahun(baru), peristiwa = [];
-    peristiwa.push(fokus.fasa === 'pemilihan'
+    var fokus = getFokusTahun(baru), peristiwa = [], mcT = mcaP();
+    // v14.5 (maklum balas baris 54): DAP: Kongres akan ditangguh bulan ini, jangan umum "tahun pemilihan" (jawatan kekal)
+    if (fokus.fasa === 'pemilihan' && mcT && mcT.M.akanTangguh && mcT.M.akanTangguh(mcT.p, baru)) {
+      peristiwa.push({ jenis: 'tahun_pentadbiran', mesej: 'Tahun ' + baru + ' sepatutnya tahun Kongres, tetapi PRU dijangka dalam 24 bulan: pemilihan ditangguh dan jawatan semasa kekal.' });
+    } else peristiwa.push(fokus.fasa === 'pemilihan'
       ? { jenis: 'pemilihan_dibuka', mesej: 'Tahun ' + baru + ' ialah tahun pemilihan. Pertandingan jawatan (Cawangan, Bahagian, Pusat), pemilihan perwakilan dan kempen dibuka. Mandat perwakilan tahun lalu sudah luput.' }
       : { jenis: 'tahun_pentadbiran', mesej: 'Tahun ' + baru + ' ialah tahun pentadbiran. Pertandingan jawatan ditutup (pemilihan seterusnya ' + tahunPemilihanSeterusnya(baru) + '), tetapi mandat perwakilan tahun lalu sudah luput: bertanding semula di Cawangan.' });
     return { ok: true, tahunLama: lama, tahunBaru: baru, fasa: fokus.fasa, mesej: peristiwa[0].mesej, peristiwa: peristiwa, perubahan: r.perubahan, profil: r.profil };

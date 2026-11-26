@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v14.5: Pembetulan maklum balas (baris 43, 46, 48, 52, 54)
+- Lompat parti: nama parti asal pada cip tidak lagi ditukar oleh penjenamaan (baris 43).
+- Rujukan Fasal/Perkara dalam teks umum dipaparkan sebagai "peraturan parti" (kecuali Perkara 49A).
+- Yang di-Pertua Negeri tidak boleh bertanding dalam pemilihan parti (baris 48).
+- DAP: Januari tahun Kongres yang ditangguh tidak lagi mengumumkan "tahun pemilihan"; mesej menyatakan jawatan semasa kekal (baris 54).
+- Usul Undi Tidak Percaya: mesej menyatakan sebab (hilang majoriti, kestabilan atau Tadbir Urus rendah); gabungan stabil (>= 70%) kurang MP goyah (baris 52).
+- Jawatan Komuniti: amaran 6 bulan dan 1 bulan sebelum tamat, dengan kos pembaharuan (baris 46).
+
 ## v14.4 (2026-11-26)
 
 - **EN: dua baki audit dibetulkan** (pembetulan; tiada perubahan permainan).

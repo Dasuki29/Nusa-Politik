@@ -247,6 +247,8 @@
       var g = d.ganjaran; jum.ip += g.ip || 0; jum.myr += g.myr || 0; jum.reputasi += g.reputasi || 0; jum.akarUmbi += g.akarUmbi || 0;
       if (j.konflik >= 60) { repLain -= 1; }
       if (kini >= j.tamat) { tamat(k, p, j, d, 'tamat', {}, 'komuniti_tamat'); ev.push({ jenis: 'komuniti_tamat', mesej: 'Tempoh jawatan ' + d.nama + ' tamat.' }); }
+      // v14.5 (maklum balas baris 46): amaran sebelum tamat supaya pemain sempat memperbaharui
+      else if (j.tamat - kini === CONFIG.BAHARUI_DALAM || j.tamat - kini === 1) { ev.push({ jenis: 'komuniti_amaran', mesej: 'Jawatan ' + d.nama + ' tamat dalam ' + (j.tamat - kini) + ' bulan. Perbaharui di kad Jawatan Komuniti, tab Tindakan (kos ' + rm(kosBaharui(p, d)) + ').' }); }
     });
     var kes = { ip: jum.ip, myr: jum.myr - denda, reputasi: jum.reputasi + repLain };
     if (jum.akarUmbi) { kes.kesetiaan = { akarUmbi: jum.akarUmbi }; }

@@ -265,6 +265,11 @@
   }
 
   /* ---------- Bulanan ---------- */
+  /** v14.5 (maklum balas baris 54): tahun Y akan ditangguh pada Januari (PRU dalam 24 bulan sebelum Kongres)? */
+  function akanTangguh(p, Y) {
+    var m = st(p), pru = p.pru || {}, pruIdx = (parseInt(pru.tahunPRU, 10) || 0) * 12 + (parseInt(pru.bulanPRU, 10) || 1), kIdx = Y * 12 + CONFIG.BULAN_PUSAT;
+    return adalahTahunPemilihan(p, Y) && m.tangguhDari !== Y && pruIdx > kIdx && pruIdx - kIdx <= CONFIG.TANGGUH_BULAN;
+  }
   function prosesBulan() {
     var Sv = S(), p = Sv && Sv.loadPlayer(), ev = [];
     if (!p || p.tamat || !adalah(p)) { return { peristiwa: ev }; }
@@ -308,7 +313,7 @@
   return { CONFIG: CONFIG, adalah: adalah, kawasan: kawasan, sebabKuota: sebabKuota, ofset: ofset, lawan: lawan, kerajaanNegeriAwal: kerajaanNegeriAwal,
     adalahTahunPemilihan: adalahTahunPemilihan, tahunLepas: tahunLepas, tahunSeterusnya: tahunSeterusnya,
     sokonganBahagian: sokonganBahagian, perwakilan: perwakilan, ringkasPusat: ringkasPusat, bonusPusat: bonusPusat, statusJelajah: statusJelajah, jelajah: jelajah,
-    lantikanSemasa: function () { return null; }, kerusiParlimen: kerusiParlimen, kadarDUN: kadarDUN, prosesBulan: prosesBulan,
+    lantikanSemasa: function () { return null; }, akanTangguh: akanTangguh, kerusiParlimen: kerusiParlimen, kadarDUN: kadarDUN, prosesBulan: prosesBulan,
     wakilCawangan: wakilCawangan, ahliParlimen: ahliParlimen, penyelaras: penyelaras, segarPenyelaras: segarPenyelaras, kerusiJawatan: kerusiJawatan, bonusJTP: bonusJTP,
     tahunKeahlian: tahunKeahlian, hubJTP: hubJTP, adjCalon: adjCalon, sekatanCalon: sekatanCalon, sekatanJawatan: sekatanJawatan, pencalonan: pencalonan, statusPencalonan: statusPencalonan, kumpulPencalonan: kumpulPencalonan,
     mesyuarat: mesyuarat, statusMesyuarat: statusMesyuarat, pilihSasaran: pilihSasaran, statusLobi: statusLobi, lobi: lobi, penggalSA: penggalSA };

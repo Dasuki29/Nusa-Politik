@@ -43,7 +43,7 @@
         h += '<div class="lp-g">' + (g[2] ? '<img src="' + g[2] + '" alt="" data-netral>' : '') + esc(g[1]) + (mesra ? ' <span class="lp-g__m">· 🤝 sambutan lebih mesra</span>' : '') + '</div><div class="lp-grid">' +
           cs.map(function (c) {
             return '<label class="lp-chip' + (pilih === c.kod ? ' lp-chip--on' : '') + (c.boleh ? '' : ' lp-chip--x') + '"' + (c.boleh ? '' : ' title="' + esc(c.sebab) + '"') + '><input type="radio" name="lp-parti" value="' + c.kod + '" data-lp-pilih' + (pilih === c.kod ? ' checked' : '') + (c.boleh ? '' : ' disabled') + '>' +
-              '<img src="' + esc(logo(c.kod)) + '" alt="" data-netral><span>' + esc(c.nama) + '</span>' + (pilih === c.kod ? '<i class="lp-chip__m">✔</i>' : c.mesra ? '<i class="lp-chip__m">🤝</i>' : '') + '</label>';
+              '<img src="' + esc(logo(c.kod)) + '" alt="" data-netral><span data-jenama-skip>' + esc(c.nama) + '</span>'   /* v14.5: nama parti asal, bukan ditukar ikut parti pemain (maklum balas baris 43) */ + (pilih === c.kod ? '<i class="lp-chip__m">✔</i>' : c.mesra ? '<i class="lp-chip__m">🤝</i>' : '') + '</label>';
           }).join('') + '</div>';
       });
       var tolak = ada.filter(function (c) { return !c.boleh; })[0]; if (tolak) { h += '<p class="note jm-amaran" style="margin:6px 0 0">' + esc(tolak.sebab) + '</p>'; }

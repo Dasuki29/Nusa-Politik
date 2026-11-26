@@ -6293,6 +6293,12 @@
   /* v14.4: EN jemputan konvensyen sayap AMANAH */
   ["WARDA AMANAH menjemput anda hadir ke Konvensyen WARDA peringkat negeri dan memohon sokongan logistik.", "WARDA AMANAH invites you to the state-level WARDA Convention and requests logistical support."],
   ["AWAN AMANAH menjemput anda hadir ke Konvensyen AWAN peringkat pusat dan memohon sokongan logistik.", "AWAN AMANAH invites you to the national-level AWAN Convention and requests logistical support."],
+  /* v14.5 */
+  ["Tahun {y} sepatutnya tahun Kongres, tetapi PRU dijangka dalam 24 bulan: pemilihan ditangguh dan jawatan semasa kekal.", "{y} was due to be a Congress year, but a general election is expected within 24 months: the party election is postponed and current posts remain."],
+  ["Sebab: kerajaan hilang majoriti (bawah {a} kerusi) selepas blok menarik sokongan.", "Reason: the government lost its majority (below {a} seats) after a bloc withdrew support."],
+  ["Jawatan {a} tamat dalam {b} bulan. Perbaharui di kad Jawatan Komuniti, tab Tindakan (kos {c}).", "Your {a} post ends in {b} months. Renew it on the Community Posts card, Actions tab (cost {c})."],
+  ["Sebab: kestabilan gabungan {a}% (bawah {b}%).", "Reason: coalition stability {a}% (below {b}%)."],
+  ["Sebab: Tadbir Urus {a}% (bawah {b}%), walaupun kestabilan gabungan {c}%.", "Reason: Governance {a}% (below {b}%), even though coalition stability is {c}%."],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],
