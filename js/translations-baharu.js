@@ -6663,6 +6663,12 @@
   ["Wanita KEADILAN: blaus biru muda, rambut paras bahu (tanpa tudung)", "Wanita KEADILAN: light-blue blouse, shoulder-length hair (no headscarf)"],
   ["Lelaki pertengahan umur, kemeja biru muda, blazer biru tua, tali leher merah", "Middle-aged man, light-blue shirt, dark-blue blazer, red tie"],
   ["Lelaki berusia, batik biru, berkaca mata", "Older man, blue batik, glasses"],
+  /* v14.12 Avatar DAP */
+  ["DAPSY: lelaki muda, polo merah berkolar putih, lencana roket", "DAPSY: young man, red polo with white collar, rocket badge"],
+  ["Wanita DAP: rambut paras bahu, blazer merah, kemeja putih", "Wanita DAP: shoulder-length hair, red blazer, white shirt"],
+  ["Wanita DAP: tudung merah, kebaya putih (bertudung)", "Wanita DAP: red headscarf, white kebaya (with headscarf)"],
+  ["Lelaki pertengahan umur, kemeja putih, tali leher merah", "Middle-aged man, white shirt, red tie"],
+  ["Lelaki berusia, blazer biru tua, tali leher merah, berkaca mata", "Older man, dark-blue blazer, red tie, glasses"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

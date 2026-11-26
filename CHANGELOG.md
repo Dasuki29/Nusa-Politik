@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v14.12: Avatar khas DAP
+- Set avatar DAP dalam warna parti (merah, putih, biru tua) dengan lencana roket: DAPSY (polo merah berkolar putih), Wanita DAP (rambut paras bahu, blazer merah), induk dewasa (kemeja putih, tali leher merah), veteran (blazer biru tua, berkaca mata), veteran perempuan (rambut uban pendek, kardigan merah, berkaca mata).
+- Pilihan kedua untuk pemain perempuan DAP: Wanita DAP bertudung (tudung merah, kebaya putih).
+
 ## v14.11: Avatar khas PKR
 - Set avatar PKR dalam warna parti (biru muda, merah, putih) dengan lencana logo mata: AMK (kemeja-T biru muda berjalur merah), Wanita KEADILAN (tudung biru muda, baju biru tua), induk dewasa (kemeja biru muda, blazer biru tua, tali leher merah), veteran (batik biru, berkaca mata), veteran perempuan (tudung putih, baju kurung biru muda).
 - Pilihan baharu untuk pemain perempuan PKR: Wanita KEADILAN tanpa tudung (blaus biru muda, rambut paras bahu).

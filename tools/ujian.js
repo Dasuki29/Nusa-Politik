@@ -2525,7 +2525,7 @@ ujian('v13.41 Avatar PAS: kopiah/serban, tudung labuh, tiada songkok; UMNO dan P
   ['pemuda', 'biasa', 'veteran'].forEach((k) => { const s = A.svg(k, { parti: 'PAS' }); betul(!songkok.test(s), k + ' tiada songkok'); betul(/M31\.5 36 Q31 21\.5|M27\.5 38 Q24 17/.test(s), k + ' kopiah/serban'); });
   betul(!/#2F3E5C|#2E6BD6/.test(A.svg('biasa', { parti: 'PAS' }) + A.svg('pemuda', { parti: 'PAS' })), 'tiada blazer / tali leher');
   betul(/#2E7D5B/.test(A.svg('wanita', { parti: 'PAS' })), 'Muslimat tudung labuh hijau'); betul(/#2E5E4E/.test(A.svg('veteran_p', { parti: 'PAS' })), 'Muslimat berusia');
-  betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(/#2E6BD6/.test(A.svg('pemuda', { parti: 'DAP' })), 'DAP kekal set umum');   // v14.11: PKR kini ada set khas
+  betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(/#2E6BD6/.test(A.svg('pemuda', { parti: 'MCA' })), 'MCA kekal set umum');   // v14.11/v14.12: PKR dan DAP kini ada set khas
   sama(A.senarai('PAS').length, 4); betul(/kopiah/.test(A.senarai('PAS')[0].penerangan));
 });
 ujian('v13.42 Jemaah Menteri: calon rakan gabungan termasuk Cina / India; calon parti sendiri ikut kaum parti (maklum balas baris 32)', () => {
@@ -3674,10 +3674,17 @@ ujian('v14.10 Gerakan Parti Negeri (baris 49): akses, program, ganda lemah, had,
 
 ujian('v14.11 Avatar PKR: set khas (biru muda, lencana logo), Wanita tanpa tudung hanya PKR', () => {
   const A = g.MyPolitikAvatar, l = A.senarai('PKR').map((a) => a.kod);
-  sama(l.join(','), 'pemuda,wanita,wanita2,biasa,veteran'); betul(!A.senarai('DAP').some((a) => a.kod === 'wanita2')); betul(A.adaKod('wanita2'));
+  sama(l.join(','), 'pemuda,wanita,wanita2,biasa,veteran'); betul(!A.senarai('MCA').some((a) => a.kod === 'wanita2')); betul(A.adaKod('wanita2'));
   ['pemuda', 'wanita', 'wanita2', 'biasa', 'veteran', 'veteran_p'].forEach((k) => { const sv = A.svg(k, { parti: 'PKR' }); betul(sv.includes('#4BA8E6') && sv.includes('#D7262E'), k + ': warna PKR + lencana'); });
-  betul(!A.svg('wanita2', { parti: 'DAP' }).includes('#D7262E'), 'parti lain: wanita2 -> wanita umum');
+  betul(!A.svg('wanita2', { parti: 'MCA' }).includes('#D7262E'), 'parti lain: wanita2 -> wanita umum');
   betul(!A.svg('pemuda', { parti: 'UMNO' }).includes('#4BA8E6'), 'UMNO tidak berubah');
+});
+
+ujian('v14.12 Avatar DAP: set khas (merah, lencana roket), Wanita bertudung sebagai pilihan kedua', () => {
+  const A = g.MyPolitikAvatar;
+  sama(A.senarai('DAP').map((a) => a.kod).join(','), 'pemuda,wanita,wanita2,biasa,veteran'); betul(/bertudung/.test(A.senarai('DAP').find((a) => a.kod === 'wanita2').penerangan));
+  ['pemuda', 'wanita', 'wanita2', 'biasa', 'veteran', 'veteran_p'].forEach((k) => { const sv = A.svg(k, { parti: 'DAP' }); betul(sv.includes('#D71920') && sv.includes('#1B2F6B'), k + ': warna DAP + roket'); });
+  betul(!A.svg('wanita2', { parti: 'MCA' }).includes('#D71920'), 'parti lain: wanita2 -> umum');
 });
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);

@@ -2,6 +2,7 @@
    Nusa Politik — js/avatar.js
    Avatar watak (SVG asli, dilukis dengan kod): Pemuda, Puteri, Wanita, Biasa, Veteran.
    v5.1: tambah Biasa (lelaki pertengahan umur, baju Melayu biru tua, songkok hitam).
+   v14.12: set khas DAP (merah, putih, biru tua; lencana roket); Wanita DAP lalai tanpa tudung, 'wanita2' = bertudung.
    v14.11: set khas PKR (biru muda, merah, putih; lencana logo mata) termasuk Wanita tanpa tudung (kod 'wanita2', PKR sahaja).
    v4.3: Pemuda (baju Melayu putih, songkok hitam), Puteri (kebaya putih, tudung merah jambu),
          Wanita (baju kurung putih, tudung merah, berusia), Veteran (baju Melayu merah, songkok hitam, berusia).
@@ -324,6 +325,54 @@
     return bahagianUmum(kod);
   }
   var LATAR_PKR = { pemuda: { bg1: '#3FA9F5', bg2: '#0B4F8A' }, wanita: { bg1: '#E8344F', bg2: '#8A0F24' }, wanita2: { bg1: '#E8344F', bg2: '#8A0F24' }, biasa: { bg1: '#2F7FCC', bg2: '#0A2F5A' }, veteran: { bg1: '#8CC3EC', bg2: '#2B5D8A' }, veteran_p: { bg1: '#8CC3EC', bg2: '#2B5D8A' } };
+  /* v14.12: set avatar khas DAP (merah, putih, biru tua; lencana roket). DAPSY (pemuda): polo merah berkolar putih;
+     Wanita DAP: rambut paras bahu, blazer merah (pilihan kedua: tudung merah); induk: kemeja putih, tali leher merah;
+     veteran: blazer biru tua, berkaca mata; veteran perempuan: rambut uban pendek, kardigan merah. */
+  var DAP_M = '#D71920', DAP_MG = '#9E1016', DAP_B = '#1B2F6B';
+  function logoDAP(x, y, r) {
+    return '<g transform="translate(' + x + ' ' + y + ') scale(' + (r / 10) + ')"><circle r="10" fill="#fff" stroke="' + DAP_B + '" stroke-width="2"/>' +
+      '<path d="M0 -7.5 Q3.4 -3.5 3 3.2 L-3 3.2 Q-3.4 -3.5 0 -7.5Z" fill="' + DAP_M + '"/><circle cy="-2.2" r="1.2" fill="#fff"/>' +
+      '<path d="M-3 0.8 L-5.6 4.6 L-3 3.6Z M3 0.8 L5.6 4.6 L3 3.6Z" fill="' + DAP_M + '"/><path d="M-1.8 3.6 L0 7.4 L1.8 3.6Z" fill="' + DAP_B + '"/></g>';
+  }
+  function tukar(s, peta) { Object.keys(peta).forEach(function (k) { s = s.split(k).join(peta[k]); }); return s; }
+  function bahagianDAP(kod) {
+    var s, kulit = '#EBC39E';
+    if (kod === 'pemuda') {
+      s = tukar(bahagianUmum('pemuda'), { '#D9A97E': kulit });
+      s = s.replace('fill="#F4F6F8"/>', 'fill="' + DAP_M + '"/>');
+      s = s.replace(/<path d="M40 69 L48 80[^>]*>/, '<path d="M38 68 L48 78 L58 68 L54 67 L48 73 L42 67Z" fill="#fff"/><path d="M48 78 L48 88" stroke="' + DAP_MG + '" stroke-width="1.4"/><circle cx="48" cy="82" r="1" fill="#fff"/><circle cx="48" cy="86" r="1" fill="#fff"/>');
+      s = s.replace(/<path d="M48 74 L45\.5 96[^>]*>/, logoDAP(63, 84, 5));
+      return s + '<path d="M32 40 C30 21 62 18 65 36 C61 29 54 26 47 27 C41 28 35 33 32 40Z" fill="#15171D"/>';
+    }
+    if (kod === 'wanita') {                                                                // tanpa tudung: rambut paras bahu, blazer merah
+      s = tukar(bahagianUmum('wanita'), { '#1F7A6B': DAP_M, '#E0B48E': kulit });
+      s = s.replace(/<path d="M28 46 C26 22 70 22 68 46 C69 62 72 68 70 74 L26 74 C24 68 27 62 28 46Z"/, '<path d="M28 46 C26 22 70 22 68 46 C69 56 70 61 67 64 L29 64 C26 61 27 56 28 46Z"');
+      s = s.replace('<path d="M38 69 Q48 80 58 69" fill="#fff" opacity=".9"/>', '<path d="M38 69 L48 84 L58 69 L53 68 L48 75 L43 68Z" fill="#fff"/><path d="M38 69 L44 90 M58 69 L52 90" stroke="' + DAP_MG + '" stroke-width="1.6"/>');
+      return s + '<circle cx="34" cy="52" r="1.2" fill="#E8E8F0"/><circle cx="62" cy="52" r="1.2" fill="#E8E8F0"/>' + logoDAP(64, 84, 4.6);
+    }
+    if (kod === 'wanita2') {                                                               // bertudung merah
+      s = tukar(bahagian('puteri', false), { '#E9729B': DAP_M, '#C84F7E': DAP_MG, '#F7A9C4': '#F06A6F', '#FDFCFA': '#FFFFFF', '#F4E6EE': '#F1F1F4', '#E9C9D9': '#D8D8E0', '#EADDE6': '#D8D8E0', '#E2B93B': DAP_B, '#B8860B': '#0E1C45' });
+      return s + logoDAP(63, 86, 4.6);
+    }
+    if (kod === 'biasa') {
+      s = tukar(bahagianUmum('biasa'), { '#D2A074': kulit, '#2F3E5C': '#F7F7F7', '#B8860B': DAP_M, '#1B2740': DAP_MG });
+      s = s.replace('fill="#F4F6F8"/><path d="M48 76', 'fill="#E6E9EE"/><path d="M48 76');
+      return s + logoDAP(32, 80, 4.2);
+    }
+    if (kod === 'veteran') {
+      s = tukar(bahagianUmum('veteran'), { '#CDA27C': '#E3B994', '#7B5B3A': DAP_B, '#5A4128': '#0E1C45', '#E2B93B': '#C9CED8' });
+      s = s.replace('<path d="M38 69 Q48 76 58 69" fill="none" stroke="#0E1C45" stroke-width="2"/>', '<path d="M39 69 L48 82 L57 69 L53 68 L48 74 L43 68Z" fill="#fff"/><path d="M48 76 L46 96 L50 96Z" fill="' + DAP_M + '"/>');
+      return s + logoDAP(64, 84, 4.4);
+    }
+    if (kod === 'veteran_p') {
+      s = tukar(bahagianUmum('veteran_p'), { '#D4AA86': '#E6BD98', '#5C4A7A': DAP_M });
+      s = s.replace(/<path d="M28 46 C26 22 70 22 68 46 C69 62 72 68 70 74 L26 74 C24 68 27 62 28 46Z"/, '<path d="M28 46 C26 22 70 22 68 46 C69 52 69 56 66 58 L30 58 C27 56 27 52 28 46Z"');
+      return s + '<circle cx="42" cy="45" r="5.4" fill="none" stroke="#5B4636" stroke-width="1.1"/><circle cx="54" cy="45" r="5.4" fill="none" stroke="#5B4636" stroke-width="1.1"/><path d="M47.4 44.6 h1.2" stroke="#5B4636" stroke-width="1.1"/>' +
+        '<path d="M38 69 Q48 78 58 69" fill="none" stroke="#fff" stroke-width="2.4"/>' + logoDAP(64, 84, 4.4);
+    }
+    return bahagianUmum(kod);
+  }
+  var LATAR_DAP = { pemuda: { bg1: '#F2F2F2', bg2: '#9FA9C8' }, wanita: { bg1: '#3B5BB5', bg2: '#122458' }, wanita2: { bg1: '#3B5BB5', bg2: '#122458' }, biasa: { bg1: '#E8343A', bg2: '#7A0A10' }, veteran: { bg1: '#C9CED8', bg2: '#5B6378' }, veteran_p: { bg1: '#C9CED8', bg2: '#5B6378' } };
   function partiOpts(opts) {
     var k = opts && opts.parti; if (!k) { try { var P = (typeof globalThis !== 'undefined' ? globalThis : {}).MyPolitikParti; k = P && P.kini ? P.kini() : 'UMNO'; } catch (e) { k = 'UMNO'; } }
     return k || 'UMNO';
@@ -336,24 +385,25 @@
   function svg(kod, opts) {
     opts = opts || {};
     if (kod === 'puteri' && bukanUMNO(opts)) { kod = 'wanita'; }
-    if (kod === 'wanita2' && partiOpts(opts) !== 'PKR') { kod = 'wanita'; }                // v14.11: hanya PKR
-    var c = (partiOpts(opts) === 'PKR' ? LATAR_PKR[kod] : LATAR[kod]) || LATAR.pemuda, id = 'mpa' + (++seq), saiz = opts.saiz || 96;
+    if (kod === 'wanita2' && partiOpts(opts) !== 'PKR' && partiOpts(opts) !== 'DAP') { kod = 'wanita'; }                // v14.11: hanya PKR
+    var pk = partiOpts(opts), c = (pk === 'PKR' ? LATAR_PKR[kod] : pk === 'DAP' ? LATAR_DAP[kod] : LATAR[kod]) || LATAR.pemuda, id = 'mpa' + (++seq), saiz = opts.saiz || 96;
     var lbl = opts.label || (kod === 'wanita2' ? 'Wanita' : (LIST.filter(function (a) { return a.kod === kod; })[0] || LIST[0]).label);
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="' + saiz + '" height="' + saiz + '" role="img" aria-label="Avatar ' + lbl + '">' +
       '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c.bg1 + '"/><stop offset="1" stop-color="' + c.bg2 + '"/></linearGradient>' +
       '<clipPath id="' + id + 'c"><circle cx="48" cy="48" r="48"/></clipPath></defs>' +
       '<circle cx="48" cy="48" r="48" fill="url(#' + id + ')"/>' +
-      '<g clip-path="url(#' + id + 'c)">' + (partiOpts(opts) === 'PAS' ? bahagianPAS(kod) : partiOpts(opts) === 'PKR' ? bahagianPKR(kod) : bahagian(kod, bukanUMNO(opts))) + '</g></svg>';
+      '<g clip-path="url(#' + id + 'c)">' + (partiOpts(opts) === 'PAS' ? bahagianPAS(kod) : partiOpts(opts) === 'PKR' ? bahagianPKR(kod) : partiOpts(opts) === 'DAP' ? bahagianDAP(kod) : bahagian(kod, bukanUMNO(opts))) + '</g></svg>';
   }
   var PENERANGAN_UMUM = { pemuda: 'Lelaki muda, kemeja putih dan tali leher', wanita: 'Perempuan, blaus dan rambut panjang', biasa: 'Lelaki pertengahan umur, blazer biru tua', veteran: 'Lelaki berusia, berkaca mata, baju batik coklat' };
   var PENERANGAN_PKR = { pemuda: 'AMK: lelaki muda, kemeja-T biru muda berjalur merah, lencana PKR', wanita: 'Wanita KEADILAN: tudung biru muda, baju biru tua', wanita2: 'Wanita KEADILAN: blaus biru muda, rambut paras bahu (tanpa tudung)', biasa: 'Lelaki pertengahan umur, kemeja biru muda, blazer biru tua, tali leher merah', veteran: 'Lelaki berusia, batik biru, berkaca mata' };   // v14.11
+  var PENERANGAN_DAP = { pemuda: 'DAPSY: lelaki muda, polo merah berkolar putih, lencana roket', wanita: 'Wanita DAP: rambut paras bahu, blazer merah, kemeja putih', wanita2: 'Wanita DAP: tudung merah, kebaya putih (bertudung)', biasa: 'Lelaki pertengahan umur, kemeja putih, tali leher merah', veteran: 'Lelaki berusia, blazer biru tua, tali leher merah, berkaca mata' };   // v14.12
   var PENERANGAN_PAS = { pemuda: 'Lelaki muda, baju Melayu putih, kopiah putih', wanita: 'Perempuan, jubah hitam, tudung labuh hijau', biasa: 'Lelaki pertengahan umur, jubah hijau tua, kopiah putih, berjanggut', veteran: 'Lelaki berusia, jubah putih, serban putih, janggut beruban' };
   /** v10.5: senarai watak mengikut parti. Parti selain UMNO tiada Puteri dan guna penerangan umum (PAS: set khas, v13.41). */
   function senarai(parti) {
     if (!parti || parti === 'UMNO') { return LIST; }
-    var P = parti === 'PAS' ? PENERANGAN_PAS : parti === 'PKR' ? PENERANGAN_PKR : PENERANGAN_UMUM;
+    var P = parti === 'PAS' ? PENERANGAN_PAS : parti === 'PKR' ? PENERANGAN_PKR : parti === 'DAP' ? PENERANGAN_DAP : PENERANGAN_UMUM;
     var out = LIST.filter(function (a) { return a.kod !== 'puteri'; }).map(function (a) { return { kod: a.kod, label: a.label, penerangan: P[a.kod] || a.penerangan }; });
-    if (parti === 'PKR') { var iw = out.map(function (a) { return a.kod; }).indexOf('wanita'); out.splice(iw + 1, 0, { kod: 'wanita2', label: 'Wanita', penerangan: P.wanita2 }); }   // v14.11: pilihan Wanita tanpa tudung
+    if (parti === 'PKR' || parti === 'DAP') { var iw = out.map(function (a) { return a.kod; }).indexOf('wanita'); out.splice(iw + 1, 0, { kod: 'wanita2', label: 'Wanita', penerangan: P.wanita2 }); }   // v14.11: pilihan Wanita tanpa tudung
     return out;
   }
   function adaKod(kod) { return kod === 'wanita2' || LIST.some(function (a) { return a.kod === kod; }); }
