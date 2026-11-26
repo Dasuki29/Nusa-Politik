@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v14.3 (2026-11-26)
+
+- **Audit menyeluruh Nusa Politik, Fasa 2** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap dan nama perhimpunan sayap selain PAS / PKR ialah andaian permainan).
+  - G10 / G2 (sistem UMNO) dibuang bagi BERJASA, BERSATU, WARISAN, GAGASAN, PBS, UPKO, LDP, PHRS, PCS, PBB, PRS, SUPP dan PDP: sayap Bahagian memilih 5 Perwakilan ke perhimpunan sayap sendiri. PKR: tiada wakil sayap ke Mesyuarat Agung Tahunan Cabang (semua anggota hadir, Fasal 33.2). PAS / AMANAH: kerusi wakil Dewan / sayap ikut Perlembagaan dikekalkan, tetapi label "G15 / G20" kini "Wakil Pemuda ke Mesyuarat ...".
+  - Perhimpunan sayap dinamakan ikut parti: Kongres Angkatan Muda / Kongres Wanita KEADILAN, Konvensyen Pemuda Nasional, Muktamar Dewan Pemuda, Muktamar ANGKASA, Perhimpunan Agung Armada / Srikandi / Srikandi Muda, Perhimpunan Agung Wira WARISAN, Perhimpunan Agung Pemuda (parti GRS dan GPS), Persidangan Perwakilan Seksyen Pemuda SUPP.
+  - Jawatan Komuniti: "Masjid" → "Persatuan Penduduk" bagi PBS, UPKO, LDP, PHRS, PCS, SUPP, PRS dan PDP (parti majoriti bukan Islam); acara gotong-royong "surau" → "rumah ibadat".
+  - Takwim PKR: mesej bulan ikut takwim PKR sebenar (Ranting 3, Cabang 4, Kongres 5, Pasca-Kongres 6); sebelum ini PKR menerima mesej UMNO bulan 4 / 6 / 9 / 10.
+  - Kod: teks G10 / G2 dalam js/meeting.js, js/election.js dan js/app.js kini ikut tetapan `tanpaG10`, `g2Kerusi`, `tanpaG2`, `g10` (js/struktur.js); pembantu `sayapAgung()` dalam js/parti.js; tajuk dan nota pemilihan diterjemah berasingan.
+- Ujian baharu (233 ujian).
+
 ## v14.2 (2026-11-26)
 
 - **Audit menyeluruh Nusa Politik, Fasa 1** (pembetulan; tiada perubahan permainan). Semua 22 parti dimain 12 bulan dalam BM dan EN; 0 ralat JavaScript.

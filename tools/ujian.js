@@ -3047,6 +3047,20 @@ ujian('v14.2 audit menyeluruh: lokasi PA parti Sarawak, EN Perhimpunan Agung BER
   P.tetap({ parti: 'BERSATU' }); sama(PT.ke('+8 PAU Delegate Support'), '+8 General Assembly Delegate Support'); sama(PT.ke('Month 11 PAU'), 'Month 11 General Assembly');
   P.tetap({ parti: 'SUPP', negeri: 'Sarawak' }); sama(PT.ke('+8 PAU Delegate Support'), '+8 Conference Delegate Support'); sama(PT.ke('Post-PAU & Community Service'), 'Post-Conference & Community Service');
 });
+ujian('v14.3 audit Fasa 2: tiada G10 / G2 bagi parti selain UMNO, perhimpunan sayap ikut parti, Persatuan Penduduk', () => {
+  const PT = g.MyPolitikParti; P.daftar();
+  const sw = (parti, negeri) => { const p = P.tetap({ parti, negeri, sayap: 'pemuda', jawatanSayap: 'pemuda' }); return E.senaraiPertandingan(p); };
+  for (const [k, n] of [['BERSATU', 'Kelantan'], ['WARISAN', 'Sabah'], ['PBS', 'Sabah'], ['SUPP', 'Sarawak'], ['PRS', 'Sarawak']]) {
+    const kk = sw(k, n), g2 = kk.filter((x) => x.kod === 'perwakilan_sayap_g2')[0];
+    betul(!kk.some((x) => x.kod === 'perwakilan_sayap_g10'), k + ': tiada G10'); betul(g2 && g2.kerusi === 5, k + ': 5 Perwakilan sayap Bahagian');
+    betul(!/G2|G10/.test(PT.ke(g2.jawatan)), k + ': label tanpa G2 (' + PT.ke(g2.jawatan) + ')');
+  }
+  const kp = sw('PKR', 'Selangor'); betul(!kp.some((x) => /perwakilan_sayap_g(10|2)/.test(x.kod)), 'PKR: tiada G10 / G2');
+  const ks = sw('PAS', 'Kelantan').filter((x) => x.kod === 'perwakilan_sayap_g10')[0]; betul(ks && !/G\d/.test(PT.ke(ks.jawatan)), 'PAS: wakil Dewan (Fasal) tanpa label G15');
+  P.tetap({ parti: 'WARISAN', negeri: 'Sabah' }); sama(PT.ke('Perhimpunan Wira (Pra-PAU)'), 'Perhimpunan Agung Wira WARISAN');
+  P.tetap({ parti: 'PBS', negeri: 'Sabah' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🏘️ Pengerusi Persatuan Penduduk');
+  P.tetap({ parti: 'PAS', negeri: 'Kelantan' }); sama(PT.ke('🕌 Pengerusi Masjid'), '🕌 Pengerusi Masjid', 'PAS kekal masjid');
+});
 ujian('v13.57 Enjin pemilihan ikut parti (Fasa 1 BN): MCA, MIC, PPP dan PBRS berbeza daripada UMNO (struktur.js)', () => {
   const ST = g.MyPolitikStruktur, J = g.MyPolitikJawatan, PT = g.MyPolitikParti;
   const kod = (parti, sayap) => J.katalogUntuk({ parti: parti, sayap: sayap || 'utama' }).map((d) => d.kod);

@@ -316,7 +316,7 @@
       var layakB = swSah || exBhg.sah || ketuaSy;
       if (!mz('tanpaG10')) {                                                        // v13.93: DAP tiada G10
       tambah({
-        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: 'G' + nG10 + ' ' + NS + ': ' + nG10 + ' wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
+        kod: 'perwakilan_sayap_g10', jenis: 'perwakilan', jawatan: mz('g10') ? 'Wakil ' + NS + ' ke Mesyuarat Perwakilan Bahagian' : 'G' + nG10 + ' ' + NS + ': ' + nG10 + ' wakil ke Mesyuarat Perwakilan Bahagian', peringkat: 'sayap_bahagian', kumpulan: 'perwakilan', sayap: sy,
         kerusi: nG10, kesukaran: 0,
         terbuka: layakB && !exBhg.sah,
         sebab: exBhg.sah ? 'Anda hadir Mesyuarat Perwakilan Bahagian secara automatik sebagai ' + exBhg.sumber + '.' : (layakB ? '' : 'Menjadi wakil ' + NS + ' Cawangan tahun ' + p.tahun + ' dahulu.')

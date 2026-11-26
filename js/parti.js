@@ -439,6 +439,34 @@
      (data/warisan-malaysia.csv, tools/build-warisan.js); takwim 3/5/9. Logo daripada pengguna. */
   SENARAI.WARISAN = { kod: 'WARISAN', nama: 'WARISAN', penuh: 'Parti Warisan', logo: 'assets/images/logo-warisan.png', sayap: ['pemuda', 'puteri', 'wanita'], negeriTetap: null, data: 'data/warisan-malaysia.csv', bahagianJenis: 'Parlimen', warisan: true, gabungan: null,
     istilah: [[/\bPemuda\b/g, 'Wira'], [/\bYouth\b/g, 'Wira'], [/\bPuteri\b/g, 'Wirawati']].concat(istilahGRS('WARISAN', false)), istilahSongsang: [[/\bWirawati\b/g, 'Puteri'], [/\bWira\b/g, 'Pemuda']].concat(istilahGRS('WARISAN', true)) };
+  /* v14.3: audit menyeluruh Fasa 2: perhimpunan sayap setiap parti dinamakan ikut parti (bukan "Perhimpunan Sayap Pusat / (Pra-PA)" UMNO),
+     dan Jawatan Komuniti bukan masjid bagi parti majoriti bukan Islam. ANDAIAN: nama perhimpunan sayap selain PAS / PKR. */
+  function sayapAgung(kod, sayap, bm, en, masjid) {
+    var S = SENARAI[kod]; if (!S) { return; }
+    var W = sayap.join('|'), bmS = bm('Sayap'), enS = en('Wing');
+    var maju = [[new RegExp('Perhimpunan (' + W + ') (\\(Pra-[A-Za-z]+\\)|Pusat)', 'g'), function (m, w) { return bm(w); }], [/Perhimpunan Sayap (\(Pra-[A-Za-z]+\)|Pusat)/g, bmS],
+      [new RegExp('(' + W + ') Wing (Central )?Assembly( \\(Pre-[^)]*\\))?', 'g'), function (m, w) { return en(w); }], [new RegExp('Central (' + W + ') Wing Assembly', 'g'), function (m, w) { return en(w); }],
+      [/(Youth|Pemuda Wing) Central Assembly/g, function () { return en(sayap[0]); }], [new RegExp('(' + W + ') Central Assembly', 'g'), function (m, w) { return en(w); }], [/Central Wing Assembly|Wing Central Assembly|Wing Assembly \(Pre-[^)]*\)/g, enS],
+      [/the (\S+(?: \S+)?) Wing G2 \(2 (\w+) delegates\)/g, 'the $1 Wing $2 Delegates'], [/ or [Ww]ing G10 members/g, ''], [/You are not in the (\S+(?: \S+)?) Wing G(?:10|2) this year\./g, 'You are not a $1 Wing delegate this year.'], [/Delegate Persidangan Perwakilan/g, 'Conference Delegate']];
+    var esk = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+    var balik = [[new RegExp('dipilih dalam ' + esk(bmS), 'g'), 'dipilih dalam Perhimpunan Sayap (Pra-PAU)'], [new RegExp(esk(bmS), 'g'), 'Perhimpunan Sayap Pusat']].concat(sayap.map(function (w) { return [new RegExp(bm(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), 'Perhimpunan ' + w + ' Pusat']; }));
+    if (masjid) {
+      maju = maju.concat([[/🕌 ?Masjid & PIBG/g, '🏘️ Persatuan Penduduk & PIBG'], [/Masjid & PIBG/g, 'Persatuan Penduduk & PIBG'], [/🕌 ?Pengerusi Masjid/g, '🏘️ Pengerusi Persatuan Penduduk'], [/Pengerusi Masjid/g, 'Pengerusi Persatuan Penduduk'],
+        [/(🕌 )?Mosque & PTA/g, '🏘️ Residents\' Association & PTA'], [/(🕌 )?Mosque Chairman/g, '🏘️ Residents\' Association Chairman'], [/surau dan balairaya/g, 'rumah ibadat dan balai raya'], [/the surau and community hall/g, 'places of worship and the community hall']]);
+      balik = balik.concat([[/Persatuan Penduduk & PIBG/g, 'Masjid & PIBG'], [/Pengerusi Persatuan Penduduk/g, 'Pengerusi Masjid'], [/🏘️ (Masjid|Pengerusi Masjid)/g, '🕌 $1'], [/rumah ibadat dan balai raya/g, 'surau dan balairaya']]);
+    }
+    S.istilah = (S.istilah || []).concat(maju); S.istilahSongsang = balik.concat(S.istilahSongsang || []);
+  }
+  sayapAgung('PKR', ['Angkatan Muda', 'Wanita'], function (w) { return w === 'Angkatan Muda' ? 'Kongres Angkatan Muda' : 'Kongres ' + w + ' KEADILAN'; }, function (w) { return w === 'Angkatan Muda' ? 'Angkatan Muda Congress' : 'KEADILAN ' + w + ' Congress'; });
+  sayapAgung('AMANAH', ['Pemuda', 'Wanita', 'AWAN'], function (w) { return 'Konvensyen ' + w + ' Nasional'; }, function (w) { return 'National ' + w + ' Convention'; });
+  sayapAgung('PAS', ['Pemuda', 'Muslimat', 'Ulamak'], function (w) { return 'Muktamar Dewan ' + w; }, function (w) { return w === 'Wing' ? 'Dewan Muktamar' : 'Dewan ' + w + ' Muktamar'; });
+  sayapAgung('BERJASA', ['ANGKASA', 'Wanita'], function (w) { return 'Muktamar ' + w + (w === 'ANGKASA' ? '' : ' BERJASA'); }, function (w) { return (w === 'ANGKASA' ? '' : 'BERJASA ') + w + ' Muktamar'; });
+  sayapAgung('BERSATU', ['Srikandi Muda', 'Armada', 'Srikandi'], function (w) { return 'Perhimpunan Agung ' + w; }, function (w) { return w + ' General Assembly'; });
+  sayapAgung('WARISAN', ['Wirawati', 'Wira', 'Wanita'], function (w) { return 'Perhimpunan Agung ' + w + ' WARISAN'; }, function (w) { return 'WARISAN ' + w + ' General Assembly'; });
+  ['GAGASAN', 'PBS', 'UPKO', 'LDP', 'PHRS', 'PCS', 'PBB', 'PRS', 'PDP'].forEach(function (k) {
+    sayapAgung(k, ['Pemuda', 'Wanita'], function (w) { return 'Perhimpunan Agung ' + w + ' ' + k; }, function (w) { return k + ' ' + w + ' General Assembly'; }, /^(PBS|UPKO|LDP|PHRS|PCS|PRS|PDP)$/.test(k));
+  });
+  sayapAgung('SUPP', ['Pemuda', 'Wanita'], function (w) { return 'Persidangan Perwakilan Seksyen ' + w; }, function (w) { return 'SUPP ' + w + ' Section Delegates Conference'; }, true);
   var SENARAI_KOD = Object.keys(SENARAI);
 
   function sah(k) { return SENARAI_KOD.indexOf(k) >= 0; }

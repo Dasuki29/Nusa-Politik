@@ -245,6 +245,10 @@
     }
   };
 
+  /* v14.3: audit menyeluruh Fasa 2: tiada G10 / G2 UMNO bagi parti lain. Sayap Bahagian memilih 5 Perwakilan ke perhimpunan sayap sendiri (ANDAIAN 5).
+     PKR: semua anggota Cabang hadir Mesyuarat Agung Tahunan Cabang (Fasal 33.2), jadi tiada wakil sayap; wakil Kongres AMK / Wanita kekal (wakilDewanPA). */
+  ['BERJASA', 'BERSATU', 'WARISAN', 'GAGASAN', 'PBS', 'UPKO', 'LDP', 'PHRS', 'PCS', 'PBB', 'PRS', 'SUPP', 'PDP'].forEach(function (k) { if (STRUKTUR[k]) { STRUKTUR[k].tanpaG10 = true; STRUKTUR[k].g2Kerusi = 5; } });
+  if (STRUKTUR.PKR) { STRUKTUR.PKR.tanpaG10 = true; }
   function untuk(p) { var k = p && p.parti; return k && STRUKTUR[k] ? STRUKTUR[k] : null; }
   /** Entri jadual bagi jawatan d (atau kod) untuk parti pemain; padanan tepat, kemudian corak 'awalan_*'. */
   function entri(p, d) {

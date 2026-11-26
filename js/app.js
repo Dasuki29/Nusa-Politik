@@ -1141,7 +1141,14 @@
     sayap_pau: ['Pemilihan Sayap Pusat', 'Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Pusat, diundi dalam Mesyuarat Perwakilan Sayap Bahagian (Fasal 9.4), laluan sayap sahaja'],
     pusat: ['Pemilihan Pusat', 'Bulan 6 · Presiden, Timbalan Presiden, 3 Naib Presiden dan MKT, diundi oleh perwakilan Mesyuarat Perwakilan Bahagian di 191 Bahagian (Fasal 9.3)']
   };
-  function tajukPeringkat(p, lv) { var Um = W.MyPolitikUMNO; return TAJUK_UMNO[lv] && Um && Um.baharu && Um.baharu(p) ? TAJUK_UMNO[lv] : TAJUK_PERINGKAT[lv]; }
+  function tajukPeringkat(p, lv) {
+    var Um = W.MyPolitikUMNO; if (TAJUK_UMNO[lv] && Um && Um.baharu && Um.baharu(p)) { return TAJUK_UMNO[lv]; }
+    var St = W.MyPolitikStruktur, mz = function (k) { return St && St.mesyuarat ? St.mesyuarat(p, k) : null; };   // v14.3: tanpa G10 / G2 bagi parti selain UMNO
+    if (lv === 'sayap_bahagian' && mz('tanpaG10')) { return ['Pemilihan Sayap Bahagian', 'Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan)' + (mz('g2Kerusi') ? ' dan ' + mz('g2Kerusi') + ' Perwakilan Sayap Bahagian ke Perhimpunan Sayap Pusat' : '')]; }
+    if (lv === 'sayap_bahagian' && mz('g10')) { return ['Pemilihan Sayap Bahagian', 'Bulan 6 · Ketua, Naib Ketua dan AJK Sayap Bahagian (tahun pemilihan) dan ' + mz('g10') + ' Wakil Sayap ke Mesyuarat Perwakilan Bahagian']; }
+    if (lv === 'sayap_pau' && mz('g2Kerusi')) { return ['Pemilihan Sayap Pusat', 'Bulan 9 · Ketua, Naib Ketua dan AJK Sayap Pusat, dipilih dalam Perhimpunan Sayap Pusat, laluan sayap sahaja']; }
+    return TAJUK_PERINGKAT[lv];
+  }
 
   /* ---------- v8.30: bahagian boleh dilipat (keadaan disimpan dalam pelayar, ikut pemain) ---------- */
   function kunciLipat() { var p = S && S.loadPlayer(); return 'nusa_lipat_' + (p && p.id ? p.id : 'x'); }
@@ -1297,7 +1304,7 @@
     ['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'sayap_pau', 'pusat'].forEach(function (lv) {
       var baris = st.pertandingan.filter(function (e) { return e.peringkat === lv; });
       if (!baris.length) { return; }
-      var cLv = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + tajukPeringkat(p, lv)[0] + '</h2><p class="note">' + tajukPeringkat(p, lv)[1] + '. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</p>';
+      var cLv = '<section class="card"><h2 class="card__title" style="margin:0 0 4px">' + tajukPeringkat(p, lv)[0] + '</h2><p class="note"><span>' + tajukPeringkat(p, lv)[1] + '</span><span>. Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.</span></p>';
       baris.forEach(function (e) { cLv += barisPertandingan(e); });
       cLv += '</section>';
       var aktifLv = baris.some(function (e) { return !e.selesai && (e.didaftar || (e.tetingkap && e.tetingkap.status === 'dibuka')); });   // v8.30: hanya peringkat aktif dibuka
