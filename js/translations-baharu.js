@@ -6286,6 +6286,13 @@
   /* v14.3: nota satu jawatan (span berasingan) */
   [". Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.", ". Only one post per level can be held (if both the main and wing posts are won, the higher is kept); delegates are contested together."],
   ["Hanya satu jawatan bagi setiap peringkat boleh dipegang (jika kedua-dua jawatan utama dan sayap dimenangi, yang lebih tinggi dikekalkan); perwakilan dipertandingkan bersama.", "Only one post per level can be held (if both the main and wing posts are won, the higher is kept); delegates are contested together."],
+  /* v14.4: EN mesyuarat sayap ditutup automatik */
+  ["Persidangan Tahunan Sayap Cawangan ditutup secara automatik kerana musim tamat. Persidangan Tahunan {a} Cawangan ditutup. {b} usul lulus, {c} ditolak. Usul dibawa ke Persidangan Tahunan Cawangan: {d}", "The Wing Branch Annual Conference closed automatically because the season ended. The {a} Branch Annual Conference closed. {b} motions passed, {c} rejected. Motion brought to the Branch Annual Conference: {d}"],
+  ["Persidangan Tahunan {a} Cawangan ditutup. {b} usul lulus, {c} ditolak. Usul dibawa ke Persidangan Tahunan Cawangan: {d}", "The {a} Branch Annual Conference closed. {b} motions passed, {c} rejected. Motion brought to the Branch Annual Conference: {d}"],
+  ["Persidangan Tahunan Sayap Cawangan ditutup secara automatik kerana musim tamat. Persidangan Tahunan {a} Cawangan ditutup. {b} usul lulus, {c} ditolak.", "The Wing Branch Annual Conference closed automatically because the season ended. The {a} Branch Annual Conference closed. {b} motions passed, {c} rejected."],
+  /* v14.4: EN jemputan konvensyen sayap AMANAH */
+  ["WARDA AMANAH menjemput anda hadir ke Konvensyen WARDA peringkat negeri dan memohon sokongan logistik.", "WARDA AMANAH invites you to the state-level WARDA Convention and requests logistical support."],
+  ["AWAN AMANAH menjemput anda hadir ke Konvensyen AWAN peringkat pusat dan memohon sokongan logistik.", "AWAN AMANAH invites you to the national-level AWAN Convention and requests logistical support."],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

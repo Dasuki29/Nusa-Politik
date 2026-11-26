@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.4 (2026-11-26)
+
+- **EN: dua baki audit dibetulkan** (pembetulan; tiada perubahan permainan).
+  - PBB (dan semua parti): mesej "Persidangan Tahunan Sayap ... ditutup secara automatik kerana musim tamat. ... Usul dibawa ke ..." kini diterjemah sepenuhnya, termasuk nama mesyuarat ("Wing Ranting Annual Conference").
+  - AMANAH: jemputan "WARDA / AWAN AMANAH menjemput anda hadir ke Konvensyen ... peringkat negeri / pusat" kini diterjemah (sebelum ini "Konvensyen" disalah tafsir sebagai Konvensyen Nasional).
+
 ## v14.3 (2026-11-26)
 
 - **Audit menyeluruh Nusa Politik, Fasa 2** (mockup dipersetujui; ⚠️ bilangan 5 perwakilan sayap dan nama perhimpunan sayap selain PAS / PKR ialah andaian permainan).
