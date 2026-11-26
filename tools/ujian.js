@@ -3689,10 +3689,16 @@ ujian('v14.12 Avatar DAP: set khas (merah, lencana roket), Wanita bertudung seba
 
 ujian('v14.13 Avatar AMANAH: set khas (oren, lencana), AWAN sentiasa bertudung', () => {
   const A = g.MyPolitikAvatar;
-  sama(A.senarai('AMANAH').map((a) => a.kod).join(','), 'pemuda,wanita,biasa,veteran', 'tiada pilihan tanpa tudung');
+  sama(A.senarai('AMANAH').map((a) => a.kod).join(','), 'pemuda,puteri,wanita,biasa,veteran', 'WARDA (v14.14); tiada pilihan tanpa tudung');
   ['pemuda', 'wanita', 'biasa', 'veteran', 'veteran_p'].forEach((k) => { const sv = A.svg(k, { parti: 'AMANAH' }); betul(sv.includes('#F28C28'), k + ': warna AMANAH'); });
   betul(/<path d="M2[01] 4[68] C/.test(A.svg('wanita', { parti: 'AMANAH' })) || A.svg('wanita', { parti: 'AMANAH' }).includes('#C1601A'), 'tudung');
   betul(!A.svg('wanita2', { parti: 'AMANAH' }).includes('#2A1A12'), 'wanita2 -> AWAN bertudung');
+});
+
+ujian('v14.14 Avatar WARDA (AMANAH): kod puteri kekal untuk AMANAH, cadangan wanita muda = WARDA', () => {
+  const A = g.MyPolitikAvatar, sw = A.svg('puteri', { parti: 'AMANAH' }), aw = A.svg('wanita', { parti: 'AMANAH' });
+  betul(sw.includes('#FFA54F') && !sw.includes('#E9729B'), 'WARDA tudung oren cerah'); betul(aw.includes('#C1601A') && aw !== sw, 'AWAN berbeza');
+  sama(A.cadangan('puteri', 'AMANAH'), 'puteri'); sama(A.cadangan('puteri', 'PKR'), 'wanita'); betul(!A.senarai('PKR').some((a) => a.kod === 'puteri'));
 });
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);

@@ -6674,6 +6674,9 @@
   ["AWAN: tudung oren, baju kurung putih", "AWAN: orange headscarf, white baju kurung"],
   ["Lelaki pertengahan umur, baju Melayu putih, samping oren, songkok hitam", "Middle-aged man, white baju Melayu, orange samping, black songkok"],
   ["Lelaki berusia, baju Melayu krim, songkok, janggut pendek uban, berkaca mata", "Older man, cream baju Melayu, songkok, short grey beard, glasses"],
+  /* v14.14 WARDA */
+  ["WARDA: wanita muda, tudung oren cerah, kebaya putih", "WARDA: young woman, light-orange headscarf, white kebaya"],
+  ["AWAN: tudung oren tua, baju kurung putih", "AWAN: dark-orange headscarf, white baju kurung"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

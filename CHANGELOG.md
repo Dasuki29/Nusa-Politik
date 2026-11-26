@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v14.14: Avatar WARDA (AMANAH)
+- Avatar baharu WARDA (sayap wanita muda AMANAH, 35 tahun ke bawah): tudung oren cerah, kebaya putih, lencana AMANAH. Pemain perempuan muda AMANAH dicadangkan avatar ini.
+- AWAN kini berwajah lebih berusia (tudung oren tua, baju kurung putih) supaya berbeza daripada WARDA. Semua avatar wanita AMANAH bertudung.
+
 ## v14.13: Avatar khas AMANAH
 - Set avatar AMANAH dalam warna parti (oren, putih) dengan lencana A: Pemuda AMANAH (baju Melayu oren, songkok), AWAN (tudung oren, baju kurung putih; sentiasa bertudung), induk dewasa (baju Melayu putih, samping oren, songkok), veteran (baju Melayu krim, songkok, janggut uban, berkaca mata), veteran perempuan (tudung oren lembut, baju kurung putih).
 
