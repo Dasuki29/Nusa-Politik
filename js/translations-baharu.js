@@ -6657,6 +6657,12 @@
   ["Kesan: Kekuatan Parti di peta; PRU +1 kerusi Parlimen setiap {a} mata di negeri Lemah/Swing (maks +{b}); negeri anda: undi kerusi dan peluang kerajaan negeri +1% setiap {c} mata.", "Effect: Party Strength on the map; GE +1 parliamentary seat per {a} points in Weak/Swing states (max +{b}); your state: seat vote and state government chance +1% per {c} points."],
   ["{a} di {b}: Kekuatan Parti +{c}, Ahli +{d}.", "{a} in {b}: Party Strength +{c}, Members +{d}."],
   ["{a} di {b}: Kekuatan Parti +{c}.", "{a} in {b}: Party Strength +{c}."],
+  /* v14.11 Avatar PKR */
+  ["AMK: lelaki muda, kemeja-T biru muda berjalur merah, lencana PKR", "AMK: young man, light-blue T-shirt with red stripes, PKR badge"],
+  ["Wanita KEADILAN: tudung biru muda, baju biru tua", "Wanita KEADILAN: light-blue headscarf, dark-blue dress"],
+  ["Wanita KEADILAN: blaus biru muda, rambut paras bahu (tanpa tudung)", "Wanita KEADILAN: light-blue blouse, shoulder-length hair (no headscarf)"],
+  ["Lelaki pertengahan umur, kemeja biru muda, blazer biru tua, tali leher merah", "Middle-aged man, light-blue shirt, dark-blue blazer, red tie"],
+  ["Lelaki berusia, batik biru, berkaca mata", "Older man, blue batik, glasses"],
   ["Restu Pengerusi Kehormat", "Honorary Chairman's Blessing"],
   ["Restu", "Blessing"],
   ["🏛️ Kunjungi Pengerusi Kehormat ({a} AP, {b}, +{c})", "🏛️ Visit the Honorary Chairman ({a} AP, {b}, +{c})"],

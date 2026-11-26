@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v14.11: Avatar khas PKR
+- Set avatar PKR dalam warna parti (biru muda, merah, putih) dengan lencana logo mata: AMK (kemeja-T biru muda berjalur merah), Wanita KEADILAN (tudung biru muda, baju biru tua), induk dewasa (kemeja biru muda, blazer biru tua, tali leher merah), veteran (batik biru, berkaca mata), veteran perempuan (tudung putih, baju kurung biru muda).
+- Pilihan baharu untuk pemain perempuan PKR: Wanita KEADILAN tanpa tudung (blaus biru muda, rambut paras bahu).
+
 ## v14.10: Gerakan Parti Negeri (maklum balas baris 49)
 - Kad baharu 📣 Gerakan Parti Negeri di tab Tindakan: jadual negeri (Kekuatan asas, Gerakan, status Lemah/Swing/Kubu). Jawatan Pusat: semua negeri; Ketua Bahagian: negeri sendiri.
 - 3 program: Jelajah Negeri (3 AP, RM 10,000, +3, bulanan), Buka Cawangan Baharu (RM 20,000, +2 tidak susut, Ahli +150, setahun sekali), Program Komuniti & Media Tempatan (2 AP, RM 5,000, +2, bulanan). Negeri lemah x1.5, had +15 setiap negeri, susut 1 setiap 3 bulan.
