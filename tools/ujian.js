@@ -2525,7 +2525,7 @@ ujian('v13.41 Avatar PAS: kopiah/serban, tudung labuh, tiada songkok; UMNO dan P
   ['pemuda', 'biasa', 'veteran'].forEach((k) => { const s = A.svg(k, { parti: 'PAS' }); betul(!songkok.test(s), k + ' tiada songkok'); betul(/M31\.5 36 Q31 21\.5|M27\.5 38 Q24 17/.test(s), k + ' kopiah/serban'); });
   betul(!/#2F3E5C|#2E6BD6/.test(A.svg('biasa', { parti: 'PAS' }) + A.svg('pemuda', { parti: 'PAS' })), 'tiada blazer / tali leher');
   betul(/#2E7D5B/.test(A.svg('wanita', { parti: 'PAS' })), 'Muslimat tudung labuh hijau'); betul(/#2E5E4E/.test(A.svg('veteran_p', { parti: 'PAS' })), 'Muslimat berusia');
-  betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(/#2E6BD6/.test(A.svg('pemuda', { parti: 'MCA' })), 'MCA kekal set umum');   // v14.11/v14.12: PKR dan DAP kini ada set khas
+  betul(songkok.test(A.svg('pemuda', { parti: 'UMNO' })), 'UMNO kekal songkok'); betul(A.svg('pemuda', { parti: 'MCA' }).includes('#12306E'), 'MCA set khas (v14.15)');   // v14.11/v14.12: PKR dan DAP kini ada set khas
   sama(A.senarai('PAS').length, 4); betul(/kopiah/.test(A.senarai('PAS')[0].penerangan));
 });
 ujian('v13.42 Jemaah Menteri: calon rakan gabungan termasuk Cina / India; calon parti sendiri ikut kaum parti (maklum balas baris 32)', () => {
@@ -3699,6 +3699,18 @@ ujian('v14.14 Avatar WARDA (AMANAH): kod puteri kekal untuk AMANAH, cadangan wan
   const A = g.MyPolitikAvatar, sw = A.svg('puteri', { parti: 'AMANAH' }), aw = A.svg('wanita', { parti: 'AMANAH' });
   betul(sw.includes('#FFA54F') && !sw.includes('#E9729B'), 'WARDA tudung oren cerah'); betul(aw.includes('#C1601A') && aw !== sw, 'AWAN berbeza');
   sama(A.cadangan('puteri', 'AMANAH'), 'puteri'); sama(A.cadangan('puteri', 'PKR'), 'wanita'); betul(!A.senarai('PKR').some((a) => a.kod === 'puteri'));
+});
+
+ujian('v14.15 Avatar khas 18 parti lain: warna logo, lencana logo sebenar, Puteri ikut sayap parti, wanita2 bagi parti berbilang kaum', () => {
+  const A = g.MyPolitikAvatar, K = ['BERSATU', 'BERJASA', 'MCA', 'MIC', 'PPP', 'PBRS', 'PBS', 'UPKO', 'LDP', 'PHRS', 'PCS', 'GAGASAN', 'WARISAN', 'PBB', 'PRS', 'SUPP', 'PDP', 'PSB'];
+  K.forEach((p) => {
+    const l = A.senarai(p), sy = g.MyPolitikParti.info(p).sayap; betul(l.every((a) => a.penerangan && !/undefined/.test(a.penerangan)), p + ' penerangan');
+    sama(l.some((a) => a.kod === 'puteri'), sy.indexOf('puteri') >= 0, p + ' Puteri ikut sayap');
+    l.map((a) => a.kod).concat(['veteran_p']).forEach((k) => { const sv = A.svg(k, { parti: p }); betul(sv.includes(g.MyPolitikParti.info(p).logo) && !/undefined|NaN/.test(sv), p + '/' + k + ' lencana logo'); });
+  });
+  betul(A.senarai('WARISAN').some((a) => a.kod === 'wanita2') && !A.senarai('MCA').some((a) => a.kod === 'wanita2'));
+  sama(A.cadangan('puteri', 'BERSATU'), 'puteri'); sama(A.cadangan('puteri', 'MCA'), 'wanita');
+  betul(/kopiah/.test(A.senarai('BERJASA')[0].penerangan)); betul(/sari/.test(A.senarai('MIC').find((a) => a.kod === 'wanita').penerangan));
 });
 
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);

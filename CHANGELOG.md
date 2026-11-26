@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v14.15: Avatar khas untuk semua parti
+- 18 parti lain kini ada set avatar sendiri (BERSATU, BERJASA, MCA, MIC, PPP, PBRS, PBS, UPKO, LDP, PHRS, PCS, GAGASAN, WARISAN, PBB, PRS, SUPP, PDP, PSB): warna daripada logo parti dan lencana logo sebenar di dada.
+- Gaya ikut ciri parti: Melayu (baju Melayu, songkok; BERJASA kopiah dan serban; tudung), moden (kemeja, blazer, blaus: MCA, PPP, SUPP, LDP), Borneo (motif Sabah/Sarawak, kalung manik) dan MIC (kurta dan selendang, sari bersempadan emas).
+- Avatar Puteri kini dipaparkan bagi parti yang ada sayap Puteri (BERSATU, BERJASA, MIC, PPP, GAGASAN, WARISAN). Parti berbilang kaum bergaya Melayu (PBB, GAGASAN, WARISAN) ada pilihan Wanita tanpa tudung.
+
 ## v14.14: Avatar WARDA (AMANAH)
 - Avatar baharu WARDA (sayap wanita muda AMANAH, 35 tahun ke bawah): tudung oren cerah, kebaya putih, lencana AMANAH. Pemain perempuan muda AMANAH dicadangkan avatar ini.
 - AWAN kini berwajah lebih berusia (tudung oren tua, baju kurung putih) supaya berbeza daripada WARDA. Semua avatar wanita AMANAH bertudung.
