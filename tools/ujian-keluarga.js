@@ -19,6 +19,7 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
     await pg.addInitScript((d) => { if (sessionStorage.getItem('__bekal')) { return; } sessionStorage.setItem('__bekal', '1'); Object.keys(d).forEach((k) => localStorage.setItem(k, d[k])); }, BEKAL);
     await pg.goto(base + '/dashboard.html'); await pg.waitForSelector('#kandungan:not([hidden])');
     await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) {} }); await pg.addStyleTag({ content: sembunyi });
+    await pg.evaluate(() => { try { NusaUI.subProfil('peribadi', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
     for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
     await pg.evaluate(() => NusaUI.gotoTab('profil')); await pg.waitForTimeout(300);
     const kad = await pg.$('.kl-kad'); if (!kad) { gagal.push(n + ': kad Keluarga tiada'); } else {

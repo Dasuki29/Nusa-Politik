@@ -40,6 +40,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
+  await pg.evaluate(() => { try { NusaUI.subProfil('parti', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-mic') >= 0, 'logo MIC pada dashboard');
   semak(await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); return p.parti === 'MIC' && p.sayap === 'putera'; }), 'profil parti MIC, sayap Putera');

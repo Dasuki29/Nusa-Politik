@@ -35,9 +35,11 @@ const PARTI = ['SUPP', 'PDP', 'PSB'].indexOf(process.env.PARTI) >= 0 ? process.e
   await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
+  await pg.evaluate(() => { try { NusaUI.subProfil('parti', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
   semak((await pg.getAttribute('.brand__img', 'src')).indexOf(CFG.logo) >= 0, 'logo PRS pada dashboard');
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(400); }
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
+  await pg.evaluate(() => { try { NusaUI.subProfil('parti', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
   for (const t of ['tindakan', 'profil', 'pemilihan', 'mesyuarat']) { await pg.click('[data-tab="' + t + '"]'); await pg.waitForTimeout(400); }
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(400);
   const pf = await pg.textContent('#panel-profil');

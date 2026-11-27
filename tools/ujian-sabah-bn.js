@@ -37,6 +37,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.waitForTimeout(300); await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
+  await pg.evaluate(() => { try { NusaUI.subProfil('parti', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   semak(await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(); return p.parti === 'MCA' && /Sabah/i.test(p.negeri) && MyPolitikSabahBN.adalah(p) && MyPolitikPRU.getPRU(p).jenisPBB === 'PRN'; }), 'profil MCA Sabah, PRN Sabah');
   await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { ap: 10, myr: 20000 } }); NusaUI.render(); });

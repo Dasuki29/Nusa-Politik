@@ -32,13 +32,14 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.waitForTimeout(300); await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
+  await pg.evaluate(() => { try { NusaUI.subProfil('jawatan', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   await pg.evaluate(() => { MyPolitikSave.applyEffects({}, { kiraTindakan: false, patch: { tahun: 2027, bulan: 1, reputasi: 60,
     pru: Object.assign(MyPolitikPRU.getPRU(MyPolitikSave.loadPlayer()), { status: { jenis: 'MP', kerusi: 'Kangar', sejakTahun: 2026, sejakBulan: 3, kerajaan: true }, statusKedua: { jenis: 'ADUN', kerusi: 'Kuala Perlis', sejakTahun: 2026, sejakBulan: 3, kerajaan: true } }),
     kabinet: Object.assign(MyPolitikKabinet.getKabinet(MyPolitikSave.loadPlayer()), { hasGovernmentRole: true, roleLevel: 'TIMBALAN_MENTERI', portfolioName: 'Timbalan Menteri Pendidikan' }) } }); NusaUI.render(); });
   await pg.click('[data-tab="profil"]'); await pg.waitForTimeout(500);
   const kd = await pg.textContent('#panel-profil').catch(() => '');
-  semak(/Jawatan & Letak Jawatan/.test(kd) && /Wakil rakyat & kerajaan/.test(kd) && /Ahli Parlimen Kangar/.test(kd) && /ADUN Kuala Perlis/.test(kd) && /Timbalan Menteri Pendidikan/.test(kd), 'kad Wakil Rakyat & Kerajaan (' + kd.slice(0, 120) + ')');
+  semak(/Jawatan & Mandat/.test(kd) && /Wakil rakyat & kerajaan/.test(kd) && /Ahli Parlimen Kangar/.test(kd) && /ADUN Kuala Perlis/.test(kd) && /Timbalan Menteri Pendidikan/.test(kd), 'kad Wakil Rakyat & Kerajaan (' + kd.slice(0, 120) + ')');
   semak(await pg.$$eval('.letak-kad [data-letak]', (l) => l.length) === 3, '3 butang Letak Jawatan');
   if (process.env.SKRIN) { await (await pg.$('.letak-kad')).screenshot({ path: process.env.SKRIN }).catch(() => {}); }
   await pg.click('.letak-kad [data-letak="MP"]'); await pg.waitForTimeout(400);

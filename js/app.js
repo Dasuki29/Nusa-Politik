@@ -1300,14 +1300,76 @@
     return h + '</section>';
   }
 
+  /* v14.20: tab Profil disusun semula (audit 9 peringkat + 6 parti, mockup dipersetujui).
+     Sub-tab: Ringkasan (jubin identiti) · Jawatan · Parti · Peribadi · Pencapaian · Kerjaya.
+     Semua sub-tab dirender (yang tidak aktif disembunyikan) supaya pautan dan ujian sedia ada kekal. */
+  var SUB_PROFIL = ['ringkasan', 'jawatan', 'parti', 'peribadi', 'pencapaian', 'kerjaya'];
+  function subProfil(id) { if (id) { simpanLipat('_subProfil', id); state.subProfil = id; state.subProfilManual = true; render(); } return state.subProfil || bacaLipat()._subProfil || 'ringkasan'; }
+  function buangBalut(html) { return String(html || '').replace(/^\s*<section[^>]*>/, '').replace(/<h2 class="card__title"[^>]*>[\s\S]*?<\/h2>/, '').replace(/<\/section>\s*$/, ''); }
+  /** Jawatan & Mandat + Jawatan & Letak Jawatan digabung dalam satu kad. */
+  function kadJawatanGabung(p) {
+    if (!J) { return ''; }
+    var lk = W.MyPolitikLetakUI ? W.MyPolitikLetakUI.kad(p) : '', pc = J.perwakilanSah(p, 'cawangan'), pb = J.perwakilanSah(p, 'bahagian'), senarai = J.ringkas(p);
+    function mandat(nama, x) {
+      var teks = x.sah ? 'Sah tahun ' + p.tahun + ' sahaja' : x.exOfficio ? 'Automatik (' + esc(x.sumberExOfficio) + ')' : x.luput ? 'Luput (tahun ' + x.tahun + ')' : 'Belum ada';
+      return '<div class="kv"><span>' + esc(nama) + '</span><b class="' + (x.layak ? 'text-gold' : '') + '">' + teks + '</b></div>';
+    }
+    var h = '<section class="card pf-jawatan"><h2 class="card__title" style="margin:0 0 4px">🏛️ Jawatan &amp; Mandat</h2>';
+    if (lk) { h += '<div class="letak-kad">' + buangBalut(lk) + '</div>'; }
+    else { h += senarai.length ? '<div class="btn-group" style="flex-wrap:wrap;margin-bottom:10px">' + senarai.map(function (j) { return '<span class="badge-office badge-office--' + kelasLencana(j.jawatan) + '">' + esc(j.jawatan) + ' &middot; ' + esc(j.label) + '</span>'; }).join('') + '</div>' : '<p class="empty">Belum memegang sebarang jawatan.</p>'; }
+    h += '<h3 class="letak-h">Mandat perwakilan</h3>' + mandat('Perwakilan Cawangan ke Bahagian', pc) + mandat('Perwakilan Bahagian ke PAU', pb);
+    h += '<details class="pf-info"><summary>ⓘ Peraturan jawatan</summary><p class="note">Anda boleh memegang jawatan di <b>peringkat berbeza</b> serentak (Cawangan + Bahagian + Pusat), tetapi hanya <b>satu jawatan bagi setiap peringkat</b>. Setiap jawatan menambah Stress bulanan; terlalu banyak jawatan mencetus cemburu dan sabotaj akar umbi. ' +
+      (J.sayapPemain(p) ? 'Laluan anda: <b>Sayap ' + esc(J.NAMA_SAYAP[J.sayapPemain(p)]) + '</b>.' : 'Laluan anda: <b>Utama / Induk</b>, jadi jawatan sayap tidak dibuka.') + '</p><p class="note">Mandat perwakilan hanya sah untuk tahun berjalan. Setiap tahun baharu, bertanding semula di Cawangan (bulan 4-5).</p></details>';
+    return h + '</section>';
+  }
+  /** Jubin ringkasan identiti (setiap jubin membuka sub-tab berkaitan). */
+  function jubinProfil(p) {
+    var t = [];
+    function jb(sub, k, b, s, bar, cls) { t.push('<button type="button" class="pf-jubin' + (cls ? ' ' + cls : '') + '" data-act="pf-sub" data-v="' + sub + '"><span class="pf-jubin__k">' + k + '</span><b>' + esc(b) + '</b>' + (s ? '<small>' + esc(s) + '</small>' : '') + (bar != null ? '<span class="pf-jubin__bar"><i style="width:' + clamp(bar, 0, 100) + '%"></i></span>' : '') + '</button>'); }
+    try {
+      var sen = J ? J.ringkas(p) : [], sy = J && J.sayapPemain(p);
+      jb('jawatan', 'Jawatan parti', p.jawatan || 'Ahli Biasa', sen.length > 1 ? 'Memegang ' + sen.length + ' jawatan' : (sy ? 'Laluan sayap ' + J.NAMA_SAYAP[sy] : 'Laluan Utama / Induk'));
+      var PR = W.MyPolitikPRU, st = PR && PR.semuaStatus ? PR.semuaStatus(p) : [];
+      if (st.length) { jb('jawatan', 'Wakil rakyat', st.map(function (s) { return (s.jenis === 'ADUN' ? 'ADUN ' : 'MP ') + (s.kerusi || ''); }).join(' + '), (st[0].kerajaan ? 'kerajaan' : 'pembangkang') + ' · sejak ' + (st[0].sejakTahun || p.tahun)); }
+      var KB = W.MyPolitikKabinet, kr = KB && KB.ringkasan ? KB.ringkasan(p) : null;
+      if (kr && kr.hasGovernmentRole) { jb('jawatan', 'Kerajaan', kr.portfolioName || kr.tahapNama || '', kr.tahapNama || ''); }
+      else if (st.length) { var mb = KB && KB.semakMB ? KB.semakMB(p) : null; jb('jawatan', 'Kerajaan', 'Tiada jawatan', mb && mb.item ? mb.label + ': ' + mb.item.filter(function (x) { return x.ok; }).length + '/' + mb.item.length + ' syarat' : ''); }
+      if (ET) { var r = ET.ringkasan(p); jb('parti', 'Modal Sosial', r.modal + '%', 'Risiko disiplin ' + r.labelRisiko + ' · ' + r.salah + ' hukuman', r.modal); jb('parti', 'Keahlian', Math.floor(r.bulanKeahlian / 12) + ' tahun ' + (r.bulanKeahlian % 12) + ' bulan', E && E.getKitaran ? 'Pemilihan seterusnya ' + E.getKitaran(p.tahun).pemilihanBerikutnya : ''); }
+      var LT = W.MyPolitikLetak, bb = LT && LT.bebanSebulan ? LT.bebanSebulan(p) : 0;
+      if (bb) { jb('jawatan', 'Stress jawatan', 'Beban +' + bb + ' sebulan', sen.length + ' jawatan parti, ' + st.length + ' kerusi', bb * 4, 'is-w'); }
+      var PD = W.MyPolitikPendidikan, pd = PD && PD.ringkasan ? PD.ringkasan(p) : null;
+      if (pd) { jb('peribadi', 'Pendidikan', pd.nama, pd.belajar ? 'Sedang belajar: ' + pd.belajar.nama : (pd.bonusLobi ? 'Lobi portfolio +' + pd.bonusLobi + '%' : '')); }
+      var KL = W.MyPolitikKeluarga;
+      if (KL && !p.tamat) { var kk = KL.keadaan(p); jb('peribadi', 'Keluarga', kk.pasangan ? 'Berkahwin' : 'Bujang', kk.pasangan ? 'Bilangan anak: ' + kk.anak.length : (kk.kahwin.boleh ? 'Boleh berkahwin' : '')); }
+      var HT = W.MyPolitikHarta, hr = HT && HT.ringkasan ? HT.ringkasan(p) : null;
+      if (hr) { jb('peribadi', 'Harta bersih', 'RM ' + fmt(hr.bersih), 'Tunai RM ' + fmt(hr.tunai) + ' · aset RM ' + fmt(hr.nilaiAset), null, hr.menunggu ? 'is-w' : ''); }
+    } catch (e) { /* abaikan */ }
+    var gaya = '';
+    try { if (WK) { var w = WK.tentukan(p); gaya = '<button type="button" class="pf-gaya" data-act="pf-sub" data-v="peribadi"><b>🎯 Gaya Kepimpinan: ' + esc(w.nama) + '</b><small>' + esc(w.huraian) + '</small></button>'; } } catch (e2) { /* abaikan */ }
+    return '<div class="pf-jubin-grid">' + t.join('') + '</div>' + gaya;
+  }
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    return lipatKad('pf-jawatan', kadJawatan(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikBERJASAUI ? lipatKad('pf-berjasa', W.MyPolitikBERJASAUI.kad(p), { buka: true }) : '') + (W.MyPolitikGRSUI ? lipatKad('pf-grs', W.MyPolitikGRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikWarisanUI ? lipatKad('pf-warisan', W.MyPolitikWarisanUI.kad(p), { buka: true }) : '') + (W.MyPolitikAmanahUI ? lipatKad('pf-amanah', W.MyPolitikAmanahUI.kad(p), { buka: true }) : '') + (W.MyPolitikBersatuUI ? lipatKad('pf-bersatu', W.MyPolitikBersatuUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikDAPUI ? lipatKad('pf-dap', W.MyPolitikDAPUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') + lipatKad('pf-etika', kadEtika(p), { buka: true }) +
-      (W.MyPolitikPendidikanUI ? lipatKad('pf-pendidikan', W.MyPolitikPendidikanUI.kad(p), { buka: true }) : '') +   // v13.13: Pendidikan
-      (W.MyPolitikLetakUI ? lipatKad('pf-letak', W.MyPolitikLetakUI.kad(p), { buka: true }) : '') +   // v13.12: Letak Jawatan
-      (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p)) : '') + (W.MyPolitikLompatUI ? lipatKad('pf-lompat', W.MyPolitikLompatUI.kad(p)) : '') + (W.MyPolitikTYTUI ? lipatKad('pf-tyt', W.MyPolitikTYTUI.kad(p), { buka: true }) : '') + (W.MyPolitikSelepasUI ? lipatKad('pf-selepas', W.MyPolitikSelepasUI.kad(p), { buka: true }) : '') + (W.NusaPRU_UI && W.NusaPRU_UI.kadProfil ? lipatKad('pf-kerajaan-info', W.NusaPRU_UI.kadProfil(p), { buka: true }) : '') + (W.MyPolitikKeluargaUI ? lipatKad('pf-keluarga', W.MyPolitikKeluargaUI.kad(p), { buka: true }) + lipatKad('pf-dinasti', W.MyPolitikKeluargaUI.pokok(p), { buka: true }) : '') + lipatKad('pf-gaya', kadWatak(p)) +   // v13.51: Lompat Parti
-      (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { lencana: hm ? '!' : '' }) : '') +
-      (W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { lencana: nb ? String(nb) : '' }) : '');
+    var sJawatan = lipatKad('pf-jawatan', kadJawatanGabung(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) +
+      (W.NusaPRU_UI && W.NusaPRU_UI.kadProfil ? W.NusaPRU_UI.kadProfil(p) : '');
+    var sParti = lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikBERJASAUI ? lipatKad('pf-berjasa', W.MyPolitikBERJASAUI.kad(p), { buka: true }) : '') + (W.MyPolitikGRSUI ? lipatKad('pf-grs', W.MyPolitikGRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikWarisanUI ? lipatKad('pf-warisan', W.MyPolitikWarisanUI.kad(p), { buka: true }) : '') + (W.MyPolitikAmanahUI ? lipatKad('pf-amanah', W.MyPolitikAmanahUI.kad(p), { buka: true }) : '') + (W.MyPolitikBersatuUI ? lipatKad('pf-bersatu', W.MyPolitikBersatuUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikDAPUI ? lipatKad('pf-dap', W.MyPolitikDAPUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') +
+      lipatKad('pf-etika', kadEtika(p), { buka: true });
+    var sPeribadi = (W.MyPolitikPendidikanUI ? lipatKad('pf-pendidikan', W.MyPolitikPendidikanUI.kad(p), { buka: true }) : '') + (W.MyPolitikKeluargaUI ? lipatKad('pf-keluarga', W.MyPolitikKeluargaUI.kad(p), { buka: true }) + lipatKad('pf-dinasti', W.MyPolitikKeluargaUI.pokok(p), { buka: true }) : '') +
+      (W.NusaHarta_UI ? lipat('pf-harta', '<span>💰 Harta</span>', W.NusaHarta_UI.panel(p), { buka: true, lencana: hm ? '!' : '' }) : '') + lipatKad('pf-gaya', kadWatak(p));
+    var sPencapaian = W.NusaPencapaian_UI ? lipat('pf-pencapaian', '<span>🏆 Pencapaian</span>', W.NusaPencapaian_UI.panel(p), { buka: true, lencana: nb ? String(nb) : '' }) : '';
+    var kTYT = W.MyPolitikTYTUI ? W.MyPolitikTYTUI.kad(p) : '', kSel = W.MyPolitikSelepasUI ? W.MyPolitikSelepasUI.kad(p) : '';
+    var sKerjaya = (kTYT ? lipatKad('pf-tyt', kTYT, { buka: true }) : '') + (kSel ? lipatKad('pf-selepas', kSel, { buka: true }) : '') + (W.NusaPindah_UI ? lipatKad('pf-pindah', W.NusaPindah_UI.kad(p), { buka: true }) : '') + (W.MyPolitikLompatUI ? lipatKad('pf-lompat', W.MyPolitikLompatUI.kad(p), { buka: true }) : '');
+    var segera = !!(kSel || (p.tyt && p.tyt.tawaran));
+    var isi = { ringkasan: jubinProfil(p), jawatan: sJawatan, parti: sParti, peribadi: sPeribadi, pencapaian: sPencapaian, kerjaya: sKerjaya };
+    var PTn = W.MyPolitikParti && W.MyPolitikParti.jenama ? W.MyPolitikParti.jenama(p.parti) : null;
+    var LBL = { ringkasan: '👤 Ringkasan', jawatan: '🏛️ Jawatan', parti: '🗳️ ' + esc((PTn && PTn.pendek) || p.parti || 'Parti'), peribadi: '👪 Peribadi', pencapaian: '🏆 Pencapaian', kerjaya: '🔀 Kerjaya' };
+    var bil = { pencapaian: nb ? String(nb) : '', peribadi: hm ? '!' : '', kerjaya: segera ? '!' : '' };
+    var aktif = subProfil(); if (segera && !state.subProfilManual) { aktif = 'kerjaya'; } if (!isi[aktif]) { aktif = 'ringkasan'; }
+    var h = '<div class="tn-seg" role="tablist" aria-label="Bahagian profil">' + SUB_PROFIL.filter(function (k) { return isi[k]; }).map(function (k) {
+      return '<button type="button" role="tab" class="tn-seg__b' + (k === aktif ? ' is-on' : '') + '" aria-selected="' + (k === aktif) + '" data-act="pf-sub" data-v="' + k + '">' + LBL[k] + (bil[k] ? '<i>' + bil[k] + '</i>' : '') + '</button>';
+    }).join('') + '</div>';
+    SUB_PROFIL.forEach(function (k) { if (isi[k]) { h += '<div class="tn-pane" data-sub="' + k + '" role="tabpanel"' + (k === aktif ? '' : ' hidden') + '>' + isi[k] + '</div>'; } });
+    return h;
   }
 
   function panelPemilihan(p) {
@@ -1960,7 +2022,8 @@
     else if (act.indexOf('kawasan-') === 0) { var KWm = W.MyPolitikKawasan, kid = t.getAttribute('data-id'); var kp = act === 'kawasan-selesai' ? KWm.selesaikan(kid) : act === 'kawasan-dana' ? KWm.danaKeluhan(kid) : act === 'kawasan-usul' ? KWm.usul(kid) : act === 'kawasan-abai' ? KWm.abai(kid) : KWm.aktiviti(kid); render(); toast(kp.ok ? kp.mesej : kp.ralat, kp.ok ? 'ok' : 'ralat'); }
     else if (act.indexOf('harta-') === 0) { if (W.NusaHarta_UI) { W.NusaHarta_UI.aksi(act, t); } }
     else if (act === 'ke-tab') { setTab(t.getAttribute('data-v')); }
-    else if (act === 'tn-sub') { subTindakan(t.getAttribute('data-v')); }   // v14.19: sub-tab Tindakan
+    else if (act === 'tn-sub') { subTindakan(t.getAttribute('data-v')); }
+    else if (act === 'pf-sub') { subProfil(t.getAttribute('data-v')); }   // v14.20: sub-tab Profil   // v14.19: sub-tab Tindakan
     else if (act === 'ulang-peta') { muatPeta(true); }
     else if (act === 'daftar') { operasiPemilihan(function () { return E.daftarBertanding(kod); }); }
     else if (act === 'tarik') { operasiPemilihan(function () { return E.tarikBalik(kod); }); }
@@ -2210,6 +2273,6 @@
       else if (lama && (Number(p.bulan) || 1) >= 3) { sessionStorage.setItem('nusa_ingat_simpan', '1'); toast('Simpanan hanya dalam pelayar ini. Eksport sandaran di Menu, bahagian Pindah Career.', 'ok'); }
     } catch (e) { /* abaikan */ }
   }
-  W.NusaUI = { modal: modal, toast: toast, render: render, esc: esc, fmt: fmt, lapor: urusPeristiwa, gotoTab: setTab, subTindakan: function (id, kekal) { var r = subTindakan(id); if (!kekal && state.tab !== 'tindakan') { setTab('tindakan'); } return r; } };   // v14.19   // v7.3: dikongsi dengan js/pru-ui.js
+  W.NusaUI = { modal: modal, toast: toast, render: render, esc: esc, fmt: fmt, lapor: urusPeristiwa, gotoTab: setTab, subProfil: function (id, kekal) { var r = subProfil(id); if (!kekal && state.tab !== 'profil') { setTab('profil'); } return r; }, subTindakan: function (id, kekal) { var r = subTindakan(id); if (!kekal && state.tab !== 'tindakan') { setTab('tindakan'); } return r; } };   // v14.19   // v7.3: dikongsi dengan js/pru-ui.js
   mula();
 })();

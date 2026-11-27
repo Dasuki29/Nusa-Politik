@@ -14,6 +14,7 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
     await pg.addInitScript((d) => { if (sessionStorage.getItem('__bekal')) { return; } sessionStorage.setItem('__bekal', '1'); Object.keys(d).forEach((k) => localStorage.setItem(k, d[k])); }, BEKAL);
     await pg.goto(base + '/dashboard.html'); await pg.waitForSelector('#kandungan:not([hidden])');
     await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) {} }); await pg.addStyleTag({ content: '.tut-kad,.tut-blok,.tut-sorot,.tut-fab,#mpa-bar,.toast-stack{display:none!important}' });
+    await pg.evaluate(() => { try { NusaUI.subProfil('kerjaya', true); } catch (e) { /* v14.20: sub-tab Profil */ } });
     for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
     await pg.evaluate(() => NusaUI.gotoTab('profil')); await pg.waitForTimeout(500);
     await pg.evaluate(() => { const d = document.querySelector('.lp-kad'); const det = d && d.closest('details'); if (det) { det.open = true; } });

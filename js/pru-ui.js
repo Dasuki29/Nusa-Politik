@@ -305,7 +305,10 @@
     return o;
   }
   /** v14.19: kad maklumat (syarat Menteri Besar, tiada lobi) untuk tab Profil. */
-  function kadProfil(p) { try { return kadSemakMB(p) + (KB && !KB.ringkasan(p).hasGovernmentRole && !KB.ringkasan(p).lobi ? kadTiadaLobi(p) : ''); } catch (e) { return ''; } }
+  function kadProfil(p) {
+    function lip(html, buka) { if (!html) { return ''; } var m = /<h2 class="card__title"[^>]*>([\s\S]*?)<\/h2>/.exec(html); return '<details class="card pf-info"' + (buka ? ' open' : '') + '><summary>' + (m ? m[1] : '') + '</summary>' + html.replace(m ? m[0] : '', '').replace(/^\s*<section[^>]*>/, '').replace(/<\/section>\s*$/, '') + '</details>'; }
+    try { return lip(kadSemakMB(p), true) + (KB && !KB.ringkasan(p).hasGovernmentRole && !KB.ringkasan(p).lobi ? lip(kadTiadaLobi(p), false) : ''); } catch (e) { return ''; }
+  }
   function bannerNasional(p) {      // v7.22: keputusan nasional menunggu Presiden (cth. pemain memuat semula halaman)
     return PRU.nasionalTertunggak(p) ? '<div class="banner banner--gold"><strong>🗳️ Keputusan nasional menunggu</strong>Anda Presiden parti: tentukan pembentukan kerajaan. <button type="button" class="btn btn--sm btn--gold" data-pru="nasional">Lihat Keputusan Nasional</button></div>' : '';
   }

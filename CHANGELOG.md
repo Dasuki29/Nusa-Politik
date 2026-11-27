@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v14.20 — Tab Profil disusun semula (audit, mockup dipersetujui)
+
+- **Sub-tab:** 👤 Ringkasan · 🏛️ Jawatan · 🗳️ Parti · 👪 Peribadi · 🏆 Pencapaian · 🔀 Kerjaya. Sub-tab terakhir diingat; lencana untuk pencapaian baharu, harta menunggu dan tawaran Selepas Politik / Istana (sub-tab Kerjaya dibuka terus).
+- **Ringkasan:** jubin identiti boleh diklik (jawatan parti, wakil rakyat, kerajaan, Modal Sosial, keahlian, Stress jawatan, pendidikan, keluarga, harta bersih) dan Gaya Kepimpinan ringkas.
+- **Jawatan:** kad "Jawatan & Mandat Anda" dan "Jawatan & Letak Jawatan" digabung menjadi 🏛️ Jawatan & Mandat; peraturan dilipat di bawah ⓘ. Syarat Menteri Besar dan nota lobi kini satu kad lipat setiap satu (pembetulan tajuk berganda v14.19).
+- **Parti:** kad parti (pemilihan, jelajah, lantikan) dan Tataetika. **Peribadi:** Pendidikan, Keluarga, Pokok Dinasti, Harta, Gaya Kepimpinan. **Kerjaya:** TYT, Selepas Politik, Pindah, Lompat Parti.
+- Hasil simulasi (desktop, paparan pertama): ADUN 3,277 px → 410 px; DAP 3,481 px → sekitar 410 px; Ahli Biasa 2,396 px → 323 px.
+
 ## v14.19 — Tab Tindakan disusun semula (audit 9 peringkat, mockup dipersetujui)
 
 - **Jalur ringkas** di atas: baki AP dan cip amaran (keluhan kawasan, Akar Umbi rendah, Musim Akar Umbi, kelayakan bertanding).
