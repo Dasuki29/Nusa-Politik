@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v14.22 — 🏛️ Dewan Negara Fasa 2 (mockup dipersetujui)
+
+- **Tawaran Senator-Menteri selepas PRU:** pemimpin Pusat (Naib Presiden ke atas, atau Ketua Sayap Pusat) parti kerajaan yang tidak memegang kerusi Parlimen berpeluang ditawarkan Senator + jawatan kerajaan (Naib Presiden 50%, Timbalan Presiden 80%: Timbalan Menteri; Presiden 100%: Menteri). Tolak = Reputasi +1. Kad di tab Tindakan (keputusan menunggu), luput selepas 2 bulan.
+- **Lobi Portfolio Senator:** Senator parti kerajaan boleh membuka Lobi Portfolio Kerajaan sekali setiap penggal (1 percubaan, peluang −10%).
+- **Menteri yang juga Senator:** tab Dewan memaparkan portfolio; tugas "Jawab soalan Senator" (KPI +3) dan "Bentang RUU kementerian di Dewan Negara" (KPI +4, atau −2 jika ditangguh). Jawatan kerajaan tamat bersama kerusi Senat; jika menjadi Ahli Parlimen, jawatan kekal.
+- **PM pemain:** calon 🎓 teknokrat (dilantik Senator) dalam Bentuk Jemaah Menteri, maksimum 4, kecekapan tinggi, Sokongan perwakilan −2 setiap seorang. Kad Kuota Senator Lantikan (Tindakan › Kerajaan) setiap Januari dan Julai: 4 kerusi untuk parti (perwakilan +2), rakan gabungan (hubungan +3) atau tokoh / NGO (Reputasi +1); tidak diagih = parti sendiri tanpa bonus.
+- **Komposisi Dewan Negara dinamik:** pertukaran kerajaan membalikkan komposisi (kerajaan baharu bermula 29/70); kekosongan Januari dan Julai menambah kerusi kerajaan. Tanpa majoriti (36), RUU kerajaan yang lulus di Dewan Rakyat berpeluang 30% ditangguh (Tadbir Urus separuh).
+- Ujian unit baharu, ujian pelayar Dewan Negara diperluas, kunci EN baharu.
+
 ## v14.21 — 🏛️ Dewan Negara Fasa 1 (mockup dipersetujui)
 
 - **Senator untuk semua parti.** Syarat: umur 30+ (Perkara 47), bukan Ahli Parlimen (Perkara 49), Ketua Bahagian / jawatan Pusat / Ketua Sayap, Integriti 50+, maksimum 2 penggal (Perkara 45).

@@ -1244,3 +1244,11 @@ details.pf-info > summary { font-weight: 700; cursor: pointer; }
 .sn-o { flex: 1; min-width: 150px; text-align: left; border: 2px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: .74rem; background: #FFF9E3; color: #111; cursor: pointer; }
 .sn-o b { display: block; font-size: .8rem; }
 .sn-o.is-r { background: #FFE1E1; }
+
+/* v14.22: Dewan Negara Fasa 2 */
+.sn-q { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1.5px dashed var(--border); padding: 6px 0; font-size: .85rem; }
+.sn-q small { display: block; color: var(--text-muted); font-size: .76rem; }
+.sn-st { display: flex; align-items: center; gap: 4px; }
+.sn-st span { min-width: 28px; text-align: center; font-weight: 800; border: 2px solid var(--border); border-radius: 6px; padding: 2px 6px; background: #fff; color: #111; }
+.sn-amaran { background: #FFE1E1; color: #111; border: 2px solid #E8344F; border-radius: var(--radius); padding: 8px 10px; font-size: .8rem; margin-top: 8px; }
+.jm-tag--teknokrat { background: #E3D7FF; }   /* v14.22 */

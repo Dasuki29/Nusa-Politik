@@ -262,6 +262,7 @@
       d.laras = clamp((Number(d.laras) || 0) + CONFIG.LULUS.kestabilan, -60, 60);
       mesej = u.tajuk + ' LULUS (' + sokong + ' sokong, ' + bantah + ' bantah). IP +' + CONFIG.LULUS.ip + ', Tadbir Urus +' + CONFIG.LULUS.rating + '%.';
       kes = { rating: CONFIG.LULUS.rating };
+      var SNd = root.MyPolitikSenat; if (SNd && SNd.tangguhRUU && SNd.tangguhRUU(p, r)) { kes.rating = Math.round(CONFIG.LULUS.rating / 2); mesej += ' Dewan Negara (kerajaan tanpa majoriti Senat) menangguhkan ' + (bajetJenis ? 'Bajet ini 1 bulan' : 'RUU ini 1 tahun') + ' (Perkara 68): Tadbir Urus hanya +' + kes.rating + '%.'; }   // v14.22
     } else {
       var g = bajetJenis ? CONFIG.GAGAL_BAJET : CONFIG.GAGAL;
       d.laras = clamp((Number(d.laras) || 0) + g.kestabilan, -60, 60);

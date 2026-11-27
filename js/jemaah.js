@@ -46,9 +46,10 @@
     TEKANAN: { tinggi: -2, sederhana: 0, rendah: 2 }, SETIA_TINGGI: 60, SETIA_SEDERHANA: 45,
     PENCABAR_KURANG: 0.15, ROMBAK_AP: 3, BIL_PENCABAR: 2,
     ETNIK_RAKAN: { melayu: 0.4, cina: 0.4, india: 0.2 },
-    TPM_TRADISI: 10, TPM_LANGKAU: 15, TPM_PENCABAR: 0.10, TPM_HUB_RAKAN: 8, TPM_HUB_BORNEO: 5, PEMIMPIN_TERTINGGAL: 3   // v13.46: andaian (mockup baris 25)
+    TPM_TRADISI: 10, TPM_LANGKAU: 15, TPM_PENCABAR: 0.10, TPM_HUB_RAKAN: 8, TPM_HUB_BORNEO: 5, PEMIMPIN_TERTINGGAL: 3,   // v13.46: andaian (mockup baris 25)
+    TEKNOKRAT_MAKS: 4, TEKNOKRAT_PERWAKILAN: 2   // v14.22: teknokrat dilantik Senator (kesetiaan perwakilan -2 setiap seorang)
   };
-  var JENIS_LABEL = { anda: 'Parti anda', rakan: 'Rakan gabungan', borneo: 'Sabah/Sarawak' };
+  var JENIS_LABEL = { anda: 'Parti anda', rakan: 'Rakan gabungan', borneo: 'Sabah/Sarawak', teknokrat: '🎓 Teknokrat · Senator baharu' };
 
   function kab(p) { var K = KB(); return K && K.getKabinet ? K.getKabinet(p) : (p.kabinet || {}); }
   function adalahPM(p) { return !!p && kab(p).roleLevel === 'PERDANA_MENTERI'; }
@@ -110,9 +111,11 @@
     }
     var tpmR = { id: 't:r', nama: nama(rng, 'rakan', true).replace(/^Dato' /, "Dato' Sri "), jawatan: 'Presiden parti rakan', jenis: 'rakan', kat: 'ketua_rakan', kecekapan: antara(rng, 65, 85), kesetiaan: antara(rng, 45, 65), pencabar: false };
     var tpmB = { id: 't:b', nama: nama(rng, 'borneo', true), jawatan: 'Ketua rakan Sabah/Sarawak', jenis: 'borneo', kat: 'ketua_borneo', kecekapan: antara(rng, 60, 80), kesetiaan: antara(rng, 45, 65), pencabar: false };
-    return { parti: parti, rakan: rakan, borneo: borneo, tpm: [tpmR, tpmB] };
+    var rt = rngUntuk(p, 'tekno|' + garamCalon(p)), LATAR = ['Bekas Ketua Ekonomi Bank', 'Bekas CEO GLC', 'Profesor universiti awam', 'Bekas Ketua Setiausaha', 'Pakar kesihatan awam', 'Bekas diplomat kanan', 'Tokoh korporat', 'Bekas Ketua Hakim Mahkamah'], tekno = [];   // v14.22
+    for (var t = 0; t < CONFIG.UTAMA.length; t++) { tekno.push({ id: 'k:' + t, nama: nama(rt, 'rakan', true), jawatan: LATAR[t % LATAR.length], jenis: 'teknokrat', kat: 'teknokrat', kecekapan: antara(rt, 78, 95), kesetiaan: antara(rt, 30, 50), pencabar: false }); }
+    return { parti: parti, rakan: rakan, borneo: borneo, tpm: [tpmR, tpmB], teknokrat: tekno };
   }
-  function semuaCalon(k) { return k.parti.concat(k.rakan, k.borneo, k.tpm); }
+  function semuaCalon(k) { return k.parti.concat(k.rakan, k.borneo, k.tpm, k.teknokrat || []); }
   function cariCalon(k, id) { return semuaCalon(k).filter(function (x) { return x.id === id; })[0] || null; }
   /** Calon TPM: Timbalan Presiden, Naib Presiden paling cekap, ketua parti rakan, ketua rakan Borneo. */
   function calonTPM(p, k) {
@@ -128,6 +131,7 @@
     return CONFIG.UTAMA.map(function (portfolio, i) {
       var c = [parti[i % Math.max(1, parti.length)] || k.parti[0], k.rakan[i], k.borneo[i]];
       for (var m = c.length - 1; m > 0; m--) { var t = Math.floor(rng() * (m + 1)), x = c[m]; c[m] = c[t]; c[t] = x; }   // susunan rawak tetap
+      if (k.teknokrat && k.teknokrat[i]) { c.push(k.teknokrat[i]); }   // v14.22: calon teknokrat (dilantik Senator) sentiasa di hujung
       return { portfolio: portfolio, calon: c };
     });
   }
@@ -161,7 +165,8 @@
     var npDalam = k.parti.filter(function (x) { return x.kat === 'np' && ids.indexOf(x.id) >= 0; }).length, npJumlah = k.parti.filter(function (x) { return x.kat === 'np'; }).length;
     var adjSetia = pl.lama ? 0 : (tpTPM ? CONFIG.TPM_TRADISI : tpLangkau ? -CONFIG.TPM_LANGKAU : 0) - tertinggal.length * CONFIG.PEMIMPIN_TERTINGGAL;
     if (semua.length) { set = clamp(set + adjSetia, 0, 100); }
-    var rakan = dipilih.filter(function (c) { return c.jenis !== 'anda'; }).length, borneo = dipilih.filter(function (c) { return c.jenis === 'borneo'; }).length + (tpm && tpm.jenis === 'borneo' ? 1 : 0);
+    var tekno = semua.filter(function (c) { return c.jenis === 'teknokrat'; }).length;   // v14.22
+    var rakan = dipilih.filter(function (c) { return c.jenis === 'rakan' || c.jenis === 'borneo'; }).length, borneo = dipilih.filter(function (c) { return c.jenis === 'borneo'; }).length + (tpm && tpm.jenis === 'borneo' ? 1 : 0);
     var tekanan = set >= CONFIG.SETIA_TINGGI ? CONFIG.TEKANAN.tinggi : set >= CONFIG.SETIA_SEDERHANA ? CONFIG.TEKANAN.sederhana : CONFIG.TEKANAN.rendah;
     var penaltiHub = Math.max(0, CONFIG.KUOTA_RAKAN - rakan) * CONFIG.PENALTI_RAKAN + (borneo < CONFIG.KUOTA_BORNEO ? CONFIG.PENALTI_BORNEO : 0);
     var bonusHub = tpm && tpm.kat === 'ketua_rakan' ? CONFIG.TPM_HUB_RAKAN : tpm && tpm.kat === 'ketua_borneo' ? CONFIG.TPM_HUB_BORNEO : 0;
@@ -170,7 +175,7 @@
       tadbir: bulat(CONFIG.TADBIR_ASAS + (semua.length ? cek : 0) * CONFIG.TADBIR_FAKTOR), tekananBulanan: tekanan, penaltiHubungan: penaltiHub, bonusHubungan: bonusHub,
       pencabar: semua.filter(function (c) { return c.pencabar; }).length, tpm: tpm, tp: tp, tpTPM: tpTPM, tpLangkau: tpLangkau, npDalam: npDalam, npJumlah: npJumlah,
       tertinggal: tertinggal.map(function (x) { return x.jawatan; }), pencabarTiada: pencabarTiada.map(function (x) { return x.jawatan; }),
-      duplikat: dup.map(function (id) { var c = cariCalon(k, id); return c ? c.nama : id; }), pilih: pl };
+      duplikat: dup.map(function (id) { var c = cariCalon(k, id); return c ? c.nama : id; }), pilih: pl, teknokrat: tekno };
   }
 
   /** Senarai penuh Jemaah Menteri (29 portfolio + PM/TPM). pilihan: { 'Timbalan Perdana Menteri': calon, portfolio: calon } (jika ada). */
@@ -209,6 +214,7 @@
     if (n.duplikat.length) { return { ok: false, ralat: 'Seorang hanya boleh memegang satu jawatan: ' + n.duplikat.join(', ') + '.' }; }
     if (!n.tpm) { return { ok: false, ralat: 'Pilih Timbalan Perdana Menteri.' }; }
     if (!n.lengkap) { return { ok: false, ralat: 'Pilih menteri bagi semua ' + CONFIG.UTAMA.length + ' portfolio utama.' }; }
+    if (n.teknokrat > CONFIG.TEKNOKRAT_MAKS) { return { ok: false, ralat: 'Maksimum ' + CONFIG.TEKNOKRAT_MAKS + ' teknokrat (Senator baharu).' }; }
     var kl = kolam(p), pilihan = { 'Timbalan Perdana Menteri': n.tpm }, lama = p.jemaah || {};
     Object.keys(n.pilih.m).forEach(function (nm) { var c = cariCalon(kl, n.pilih.m[nm]); if (c) { pilihan[nm] = c; } });
     var kunci = kunciPenggal(p), j = { kunci: kunci, umum: true, rombak: false, tahunRombak: lama.tahunRombak || 0, pilih: { tpm: n.pilih.tpm, m: n.pilih.m },
@@ -223,13 +229,16 @@
       Object.keys(rv.senaraiPencabar).forEach(function (lv) { var x = rv.senaraiPencabar[lv]; if (x && typeof x.kuasa === 'number') { x.kuasa = Math.round(x.kuasa * faktor * 10) / 10; } });
       patch.rival = rv;
     }
-    var r = Sv.applyEffects({}, { kiraTindakan: false, patch: patch, log: { tindakan: 'jemaah_umum', nama: 'Jemaah Menteri diumumkan (TPM: ' + n.tpm.nama + ')', peringkat: 'ahli' } });
+    var kesT = {};
+    if (n.teknokrat) { kesT.kesetiaan = { perwakilan: -CONFIG.TEKNOKRAT_PERWAKILAN * n.teknokrat }; var SNt = modul('MyPolitikSenat', 'senat.js'); if (SNt && SNt.tambahKerajaan) { patch.senat = SNt.tambahKerajaan(p, n.teknokrat); } }   // v14.22
+    var r = Sv.applyEffects(kesT, { kiraTindakan: false, patch: patch, log: { tindakan: 'jemaah_umum', nama: 'Jemaah Menteri diumumkan (TPM: ' + n.tpm.nama + ')', peringkat: 'ahli' } });
     if (!r.ok) { return { ok: false, ralat: r.ralat || 'Gagal menyimpan.' }; }
     var m = 'Jemaah Menteri diumumkan. Timbalan Perdana Menteri: ' + n.tpm.nama + '. Penarafan Tadbir Urus ' + n.tadbir + '.';
     if (n.bonusHubungan) { m += ' TPM daripada rakan gabungan: Hubungan Gabungan +' + n.bonusHubungan + '.'; }
     if (n.penaltiHubungan) { m += ' Hubungan Gabungan -' + n.penaltiHubungan + '.'; }
     if (n.pencabar) { m += ' Pencabar dalam parti dilantik: kuasa pencabar -15%.'; }
     if (n.tpLangkau) { m += ' Timbalan Presiden dilangkau: kuasa pencabar +10%.'; }
+    if (n.teknokrat) { m += ' ' + n.teknokrat + ' teknokrat dilantik Senator: Sokongan perwakilan -' + (CONFIG.TEKNOKRAT_PERWAKILAN * n.teknokrat) + '.'; }
     return { ok: true, mesej: m, nilai: n };
   }
 

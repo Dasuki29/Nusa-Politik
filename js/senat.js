@@ -42,10 +42,24 @@
     SIDANG: [4, 8, 11], BAJET: 11,
     UNDI: { sokong: { hubungan: 3 }, sokongWang: { hubungan: 2 }, pinda: { pengaruh: 4, ip: 5, hubungan: -2, kembali: 0.4 }, tolak: { hubungan: -8, pengaruh: 2 }, tolakWang: { hubungan: -10, pengaruh: 1 }, tangguh: { pengaruh: 70, peluang: 0.3 } },
     TUGAS: { bahas: { ap: 2, ip: 8, pengaruh: 3 }, soalan: { ap: 1, reputasi: 1, hubungan: -1 }, jk: { ap: 1, pengaruh: 2, kehadiran: 5 } },
-    PONTENG: -10, SUSUT_HADIR: -2, MULA: { pengaruh: 40, hubungan: 60, kehadiran: 90 }
+    PONTENG: -10, SUSUT_HADIR: -2, MULA: { pengaruh: 40, hubungan: 60, kehadiran: 90 },
+    /* v14.22 Fasa 2 */
+    MAJORITI: 36, KEKOSONGAN: 4, BULAN_KOSONG: [1, 7], TANGGUH_RUU: 0.30,
+    TAWARAN: { pangkat: 10, peluang: { 10: 0.5, 11: 0.8, 12: 1 } }, KUOTA: { parti: 2, rakan: 3, ngo: 1 },
+    MENTERI: { jawab: { ap: 1, kpi: 3, pengaruh: 2 }, bentang: { ap: 2, kpi: 4, kpiTangguh: -2, pengaruh: 2 } }
   };
 
-  function getSN(p) { var s = p && p.senat && typeof p.senat === 'object' ? salin(p.senat) : {}; s.aktif = s.aktif || null; s.sejarah = Array.isArray(s.sejarah) ? s.sejarah : []; return s; }
+  function getSN(p) { var s = p && p.senat && typeof p.senat === 'object' ? salin(p.senat) : {}; s.aktif = s.aktif || null; s.sejarah = Array.isArray(s.sejarah) ? s.sejarah : []; if (!isFinite(Number(s.kerajaan))) { s.kerajaan = CONFIG.KERAJAAN; } return s; }
+  function KB() { return modul('MyPolitikKabinet', 'kabinet.js'); }
+  function kab(p) { var K = KB(); return K && K.getKabinet ? K.getKabinet(p) : (p.kabinet || {}); }
+  /** v14.22: komposisi Dewan Negara (kerusi kerajaan daripada 70). */
+  function komposisi(p) { var k = getSN(p).kerajaan; return { kerajaan: k, lain: CONFIG.KERUSI - k, majoriti: CONFIG.MAJORITI, ada: k >= CONFIG.MAJORITI }; }
+  function tambahKerajaan(p, n) { var s = getSN(p); s.kerajaan = clamp(s.kerajaan + (Number(n) || 0), 0, CONFIG.KERUSI); return s; }
+  /** RUU kerajaan yang lulus di Dewan Rakyat ditangguh Dewan Negara jika kerajaan tiada majoriti Senat (js/dewan.js). */
+  function tangguhRUU(p, r) { return !komposisi(p).ada && (r || Math.random)() < CONFIG.TANGGUH_RUU; }
+  function menteriSenat(p) { var k = kab(p); return !!(k && k.hasGovernmentRole && k.senatorMenteri && aktif(p)); }
+  /** Senator-Menteri: jawatan kerajaan tamat bersama kerusi Senat. Pulang peristiwa atau null. */
+  function lucutMenteri(p, sebab) { var k = kab(p), K = KB(); if (k && k.hasGovernmentRole && k.senatorMenteri && !adaMP(p) && K && K.lucutJawatan) { return K.lucutJawatan(sebab); } return null; }
   function sbnAktif(p) { var B = modul('MyPolitikSabahBN', 'sabah-bn.js'); return !!(B && B.senatorAktif && B.adalah && B.adalah(p) && B.senatorAktif(p)); }
   function aktif(p) { if (!p || p.tamat) { return false; } var a = p.senat && p.senat.aktif; return a ? (a.sumber === 'sbn' ? sbnAktif(p) : true) : sbnAktif(p); }
   function umur(p) { var H = modul('MyPolitikHayat', 'hayat.js'); return H && H.umurSemasa ? H.umurSemasa(p) : 0; }
@@ -179,12 +193,13 @@
     var Sv = S(), p = Sv.loadPlayer(); if (!p || !(p.senat && p.senat.aktif)) { return { ok: false, ralat: 'Anda bukan Senator.' }; }
     var s = tamatkan(p, getSN(p), 'bertanding');
     var h = Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_letak', nama: 'Letak jawatan Senator untuk bertanding PRU', peringkat: 'ahli' } });
+    lucutMenteri(Sv.loadPlayer(), 'Anda meletak jawatan Senator.');   // v14.22
     return h.ok ? { ok: true, mesej: 'Anda meletak jawatan Senator untuk bertanding dalam pilihan raya (Perkara 49).' } : { ok: false, ralat: h.ralat };
   }
   function terimaLanjut(ya) {
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
     var a = c.a; if (!a.lanjut) { return { ok: false, ralat: 'Tiada tawaran penggal kedua.' }; }
-    if (!ya) { tamatkan(c.p, c.s, 'tolak'); var h0 = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); return h0.ok ? { ok: true, mesej: 'Penggal anda sebagai Senator tamat.' } : { ok: false, ralat: h0.ralat }; }
+    if (!ya) { tamatkan(c.p, c.s, 'tolak'); var h0 = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); lucutMenteri(S().loadPlayer(), 'Penggal Senator anda tamat.'); return h0.ok ? { ok: true, mesej: 'Penggal anda sebagai Senator tamat.' } : { ok: false, ralat: h0.ralat }; }
     a.penggal = 2; a.mula = idx(c.p); a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false;
     var h = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_lanjut', nama: 'Penggal kedua Senator', peringkat: 'ahli' } });
     return h.ok ? { ok: true, mesej: 'Anda dilantik semula sebagai Senator bagi penggal kedua (penggal terakhir).' } : { ok: false, ralat: h.ralat };
@@ -204,12 +219,13 @@
   function prosesBulan(o) {
     var Sv = S(), p = Sv && Sv.loadPlayer(), ev = [], r = rng(o);
     if (p && !p.tamat && p.senat && p.senat.aktif && p.senat.aktif.sumber === 'sbn' && !sbnAktif(p)) { Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: tamatkan(p, getSN(p), 'penggal') } }); return { peristiwa: ev }; }   // penggal MIC Sabah tamat (mesej oleh sabah-bn.js)
+    if (p && !p.tamat) { ev = ev.concat(prosesGlobal(p, r)); p = Sv.loadPlayer(); }   // v14.22: komposisi, kuota PM, tawaran Senator-Menteri
     if (!p || p.tamat || !aktif(p)) { return { peristiwa: ev }; }
     var s = getSN(p), a = aktifRekod(p, s), kini = idx(p), kes = {};
-    if (adaMP(p) && a.sumber !== 'sbn') { tamatkan(p, s, 'mp'); Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s } }); ev.push({ jenis: 'senat', mesej: 'Anda kini Ahli Parlimen. Kerusi Senator anda dikosongkan (Perkara 49).' }); return { peristiwa: ev }; }
+    if (adaMP(p) && a.sumber !== 'sbn') { tamatkan(p, s, 'mp'); var kbM = kab(p), pM = { senat: s }; if (kbM && kbM.senatorMenteri) { kbM = salin(kbM); kbM.senatorMenteri = false; pM.kabinet = kbM; } Sv.applyEffects({}, { kiraTindakan: false, patch: pM }); ev.push({ jenis: 'senat', mesej: 'Anda kini Ahli Parlimen. Kerusi Senator anda dikosongkan (Perkara 49).' }); return { peristiwa: ev }; }
     if (kini >= a.tamat) {
       if (a.sumber !== 'sbn' && a.penggal === 1 && !a.lanjut && a.hubungan >= CONFIG.LANJUT && penggalDigunakan(s) + 1 < CONFIG.MAKS_PENGGAL) { a.lanjut = true; a.tamat = kini + 1; Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s } }); ev.push({ jenis: 'senat', mesej: 'Penggal pertama anda sebagai Senator tamat. Anda ditawarkan penggal kedua: jawab di tab Dewan.' }); return { peristiwa: ev }; }
-      tamatkan(p, s, 'penggal'); Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); ev.push({ jenis: 'senat', mesej: a.lanjut ? 'Anda tidak menjawab tawaran penggal kedua. Penggal Senator anda tamat.' : 'Penggal anda sebagai Senator tamat.' }); return { peristiwa: ev };
+      tamatkan(p, s, 'penggal'); Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); var lcM = lucutMenteri(Sv.loadPlayer(), 'Penggal Senator anda tamat.'); if (lcM) { ev.push(lcM); } ev.push({ jenis: 'senat', mesej: a.lanjut ? 'Anda tidak menjawab tawaran penggal kedua. Penggal Senator anda tamat.' : 'Penggal anda sebagai Senator tamat.' }); return { peristiwa: ev };
     }
     var ponteng = a.ruu.filter(function (x) { return x.bulan < kini; });
     if (ponteng.length) { laras(a, { kehadiran: CONFIG.PONTENG * ponteng.length }); a.ruu = a.ruu.filter(function (x) { return x.bulan >= kini; }); ev.push({ jenis: 'senat', mesej: 'Anda tidak mengundi ' + ponteng.length + ' RUU di Dewan Negara. Kehadiran ' + (CONFIG.PONTENG * ponteng.length) + '.' }); }
@@ -223,13 +239,103 @@
     Sv.applyEffects(kes, { kiraTindakan: false, pindahan: true, patch: { senat: s }, log: kes.myr ? { tindakan: 'elaun_senator', nama: 'Elaun Senator: +RM ' + CONFIG.ELAUN, peringkat: 'bulan' } : undefined });
     return { peristiwa: ev };
   }
+  /* ---------- v14.22 Fasa 2 ---------- */
+  function adalahPM(p) { return kab(p).roleLevel === 'PERDANA_MENTERI'; }
+  function kunciPRU(p) { var k = p.kerusiNasional; return k && k.tahun ? String(k.tahun) + '|' + (k.parti || 0) + '|' + (k.kerajaan ? 1 : 0) : null; }
+  function tahapTawaran(pk) { return pk >= 12 ? 'MENTERI_PENUH' : 'TIMBALAN_MENTERI'; }
+  /** Bahagian global (bukan hanya Senator): pertukaran kerajaan, kekosongan Jan/Jul (kuota PM), tawaran Senator-Menteri selepas PRU. */
+  function prosesGlobal(p, r) {
+    var Sv = S(), s = getSN(p), ev = [], ubah = false, kini = idx(p), kp = kerajaanPusat(p), b = parseInt(p.bulan, 10);
+    if (s.kerajaanLalu !== undefined && s.kerajaanLalu !== kp) { s.kerajaan = CONFIG.KERUSI - s.kerajaan; ev.push({ jenis: 'senat', mesej: 'Pertukaran kerajaan: Senator lama kekal hingga tamat penggal. Kerajaan ' + (kp ? 'baharu (parti anda)' : 'baharu') + ' menguasai ' + (kp ? s.kerajaan : CONFIG.KERUSI - s.kerajaan) + ' daripada ' + CONFIG.KERUSI + ' kerusi Dewan Negara.' }); }
+    if (s.kerajaanLalu !== kp) { s.kerajaanLalu = kp; ubah = true; }
+    var kes = {};
+    if (s.kuota && s.kuota.i < kini) {   // kuota tidak diagihkan: semua kepada parti sendiri tanpa bonus
+      s.kerajaan = clamp(s.kerajaan + s.kuota.n, 0, CONFIG.KERUSI); ev.push({ jenis: 'senat', mesej: 'Kuota Senator tidak diagihkan: ' + s.kuota.n + ' kerusi diisi calon parti anda (tanpa bonus).' }); s.kuota = null; ubah = true;
+    }
+    if (CONFIG.BULAN_KOSONG.indexOf(b) >= 0 && s.kosong !== kini) {
+      s.kosong = kini; ubah = true;
+      if (kp && adalahPM(p)) { s.kuota = { i: kini, n: CONFIG.KEKOSONGAN }; ev.push({ jenis: 'senat', mesej: '🏛️ ' + CONFIG.KEKOSONGAN + ' kekosongan Senator lantikan. Agihkan kuota di tab Tindakan › Kerajaan sebelum bulan depan.' }); }
+      else if (s.kerajaan < CONFIG.KERAJAAN) { s.kerajaan = Math.min(CONFIG.KERAJAAN, s.kerajaan + CONFIG.KEKOSONGAN); }   // kerajaan NPC mengisi kekosongan
+    }
+    var kunci = kunciPRU(p), pk = pangkat(p), PRm = PR(), pa = PRm && PRm.getPRU ? PRm.getPRU(p).aktif : null;
+    if (kunci && kunci !== s.tawaranKunci && !pa && Math.abs((parseInt(p.kerusiNasional.tahun, 10) || 0) - (parseInt(p.tahun, 10) || 0)) <= 0) {   // PRU tahun ini sahaja
+      s.tawaranKunci = kunci; ubah = true;
+      var sy = syarat(p).filter(function (x, i) { return i !== 2; }).every(function (x) { return x.ok; });
+      if (kp && sy && !aktif(p) && !adaMP(p) && !luar(p) && !kab(p).hasGovernmentRole && (pk >= CONFIG.TAWARAN.pangkat || (ketuaSayap(p) && pk >= 9))) {
+        var pel = CONFIG.TAWARAN.peluang[Math.min(12, Math.floor(pk))] || CONFIG.TAWARAN.peluang[10];
+        if (r() < pel) { s.tawaran = { tahap: tahapTawaran(pk), i: kini }; ev.push({ jenis: 'senat', mesej: '📜 Perdana Menteri menawarkan lantikan Senator dan jawatan ' + (s.tawaran.tahap === 'MENTERI_PENUH' ? 'Menteri' : 'Timbalan Menteri') + '. Jawab di tab Tindakan.' }); }
+      }
+    }
+    if (s.tawaran && s.tawaran.i < kini - 2) { s.tawaran = null; ubah = true; ev.push({ jenis: 'senat', mesej: 'Tawaran Senator-Menteri luput kerana tidak dijawab.' }); }
+    if (ubah) { Sv.applyEffects(kes, { kiraTindakan: false, patch: { senat: s } }); }
+    return ev;
+  }
+  /** Jawab tawaran Senator-Menteri. */
+  function jawabTawaran(ya, o) {
+    var Sv = S(), p = Sv.loadPlayer(), s = getSN(p); if (!s.tawaran) { return { ok: false, ralat: 'Tiada tawaran.' }; }
+    var t = s.tawaran; s.tawaran = null;
+    if (!ya) { var h0 = Sv.applyEffects({ reputasi: 1 }, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_tawaran_tolak', nama: 'Tolak tawaran Senator-Menteri', peringkat: 'ahli' } }); return h0.ok ? { ok: true, mesej: 'Anda menolak tawaran itu. Reputasi +1 (tidak dilihat mengejar jawatan).' } : { ok: false, ralat: h0.ralat }; }
+    s.aktif = baharu(p, 'pm');
+    var h = Sv.applyEffects({}, { kiraTindakan: true, patch: { senat: s }, log: { tindakan: 'senat_lantik', nama: 'Dilantik Senator (Senator-Menteri)', peringkat: 'ahli' } }); if (!h.ok) { return { ok: false, ralat: h.ralat }; }
+    var K = KB(), l = K && K.lantikSenator ? K.lantikSenator(t.tahap, o) : { ok: false, ralat: 'Modul kabinet tiada.' };
+    return l.ok ? { ok: true, mesej: 'Anda mengangkat sumpah sebagai Senator dan dilantik ' + l.portfolio + '.' } : { ok: false, ralat: l.ralat };
+  }
+  /** Senator biasa membuka Lobi Portfolio (sekali setiap penggal). */
+  function semakLobi(p) {
+    if (!aktif(p)) { return { boleh: false, sebab: 'Hanya Senator.' }; }
+    var a = getSN(p).aktif || {}, k = kab(p);
+    if (k.hasGovernmentRole) { return { boleh: false, sebab: 'Anda sudah memegang jawatan kerajaan.' }; }
+    if (k.lobi) { return { boleh: false, sebab: 'Lobi sudah dibuka: pilih portfolio di tab Tindakan.' }; }
+    if (!kerajaanPusat(p)) { return { boleh: false, sebab: 'Parti anda tidak berada dalam kerajaan persekutuan.' }; }
+    if (a.lobiPenggal === a.penggal) { return { boleh: false, sebab: 'Lobi sudah digunakan penggal ini.' }; }
+    return { boleh: true };
+  }
+  function bukaLobi() {
+    var Sv = S(), p = Sv.loadPlayer(), x = semakLobi(p); if (!x.boleh) { return { ok: false, ralat: x.sebab }; }
+    var s = getSN(p); aktifRekod(p, s); s.aktif.lobiPenggal = s.aktif.penggal; Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s } });
+    var K = KB(), r = K && K.bukaLobi ? K.bukaLobi('SENAT') : { ok: false };
+    return r.ok ? { ok: true, mesej: 'Lobi Portfolio Kerajaan dibuka (1 percubaan, peluang 10% lebih rendah kerana tiada kerusi). Pilih portfolio di tab Tindakan.' } : { ok: false, ralat: r.ralat || 'Lobi tidak dapat dibuka.' };
+  }
+  /** Tugas Senator-Menteri: jawab | bentang */
+  function tugasMenteri(jenis, o) {
+    var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
+    if (!menteriSenat(c.p)) { return { ok: false, ralat: 'Hanya Menteri yang juga Senator.' }; }
+    var T = CONFIG.MENTERI[jenis], a = c.a, p = c.p, kini = idx(p); if (!T) { return { ok: false, ralat: 'Tugas tidak sah.' }; }
+    var kunciT = 'm_' + jenis; if (a[kunciT] === kini) { return { ok: false, ralat: 'Sudah dibuat bulan ini.' }; }
+    if ((Number(p.ap) || 0) < T.ap) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    a[kunciT] = kini; laras(a, { pengaruh: T.pengaruh });
+    var k = salin(kab(p)), dk = T.kpi, mesej;
+    if (jenis === 'bentang' && tangguhRUU(p, rng(o))) { dk = T.kpiTangguh; mesej = 'Dewan Negara (kerajaan tanpa majoriti) menangguhkan RUU kementerian anda.'; }
+    else { mesej = jenis === 'jawab' ? 'Anda menjawab soalan Senator tentang kementerian anda.' : 'RUU kementerian anda diluluskan Dewan Negara.'; }
+    k.governanceRating = clamp((Number(k.governanceRating) || 50) + dk, 0, 100);
+    var h = S().applyEffects({ ap: -T.ap }, { kiraTindakan: true, patch: { senat: c.s, kabinet: k }, log: { tindakan: 'senat_menteri_' + jenis, nama: mesej, peringkat: 'ahli' } });
+    return h.ok ? { ok: true, mesej: mesej + ' KPI Portfolio ' + tanda(dk) + ', Pengaruh Senat +' + T.pengaruh + '.' } : { ok: false, ralat: h.ralat };
+  }
+  /** PM: agih kuota Senator lantikan. */
+  function agihKuota(parti, rakan, ngo) {
+    var Sv = S(), p = Sv.loadPlayer(), s = getSN(p), q = s.kuota; if (!q) { return { ok: false, ralat: 'Tiada kekosongan Senator.' }; }
+    parti = Math.max(0, parseInt(parti, 10) || 0); rakan = Math.max(0, parseInt(rakan, 10) || 0); ngo = Math.max(0, parseInt(ngo, 10) || 0);
+    if (parti + rakan + ngo !== q.n) { return { ok: false, ralat: 'Agihkan tepat ' + q.n + ' kerusi.' }; }
+    var K = CONFIG.KUOTA, kes = {}, patch = {};
+    if (parti) { kes.kesetiaan = { perwakilan: K.parti * parti }; }
+    if (ngo) { kes.reputasi = K.ngo * ngo; }
+    if (rakan) { var PRm = PR(); if (PRm && PRm.getPRU) { var pr = salin(PRm.getPRU(p)); pr.hubunganGabungan = clamp((Number(pr.hubunganGabungan) || 50) + K.rakan * rakan, 0, 100); patch.pru = pr; } }
+    s.kerajaan = clamp(s.kerajaan + q.n, 0, CONFIG.KERUSI); s.kuota = null; patch.senat = s;
+    var h = Sv.applyEffects(kes, { kiraTindakan: true, patch: patch, log: { tindakan: 'senat_kuota', nama: 'Kuota Senator: parti ' + parti + ', rakan ' + rakan + ', NGO ' + ngo, peringkat: 'ahli' } });
+    var b = []; if (parti) { b.push('Sokongan perwakilan +' + K.parti * parti); } if (rakan) { b.push('Hubungan gabungan +' + K.rakan * rakan); } if (ngo) { b.push('Reputasi +' + K.ngo * ngo); }
+    return h.ok ? { ok: true, mesej: q.n + ' Senator baharu dilantik. ' + b.join(', ') + '.' } : { ok: false, ralat: h.ralat };
+  }
+  function keadaanPM(p) { var s = getSN(p); return { kuota: s.kuota || null, tawaran: s.tawaran || null, komposisi: komposisi(p), pm: adalahPM(p) }; }
   function keadaan(p) {
     var s = getSN(p); if (!aktif(p)) { return { aktif: false, sejarah: s.sejarah }; }
     var a = aktifRekod(p, s), kini = idx(p);
-    return { aktif: true, a: a, label: label(a), bulanKe: a.lanjut ? CONFIG.PENGGAL : clamp(kini - (a.tamat - CONFIG.PENGGAL) + 1, 1, CONFIG.PENGGAL), kerajaan: CONFIG.KERAJAAN,
+    var kb = kab(p), mn = menteriSenat(p), kp = komposisi(p);
+    return { aktif: true, a: a, label: label(a), bulanKe: a.lanjut ? CONFIG.PENGGAL : clamp(kini - (a.tamat - CONFIG.PENGGAL) + 1, 1, CONFIG.PENGGAL), kerajaan: kp.kerajaan, komposisi: kp,
+      menteri: mn ? { portfolio: kb.portfolioName, kpi: Number(kb.governanceRating) || 0, jawab: a.m_jawab !== kini && (Number(p.ap) || 0) >= CONFIG.MENTERI.jawab.ap, bentang: a.m_bentang !== kini && (Number(p.ap) || 0) >= CONFIG.MENTERI.bentang.ap } : null, lobi: semakLobi(p),
       boleh: { bahas: a.bahas !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.bahas.ap, soalan: a.soalan !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.soalan.ap, jk: a.jk !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.jk.ap }, sejarah: s.sejarah };
   }
 
   return { CONFIG: CONFIG, setRng: function (f) { rngLalai = f || Math.random; }, getSN: getSN, aktif: aktif, syarat: syarat, laluan: laluan, mohon: mohon, undi: undi, tugas: tugas,
-    letakUntukBertanding: letakUntukBertanding, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan, label: label };
+    letakUntukBertanding: letakUntukBertanding, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan, label: label,
+    komposisi: komposisi, tambahKerajaan: tambahKerajaan, tangguhRUU: tangguhRUU, menteriSenat: menteriSenat, jawabTawaran: jawabTawaran, semakLobi: semakLobi, bukaLobi: bukaLobi, tugasMenteri: tugasMenteri, agihKuota: agihKuota, keadaanPM: keadaanPM };
 });

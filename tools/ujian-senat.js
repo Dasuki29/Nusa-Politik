@@ -8,6 +8,7 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
 (async () => {
   await new Promise((r) => srv.listen(0, r)); const base = 'http://127.0.0.1:' + srv.address().port; const br = await PW.chromium.launch(); const out = process.argv[2] || null; const gagal = [];
   const EN = process.argv[3] === 'EN', RE = /(Senator Dewan Negara|dilantik Agong|Lantikan atas nasihat|Dipilih DUN|Lobi Presiden|Mohon pencalonan|Pengaruh Senat|Hubungan Kerajaan|Kehadiran|Komposisi Dewan|RUU dari Dewan|Cadang pindaan|Tugas bulanan|Bahas RUU|Soalan kepada Menteri|Jawatankuasa Pilihan|Sokong|Tolak|Lulus Dewan Rakyat|kerajaan ·)/;
+  const RE2 = /(susut|Jika penggal|Tawaran Perdana Menteri|Terima|Tolak|Kekal di luar|Jawab soalan|Bentang RUU|bergantung pada kerusi|Kuota Senator|kekosongan|Parti anda|Rakan gabungan|Tokoh masyarakat|Setiap kerusi|Sahkan lantikan|Komposisi)/;
   const sembunyi = '.tut-kad,.tut-blok,.tut-sorot,.tut-fab,#mpa-bar,.toast-stack{display:none!important}';
   for (const [w, n] of [[1280, 'd'], [420, 'm']]) {
     const pg = await br.newPage({ viewport: { width: w, height: 900 } }); const er = []; pg.on('pageerror', (e) => er.push(e.message));
@@ -33,6 +34,29 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
     if (await pg.$$eval('.sn-panel .sn-ruu', (x) => x.length) !== 1) { gagal.push(n + ': undi tidak direkod'); }
     await pg.click('.sn-panel [data-sn="tugas:bahas"]'); await pg.waitForTimeout(300);
     if (!(await pg.$eval('.sn-panel [data-sn="tugas:bahas"]', (b) => b.disabled))) { gagal.push(n + ': bahas tidak dikunci'); }
+    /* v14.22: tawaran Senator-Menteri (Tindakan), mod Menteri (Dewan), kuota PM (Tindakan › Kerajaan) */
+    await pg.evaluate(() => { const S = MyPolitikSave, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { senat: { sejarah: [], kerajaan: 41, kerajaanLalu: true, tawaran: { tahap: 'TIMBALAN_MENTERI', i: p.tahun * 12 + p.bulan } }, ap: 10 } }); NusaUI.gotoTab('tindakan'); });
+    await pg.waitForTimeout(400);
+    const tw = await pg.$('.sn-tawaran'); if (!tw) { gagal.push(n + ': kad tawaran tiada'); } else {
+      if (EN) { const t = await tw.innerText(); if (RE2.test(t)) { gagal.push(n + ': BM bocor (tawaran): ' + t.slice(0, 300)); } }
+      if (out) { await tw.screenshot({ path: out + '/senat-tawaran-' + n + '.png' }); }
+      await pg.evaluate(() => MyPolitikKabinet.setRng ? MyPolitikKabinet.setRng(() => 0) : null); await pg.click('.sn-tawaran [data-sn="tawaran:ya"]'); await pg.waitForTimeout(400);
+      const kb = await pg.evaluate(() => { const k = MyPolitikKabinet.getKabinet(MyPolitikSave.loadPlayer()); return k.hasGovernmentRole && k.senatorMenteri; }); if (!kb) { gagal.push(n + ': tidak dilantik Senator-Menteri'); }
+    }
+    await pg.evaluate(() => NusaUI.gotoTab('dewan')); await pg.waitForTimeout(400);
+    if (!(await pg.$('.sn-panel [data-sn="mtugas:jawab"]'))) { gagal.push(n + ': tugas Menteri tiada'); }
+    if (EN) { const t = await (await pg.$('.sn-panel')).innerText(); if (RE2.test(t)) { gagal.push(n + ': BM bocor (Menteri): ' + t.match(RE2)[0] + ' | ' + t.slice(0, 1200)); } }
+    if (out) { await (await pg.$('.sn-panel')).screenshot({ path: out + '/senat-menteri-' + n + '.png' }); }
+    await pg.click('.sn-panel [data-sn="mtugas:jawab"]'); await pg.waitForTimeout(300);
+    await pg.evaluate(() => { const S = MyPolitikSave, K = MyPolitikKabinet, p = S.loadPlayer(); S.applyEffects({}, { kiraTindakan: false, patch: { kabinet: Object.assign(K.getKabinet(p), { hasGovernmentRole: true, roleLevel: 'PERDANA_MENTERI', portfolioName: 'Perdana Menteri', senatorMenteri: false }), senat: { sejarah: [], kerajaan: 29, kerajaanLalu: true, kuota: { i: p.tahun * 12 + p.bulan, n: 4 } }, jemaah: { kunci: 'x', umum: true } } }); NusaUI.subTindakan('kerajaan'); });
+    await pg.waitForTimeout(400);
+    const kq = await pg.$('.sn-kuota'); if (!kq) { gagal.push(n + ': kad kuota tiada'); } else {
+      await pg.click('.sn-kuota [data-sn="kuota:-:parti"]'); await pg.waitForTimeout(200); await pg.click('.sn-kuota [data-sn="kuota:+:rakan"]'); await pg.waitForTimeout(200);
+      if (EN) { const t = await (await pg.$('.sn-kuota')).innerText(); if (RE2.test(t)) { gagal.push(n + ': BM bocor (kuota): ' + t.slice(0, 300)); } }
+      if (out) { await (await pg.$('.sn-kuota')).screenshot({ path: out + '/senat-kuota-' + n + '.png' }); }
+      await pg.click('.sn-kuota [data-sn="kuota:sahkan"]'); await pg.waitForTimeout(300);
+      const kr = await pg.evaluate(() => MyPolitikSenat.komposisi(MyPolitikSave.loadPlayer()).kerajaan); if (kr !== 33) { gagal.push(n + ': komposisi ' + kr); }
+    }
     if (er.length) { gagal.push(n + ': ralat ' + er.join(' | ')); }
     await pg.close();
   }

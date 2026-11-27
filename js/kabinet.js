@@ -229,14 +229,15 @@
     if (k.hasGovernmentRole) { return { ok: false, ralat: 'Sudah memegang jawatan kerajaan.' }; }
     var LT = modul('MyPolitikLetak', 'letak.js'), bt = LT && LT.bertenang ? LT.bertenang(p) : 0;          // v13.12: tempoh bertenang selepas letak jawatan
     if (bt) { return { ok: false, ralat: 'Tempoh bertenang selepas letak jawatan (sehingga ' + LT.tb(bt) + ').' }; }
-    k.lobi = { sumber: sumber === 'DUN' ? 'DUN' : 'PARLIMEN', baki: CONFIG.LOBI_PERCUBAAN }; k.mbTertunda = false; k.tpmCuba = false;   // v13.40
+    k.lobi = { sumber: sumber === 'DUN' ? 'DUN' : sumber === 'SENAT' ? 'SENAT' : 'PARLIMEN', baki: sumber === 'SENAT' ? 1 : CONFIG.LOBI_PERCUBAAN }; k.mbTertunda = false; k.tpmCuba = false;   // v13.40   // v14.22: Senator (1 percubaan)
     var r = simpan(k, {}, { log: { tindakan: 'lobi_buka', nama: 'Lobi Portfolio Kerajaan dibuka', peringkat: 'ahli' } });
     return { ok: !!(r && r.ok) };
   }
   function peluang(p, def) {
     var PD = modul('MyPolitikPendidikan', 'pendidikan.js'), bp = PD && PD.bonusLobi ? PD.bonusLobi(p) : 0;          // v13.13: pendidikan (Ijazah +2%, Sarjana +4%, PhD +6%)
     var PK = p && p.parti === 'PKR' ? modul('MyPolitikPKR', 'pkr.js') : null, kem = PK && PK.adjLantikan ? PK.adjLantikan(p) : 0;   // v13.36: kem lawan menguasai MPP
-    return clamp(def.asas + ((Number(p.ip) || 0) - def.ip) / (def.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003 + bp + kem, 0.1, 0.95);
+    var kl = p && p.kabinet && p.kabinet.lobi, sn = kl && kl.sumber === 'SENAT' ? -0.10 : 0;   // v14.22: Senator tiada kerusi
+    return clamp(def.asas + ((Number(p.ip) || 0) - def.ip) / (def.ip * 8) + ((Number(p.reputasi) || 50) - 50) * 0.003 + bp + kem + sn, 0.1, 0.95);
   }
   /** v7.42: Parlimen: hanya portfolio dengan IP perlu <= IP pemain; paling HAMPIR dengan IP pemain dahulu, maks HAD_PILIHAN (rawak tetap bagi IP sama). */
   /** v9.2: kolam portfolio mengikut sumber; pemain PBB melobi portfolio Sarawak untuk kerusi DUN. */
@@ -244,11 +245,11 @@
     if (sumber === 'DUN' && p && SW(p.parti)) { return PORTFOLIO.SARAWAK; }
     if (sumber === 'DUN' && SB(p)) { return PORTFOLIO.SABAH; }                     // v13.81
     if (sumber === 'DUN') { return PORTFOLIO.DUN.filter(function (d) { return !d.islam || bolehAgama(p); }); }   // v13.69
-    return PORTFOLIO[sumber];
+    return PORTFOLIO[sumber === 'SENAT' ? 'PARLIMEN' : sumber];
   }
   function kolamPaparan(p, sumber) {
     var semua = kolamSumber(p, sumber);
-    if (sumber !== 'PARLIMEN' || !DARI_CSV) { return semua; }
+    if ((sumber !== 'PARLIMEN' && sumber !== 'SENAT') || !DARI_CSV) { return semua; }
     var ip = Number(p.ip) || 0, rg = S().rngBerbenih(String(p.id) + '|kabinet|' + p.tahun), kunci = {};
     semua.forEach(function (d) { kunci[d.id] = rg(); });
     var ok = semua.filter(function (d) { return d.ip <= ip; }).sort(function (x, y) { return (y.ip - x.ip) || (kunci[x.id] - kunci[y.id]); });
@@ -279,7 +280,7 @@
     if (lulus) {
       kes = { ip: -d.ip, myr: -d.myr };
       k.hasGovernmentRole = true; k.roleLevel = d.tahap; k.portfolioName = d.nama; k.portfolioId = d.id; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
-      k.bulanBerjawatan = 0; k.ratingRendah = 0; k.lobi = null; k.acara = null;
+      k.bulanBerjawatan = 0; k.ratingRendah = 0; k.senatorMenteri = k.lobi.sumber === 'SENAT'; k.lobi = null; k.acara = null;
       k.popularitiNasional = CONFIG.POP_AWAL; k.risikoRombak = 0; k.ratingLalu = CONFIG.RATING_AWAL; k.cdfBaki = CONFIG.CDF.BULANAN[d.tahap]; k.cdfBulan = 0; k.cdfJumlah = 0;
       k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: d.nama, hasil: 'dilantik' }]).slice(-10);
       var res = simpan(k, kes, { log: { tindakan: 'lobi_jaya', nama: 'Dilantik: ' + d.nama, peringkat: 'ahli' } });
@@ -442,7 +443,7 @@
     var k = getKabinet(p);
     if (!k.hasGovernmentRole && !k.lobi) { return null; }
     var nama = k.portfolioName;
-    k.hasGovernmentRole = false; k.roleLevel = 'NONE'; k.portfolioName = ''; k.portfolioId = ''; k.acara = null; k.lobi = null; k.bulanBerjawatan = 0; k.ratingRendah = 0;
+    k.hasGovernmentRole = false; k.roleLevel = 'NONE'; k.portfolioName = ''; k.portfolioId = ''; k.acara = null; k.lobi = null; k.senatorMenteri = false; k.bulanBerjawatan = 0; k.ratingRendah = 0;
     simpan(k, {}, { log: { tindakan: 'kabinet_tamat', nama: 'Penggal tamat' + (nama ? ': ' + nama : ''), peringkat: 'ahli' } });
     return { mesej: nama ? 'Parlimen/Dewan dibubarkan. Jawatan ' + nama + ' tamat bersama penggal.' : '' };
   }
@@ -463,6 +464,19 @@
     return { jenis: 'kabinet_rombak', mesej: 'Rombakan kabinet! ' + sebab + ' Anda digugurkan daripada ' + nama + '. Elaun dihentikan dan Reputasi -5.' };
   }
   /** v8.0: tamatkan jawatan kerajaan tanpa penalti tambahan (cth. dipecat daripada parti). Pulang { mesej } atau null. */
+  /** v14.22: lantikan terus Senator-Menteri (tawaran PM selepas PRU). tahap: 'MENTERI_PENUH' | 'TIMBALAN_MENTERI'. */
+  function lantikSenator(tahap, o) {
+    var p = S().loadPlayer(), k = getKabinet(p), r = rng(o);
+    if (k.hasGovernmentRole) { return { ok: false, ralat: 'Sudah memegang jawatan kerajaan.' }; }
+    var pool = (PORTFOLIO.PARLIMEN || []).filter(function (d) { return d.tahap === tahap; }); if (!pool.length) { return { ok: false, ralat: 'Tiada portfolio.' }; }
+    var d = pool[Math.floor(r() * pool.length)];
+    k.hasGovernmentRole = true; k.roleLevel = d.tahap; k.portfolioName = d.nama; k.portfolioId = d.id; k.governanceRating = CONFIG.RATING_AWAL; k.tekananPolitik = CONFIG.TEKANAN_AWAL;
+    k.bulanBerjawatan = 0; k.ratingRendah = 0; k.senatorMenteri = true; k.lobi = null; k.acara = null;
+    k.popularitiNasional = CONFIG.POP_AWAL; k.risikoRombak = 0; k.ratingLalu = CONFIG.RATING_AWAL; k.cdfBaki = CONFIG.CDF.BULANAN[d.tahap]; k.cdfBulan = 0; k.cdfJumlah = 0;
+    k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: d.nama, hasil: 'dilantik' }]).slice(-10);
+    var res = simpan(k, {}, { log: { tindakan: 'kabinet_senator', nama: 'Dilantik (Senator): ' + d.nama, peringkat: 'ahli' } });
+    return res.ok ? { ok: true, portfolio: d.nama, tahap: d.tahap } : { ok: false, ralat: res.ralat };
+  }
   function lucutJawatan(sebab) {
     var p = S() && S().loadPlayer();
     if (!p) { return null; }
@@ -470,7 +484,7 @@
     if (!k.hasGovernmentRole && !k.lobi) { return null; }
     var adaJawatan = k.hasGovernmentRole, nama = k.portfolioName;
     if (nama) { k.sejarah = (k.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: nama, hasil: 'dilucut' }]).slice(-10); }
-    k.hasGovernmentRole = false; k.roleLevel = 'NONE'; k.portfolioName = ''; k.portfolioId = ''; k.acara = null; k.lobi = null; k.bulanBerjawatan = 0; k.ratingRendah = 0; k.risikoRombak = 0; k.cdfBaki = 0; k.cdfBulan = 0;
+    k.hasGovernmentRole = false; k.roleLevel = 'NONE'; k.portfolioName = ''; k.portfolioId = ''; k.acara = null; k.lobi = null; k.senatorMenteri = false; k.bulanBerjawatan = 0; k.ratingRendah = 0; k.risikoRombak = 0; k.cdfBaki = 0; k.cdfBulan = 0;
     simpan(k, {}, { log: { tindakan: 'kabinet_lucut', nama: adaJawatan ? 'Jawatan kerajaan dilucutkan' + (nama ? ': ' + nama : '') : 'Lobi portfolio ditutup', peringkat: 'ahli' } });
     if (!adaJawatan) { return null; }                                          // hanya lobi terbuka: ditutup tanpa makluman
     return { jenis: 'kabinet_rombak', mesej: (sebab || 'Jawatan kerajaan anda ditamatkan.') + (nama ? ' Anda tidak lagi memegang jawatan ' + nama + '.' : '') };
@@ -727,7 +741,7 @@
     CONFIG: CONFIG, TAHAP: TAHAP, PORTFOLIO: PORTFOLIO, ACARA: ACARA, SB: SB, SW: SW, PORTFOLIO_MB: PORTFOLIO_MB, TINDAKAN_EXCO: TINDAKAN_EXCO, cariPortfolio: cariPortfolio, bolehAgama: bolehAgama,
     kepimpinanNegeri: kepimpinanNegeri, pejabatEXCO: pejabatEXCO, tindakanEXCO: tindakanEXCO,
     setRng: function (f) { rngLalai = f || Math.random; },
-    getKabinet: getKabinet, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
+    getKabinet: getKabinet, lantikSenator: lantikSenator, lantikKanan: lantikKanan, lantikTM: lantikTM, syaratMB: syaratMB, syaratTPM: syaratTPM, peluangTPM: peluangTPM, maklumatTPM: maklumatTPM, lobiTPM: lobiTPM, pmPartiSendiri: pmPartiSendiri, TPM: TPM, bukaLobi: bukaLobi, senaraiPortfolio: senaraiPortfolio, lobiPortfolio: lobiPortfolio, lepaskanLobi: lepaskanLobi, maklumatMB: maklumatMB, semakMB: semakMB, tuntutMB: tuntutMB, terimaExcoKanan: terimaExcoKanan, salurCDF: salurCDF, pilihanCDF: pilihanCDF, labelKPI: labelKPI,
     laras: laras, tamatPenggal: tamatPenggal, lucutJawatan: lucutJawatan, prosesBulan: prosesBulan, acaraSemasa: acaraSemasa, jawabAcara: jawabAcara, ringkasan: ringkasan
   };
 });

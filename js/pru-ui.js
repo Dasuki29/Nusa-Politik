@@ -298,7 +298,8 @@
       o.media = W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '';
       o.kawasan = kadJanji(p);
       var kk = kadKabinet(p, true), peranan = KB && KB.ringkasan(p).hasGovernmentRole;
-      if (peranan) { o.kerajaan = kk; } else { o.segera += kk; }   // lobi / tuntutan MB (boleh bertindak) di atas
+      if (peranan) { o.kerajaan = kk; } else { o.segera += kk; }
+      if (W.MyPolitikSenatUI) { o.segera += W.MyPolitikSenatUI.kadTawaran(p); o.kerajaan += W.MyPolitikSenatUI.kadKuota(p); }   // v14.22: tawaran Senator-Menteri, kuota Senator (PM)   // lobi / tuntutan MB (boleh bertindak) di atas
       var JM = W.MyPolitikJemaah, jk = W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '';
       if (JM && JM.perluBentuk && JM.perluBentuk(p)) { o.segera += jk; } else { o.kerajaan += jk; }   // bentuk / rombak Jemaah Menteri = keputusan menunggu
     } catch (e) { /* abaikan */ }

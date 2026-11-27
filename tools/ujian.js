@@ -2015,7 +2015,7 @@ ujian('v12.1: Jemaah Menteri: PM pilih 8 portfolio, kesan tadbir urus / gabungan
   betul(!J.perluBentuk(S.loadPlayer()) && J.senarai(S.loadPlayer()) === null, 'bukan kerajaan: tiada');
   betul(KB.lantikKanan('PERDANA_MENTERI').ok, 'lantik PM');
   let p = S.loadPlayer(); betul(J.perluBentuk(p), 'PM perlu bentuk');
-  const sl = J.calon(p); sama(sl.length, 8); sl.forEach((s) => { sama(s.calon.length, 3); sama(s.calon.map((c) => c.jenis).sort().join(), 'anda,borneo,rakan'); });
+  const sl = J.calon(p); sama(sl.length, 8); sl.forEach((s) => { sama(s.calon.length, 4); sama(s.calon.map((c) => c.jenis).sort().join(), 'anda,borneo,rakan,teknokrat'); sama(s.calon[3].jenis, 'teknokrat', 'teknokrat di hujung'); });   // v14.22
   sama(JSON.stringify(J.calon(p)), JSON.stringify(sl), 'calon deterministik');
   betul(!J.umumkan([0, 1]).ok, 'mesti lengkap');
   const pilihAnda = sl.map((s) => s.calon.findIndex((c) => c.jenis === 'anda')), n = J.nilai(p, pilihAnda);
@@ -3616,6 +3616,37 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   pl = SL.pilihan(S.loadPlayer()); betul(pl.duta.boleh, JSON.stringify(pl.duta.item)); betul(!pl.tyt.boleh); betul(pl.duta.pos.every((x) => x.rep <= 50), 'pos ikut Reputasi');
   betul(SL.pilihDuta(pl.duta.pos[0].kod).ok); a = D.getD(S.loadPlayer()).aktif; P.tetap({ duta: { aktif: Object.assign({}, a, { tamat: 0 }), sejarah: [] } });
   D.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); betul(p.tamat && p.tamat.sebab === 'duta', JSON.stringify(p.tamat && p.tamat.sebab));
+  S.clearPlayer();
+});
+
+ujian('v14.22 Dewan Negara Fasa 2: komposisi, tangguh RUU, tawaran Senator-Menteri, lobi Senator, tugas Menteri, kuota PM, teknokrat', () => {
+  const SN = g.MyPolitikSenat, KB = g.MyPolitikKabinet, J = g.MyPolitikJemaah, C = SN.CONFIG; P.daftar({ umur: 45 });
+  P.tetap({ tahun: 2031, bulan: 3, ap: 10, myr: 50000, reputasi: 60, jawatanList: [{ kod: 'naib_presiden', jawatan: 'Naib Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 10, tahun: 2028 }] });
+  let p = S.loadPlayer(); sama(SN.komposisi(p).kerajaan, C.KERAJAAN); betul(SN.komposisi(p).ada); betul(!SN.tangguhRUU(p, () => 0), 'majoriti: tiada tangguh');
+  // pertukaran kerajaan: kerajaan baharu mewarisi kerusi pembangkang lama
+  P.tetap({ senat: { kerajaanLalu: false, kerajaan: 41, sejarah: [] } }); SN.prosesBulan({ rng: () => 0.9 }); p = S.loadPlayer(); sama(SN.komposisi(p).kerajaan, 29); betul(SN.tangguhRUU(p, () => 0), 'tanpa majoriti');
+  P.tetap({ bulan: 7 }); SN.prosesBulan({ rng: () => 0.9 }); sama(SN.komposisi(S.loadPlayer()).kerajaan, 33, 'NPC mengisi kekosongan Julai');
+  // tawaran Senator-Menteri selepas PRU (tidak memegang kerusi)
+  P.tetap({ bulan: 9, kerusiNasional: { tahun: 2031, parti: 60, rakan: 60, kerajaan: true } }); let ev = SN.prosesBulan({ rng: () => 0.1 }).peristiwa; p = S.loadPlayer();
+  betul(p.senat.tawaran && p.senat.tawaran.tahap === 'TIMBALAN_MENTERI', JSON.stringify(p.senat.tawaran)); betul(ev.some((x) => /menawarkan lantikan Senator/.test(x.mesej)));
+  const jt = SN.jawabTawaran(true, { rng: () => 0 }); betul(jt.ok, jt.ralat); p = S.loadPlayer(); betul(SN.aktif(p)); const kb = KB.getKabinet(p); betul(kb.hasGovernmentRole && kb.senatorMenteri && kb.roleLevel === 'TIMBALAN_MENTERI'); betul(SN.menteriSenat(p));
+  const kpi0 = KB.getKabinet(p).governanceRating; betul(SN.tugasMenteri('jawab').ok); betul(!SN.tugasMenteri('jawab').ok, 'sebulan sekali'); sama(KB.getKabinet(S.loadPlayer()).governanceRating, kpi0 + C.MENTERI.jawab.kpi);
+  betul(!SN.semakLobi(S.loadPlayer()).boleh, 'sudah Menteri: tiada lobi');
+  betul(SN.letakUntukBertanding().ok); p = S.loadPlayer(); betul(!KB.getKabinet(p).hasGovernmentRole, 'Menteri-Senator: jawatan tamat bersama kerusi Senat');
+  // Senator biasa: lobi portfolio sekali setiap penggal
+  P.tetap({ senat: Object.assign({}, S.loadPlayer().senat, { aktif: null, sejarah: [] }) }); P.tetap({ bulan: 1, ap: 10, ip: 900 }); betul(SN.mohon('pm', { rng: () => 0 }).berjaya);
+  const bl = SN.bukaLobi(); betul(bl.ok, bl.ralat); const lb = KB.getKabinet(S.loadPlayer()).lobi; sama(lb.sumber, 'SENAT'); sama(lb.baki, 1); betul(KB.senaraiPortfolio(S.loadPlayer()).length > 0, 'kolam Parlimen');
+  P.tetap({ kabinet: Object.assign({}, KB.getKabinet(S.loadPlayer()), { lobi: null }) }); betul(!SN.bukaLobi().ok, 'sekali setiap penggal');
+  // PM pemain: kuota Senator Januari
+  S.clearPlayer(); P.daftar({ umur: 50 }); P.tetap({ tahun: 2032, bulan: 1, ap: 10, reputasi: 50 }); betul(KB.lantikKanan('PERDANA_MENTERI').ok);
+  ev = SN.prosesBulan({ rng: () => 0.9 }).peristiwa; p = S.loadPlayer(); sama(p.senat.kuota.n, C.KEKOSONGAN); betul(ev.some((x) => /kekosongan Senator/.test(x.mesej)));
+  betul(!SN.agihKuota(1, 1, 1).ok, 'mesti tepat'); const ps = p.kesetiaan.perwakilan, k0 = SN.komposisi(p).kerajaan;
+  betul(SN.agihKuota(2, 1, 1).ok); p = S.loadPlayer(); sama(SN.komposisi(p).kerajaan, k0 + 4); sama(p.reputasi, 51); sama(p.kesetiaan.perwakilan, ps + 4); betul(!p.senat.kuota);
+  // teknokrat dalam Jemaah Menteri: maksimum 4, kesetiaan perwakilan -2 setiap seorang, kerusi Senat kerajaan +n
+  const sl = J.calon(p), tp = J.calonTPM(p, J.kolam(p))[0], m = {}; sl.forEach((x, i) => { m[x.portfolio] = (i < 5 ? x.calon[3] : x.calon[0]).id; });
+  betul(!J.umumkan({ tpm: tp.id, m: m }).ok, 'maksimum 4 teknokrat'); sl.forEach((x, i) => { m[x.portfolio] = (i < 2 ? x.calon[3] : x.calon.filter((c) => c.jenis !== 'teknokrat')[0]).id; });
+  const pw0 = S.loadPlayer().kesetiaan.perwakilan, kk0 = SN.komposisi(S.loadPlayer()).kerajaan, um = J.umumkan({ tpm: tp.id, m: m }); betul(um.ok, um.ralat); p = S.loadPlayer();
+  sama(p.kesetiaan.perwakilan, pw0 - 4); sama(SN.komposisi(p).kerajaan, Math.min(70, kk0 + 2)); betul(/teknokrat/.test(um.mesej));
   S.clearPlayer();
 });
 
