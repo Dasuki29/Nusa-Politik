@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v14.21 — 🏛️ Dewan Negara Fasa 1 (mockup dipersetujui)
+
+- **Senator untuk semua parti.** Syarat: umur 30+ (Perkara 47), bukan Ahli Parlimen (Perkara 49), Ketua Bahagian / jawatan Pusat / Ketua Sayap, Integriti 50+, maksimum 2 penggal (Perkara 45).
+- **Dua laluan:** lantikan atas nasihat PM (parti dalam kerajaan persekutuan; kekosongan Januari dan Julai; lobi Presiden 3 AP, RM 5,000) atau dipilih DUN (parti membentuk kerajaan negeri; kekosongan disemak setiap Januari; 2 AP, RM 3,000). Kad di tab Profil › Jawatan.
+- **Mod Dewan Negara (tab Dewan):** meter Pengaruh Senat, Hubungan Kerajaan, Kehadiran; komposisi 70 kerusi; RUU dari Dewan Rakyat pada bulan 4, 8 dan 11 (Bajet = RUU Wang, tidak boleh dipinda) dengan pilihan Sokong / Cadang pindaan / Tolak (tangguh 1 tahun atau 1 bulan, Perkara 68); RUU tidak diundi = Kehadiran −10; tugas bulanan Bahas, Soalan kepada Menteri, Jawatankuasa Pilihan Khas.
+- **Penggal 3 tahun**, elaun RM 2,000 sebulan, penggal kedua jika Hubungan Kerajaan 60+. Pembubaran Parlimen tidak menamatkan penggal.
+- **Perkara 49:** Senator yang mahu bertanding kerusi Parlimen mesti meletak jawatan sebelum penamaan calon (pengesahan dalam aliran pencalonan PRU). Senator yang menjadi Ahli Parlimen kehilangan kerusi Senat.
+- **Senator MIC Sabah** diserap: kini mendapat mod Dewan Negara (tanpa elaun berganda) dan lencana Senator dipaparkan untuk semua parti.
+- Modul baharu `js/senat.js`, `js/senat-ui.js`; ujian unit dan `tools/ujian-senat.js`; kunci EN baharu.
+
 ## v14.20 — Tab Profil disusun semula (audit, mockup dipersetujui)
 
 - **Sub-tab:** 👤 Ringkasan · 🏛️ Jawatan · 🗳️ Parti · 👪 Peribadi · 🏆 Pencapaian · 🔀 Kerjaya. Sub-tab terakhir diingat; lencana untuk pencapaian baharu, harta menunggu dan tawaran Selepas Politik / Istana (sub-tab Kerjaya dibuka terus).

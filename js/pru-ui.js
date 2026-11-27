@@ -317,7 +317,7 @@
     PRU.semuaStatus(p).forEach(function (s) { h += '<span class="badge-office badge-office--menteri" title="Kerusi ' + esc(s.kerusi) + '">' + (s.jenis === 'ADUN' ? 'ADUN' : 'Ahli Parlimen') + (s.bebas ? ' (Bebas)' : '') + '</span> '; });
     if (PRU.pengkhianat && PRU.pengkhianat(p)) { h += '<span class="badge-office badge-office--gantung" title="Bertanding sebagai calon Bebas menentang calon parti">Pengkhianat Parti</span> '; }   // v13.87    // v7.55: dua jawatan wakil rakyat dipapar serentak
     if (kb && kb.hasGovernmentRole) { h += '<span class="badge-office badge-office--menteri">' + esc(kb.portfolioName) + '</span>'; }
-    if (W.MyPolitikSabahBN && W.MyPolitikSabahBN.adalah(p) && W.MyPolitikSabahBN.senatorAktif(p)) { h += ' <span class="badge-office badge-office--menteri">Senator</span>'; }   // v13.16: MIC Sabah
+    if (W.MyPolitikSenat ? W.MyPolitikSenat.aktif(p) : (W.MyPolitikSabahBN && W.MyPolitikSabahBN.adalah(p) && W.MyPolitikSabahBN.senatorAktif(p))) { h += ' <span class="badge-office badge-office--menteri">Senator</span>'; }   // v14.21: semua parti   // v13.16: MIC Sabah
     return h;
   }
 
@@ -468,6 +468,7 @@
           if (j === 'NONE') {
             var tb = PRU.tidakBertanding(); toast(tb.mesej || tb.ralat, tb.ok ? 'ok' : 'ralat'); segarkan(); if (tb.nasional) { await nasional(); } break;
           }
+          if ((j === 'PARLIMEN' || j === 'KEDUA') && W.MyPolitikSenatUI && !(await W.MyPolitikSenatUI.sahkanBertanding())) { continue; }   // v14.21: Senator perlu letak jawatan (Perkara 49)
           var r = PRU.pilihKerusi(j, lk ? { kerusi: lk.kerusi } : undefined);
           if (!r.ok) { toast(r.ralat, 'ralat'); continue; }
           toast(r.mesej, r.diluluskan ? 'ok' : 'ralat'); segarkan();

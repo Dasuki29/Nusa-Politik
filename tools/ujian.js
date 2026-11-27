@@ -3619,6 +3619,35 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   S.clearPlayer();
 });
 
+ujian('v14.21 Dewan Negara Fasa 1: syarat, lantikan PM, RUU, undi, tugas, ponteng, penggal kedua, Perkara 49', () => {
+  const SN = g.MyPolitikSenat, C = SN.CONFIG; P.daftar({ umur: 25 });
+  P.tetap({ tahun: 2030, bulan: 3, ap: 10, myr: 20000, reputasi: 70, jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2027 }] });
+  let p = S.loadPlayer(), l = SN.laluan(p); betul(!l.syarat[0].ok, 'umur 29 < 30'); betul(!l.pm.boleh);
+  P.tetap({ tahun: 2031 }); p = S.loadPlayer(); l = SN.laluan(p); betul(l.syarat.every((x) => x.ok), JSON.stringify(l.syarat)); betul(!l.pm.boleh && /7\/2031/.test(l.pm.sebab), l.pm.sebab);
+  P.tetap({ bulan: 7 }); const r = SN.mohon('pm', { rng: () => 0 }); betul(r.ok && r.berjaya, r.ralat || r.mesej); p = S.loadPlayer(); betul(SN.aktif(p)); sama(p.myr, 15000); sama(p.ap, 7);
+  betul(!SN.mohon('pm', { rng: () => 0 }).ok, 'sudah Senator'); sama(SN.keadaan(p).bulanKe, 1);
+  // sidang bulan 8: 2 RUU, elaun
+  P.tetap({ bulan: 8, ap: 10 }); let ev = SN.prosesBulan({ rng: () => 0.3 }).peristiwa; p = S.loadPlayer();
+  sama(p.senat.aktif.ruu.length, 2); sama(p.myr, 15000 + C.ELAUN); betul(ev.some((x) => /Sidang Dewan Negara/.test(x.mesej)));
+  const [r1, r2] = p.senat.aktif.ruu; betul(SN.undi(r1.id, 'sokong').ok); sama(S.loadPlayer().senat.aktif.hubungan, C.MULA.hubungan + 3);
+  betul(SN.undi(r2.id, 'pinda', { rng: () => 0.9 }).ok); p = S.loadPlayer(); sama(p.senat.aktif.pengaruh, C.MULA.pengaruh + 4); sama(p.senat.aktif.ruu.length, 0);
+  betul(SN.tugas('bahas').ok); betul(!SN.tugas('bahas').ok, 'sebulan sekali'); sama(S.loadPlayer().senat.aktif.pengaruh, C.MULA.pengaruh + 7);
+  // Bajet bulan 11 = RUU Wang, tidak boleh dipinda; tidak diundi = ponteng
+  P.tetap({ bulan: 11 }); SN.prosesBulan({ rng: () => 0.3 }); p = S.loadPlayer(); const bj = p.senat.aktif.ruu.filter((x) => x.wang)[0]; betul(bj && /Bajet 2032/.test(bj.tajuk));
+  betul(!SN.undi(bj.id, 'pinda').ok, 'RUU Wang'); const k0 = p.senat.aktif.kehadiran;
+  P.tetap({ bulan: 12 }); ev = SN.prosesBulan({ rng: () => 0.9 }).peristiwa; p = S.loadPlayer(); sama(p.senat.aktif.ruu.length, 0); betul(p.senat.aktif.kehadiran <= k0 + C.PONTENG * 2, String(p.senat.aktif.kehadiran)); betul(ev.some((x) => /tidak mengundi/.test(x.mesej)));
+  // tamat penggal 1 dengan Hubungan 60+: penggal kedua, kiraan bulan bermula semula
+  const a = p.senat.aktif; P.tetap({ senat: Object.assign({}, p.senat, { aktif: Object.assign({}, a, { hubungan: 70, tamat: 2031 * 12 + 12 }) }) });
+  ev = SN.prosesBulan({ rng: () => 0.9 }).peristiwa; betul(ev.some((x) => /penggal kedua/.test(x.mesej))); betul(SN.terimaLanjut(true).ok); p = S.loadPlayer(); sama(p.senat.aktif.penggal, 2); sama(SN.keadaan(p).bulanKe, 1);
+  // Perkara 49: letak untuk bertanding; rekod sejarah; tidak lagi layak selepas 2 penggal
+  betul(SN.letakUntukBertanding().ok); p = S.loadPlayer(); betul(!SN.aktif(p)); sama(p.senat.sejarah.length, 1); sama(p.senat.sejarah[0].sebab, 'bertanding');
+  betul(!SN.laluan(p).syarat[4].ok, 'maksimum 2 penggal');
+  // menjadi Ahli Parlimen ketika Senator: kerusi Senat dikosongkan
+  P.tetap({ senat: { aktif: Object.assign({}, a, { tamat: 2040 * 12 }), sejarah: [] }, pru: Object.assign({}, PRU.getPRU(S.loadPlayer()), { aktif: null, status: { jenis: 'MP', kerusi: 'P.001', kerajaan: true } }) });
+  ev = SN.prosesBulan().peristiwa; betul(!SN.aktif(S.loadPlayer())); betul(ev.some((x) => /Perkara 49/.test(x.mesej)));
+  S.clearPlayer();
+});
+
 ujian('v14.18 Dinasti Politik: kahwin, anak, bimbing, daftar sayap, naik jawatan, waris separa, Anak Tokoh, Pokok Dinasti', () => {
   const K = g.MyPolitikKeluarga, HY = g.MyPolitikHayat, C = K.CONFIG; P.daftar({ umur: 19, nama: 'Ahmad Kamal bin Yusof' });
   P.tetap({ tahun: 2030, bulan: 3, ap: 10, myr: 100000, reputasi: 60 });

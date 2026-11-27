@@ -1233,3 +1233,14 @@ details.pf-info { padding: 10px 14px; margin-bottom: var(--space-3, 12px); }
 details.pf-info > summary { font-weight: 700; cursor: pointer; }
 .pf-jawatan details.pf-info { padding: 6px 0 0; margin: 6px 0 0; border: 0; background: none; }
 @media (max-width: 640px) { .pf-jubin-grid { grid-template-columns: 1fr 1fr; } }
+
+/* v14.21: Senator Dewan Negara */
+.sn-ban { background: linear-gradient(135deg, #3B1F5C, #7A2E5C) !important; }
+.sn-kerusi { height: 14px; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; background: #9AA1AE; margin: 2px 0 8px; }
+.sn-kerusi i { display: block; height: 100%; background: #1D4E9E; }
+.sn-ruu { border: 2px solid var(--border); border-radius: var(--radius); padding: 8px 10px; margin: 8px 0; font-size: .85rem; }
+.sn-ruu small { display: block; color: var(--text-muted); font-size: .76rem; margin: 2px 0 6px; }
+.sn-opt { display: flex; flex-wrap: wrap; gap: 6px; }
+.sn-o { flex: 1; min-width: 150px; text-align: left; border: 2px solid var(--border); border-radius: 8px; padding: 6px 8px; font: inherit; font-size: .74rem; background: #FFF9E3; color: #111; cursor: pointer; }
+.sn-o b { display: block; font-size: .8rem; }
+.sn-o.is-r { background: #FFE1E1; }

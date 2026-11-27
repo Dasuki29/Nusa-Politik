@@ -125,6 +125,8 @@ Modul utama dalam `js/`:
 | `sokong-ui.js` | Kad 🗳️ Pertandingan Lain (tab Pemilihan) |
 | `gerakan.js` | Gerakan Parti Negeri: program, had, susut, kesan peta dan PRU |
 | `gerakan-ui.js` | Kad 📣 Gerakan Parti Negeri (tab Tindakan) |
+| `senat.js` | Senator Dewan Negara: syarat, lantikan PM / DUN, RUU dari Dewan Rakyat, undi, tugas, penggal, Perkara 49 |
+| `senat-ui.js` | Kad 🏛️ Senator (tab Profil › Jawatan) dan mod Dewan Negara (tab Dewan) |
 | `keluarga.js` | Keluarga dan Dinasti Politik: kahwin, anak, bimbing, sayap anak, waris separa, Anak Tokoh, Skor Dinasti |
 | `keluarga-ui.js` | Kad 👪 Keluarga dan 🌳 Pokok Dinasti (tab Profil), 🏛️ Teruskan Dinasti (skrin Legasi) |
 | `berjasa.js` | BERJASA (Lain-lain, mod ringan): Kekuatan Parti, Dakwah, pakatan pilihan raya, PRU solo, Penentu kerajaan |
@@ -202,6 +204,7 @@ node tools/ujian-tyt.js          # pelayar: Yang di-Pertua Negeri (tawaran, tab 
 node tools/ujian-selepas.js      # pelayar: Pilihan Selepas Politik (modal Bersara, pos Duta, tab Kedutaan, EN)
 node tools/ujian-sokong.js       # pelayar: Sokong Calon Pertandingan Lain (kad tab Pemilihan, EN)
 node tools/ujian-gerakan.js      # pelayar: Gerakan Parti Negeri (kad tab Tindakan, EN)
+node tools/ujian-senat.js        # pelayar: Dewan Negara (kad Senator, lantikan, undi RUU, tugas, EN)
 node tools/ujian-keluarga.js     # pelayar: Dinasti Politik (kad Keluarga, Teruskan Dinasti, Pokok Dinasti, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN
 node tools/ujian-grs.js          # pelayar: menu GRS, daftar Gagasan (Beliawanis), kad GRS, krisis, LDP, kerusi, EN

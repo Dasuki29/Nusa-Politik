@@ -1350,7 +1350,7 @@
   }
   function panelProfil(p) {
     var hm = W.MyPolitikHarta && W.MyPolitikHarta.menunggu(p), nb = W.NusaPencapaian_UI ? W.NusaPencapaian_UI.bilBaru() : 0;
-    var sJawatan = lipatKad('pf-jawatan', kadJawatanGabung(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) +
+    var sJawatan = lipatKad('pf-jawatan', kadJawatanGabung(p), { buka: true }) + lipatKad('pf-dun', kadDUN(p), { buka: true }) + lipatKad('pf-parlimen', kadParlimenPBB(p)) + lipatKad('pf-blok', kadBlokPBB(p), { buka: true }) + lipatKad('pf-gps', kadGPS(p), { buka: true }) + (W.MyPolitikSenatUI ? lipatKad('pf-senat', W.MyPolitikSenatUI.kad(p), { buka: true }) : '') +   // v14.21: Senator Dewan Negara
       (W.NusaPRU_UI && W.NusaPRU_UI.kadProfil ? W.NusaPRU_UI.kadProfil(p) : '');
     var sParti = lipatKad('pf-ringan', kadRingan(p), { buka: true }) + (W.MyPolitikMCAUI ? lipatKad('pf-mca', W.MyPolitikMCAUI.kad(p), { buka: true }) : '') + (W.MyPolitikMICUI ? lipatKad('pf-mic', W.MyPolitikMICUI.kad(p), { buka: true }) : '') + (W.MyPolitikSabahBNUI ? lipatKad('pf-sbn', W.MyPolitikSabahBNUI.kad(p), { buka: true }) : '') + (W.MyPolitikPPPUI ? lipatKad('pf-ppp', W.MyPolitikPPPUI.kad(p), { buka: true }) : '') + (W.MyPolitikBERJASAUI ? lipatKad('pf-berjasa', W.MyPolitikBERJASAUI.kad(p), { buka: true }) : '') + (W.MyPolitikGRSUI ? lipatKad('pf-grs', W.MyPolitikGRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikWarisanUI ? lipatKad('pf-warisan', W.MyPolitikWarisanUI.kad(p), { buka: true }) : '') + (W.MyPolitikAmanahUI ? lipatKad('pf-amanah', W.MyPolitikAmanahUI.kad(p), { buka: true }) : '') + (W.MyPolitikBersatuUI ? lipatKad('pf-bersatu', W.MyPolitikBersatuUI.kad(p), { buka: true }) : '') + (W.MyPolitikPBRSUI ? lipatKad('pf-pbrs', W.MyPolitikPBRSUI.kad(p), { buka: true }) : '') + (W.MyPolitikPASUI ? lipatKad('pf-pas', W.MyPolitikPASUI.kad(p), { buka: true }) : '') + (W.MyPolitikPKRUI ? lipatKad('pf-pkr', W.MyPolitikPKRUI.kad(p), { buka: true }) : '') + (W.MyPolitikDAPUI ? lipatKad('pf-dap', W.MyPolitikDAPUI.kad(p), { buka: true }) : '') + (W.MyPolitikUMNOUI ? lipatKad('pf-umno', W.MyPolitikUMNOUI.kad(p), { buka: true }) : '') +
       lipatKad('pf-etika', kadEtika(p), { buka: true });
@@ -1583,7 +1583,7 @@
     var id = state.tab, el = $('panel-' + id);
     if (id === 'peta') { renderKrisisSW(); return; }
     var fk = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-fk') : null;
-    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? (W.NusaDewan_UI ? W.NusaDewan_UI.panel(p) : '') : id === 'istana' ? (W.MyPolitikTYTUI ? W.MyPolitikTYTUI.panel(p) : '') : id === 'kedutaan' ? (W.MyPolitikSelepasUI ? W.MyPolitikSelepasUI.panel(p) : '') : id === 'profil' ? panelProfil(p) : panelMesyuarat(p);
+    el.innerHTML = id === 'tindakan' ? panelTindakan(p) : id === 'pemilihan' ? panelPemilihan(p) : id === 'pilihanraya' ? PUIh(p, 'pilihanraya') : id === 'dewan' ? ((W.MyPolitikSenatUI ? W.MyPolitikSenatUI.panel(p) : '') + (W.NusaDewan_UI && ((W.MyPolitikDewan && W.MyPolitikDewan.aktif(p)) || (W.MyPolitikDUN && W.MyPolitikDUN.aktif(p)) || !(W.MyPolitikSenat && W.MyPolitikSenat.aktif(p))) ? W.NusaDewan_UI.panel(p) : '')) : id === 'istana' ? (W.MyPolitikTYTUI ? W.MyPolitikTYTUI.panel(p) : '') : id === 'kedutaan' ? (W.MyPolitikSelepasUI ? W.MyPolitikSelepasUI.panel(p) : '') : id === 'profil' ? panelProfil(p) : panelMesyuarat(p);
     if (fk) { var f = el.querySelector('[data-fk="' + fk.replace(/"/g, '\\"') + '"]'); if (f && !f.disabled) { f.focus({ preventScroll: true }); } }
   }
 
@@ -1593,10 +1593,10 @@
     if (!musim && state.tab === 'pilihanraya') { state.tab = 'tindakan'; }
     state.musimLalu = musim;
     $('tab-pilihanraya').hidden = !musim; $('nav-pilihanraya').hidden = !musim;
-    var dwD = !!(W.MyPolitikDewan && W.MyPolitikDewan.aktif(p)), dwN = !!(W.MyPolitikDUN && W.MyPolitikDUN.aktif(p)), dw = dwD || dwN;                   // v7.55: tab Dewan Rakyat untuk Ahli Parlimen / Menteri
+    var dwD = !!(W.MyPolitikDewan && W.MyPolitikDewan.aktif(p)), dwN = !!(W.MyPolitikDUN && W.MyPolitikDUN.aktif(p)), dwS = !!(W.MyPolitikSenat && W.MyPolitikSenat.aktif(p)), dw = dwD || dwN || dwS;   // v14.21: Senator                   // v7.55: tab Dewan Rakyat untuk Ahli Parlimen / Menteri
     if (!dw && state.tab === 'dewan') { state.tab = 'tindakan'; }
     $('tab-dewan').hidden = !dw; $('nav-dewan').hidden = !dw;
-    if (dw) { $('tab-dewan').textContent = dwD && dwN ? '🏛️ Dewan' : dwN ? '🏛️ DUN' : '🏛️ Dewan Rakyat'; $('nav-dewan').innerHTML = '<span class="icon" aria-hidden="true">🏛️</span>' + (dwN && !dwD ? 'DUN' : 'Dewan'); }
+    if (dw) { $('tab-dewan').textContent = (dwD && dwN) || (dwS && (dwD || dwN)) ? '🏛️ Dewan' : dwS ? '🏛️ Dewan Negara' : dwN ? '🏛️ DUN' : '🏛️ Dewan Rakyat'; $('nav-dewan').innerHTML = '<span class="icon" aria-hidden="true">🏛️</span>' + (dwN && !dwD ? 'DUN' : 'Dewan'); }
     var ist = !!(W.MyPolitikTYT && W.MyPolitikTYT.aktif(p));                     // v13.52: tab Istana untuk Yang di-Pertua Negeri
     if (ist && !state.istanaLalu) { state.tab = 'istana'; } state.istanaLalu = ist;
     if (!ist && state.tab === 'istana') { state.tab = 'tindakan'; }

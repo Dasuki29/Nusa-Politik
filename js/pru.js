@@ -526,6 +526,7 @@
   /* ------------------------------------------------------------------------
      PENCALONAN
      ------------------------------------------------------------------------ */
+  function letakSenat() { var SNk = modul('MyPolitikSenat', 'senat.js'), pk = S().loadPlayer(); if (SNk && pk && pk.senat && pk.senat.aktif && pk.senat.aktif.sumber !== 'sbn') { SNk.letakUntukBertanding(); } }
   function pilihKerusi(jenis, o) {
     var p = S().loadPlayer(), pru = getPRU(p), a = pru.aktif;
     if (!a || (a.fasa !== 'isytihar' && a.fasa !== 'calon')) { return { ok: false, ralat: 'Tiada fasa pencalonan.' }; }
@@ -557,6 +558,7 @@
     a.perluRunding = p.parti !== 'PSB' && p.parti !== 'BERJASA' && p.parti !== 'WARISAN' && (jenis === 'PARLIMEN' ? rng(o)() < CONFIG.GABUNGAN.peluangRunding + 0.1 : rng(o)() < CONFIG.GABUNGAN.peluangRunding - 0.15);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan: ' + a.kerusi.nama + ' (' + jenis + ')', peringkat: 'ahli' } });
+    if (jenis === 'PARLIMEN') { letakSenat(); }   // v14.21: Senator meletak jawatan sebelum penamaan calon (Perkara 49)
     return { ok: true, diluluskan: true, perluRunding: a.perluRunding, lain: lain, mesej: 'Dicalonkan bertanding kerusi ' + a.kerusi.nama + ' (' + (jenis === 'DUN' ? 'DUN' : 'Parlimen') + ').' };
   }
 
@@ -585,6 +587,7 @@
     a.perluRunding = p.parti !== 'PSB' && p.parti !== 'BERJASA' && p.parti !== 'WARISAN' && (r() < CONFIG.GABUNGAN.peluangRunding + 0.1);   // v10.3: PSB pembangkang tiada rakan gabungan: tiada rundingan kerusi / 3-penjuru
     a.fasa = a.perluRunding ? 'runding' : 'manifesto';
     simpanPRU(pru, {}, { log: { tindakan: 'pru_calon', nama: 'Dicalonkan serentak: ' + a.kerusi.nama + ' (Parlimen) + ' + a.kerusi2.nama + ' (DUN)', peringkat: 'ahli' } });
+    letakSenat();   // v14.21: Perkara 49
     return { ok: true, diluluskan: true, dua: true, perluRunding: a.perluRunding, mesej: 'Dicalonkan bertanding serentak kerusi ' + a.kerusi.nama + ' (Parlimen) dan ' + a.kerusi2.nama + ' (DUN).' };
   }
 

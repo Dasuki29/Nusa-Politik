@@ -597,6 +597,8 @@
     var DTm = muat('MyPolitikDuta', 'duta.js'), SLm = muat('MyPolitikSelepas', 'selepas.js');   // v14.6: Duta Malaysia dan Pilihan Selepas Politik
     if (DTm && DTm.prosesBulan) { peristiwa = peristiwa.concat(DTm.prosesBulan().peristiwa || []); }
     if (SLm && SLm.prosesBulan) { peristiwa = peristiwa.concat(SLm.prosesBulan().peristiwa || []); }
+    var SNm = muat('MyPolitikSenat', 'senat.js');                                              // v14.21: Senator Dewan Negara
+    if (SNm && SNm.prosesBulan) { peristiwa = peristiwa.concat(SNm.prosesBulan().peristiwa || []); }
     var KLm = muat('MyPolitikKeluarga', 'keluarga.js');                                        // v14.18: Keluarga dan Dinasti Politik
     if (KLm && KLm.prosesBulan) { peristiwa = peristiwa.concat(KLm.prosesBulan().peristiwa || []); }
     var GKm = muat('MyPolitikGerakan', 'gerakan.js');                                          // v14.10: Gerakan Parti Negeri (susut bonus)
