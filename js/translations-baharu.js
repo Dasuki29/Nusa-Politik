@@ -6544,6 +6544,17 @@
   ["Krisis konsular: {a} rakyat Malaysia ditahan di China. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in China. Choose an action in the Embassy tab."],
   ["Krisis konsular: {a} rakyat Malaysia ditahan di United Kingdom. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in the United Kingdom. Choose an action in the Embassy tab."],
   ["Krisis konsular: {a} rakyat Malaysia ditahan di Amerika Syarikat. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in the United States. Choose an action in the Embassy tab."],
+  /* v14.25 Peta: Wilayah Persekutuan dipisahkan, aras DUN */
+  ["Semua cawangan", "All branches"],
+  ["◀ DUN sebelum", "◀ Previous DUN"],
+  ["DUN seterusnya ▶", "Next DUN ▶"],
+  ["🔍 Zum masuk: DUN", "🔍 Zoom in: DUN"],
+  ["🔍 Buka peta DUN ini", "🔍 Open this DUN's map"],
+  ["· {a} cawangan.", "· {a} branches."],
+  ["Klik zon untuk pilih cawangan, kemudian Lobi atau Ziarah.", "Click a zone to select a branch, then Lobby or Visit."],
+  ["Dalam permainan, Kuala Lumpur, Putrajaya dan Labuan ialah satu negeri. Lobi dan Ziarah peringkat negeri meliputi seluruh Wilayah Persekutuan.", "In the game, Kuala Lumpur, Putrajaya and Labuan are one state. State-level Lobby and Visit cover all the Federal Territories."],
+  ["🔍 Kuala Lumpur · Putrajaya", "🔍 Kuala Lumpur · Putrajaya"],
+  ["Sisipan zum Kuala Lumpur dan Putrajaya", "Zoom inset of Kuala Lumpur and Putrajaya"],
   /* v14.23 Dewan Negara Fasa 3 */
   ["Yang di-Pertua berkecuali dan tidak memegang jawatan kerajaan.", "The President is impartial and holds no government post."],
   ["⚖️ Yang di-Pertua Dewan Negara", "⚖️ President of the Senate"],

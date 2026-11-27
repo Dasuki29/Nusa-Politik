@@ -74,7 +74,7 @@ Modul utama dalam `js/`:
 | `etika.js` | Tataetika, siasatan dan hukuman disiplin |
 | `events.js` | Peristiwa rawak |
 | `watak.js` | Gaya Kepimpinan dan kad Laluan Karier Sebenar |
-| `map.js`, `geo.js` | Peta SVG negeri, parlimen dan DUN |
+| `map.js`, `geo.js` | Peta SVG negeri (KL, Putrajaya, Labuan berasingan), parlimen, DUN dan Daerah Mengundi |
 | `menu.js` | Menu utama pada `index.html` (Sambung, Permainan Baharu, Cara Bermain) |
 | `perlembagaan.js` | Modal rujukan Perlembagaan Parti (fasal boleh lipat) |
 | `slot.js`, `slotpanel.js` | Slot simpanan berbilang (5 watak) dan panel Simpanan Permainan pada menu |
@@ -205,6 +205,7 @@ node tools/ujian-selepas.js      # pelayar: Pilihan Selepas Politik (modal Bersa
 node tools/ujian-sokong.js       # pelayar: Sokong Calon Pertandingan Lain (kad tab Pemilihan, EN)
 node tools/ujian-gerakan.js      # pelayar: Gerakan Parti Negeri (kad tab Tindakan, EN)
 node tools/ujian-peta-sentuh.js  # pelayar telefon: seret satu jari, zum cubit dan ketik pada tab Peta
+node tools/ujian-peta-dun.js     # pelayar: peta Wilayah Persekutuan dipisahkan, aras DUN, peta satu DUN (EN)
 node tools/ujian-senat.js        # pelayar: Dewan Negara (kad Senator, lantikan, undi RUU, tugas, EN)
 node tools/ujian-keluarga.js     # pelayar: Dinasti Politik (kad Keluarga, Teruskan Dinasti, Pokok Dinasti, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN

@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.25 — 🗺️ Peta: Wilayah Persekutuan dipisahkan dan aras DUN (mockup dipersetujui)
+
+- **Wilayah Persekutuan:** pada aras Malaysia, Kuala Lumpur, Putrajaya dan Labuan kini tiga kawasan peta berasingan. Butiran, peluang dan sokongan dikira bagi wilayah itu sahaja (KL 11 bahagian, Putrajaya 1, Labuan 1); Zum masuk membuka peta bahagian wilayah itu. Sisipan zum untuk KL dan Putrajaya kerana kedua-duanya sangat kecil. Dalam permainan WP kekal satu negeri: jawatan, Badan Perhubungan, PRN serta Lobi dan Ziarah peringkat negeri tidak berubah.
+- **Aras DUN baharu:** laluan peta kini Malaysia › Negeri › Bahagian › DUN › Cawangan. Zum masuk dari bahagian memaparkan DUN bahagian itu; dwiklik atau 🔍 pada DUN membuka peta DUN itu sendiri yang memenuhi bingkai (zon Daerah Mengundi = cawangan), dengan butang ◀ DUN sebelum / DUN seterusnya ▶. Bahagian WP (tiada DUN) dan mod Sarawak terus ke cawangan seperti dahulu.
+- Ujian pelayar baharu `tools/ujian-peta-dun.js`.
+
 ## v14.24 — Pembetulan: seret peta di telefon
 
 - **Pepijat:** peta tidak boleh diseret di telefon kerana sentuhan diabaikan (hanya tetikus disokong) dan peta membenarkan tatal halaman secara menegak. Kini satu jari = seret peta, dua jari = zum cubit, ketik masih memilih kawasan. Untuk menatal halaman di telefon, seret di luar bingkai peta.
