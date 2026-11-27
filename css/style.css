@@ -1252,3 +1252,7 @@ details.pf-info > summary { font-weight: 700; cursor: pointer; }
 .sn-st span { min-width: 28px; text-align: center; font-weight: 800; border: 2px solid var(--border); border-radius: 6px; padding: 2px 6px; background: #fff; color: #111; }
 .sn-amaran { background: #FFE1E1; color: #111; border: 2px solid #E8344F; border-radius: var(--radius); padding: 8px 10px; font-size: .8rem; margin-top: 8px; }
 .jm-tag--teknokrat { background: #E3D7FF; }   /* v14.22 */
+
+/* v14.23: Yang di-Pertua Dewan Negara */
+.sn-ban--ydp { background: linear-gradient(135deg, #5C1F1F, #9E2B2B) !important; }
+.sn-pilih .prkl-act { border-top-color: rgba(0,0,0,.2); }

@@ -81,8 +81,15 @@
       { ok: integriti(p) >= (D ? D.CONFIG.INTEGRITI : 50), teks: 'Integriti ' + (D ? D.CONFIG.INTEGRITI : 50) + ' ke atas (anda ' + Math.round(integriti(p)) + ')' },
       { ok: !sl.dutaSelesai, teks: 'Belum pernah berkhidmat sebagai Duta' }
     ];
+    var SNx = modul('MyPolitikSenat', 'senat.js'), sedangSenat = !!(SNx && SNx.aktif(p)), CS = SNx ? SNx.CONFIG : { SELEPAS: { umur: 45, peluang: 0.7 }, INTEGRITI: 50, MAKS_PENGGAL: 2 };   // v14.23: Senator (khidmat negarawan)
+    var iS = [
+      { ok: !!(tk || pernahMP(p) || (p.jawatanTertinggi && p.jawatanTertinggi.peringkat === 'pusat') || (p.jawatanList || []).some(function (j) { return j && j.peringkat === 'pusat'; })), teks: 'Tokoh nasional / bekas Menteri, Ahli Parlimen atau jawatan Pusat' },
+      { ok: !!(SNx && SNx.kerajaanPusat(p)), teks: 'Parti dalam kerajaan persekutuan' },
+      { ok: integriti(p) >= CS.INTEGRITI && u >= CS.SELEPAS.umur && !!(SNx && SNx.penggalDigunakan(p) < CS.MAKS_PENGGAL), teks: 'Integriti ' + CS.INTEGRITI + '+, umur ' + CS.SELEPAS.umur + '+, belum ' + CS.MAKS_PENGGAL + ' penggal Senator' },
+      { ok: sl.senatTahun !== p.tahun, teks: 'Belum ditolak PM tahun ini' }
+    ];
     var bolehT = !sedangTYT && sl.jalur !== 'tyt' && iT.every(function (x) { return x.ok; });
-    return { tyt: { item: iT, boleh: bolehT, kosong: kos, peluang: TY ? TY.peluang(p) : 0 }, duta: { item: iD, boleh: !sedangDuta && !sedangTYT && sl.jalur !== 'tyt' && iD.every(function (x) { return x.ok; }), pos: D ? D.tawaran(p) : [] }, limbo: !!sl.limbo };
+    return { tyt: { item: iT, boleh: bolehT, kosong: kos, peluang: TY ? TY.peluang(p) : 0 }, duta: { item: iD, boleh: !sedangDuta && !sedangTYT && sl.jalur !== 'tyt' && iD.every(function (x) { return x.ok; }), pos: D ? D.tawaran(p) : [] }, senat: { item: iS, boleh: !!SNx && !sedangSenat && !sedangTYT && !sedangDuta && sl.jalur !== 'tyt' && iS.every(function (x) { return x.ok; }), peluang: CS.SELEPAS.peluang }, limbo: !!sl.limbo };
   }
   /** Lepaskan semua jawatan parti dan kerajaan serta kerusi (PRK calon parti melalui js/letak.js). */
   function lepasSemua(sebab) {
@@ -113,9 +120,20 @@
     var r = DT().mula(kod); if (r.ok && l.prk) { r.mesej += ' PRK diadakan bulan depan.'; }
     return r;
   }
+  /** v14.23: Senator (khidmat negarawan): peluang tawaran PM; berjaya = lepaskan semua jawatan dan kerusi, keahlian kekal. */
+  function pilihSenat(o) {
+    var p = S().loadPlayer(); if (!p || p.tamat) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
+    var pl = pilihan(p), SNx = modul('MyPolitikSenat', 'senat.js'); if (!pl.senat.boleh || !SNx) { return { ok: false, ralat: 'Anda belum layak untuk laluan Senator.' }; }
+    var r = (o && o.rng) || Math.random;
+    if (r() >= pl.senat.peluang) { var sl0 = getSL(p); sl0.senatTahun = p.tahun; simpan(sl0, {}, { tindakan: 'selepas_senat_tolak', nama: 'Tiada tawaran Senator tahun ini', peringkat: 'ahli' }); return { ok: true, berjaya: false, mesej: 'Perdana Menteri tidak mencadangkan nama anda sebagai Senator tahun ini. Anda kekal dalam politik; cuba laluan lain atau tahun hadapan.' }; }
+    var l = lepasSemua('Dilantik Senator (khidmat negarawan).'), sl = getSL(S().loadPlayer()); sl.jalur = null; sl.limbo = false; sl.pernahMP = sl.pernahMP || l.mp;
+    var h = simpan(sl, l.patch); if (!h.ok) { return { ok: false, ralat: h.ralat }; }
+    var m = SNx.mulaSelepas(); if (m.ok && l.prk) { m.mesej += ' PRK diadakan bulan depan.'; }
+    return m;
+  }
   function bersara() { var H = HY(); return H && H.bersaraAwal ? H.bersaraAwal() : { ok: false, ralat: 'Modul hayat tiada.' }; }
   /** Pemain di luar politik (menunggu TYT, limbo, Duta atau TYT aktif): tidak boleh bertanding dalam pemilihan parti. */
-  function luarPolitik(p) { var sl = (p && p.selepas) || {}; return !!(p && (sl.jalur === 'tyt' || sl.limbo || (p.duta && p.duta.aktif) || (p.tyt && p.tyt.aktif))); }
+  function luarPolitik(p) { var sl = (p && p.selepas) || {}; return !!(p && (sl.jalur === 'tyt' || sl.limbo || (p.duta && p.duta.aktif) || (p.tyt && p.tyt.aktif) || (p.senat && p.senat.aktif && p.senat.aktif.sumber === 'selepas'))); }   // v14.23: Senator negarawan
 
   /** Bulanan (calendar.js), selepas js/tyt.js: tamatkan penantian bila TYT dilantik atau tawaran tiada / ditolak. */
   function prosesBulan() {
@@ -134,6 +152,6 @@
   /** Bulan sasaran langkau (Januari tahun kekosongan) semasa menunggu TYT. */
   function sasaranLangkau(p) { var sl = getSL(p); return sl.jalur === 'tyt' && sl.kosong ? sl.kosong * 12 + 1 : null; }
 
-  return { CONFIG: CONFIG, getSL: getSL, tokohNasional: tokohNasional, pilihan: pilihan, kosongTerdekat: kosongTerdekat, pilihTYT: pilihTYT, pilihDuta: pilihDuta, bersara: bersara,
+  return { CONFIG: CONFIG, getSL: getSL, tokohNasional: tokohNasional, pilihan: pilihan, kosongTerdekat: kosongTerdekat, pilihTYT: pilihTYT, pilihDuta: pilihDuta, pilihSenat: pilihSenat, bersara: bersara,
     luarPolitik: luarPolitik, prosesBulan: prosesBulan, sasaranLangkau: sasaranLangkau, idx: idx };
 });

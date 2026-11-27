@@ -9,6 +9,7 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
   await new Promise((r) => srv.listen(0, r)); const base = 'http://127.0.0.1:' + srv.address().port; const br = await PW.chromium.launch(); const out = process.argv[2] || null; const gagal = [];
   const EN = process.argv[3] === 'EN', RE = /(Senator Dewan Negara|dilantik Agong|Lantikan atas nasihat|Dipilih DUN|Lobi Presiden|Mohon pencalonan|Pengaruh Senat|Hubungan Kerajaan|Kehadiran|Komposisi Dewan|RUU dari Dewan|Cadang pindaan|Tugas bulanan|Bahas RUU|Soalan kepada Menteri|Jawatankuasa Pilihan|Sokong|Tolak|Lulus Dewan Rakyat|kerajaan ·)/;
   const RE2 = /(susut|Jika penggal|Tawaran Perdana Menteri|Terima|Tolak|Kekal di luar|Jawab soalan|Bentang RUU|bergantung pada kerusi|Kuota Senator|kekosongan|Parti anda|Rakan gabungan|Tokoh masyarakat|Setiap kerusi|Sahkan lantikan|Komposisi)/;
+  const RE3 = /(Pemilihan Yang|Calonkan|Kewibawaan|Usul tergempar|Benarkan|Pengerusikan|Lawatan diplomatik|Sebagai pengerusi|Tugas Yang|peluang|sekali)/;
   const sembunyi = '.tut-kad,.tut-blok,.tut-sorot,.tut-fab,#mpa-bar,.toast-stack{display:none!important}';
   for (const [w, n] of [[1280, 'd'], [420, 'm']]) {
     const pg = await br.newPage({ viewport: { width: w, height: 900 } }); const er = []; pg.on('pageerror', (e) => er.push(e.message));
@@ -57,6 +58,22 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
       await pg.click('.sn-kuota [data-sn="kuota:sahkan"]'); await pg.waitForTimeout(300);
       const kr = await pg.evaluate(() => MyPolitikSenat.komposisi(MyPolitikSave.loadPlayer()).kerajaan); if (kr !== 33) { gagal.push(n + ': komposisi ' + kr); }
     }
+    /* v14.23: pemilihan Yang di-Pertua, mod pengerusi, usul, avatar jubah */
+    await pg.evaluate(() => { const S = MyPolitikSave, K = MyPolitikKabinet, p = S.loadPlayer(), i = p.tahun * 12 + p.bulan; const sn = JSON.parse(JSON.stringify(p.senat)); sn.aktif = sn.aktif || {}; Object.assign(sn.aktif, { sumber: 'pm', penggal: 1, mula: i, tamat: i + 30, tahunMula: p.tahun, pengaruh: 80, hubungan: 70, kehadiran: 90, ruu: [], jawatan: null, pemilihan: { i: i } });
+      S.applyEffects({}, { kiraTindakan: false, patch: { senat: sn, ap: 10, kabinet: Object.assign(K.getKabinet(p), { hasGovernmentRole: false, roleLevel: 'NONE', senatorMenteri: false }) } }); NusaUI.gotoTab('dewan'); });
+    await pg.waitForTimeout(400);
+    if (!(await pg.$('.sn-pilih [data-sn="calon:ydp"]:not([disabled])'))) { gagal.push(n + ': butang calon YDP'); }
+    if (EN) { const t = await (await pg.$('.sn-pilih')).innerText(); if (RE3.test(t)) { gagal.push(n + ': BM bocor (pemilihan): ' + t.match(RE3)[0] + ' | ' + t.slice(0, 300)); } }
+    if (out) { await (await pg.$('.sn-pilih')).screenshot({ path: out + '/senat-pemilihan-' + n + '.png' }); }
+    await pg.evaluate(() => MyPolitikSenat.setRng(() => 0)); await pg.click('.sn-pilih [data-sn="calon:ydp"]'); await pg.waitForTimeout(400);
+    await pg.evaluate(() => { const S = MyPolitikSave, p = S.loadPlayer(), sn = JSON.parse(JSON.stringify(p.senat)); sn.aktif.usul = { i: p.tahun * 12 + p.bulan }; S.applyEffects({}, { kiraTindakan: false, patch: { senat: sn } }); NusaUI.render(); });
+    await pg.waitForTimeout(400);
+    if (!(await pg.$('.sn-ban--ydp'))) { gagal.push(n + ': mod Yang di-Pertua tiada'); }
+    const jb = await pg.evaluate(() => (document.getElementById('p-avatar') || {}).innerHTML || ''); if (!/#D4AF37/.test(jb) || !/fill="#111"/.test(jb)) { gagal.push(n + ': avatar jubah tiada'); }
+    if (EN) { const t = await (await pg.$('.sn-panel')).innerText(); if (RE3.test(t)) { gagal.push(n + ': BM bocor (YDP): ' + t.match(RE3)[0] + ' | ' + t.slice(0, 500)); } }
+    if (out) { await (await pg.$('.sn-panel')).screenshot({ path: out + '/senat-ydp-' + n + '.png' }); await (await pg.$('#p-avatar')).screenshot({ path: out + '/senat-avatar-' + n + '.png' }); }
+    await pg.click('.sn-panel [data-sn="usul:benar"]'); await pg.waitForTimeout(300); if (await pg.$('.sn-panel [data-sn="usul:benar"]')) { gagal.push(n + ': usul tidak diputuskan'); }
+    await pg.click('.sn-panel [data-sn="ydp:pengerusi"]'); await pg.waitForTimeout(300);
     if (er.length) { gagal.push(n + ': ralat ' + er.join(' | ')); }
     await pg.close();
   }

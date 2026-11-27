@@ -17,9 +17,10 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
     for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
     await pg.evaluate(() => document.getElementById('btn-bersara').click()); await pg.waitForSelector('#modal.is-open'); await pg.waitForTimeout(300);
     const isi = await pg.$eval('#modal', (m) => m.innerText); if (EN && RE.test(isi)) { gagal.push(n + ': BM bocor (modal): ' + isi.slice(0, 400)); }
-    const lbl = await pg.$$eval('#modal-kaki button', (b) => b.map((x) => x.innerText)); if (lbl.length !== 4) { gagal.push(n + ': butang modal ' + JSON.stringify(lbl)); }
+    const lbl = await pg.$$eval('#modal-kaki button', (b) => b.map((x) => x.innerText)); if (lbl.length !== 5 || !lbl.some((x) => /Senator/.test(x))) {   // v14.23: + Senator
+      gagal.push(n + ': butang modal ' + JSON.stringify(lbl)); }
     if (out) { await (await pg.$('#modal .modal, #modal')).screenshot({ path: out + '/selepas-modal-' + n + '.png' }); }
-    await pg.evaluate(() => { const b = document.querySelectorAll('#modal-kaki button'); b[b.length - 1].click(); }); await pg.waitForTimeout(400);
+    await pg.evaluate(() => { const b = [].slice.call(document.querySelectorAll('#modal-kaki button')); (b.filter((x) => /Duta|Ambassador/.test(x.innerText))[0] || b[b.length - 1]).click(); }); await pg.waitForTimeout(400);
     const isi2 = await pg.$eval('#modal', (m) => m.innerText); if (EN && RE.test(isi2)) { gagal.push(n + ': BM bocor (pos): ' + isi2.slice(0, 300)); }
     if (out) { await (await pg.$('#modal .modal, #modal')).screenshot({ path: out + '/selepas-pos-' + n + '.png' }); }
     await pg.evaluate(() => { const b = document.querySelectorAll('#modal-kaki button'); b[1].click(); }); await pg.waitForTimeout(700);

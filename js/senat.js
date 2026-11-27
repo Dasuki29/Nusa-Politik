@@ -46,7 +46,11 @@
     /* v14.22 Fasa 2 */
     MAJORITI: 36, KEKOSONGAN: 4, BULAN_KOSONG: [1, 7], TANGGUH_RUU: 0.30,
     TAWARAN: { pangkat: 10, peluang: { 10: 0.5, 11: 0.8, 12: 1 } }, KUOTA: { parti: 2, rakan: 3, ngo: 1 },
-    MENTERI: { jawab: { ap: 1, kpi: 3, pengaruh: 2 }, bentang: { ap: 2, kpi: 4, kpiTangguh: -2, pengaruh: 2 } }
+    MENTERI: { jawab: { ap: 1, kpi: 3, pengaruh: 2 }, bentang: { ap: 2, kpi: 4, kpiTangguh: -2, pengaruh: 2 } },
+    /* v14.23 Fasa 3: Yang di-Pertua (Perkara 56), Selepas Politik */
+    YDP: { pengaruh: 70, ap: 3, asas: 0.15, elaun: 5000 }, TYDP: { pengaruh: 60, ap: 2, asas: 0.35, elaun: 3500 }, KOSONG_YDP: 0.10, USUL: 0.25,
+    TUGAS_YDP: { pengerusi: { ap: 2, ip: 10, kewibawaan: 3 }, lawatan: { ap: 3, myr: 3000, reputasi: 2 }, ganti: { ap: 1, ip: 5 } },
+    USUL_PILIH: { benar: { hubungan: -4, kewibawaan: 4 }, tolak: { hubungan: 3, kewibawaan: -3 }, abai: { kewibawaan: -3 } }, SELEPAS: { peluang: 0.7, umur: 45 }
   };
 
   function getSN(p) { var s = p && p.senat && typeof p.senat === 'object' ? salin(p.senat) : {}; s.aktif = s.aktif || null; s.sejarah = Array.isArray(s.sejarah) ? s.sejarah : []; if (!isFinite(Number(s.kerajaan))) { s.kerajaan = CONFIG.KERAJAAN; } return s; }
@@ -125,7 +129,7 @@
     return { sumber: sumber, negeri: sumber === 'dun' ? (p.negeri || '') : '', penggal: 1, mula: idx(p), tamat: idx(p) + CONFIG.PENGGAL, tahunMula: p.tahun,
       pengaruh: M.pengaruh, hubungan: M.hubungan, kehadiran: M.kehadiran, bahas: 0, soalan: 0, jk: 0, ruu: [], lanjut: false };
   }
-  function label(a) { return a.sumber === 'dun' ? 'Dipilih DUN ' + a.negeri : a.sumber === 'sbn' ? 'Mewakili MIC Sabah' : 'Dilantik atas nasihat PM'; }
+  function label(a) { return a.sumber === 'dun' ? 'Dipilih DUN ' + a.negeri : a.sumber === 'sbn' ? 'Mewakili MIC Sabah' : a.sumber === 'selepas' ? 'Khidmat negarawan (lantikan PM)' : 'Dilantik atas nasihat PM'; }
   /** Lobi lantikan: jenis = 'pm' | 'dun'. */
   function mohon(jenis, o) {
     var Sv = S(), p = Sv.loadPlayer(); if (!p) { return { ok: false, ralat: 'Tiada profil pemain.' }; }
@@ -141,9 +145,9 @@
       : (jenis === 'pm' ? 'Presiden parti tidak mencadangkan nama anda kali ini.' : 'DUN memilih calon lain sebagai Senator negeri.') + ' Cuba lagi pada kekosongan seterusnya.' };
   }
 
-  function laras(a, x) { ['pengaruh', 'hubungan', 'kehadiran'].forEach(function (k) { if (x[k]) { a[k] = clamp((Number(a[k]) || 0) + x[k], 0, 100); } }); }
+  function laras(a, x) { ['pengaruh', 'hubungan', 'kehadiran', 'kewibawaan'].forEach(function (k) { if (x[k]) { a[k] = clamp((Number(a[k]) || 0) + x[k], 0, 100); } }); }
   function tanda(n) { return (n > 0 ? '+' : '') + n; }
-  var LBL = { pengaruh: 'Pengaruh Senat', hubungan: 'Hubungan Kerajaan', kehadiran: 'Kehadiran', ip: 'IP', reputasi: 'Reputasi' };
+  var LBL = { pengaruh: 'Pengaruh Senat', hubungan: 'Hubungan Kerajaan', kehadiran: 'Kehadiran', kewibawaan: 'Kewibawaan Kerusi', ip: 'IP', reputasi: 'Reputasi' };
   function ringkas(x) { return Object.keys(LBL).filter(function (k) { return x[k]; }).map(function (k) { return LBL[k] + ' ' + tanda(x[k]); }).join(', '); }
   /** Rekod aktif (Senator MIC Sabah dicipta secara malas). */
   function aktifRekod(p, s) {
@@ -156,7 +160,7 @@
   /** Undi RUU: pilihan = sokong | pinda | tolak */
   function undi(id, pilihan, o) {
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
-    var a = c.a, r = a.ruu.filter(function (x) { return x.id === id; })[0]; if (!r) { return { ok: false, ralat: 'RUU tidak dijumpai.' }; }
+    var a = c.a, r = a.ruu.filter(function (x) { return x.id === id; })[0]; if (a.jawatan === 'ydp') { return { ok: false, ralat: 'Yang di-Pertua mempengerusikan sidang dan tidak mengundi.' }; } if (!r) { return { ok: false, ralat: 'RUU tidak dijumpai.' }; }
     if (r.wang && pilihan === 'pinda') { return { ok: false, ralat: 'RUU Wang tidak boleh dipinda oleh Dewan Negara.' }; }
     var U = CONFIG.UNDI, x = pilihan === 'sokong' ? (r.wang ? U.sokongWang : U.sokong) : pilihan === 'pinda' ? U.pinda : pilihan === 'tolak' ? (r.wang ? U.tolakWang : U.tolak) : null;
     if (!x) { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
@@ -172,7 +176,7 @@
   /** Tugas bulanan: bahas | soalan | jk */
   function tugas(jenis) {
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
-    var T = CONFIG.TUGAS[jenis], a = c.a, p = c.p, kini = idx(p); if (!T) { return { ok: false, ralat: 'Tugas tidak sah.' }; }
+    var T = CONFIG.TUGAS[jenis], a = c.a, p = c.p, kini = idx(p); if (!T) { return { ok: false, ralat: 'Tugas tidak sah.' }; } if (a.jawatan === 'ydp') { return { ok: false, ralat: 'Yang di-Pertua tidak berbahas; gunakan tugas pengerusi.' }; }
     if (a[jenis] === kini) { return { ok: false, ralat: 'Sudah dibuat bulan ini.' }; }
     if ((Number(p.ap) || 0) < T.ap) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
     a[jenis] = kini; var x = {}, kes = { ap: -T.ap };
@@ -199,7 +203,7 @@
   function terimaLanjut(ya) {
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
     var a = c.a; if (!a.lanjut) { return { ok: false, ralat: 'Tiada tawaran penggal kedua.' }; }
-    if (!ya) { tamatkan(c.p, c.s, 'tolak'); var h0 = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); lucutMenteri(S().loadPlayer(), 'Penggal Senator anda tamat.'); return h0.ok ? { ok: true, mesej: 'Penggal anda sebagai Senator tamat.' } : { ok: false, ralat: h0.ralat }; }
+    if (!ya) { tamatkan(c.p, c.s, 'tolak'); var h0 = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); lucutMenteri(S().loadPlayer(), 'Penggal Senator anda tamat.'); if (a.sumber === 'selepas') { var ax = akhirSelepas(); if (ax) { return ax; } } return h0.ok ? { ok: true, mesej: 'Penggal anda sebagai Senator tamat.' } : { ok: false, ralat: h0.ralat }; }
     a.penggal = 2; a.mula = idx(c.p); a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false;
     var h = S().applyEffects({}, { kiraTindakan: false, patch: { senat: c.s }, log: { tindakan: 'senat_lanjut', nama: 'Penggal kedua Senator', peringkat: 'ahli' } });
     return h.ok ? { ok: true, mesej: 'Anda dilantik semula sebagai Senator bagi penggal kedua (penggal terakhir).' } : { ok: false, ralat: h.ralat };
@@ -225,18 +229,21 @@
     if (adaMP(p) && a.sumber !== 'sbn') { tamatkan(p, s, 'mp'); var kbM = kab(p), pM = { senat: s }; if (kbM && kbM.senatorMenteri) { kbM = salin(kbM); kbM.senatorMenteri = false; pM.kabinet = kbM; } Sv.applyEffects({}, { kiraTindakan: false, patch: pM }); ev.push({ jenis: 'senat', mesej: 'Anda kini Ahli Parlimen. Kerusi Senator anda dikosongkan (Perkara 49).' }); return { peristiwa: ev }; }
     if (kini >= a.tamat) {
       if (a.sumber !== 'sbn' && a.penggal === 1 && !a.lanjut && a.hubungan >= CONFIG.LANJUT && penggalDigunakan(s) + 1 < CONFIG.MAKS_PENGGAL) { a.lanjut = true; a.tamat = kini + 1; Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s } }); ev.push({ jenis: 'senat', mesej: 'Penggal pertama anda sebagai Senator tamat. Anda ditawarkan penggal kedua: jawab di tab Dewan.' }); return { peristiwa: ev }; }
-      tamatkan(p, s, 'penggal'); Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); var lcM = lucutMenteri(Sv.loadPlayer(), 'Penggal Senator anda tamat.'); if (lcM) { ev.push(lcM); } ev.push({ jenis: 'senat', mesej: a.lanjut ? 'Anda tidak menjawab tawaran penggal kedua. Penggal Senator anda tamat.' : 'Penggal anda sebagai Senator tamat.' }); return { peristiwa: ev };
+      tamatkan(p, s, 'penggal'); Sv.applyEffects({}, { kiraTindakan: false, patch: { senat: s }, log: { tindakan: 'senat_tamat', nama: 'Tamat penggal Senator', peringkat: 'ahli' } }); var lcM = lucutMenteri(Sv.loadPlayer(), 'Penggal Senator anda tamat.'); if (lcM) { ev.push(lcM); } if (a.sumber === 'selepas') { var axP = akhirSelepas(); if (axP) { ev.push({ jenis: 'senat', mesej: axP.mesej }); return { peristiwa: ev }; } } ev.push({ jenis: 'senat', mesej: a.lanjut ? 'Anda tidak menjawab tawaran penggal kedua. Penggal Senator anda tamat.' : 'Penggal anda sebagai Senator tamat.' }); return { peristiwa: ev };
     }
+    ev = ev.concat(prosesYDP(p, s, a, r));   // v14.23: pemilihan Yang di-Pertua, usul tergempar
+    if (a.jawatan === 'ydp') { a.ruu = []; }   // Yang di-Pertua tidak mengundi
     var ponteng = a.ruu.filter(function (x) { return x.bulan < kini; });
     if (ponteng.length) { laras(a, { kehadiran: CONFIG.PONTENG * ponteng.length }); a.ruu = a.ruu.filter(function (x) { return x.bulan >= kini; }); ev.push({ jenis: 'senat', mesej: 'Anda tidak mengundi ' + ponteng.length + ' RUU di Dewan Negara. Kehadiran ' + (CONFIG.PONTENG * ponteng.length) + '.' }); }
-    var aktifBulanLalu = a.bahas === kini - 1 || a.soalan === kini - 1 || a.jk === kini - 1;
+    var aktifBulanLalu = a.bahas === kini - 1 || a.soalan === kini - 1 || a.jk === kini - 1 || a.y_pengerusi === kini - 1;
     if (!aktifBulanLalu) { laras(a, { kehadiran: CONFIG.SUSUT_HADIR }); }
-    if (CONFIG.SIDANG.indexOf(parseInt(p.bulan, 10)) >= 0) {
+    if (CONFIG.SIDANG.indexOf(parseInt(p.bulan, 10)) >= 0 && a.jawatan !== 'ydp') {
       var baru = ruuBaharu(p, r, a); a.ruu = a.ruu.concat(baru);
       if (baru.length) { ev.push({ jenis: 'senat', mesej: '📜 Sidang Dewan Negara: ' + baru.length + ' RUU dari Dewan Rakyat menunggu undian anda (tab Dewan).' }); }
     }
-    if (a.sumber !== 'sbn') { kes.myr = CONFIG.ELAUN; }
-    Sv.applyEffects(kes, { kiraTindakan: false, pindahan: true, patch: { senat: s }, log: kes.myr ? { tindakan: 'elaun_senator', nama: 'Elaun Senator: +RM ' + CONFIG.ELAUN, peringkat: 'bulan' } : undefined });
+    var el = a.jawatan === 'ydp' ? CONFIG.YDP.elaun : a.jawatan === 'tydp' ? CONFIG.TYDP.elaun : CONFIG.ELAUN;
+    if (a.sumber !== 'sbn' || a.jawatan) { kes.myr = el; }
+    Sv.applyEffects(kes, { kiraTindakan: false, pindahan: true, patch: { senat: s }, log: kes.myr ? { tindakan: 'elaun_senator', nama: 'Elaun Senator: +RM ' + el, peringkat: 'bulan' } : undefined });
     return { peristiwa: ev };
   }
   /* ---------- v14.22 Fasa 2 ---------- */
@@ -284,6 +291,7 @@
   function semakLobi(p) {
     if (!aktif(p)) { return { boleh: false, sebab: 'Hanya Senator.' }; }
     var a = getSN(p).aktif || {}, k = kab(p);
+    if (a.jawatan === 'ydp') { return { boleh: false, sebab: 'Yang di-Pertua berkecuali dan tidak memegang jawatan kerajaan.' }; }   // v14.23
     if (k.hasGovernmentRole) { return { boleh: false, sebab: 'Anda sudah memegang jawatan kerajaan.' }; }
     if (k.lobi) { return { boleh: false, sebab: 'Lobi sudah dibuka: pilih portfolio di tab Tindakan.' }; }
     if (!kerajaanPusat(p)) { return { boleh: false, sebab: 'Parti anda tidak berada dalam kerajaan persekutuan.' }; }
@@ -325,17 +333,95 @@
     var b = []; if (parti) { b.push('Sokongan perwakilan +' + K.parti * parti); } if (rakan) { b.push('Hubungan gabungan +' + K.rakan * rakan); } if (ngo) { b.push('Reputasi +' + K.ngo * ngo); }
     return h.ok ? { ok: true, mesej: q.n + ' Senator baharu dilantik. ' + b.join(', ') + '.' } : { ok: false, ralat: h.ralat };
   }
+  /* ---------- v14.23 Fasa 3 ---------- */
+  function namaJawatan(j) { return j === 'ydp' ? 'Yang di-Pertua Dewan Negara' : j === 'tydp' ? 'Timbalan Yang di-Pertua Dewan Negara' : ''; }
+  /** Pemilihan Yang di-Pertua: selepas PRU (Parlimen baharu) atau kekosongan rawak setiap Januari; usul tergempar bagi Yang di-Pertua. */
+  function prosesYDP(p, s, a, r) {
+    var ev = [], kini = idx(p), kunci = kunciPRU(p), b = parseInt(p.bulan, 10);
+    if (a.sumber === 'sbn') { return ev; }
+    if (kunci && s.ydpKunci !== kunci) {
+      var adaLama = s.ydpKunci !== undefined; s.ydpKunci = kunci;
+      if (adaLama) { if (a.jawatan) { ev.push({ jenis: 'senat', mesej: 'Parlimen baharu: jawatan ' + namaJawatan(a.jawatan) + ' anda tamat dan Dewan Negara memilih semula.' }); a.jawatan = null; } a.pemilihan = { i: kini }; ev.push({ jenis: 'senat', mesej: '🗳️ Pemilihan Yang di-Pertua dan Timbalan Yang di-Pertua Dewan Negara dibuka (tab Dewan).' }); }
+    } else if (b === 1 && !a.jawatan && !a.pemilihan && r() < CONFIG.KOSONG_YDP) { a.pemilihan = { i: kini }; ev.push({ jenis: 'senat', mesej: '🗳️ Jawatan Yang di-Pertua Dewan Negara kosong. Pemilihan dibuka (tab Dewan).' }); }
+    if (a.pemilihan && a.pemilihan.i < kini - 1) { a.pemilihan = null; }
+    if (a.jawatan === 'ydp') {
+      if (a.usul && a.usul.i < kini) { laras(a, CONFIG.USUL_PILIH.abai); a.usul = null; ev.push({ jenis: 'senat', mesej: 'Usul tergempar tidak diputuskan. Kewibawaan Kerusi ' + CONFIG.USUL_PILIH.abai.kewibawaan + '.' }); }
+      if (CONFIG.SIDANG.indexOf(b) >= 0 && r() < CONFIG.USUL) { a.usul = { i: kini }; ev.push({ jenis: 'senat', mesej: '⚖️ Usul tergempar dikemukakan di Dewan Negara: putuskan di tab Dewan.' }); }
+    }
+    return ev;
+  }
+  function semakCalon(p, jenis) {
+    if (!aktif(p)) { return { boleh: false, sebab: 'Hanya Senator.' }; }
+    var a = getSN(p).aktif || {}, C = jenis === 'ydp' ? CONFIG.YDP : CONFIG.TYDP;
+    if (a.sumber === 'sbn') { return { boleh: false, sebab: 'Tidak tersedia bagi Senator MIC Sabah.' }; }
+    if (!a.pemilihan) { return { boleh: false, sebab: 'Tiada pemilihan sekarang (selepas PRU atau apabila jawatan kosong).' }; }
+    if (a.jawatan === 'ydp' || a.jawatan === jenis) { return { boleh: false, sebab: 'Anda sudah memegang jawatan ini.' }; }
+    if (a.pemilihan[jenis]) { return { boleh: false, sebab: 'Sudah bertanding dalam pemilihan ini.' }; }
+    if (!kerajaanPusat(p)) { return { boleh: false, sebab: 'Calon kerajaan biasanya menang: parti anda tidak berada dalam kerajaan.' }; }
+    if ((Number(a.pengaruh) || 0) < C.pengaruh) { return { boleh: false, sebab: 'Pengaruh Senat ' + C.pengaruh + '+ (anda ' + a.pengaruh + ').' }; }
+    if ((Number(p.ap) || 0) < C.ap) { return { boleh: false, sebab: 'AP tidak mencukupi.' }; }
+    var pel = clamp(C.asas + ((Number(a.pengaruh) || 0) - C.pengaruh) / 100 + ((Number(a.hubungan) || 50) - 50) / 200 + (komposisi(p).ada ? 0.1 : -0.1), 0.05, 0.9);
+    return { boleh: true, peluang: Math.round(pel * 100) };
+  }
+  function calonkan(jenis, o) {
+    var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
+    var x = semakCalon(c.p, jenis); if (!x.boleh) { return { ok: false, ralat: x.sebab }; }
+    var a = c.a, C = jenis === 'ydp' ? CONFIG.YDP : CONFIG.TYDP, menang = rng(o)() * 100 < x.peluang; a.pemilihan[jenis] = true;
+    if (menang) { a.jawatan = jenis; a.kewibawaan = a.kewibawaan || 60; if (jenis === 'ydp') { c.s.ydpPernah = true; a.pemilihan = null; } }
+    var nm = namaJawatan(jenis), h = S().applyEffects({ ap: -C.ap }, { kiraTindakan: true, patch: { senat: c.s }, log: { tindakan: 'senat_' + jenis, nama: (menang ? 'Dipilih ' : 'Kalah pemilihan ') + nm, peringkat: 'ahli' } });
+    if (!h.ok) { return { ok: false, ralat: h.ralat }; }
+    return { ok: true, berjaya: menang, mesej: menang ? 'Dewan Negara memilih anda sebagai ' + nm + '. Elaun RM ' + C.elaun.toLocaleString('en') + ' sebulan.' + (jenis === 'ydp' ? ' Anda kini mempengerusikan sidang dan tidak mengundi RUU.' : '') : 'Dewan Negara memilih calon lain sebagai ' + nm + '.' };
+  }
+  function tugasYDP(jenis) {
+    var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
+    var a = c.a, p = c.p, kini = idx(p), T = CONFIG.TUGAS_YDP[jenis]; if (!T) { return { ok: false, ralat: 'Tugas tidak sah.' }; }
+    if (jenis === 'ganti' ? a.jawatan !== 'tydp' : a.jawatan !== 'ydp') { return { ok: false, ralat: 'Hanya ' + (jenis === 'ganti' ? 'Timbalan Yang di-Pertua.' : 'Yang di-Pertua.') }; }
+    var k = 'y_' + jenis; if (jenis === 'lawatan' ? a[k] === p.tahun : a[k] === kini) { return { ok: false, ralat: jenis === 'lawatan' ? 'Sudah dibuat tahun ini.' : 'Sudah dibuat bulan ini.' }; }
+    if ((Number(p.ap) || 0) < T.ap) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
+    var kos = T.myr ? (S().kosSebenar ? S().kosSebenar(p, T.myr) : T.myr) : 0; if (kos && (Number(p.myr) || 0) < kos) { return { ok: false, ralat: 'Dana tidak mencukupi.' }; }
+    a[k] = jenis === 'lawatan' ? p.tahun : kini; var x = {}, kes = { ap: -T.ap }; if (kos) { kes.myr = -kos; }
+    if (T.kewibawaan) { x.kewibawaan = T.kewibawaan; laras(a, x); } if (T.ip) { kes.ip = T.ip; x.ip = T.ip; } if (T.reputasi) { kes.reputasi = T.reputasi; x.reputasi = T.reputasi; }
+    var NM = { pengerusi: 'Anda mempengerusikan sidang Dewan Negara.', lawatan: 'Anda mengetuai lawatan diplomatik parlimen.', ganti: 'Anda mempengerusikan sidang bagi pihak Yang di-Pertua.' };
+    var h = S().applyEffects(kes, { kiraTindakan: true, patch: { senat: c.s }, log: { tindakan: 'senat_y_' + jenis, nama: NM[jenis], peringkat: 'ahli' } });
+    return h.ok ? { ok: true, mesej: NM[jenis] + ' ' + ringkas(x) + '.' } : { ok: false, ralat: h.ralat };
+  }
+  /** Usul tergempar: pilihan = benar | tolak */
+  function putusUsul(pilihan) {
+    var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
+    var a = c.a, x = CONFIG.USUL_PILIH[pilihan]; if (!a.usul) { return { ok: false, ralat: 'Tiada usul tergempar.' }; } if (!x || pilihan === 'abai') { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
+    laras(a, x); a.usul = null;
+    var m = pilihan === 'benar' ? 'Anda membenarkan usul tergempar dibahaskan.' : 'Anda menolak usul tergempar.';
+    var h = S().applyEffects({}, { kiraTindakan: true, patch: { senat: c.s }, log: { tindakan: 'senat_usul', nama: m, peringkat: 'ahli' } });
+    return h.ok ? { ok: true, mesej: m + ' ' + ringkas(x) + '.' } : { ok: false, ralat: h.ralat };
+  }
+  /** Selepas Politik: lantikan Senator negarawan (dipanggil oleh js/selepas.js selepas jawatan dilepaskan). */
+  function mulaSelepas() {
+    var Sv = S(), p = Sv.loadPlayer(), s = getSN(p); s.aktif = baharu(p, 'selepas');
+    var h = Sv.applyEffects({}, { kiraTindakan: true, patch: { senat: s }, log: { tindakan: 'senat_lantik', nama: 'Dilantik Senator (khidmat negarawan)', peringkat: 'ahli' } });
+    return h.ok ? { ok: true, mesej: 'Anda mengangkat sumpah sebagai Senator Dewan Negara (khidmat negarawan). Semua jawatan parti dan kerusi dilepaskan; keahlian parti kekal. Tab Dewan dibuka.' } : { ok: false, ralat: h.ralat };
+  }
+  /** Tamat Senator negarawan: pilih TYT jika layak (limbo), atau bersara sepenuhnya (legasi 'senator'). */
+  function akhirSelepas() {
+    var Sv = S(), p = Sv.loadPlayer(), SL = modul('MyPolitikSelepas', 'selepas.js');
+    var bolehTYT = SL && SL.pilihan ? SL.pilihan(p).tyt.boleh : false;
+    if (bolehTYT) { Sv.applyEffects({}, { kiraTindakan: false, patch: { selepas: Object.assign({}, p.selepas || {}, { jalur: null, limbo: true, senatSelesai: true }) } }); return { ok: true, mesej: 'Penggal Senator anda tamat. Anda layak ditimbang sebagai Yang di-Pertua Negeri: pilih di kad Selepas Politik (tab Profil).' }; }
+    var H = modul('MyPolitikHayat', 'hayat.js'), r = H && H.tamatkan ? H.tamatkan('senator') : null;
+    return r ? { ok: true, tamat: true, mesej: 'Penggal Senator anda tamat. Anda bersara sepenuhnya daripada kehidupan awam.' } : null;
+  }
   function keadaanPM(p) { var s = getSN(p); return { kuota: s.kuota || null, tawaran: s.tawaran || null, komposisi: komposisi(p), pm: adalahPM(p) }; }
   function keadaan(p) {
     var s = getSN(p); if (!aktif(p)) { return { aktif: false, sejarah: s.sejarah }; }
     var a = aktifRekod(p, s), kini = idx(p);
     var kb = kab(p), mn = menteriSenat(p), kp = komposisi(p);
     return { aktif: true, a: a, label: label(a), bulanKe: a.lanjut ? CONFIG.PENGGAL : clamp(kini - (a.tamat - CONFIG.PENGGAL) + 1, 1, CONFIG.PENGGAL), kerajaan: kp.kerajaan, komposisi: kp,
+      jawatan: a.jawatan || null, namaJawatan: namaJawatan(a.jawatan), kewibawaan: a.kewibawaan || 0, usul: a.usul || null, pemilihan: a.pemilihan ? { ydp: semakCalon(p, 'ydp'), tydp: semakCalon(p, 'tydp') } : null,
+      ydp: { pengerusi: a.y_pengerusi !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS_YDP.pengerusi.ap, lawatan: a.y_lawatan !== p.tahun && (Number(p.ap) || 0) >= CONFIG.TUGAS_YDP.lawatan.ap, ganti: a.y_ganti !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS_YDP.ganti.ap },
       menteri: mn ? { portfolio: kb.portfolioName, kpi: Number(kb.governanceRating) || 0, jawab: a.m_jawab !== kini && (Number(p.ap) || 0) >= CONFIG.MENTERI.jawab.ap, bentang: a.m_bentang !== kini && (Number(p.ap) || 0) >= CONFIG.MENTERI.bentang.ap } : null, lobi: semakLobi(p),
       boleh: { bahas: a.bahas !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.bahas.ap, soalan: a.soalan !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.soalan.ap, jk: a.jk !== kini && (Number(p.ap) || 0) >= CONFIG.TUGAS.jk.ap }, sejarah: s.sejarah };
   }
 
   return { CONFIG: CONFIG, setRng: function (f) { rngLalai = f || Math.random; }, getSN: getSN, aktif: aktif, syarat: syarat, laluan: laluan, mohon: mohon, undi: undi, tugas: tugas,
     letakUntukBertanding: letakUntukBertanding, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan, label: label,
-    komposisi: komposisi, tambahKerajaan: tambahKerajaan, tangguhRUU: tangguhRUU, menteriSenat: menteriSenat, jawabTawaran: jawabTawaran, semakLobi: semakLobi, bukaLobi: bukaLobi, tugasMenteri: tugasMenteri, agihKuota: agihKuota, keadaanPM: keadaanPM };
+    komposisi: komposisi, tambahKerajaan: tambahKerajaan, tangguhRUU: tangguhRUU, menteriSenat: menteriSenat, jawabTawaran: jawabTawaran, semakLobi: semakLobi, bukaLobi: bukaLobi, tugasMenteri: tugasMenteri, agihKuota: agihKuota, keadaanPM: keadaanPM,
+    calonkan: calonkan, semakCalon: semakCalon, tugasYDP: tugasYDP, putusUsul: putusUsul, mulaSelepas: mulaSelepas, namaJawatan: namaJawatan, kerajaanPusat: kerajaanPusat, penggalDigunakan: function (p) { return penggalDigunakan(getSN(p)); } };
 });

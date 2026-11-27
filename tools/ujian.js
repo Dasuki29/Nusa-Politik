@@ -3619,6 +3619,30 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   S.clearPlayer();
 });
 
+ujian('v14.23 Dewan Negara Fasa 3: pemilihan Yang di-Pertua, mod pengerusi, usul, Senator Selepas Politik, avatar rasmi, legasi', () => {
+  const SN = g.MyPolitikSenat, SL = g.MyPolitikSelepas, A = g.MyPolitikAvatar, C = SN.CONFIG; P.daftar({ umur: 48 });
+  P.tetap({ tahun: 2031, bulan: 7, ap: 10, myr: 50000, reputasi: 60, jawatanList: [{ kod: 'ketua_bahagian', jawatan: 'Ketua Bahagian', peringkat: 'bahagian', kumpulan: 'utama', pangkat: 7, tahun: 2027 }] });
+  betul(SN.mohon('pm', { rng: () => 0 }).berjaya); let p = S.loadPlayer();
+  P.tetap({ kerusiNasional: { tahun: 2031, parti: 60, rakan: 60, kerajaan: true }, senat: Object.assign({}, p.senat, { ydpKunci: 'lama', tawaranKunci: '2031|60|1', aktif: Object.assign({}, p.senat.aktif, { pengaruh: 80, hubungan: 70 }) }) });
+  P.tetap({ bulan: 8 }); let ev = SN.prosesBulan({ rng: () => 0.99 }).peristiwa; p = S.loadPlayer(); betul(p.senat.aktif.pemilihan, 'pemilihan dibuka'); betul(ev.some((x) => /Pemilihan Yang di-Pertua/.test(x.mesej)));
+  const k0 = SN.keadaan(p); betul(k0.pemilihan.ydp.boleh, k0.pemilihan.ydp.sebab);
+  const cy = SN.calonkan('ydp', { rng: () => 0 }); betul(cy.ok && cy.berjaya, cy.ralat); p = S.loadPlayer(); sama(p.senat.aktif.jawatan, 'ydp'); betul(p.senat.ydpPernah); sama(A.rasmiDari(p), 'ydp');
+  betul(!SN.tugas('bahas').ok, 'YDP tidak berbahas'); betul(SN.tugasYDP('pengerusi').ok); betul(!SN.tugasYDP('pengerusi').ok, 'sebulan sekali'); betul(!SN.tugasYDP('ganti').ok, 'hanya Timbalan');
+  const m0 = S.loadPlayer().myr; P.tetap({ bulan: 11 }); ev = SN.prosesBulan({ rng: () => 0 }).peristiwa; p = S.loadPlayer(); sama(p.myr - m0, C.YDP.elaun, 'elaun YDP'); sama(p.senat.aktif.ruu.length, 0, 'YDP tidak mengundi');
+  betul(p.senat.aktif.usul, 'usul tergempar'); const kw = p.senat.aktif.kewibawaan; betul(SN.putusUsul('benar').ok); sama(S.loadPlayer().senat.aktif.kewibawaan, kw + C.USUL_PILIH.benar.kewibawaan);
+  // avatar
+  const sv = A.svg('biasa', { parti: 'UMNO', rasmi: 'ydp' }); betul(/#D4AF37/.test(sv) && /fill="#111"/.test(sv)); betul(/>DN</.test(A.svg('biasa', { parti: 'DAP', pinDN: true })), 'pin DN'); betul(!/>DN</.test(A.svg('biasa', { parti: 'DAP' })));
+  // Senator sebagai laluan Selepas Politik
+  S.clearPlayer(); P.daftar({ umur: 50 }); P.tetap({ tahun: 2031, bulan: 3, ap: 10, myr: 50000, jawatanList: [{ kod: 'naib_presiden', jawatan: 'Naib Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 10, tahun: 2028 }] });
+  p = S.loadPlayer(); let pl = SL.pilihan(p); betul(pl.senat.boleh, JSON.stringify(pl.senat.item));
+  let r = SL.pilihSenat({ rng: () => 0.99 }); betul(r.ok && r.berjaya === false); betul(!SL.pilihan(S.loadPlayer()).senat.boleh, 'ditolak tahun ini');
+  P.tetap({ tahun: 2032 }); r = SL.pilihSenat({ rng: () => 0 }); betul(r.ok, r.ralat); p = S.loadPlayer(); betul(SN.aktif(p)); sama(p.senat.aktif.sumber, 'selepas'); sama(p.jawatan, 'Ahli Biasa'); betul(SL.luarPolitik(p));
+  // tamat penggal tanpa layak TYT: bersara (legasi senator)
+  P.tetap({ senat: Object.assign({}, p.senat, { aktif: Object.assign({}, p.senat.aktif, { hubungan: 40, tamat: 2032 * 12 + 4 }) }) }); P.tetap({ bulan: 4 });
+  SN.prosesBulan({ rng: () => 0.99 }); p = S.loadPlayer(); betul(p.tamat && p.tamat.sebab === 'senator', JSON.stringify(p.tamat && p.tamat.sebab)); betul(/Senator Dewan Negara/.test(p.tamat.mesej));
+  S.clearPlayer();
+});
+
 ujian('v14.22 Dewan Negara Fasa 2: komposisi, tangguh RUU, tawaran Senator-Menteri, lobi Senator, tugas Menteri, kuota PM, teknokrat', () => {
   const SN = g.MyPolitikSenat, KB = g.MyPolitikKabinet, J = g.MyPolitikJemaah, C = SN.CONFIG; P.daftar({ umur: 45 });
   P.tetap({ tahun: 2031, bulan: 3, ap: 10, myr: 50000, reputasi: 60, jawatanList: [{ kod: 'naib_presiden', jawatan: 'Naib Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 10, tahun: 2028 }] });

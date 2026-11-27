@@ -24,6 +24,7 @@
       (pl.tyt.kosong ? '<small>Kekosongan terdekat: ' + esc(pl.tyt.kosong.nama) + ', Januari ' + pl.tyt.kosong.kosong + ' · peluang tawaran ± ' + Math.round(pl.tyt.peluang * 100) + '%</small>' : '') +
       senarai(pl.tyt.item) + '<small>Sementara menunggu: semua jawatan dilepaskan dan anda boleh melangkau bulan hingga Januari. Jika tiada tawaran, pilih semula Duta / Pesuruhjaya Tinggi atau bersara.</small></div>';
     h += '<div class="sl-pil' + (pl.duta.boleh ? ' is-on' : '') + '"><b>🌏 Duta / Pesuruhjaya Tinggi Malaysia ke luar negara</b><small>Lantikan politik oleh Perdana Menteri (penggal 3 tahun, elaun ' + rm(D.CONFIG.ELAUN) + ' sebulan). Keahlian parti digantung.</small>' + senarai(pl.duta.item) + '</div>';
+    if (pl.senat) { h += '<div class="sl-pil' + (pl.senat.boleh ? ' is-on' : '') + '"><b>🏛️ Senator (khidmat negarawan)</b><small>Lantikan atas nasihat PM sebagai tokoh berpengalaman (peluang ' + Math.round(pl.senat.peluang * 100) + '%). Semua jawatan parti dan kerusi dilepaskan; keahlian parti kekal. Penggal 3 tahun (maksimum 2). Tamat: pilih TYT jika layak, atau bersara.</small>' + senarai(pl.senat.item) + '</div>'; }   // v14.23
     return h;
   }
   /** Modal pilih pos Duta. */
@@ -40,6 +41,7 @@
     var butang = [{ label: 'Batal', nilai: null }, { label: '🏠 Bersara sepenuhnya', nilai: 'penuh' }];
     if (pl.tyt.boleh) { butang.push({ label: '🏰 Yang di-Pertua Negeri', nilai: 'tyt', kelas: 'btn--gold' }); }
     if (pl.duta.boleh) { butang.push({ label: '🌏 Duta Malaysia', nilai: 'duta', kelas: 'btn--gold' }); }
+    if (pl.senat && pl.senat.boleh) { butang.push({ label: '🏛️ Senator', nilai: 'senat', kelas: 'btn--gold' }); }   // v14.23
     var pilih = await M({ tajuk: 'Bersara daripada Politik?', isi: '<p>Usia ' + esc(umur) + ' tahun. Pilih laluan selepas politik:</p>' + isiPilihan(p, pl), butang: butang });
     await jalan(pilih, pl);
   }
@@ -48,6 +50,7 @@
     if (pilih === 'penuh') {
       var ya = await M({ tajuk: 'Bersara Sepenuhnya?', isi: '<p>Permainan ini tidak boleh diteruskan selepas bersara. Anda boleh memulakan kerjaya baharu dari umur 18.</p>', butang: [{ label: 'Batal', nilai: false }, { label: 'Ya, Bersara', nilai: true, kelas: 'btn--gold' }] });
       if (ya) { var r = SL.bersara(); if (!r.ok) { lapor(r); } else if (UI().render) { UI().render(); } }
+    } else if (pilih === 'senat') { var hs = SL.pilihSenat(); lapor(hs); if (hs.ok && hs.berjaya !== false && UI().gotoTab) { setTimeout(function () { UI().gotoTab('dewan'); }, 50); }   // v14.23
     } else if (pilih === 'tyt') { lapor(SL.pilihTYT()); if (UI().gotoTab) { UI().gotoTab('profil'); } }
     else if (pilih === 'duta') {
       var kod = await pilihPos(pl); if (!kod) { return; }
@@ -79,7 +82,7 @@
       } else {
         var pl = SL.pilihan(p);
         h += '<p class="note">Pilih laluan seterusnya.</p>' + isiPilihan(p, pl, true) + '<div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' +
-          (pl.tyt.boleh ? btn('pilih:tyt', '🏰 Yang di-Pertua Negeri', true, 'btn--primary') : '') + (pl.duta.boleh ? btn('pilih:duta', '🌏 Duta Malaysia', true, 'btn--primary') : '') + btn('pilih:penuh', '🏠 Bersara sepenuhnya', true) + '</div>';
+          (pl.tyt.boleh ? btn('pilih:tyt', '🏰 Yang di-Pertua Negeri', true, 'btn--primary') : '') + (pl.duta.boleh ? btn('pilih:duta', '🌏 Duta Malaysia', true, 'btn--primary') : '') + (pl.senat && pl.senat.boleh ? btn('pilih:senat', '🏛️ Senator', true, 'btn--primary') : '') + btn('pilih:penuh', '🏠 Bersara sepenuhnya', true) + '</div>';
       }
       return h + '</section>';
     } catch (e) { return ''; }

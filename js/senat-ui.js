@@ -39,11 +39,26 @@
     try {
       var k = SN.keadaan(p); if (!k.aktif) { return ''; }
       var a = k.a, kr = k.kerajaan, ln = C.KERUSI - kr, h = '<section class="card sn-panel">';
-      h += '<div class="tyt-ban sn-ban"><b>🏛️ ' + (k.menteri ? esc(k.menteri.portfolio) + ' · Senator' : 'Senator · Dewan Negara') + '</b><small>' + esc(k.label) + ' · Penggal ' + a.penggal + ' · bulan ' + k.bulanKe + ' daripada ' + C.PENGGAL + (a.sumber === 'sbn' ? '' : ' · Elaun ' + rm(C.ELAUN)) + '</small></div>';
+      var ydp = k.jawatan === 'ydp', elaun = ydp ? C.YDP.elaun : k.jawatan === 'tydp' ? C.TYDP.elaun : C.ELAUN;   // v14.23
+      h += '<div class="tyt-ban sn-ban' + (ydp ? ' sn-ban--ydp' : '') + '"><b>' + (ydp ? '⚖️ Yang di-Pertua Dewan Negara' : k.jawatan === 'tydp' ? '🏛️ Timbalan Yang di-Pertua · Senator' : '🏛️ ' + (k.menteri ? esc(k.menteri.portfolio) + ' · Senator' : 'Senator · Dewan Negara')) + '</b><small>' + esc(k.label) + ' · Penggal ' + a.penggal + ' · bulan ' + k.bulanKe + ' daripada ' + C.PENGGAL + (a.sumber === 'sbn' && !k.jawatan ? '' : ' · Elaun ' + rm(elaun)) + '</small></div>';
       if (k.lobi && k.lobi.boleh) { h += act('🏛️ Lobi Portfolio Kerajaan (Senator)', 'Parti dalam kerajaan · 1 percubaan setiap penggal Senator · peluang 10% lebih rendah (tiada kerusi)', btn('lobi', 'Buka Lobi', true, 'btn--gold')); }
-      h += meter('Pengaruh Senat', a.pengaruh) + meter('Hubungan Kerajaan', a.hubungan) + meter('Kehadiran', a.kehadiran, '%');
+      h += meter('Pengaruh Senat', a.pengaruh) + (ydp ? meter('Kewibawaan Kerusi (berkecuali)', k.kewibawaan) : '') + meter('Hubungan Kerajaan', a.hubungan) + meter('Kehadiran', a.kehadiran, '%');
+      if (k.pemilihan) {
+        var Y = k.pemilihan.ydp, Td = k.pemilihan.tydp;
+        h += '<div class="tyt-ev sl-ev sn-pilih"><b>🗳️ Pemilihan Yang di-Pertua Dewan Negara</b><small>Dewan Negara memilih Yang di-Pertua dan Timbalan daripada kalangan Senator (Perkara 56). Calon kerajaan biasanya menang.</small>' +
+          act('Calonkan diri: Yang di-Pertua', C.YDP.ap + ' AP · Pengaruh Senat ' + C.YDP.pengaruh + '+' + (Y.boleh ? ' · peluang ' + Y.peluang + '%' : ' · ' + Y.sebab), btn('calon:ydp', 'Calonkan', Y.boleh, 'btn--gold')) +
+          act('Calonkan diri: Timbalan Yang di-Pertua', C.TYDP.ap + ' AP · Pengaruh Senat ' + C.TYDP.pengaruh + '+' + (Td.boleh ? ' · peluang ' + Td.peluang + '%' : ' · ' + Td.sebab), btn('calon:tydp', 'Calonkan', Td.boleh)) + '</div>';
+      }
+      if (ydp && k.usul) { var UP = C.USUL_PILIH; h += '<div class="sn-ruu"><b>⚖️ Usul tergempar</b><small>Seorang Senator memohon usul tergempar dibahaskan. Keputusan anda sebagai pengerusi:</small><div class="sn-opt"><button type="button" class="sn-o" data-sn="usul:benar"><b>Benarkan</b>Hubungan Kerajaan ' + UP.benar.hubungan + ' · Kewibawaan +' + UP.benar.kewibawaan + '</button><button type="button" class="sn-o is-r" data-sn="usul:tolak"><b>Tolak</b>Hubungan Kerajaan +' + UP.tolak.hubungan + ' · Kewibawaan ' + UP.tolak.kewibawaan + '</button></div></div>'; }
       h += '<p class="note" style="margin:8px 0 2px">Komposisi Dewan Negara: ' + kr + ' kerajaan · ' + ln + ' lain-lain</p><div class="sn-kerusi"><i style="width:' + Math.round(kr / C.KERUSI * 100) + '%"></i></div>';
       if (a.lanjut) { h += '<div class="tyt-ev sl-ev"><b>📜 Tawaran penggal kedua</b><small>Terima untuk berkhidmat tiga tahun lagi (penggal terakhir), atau tamatkan.</small><div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' + btn('lanjut:ya', 'Terima penggal kedua', true, 'btn--primary') + btn('lanjut:tidak', 'Tamatkan', true) + '</div></div>'; }
+      if (ydp) {
+        var TY = C.TUGAS_YDP;
+        h += '<p class="note" style="margin:8px 0 2px">Sebagai pengerusi, anda tidak mengundi RUU dan tidak berbahas.</p><h3 style="margin:10px 0 4px">⚖️ Tugas Yang di-Pertua</h3>';
+        h += act('Pengerusikan sidang', TY.pengerusi.ap + ' AP · IP +' + TY.pengerusi.ip + ', Kewibawaan +' + TY.pengerusi.kewibawaan + ' · sekali sebulan', btn('ydp:pengerusi', 'Pengerusikan', k.ydp.pengerusi));
+        h += act('Lawatan diplomatik parlimen', TY.lawatan.ap + ' AP, ' + rm(TY.lawatan.myr) + ' · Reputasi +' + TY.lawatan.reputasi + ' · sekali setahun', btn('ydp:lawatan', 'Lawat', k.ydp.lawatan));
+        return h + '</section>';
+      }
       h += '<h3 style="margin:10px 0 4px">📜 RUU dari Dewan Rakyat</h3>';
       if (!a.ruu.length) { h += '<p class="note">Tiada RUU menunggu. Dewan Negara bersidang pada bulan ' + C.SIDANG.join(', ') + ' (Bajet pada bulan ' + C.BAJET + ').</p>'; }
       a.ruu.forEach(function (r) {
@@ -64,6 +79,7 @@
       } else {
         h += act('Soalan kepada Menteri', T.soalan.ap + ' AP · Reputasi +' + T.soalan.reputasi + ', Hubungan Kerajaan ' + T.soalan.hubungan + ' · sekali sebulan', btn('tugas:soalan', 'Tanya', k.boleh.soalan));
       }
+      if (k.jawatan === 'tydp') { h += act('Pengerusikan sidang (ganti)', C.TUGAS_YDP.ganti.ap + ' AP · IP +' + C.TUGAS_YDP.ganti.ip + ' · sekali sebulan', btn('ydp:ganti', 'Pengerusikan', k.ydp.ganti)); }
       h += act('Jawatankuasa Pilihan Khas', T.jk.ap + ' AP · Pengaruh Senat +' + T.jk.pengaruh + ', Kehadiran +' + T.jk.kehadiran + ' · sekali sebulan', btn('tugas:jk', 'Hadir', k.boleh.jk));
       h += '<small class="note"><span>Kehadiran susut ' + C.SUSUT_HADIR + ' sebulan jika tiada tugas dibuat bulan sebelumnya.</span> <span>Untuk bertanding PRU, anda perlu meletak jawatan Senator sebelum penamaan calon (Perkara 49).</span></small>';
       if (k.menteri) { h += '<div class="sn-amaran"><span>⚠️ Jawatan Menteri anda bergantung pada kerusi Senat.</span> <span>Jika penggal Senator tamat tanpa dilantik semula, atau anda meletak jawatan Senator, jawatan Menteri juga tamat.</span></div>'; }
@@ -119,6 +135,9 @@
     if (x[0] === 'lanjut') { lapor(SN.terimaLanjut(x[1] === 'ya')); return; }
     if (x[0] === 'tawaran') { lapor(SN.jawabTawaran(x[1] === 'ya')); return; }
     if (x[0] === 'lobi') { lapor(SN.bukaLobi()); return; }
+    if (x[0] === 'calon') { lapor(SN.calonkan(x[1])); return; }
+    if (x[0] === 'ydp') { lapor(SN.tugasYDP(x[1])); return; }
+    if (x[0] === 'usul') { lapor(SN.putusUsul(x[1])); return; }
     if (x[0] === 'mtugas') { lapor(SN.tugasMenteri(x[1])); return; }
     if (x[0] === 'kuota' && pilihKuota) {
       if (x[1] === 'sahkan') { var r = SN.agihKuota(pilihKuota.parti, pilihKuota.rakan, pilihKuota.ngo); if (r.ok) { pilihKuota = null; } lapor(r); return; }

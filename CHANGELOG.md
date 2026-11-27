@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v14.23 — 🏛️ Dewan Negara Fasa 3 (mockup dipersetujui)
+
+- **Yang di-Pertua dan Timbalan Yang di-Pertua Dewan Negara (Perkara 56):** pemilihan dibuka selepas PRU (Parlimen baharu; jawatan sedia ada tamat) atau apabila jawatan kosong (10% setiap Januari). Syarat: parti dalam kerajaan, Pengaruh Senat 70+ (Timbalan 60+); 3 / 2 AP; peluang ikut Pengaruh, Hubungan Kerajaan dan majoriti kerajaan.
+- **Mod Yang di-Pertua (tab Dewan):** tidak mengundi RUU atau berbahas; meter Kewibawaan Kerusi; tugas Pengerusikan sidang (bulanan), Lawatan diplomatik parlimen (tahunan), keputusan usul tergempar (Benarkan / Tolak; dibiarkan = Kewibawaan −3). Elaun RM 5,000. Tiada lobi portfolio (berkecuali).
+- **Timbalan Yang di-Pertua:** masih mengundi; tugas Pengerusikan sidang (ganti). Elaun RM 3,500.
+- **Senator sebagai laluan Selepas Politik:** pilihan 🏛️ Senator (khidmat negarawan) dalam modal Bersara dan kad Selepas Politik. Syarat: tokoh nasional / bekas Menteri, Ahli Parlimen atau jawatan Pusat, parti dalam kerajaan, Integriti 50+, umur 45+, belum 2 penggal. Peluang 70% (ditolak = cuba tahun hadapan). Semua jawatan dan kerusi dilepaskan, keahlian kekal (tidak bertanding pemilihan parti). Tamat: TYT jika layak, atau bersara (legasi "Tamat Perkhidmatan Senator").
+- **Avatar rasmi:** Senator kekal avatar parti dengan pin merah "DN"; Yang di-Pertua memakai jubah hitam bersulam emas (tanpa warna atau logo parti), kekal di skrin Legasi.
+- Ujian unit baharu; ujian pelayar Dewan Negara dan Selepas Politik dikemas kini; kunci EN baharu.
+
 ## v14.22 — 🏛️ Dewan Negara Fasa 2 (mockup dipersetujui)
 
 - **Tawaran Senator-Menteri selepas PRU:** pemimpin Pusat (Naib Presiden ke atas, atau Ketua Sayap Pusat) parti kerajaan yang tidak memegang kerusi Parlimen berpeluang ditawarkan Senator + jawatan kerajaan (Naib Presiden 50%, Timbalan Presiden 80%: Timbalan Menteri; Presiden 100%: Menteri). Tolak = Reputasi +1. Kad di tab Tindakan (keputusan menunggu), luput selepas 2 bulan.
