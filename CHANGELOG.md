@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v14.24 — Pembetulan: seret peta di telefon
+
+- **Pepijat:** peta tidak boleh diseret di telefon kerana sentuhan diabaikan (hanya tetikus disokong) dan peta membenarkan tatal halaman secara menegak. Kini satu jari = seret peta, dua jari = zum cubit, ketik masih memilih kawasan. Untuk menatal halaman di telefon, seret di luar bingkai peta.
+- Ujian pelayar baharu `tools/ujian-peta-sentuh.js` (emulasi Pixel 5). Ujian pelayar utama dikemas kini untuk sub-tab Profil (v14.20).
+
 ## v14.23 — 🏛️ Dewan Negara Fasa 3 (mockup dipersetujui)
 
 - **Yang di-Pertua dan Timbalan Yang di-Pertua Dewan Negara (Perkara 56):** pemilihan dibuka selepas PRU (Parlimen baharu; jawatan sedia ada tamat) atau apabila jawatan kosong (10% setiap Januari). Syarat: parti dalam kerajaan, Pengaruh Senat 70+ (Timbalan 60+); 3 / 2 AP; peluang ikut Pengaruh, Hubungan Kerajaan dan majoriti kerajaan.

@@ -132,7 +132,7 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   await pg.waitForTimeout(500);
   const toastPC = await pg.evaluate(() => Array.prototype.map.call(document.querySelectorAll('.toast'), (t) => t.textContent).join(' | '));
   if (toastPC.indexOf('Achievement Unlocked: Foremost Statesman!') < 0) { ralat.push('toast pencapaian tiada/salah: ' + toastPC.slice(0, 120)); }
-  await pg.locator('[data-tab="profil"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-pencapaian"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (pencapaian)');
+  await pg.locator('[data-tab="profil"]').first().evaluate((e) => e.click()); await pg.waitForTimeout(300); await pg.evaluate(() => { try { NusaUI.subProfil('pencapaian', true); } catch (e) { /* v14.20 */ } const d = document.querySelector('details[data-lipat="pf-pencapaian"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (pencapaian)');
   const panelPC = await pg.evaluate(() => document.getElementById('panel-profil').innerText);
   const lp = await pg.evaluate(() => { window.NusaUI.render(); const d = document.querySelector('details[data-lipat="pf-pencapaian"]'), k = Object.keys(localStorage).filter((x) => /^nusa_lipat_/.test(x))[0]; return { buka: !!(d && d.open), simpan: !!(k && /pf-pencapaian/.test(localStorage.getItem(k) || '')), sumLipat: document.querySelectorAll('#panel-profil details.lipat').length }; });
   if (!lp.buka || !lp.simpan || lp.sumLipat < 5) { ralat.push('bahagian boleh lipat Profil: keadaan tidak disimpan/dikekalkan: ' + JSON.stringify(lp)); }
@@ -310,7 +310,7 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
   /* v8.13: tab Harta (EN) dan pengisytiharan SPRM wajib. */
   await tutup();
   await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 300000 } }); window.MyPolitikHarta.beli('wisma'); });
-  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (harta)');
+  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { try { NusaUI.subProfil('peribadi', true); } catch (e) { /* v14.20 */ } const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('tab profil (harta)');
   const ht = await pg.evaluate(() => (document.getElementById('panel-profil') || {}).innerText || '');
   if (!/asset catalogue/i.test(ht) || !/office building/i.test(ht)) { ralat.push('panel Harta EN salah: ' + ht.slice(0, 120)); }
   if (/Katalog|Hartanah|Penyelenggaraan|Kekayaan/.test(ht)) { ralat.push('panel Harta bocor BM: ' + ht.slice(0, 160)); }
@@ -323,7 +323,7 @@ const BENAR = /(Wikipedia|mStar|Laman rasmi|data-i18n-skip|Cawangan Contoh|Neger
 
   /* v8.22: sewa hartanah dan naik taraf (EN). */
   await pg.evaluate(() => { const S = window.MyPolitikSave; S.applyEffects({}, { kiraTindakan: false, patch: { myr: 400000 } }); window.MyPolitikHarta.beli('rumah'); window.NusaHarta_UI.render ? window.NusaHarta_UI.render() : 0; });
-  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('harta naik taraf');
+  await pg.locator('#tab-profil').first().evaluate((e) => e.click()).catch(() => {}); await pg.waitForTimeout(300); await pg.evaluate(() => { try { NusaUI.subProfil('peribadi', true); } catch (e) { /* v14.20 */ } const d = document.querySelector('details[data-lipat="pf-harta"]'); if (d) { d.open = true; } }); await pg.waitForTimeout(400); await imbas('harta naik taraf');
   const nt = await pg.evaluate(() => (document.getElementById('panel-profil') || {}).textContent || '');
   if (!/Bungalow/.test(nt) || !/Upgrade/.test(nt) || !/Rent RM/.test(nt) || !/Property rent per month/.test(nt)) { ralat.push('panel naik taraf EN salah: ' + nt.slice(0, 160)); }
   if (/Naik taraf|Sewa |banglo|Kompleks/.test(nt)) { ralat.push('panel naik taraf bocor BM'); }

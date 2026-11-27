@@ -513,7 +513,7 @@
     '.mpm-zon.is-rumah{stroke:var(--mpm-gold);stroke-width:1.6}',
     /* ---- v3.1: peta poligon vektor (gaya Kempen 222). Token warna boleh diubah dalam css/map.css ---- */
     '.mpm-kanvas{position:relative;border:1px solid var(--mpm-bd);border-radius:14px;overflow:hidden;background:var(--mpm-laut,radial-gradient(120% 100% at 50% 0%,#14161D,#0B0C10))}',
-    '.mpm-peta{display:block;width:100%;height:auto;max-height:68vh;min-height:220px;touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none;cursor:grab}',
+    '.mpm-peta{display:block;width:100%;height:auto;max-height:68vh;min-height:220px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}',
     '.mpm-peta.is-seret{cursor:grabbing}',
     '.mpm-poli{stroke:var(--mpm-garis,#0E0F13);stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:filter .15s,opacity .15s}',
     '.mpm-poli.is-kosong{cursor:default;fill:var(--mpm-kosong,#23262F)}',
@@ -1260,25 +1260,43 @@
         if (!(ev.ctrlKey || ev.metaKey)) { return; }
         ev.preventDefault(); var p = titik(ev); zum(ev.deltaY < 0 ? 0.8 : 1.25, p.x, p.y);
       }, { passive: false });
+      /* v14.24: sentuhan (telefon) disokong: satu jari = seret, dua jari = zum cubit. Dahulu sentuhan diabaikan. */
+      var jari = {};
+      function bilJari() { return Object.keys(jari).length; }
+      function cubitMula() { var k = Object.keys(jari), a = jari[k[0]], b = jari[k[1]]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, vb: vb.slice() }; }
       svg.addEventListener('pointerdown', function (ev) {
-        if (ev.pointerType === 'touch' || ev.button !== 0) { return; }
+        if (ev.pointerType !== 'touch' && ev.button !== 0) { return; }
+        jari[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+        if (bilJari() >= 2) { seret = { cubit: cubitMula(), pindah: true, vb: vb.slice() }; svg.classList.add('is-seret'); tip.hidden = true; return; }
         seret = { x: ev.clientX, y: ev.clientY, vb: vb.slice(), pindah: false };
       });
       root.addEventListener('pointermove', onGerak);
       root.addEventListener('pointerup', onLepas);
+      root.addEventListener('pointercancel', onLepas);
       function onGerak(ev) {
+        if (jari[ev.pointerId]) { jari[ev.pointerId] = { x: ev.clientX, y: ev.clientY }; }
         if (!seret || !svg.isConnected) { return; }
+        if (seret.cubit) {
+          if (bilJari() < 2) { return; }
+          var kk = Object.keys(jari), A = jari[kk[0]], B = jari[kk[1]], dd = Math.hypot(A.x - B.x, A.y - B.y) || 1, f = seret.cubit.d / dd, v0 = seret.cubit.vb, nw = v0[2] * f;
+          if (nw > asal[2] * 1.2 || nw < asal[2] / 60) { return; }
+          var mm = svg.getScreenCTM(), pt = { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 };
+          if (mm && svg.createSVGPoint) { var q = svg.createSVGPoint(); q.x = pt.x; q.y = pt.y; vb = v0.slice(); svg.setAttribute('viewBox', v0.join(' ')); q = q.matrixTransform(svg.getScreenCTM().inverse()); vb = [q.x - (q.x - v0[0]) * f, q.y - (q.y - v0[1]) * f, nw, v0[3] * f]; pakai(); }
+          return;
+        }
         var dx = ev.clientX - seret.x, dy = ev.clientY - seret.y;
         if (!seret.pindah && Math.abs(dx) + Math.abs(dy) < 5) { return; }
         seret.pindah = true; svg.classList.add('is-seret'); tip.hidden = true;
         var m = svg.getScreenCTM(), k = m && m.a ? 1 / m.a : vb[2] / svg.clientWidth;
         vb = [seret.vb[0] - dx * k, seret.vb[1] - dy * k, vb[2], vb[3]]; pakai();
       }
-      function onLepas() {
+      function onLepas(ev) {
+        if (ev && jari[ev.pointerId]) { delete jari[ev.pointerId]; }
+        if (seret && seret.cubit && bilJari() === 1) { var k1 = Object.keys(jari)[0]; seret = { x: jari[k1].x, y: jari[k1].y, vb: vb.slice(), pindah: true }; return; }   // dari cubit ke seret satu jari
         if (!seret) { return; }
         if (seret.pindah) { kv._seret = true; root.setTimeout(function () { kv._seret = false; }, 0); }
         svg.classList.remove('is-seret'); seret = null;
-        if (!svg.isConnected) { root.removeEventListener('pointermove', onGerak); root.removeEventListener('pointerup', onLepas); }
+        if (!svg.isConnected) { root.removeEventListener('pointermove', onGerak); root.removeEventListener('pointerup', onLepas); root.removeEventListener('pointercancel', onLepas); }
       }
       kv.addEventListener('click', function (ev) { if (kv._seret) { ev.stopPropagation(); ev.preventDefault(); } }, true);
       kv.addEventListener('pointermove', function (ev) {
