@@ -78,7 +78,8 @@
       var b = J.bolehRombak(p);
       h += '<button type="button" class="btn btn--sm" data-jm="rombak"' + (b.boleh ? '' : ' disabled') + '>🔄 Rombak kabinet (' + J.CONFIG.ROMBAK_AP + ' AP)</button>' + (b.boleh ? '' : ' <small class="note">' + esc(b.sebab) + '</small>');
     }
-    h += '<details class="jm-senarai"' + (J.adalahPM(p) ? '' : ' open') + '><summary>Senarai penuh (' + l.length + ' jawatan)</summary><div class="jm-jadual"><table><thead><tr><th>Portfolio</th><th>Menteri</th><th>Timbalan Menteri</th></tr></thead><tbody>' +
+    h += '<details class="jm-senarai">'   // v14.19: senarai penuh dilipat (sebelum ini 2,000 px terbuka)
+      + '<summary>Senarai penuh (' + l.length + ' jawatan)</summary><div class="jm-jadual"><table><thead><tr><th>Portfolio</th><th>Menteri</th><th>Timbalan Menteri</th></tr></thead><tbody>' +
       l.map(function (r) {
         var m = r.anda ? '<b>Anda</b>' : esc(r.menteri) + ' ' + tag(r.jenis) + (r.jawatanParti ? '<small class="jm-jp">' + esc(r.jawatanParti) + '</small>' : ''), t = r.timbalan === undefined ? '–' : (r.andaT ? '<b>Anda</b>' : esc(r.timbalan) + ' ' + tag(r.jenisT));
         return '<tr' + (r.anda || r.andaT ? ' class="is-anda"' : '') + '><td>' + esc(r.portfolio) + '</td><td>' + m + '</td><td>' + t + '</td></tr>';

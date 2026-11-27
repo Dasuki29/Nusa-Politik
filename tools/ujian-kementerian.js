@@ -32,6 +32,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.waitForTimeout(300); await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
+  await pg.evaluate(() => { try { NusaUI.subTindakan('kerajaan', true); } catch (e) { /* v14.19: sub-tab Kerajaan */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   const BOCOR = async (sel) => pg.evaluate(([src, s]) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll(s).forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, [BM.source, sel]);
   const SENARAI = { kpm: 'Menteri Pendidikan', kkm: 'Menteri Kesihatan', ke: 'Menteri Ekonomi', kpkt: 'Menteri Perumahan dan Kerajaan Tempatan', sabahkm: { nama: 'Ketua Menteri Sabah', role: 'MENTERI_BESAR', negeri: 'Sabah' }, premier: { nama: 'Premier Sarawak', role: 'MENTERI_BESAR', negeri: 'Sarawak', parti: 'PBB' }, mb: { nama: 'Menteri Besar Johor', role: 'MENTERI_BESAR', negeri: 'Johor', parti: 'UMNO' }, kmsj: { nama: 'Ketua Menteri Melaka', role: 'MENTERI_BESAR', negeri: 'Melaka', parti: 'UMNO' } };

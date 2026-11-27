@@ -32,6 +32,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   await pg.waitForTimeout(300); await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } });
+  await pg.evaluate(() => { try { NusaUI.subTindakan('kerajaan', true); } catch (e) { /* v14.19: sub-tab Kerajaan */ } });
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(300); }
   const BOCOR = async (sel) => pg.evaluate(([src, s]) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll(s).forEach((k) => { const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, [BM.source, sel]);
   await pg.evaluate(() => { const p = MyPolitikSave.loadPlayer(), k = MyPolitikKabinet.getKabinet(p); Object.assign(k, { hasGovernmentRole: true, roleLevel: 'MENTERI_PENUH', portfolioName: 'Menteri Dalam Negeri', lobi: null, acara: null });

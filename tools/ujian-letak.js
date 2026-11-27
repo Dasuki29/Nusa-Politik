@@ -2,7 +2,7 @@
 /* ==========================================================================
    Nusa Politik — tools/ujian-letak.js   (v13.12)
    Ujian pelayar (Playwright): kad "Wakil Rakyat & Kerajaan" di tab Profil, skrin pengesahan Letak Jawatan,
-   letak kerusi MP (jawatan persekutuan tamat, PRK dijadualkan), senarai semak MB di tab Tindakan, dan EN tanpa BM bocor.
+   letak kerusi MP (jawatan persekutuan tamat, PRK dijadualkan), senarai semak MB di tab Profil, dan EN tanpa BM bocor.
    Dilangkau (kod keluar 0) jika Playwright atau Chromium tiada. Guna: node tools/ujian-letak.js
    ========================================================================== */
 'use strict';
@@ -57,8 +57,8 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   if (process.env.SKRIN3) { await (await pg.$('#modal .modal__kotak, #modal > *')).screenshot({ path: process.env.SKRIN3 }).catch(() => {}); }
   await pg.click('#modal-kaki button:has-text("Ya, letak jawatan")'); await pg.waitForTimeout(500);
   semak(await pg.evaluate(() => MyPolitikSave.loadPlayer().jawatan === 'Ahli Biasa'), 'jawatan parti dilepaskan');
-  // senarai semak MB di tab Tindakan
-  await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(500);
+  // senarai semak MB di tab Profil (v14.19)
+  await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(500);
   const tk = await pg.evaluate(() => document.body.innerText);
   semak(/Anda ADUN di negeri ini/.test(tk) && /Pengerusi Badan Perhubungan Negeri/.test(tk), 'senarai semak MB');
   // EN
@@ -71,7 +71,7 @@ const BM = /\b(yang|dan|untuk|dengan|anda|kepada|telah|akan|tidak|sudah|ialah|da
   const bocor2 = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; const k = document.querySelector('#modal'); const w = document.createTreeWalker(k, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } return out; }, BM.source);
   semak(bocor2.length === 0, 'EN: tiada BM bocor dalam skrin pengesahan:\n    ' + bocor2.slice(0, 15).join('\n    '));
   await pg.click('#modal-kaki button >> nth=1'); await pg.waitForTimeout(300);
-  await pg.click('[data-tab="tindakan"]').catch(() => {}); await pg.waitForTimeout(500);
+  await pg.click('[data-tab="profil"]').catch(() => {}); await pg.waitForTimeout(500);
   const bocor3 = await pg.evaluate((src) => { const re = new RegExp(src, 'i'), out = []; document.querySelectorAll('.mbsemak').forEach((k) => { const w = document.createTreeWalker(k.parentNode, 4); let n; while ((n = w.nextNode())) { const t = n.textContent.trim(); if (t && re.test(t)) { out.push(t); } } }); return out; }, BM.source);
   semak(bocor3.length === 0, 'EN: tiada BM bocor dalam senarai semak MB:\n    ' + bocor3.slice(0, 15).join('\n    '));
   semak(ralat.length === 0, 'ralat JavaScript: ' + ralat.slice(0, 3).join(' | '));

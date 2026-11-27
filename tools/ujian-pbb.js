@@ -35,6 +35,7 @@ const gagal = []; const semak = (ok, msg) => { if (!ok) { gagal.push(msg); } };
   await pg.click('#btn-submit'); await pg.waitForTimeout(3500);
   semak(/dashboard\.html/.test(pg.url()), 'beralih ke dashboard');
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);
+  await pg.evaluate(() => { try { NusaUI.subTindakan('kerajaan', true); } catch (e) { /* v14.19: sub-tab Kerajaan */ } });
   semak((await pg.getAttribute('.brand__img', 'src')).indexOf('logo-pbb') >= 0, 'logo PBB pada dashboard');
   for (let i = 0; i < 4; i++) { const b = await pg.$('#modal.is-open button'); if (!b) { break; } await b.click(); await pg.waitForTimeout(400); }
   await pg.evaluate(() => { try { MyPolitikTutorial.skip(); } catch (e) { /* abaikan */ } }); await pg.waitForTimeout(400);

@@ -1,5 +1,14 @@
 # Catatan Perubahan
 
+## v14.19 — Tab Tindakan disusun semula (audit 9 peringkat, mockup dipersetujui)
+
+- **Jalur ringkas** di atas: baki AP dan cip amaran (keluhan kawasan, Akar Umbi rendah, Musim Akar Umbi, kelayakan bertanding).
+- **Sub-tab ikut peranan:** ⚡ Utama · 🏛️ Kawasan (ADUN/MP) · 💼 Kerajaan (EXCO/MB/Menteri/PM) · 📣 Parti · 📡 Media & Aset. Lencana bilangan (keluhan, misi sayap). Sub-tab terakhir diingat.
+- **Utama:** tindakan teras sentiasa di atas, grid padat dua lajur (satu lajur di telefon), kesan dipecah kepada cip kecil, satu tindakan ditanda ★ disyorkan (rehat jika Stress 70+, jika tidak tindakan yang menaikkan sokongan paling lemah). Kelayakan Bertanding dilipat dengan lencana peratus.
+- **Keputusan menunggu** (Isu Semasa, lantikan NPC, Friends of BN, lobi portfolio / tuntutan MB, bentuk atau rombak Jemaah Menteri) dipapar di atas sub-tab.
+- **Jemaah Menteri:** senarai penuh 32 jawatan kini dilipat. Kad maklumat sahaja (syarat Menteri Besar, tiada lobi) dipindah ke tab Profil.
+- Hasil simulasi (desktop): Menteri 3,863 px → 720 px; Ahli Biasa 1,786 → 605 px; ADUN 1,880 → 653 px.
+
 ## v14.18 — 👪 Dinasti Politik (mockup dipersetujui)
 
 - **Kad 👪 Keluarga (tab Profil):** berkahwin (umur 21 hingga 60, 2 AP, RM 30,000, Reputasi +2). Selepas berkahwin, peluang 35% setahun dapat anak (maksimum 5; ibu berumur 45 ke bawah). Nama anak ikut adat keluarga (bin/binti, a/l, nama keluarga).

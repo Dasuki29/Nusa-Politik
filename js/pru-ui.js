@@ -210,9 +210,9 @@
       '<li>ℹ️ Peluang: 100% jika parti menang majoriti sendiri; jika gabungan, ikut bahagian kerusi parti dan hubungan gabungan.</li></ul>';
     return h + (m.semua ? '<p class="note">Semua syarat dipenuhi. Tuntutan dibuka selepas pilihan raya akan datang jika parti membentuk kerajaan negeri.</p>' : '') + '</section>';
   }
-  function kadKabinet(p) {
+  function kadKabinet(p, tanpaInfo) {
     if (!KB) { return ''; }
-    var k = KB.ringkasan(p), h = '', smb = kadSemakMB(p);
+    var k = KB.ringkasan(p), h = '', smb = tanpaInfo ? '' : kadSemakMB(p);   // v14.19: kad maklumat sahaja dipindah ke tab Profil
     if (k.lobi && !k.hasGovernmentRole) {
       var mb = k.mb && k.mb.boleh ? k.mb : null;
       var bMB = mb ? '<div class="banner banner--gold"><strong>🏛️ Kerajaan negeri dibentuk</strong>Parti anda membentuk kerajaan negeri ' + esc(mb.negeri) + '. Anda Pengerusi Badan Perhubungan Negeri dan ADUN. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">' + (mb.sendiri ? 'Angkat Sumpah ' + esc(mb.label) : 'Runding ' + esc(mb.label)) + '</button></div>' : '';
@@ -221,7 +221,7 @@
     if (!k.hasGovernmentRole && k.mbTertunda && k.mb && k.mb.boleh) {   // v13.40: lobi Menteri Persekutuan gagal, MB masih boleh dituntut sekali
       return smb + '<div class="banner banner--gold"><strong>👔 ' + esc(k.mb.label) + ' ' + esc(k.mb.negeri) + '</strong>Lobi Menteri Persekutuan tidak berjaya, tetapi anda masih boleh menuntut jawatan ' + esc(k.mb.label) + ' sekali. <button type="button" class="btn btn--sm btn--gold" data-pru="mb">Tuntut ' + esc(k.mb.label) + '</button></div>' + kadTiadaLobi(p);
     }
-    if (!k.hasGovernmentRole) { return smb + kadTiadaLobi(p); }
+    if (!k.hasGovernmentRole) { return smb + (tanpaInfo ? '' : kadTiadaLobi(p)); }
     h = smb + '<section class="card"><h2 class="card__title" style="margin:0 0 4px">🏛️ ' + esc(k.portfolioName) + '</h2><p class="note">' + esc(k.tahapNama) + ' · ' + k.bulanBerjawatan + ' bulan berkhidmat · elaun +RM ' + fmt(k.elaun.myr) + ' &amp; +' + k.elaun.ip + ' IP sebulan.</p>';
     var tabK = [], MOFUI = W.MyPolitikMOFUI, adaMOF = !!(MOFUI && W.MyPolitikMOF && W.MyPolitikMOF.aktif(p));   // v13.69 Portfolio Saya; v13.70 Pejabat MOF
     if (k.pejabat) { tabK.push(['pejabat', '🏛️ Portfolio Saya']); }
@@ -289,6 +289,23 @@
       return bannerNasional(p) + bannerMusim(p) + (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '') + (W.MyPolitikNPCUI ? W.MyPolitikNPCUI.kad(p) : '') + (W.MyPolitikFBNUI ? W.MyPolitikFBNUI.kad(p) : '') + kadJanji(p) + kadKabinet(p) + (W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '');      // v12.1: Jemaah Menteri
     } catch (e) { return ''; }
   }
+  /** v14.19: kandungan tab Tindakan mengikut sub-tab (banner, media, parti, kawasan, kerajaan). */
+  function bahagianTindakan(p) {
+    var o = { banner: '', segera: '', media: '', parti: '', kawasan: '', kerajaan: '' };
+    try {
+      o.banner = bannerNasional(p) + bannerMusim(p);
+      o.segera = (W.MyPolitikIsuUI ? W.MyPolitikIsuUI.kad(p) : '') + (W.MyPolitikNPCUI ? W.MyPolitikNPCUI.kad(p) : '') + (W.MyPolitikFBNUI ? W.MyPolitikFBNUI.kad(p) : '');   // keputusan menunggu
+      o.media = W.MyPolitikTularUI ? W.MyPolitikTularUI.kad(p) : '';
+      o.kawasan = kadJanji(p);
+      var kk = kadKabinet(p, true), peranan = KB && KB.ringkasan(p).hasGovernmentRole;
+      if (peranan) { o.kerajaan = kk; } else { o.segera += kk; }   // lobi / tuntutan MB (boleh bertindak) di atas
+      var JM = W.MyPolitikJemaah, jk = W.MyPolitikJemaahUI ? W.MyPolitikJemaahUI.kad(p) : '';
+      if (JM && JM.perluBentuk && JM.perluBentuk(p)) { o.segera += jk; } else { o.kerajaan += jk; }   // bentuk / rombak Jemaah Menteri = keputusan menunggu
+    } catch (e) { /* abaikan */ }
+    return o;
+  }
+  /** v14.19: kad maklumat (syarat Menteri Besar, tiada lobi) untuk tab Profil. */
+  function kadProfil(p) { try { return kadSemakMB(p) + (KB && !KB.ringkasan(p).hasGovernmentRole && !KB.ringkasan(p).lobi ? kadTiadaLobi(p) : ''); } catch (e) { return ''; } }
   function bannerNasional(p) {      // v7.22: keputusan nasional menunggu Presiden (cth. pemain memuat semula halaman)
     return PRU.nasionalTertunggak(p) ? '<div class="banner banner--gold"><strong>🗳️ Keputusan nasional menunggu</strong>Anda Presiden parti: tentukan pembentukan kerajaan. <button type="button" class="btn btn--sm btn--gold" data-pru="nasional">Lihat Keputusan Nasional</button></div>' : '';
   }
@@ -831,5 +848,5 @@
     else if (a === 'exco-tab') { var tid = t.getAttribute('data-id'), kems = W.MyPolitikKementerian ? W.MyPolitikKementerian.senarai().map(function (mk) { return mk.def.kunci; }) : []; tabEXCO = ['pejabat', 'mof', 'kdn', 'mindef', 'kkdw', 'pm', 'kln'].concat(kems).indexOf(tid) >= 0 ? tid : 'ringkasan'; segarkan(); } else if (a === 'exco-tindak') { tindakEXCO(t.getAttribute('data-id')); }   // v13.69
   });
 
-  W.NusaPRU_UI = {  nasional: nasional, musim: musim, kad: kad, lencana: lencana, selepasBulan: selepasBulan, alir: alir, kejutan: kejutan, keputusan: keputusan, lobi: lobi, acara: acara, selesai: selesai };
+  W.NusaPRU_UI = {  nasional: nasional, musim: musim, kad: kad, bahagianTindakan: bahagianTindakan, kadProfil: kadProfil, lencana: lencana, selepasBulan: selepasBulan, alir: alir, kejutan: kejutan, keputusan: keputusan, lobi: lobi, acara: acara, selesai: selesai };
 })(window);
