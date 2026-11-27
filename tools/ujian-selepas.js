@@ -24,6 +24,8 @@ const srv = http.createServer((q, r) => { const u = decodeURIComponent(q.url.spl
     if (out) { await (await pg.$('#modal .modal, #modal')).screenshot({ path: out + '/selepas-pos-' + n + '.png' }); }
     await pg.evaluate(() => { const b = document.querySelectorAll('#modal-kaki button'); b[1].click(); }); await pg.waitForTimeout(700);
     const tabOk = await pg.evaluate(() => !document.getElementById('tab-kedutaan').hidden && !document.getElementById('panel-kedutaan').hidden); if (!tabOk) { gagal.push(n + ': tab Kedutaan tidak dibuka'); }
+    const avD = await pg.evaluate(() => { NusaUI.gotoTab('profil'); return (document.getElementById('p-avatar') || {}).innerHTML || ''; }); await pg.evaluate(() => NusaUI.gotoTab('kedutaan')); await pg.waitForTimeout(300);
+    if (!avD.includes('#010066')) { gagal.push(n + ': avatar Duta (pin Jalur Gemilang) tiada'); }   // v14.16
     await pg.click('[data-sl="t:kunjungan"]'); await pg.waitForTimeout(300); await pg.click('[data-sl="t:konsular"]'); await pg.waitForTimeout(300);
     const st = await pg.evaluate(() => { const a = MyPolitikDuta.getD(MyPolitikSave.loadPlayer()).aktif; return a && { k: a.kunjungan, c: a.konsular, j: MyPolitikSave.loadPlayer().jawatanList.length }; });
     if (!st || !st.k || !st.c || st.j) { gagal.push(n + ': tugas tidak direkod ' + JSON.stringify(st)); }

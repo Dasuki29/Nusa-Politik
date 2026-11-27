@@ -1,5 +1,10 @@
 # Catatan Perubahan
 
+## v14.16: Avatar rasmi TYT dan Duta
+- Apabila dilantik Yang di-Pertua Negeri atau Duta Malaysia (keahlian parti digantung), avatar bertukar kepada pakaian rasmi tanpa warna atau logo parti; kekal pada skrin persaraan selepas tamat perkhidmatan.
+- TYT: jaket istiadat putih krim, kolar dan epaulet emas, selempang biru berjalur merah putih, rantai kebesaran, bintang, songkok bersulam emas (parti bergaya Melayu), latar kelabu potret.
+- Duta: sut gelap, tali leher biru perak, pin Jalur Gemilang, latar biru. Jantina, peringkat umur, ton kulit dan pilihan tudung pemain dikekalkan.
+
 ## v14.15: Avatar khas untuk semua parti
 - 18 parti lain kini ada set avatar sendiri (BERSATU, BERJASA, MCA, MIC, PPP, PBRS, PBS, UPKO, LDP, PHRS, PCS, GAGASAN, WARISAN, PBB, PRS, SUPP, PDP, PSB): warna daripada logo parti dan lencana logo sebenar di dada.
 - Gaya ikut ciri parti: Melayu (baju Melayu, songkok; BERJASA kopiah dan serban; tudung), moden (kemeja, blazer, blaus: MCA, PPP, SUPP, LDP), Borneo (motif Sabah/Sarawak, kalung manik) dan MIC (kurta dan selendang, sari bersempadan emas).

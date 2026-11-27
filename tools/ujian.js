@@ -3713,6 +3713,16 @@ ujian('v14.15 Avatar khas 18 parti lain: warna logo, lencana logo sebenar, Puter
   betul(/kopiah/.test(A.senarai('BERJASA')[0].penerangan)); betul(/sari/.test(A.senarai('MIC').find((a) => a.kod === 'wanita').penerangan));
 });
 
+ujian('v14.16 Avatar rasmi TYT dan Duta: tiada warna/logo parti, kekal jantina dan tudung, kekal selepas tamat', () => {
+  const A = g.MyPolitikAvatar;
+  sama(A.rasmiDari({ tyt: { aktif: { negeri: 'melaka' } } }), 'tyt'); sama(A.rasmiDari({ duta: { aktif: { pos: 'tokyo' } } }), 'duta');
+  sama(A.rasmiDari({ tamat: { sebab: 'duta' } }), 'duta'); sama(A.rasmiDari({ tamat: { sebab: 'bersara_sukarela' } }), null); sama(A.rasmiDari({}), null);
+  const t = A.svg('biasa', { parti: 'UMNO', rasmi: 'tyt' }), d = A.svg('wanita', { parti: 'DAP', rasmi: 'duta' }), dp = A.svg('wanita', { parti: 'PAS', rasmi: 'duta' });
+  betul(t.includes('#F4EFE2') && t.includes('#3552B0') && t.includes('#D4AF37'), 'TYT: jaket krim, selempang biru, emas');
+  betul(d.includes('#010066') && !d.includes('#D71920') && !d.includes('logo-dap'), 'Duta: pin bendera, tiada warna/logo DAP');
+  betul(dp.includes('#23324F'), 'Duta wanita bertudung: tudung biru tua'); betul(!A.svg('wanita', { parti: 'PKR', rasmi: 'tyt' }).includes('logo'), 'tiada lencana parti');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');
