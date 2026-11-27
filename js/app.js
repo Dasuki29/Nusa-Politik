@@ -1441,6 +1441,39 @@
     return h + '</div>';
   }
 
+  /* ---------- v14.27: Kertas undi dalam mesyuarat (satu jawatan satu halaman) ---------- */
+  function nmK(s) { return '<span data-i18n-skip>' + esc(s) + '</span>'; }
+  function kertasHtml(mk, p) {
+    var KU = E && E.kertasUndi ? E.kertasUndi(mk, p) : []; if (!KU.length) { return ''; }
+    var sdh = E.kertasDihantar(mk, p), anda = KU.filter(function (h) { return h.didaftar; })[0];
+    var kepala = '<div class="item ku" style="margin-top:12px;border:2px solid var(--merah,#C8102E)"><div class="item__head"><div class="item__title">🗳️ Pengundian Jawatan</div><span class="status-chip' + (sdh ? ' is-done' : '') + '">' + (sdh ? 'Undi dimasukkan' : 'Belum mengundi') + '</span></div>' +
+      '<p class="item__desc"><span>' + KU.length + ' jawatan diundi dalam mesyuarat ini.</span>' + (anda ? ' <span>Anda calon:</span> <span>' + esc(anda.jawatan) + '</span>' : '') + '</p>';
+    if (sdh) {
+      var n = Object.keys(sdh.undi).filter(function (k) { return sdh.undi[k].length; }).length;
+      return kepala + '<p class="item__desc">✅ <span>Kertas undi anda dimasukkan (' + n + '/' + KU.length + ' jawatan).</span> <span>Tutup Mesyuarat untuk mengira keputusan.</span></p></div>';
+    }
+    var ks = state.kertas && state.kertas[mk];
+    if (!ks) { return kepala + '<button type="button" class="btn btn--primary" style="margin-top:8px" data-act="ku-buka" data-lvl="' + mk + '">🗳️ Buka Kertas Undi (0/' + KU.length + ')</button></div>'; }
+    var i = ks.i, langkah = '<div class="ku-langkah">' + KU.map(function (h, j) { return '<i class="' + (j === i ? 'is-kini' : ks.undi[h.kod] ? 'is-siap' : '') + '"></i>'; }).join('') + '</div>';
+    if (i >= KU.length) {
+      var baris = KU.map(function (h) { var u = ks.undi[h.kod]; return '<div class="kv"><span>' + esc(h.jawatan) + '</span><b>' + (!u || !u.length ? 'Berkecuali' : h.kerusi > 1 ? u.length + ' calon dipilih' : nmK(u[0]) + (u[0] === p.nama ? ' <span>(Anda)</span>' : '')) + '</b></div>'; }).join('');
+      return kepala + '<h3 style="margin:10px 0 2px;font-size:1rem">Semak Kertas Undi</h3>' + langkah + baris +
+        '<div class="ku-nav"><button type="button" class="btn btn--ghost" data-act="ku-nav" data-v="-1" data-lvl="' + mk + '">◀ Ubah</button><button type="button" class="btn btn--primary" data-act="ku-hantar" data-lvl="' + mk + '">✅ Masukkan Undi</button></div></div>';
+    }
+    var h = KU[i], pil = ks.undi[h.kod] || [];
+    var calon = h.calon.map(function (c, j) {
+      var on = pil.indexOf(c.nama) >= 0, tag = c.pemain ? ' <span class="badge badge--gold">Anda</span>' : '';
+      var ket = c.pemain ? 'Calon' : c.penyandang ? 'Penyandang' : c.pencabar ? 'Pencabar' : 'Calon';
+      var ini = c.nama.split(' ').filter(function (x) { return x && !/^(bin|binti|a\/l|a\/p)$/i.test(x); }).slice(0, 2).map(function (x) { return x.charAt(0); }).join('');
+      return '<button type="button" class="ku-calon' + (on ? ' is-on' : '') + (c.pemain ? ' is-anda' : '') + '" data-act="ku-pilih" data-lvl="' + mk + '" data-v="' + j + '" aria-pressed="' + on + '">' +
+        '<span class="ku-av" aria-hidden="true">' + (c.pemain ? '★' : nmK(ini)) + '</span><span class="ku-nm">' + nmK(c.nama) + tag + '<small>' + ket + '</small></span><span class="ku-tanda' + (h.kerusi > 1 ? ' ku-kotak' : '') + '" aria-hidden="true"></span></button>';
+    }).join('');
+    return kepala + '<h3 style="margin:10px 0 2px;font-size:1rem">' + esc(h.jawatan) + '</h3><p class="item__desc">' +
+      (h.kerusi > 1 ? '<span>Jawatan ' + (i + 1) + ' daripada ' + KU.length + ' · pilih sehingga ' + h.kerusi + ' calon (' + pil.length + ' dipilih)</span>' : '<span>Jawatan ' + (i + 1) + ' daripada ' + KU.length + ' · pilih 1 calon</span>') + '</p>' + langkah + calon +
+      '<div class="ku-nav"><button type="button" class="btn btn--ghost" data-act="ku-nav" data-v="-1" data-lvl="' + mk + '"' + (i ? '' : ' disabled') + '>◀ Sebelum</button><button type="button" class="btn btn--primary" data-act="ku-nav" data-v="1" data-lvl="' + mk + '">' + (i === KU.length - 1 ? 'Semak ▶' : 'Seterusnya ▶') + '</button></div>' +
+      '<button type="button" class="btn btn--ghost btn--sm" style="margin-top:6px;width:100%" data-act="ku-kecuali" data-lvl="' + mk + '">Berkecuali untuk jawatan ini</button></div>';
+  }
+
   function panelMesyuarat(p) {
     if (!M) { return '<div class="card"><p class="empty">Modul mesyuarat tidak dimuatkan.</p></div>'; }
     var k = M.getKeadaanMesyuarat(p), h = '';
@@ -1478,6 +1511,7 @@
           hk += '</div>';
         });
         if (lv.status === 'sedang') {
+          hk += kertasHtml(lv.kod, p);
           hk += '<div style="margin-top:12px"><button type="button" class="btn btn--gold" data-act="tutup" data-lvl="' + lv.kod + '" data-fk="tutup:' + lv.kod + '">Tutup Mesyuarat</button></div>';
         }
         if (lv.status === 'selesai' && lv.ringkasan) {
@@ -1808,6 +1842,15 @@
       });
       h += '</ul>';
     }
+    if (r.kertas && r.kertas.length) {                                       // v14.27: keputusan kertas undi anda
+      h += '<h3>🗳️ Undi Anda</h3><ul class="ring__usul">';
+      r.kertas.forEach(function (x) {
+        var kena = x.pilihan.filter(function (n) { return x.pemenang.indexOf(n) >= 0; }).length, tg = !x.pilihan.length ? ['', 'BERKECUALI'] : kena ? ['ya', 'PILIHAN MENANG'] : ['tidak', 'PILIHAN KALAH'];
+        h += '<li><span class="ring__tag' + (tg[0] ? ' ring__tag--' + tg[0] : '') + '">' + tg[1] + '</span><b>' + esc(x.jawatan) + '</b><small>' +
+          (x.kerusi > 1 ? '<span>Pilihan anda menang: ' + kena + '/' + x.pilihan.length + '.</span>' : (x.pilihan.length ? '<span>Undi anda:</span> ' + nmK(x.pilihan[0]) + ' · ' : '') + '<span>Pemenang:</span> ' + nmK(x.pemenang[0] || '-')) + '</small></li>';
+      });
+      h += '</ul>';
+    }
     if (r.tidakDidaftar && r.tidakDidaftar.length) { h += '<p class="note">Anda tidak bertanding untuk: ' + r.tidakDidaftar.map(esc).join(', ') + '.</p>'; }
     (r.peristiwa || []).forEach(function (m) { h += '<p class="note"><b>' + esc(m) + '</b></p>'; });
     var d = r.perubahan || {}, b = r.baki || {};
@@ -2049,8 +2092,24 @@
       var pr = M.pilihPeranan(lvl, t.getAttribute('data-u'), t.getAttribute('data-r'), t.getAttribute('data-p'));
       render(); lapor(pr);
     }
+    else if (act === 'ku-buka' || act === 'ku-nav' || act === 'ku-pilih' || act === 'ku-kecuali' || act === 'ku-hantar') {     // v14.27: kertas undi
+      var KUx = E.kertasUndi(lvl); state.kertas = state.kertas || {};
+      var ksx = state.kertas[lvl] || (state.kertas[lvl] = { i: 0, undi: {} });
+      if (act === 'ku-nav') { ksx.i = Math.max(0, Math.min(KUx.length, ksx.i + (parseInt(t.getAttribute('data-v'), 10) || 0))); }
+      else if (act === 'ku-pilih') {
+        var hx = KUx[ksx.i], cx = hx && hx.calon[parseInt(t.getAttribute('data-v'), 10)];
+        if (cx) { var ux = ksx.undi[hx.kod] || []; var ix = ux.indexOf(cx.nama);
+          if (hx.kerusi > 1) { if (ix >= 0) { ux.splice(ix, 1); } else if (ux.length < hx.kerusi) { ux.push(cx.nama); } else { toast('Had ' + hx.kerusi + ' calon untuk jawatan ini.', 'ralat'); } }
+          else { ux = ix >= 0 ? [] : [cx.nama]; }
+          ksx.undi[hx.kod] = ux; }
+      }
+      else if (act === 'ku-kecuali') { var hk2 = KUx[ksx.i]; if (hk2) { ksx.undi[hk2.kod] = []; } ksx.i = Math.min(KUx.length, ksx.i + 1); }
+      else if (act === 'ku-hantar') { var rh = E.hantarUndi(lvl, ksx.undi); if (rh.ok) { delete state.kertas[lvl]; toast(rh.mesej, 'ok'); } else { toast(rh.ralat, 'ralat'); } }
+      render(); return;
+    }
     else if (act === 'tutup') {
-      modal({ tajuk: 'Tutup Mesyuarat?', isi: '<p>Usul yang belum anda sertai akan diputuskan tanpa kesan kepada anda' + ', dan pencalonan yang telah anda daftar pada peringkat ini akan diundi' + '.</p>',
+      var kuBelum = E && E.kertasUndi && E.kertasUndi(lvl).length && !E.kertasDihantar(lvl);
+      modal({ tajuk: 'Tutup Mesyuarat?', isi: '<p>Usul yang belum anda sertai akan diputuskan tanpa kesan kepada anda' + ', dan pencalonan yang telah anda daftar pada peringkat ini akan diundi' + '.</p>' + (kuBelum ? '<p>🗳️ Kertas undi anda belum dimasukkan: undi anda dikira berkecuali.</p>' : ''),
         butang: [{ label: 'Batal', nilai: false }, { label: 'Tutup Mesyuarat', nilai: true, kelas: 'btn--gold' }] })
         .then(function (ya) { if (ya) { tutupDanRingkas(lvl); } });
     }

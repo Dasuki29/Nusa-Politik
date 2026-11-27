@@ -3867,6 +3867,23 @@ ujian('v14.26 Kelayakan: mandat perwakilan bukan syarat bertanding (sayap Bahagi
   k = J.semakKelayakan(S.loadPlayer(), J.cariDef('ajk_bahagian')); betul(k.terbuka, 'AJK Bahagian tanpa perwakilan: ' + k.sebab);
 });
 
+ujian('v14.27 Kertas undi mesyuarat: halaman setiap jawatan, nama unik, undi dikira, Struktur dikemas kini, Pusat UMNO di Bahagian', () => {
+  const E = g.MyPolitikElection, M = g.MyPolitikMeeting, K = g.MyPolitikCalendar; P.daftar({ umur: 40, tahunAhli: 10 }); let t = 2026; while (!E.adalahTahunPemilihan(t)) { t++; }
+  P.tetap({ tahun: t, bulan: K.getTetingkap('cawangan', 1).mula, ip: 900, ap: 30, myr: 99999, jawatanList: [{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', kumpulan: 'ajk', pangkat: 1, tahun: t - 3 }] });
+  betul(E.daftarBertanding('naib_ketua_cawangan').ok);
+  const KU = E.kertasUndi('cawangan'); betul(KU.length >= 3, 'halaman: ' + KU.length); sama(KU[0].kod, 'ketua_cawangan', 'Ketua dahulu');
+  const nama = []; KU.forEach((h) => h.calon.forEach((c) => nama.push(c.nama))); sama(new Set(nama).size, nama.length, 'nama calon unik');
+  const hN = KU.filter((h) => h.didaftar)[0]; betul(hN && hN.calon.some((c) => c.pemain), 'nama anda dalam jawatan yang ditandingi');
+  sama(E.kertasUndi('pau').length, 0, 'UMNO: tiada kertas undi Pusat di PAU');
+  const u = {}; KU.forEach((h) => { u[h.kod] = h.didaftar ? [hN.calon.filter((c) => c.pemain)[0].nama] : [h.calon[1].nama, 'Bukan Calon']; });
+  betul(M.mulaMesyuarat('cawangan').ok); const r = E.hantarUndi('cawangan', u); betul(r.ok, r.ralat); betul(!E.hantarUndi('cawangan', u).ok, 'sekali sahaja');
+  const k = E.kertasDihantar('cawangan'); sama(k.undi.ketua_cawangan.length, 1, 'nama bukan calon dibuang');
+  betul(M.tutupMesyuarat('cawangan', { rng: () => 0.5 }).ok); const rg = M.getRingkasan('cawangan'); sama(rg.kertas.length, KU.length, 'ringkasan Undi Anda');
+  const p = S.loadPlayer(), kp = p.pemilihan.keputusan.naib_ketua_cawangan; betul(kp.jadual.some((j) => j.pemain && j.undiAnda), 'undi anda dikira dalam pertandingan anda');
+  betul(p.npc && p.npc.nama && p.npc.nama['cawangan|induk|ketua'] === rg.kertas[0].pemenang[0], 'Ketua Cawangan baharu dalam Struktur');
+  P.tetap({ bulan: K.getTetingkap('bahagian', 1).mula }); const KB = E.kertasUndi('bahagian'); betul(KB.some((h) => h.peringkat === 'bahagian') && KB.some((h) => h.peringkat === 'pusat'), 'UMNO: jawatan Pusat diundi di Bahagian');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

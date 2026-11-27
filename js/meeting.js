@@ -1001,6 +1001,7 @@
     if (adaPemilihan(p, peringkat)) {
       pemilihan = E.jalankanPemilihanPeringkat(peringkat, { rng: opts.rng });
     }
+    var kertas = E && E.jalankanKertas ? E.jalankanKertas(peringkat) : null;          // v14.27: jawatan lain dalam kertas undi anda
 
     // 2. Muat semula profil dan putuskan baki usul.
     p = S.loadPlayer();
@@ -1039,7 +1040,8 @@
       tidakDidaftar: (E && adaPemilihan(p, peringkat) ? E.senaraiPertandingan(p) : []).filter(function (c) {
         return c.peringkat === (peringkat === 'pau' ? 'pusat' : peringkat) && c.terbuka && !c.didaftar && !c.selesai && !c.pertahan;
       }).map(function (c) { return c.jawatan; }),
-      peristiwa: []
+      peristiwa: [],
+      kertas: kertas || null
     };
     ringkasan.usulDibawa = null;                                              // v6.1: satu usul sayap dibawa ke mesyuarat utama
     if (adalahSayap(peringkat)) {

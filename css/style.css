@@ -1256,3 +1256,23 @@ details.pf-info > summary { font-weight: 700; cursor: pointer; }
 /* v14.23: Yang di-Pertua Dewan Negara */
 .sn-ban--ydp { background: linear-gradient(135deg, #5C1F1F, #9E2B2B) !important; }
 .sn-pilih .prkl-act { border-top-color: rgba(0,0,0,.2); }
+
+/* v14.27: kertas undi dalam mesyuarat */
+.ku-langkah { display: flex; gap: 4px; margin: 6px 0 8px; }
+.ku-langkah i { flex: 1; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--text) 16%, transparent); }
+.ku-langkah i.is-siap { background: var(--text); }
+.ku-langkah i.is-kini { background: var(--red); }
+.ku-calon { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; margin-top: 6px; padding: 8px 10px; border: 2px solid var(--border); border-radius: 10px; background: var(--bg-elev-1); color: var(--text); font: inherit; cursor: pointer; }
+.ku-calon:hover { border-color: var(--gold); }
+.ku-calon.is-on { border-color: var(--red); background: color-mix(in srgb, var(--gold) 18%, var(--bg-elev-1)); }
+.ku-calon.is-anda { border-style: dashed; }
+.ku-av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--bg-elev-3); font-weight: 800; font-size: .75rem; }
+.ku-calon.is-anda .ku-av { background: var(--red); color: var(--white); }
+.ku-nm { flex: 1; font-weight: 700; font-size: .9rem; }
+.ku-nm small { display: block; font-weight: 400; color: var(--text-muted); font-size: .75rem; }
+.ku-tanda { width: 20px; height: 20px; border: 2px solid var(--text); border-radius: 50%; flex: none; }
+.ku-tanda.ku-kotak { border-radius: 5px; }
+.ku-calon.is-on .ku-tanda { background: var(--red); box-shadow: inset 0 0 0 3px var(--bg-elev-1); }
+.ku-nav { display: flex; gap: 8px; margin-top: 10px; }
+.ku-nav .btn { flex: 1; }
+.ku .kv { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px dashed var(--border); padding: 5px 0; font-size: .86rem; }

@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v14.27 — 🗳️ Kertas undi dalam mesyuarat (mockup dipersetujui)
+
+- **Langkah Undi baharu sebelum Tutup Mesyuarat:** pada tahun pemilihan, kad mesyuarat memaparkan 🗳️ Pengundian Jawatan. Kertas undi dibuka satu jawatan satu halaman (Ketua dahulu, kemudian Timbalan, Naib dan AJK) dengan ◀ Sebelum / Seterusnya ▶, halaman Semak Kertas Undi dan ✅ Masukkan Undi. Jawatan berkerusi banyak (AJK) membenarkan beberapa pilihan; setiap jawatan boleh Berkecuali.
+- Kertas undi dibuka sama ada anda bertanding atau tidak. Jika anda bertanding, nama anda (★ Anda) muncul dalam senarai calon yang sama dengan pengiraan, dan anda boleh mengundi diri sendiri.
+- **Hanya pengundi yang layak:** kertas undi muncul dalam mesyuarat yang anda layak hadir (Cawangan: ahli; Bahagian: perwakilan dan ex-officio). UMNO: jawatan Pusat diundi dalam Mesyuarat Perwakilan Bahagian, jadi tiada kertas undi Pusat di PAU.
+- **Kesan:** undi anda menambah satu undi kepada calon pilihan. Jawatan lain dikira oleh urus setia dan pemenang dikemas kini dalam Struktur. Ringkasan mesyuarat memaparkan 🗳️ Undi Anda (pilihan menang / kalah / berkecuali). Tutup tanpa mengundi = berkecuali.
+- Ujian pelayar baharu `tools/ujian-kertas-undi.js` dan ujian unit v14.27.
+
 ## v14.26 — 🎯 Kelayakan pemilihan: mandat perwakilan bukan lagi syarat bertanding (mockup dipersetujui)
 
 - **Semua parti:** jawatan Bahagian (induk dan sayap, cth. Ketua Wanita Bahagian) tidak lagi memerlukan Perwakilan Cawangan induk, dan jawatan Pusat tidak lagi memerlukan Perwakilan Bahagian ke PAU. Perwakilan kekal sebagai peranan untuk hadir mesyuarat, membahas usul dan mengundi.

@@ -206,6 +206,7 @@ node tools/ujian-sokong.js       # pelayar: Sokong Calon Pertandingan Lain (kad 
 node tools/ujian-gerakan.js      # pelayar: Gerakan Parti Negeri (kad tab Tindakan, EN)
 node tools/ujian-peta-sentuh.js  # pelayar telefon: seret satu jari, zum cubit dan ketik pada tab Peta
 node tools/ujian-peta-dun.js     # pelayar: peta Wilayah Persekutuan dipisahkan, aras DUN, peta satu DUN (EN)
+node tools/ujian-kertas-undi.js  # pelayar: kertas undi dalam mesyuarat (halaman setiap jawatan, semak, masukkan undi, ringkasan, EN)
 node tools/ujian-senat.js        # pelayar: Dewan Negara (kad Senator, lantikan, undi RUU, tugas, EN)
 node tools/ujian-keluarga.js     # pelayar: Dinasti Politik (kad Keluarga, Teruskan Dinasti, Pokok Dinasti, EN)
 node tools/ujian-berjasa.js      # pelayar: menu Lain-lain, daftar BERJASA, kad Parti Kecil, kerusi, EN

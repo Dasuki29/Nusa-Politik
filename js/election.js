@@ -216,6 +216,7 @@
         if (/^perwakilan_/.test(k) && st[f][k].tahun !== p.tahun) { delete st[f][k]; }
       });
     });
+    if (st.kertas) { Object.keys(st.kertas).forEach(function (k) { if (!st.kertas[k] || st.kertas[k].tahun !== p.tahun) { delete st.kertas[k]; } }); }   // v14.27: kertas undi sah setahun
     var pwS = p.perwakilan || {};
     st.perwakilan = { cawangan: J.perwakilanSah(p, 'cawangan').sah, bahagian: J.perwakilanSah(p, 'bahagian').sah, sayapCawangan: pwS.sayapCawangan === p.tahun, g10: pwS.g10 === p.tahun, g2: pwS.g2 === p.tahun };
     return st;
@@ -777,6 +778,7 @@
     }
 
     var rng = opts.rng || Math.random, b = bina(p, st, d, opts), h = undi(b.calon, b.kerusi, b.pemilih, rng);
+    tambahUndiPemain(h.jadual, b.kerusi, pilihanKertas(st, kod));                    // v14.27: undi anda dalam kertas undi mesyuarat
     var sendiri = h.jadual.filter(function (j) { return j.pemain; })[0], menang = sendiri.menang;
     var jenis = d.jenis === 'perwakilan' ? 'perwakilan' : 'jawatan';
     var dilantik = jenis === 'jawatan' && !menang && lantikanBerlaku(p, d, sendiri.kedudukan, b.kerusi, rng);   // v13.57: AJK lantikan 1/3 (PAS Fasal 38(5), 41(5), 44(4))
@@ -790,7 +792,7 @@
 
     var keputusan = {
       kod: kod, jawatan: d.jawatan, peringkat: d.peringkat, kerusi: b.kerusi, pemilih: b.pemilih, hadir: h.hadir,
-      menang: menang, kedudukan: sendiri.kedudukan, undi: sendiri.undi, jumlahCalon: b.calon.length, dilantik: dilantik || undefined,
+      menang: menang, kedudukan: sendiri.kedudukan, undi: sendiri.undi, jumlahCalon: b.calon.length, dilantik: dilantik || undefined, pemenang: h.jadual.filter(function (j) { return j.menang; }).map(function (j) { return j.nama; }),
       jadual: h.jadual.filter(function (j, i) { return i < 10 || j.pemain; }), tahun: p.tahun, tarikh: new Date().toISOString()
     };
     st.keputusan[kod] = keputusan;
@@ -839,6 +841,100 @@
    * Selesaikan semua pertandingan berdaftar pada satu peringkat ('cawangan' | 'bahagian').
    * Dipanggil oleh meeting.js apabila mesyuarat ditutup. Pulang senarai hasil.
    */
+  /* ---- v14.27: Kertas undi dalam mesyuarat (satu halaman bagi setiap jawatan; pemain mengundi sama ada bertanding atau tidak) ---- */
+  function kunciKertas(mk) { return mk === 'pau' ? 'pusat' : mk; }
+  /** Peringkat pemilihan yang turut diundi dalam mesyuarat ini (UMNO: Pusat di Bahagian; PAS: gabungan mesyuarat). */
+  function sertaPeringkat(p, pk) {
+    var serta = umnoP(p, true) ? ({ bahagian: 'pusat', sayap_bahagian: 'sayap_pau' })[pk] : null;
+    var StG = modKhas('MyPolitikStruktur', 'struktur.js'), gm = StG && StG.mesyuarat ? StG.mesyuarat(p, 'gabungMesyuarat') : null; if (!serta && gm && gm[pk]) { serta = gm[pk]; }
+    return serta || null;
+  }
+  /** Halaman kertas undi bagi mesyuarat mk: [{ kod, jawatan, peringkat, kerusi, didaftar, calon:[{nama, pemain, penyandang, pencabar, kekuatan}] }]. Kosong jika bukan tahun pemilihan. */
+  function kertasUndi(mk, profil) {
+    var p = profil || S.loadPlayer(); if (!p || !adalahTahunPemilihan(p.tahun)) { return []; }
+    var pk = kunciKertas(mk), serta = sertaPeringkat(p, pk), st = getKeadaanPemilihan(p), simpan = st.kertas && st.kertas[pk];
+    if (['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'pusat', 'sayap_pau'].some(function (k) { return k !== pk && sertaPeringkat(p, k) === pk; })) { return []; }   // diundi dalam mesyuarat lain (UMNO: Pusat di Bahagian)
+    if (simpan && simpan.halaman) { return salin(simpan.halaman); }
+    var ent = senaraiPertandingan(p).filter(function (e) {
+      var df = J.cariDef(e.kod);
+      return e.jenis === 'jawatan' && (e.peringkat === pk || (serta && e.peringkat === serta)) && !(df && (df.dilantik || df.kumpulan === 'dilantik'));
+    });
+    ent.sort(function (a, b) { return (a.peringkat === pk ? 0 : 1) - (b.peringkat === pk ? 0 : 1) || (b.pangkat || 0) - (a.pangkat || 0); });
+    var guna = {}, tetap = {};
+    ent.forEach(function (e) { var d = st.daftar[e.kod]; if (d && !st.keputusan[e.kod]) { tetap[e.kod] = bina(p, st, d).calon; tetap[e.kod].forEach(function (c) { guna[c.nama] = 1; }); } });   // calon pertandingan anda = calon sebenar pengiraan
+    var halaman = [];
+    ent.forEach(function (e) {
+      var calon = tetap[e.kod];
+      if (!calon) {
+        var d0 = { kod: e.kod, jenis: 'jawatan', jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, kesukaran: e.kesukaran || 0 };
+        calon = bina(p, st, d0).calon.filter(function (c) { return !c.pemain; });
+        var ganti = janaPesaing(p, e.kod + '|kertas', calon.length + 8, 0), gi = 0;      // satu calon bagi setiap peringkat: nama berulang diganti
+        calon.forEach(function (c) { while (guna[c.nama] && gi < ganti.length) { c.nama = ganti[gi++].nama; c.penyandang = false; c.pencabar = false; } guna[c.nama] = 1; });
+      }
+      halaman.push({ kod: e.kod, jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, didaftar: !!tetap[e.kod],
+        calon: calon.map(function (c) { return { nama: c.nama, pemain: !!c.pemain, penyandang: !!c.penyandang, pencabar: !!c.pencabar, kekuatan: Math.round(c.kekuatan) }; }) });
+    });
+    return halaman;
+  }
+  /** Rekod kertas undi yang sudah dihantar bagi mesyuarat mk, atau null. */
+  function kertasDihantar(mk, profil) { var p = profil || S.loadPlayer(); if (!p) { return null; } var st = getKeadaanPemilihan(p), k = st.kertas && st.kertas[kunciKertas(mk)]; return k && k.hantar ? k : null; }
+  /** Hantar kertas undi. undi = { kod: [nama, ...] } (senarai kosong = berkecuali). */
+  function hantarUndi(mk, undi) {
+    var p = S.loadPlayer(); if (!p) { return gagal('tiada_profil', 'Tiada profil pemain.'); }
+    var hal = kertasUndi(mk, p); if (!hal.length) { return gagal('tiada_kertas', 'Tiada pengundian jawatan dalam mesyuarat ini.'); }
+    var st = getKeadaanPemilihan(p), pk = kunciKertas(mk); st.kertas = st.kertas || {};
+    if (st.kertas[pk] && st.kertas[pk].hantar) { return gagal('sudah_hantar', 'Kertas undi anda sudah dimasukkan.'); }
+    var bersih = {}, n = 0;
+    hal.forEach(function (h) {
+      var nama = h.calon.map(function (c) { return c.nama; }), pilih = ((undi || {})[h.kod] || []).filter(function (x, i, a) { return nama.indexOf(x) >= 0 && a.indexOf(x) === i; }).slice(0, h.kerusi);
+      bersih[h.kod] = pilih; if (pilih.length) { n++; }
+    });
+    st.kertas[pk] = { hantar: true, tahun: p.tahun, undi: bersih, halaman: hal };
+    var r = S.applyEffects({}, { kiraTindakan: false, patch: { pemilihan: st }, log: { tindakan: 'kertas_undi', nama: 'Masukkan kertas undi (' + n + ' jawatan)', peringkat: 'pemilihan' } });
+    return r.ok ? { ok: true, mesej: 'Undi anda dimasukkan: ' + n + ' daripada ' + hal.length + ' jawatan.', profil: r.profil } : r;
+  }
+  /** Pilihan pemain dalam kertas undi bagi kod (atau null jika tiada kertas). */
+  function pilihanKertas(st, kod) {
+    var k = st && st.kertas, r = null; if (!k) { return null; }
+    Object.keys(k).forEach(function (pk) { if (!r && k[pk] && k[pk].hantar && k[pk].undi && k[pk].undi[kod]) { r = k[pk].undi[kod]; } });
+    return r;
+  }
+  /** Tambah satu undi pemain kepada calon pilihannya, kemudian susun semula kedudukan. */
+  function tambahUndiPemain(jadual, kerusi, pilihan) {
+    if (!pilihan || !pilihan.length) { return; }
+    jadual.forEach(function (j) { if (pilihan.indexOf(j.nama) >= 0) { j.undi += 1; j.undiAnda = true; } });
+    jadual.sort(function (a, b) { return b.undi - a.undi; });
+    jadual.forEach(function (j, i) { j.kedudukan = i + 1; j.menang = i < kerusi; });
+  }
+  /**
+   * Selepas pertandingan pemain diundi: kira jawatan lain dalam kertas undi (calon NPC), kemas kini Struktur, dan pulang ringkasan
+   * [{ jawatan, kerusi, pilihan:[nama], pemenang:[nama], anda: bool }]. null jika kertas undi tidak dihantar.
+   */
+  function jalankanKertas(mk, opts) {
+    opts = opts || {};
+    var p = S.loadPlayer(); if (!p) { return null; }
+    var st = getKeadaanPemilihan(p), pk = kunciKertas(mk), k = st.kertas && st.kertas[pk];
+    if (!k || !k.hantar || k.dikira) { return k && k.dikira ? k.hasil || null : null; }
+    var gR = typeof globalThis !== 'undefined' ? globalThis : null, OGn = gR && gR.MyPolitikOrganisasi, npc = null, hasil = [];
+    k.halaman.forEach(function (h) {
+      var pilihan = k.undi[h.kod] || [], jd;
+      if (h.didaftar) {
+        var kp = st.keputusan[h.kod]; if (!kp) { return; }
+        jd = kp.jadual || [];
+      } else {
+        var rng = opts.rng || S.rngBerbenih(p.id + '|' + p.tahun + '|' + h.kod + '|kertas'), d = { kod: h.kod, jenis: 'jawatan', peringkat: h.peringkat, kerusi: h.kerusi };
+        var u = undi(h.calon, h.kerusi, pemilihParti(p, d) || bilPemilih(p, h.peringkat), rng); jd = u.jadual;
+        tambahUndiPemain(jd, h.kerusi, pilihan);
+        if (OGn && OGn.kemasKeputusan) { var pp = npc ? Object.assign({}, p, { npc: npc }) : p, b = OGn.kemasKeputusan(pp, h.kod, jd); if (b) { npc = b; } }
+      }
+      hasil.push({ kod: h.kod, jawatan: h.jawatan, kerusi: h.kerusi, pilihan: pilihan, pemenang: h.didaftar && st.keputusan[h.kod].pemenang ? st.keputusan[h.kod].pemenang : jd.filter(function (j) { return j.menang; }).map(function (j) { return j.nama; }), anda: !!h.didaftar });
+    });
+    k.dikira = true; k.hasil = hasil;
+    var patch = { pemilihan: st }; if (npc) { patch.npc = npc; }
+    var r = S.applyEffects({}, { kiraTindakan: false, patch: patch });
+    return r.ok ? hasil : null;
+  }
+
   function jalankanPemilihanPeringkat(peringkat, opts) {
     var p = S.loadPlayer();
     if (!p) { return []; }
@@ -927,6 +1023,7 @@
     anggarkanPeluang: anggarkanPeluang,
     jalankanPemilihan: jalankanPemilihan,
     jalankanPemilihanPeringkat: jalankanPemilihanPeringkat,
+    kertasUndi: kertasUndi, kertasDihantar: kertasDihantar, hantarUndi: hantarUndi, jalankanKertas: jalankanKertas,
     J: J,
     majuTahun: majuTahun
   };
