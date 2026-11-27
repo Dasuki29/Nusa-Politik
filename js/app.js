@@ -1048,7 +1048,7 @@
     }
     if (kl) {
       var peratus = clamp(Math.round(kl.ip / kl.ipMin * 100), 0, 100);
-      u += lipat('tn-kelayakan', '<span>🎯 Kelayakan Bertanding</span>', '<p class="note">Capai ' + kl.ipMin + ' IP untuk membuka pertandingan AJK / Sayap Cawangan (tahun pemilihan). Jawatan Bahagian dan Pusat dibuka selepas anda memegang jawatan peringkat lebih rendah dan menang mandat perwakilan tahun itu.</p>' +
+      u += lipat('tn-kelayakan', '<span>🎯 Kelayakan Bertanding</span>', '<p class="note">Capai ' + kl.ipMin + ' IP untuk membuka pertandingan AJK / Sayap Cawangan (tahun pemilihan). Jawatan Bahagian dan Pusat dibuka selepas anda memegang jawatan peringkat lebih rendah (mandat perwakilan tidak diperlukan).</p>' +
         '<div class="progress-wrap"><div class="progress__label"><span>Pengaruh</span><b>' + fmt(kl.ip) + ' / ' + kl.ipMin + '</b></div><div class="progress"><div class="progress__bar" style="width:' + peratus + '%"></div></div></div>' +
         '<div style="margin-top:12px">' + kl.senarai.map(function (e) { return '<div class="kv"><span>' + esc(e.jawatan) + '</span><b>' + (e.terbuka ? 'Terbuka' : 'Terkunci') + '</b></div>'; }).join('') + '</div>' +
         '<div style="margin-top:12px"><button type="button" class="btn btn--primary btn--sm" data-act="ke-tab" data-v="pemilihan">Ke Pemilihan</button></div>', { lencana: peratus >= 100 ? 'Layak' : peratus + '%' });

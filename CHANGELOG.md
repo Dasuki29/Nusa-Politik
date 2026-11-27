@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v14.26 — 🎯 Kelayakan pemilihan: mandat perwakilan bukan lagi syarat bertanding (mockup dipersetujui)
+
+- **Semua parti:** jawatan Bahagian (induk dan sayap, cth. Ketua Wanita Bahagian) tidak lagi memerlukan Perwakilan Cawangan induk, dan jawatan Pusat tidak lagi memerlukan Perwakilan Bahagian ke PAU. Perwakilan kekal sebagai peranan untuk hadir mesyuarat, membahas usul dan mengundi.
+- Syarat lain kekal: IP minimum, tempoh keahlian, tangga jawatan (cth. Ketua sayap Cawangan dahulu), satu jawatan bagi setiap peringkat, satu penggal dan syarat khas parti.
+- **Calon yang tidak layak hadir mesyuarat:** pencalonan tetap sah; urus setia menjalankan pengundian pada akhir musim (sebelum ini pengundian tidak dijalankan langsung).
+- Teks dikemas kini: kad Kelayakan Bertanding, tutorial dan nota perlembagaan dalam permainan. Ujian unit baharu v14.26.
+
 ## v14.25 — 🗺️ Peta: Wilayah Persekutuan dipisahkan dan aras DUN (mockup dipersetujui)
 
 - **Wilayah Persekutuan:** pada aras Malaysia, Kuala Lumpur, Putrajaya dan Labuan kini tiga kawasan peta berasingan. Butiran, peluang dan sokongan dikira bagi wilayah itu sahaja (KL 11 bahagian, Putrajaya 1, Labuan 1); Zum masuk membuka peta bahagian wilayah itu. Sisipan zum untuk KL dan Putrajaya kerana kedua-duanya sangat kecil. Dalam permainan WP kekal satu negeri: jawatan, Badan Perhubungan, PRN serta Lobi dan Ziarah peringkat negeri tidak berubah.

@@ -3856,6 +3856,17 @@ ujian('v14.16 Avatar rasmi TYT dan Duta: tiada warna/logo parti, kekal jantina d
   betul(dp.includes('#23324F'), 'Duta wanita bertudung: tudung biru tua'); betul(!A.svg('wanita', { parti: 'PKR', rasmi: 'tyt' }).includes('logo'), 'tiada lencana parti');
 });
 
+ujian('v14.26 Kelayakan: mandat perwakilan bukan syarat bertanding (sayap Bahagian, AJK Bahagian, sayap Pusat)', () => {
+  const J = g.MyPolitikJawatan; P.daftar({ umur: 45, jantina: 'P', sayap: 'wanita', tahunAhli: 10 });
+  P.tetap({ ip: 900, perwakilan: {}, jawatanList: [{ kod: 'sayap_cawangan_wanita', jawatan: 'Ketua Wanita Cawangan', peringkat: 'cawangan', kumpulan: 'sayap', sayap: 'wanita', pangkat: 2, tahun: 2020 }] });
+  let p = S.loadPlayer(); betul(!J.perwakilanSah(p, 'cawangan').layak, 'bukan perwakilan');
+  let k = J.semakKelayakan(p, J.cariDef('sayap_bahagian_wanita')); betul(k.terbuka, 'Ketua Wanita Bahagian tanpa perwakilan: ' + k.sebab);
+  P.tetap({ jawatanList: [{ kod: 'sayap_bahagian_wanita', jawatan: 'Ketua Wanita Bahagian', peringkat: 'bahagian', kumpulan: 'sayap', sayap: 'wanita', pangkat: 5, tahun: 2020 }] }); p = S.loadPlayer();
+  betul(!J.perwakilanSah(p, 'bahagian').layak, 'bukan perwakilan PAU'); k = J.semakKelayakan(p, J.cariDef('sayap_pusat_wanita')); betul(k.terbuka, 'Ketua Wanita Pusat tanpa perwakilan PAU: ' + k.sebab);
+  P.daftar({ umur: 40, tahunAhli: 10 }); P.tetap({ ip: 900, perwakilan: {}, jawatanList: [{ kod: 'ajk_cawangan', jawatan: 'AJK Cawangan', peringkat: 'cawangan', kumpulan: 'ajk', pangkat: 1, tahun: 2020 }] });
+  k = J.semakKelayakan(S.loadPlayer(), J.cariDef('ajk_bahagian')); betul(k.terbuka, 'AJK Bahagian tanpa perwakilan: ' + k.sebab);
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

@@ -237,13 +237,7 @@
     if (d.perluSayapCawangan && !(pegang(p, 'sayap_cawangan_' + d.sayap) || pegang(p, 'sayap_pusat_' + d.sayap) || lebihTinggiCawangan(p, d.sayap))) {     // v6.7: mesti Ketua Sayap Cawangan dahulu
       return { terbuka: false, sebab: 'Menangi jawatan Ketua ' + NAMA_SAYAP[d.sayap] + ' Cawangan dahulu (pertandingan menentang calon NPC di Cawangan), atau pegang jawatan Cawangan yang lebih tinggi.' };
     }
-    if (d.perluBahagian && !(perwakilanSah(p, 'cawangan').layak)) {
-      return { terbuka: false, sebab: 'Menangi Perwakilan Cawangan tahun ' + p.tahun + ' dahulu (atau pegang jawatan Ketua Cawangan/Bahagian/Pusat).' };
-    }
-    var UMb = d.perluPAU ? ((typeof globalThis !== 'undefined' && globalThis.MyPolitikUMNO) || (function () { try { return require('./umno.js'); } catch (eU) { return null; } })()) : null;   // v13.5: UMNO: Pusat diundi di Bahagian, calon tidak perlu wakil PAU
-    if (d.perluPAU && !(UMb && UMb.baharu(p)) && !(perwakilanSah(p, 'bahagian').layak)) {
-      return { terbuka: false, sebab: 'Perlu Perwakilan Bahagian ke PAU tahun ' + p.tahun + ' (atau Ketua Bahagian/pemegang jawatan Pusat).' };
-    }
+    // v14.26: mandat perwakilan (perluBahagian / perluPAU) bukan lagi syarat bertanding; perwakilan hanya untuk hadir dan mengundi dalam mesyuarat (semua parti)
     // v7.44: jawatan sayap dan utama sama-sama dikira untuk syarat tangga (Ketua Wanita Pusat tidak perlu AJK Cawangan dahulu)
     var pMin = pangkatMinParti(p, d);                                       // v13.57: syarat tangga ikut struktur parti
     if (pMin && Math.max(pangkatTertinggi(p), Number(p.pangkatUtamaLalu) || 0) < pMin) {

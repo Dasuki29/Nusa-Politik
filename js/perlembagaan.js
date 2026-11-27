@@ -78,7 +78,7 @@
         ['14.4.5', 'Tidak lebih sepuluh (10) wakil Wanita UMNO, sepuluh (10) wakil Pemuda dan sepuluh (10) wakil Puteri yang dipilih oleh Perwakilan Bahagian masing-masing.'],
         ['14.5', 'Tugas Perwakilan Bahagian: memilih AJK Bahagian, memilih tujuh (7) wakil Bahagian ke Perhimpunan Agung daripada penama yang telah mendaftar, dan membincangkan dasar untuk dikemukakan di Perhimpunan Agung. Wakil yang tidak dipilih atau diubah kemudian tidak sah.']
       ],
-      permainan: 'Perwakilan Bahagian diadakan pada bulan 6. Kuota wakil Cawangan dalam permainan: 1 bagi setiap 50 ahli, minimum 1, maksimum 5 (14.4.4). Pemain mesti memenangi mandat perwakilan untuk bertanding di peringkat Bahagian.'
+      permainan: 'Perwakilan Bahagian diadakan pada bulan 6. Kuota wakil Cawangan dalam permainan: 1 bagi setiap 50 ahli, minimum 1, maksimum 5 (14.4.4). Dalam permainan, mandat perwakilan hanya untuk hadir dan mengundi; ia bukan syarat bertanding jawatan.'
     },
     {
       no: 17, tajuk: 'Cawangan',
