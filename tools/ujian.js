@@ -3619,6 +3619,37 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   S.clearPlayer();
 });
 
+ujian('v14.18 Dinasti Politik: kahwin, anak, bimbing, daftar sayap, naik jawatan, waris separa, Anak Tokoh, Pokok Dinasti', () => {
+  const K = g.MyPolitikKeluarga, HY = g.MyPolitikHayat, C = K.CONFIG; P.daftar({ umur: 19, nama: 'Ahmad Kamal bin Yusof' });
+  P.tetap({ tahun: 2030, bulan: 3, ap: 10, myr: 100000, reputasi: 60 });
+  let p = S.loadPlayer(); sama(HY.umurSemasa(p), 23);
+  P.tetap({ ap: 1 }); betul(!K.kahwin().ok, 'AP'); P.tetap({ ap: 10 });
+  const r = K.kahwin({ rng: () => 0.5 }); betul(r.ok, r.ralat); p = S.loadPlayer(); betul(p.keluarga.pasangan && p.keluarga.pasangan.j === 'P'); sama(p.reputasi, 62); betul(!K.kahwin().ok, 'sekali');
+  P.tetap({ tahun: 2031, bulan: 1 }); let ev = K.prosesBulan({ rng: () => 0 }).peristiwa; p = S.loadPlayer();
+  sama(p.keluarga.anak.length, 1); betul(/ bin Ahmad Kamal$| binti Ahmad Kamal$/.test(p.keluarga.anak[0].nama), p.keluarga.anak[0].nama); betul(ev.some((x) => /dilahirkan/.test(x.mesej)));
+  sama(K.prosesBulan({ rng: () => 0 }).peristiwa.length, 0, 'sekali setahun');
+  // anak dewasa: bimbing, daftar, naik jawatan
+  const kl = p.keluarga; kl.anak[0] = Object.assign(kl.anak[0], { j: 'L', lahir: 2031 - 19, minat: 25 }); P.tetap({ keluarga: kl, ap: 10 });
+  const id = kl.anak[0].id; betul(!K.daftar(id).ok, 'minat rendah'); betul(K.bimbing(id).ok); betul(!K.bimbing(id).ok, 'sebulan sekali'); sama(S.loadPlayer().keluarga.anak[0].minat, 30);
+  const dr = K.daftar(id); betul(dr.ok, dr.ralat); sama(S.loadPlayer().keluarga.anak[0].sayap, 'pemuda');
+  P.tetap({ tahun: 2032, bulan: 1, jawatanList: [{ kod: 'naib_presiden', jawatan: 'Naib Presiden', peringkat: 'pusat', pangkat: 10 }] });
+  ev = K.prosesBulan({ rng: () => 0.2 }).peristiwa; p = S.loadPlayer(); sama(p.keluarga.anak[0].aras, 1); betul(ev.some((x) => /AJK Pemuda Cawangan/.test(x.mesej)), JSON.stringify(ev)); betul(ev.some((x) => /nepotisme/.test(x.mesej))); sama(p.reputasi, 59);
+  // tamat kerjaya: waris anak
+  const rep0 = p.reputasi, myr0 = p.myr; P.tetap({ tahun: 2034 }); betul(HY.tamatkan('bersara_sukarela').ok);
+  p = S.loadPlayer(); const cw = K.calonWaris(p); sama(cw.length, 1); sama(cw[0].umur, 22); sama(cw[0].jawatan, 'AJK Pemuda Cawangan');
+  const t = K.teruskan(0); betul(t.ok, t.ralat); const h = S.loadPlayer();
+  betul(!h.tamat); sama(h.nama, cw[0].nama); sama(h.tahun, 2034); sama(HY.umurSemasa(h), 22); sama(h.parti, p.parti); sama(h.bahagian, p.bahagian);
+  sama(h.reputasi, Math.round(30 + 0.25 * rep0)); sama(h.myr, 1000 + Math.round(0.25 * myr0)); sama(h.jawatan, 'AJK Pemuda Cawangan'); sama(h.sayap, 'pemuda');
+  sama(h.dinasti.generasi.length, 1); sama(h.dinasti.generasi[0].nama, p.nama); betul(/^Dinasti /.test(h.dinasti.nama)); sama(h.dinasti.tahunMula, 2034);
+  betul(K.anakTokoh(h)); sama(K.bonusPemilihan(h, 'bahagian'), C.WARIS.tokohBonus); sama(K.bonusPemilihan(h, 'pusat'), 0);
+  P.tetap({ tahun: 2039 }); betul(!K.anakTokoh(S.loadPlayer()), '5 tahun');
+  // generasi 2 tamat tanpa anak: 2 calon dijana (deterministik), generasi 3
+  betul(HY.tamatkan('bersara_sukarela').ok); const c2 = K.calonWaris(S.loadPlayer()); sama(c2.length, 2); sama(JSON.stringify(c2), JSON.stringify(K.calonWaris(S.loadPlayer())));
+  betul(c2.every((x) => x.umur >= 25 && x.umur <= 35 && x.jana));
+  betul(K.teruskan(1).ok); const h3 = S.loadPlayer(); sama(h3.dinasti.generasi.length, 2); sama(HY.umurSemasa(h3), c2[1].umur); sama(h3.jawatan, 'Ahli Biasa');
+  S.clearPlayer();
+});
+
 ujian('v14.17: Pesuruhjaya Tinggi bagi negara Komanwel, Tuan/Puan Yang Terutama ikut jantina, kiraan bulan penggal kedua bermula semula', () => {
   const D = g.MyPolitikDuta, T = g.MyPolitikTYT;
   sama(D.gelaran('london'), 'Pesuruhjaya Tinggi Malaysia'); sama(D.gelaran('singapura'), 'Pesuruhjaya Tinggi Malaysia'); sama(D.gelaran('canberra'), 'Pesuruhjaya Tinggi Malaysia');

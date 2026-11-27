@@ -75,7 +75,7 @@
   function tahapKerajaan(p) { var K = KB(), k = K ? K.getKabinet(p) : null; return k && k.hasGovernmentRole ? k.roleLevel : 'NONE'; }
   function statusEtika(p) { var E = ET(); return E ? E.getEtika(p).status : 'baik'; }
   function skorIntegriti(p) { var I = IG(); return I ? I.getIntegriti(p).skor : 70; }
-  function tahunBerkhidmat(p) { return Math.max(0, (parseInt(p.tahun, 10) || CONFIG.TAHUN_MULA) - CONFIG.TAHUN_MULA); }
+  function tahunBerkhidmat(p) { var m = p && p.dinasti && Number(p.dinasti.tahunMula) ? Number(p.dinasti.tahunMula) : CONFIG.TAHUN_MULA; return Math.max(0, (parseInt(p.tahun, 10) || m) - m); }   // v14.18: waris dinasti
   /** v13.88: bilangan gelaran tahap Datuk (Datuk persekutuan + Dato' negeri sendiri + Dato' negeri lain, maks. 5). */
   function kiraDatuk(d) { return (d.dato ? 1 : 0) + (d.negeri && d.negeri.t1 ? 1 : 0) + (Array.isArray(d.luar) ? d.luar.length : 0); }
   function cukupDatuk(d) { return kiraDatuk(d) >= CONFIG.TAHAP_DATUK; }

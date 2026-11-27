@@ -1185,3 +1185,12 @@ html, body { overflow-x: clip; }
 
 /* v14.9: tab Peta: kad sisi (Sokongan, Isu, Log) disembunyikan; kekal di tab lain */
 .dashboard-layout.is-peta .dashboard-layout__side { display: none; }
+
+/* v14.18: Keluarga dan Dinasti Politik */
+.kl-tree { position: relative; padding-left: 18px; }
+.kl-tree:before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+.kl-gen { position: relative; border: 2px solid var(--border); border-radius: var(--radius); padding: 7px 10px; margin: 6px 0; font-size: .86rem; }
+.kl-gen:before { content: ""; position: absolute; left: -17px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: #F5C518; border: 2px solid var(--border); }
+.kl-gen.is-on { border-color: #F5C518; }
+.kl-gen small { display: block; color: var(--text-muted); font-size: .78rem; margin-top: 2px; }
+.kl-legasi { margin-top: 14px; }

@@ -119,7 +119,7 @@
     DATA_JENIS.forEach(function (j) { d[j] = (o[j] && typeof o[j] === 'object') ? o[j] : null; });
     var dm = p.demografik || {};
     return { ok: true, data: { format: FORMAT, v: 1, masa: o.masa || '', player: d.player, events: d.events, tutorial: d.tutorial },
-      ringkas: { nama: p.nama, jawatan: p.jawatan || 'Ahli Biasa', cawangan: p.cawangan || '', tahun: p.tahun || 2026, bulan: p.bulan || 1, versi: p.versi || '', umur: dm.umur || null } };
+      ringkas: { nama: p.nama, jawatan: p.jawatan || 'Ahli Biasa', cawangan: p.cawangan || '', tahun: p.tahun || 2026, bulan: p.bulan || 1, versi: p.versi || '', umur: isFinite(parseInt(dm.umur, 10)) ? parseInt(dm.umur, 10) + Math.max(0, (parseInt(p.tahun, 10) || 2026) - 2026) : null } };   // v14.18: umur semasa (waris dinasti)
   }
 
   /** Pasang data ke slot n. Jika slot berisi, sandaran watak lama disimpan dahulu. Pulang { ok, slot, ganti } atau { ok:false, ralat }. */

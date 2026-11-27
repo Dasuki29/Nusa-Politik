@@ -563,7 +563,8 @@
       var sasar = calon.filter(function (c) { return c.nama === cb.penentang.nama; })[0] || calon.filter(function (c) { return (!bp || c.nama !== bp.nama) && !c.penyandang; }).sort(function (a, b) { return b.kekuatan - a.kekuatan; })[0] || calon[0];
       sasar.kekuatan = clamp(sasar.kekuatan + (cb.tahap === 'kritikal' ? CONFIG.BONUS_PENCABAR.kritikal : CONFIG.BONUS_PENCABAR.amaran), 8, 99); sasar.nama = cb.penentang.nama; sasar.pencabar = true;
     }
-    var SKb = gR && gR.MyPolitikSokong, bSk = SKb && SKb.bonusSekutu ? SKb.bonusSekutu(p) : 0;   // v14.8: sekutu daripada sokongan pertandingan lain
+    var SKb = gR && gR.MyPolitikSokong, bSk = SKb && SKb.bonusSekutu ? SKb.bonusSekutu(p) : 0;
+    var KLb = gR && gR.MyPolitikKeluarga; if (KLb && KLb.bonusPemilihan) { bSk += KLb.bonusPemilihan(p, peringkat); }   // v14.18: Anak Tokoh (dinasti)   // v14.8: sekutu daripada sokongan pertandingan lain
     calon.push({ nama: p.nama, pemain: true, kekuatan: kekuatanPemain(p, st, peringkat, d) + bSk });
     return { calon: calon, kerusi: kerusi, pemilih: pemilihParti(p, d, opts) || bilPemilih(p, peringkat, opts) };
   }

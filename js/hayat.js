@@ -161,16 +161,17 @@
     try { et = ET && ET.ringkasan ? ET.ringkasan(p) : null; } catch (e) { et = null; }
     var akarUmbi = p.kesetiaan && isFinite(Number(p.kesetiaan.akarUmbi)) ? Number(p.kesetiaan.akarUmbi) : 0;
     var statusDisiplin = et ? et.status : 'baik', salah = et ? et.salah : 0, modal = et ? et.modal : 50;
-    var gelarList = anugerahGelaran({ umur: umur, tahunBerkhidmat: Math.max(0, p.tahun - CONFIG.TAHUN_MULA), pangkat: top.pangkat || 0, jawatan: top.jawatan,
+    var mulaW = p.dinasti && Number(p.dinasti.tahunMula) ? Number(p.dinasti.tahunMula) : CONFIG.TAHUN_MULA;   // v14.18: waris dinasti
+    var gelarList = anugerahGelaran({ umur: umur, tahunBerkhidmat: Math.max(0, p.tahun - mulaW), pangkat: top.pangkat || 0, jawatan: top.jawatan,
       akarUmbi: akarUmbi, reputasi: p.reputasi || 0, modal: modal, salah: salah, status: statusDisiplin, myr: p.myr || 0,
       pernahPM: pr.jawatanKerajaan.indexOf('Perdana Menteri') >= 0 || pr.kabinetSemasa === 'Perdana Menteri',
       bilMenang: pr.menang, bilKabinet: pr.jawatanKerajaan.length + (pr.kabinetSemasa && pr.jawatanKerajaan.indexOf(pr.kabinetSemasa) < 0 ? 1 : 0) });
     return {
       kesetiaanAkarUmbi: akarUmbi, statusDisiplin: statusDisiplin, gelarList: gelarList,
       sebab: sebab, tajuk: TAJUK_SEBAB[sebab] || 'Penamat Kerjaya', mesej: mesejSebab(sebab, umur, p),
-      umur: umur, tahun: p.tahun, bulan: p.bulan, tahunMula: CONFIG.TAHUN_MULA,
-      tahunBerkhidmat: Math.max(0, p.tahun - CONFIG.TAHUN_MULA),
-      umurMula: p.demografik ? p.demografik.umur : null,
+      umur: umur, tahun: p.tahun, bulan: p.bulan, tahunMula: mulaW,
+      tahunBerkhidmat: Math.max(0, p.tahun - mulaW),
+      umurMula: p.dinasti && p.dinasti.umurMula ? p.dinasti.umurMula : (p.demografik ? p.demografik.umur : null),
       jawatanAkhir: p.tyt && p.tyt.aktif && root.MyPolitikTYT ? 'Yang di-Pertua Negeri ' + ((root.MyPolitikTYT.NEGERI[p.tyt.aktif.negeri] || {}).nama || '') : p.jawatan,   // v13.52 jawatanTertinggi: top.jawatan, pangkatTertinggi: top.pangkat || 0, gelaran: gelaranPangkat(top.pangkat || 0),
       gaya: w ? w.nama : null, gayaHuraian: w ? w.huraian : null,
       ip: p.ip, myr: p.myr, reputasi: p.reputasi, bilTindakan: p.bilTindakan || 0,

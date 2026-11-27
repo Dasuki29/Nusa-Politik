@@ -1,5 +1,15 @@
 # Catatan Perubahan
 
+## v14.18 — 👪 Dinasti Politik (mockup dipersetujui)
+
+- **Kad 👪 Keluarga (tab Profil):** berkahwin (umur 21 hingga 60, 2 AP, RM 30,000, Reputasi +2). Selepas berkahwin, peluang 35% setahun dapat anak (maksimum 5; ibu berumur 45 ke bawah). Nama anak ikut adat keluarga (bin/binti, a/l, nama keluarga).
+- **Anak:** Bimbing (1 AP, sekali sebulan, umur 10+, Minat politik +5). Daftar parti (umur 18+, Minat 30+): anak menyertai sayap mengikut umur dan jantina, dan naik jawatan sendiri setiap Januari (AJK, Naib Ketua, Ketua Cawangan, AJK Bahagian).
+- **Risiko nepotisme:** anak naik jawatan ketika anda memegang jawatan Pusat = 30% Reputasi −3.
+- **🏛️ Teruskan Dinasti (skrin Legasi):** pilih anak berumur 21+ sebagai waris; tiada anak = 2 calon waris dijana. Warisan separa: parti dan bahagian sama, Reputasi 30 + 25%, dana 25% (pusaka), jawatan sayap waris sendiri. Tahun permainan bersambung.
+- **⭐ Anak Tokoh (5 tahun pertama):** kekuatan pemilihan parti peringkat cawangan dan bahagian +5; 10% setahun tuduhan nepotisme (Reputasi −3).
+- **🌳 Pokok Dinasti (tab Profil):** setiap generasi dengan tempoh, jawatan tertinggi, kemenangan pilihan raya, sebab tamat dan Skor Dinasti.
+- Umur, tempoh berkhidmat dan gelaran waris dikira dari tahun waris bermula. Modul baharu `js/keluarga.js`, `js/keluarga-ui.js`; ujian unit dan `tools/ujian-keluarga.js`; kunci EN baharu.
+
 ## v14.17 — Pesuruhjaya Tinggi (Komanwel), Tuan/Puan Yang Terutama, kiraan penggal kedua
 
 - **Pesuruhjaya Tinggi:** pos di negara Komanwel (Singapura, London, Canberra) kini bergelar *Pesuruhjaya Tinggi Malaysia* dan pejabatnya *Suruhanjaya Tinggi* (tab, mesej, log, elaun, legasi). Pos lain kekal *Duta Malaysia* / *Kedutaan*. Modal pilih pos memaparkan gelaran bagi setiap pos.
