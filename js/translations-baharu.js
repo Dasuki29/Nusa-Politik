@@ -6544,6 +6544,10 @@
   ["Krisis konsular: {a} rakyat Malaysia ditahan di China. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in China. Choose an action in the Embassy tab."],
   ["Krisis konsular: {a} rakyat Malaysia ditahan di United Kingdom. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in the United Kingdom. Choose an action in the Embassy tab."],
   ["Krisis konsular: {a} rakyat Malaysia ditahan di Amerika Syarikat. Pilih tindakan di tab Kedutaan.", "Consular crisis: {a} Malaysians are detained in the United States. Choose an action in the Embassy tab."],
+  /* v14.29 Lantikan negeri ikut liputan parti */
+  ["Anda mesti Presiden parti.", "You must be the party President."],
+  ["Anda Presiden parti", "You are the party President"],
+  ["Anda Presiden parti: parti serantau tiada Badan Perhubungan Negeri", "You are the party President: a regional party has no State Liaison Committee"],
   /* v14.27 Kertas undi dalam mesyuarat */
   ["🗳️ Pengundian Jawatan", "🗳️ Post Elections"],
   ["Undi dimasukkan", "Vote cast"],

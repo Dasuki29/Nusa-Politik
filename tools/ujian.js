@@ -3897,6 +3897,18 @@ ujian('v14.28 Kertas undi: pemilihan perwakilan setiap tahun (Perwakilan Cawanga
   E.kertasUndi('sayap_bahagian').forEach((h) => h.calon.forEach((c) => betul(!/ bin /.test(c.nama), 'calon Wanita lelaki: ' + c.nama)));
 });
 
+ujian('v14.29 Lantikan negeri: parti serantau tiada peringkat negeri; Presiden/Ketua Sayap Pusat hanya melantik negeri yang ada parti', () => {
+  const N = g.MyPolitikNegeri, sayapPusat = (pt, sy) => { P.daftar({ umur: 30, sayap: sy, tahunAhli: 10 }); P.tetap({ parti: pt, jawatanList: [{ kod: 'sayap_pusat_' + sy, jawatan: 'Ketua', peringkat: 'pusat', kumpulan: 'sayap', sayap: sy, pangkat: 9, tahun: 2026 }, { kod: 'presiden', jawatan: 'Presiden', peringkat: 'pusat', kumpulan: 'utama', pangkat: 12, tahun: 2026 }] }); return S.loadPlayer(); };
+  let p = sayapPusat('PBRS', 'pemuda'); betul(N.serantau(p), 'PBRS serantau'); betul(!N.sayap.aktif(p) && !N.aktif(p), 'PBRS tiada Ketua Pemuda Negeri / Badan Perhubungan');
+  sama(N.sayap.menunggu(p), null); sama(N.sayap.htmlPusat(p), ''); sama(N.htmlPusat(p), '');
+  const neg = (pp, NN) => (NN.htmlPusat(pp).match(/org-baris/g) || []).length;
+  p = sayapPusat('UMNO', 'pemuda'); sama(neg(p, N.sayap), 13, 'UMNO: 13 negeri (tiada Sarawak)'); betul(!/Sarawak/.test(N.sayap.htmlPusat(p)));
+  p = sayapPusat('PAS', 'pemuda'); sama(neg(p, N.sayap), 12, 'PAS: tiada Sabah dan Sarawak'); betul(!/Sabah|Sarawak/.test(N.sayap.htmlPusat(p)));
+  p = sayapPusat('PPP', 'pemuda'); sama(neg(p, N), 7, 'PPP: 7 negeri');
+  p = sayapPusat('GAGASAN', 'pemuda'); sama(neg(p, N), 2, 'Gagasan: Sabah + WP');
+  p = sayapPusat('DAP', 'pemuda'); sama(neg(p, N), 14, 'DAP: semua negeri');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

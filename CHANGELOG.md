@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.29 — Pembetulan: lantikan peringkat negeri ikut liputan parti
+
+- **Parti serantau (satu negeri, cth PBRS, PBS, UPKO, LDP, PHRS, PCS):** tiada lagi peringkat negeri. Ketua Sayap Pusat tidak melantik Ketua Sayap Negeri dan Presiden tidak melantik Pengerusi Badan Perhubungan Negeri, kerana Pusat sudah meliputi seluruh kawasan parti. Syarat Ketua Menteri bagi parti serantau ialah Presiden parti (seperti parti Sarawak).
+- **Parti berbilang negeri:** Presiden / Ketua Sayap Pusat hanya melantik bagi negeri yang ada cawangan parti (ikut data parti): PAS dan BERJASA tanpa Sabah/Sarawak, PPP 7 negeri, MCA/MIC/AMANAH/BERSATU/WARISAN tanpa Sarawak, Gagasan Sabah + Wilayah Persekutuan, PKR dan DAP semua negeri, UMNO tanpa Sarawak.
+- Ujian unit v14.29.
+
 ## v14.28 — 🗳️ Kertas undi: pemilihan perwakilan dan jantina calon ikut sayap
 
 - **Pemilihan perwakilan dalam kertas undi (setiap tahun, termasuk tahun pemilihan):** Perwakilan Cawangan ke Bahagian, Wakil sayap Cawangan, G10 (wakil sayap ke Mesyuarat Perwakilan Bahagian), G2 (wakil ke Perhimpunan sayap Pusat), Perwakilan Bahagian ke PAU, dan wakil Dewan (PAS). Halaman perwakilan dipaparkan selepas halaman jawatan. Pada tahun bukan pemilihan, kertas undi hanya mengandungi pemilihan perwakilan. Perwakilan yang dilantik (bukan diundi) dalam parti tertentu tidak dimasukkan.
