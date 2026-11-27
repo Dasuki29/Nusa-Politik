@@ -3884,6 +3884,19 @@ ujian('v14.27 Kertas undi mesyuarat: halaman setiap jawatan, nama unik, undi dik
   P.tetap({ bulan: K.getTetingkap('bahagian', 1).mula }); const KB = E.kertasUndi('bahagian'); betul(KB.some((h) => h.peringkat === 'bahagian') && KB.some((h) => h.peringkat === 'pusat'), 'UMNO: jawatan Pusat diundi di Bahagian');
 });
 
+ujian('v14.28 Kertas undi: pemilihan perwakilan setiap tahun (Perwakilan Cawangan, wakil sayap, G10, G2) dan jantina calon ikut sayap', () => {
+  const E = g.MyPolitikElection; P.daftar({ umur: 28, jantina: 'L', sayap: 'pemuda', tahunAhli: 10 }); let t = 2026; while (E.adalahTahunPemilihan(t)) { t++; } P.tetap({ tahun: t });
+  const kod = (m) => E.kertasUndi(m).map((h) => h.kod);
+  sama(kod('cawangan').join(), 'perwakilan_cawangan', 'bukan tahun pemilihan: perwakilan sahaja'); betul(kod('sayap_cawangan').indexOf('perwakilan_sayap_cawangan') >= 0);
+  betul(['perwakilan_sayap_g10', 'perwakilan_sayap_g2'].every((k) => kod('sayap_bahagian').indexOf(k) >= 0), 'G10 dan G2'); betul(kod('bahagian').indexOf('perwakilan_bahagian') >= 0, 'Perwakilan Bahagian ke PAU');
+  while (!E.adalahTahunPemilihan(t)) { t++; } P.tetap({ tahun: t });
+  const KS = E.kertasUndi('sayap_cawangan').concat(E.kertasUndi('sayap_bahagian')); betul(KS.length >= 6);
+  KS.forEach((h) => h.calon.forEach((c) => betul(!/ binti /.test(c.nama), 'calon Pemuda perempuan: ' + c.nama + ' (' + h.kod + ')')));
+  const KC = E.kertasUndi('cawangan'); betul(KC.some((h) => h.jenis === 'perwakilan') && KC[KC.length - 1].jenis === 'perwakilan', 'perwakilan selepas jawatan');
+  P.daftar({ umur: 45, jantina: 'P', sayap: 'wanita', tahunAhli: 10 }); P.tetap({ tahun: t });
+  E.kertasUndi('sayap_bahagian').forEach((h) => h.calon.forEach((c) => betul(!/ bin /.test(c.nama), 'calon Wanita lelaki: ' + c.nama)));
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

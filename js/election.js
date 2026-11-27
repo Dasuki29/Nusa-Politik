@@ -506,13 +506,19 @@
   }
 
   /** Pesaing tetap bagi satu pertandingan (seed daripada ID pemain, tahun dan kod). */
+  /** v14.28: jantina calon ikut sayap pertandingan (Pemuda/Putera lelaki; Puteri/Wanita perempuan); null = campuran. */
+  function jantinaKod(p, kod) {
+    var k = String(kod || '').split('|')[0], df = J && J.cariDef ? J.cariDef(k) : null;
+    var w = (df && df.sayap) || (/^perwakilan_(sayap|dewan)/.test(k) && J && J.sayapPemain ? J.sayapPemain(p) : null) || ((/(pemuda|putera|puteri|wanita)/.exec(k) || [])[1]) || null;
+    return w === 'pemuda' || w === 'putera' ? 'L' : w === 'puteri' || w === 'wanita' ? 'P' : null;
+  }
   function janaPesaing(p, kod, bilangan, tambahan) {
-    var rng = S.rngBerbenih(p.id + '|' + p.tahun + '|' + kod + '|pesaing');
+    var rng = S.rngBerbenih(p.id + '|' + p.tahun + '|' + kod + '|pesaing'), jk = jantinaKod(p, kod);
     var senarai = [], guna = {};
     for (var i = 0; i < bilangan; i++) {
       var nama, cuba = 0;
       do {
-        var lelaki = rng() < 0.55, DTn = (typeof globalThis !== 'undefined' && globalThis.MyPolitikData);
+        var lelaki = rng() < 0.55, DTn = (typeof globalThis !== 'undefined' && globalThis.MyPolitikData); if (jk) { lelaki = jk === 'L'; }
         if (DTn && DTn.janaNama && p.parti && p.parti !== 'UMNO') { nama = DTn.janaNama(rng, lelaki ? 'L' : 'P', null); continue; }   // v13.20: nama ikut kaum majoriti parti
         var senaraiNama = lelaki ? NAMA_L : NAMA_P;
         nama = senaraiNama[Math.floor(rng() * senaraiNama.length)] + ' ' + NAMA_2[Math.floor(rng() * NAMA_2.length)] +
@@ -851,27 +857,32 @@
   }
   /** Halaman kertas undi bagi mesyuarat mk: [{ kod, jawatan, peringkat, kerusi, didaftar, calon:[{nama, pemain, penyandang, pencabar, kekuatan}] }]. Kosong jika bukan tahun pemilihan. */
   function kertasUndi(mk, profil) {
-    var p = profil || S.loadPlayer(); if (!p || !adalahTahunPemilihan(p.tahun)) { return []; }
-    var pk = kunciKertas(mk), serta = sertaPeringkat(p, pk), st = getKeadaanPemilihan(p), simpan = st.kertas && st.kertas[pk];
+    var p = profil || S.loadPlayer(); if (!p) { return []; }
+    var buka = adalahTahunPemilihan(p.tahun), pk = kunciKertas(mk), serta = sertaPeringkat(p, pk), st = getKeadaanPemilihan(p), simpan = st.kertas && st.kertas[pk];
     if (['cawangan', 'sayap_cawangan', 'bahagian', 'sayap_bahagian', 'pusat', 'sayap_pau'].some(function (k) { return k !== pk && sertaPeringkat(p, k) === pk; })) { return []; }   // diundi dalam mesyuarat lain (UMNO: Pusat di Bahagian)
     if (simpan && simpan.halaman) { return salin(simpan.halaman); }
+    var StK = modKhas('MyPolitikStruktur', 'struktur.js'), mzK = function (k) { return StK && StK.mesyuarat ? StK.mesyuarat(p, k) : null; };
     var ent = senaraiPertandingan(p).filter(function (e) {
       var df = J.cariDef(e.kod);
-      return e.jenis === 'jawatan' && (e.peringkat === pk || (serta && e.peringkat === serta)) && !(df && (df.dilantik || df.kumpulan === 'dilantik'));
+      if (e.jenis === 'perwakilan') {                                              // v14.28: pemilihan perwakilan (setiap tahun): Perwakilan Cawangan, wakil sayap, G10, G2
+        if ((e.kod === 'perwakilan_cawangan' && mzK('tanpaWakilCawangan')) || (e.kod === 'perwakilan_sayap_cawangan' && mzK('wakilSayapDilantik'))) { return false; }   // tiada undian dalam parti ini
+        return e.peringkat === pk && (e.kerusi || 0) > 0;
+      }
+      return buka && e.jenis === 'jawatan' && (e.peringkat === pk || (serta && e.peringkat === serta)) && !(df && (df.dilantik || df.kumpulan === 'dilantik'));
     });
-    ent.sort(function (a, b) { return (a.peringkat === pk ? 0 : 1) - (b.peringkat === pk ? 0 : 1) || (b.pangkat || 0) - (a.pangkat || 0); });
+    ent.sort(function (a, b) { return (a.peringkat === pk ? 0 : 1) - (b.peringkat === pk ? 0 : 1) || (a.jenis === 'perwakilan' ? 1 : 0) - (b.jenis === 'perwakilan' ? 1 : 0) || (b.pangkat || 0) - (a.pangkat || 0); });
     var guna = {}, tetap = {};
     ent.forEach(function (e) { var d = st.daftar[e.kod]; if (d && !st.keputusan[e.kod]) { tetap[e.kod] = bina(p, st, d).calon; tetap[e.kod].forEach(function (c) { guna[c.nama] = 1; }); } });   // calon pertandingan anda = calon sebenar pengiraan
     var halaman = [];
     ent.forEach(function (e) {
       var calon = tetap[e.kod];
       if (!calon) {
-        var d0 = { kod: e.kod, jenis: 'jawatan', jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, kesukaran: e.kesukaran || 0 };
+        var d0 = { kod: e.kod, jenis: e.jenis, jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, kesukaran: e.kesukaran || 0 };
         calon = bina(p, st, d0).calon.filter(function (c) { return !c.pemain; });
         var ganti = janaPesaing(p, e.kod + '|kertas', calon.length + 8, 0), gi = 0;      // satu calon bagi setiap peringkat: nama berulang diganti
         calon.forEach(function (c) { while (guna[c.nama] && gi < ganti.length) { c.nama = ganti[gi++].nama; c.penyandang = false; c.pencabar = false; } guna[c.nama] = 1; });
       }
-      halaman.push({ kod: e.kod, jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, didaftar: !!tetap[e.kod],
+      halaman.push({ kod: e.kod, jenis: e.jenis, jawatan: e.jawatan, peringkat: e.peringkat, kerusi: e.kerusi, didaftar: !!tetap[e.kod],
         calon: calon.map(function (c) { return { nama: c.nama, pemain: !!c.pemain, penyandang: !!c.penyandang, pencabar: !!c.pencabar, kekuatan: Math.round(c.kekuatan) }; }) });
     });
     return halaman;
@@ -922,7 +933,7 @@
         var kp = st.keputusan[h.kod]; if (!kp) { return; }
         jd = kp.jadual || [];
       } else {
-        var rng = opts.rng || S.rngBerbenih(p.id + '|' + p.tahun + '|' + h.kod + '|kertas'), d = { kod: h.kod, jenis: 'jawatan', peringkat: h.peringkat, kerusi: h.kerusi };
+        var rng = opts.rng || S.rngBerbenih(p.id + '|' + p.tahun + '|' + h.kod + '|kertas'), d = { kod: h.kod, jenis: h.jenis || 'jawatan', peringkat: h.peringkat, kerusi: h.kerusi };
         var u = undi(h.calon, h.kerusi, pemilihParti(p, d) || bilPemilih(p, h.peringkat), rng); jd = u.jadual;
         tambahUndiPemain(jd, h.kerusi, pilihan);
         if (OGn && OGn.kemasKeputusan) { var pp = npc ? Object.assign({}, p, { npc: npc }) : p, b = OGn.kemasKeputusan(pp, h.kod, jd); if (b) { npc = b; } }

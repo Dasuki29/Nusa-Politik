@@ -1,5 +1,11 @@
 # Catatan Perubahan
 
+## v14.28 — 🗳️ Kertas undi: pemilihan perwakilan dan jantina calon ikut sayap
+
+- **Pemilihan perwakilan dalam kertas undi (setiap tahun, termasuk tahun pemilihan):** Perwakilan Cawangan ke Bahagian, Wakil sayap Cawangan, G10 (wakil sayap ke Mesyuarat Perwakilan Bahagian), G2 (wakil ke Perhimpunan sayap Pusat), Perwakilan Bahagian ke PAU, dan wakil Dewan (PAS). Halaman perwakilan dipaparkan selepas halaman jawatan. Pada tahun bukan pemilihan, kertas undi hanya mengandungi pemilihan perwakilan. Perwakilan yang dilantik (bukan diundi) dalam parti tertentu tidak dimasukkan.
+- **Pepijat:** calon sayap Pemuda (dan Putera) kini lelaki sahaja; calon Puteri dan Wanita perempuan sahaja. Ini terpakai kepada kertas undi dan semua pertandingan sayap (termasuk perwakilan sayap). Calon Induk kekal campuran.
+- Ujian unit v14.28.
+
 ## v14.27 — 🗳️ Kertas undi dalam mesyuarat (mockup dipersetujui)
 
 - **Langkah Undi baharu sebelum Tutup Mesyuarat:** pada tahun pemilihan, kad mesyuarat memaparkan 🗳️ Pengundian Jawatan. Kertas undi dibuka satu jawatan satu halaman (Ketua dahulu, kemudian Timbalan, Naib dan AJK) dengan ◀ Sebelum / Seterusnya ▶, halaman Semak Kertas Undi dan ✅ Masukkan Undi. Jawatan berkerusi banyak (AJK) membenarkan beberapa pilihan; setiap jawatan boleh Berkecuali.
