@@ -1737,6 +1737,8 @@
   function nginst(t) { var N = W.MyPolitikNegeri; return t && t.getAttribute('data-b') === 'sayap' ? N.sayap : N; }
   async function urusNegeri(NG) {
     NG = NG || W.MyPolitikNegeri; if (!NG) { return; }
+    var slN = NG.senaraiLantikan ? NG.senaraiLantikan(S.loadPlayer()) : null;      // v14.30: tiada pop-up berantai: senarai dalam kad (tab Pemilihan)
+    if (slN) { toast(NG.tr(slN.jenis === 'ajk' ? '🏛️ Lantikan AJK Badan Perhubungan menunggu: sahkan dalam kad Badan Perhubungan (tab Pemilihan).' : '🏛️ Lantikan Pengerusi Badan Perhubungan menunggu: sahkan dalam kad Badan Perhubungan (tab Pemilihan).'), 'info'); return; }
     for (var g = 0; g < 20; g++) {
       var m = NG.menunggu(S.loadPlayer()); if (!m) { return; }
       var lain = m.jenis === 'pilih_negeri_lain', tajuk = lain ? NG.tr('Lantik Pengerusi Badan Perhubungan') + ' ' + m.negeriNama + ' (' + m.baki + ' negeri)' : m.jenis === 'pilih_pengerusi' ? NG.tr('Lantik Pengerusi Badan Perhubungan') : 'Lantik ' + (m.tajukJawatan || m.jawatan);
@@ -2046,6 +2048,11 @@
     else if (act === 'tindakan') { tindakan(t.getAttribute('data-id')); }
     else if (act === 'dekati-presiden') { var dk = nginst(t).dekatiPresiden(); render(); if (dk.ok) { toast(dk.mesej, 'ok'); } else { toast(dk.ralat, 'ralat'); } }
     else if (act === 'urus-negeri') { urusNegeri(nginst(t)).then(render); }
+    else if (act === 'negeri-sahkan') {                                               // v14.30
+      var kadN = t.closest('.pp-negeri'), pilN = {};
+      if (kadN) { Array.prototype.forEach.call(kadN.querySelectorAll('select[data-ngp]'), function (x) { pilN[x.getAttribute('data-ngp')] = x.value; }); }
+      var rN = nginst(t).sahkanLantikan(pilN); toast(rN.ok ? rN.mesej : rN.ralat, rN.ok ? 'ok' : 'ralat'); render();
+    }
     else if (act === 'lobi-presiden') { tawarkanLobi(nginst(t)); }
     else if (act === 'negeri-tindak') { var nt = nginst(t).tindakan(t.getAttribute('data-id')); render(); if (nt.ok) { toast(nt.mesej, 'ok'); } else { toast(nt.ralat, 'ralat'); } }
     else if (act === 'glc-syarikat' || act === 'glc-kembali') { if (W.NusaGLC_UI) { W.NusaGLC_UI.pilih(act === 'glc-syarikat' ? t.getAttribute('data-id') : null); } render(); }

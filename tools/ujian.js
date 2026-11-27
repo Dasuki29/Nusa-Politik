@@ -3909,6 +3909,19 @@ ujian('v14.29 Lantikan negeri: parti serantau tiada peringkat negeri; Presiden/K
   p = sayapPusat('DAP', 'pemuda'); sama(neg(p, N), 14, 'DAP: semua negeri');
 });
 
+ujian('v14.30 Lantikan negeri dalam satu senarai: sahkan sekali, automatik bulan berikutnya, kekosongan diisi tanpa pop-up', () => {
+  const N = g.MyPolitikNegeri, E = g.MyPolitikElection; let t = 2026;
+  const sedia = () => { P.daftar({ umur: 30, sayap: 'pemuda', tahunAhli: 10 }); t = 2026; while (!E.adalahTahunPemilihan(t)) { t++; } P.tetap({ tahun: t, bulan: 9, jawatanList: [{ kod: 'sayap_pusat_pemuda', jawatan: 'Ketua Pemuda', peringkat: 'pusat', kumpulan: 'sayap', sayap: 'pemuda', pangkat: 9, tahun: t }] }); N.sayap.prosesBulan({}); };
+  sedia(); let sl = N.sayap.senaraiLantikan(); sama(sl.jenis, 'pengerusi'); sama(sl.baris.length, 13); betul(sl.baris[0].sendiri);
+  const pil = {}; pil[sl.baris[3].kunci] = sl.baris[3].calon[1].id; const r = N.sayap.sahkanLantikan(pil); betul(r.ok, r.ralat); sama(r.bil, 13);
+  let p = S.loadPlayer(); sama(N.sayap.senaraiLantikan(p), null); sama(p.negeriSayapLain.ada[sl.baris[3].kunci.slice(2)].id, sl.baris[3].calon[1].id, 'pilihan ditukar disimpan'); betul(p.negeriSayap.pengerusi.id === sl.baris[0].calon[0].id);
+  sama(N.sayap.menunggu(p), null, 'tiada pop-up menunggu');
+  sedia(); P.tetap({ bulan: 10 }); const ev = N.sayap.prosesBulan({}).peristiwa; betul(ev.some((e) => /automatik/.test(e.mesej)), 'automatik bulan berikutnya'); sama(N.sayap.senaraiLantikan(), null);
+  P.tetap({ tahun: t + 1, bulan: 3 }); const ev2 = N.sayap.prosesBulan({ rng: () => 0.001 }).peristiwa; betul(ev2.some((e) => /sementara/.test(e.mesej)), 'kekosongan diisi sementara');
+  p = S.loadPlayer(); sama(p.negeriSayap.menunggu, null, 'tiada pop-up'); sl = N.sayap.senaraiLantikan(p); betul(sl && sl.baris[0].tukar, 'boleh ditukar bulan ini');
+  P.tetap({ bulan: 5 }); sama(N.sayap.senaraiLantikan(), null, 'tempoh tukar tamat');
+});
+
 const lulus = hasil.filter((h) => h.ok).length, gagal = hasil.filter((h) => !h.ok);
 hasil.forEach((h) => { console.log((h.ok ? '  ✓ ' : '  ✗ ') + h.nama + (h.ok ? '' : '\n      ' + h.ralat)); });
 console.log('\n' + lulus + ' lulus, ' + gagal.length + ' gagal, ' + hasil.length + ' ujian.');

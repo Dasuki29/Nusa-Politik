@@ -233,7 +233,7 @@
     var ev = [], calon = senaraiCalon(p, bp, 'lantik' + p.tahun + (sebab || '')), rng = S().rngBerbenih(String(p.id) + ctx.kunci + '|pilih|' + p.tahun + '|' + (sebab || '')), menang;
     if (sayaPresiden(p)) {                                         // pemain ialah Presiden: pilih Pengerusi negeri sendiri
       bp.menunggu = 'pilih_pengerusi'; bp.calon = calon.filter(function (c) { return !c.pemain; }).slice(0, 6);
-      bp.tahunLantik = p.tahun; bp.musimLantik = p.tahun;
+      bp.tahunLantik = p.tahun; bp.musimLantik = p.tahun; bp.sejak = idx(p);
       return { ev: [{ jenis: 'lantikan_negeri', mesej: 'Sebagai Presiden, anda perlu melantik Pengerusi Badan Perhubungan ' + namaNegeri(p) + ' daripada Ketua-Ketua Bahagian.' }] };
     }
     menang = calon.map(function (c) { return { c: c, n: c.skor + (rng() * 12 - 6) }; }).sort(function (a, b) { return b.n - a.n; })[0].c;
@@ -256,7 +256,7 @@
     var kb = (calon || senaraiCalon(p, bp, 'ajk' + p.tahun)).filter(function (c) { return !c.pemain; });
     var posts = jawatanKB(p).map(function (j) { return { jawatan: j, sumber: 'kb', pilihan: false }; });
     posts = posts.concat(jawatanLuar(p).map(function (j) { return { jawatan: j, sumber: 'luar', pilihan: !negeriKecil(p) }; }));
-    bp.menunggu = 'lantik_ajk'; bp.calon = kb; bp.luar = calonLuar(p, 'pemain' + p.tahun); bp.ajk = []; bp.posts = posts; bp.langkau = [];
+    bp.menunggu = 'lantik_ajk'; bp.calon = kb; bp.luar = calonLuar(p, 'pemain' + p.tahun); bp.ajk = []; bp.posts = posts; bp.langkau = []; bp.sejak = idx(p);
     bp.wajib = negeriKecil(p) ? kb.map(function (c) { return { id: c.id, nama: c.nama, bahagian: c.bahagian }; }) : [];
   }
 
@@ -289,7 +289,7 @@
     if (!sayaPresiden(p)) { return null; }
     var lain = keadaanLain(p);
     if (lain.musim === p.tahun) { return null; }
-    lain.musim = p.tahun; lain.menunggu = senaraiNegeriLain(p); lain.ada = lain.ada || {};
+    lain.musim = p.tahun; lain.menunggu = senaraiNegeriLain(p); lain.ada = lain.ada || {}; lain.sejak = idx(p);
     simpanLain(lain);
     return { jenis: 'lantikan_negeri', mesej: 'Sebagai Presiden, anda juga perlu melantik Pengerusi Badan Perhubungan bagi ' + lain.menunggu.length + ' negeri lain.' };
   }
@@ -324,6 +324,7 @@
     opts = opts || {};
     var s = S(), p = s && s.loadPlayer(), ev = [];
     if (!p || p.tamat || !ctx.aktif(p)) { return { peristiwa: ev }; }
+    var auto0 = autoLewat(p); if (auto0) { ev.push(auto0); p = s.loadPlayer(); }      // v14.30
     var bp = keadaan(p), rng = opts.rng || s.rngBerbenih(String(p.id) + ctx.kunci + '|negeriTick|' + p.tahun + '|' + p.bulan), kesan = {};
     var baru = (Number(p.bulan) === CONFIG.BULAN_LANTIK && tahunPemilihan(p) && bp.musimLantik !== p.tahun);
     var sej = (p.pru && p.pru.sejarah) || [], kalahBaru = sej.length > (bp.pruDilihat || 0) && sej[sej.length - 1].hasil === 'kalah';
@@ -345,10 +346,15 @@
     return { peristiwa: ev };
   }
 
+  function idx(p) { return Number(p.tahun) * 12 + Number(p.bulan); }
   function gugur(p, bp, mesej) {
     var lama = bp.pengerusi, calon = senaraiCalon(p, bp, 'ganti' + p.tahun + p.bulan).filter(function (c) { return !c.pemain && (!lama || c.id !== lama.id); });
     var ganti = calon[0];
-    if (sayaPresiden(p)) { bp.menunggu = 'pilih_pengerusi'; bp.calon = calon.slice(0, 6); return [{ jenis: 'lantikan_negeri', mesej: mesej + ' Sila lantik pengganti.' }]; }
+    if (sayaPresiden(p)) {                                          // v14.30: tiada pop-up: calon terbaik dilantik sementara; boleh ditukar dalam kad bulan ini
+      tetapkanPengerusi(p, bp, ganti); bp.tahunLantik = p.tahun; bp.ajk = ajkNpc(p, bp, ganti.id); bp.menunggu = null; bp.calon = []; bp.posts = [];
+      bp.tukar = { hingga: idx(p) + 1, calon: calon.slice(0, 6) };
+      return [{ jenis: 'lantikan_negeri', mesej: mesej + ' ' + ganti.nama + ' (' + labelBhg(p, ganti.bahagian) + ') dilantik sementara. Anda boleh menukarnya dalam kad Lantikan Negeri (tab Pemilihan) bulan ini.' }];
+    }
     tetapkanPengerusi(p, bp, ganti); bp.tahunLantik = p.tahun; bp.ajk = ajkNpc(p, bp, ganti.id); bp.menunggu = null; bp.calon = []; bp.posts = [];
     return [{ jenis: 'lantikan_negeri', mesej: mesej + ' Presiden ' + namaPresiden(p) + ' melantik ' + ganti.nama + ' sebagai pengganti.' }];
   }
@@ -483,6 +489,73 @@
     return r.ok ? { ok: true, mesej: id === '__langkau' ? 'Jawatan dilangkau.' : bil + ' AJK dilantik.', selesai: !bp.menunggu } : { ok: false, ralat: r.ralat };
   }
 
+  /* ---- v14.30: Lantikan dalam satu senarai (tiada pop-up berantai) ---- */
+  function ringkasC(c, sumber) { return { id: c.id, nama: c.nama, bahagian: c.bahagian, skor: c.skor, ringkas: sumber === 'luar' && KATEGORI_LUAR[c.kategori] ? KATEGORI_LUAR[c.kategori].label + ' · ' + KATEGORI_LUAR[c.kategori].ringkas : '' }; }
+  /** null | { jenis:'pengerusi'|'ajk', baris:[{ kunci, label, calon:[...], lalai, pilihan, sendiri }] } */
+  function senaraiLantikan(p) {
+    p = p || (S() && S().loadPlayer()); if (!p || !ctx.aktif(p)) { return null; }
+    var bp = p[ctx.kunci] || null, baris = [];
+    if (bp && bp.menunggu === 'lantik_ajk') {
+      var dipakai = bp.ajk.map(function (a) { return a.id; });
+      postBaki(bp).forEach(function (x, i) {
+        var kolam = ((x.sumber === 'luar' ? bp.luar : bp.calon) || []).filter(function (c) { return dipakai.indexOf(c.id) < 0; }).slice(0, 9);
+        var lalai = x.pilihan ? '__langkau' : (kolam.filter(function (c) { return baris.every(function (b) { return b.lalai !== c.id; }); })[0] || {}).id || '';
+        baris.push({ kunci: 'ajk:' + i, jawatan: x.jawatan, label: tr(x.jawatan), calon: kolam.map(function (c) { return ringkasC(c, x.sumber); }), lalai: lalai, pilihan: !!x.pilihan });
+      });
+      return baris.length ? { jenis: 'ajk', baris: baris } : null;
+    }
+    if (!sayaPresiden(p)) { return null; }
+    if (bp && bp.menunggu === 'pilih_pengerusi' && (bp.calon || []).length) { baris.push({ kunci: 'sendiri', label: namaNegeri(p), calon: bp.calon.map(function (c) { return ringkasC(c); }), lalai: bp.calon[0].id, sendiri: true }); }
+    else if (bp && bp.tukar && bp.tukar.hingga >= idx(p) && bp.pengerusi) {
+      var ct = bp.tukar.calon.slice(); if (!ct.some(function (c) { return c.id === bp.pengerusi.id; })) { ct.unshift(bp.pengerusi); }
+      baris.push({ kunci: 'tukar', label: namaNegeri(p), calon: ct.map(function (c) { return ringkasC(c); }), lalai: bp.pengerusi.id, sendiri: true, tukar: true });
+    }
+    var lain = keadaanLain(p), td = tiadaDi(p);
+    (lain.menunggu || []).filter(function (k) { return td.indexOf(k) < 0; }).forEach(function (k) {
+      var cl = calonNegeri(p, k, 'lantik' + lain.musim).slice(0, 6);
+      if (cl.length) { baris.push({ kunci: 'n:' + k, label: KEY_NAMA[k], calon: cl.map(function (c) { return ringkasC(c); }), lalai: cl[0].id }); }
+    });
+    return baris.length ? { jenis: 'pengerusi', baris: baris } : null;
+  }
+  /** Sahkan semua lantikan dalam senarai. pilihan = { kunci: idCalon } (tiada = calon lalai / terbaik). */
+  function sahkanLantikan(pilihan, auto) {
+    var p = S().loadPlayer(), sl = senaraiLantikan(p); if (!sl) { return { ok: false, ralat: 'Tiada lantikan menunggu.' }; }
+    pilihan = pilihan || {};
+    var bp = keadaan(p), kesan = { kesetiaan: {}, reputasi: 0 }, bil = 0, patchLain = null;
+    function gabung(k) { if (!k) { return; } if (k.reputasi) { kesan.reputasi += k.reputasi; } Object.keys(k.kesetiaan || {}).forEach(function (x) { kesan.kesetiaan[x] = (kesan.kesetiaan[x] || 0) + k.kesetiaan[x]; }); }
+    function cari(b) { var id = pilihan[b.kunci] || b.lalai; return id === '__langkau' ? '__langkau' : b.calon.filter(function (c) { return c.id === id; })[0] || b.calon.filter(function (c) { return c.id === b.lalai; })[0] || b.calon[0]; }
+    if (sl.jenis === 'ajk') {
+      var guna = bp.ajk.map(function (a) { return a.id; }), baki = postBaki(bp);
+      sl.baris.forEach(function (b, i) {
+        var x = baki[i], c = cari(b); if (!x) { return; }
+        if (c === '__langkau' || !c) { if (x.pilihan || !c) { bp.langkau = (bp.langkau || []).concat([x.jawatan]); } return; }
+        if (guna.indexOf(c.id) >= 0) { c = b.calon.filter(function (y) { return guna.indexOf(y.id) < 0; })[0]; if (!c) { return; } }   // calon sama dipilih dua kali: ambil calon lain
+        var asli = ((x.sumber === 'luar' ? bp.luar : bp.calon) || []).filter(function (y) { return y.id === c.id; })[0] || c;
+        bp.ajk.push({ jawatan: x.jawatan, id: asli.id, nama: asli.nama, bahagian: asli.bahagian, kategori: asli.kategori }); guna.push(asli.id); bil++; gabung(kesanLantikan(asli, x.sumber));
+      });
+      bp.menunggu = null; bp.calon = []; bp.luar = [];
+    } else {
+      var lain = keadaanLain(p);
+      sl.baris.forEach(function (b) {
+        var c = cari(b); if (!c || c === '__langkau') { return; }
+        if (b.kunci === 'sendiri') { tetapkanPengerusi(p, bp, c); bp.menunggu = null; bp.calon = []; bp.ajk = ajkNpc(p, bp, c.id); bp.tahunLantik = p.tahun; gabung({ kesetiaan: { perwakilan: 2 } }); bil++; }
+        else if (b.kunci === 'tukar') { if (c.id !== bp.pengerusi.id) { tetapkanPengerusi(p, bp, c); bp.ajk = ajkNpc(p, bp, c.id); bil++; } bp.tukar = null; }
+        else { tetapLain(p, lain, b.kunci.slice(2), c); gabung({ kesetiaan: { perwakilan: CONFIG.KESAN_LAIN } }); bil++; }
+      });
+      patchLain = {}; patchLain[kunciLain()] = lain;
+    }
+    var r = simpan(bp, { kesetiaan: kesan.kesetiaan, reputasi: kesan.reputasi }, { tindakan: sl.jenis === 'ajk' ? 'lantik_ajk' : 'lantik_pengerusi', nama: (auto ? 'Lantikan automatik: ' : 'Mengesahkan ') + bil + (sl.jenis === 'ajk' ? ' AJK Badan Perhubungan' : ' lantikan negeri'), peringkat: 'negeri' }, patchLain);
+    return r.ok ? { ok: true, mesej: (auto ? 'Calon terbaik dilantik secara automatik: ' : '') + bil + (sl.jenis === 'ajk' ? ' AJK dilantik.' : ' lantikan negeri disahkan.'), bil: bil } : { ok: false, ralat: r.ralat };
+  }
+  /** Lantikan yang belum disahkan selepas bulan ia dibuka: lantik calon terbaik secara automatik. */
+  function autoLewat(p) {
+    var bp = p[ctx.kunci] || {}, lain = keadaanLain(p), kini = idx(p);
+    var lewat = (bp.menunggu && bp.sejak && bp.sejak < kini) || (sayaPresiden(p) && lain.menunggu && lain.menunggu.length && lain.sejak && lain.sejak < kini);
+    if (bp.tukar && bp.tukar.hingga < kini) { bp.tukar = null; }
+    if (!lewat || !senaraiLantikan(p)) { return null; }
+    var r = sahkanLantikan({}, true); return r.ok ? { jenis: 'lantikan_negeri', mesej: tr(r.mesej) } : null;
+  }
+
   /** Keputusan menunggu pemain (untuk pop-up): null | { jenis, jawatan?, sumber?, pilihan?, calon[] }. */
   function menunggu(p) {
     p = p || (S() && S().loadPlayer()); if (!p || !p[ctx.kunci] || !ctx.aktif(p)) { return null; }
@@ -530,7 +603,8 @@
   function htmlKad(p) {
     if (!p || !ctx.aktif(p)) { return ''; }
     var st = status(p), bp = st.bp;
-    if (!(st.layak && !st.sayaPresiden) && !menunggu(p) && !st.sayaPengerusi) { return ''; }      // v7.40: tiada tindakan untuk pemain: kad disembunyikan (maklumat ada dalam Struktur)
+    var sl = senaraiLantikan(p);
+    if (!(st.layak && !st.sayaPresiden) && !menunggu(p) && !st.sayaPengerusi && !sl) { return ''; }      // v7.40: tiada tindakan untuk pemain: kad disembunyikan (maklumat ada dalam Struktur)
     var h = '<div class="card pp-negeri" data-b="' + ctx.id + '"><h3>Badan Perhubungan UMNO ' + esc(st.negeri) + '</h3>';
     h += '<p class="note">Pengerusi: ' + esc(bp.pengerusi.nama) + (bp.pengerusi.pemain ? ' (anda)' : '') + '. Senarai penuh pemimpin ada dalam <b>Struktur</b>.</p>';
     if (st.layak && !st.sayaPresiden) {
@@ -539,8 +613,18 @@
       if (tawaranLobi(p)) { h += '<button type="button" class="btn btn--gold" data-act="lobi-presiden" data-b="' + ctx.id + '">Lobi Presiden</button> '; }
       h += '<button type="button" class="btn btn--gold" data-act="dekati-presiden" data-b="' + ctx.id + '">Dekati Presiden (' + CONFIG.KOS_AP + ' AP, RM ' + kos(p, CONFIG.KOS_MYR).toLocaleString('ms-MY') + ')</button>';
     } else if (!st.sayaPresiden) { h += '<p class="note">Anda belum layak dilantik: hanya <b>Ketua Bahagian</b> negeri ini layak menjadi Pengerusi.</p>'; }
-    var m = menunggu(p);
-    if (m) { h += '<button type="button" class="btn btn--gold" data-act="urus-negeri" data-b="' + ctx.id + '" style="margin-top:.5rem">' + (m.jenis === 'pilih_pengerusi' ? 'Lantik Pengerusi' : m.jenis === 'pilih_negeri_lain' ? 'Lantik Pengerusi Negeri Lain (' + m.baki + ')' : 'Lantik AJK (' + esc(m.jawatan) + ')') + '</button>'; }
+    if (sl) {                                                          // v14.30: satu senarai lantikan, sahkan sekali
+      var tajukSl = sl.jenis === 'ajk' ? 'Lantikan AJK Badan Perhubungan' : sl.baris.some(function (b) { return b.tukar; }) && sl.baris.length === 1 ? 'Pengganti Pengerusi Badan Perhubungan' : 'Lantikan Pengerusi Badan Perhubungan Negeri';
+      h += '<div class="ng-senarai"><h4>🏛️ <span>' + esc(tajukSl) + '</span>' + (sl.jenis === 'ajk' || sl.baris.length === 1 ? ' <span data-i18n-skip>' + esc(st.negeri) + '</span>' : '') + ' <span class="chip-kira">' + sl.baris.length + '</span></h4><p class="note">' + (sl.jenis === 'ajk' ? 'Calon terbaik sudah dipilih untuk setiap jawatan. Tukar mana-mana yang anda mahu, kemudian sahkan sekali.' : sl.baris.length === 1 && sl.baris[0].tukar ? 'Calon terbaik telah dilantik sementara. Tukar jika mahu, kemudian sahkan.' : 'Calon terbaik sudah dipilih untuk setiap negeri. Tukar mana-mana yang anda mahu, kemudian sahkan sekali.') + '</p><table class="ng-jadual"><tbody>';
+      sl.baris.forEach(function (b) {
+        var ops = (b.pilihan ? '<option value="__langkau"' + (b.lalai === '__langkau' ? ' selected' : '') + '>Langkau (tidak diisi)</option>' : '') + b.calon.map(function (c, i) {
+          return '<option value="' + esc(c.id) + '"' + (c.id === b.lalai ? ' selected' : '') + ' data-i18n-skip>' + esc(c.nama + ' · ' + labelBhg(p, c.bahagian)) + (c.skor != null ? ' · ' + Math.round(c.skor) : '') + (i === 0 && !b.tukar ? ' ★' : '') + '</option>';
+        }).join('');
+        h += '<tr><th>' + (b.sendiri ? '★ ' : '') + '<span>' + esc(b.label) + '</span></th><td><select data-ngp="' + esc(b.kunci) + '" data-b="' + ctx.id + '">' + ops + '</select></td></tr>';
+      });
+      h += '</tbody></table><button type="button" class="btn btn--primary" data-act="negeri-sahkan" data-b="' + ctx.id + '" style="margin-top:.5rem">✅ <span>Sahkan ' + sl.baris.length + ' lantikan</span></button>' +
+        (sl.baris.some(function (b) { return b.tukar; }) ? '' : '<p class="note">Jika tidak disahkan bulan ini, calon terbaik dilantik secara automatik bulan depan.</p>') + '</div>';
+    }
     if (st.sayaPengerusi) {
       h += '<p class="note" style="margin-top:.6rem"><b>Kuasa Pengerusi</b> (ex-officio MKT; +' + CONFIG.BONUS_IP + ' IP dan +' + CONFIG.BONUS_AJK + ' sokongan AJK sebulan)</p><div class="pp-negeri__tindak">' + Object.keys(TINDAKAN).map(function (k) {
         var d = TINDAKAN[k], guna = bp.guna[k] === (d.had === 'bulan' ? p.tahun + '-' + p.bulan : String(p.tahun));
@@ -550,10 +634,10 @@
   }
 
   var API = { CONFIG: CONFIG, LOBI: LOBI, TINDAKAN: TINDAKAN, prosesBulan: prosesBulan, tawaranLobi: tawaranLobi, lobi: lobi, dekatiPresiden: dekatiPresiden, tindakan: tindakan,
-    pilihPengerusi: pilihPengerusi, lantikSemuaLain: lantikSemuaLain, lantikAjk: lantikAjk, menunggu: menunggu, status: status, htmlKad: htmlKad, htmlStruktur: htmlStruktur, htmlPusat: htmlPusat, senaraiPengerusiNegeri: senaraiPengerusiNegeri, layak: layak, negeriKecil: negeriKecil, namaNegeri: namaNegeri,
+    pilihPengerusi: pilihPengerusi, lantikSemuaLain: lantikSemuaLain, senaraiLantikan: senaraiLantikan, sahkanLantikan: sahkanLantikan, lantikAjk: lantikAjk, menunggu: menunggu, status: status, htmlKad: htmlKad, htmlStruktur: htmlStruktur, htmlPusat: htmlPusat, senaraiPengerusiNegeri: senaraiPengerusiNegeri, layak: layak, negeriKecil: negeriKecil, namaNegeri: namaNegeri,
     _senaraiCalon: senaraiCalon, _keadaan: keadaan, _bil: bilBahagian, id: ctx.id, aktif: ctx.aktif, tr: tr };
   if (ctx.sayap) {
-    ['prosesBulan', 'tawaranLobi', 'lobi', 'dekatiPresiden', 'tindakan', 'pilihPengerusi', 'lantikAjk', 'menunggu'].forEach(function (k) { var f = API[k]; API[k] = function () { return trObj(f.apply(null, arguments)); }; });
+    ['prosesBulan', 'tawaranLobi', 'lobi', 'dekatiPresiden', 'tindakan', 'pilihPengerusi', 'lantikAjk', 'menunggu', 'sahkanLantikan'].forEach(function (k) { var f = API[k]; API[k] = function () { return trObj(f.apply(null, arguments)); }; });
   }
   return API;
   }

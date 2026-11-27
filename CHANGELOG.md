@@ -1,5 +1,13 @@
 # Catatan Perubahan
 
+## v14.30 — 🏛️ Lantikan negeri dalam satu senarai (mockup dipersetujui)
+
+- **Tiada lagi pop-up berantai:** Presiden dan Ketua Sayap Pusat melantik Pengerusi Badan Perhubungan / Ketua Sayap Negeri bagi semua negeri dalam satu senarai pada kad Badan Perhubungan (tab Pemilihan). Calon terbaik dipilih lebih awal untuk setiap negeri; tukar mana-mana, kemudian ✅ Sahkan sekali. Notifikasi ringkas menggantikan pop-up.
+- Jika tidak disahkan dalam bulan itu, calon terbaik dilantik secara automatik bulan berikutnya.
+- **Kekosongan pertengahan penggal:** calon terbaik terus dilantik sementara (tiada pop-up yang menghalang Teruskan Bulan); boleh ditukar dalam kad bulan itu.
+- **Lantikan AJK negeri** (pemain sebagai Pengerusi / Ketua Sayap Negeri) menggunakan senarai yang sama, termasuk pilihan Langkau bagi jawatan pilihan.
+- Ujian pelayar baharu `tools/ujian-lantikan-negeri.js` dan ujian unit v14.30.
+
 ## v14.29 — Pembetulan: lantikan peringkat negeri ikut liputan parti
 
 - **Parti serantau (satu negeri, cth PBRS, PBS, UPKO, LDP, PHRS, PCS):** tiada lagi peringkat negeri. Ketua Sayap Pusat tidak melantik Ketua Sayap Negeri dan Presiden tidak melantik Pengerusi Badan Perhubungan Negeri, kerana Pusat sudah meliputi seluruh kawasan parti. Syarat Ketua Menteri bagi parti serantau ialah Presiden parti (seperti parti Sarawak).

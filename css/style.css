@@ -1276,3 +1276,13 @@ details.pf-info > summary { font-weight: 700; cursor: pointer; }
 .ku-nav { display: flex; gap: 8px; margin-top: 10px; }
 .ku-nav .btn { flex: 1; }
 .ku .kv { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px dashed var(--border); padding: 5px 0; font-size: .86rem; }
+
+/* v14.30: senarai lantikan negeri */
+.ng-senarai { margin-top: .6rem; border-top: 1px dashed var(--border); padding-top: .5rem; }
+.ng-senarai h4 { margin: 0 0 .2rem; font-size: .95rem; display: flex; align-items: center; gap: 6px; }
+.ng-senarai .chip-kira { display: inline-block; min-width: 22px; padding: 0 7px; border-radius: 999px; background: var(--gold); color: #2B2100; font-size: .72rem; font-weight: 800; text-align: center; }
+.ng-jadual { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.ng-jadual th { text-align: left; font-weight: 700; padding: 5px 8px 5px 0; white-space: nowrap; width: 1%; }
+.ng-jadual td { padding: 4px 0; }
+.ng-jadual tr + tr th, .ng-jadual tr + tr td { border-top: 1px dashed var(--border); }
+.ng-jadual select { width: 100%; max-width: 100%; font: inherit; font-size: .8rem; padding: 4px 6px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-elev-1); color: var(--text); }
