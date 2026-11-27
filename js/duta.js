@@ -34,12 +34,12 @@
 
   var POS = [
     { kod: 'jakarta', bandar: 'Jakarta', negara: 'Indonesia', bendera: '🇮🇩', isu: 'Pekerja migran, sempadan', tahap: 'Sukar', rep: 0, krisis: 0.12 },
-    { kod: 'singapura', bandar: 'Singapura', negara: 'Singapura', bendera: '🇸🇬', isu: 'Air, pekerja ulang-alik', tahap: 'Sederhana', rep: 0, krisis: 0.08 },
+    { kod: 'singapura', bandar: 'Singapura', negara: 'Singapura', bendera: '🇸🇬', isu: 'Air, pekerja ulang-alik', tahap: 'Sederhana', rep: 0, krisis: 0.08, komanwel: true },
     { kod: 'riyadh', bandar: 'Riyadh', negara: 'Arab Saudi', bendera: '🇸🇦', isu: 'Haji dan umrah, pelaburan', tahap: 'Sederhana', rep: 0, krisis: 0.08 },
     { kod: 'tokyo', bandar: 'Tokyo', negara: 'Jepun', bendera: '🇯🇵', isu: 'Pelaburan, Dasar Pandang ke Timur', tahap: 'Mudah', rep: 0, krisis: 0.04 },
-    { kod: 'canberra', bandar: 'Canberra', negara: 'Australia', bendera: '🇦🇺', isu: 'Pelajar, pendidikan', tahap: 'Mudah', rep: 40, krisis: 0.05 },
+    { kod: 'canberra', bandar: 'Canberra', negara: 'Australia', bendera: '🇦🇺', isu: 'Pelajar, pendidikan', tahap: 'Mudah', rep: 40, krisis: 0.05, komanwel: true },
     { kod: 'beijing', bandar: 'Beijing', negara: 'China', bendera: '🇨🇳', isu: 'Perdagangan, Laut China Selatan', tahap: 'Sukar', rep: 55, krisis: 0.07 },
-    { kod: 'london', bandar: 'London', negara: 'United Kingdom', bendera: '🇬🇧', isu: 'Pelajar, Komanwel', tahap: 'Sederhana', rep: 60, krisis: 0.06 },
+    { kod: 'london', bandar: 'London', negara: 'United Kingdom', bendera: '🇬🇧', isu: 'Pelajar, Komanwel', tahap: 'Sederhana', rep: 60, krisis: 0.06, komanwel: true },
     { kod: 'washington', bandar: 'Washington', negara: 'Amerika Syarikat', bendera: '🇺🇸', isu: 'Tarif, keselamatan serantau', tahap: 'Sukar', rep: 70, krisis: 0.06 }
   ];
   var TAHAP = { Mudah: 55, Sederhana: 50, Sukar: 45 };
@@ -50,6 +50,12 @@
     KRISIS: { senyap: { hubungan: 4, kebajikan: -3 }, media: { kebajikan: 6, hubungan: -6 }, abai: { kebajikan: -8, kepercayaan: -4 } },
     LAWATAN: { peluang: 0.05, kepercayaan: 5, hubungan: 3 }
   };
+  /** v14.17: gelaran kehormat ikut jantina pemain (Tuan / Puan Yang Terutama). */
+  function kehormat(p) { var j = String((p && ((p.demografik && p.demografik.jantina) || p.jantina)) || ''); return /^p/i.test(j) ? 'Puan Yang Terutama' : 'Tuan Yang Terutama'; }
+  /** v14.17: negara Komanwel menggunakan gelaran Pesuruhjaya Tinggi (Suruhanjaya Tinggi), bukan Duta (Kedutaan). */
+  function posDari(x) { return typeof x === 'string' ? cari(x) : (x && x.kod ? x : (x && x.duta && x.duta.aktif ? cari(x.duta.aktif.pos) : null)); }
+  function gelaran(x) { var q = posDari(x); return q && q.komanwel ? 'Pesuruhjaya Tinggi Malaysia' : 'Duta Malaysia'; }
+  function pejabat(x) { var q = posDari(x); return q && q.komanwel ? 'Suruhanjaya Tinggi' : 'Kedutaan'; }
   function cari(kod) { return POS.filter(function (x) { return x.kod === kod; })[0] || null; }
   function getD(p) { var d = p && p.duta && typeof p.duta === 'object' ? salin(p.duta) : {}; d.aktif = d.aktif || null; d.sejarah = Array.isArray(d.sejarah) ? d.sejarah : []; return d; }
   function aktif(p) { return !!(p && p.duta && p.duta.aktif && !p.tamat); }
@@ -70,15 +76,15 @@
     var m = TAHAP[pos.tahap] || 50;
     d.aktif = { pos: kod, penggal: 1, mula: idx(p), tamat: idx(p) + CONFIG.PENGGAL, tahunMula: p.tahun, hubungan: m, kepercayaan: 50, kebajikan: m,
       kunjungan: 0, dagang: 0, konsular: 0, hariTahun: 0, krisis: null, lawatan: null, lanjut: false };
-    var h = simpan(d, {}, { log: { tindakan: 'duta_lantik', nama: 'Dilantik Duta Malaysia ke ' + pos.negara, peringkat: 'ahli' } });
-    return h.ok ? { ok: true, mesej: 'Anda menyerahkan Surat Tauliah di ' + pos.bandar + ' sebagai Duta Malaysia ke ' + pos.negara + '. Gelaran: Tuan Yang Terutama. Tab Kedutaan dibuka.' } : { ok: false, ralat: h.ralat };
+    var h = simpan(d, {}, { log: { tindakan: 'duta_lantik', nama: 'Dilantik ' + gelaran(pos) + ' ke ' + pos.negara, peringkat: 'ahli' } });
+    return h.ok ? { ok: true, mesej: 'Anda menyerahkan Surat Tauliah di ' + pos.bandar + ' sebagai ' + gelaran(pos) + ' ke ' + pos.negara + '. Gelaran: ' + kehormat(p) + '. Tab ' + pejabat(pos) + ' dibuka.' } : { ok: false, ralat: h.ralat };
   }
 
   function laras(a, x) { ['hubungan', 'kepercayaan', 'kebajikan'].forEach(function (k) { if (x[k]) { a[k] = clamp(a[k] + x[k], 0, 100); } }); }
   function tanda(n) { return (n > 0 ? '+' : '') + n; }
   var LABEL = { hubungan: 'Hubungan', kepercayaan: 'Kepercayaan', kebajikan: 'Kebajikan' };
   function ringkas(x) { return ['hubungan', 'kepercayaan', 'kebajikan'].filter(function (k) { return x[k]; }).map(function (k) { return LABEL[k] + ' ' + tanda(x[k]); }).join(', '); }
-  function mesti() { var p = S().loadPlayer(); if (!aktif(p)) { return { ralat: 'Hanya Duta Malaysia.' }; } return { p: p, d: getD(p) }; }
+  function mesti() { var p = S().loadPlayer(); if (!aktif(p)) { return { ralat: 'Hanya Duta Malaysia atau Pesuruhjaya Tinggi Malaysia.' }; } return { p: p, d: getD(p) }; }
   function bolehAP(p, n) { return (Number(p.ap) || 0) >= n; }
 
   function tindak(jenis) {
@@ -101,7 +107,7 @@
       if (parseInt(p.bulan, 10) !== CONFIG.HARI.bulan) { return { ok: false, ralat: 'Majlis Hari Kebangsaan hanya pada bulan Ogos.' }; }
       if (a.hariTahun === p.tahun) { return { ok: false, ralat: 'Majlis Hari Kebangsaan tahun ini sudah diadakan.' }; }
       if (!bolehAP(p, CONFIG.HARI.ap)) { return { ok: false, ralat: 'AP tidak mencukupi.' }; }
-      a.hariTahun = p.tahun; x = { hubungan: CONFIG.HARI.semua, kepercayaan: CONFIG.HARI.semua, kebajikan: CONFIG.HARI.semua }; kes.ap = -CONFIG.HARI.ap; mesej = 'Majlis sambutan Hari Kebangsaan di kedutaan meriah.';
+      a.hariTahun = p.tahun; x = { hubungan: CONFIG.HARI.semua, kepercayaan: CONFIG.HARI.semua, kebajikan: CONFIG.HARI.semua }; kes.ap = -CONFIG.HARI.ap; mesej = 'Majlis sambutan Hari Kebangsaan di ' + pejabat(pos).toLowerCase() + ' meriah.';
     } else { return { ok: false, ralat: 'Pilihan tidak sah.' }; }
     laras(a, x);
     var h = simpan(c.d, kes, { log: { tindakan: 'duta_' + jenis, nama: mesej, peringkat: 'ahli' } });
@@ -121,18 +127,18 @@
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
     var a = c.d.aktif; if (!a.lanjut) { return { ok: false, ralat: 'Tiada tawaran penggal kedua.' }; }
     if (!ya) { return tamatPenggal(c.p, c.d, 'Anda memilih untuk tidak menyambung perkhidmatan.'); }
-    a.penggal = 2; a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false;
-    var h = simpan(c.d, {}, { log: { tindakan: 'duta_lanjut', nama: 'Penggal kedua Duta Malaysia', peringkat: 'ahli' } });
+    a.penggal = 2; a.mula = idx(c.p); a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false; a.tahunPenggal2 = c.p.tahun;
+    var h = simpan(c.d, {}, { log: { tindakan: 'duta_lanjut', nama: 'Penggal kedua ' + gelaran(a.pos), peringkat: 'ahli' } });
     return h.ok ? { ok: true, mesej: 'Wisma Putra melanjutkan perkhidmatan anda tiga tahun lagi.' } : { ok: false, ralat: h.ralat };
   }
   /** Tamat perkhidmatan: jika layak TYT, pemain memilih (js/selepas.js); jika tidak, kerjaya tamat (legasi 'duta'). */
   function tamatPenggal(p, d, sebab) {
     var a = d.aktif, pos = cari(a.pos);
     d.sejarah = d.sejarah.concat([{ pos: a.pos, dari: a.tahunMula, hingga: p.tahun, penggal: a.penggal, hubungan: a.hubungan }]); d.aktif = null;
-    var SL = modul('MyPolitikSelepas', 'selepas.js'), teks = sebab + ' Perkhidmatan anda sebagai Duta Malaysia ke ' + pos.negara + ' (' + a.tahunMula + '–' + p.tahun + ') tamat.';
+    var SL = modul('MyPolitikSelepas', 'selepas.js'), teks = sebab + ' Perkhidmatan anda sebagai ' + gelaran(pos) + ' ke ' + pos.negara + ' (' + a.tahunMula + '–' + p.tahun + ') tamat.';
     var bolehTYT = SL && SL.pilihan ? SL.pilihan(Object.assign({}, p, { duta: d })).tyt.boleh : false;
     var patch = { selepas: Object.assign({}, p.selepas || {}, { jalur: null, limbo: bolehTYT, dutaSelesai: true }) };
-    simpan(d, {}, { patch: patch, log: { tindakan: 'duta_tamat', nama: 'Tamat perkhidmatan Duta Malaysia ke ' + pos.negara, peringkat: 'ahli' } });
+    simpan(d, {}, { patch: patch, log: { tindakan: 'duta_tamat', nama: 'Tamat perkhidmatan ' + gelaran(pos) + ' ke ' + pos.negara, peringkat: 'ahli' } });
     if (bolehTYT) { return { ok: true, mesej: teks + ' Anda layak ditimbang sebagai Yang di-Pertua Negeri: pilih di kad Selepas Politik (tab Profil).' }; }
     var H = HY(), r = H && H.tamatkan ? H.tamatkan('duta') : { ok: false };
     return { ok: true, tamat: true, mesej: teks, hayat: r };
@@ -146,7 +152,7 @@
     if (idx(p) >= a.tamat) {
       if (a.penggal === 1 && a.hubungan >= CONFIG.LANJUT && a.kepercayaan >= CONFIG.LANJUT && !a.lanjut) {
         a.lanjut = true; a.tamat = idx(p) + 1; simpan(d, {});
-        ev.push({ jenis: 'duta', mesej: 'Penggal pertama anda tamat. Wisma Putra menawarkan penggal kedua di ' + pos.bandar + ': jawab di tab Kedutaan.' }); return { peristiwa: ev };
+        ev.push({ jenis: 'duta', mesej: 'Penggal pertama anda tamat. Wisma Putra menawarkan penggal kedua di ' + pos.bandar + ': jawab di tab ' + pejabat(pos) + '.' }); return { peristiwa: ev };
       }
       var x = tamatPenggal(p, d, a.lanjut ? 'Anda tidak menjawab tawaran penggal kedua.' : 'Penggal anda tamat.');
       ev.push({ jenis: 'duta', mesej: x.mesej }); return { peristiwa: ev };
@@ -155,22 +161,22 @@
     laras(a, { hubungan: -CONFIG.SUSUT, kepercayaan: -CONFIG.SUSUT, kebajikan: -CONFIG.SUSUT });
     if (r() < pos.krisis) {
       var n = 3 + Math.floor(r() * 18); a.krisis = { bil: n, tahun: p.tahun, bulan: p.bulan };
-      ev.push({ jenis: 'duta', mesej: 'Krisis konsular: ' + n + ' rakyat Malaysia ditahan di ' + pos.negara + '. Pilih tindakan di tab Kedutaan.' });
+      ev.push({ jenis: 'duta', mesej: 'Krisis konsular: ' + n + ' rakyat Malaysia ditahan di ' + pos.negara + '. Pilih tindakan di tab ' + pejabat(pos) + '.' });
     } else if (r() < CONFIG.LAWATAN.peluang) {
       laras(a, { kepercayaan: CONFIG.LAWATAN.kepercayaan, hubungan: CONFIG.LAWATAN.hubungan });
       ev.push({ jenis: 'duta', mesej: 'Lawatan rasmi Perdana Menteri ke ' + pos.negara + ' berjalan lancar. Kepercayaan +' + CONFIG.LAWATAN.kepercayaan + ', Hubungan +' + CONFIG.LAWATAN.hubungan + '.' });
     }
-    Sv.applyEffects({ myr: CONFIG.ELAUN }, { kiraTindakan: false, pindahan: true, patch: { duta: d }, log: { tindakan: 'elaun_duta', nama: 'Elaun Duta Malaysia: +RM ' + CONFIG.ELAUN, peringkat: 'bulan' } });
+    Sv.applyEffects({ myr: CONFIG.ELAUN }, { kiraTindakan: false, pindahan: true, patch: { duta: d }, log: { tindakan: 'elaun_duta', nama: 'Elaun ' + gelaran(pos) + ': +RM ' + CONFIG.ELAUN, peringkat: 'bulan' } });
     return { peristiwa: ev };
   }
   function keadaan(p) {
     var d = getD(p), a = d.aktif; if (!a) { return { aktif: false, sejarah: d.sejarah }; }
     var kini = idx(p);
-    return { aktif: true, a: a, pos: cari(a.pos), bulanKe: Math.min(CONFIG.PENGGAL, kini - a.mula + 1), boleh: {
+    return { aktif: true, a: a, pos: cari(a.pos), kehormat: kehormat(p), bulanKe: a.lanjut ? CONFIG.PENGGAL : clamp(kini - (a.tamat - CONFIG.PENGGAL) + 1, 1, CONFIG.PENGGAL), gelaran: gelaran(a.pos), pejabat: pejabat(a.pos), boleh: {
       kunjungan: a.kunjungan !== kini && bolehAP(p, CONFIG.KUNJUNGAN.ap), dagang: a.dagang !== kini && bolehAP(p, CONFIG.DAGANG.ap) && (Number(p.myr) || 0) >= CONFIG.DAGANG.myr,
       konsular: a.konsular !== kini && bolehAP(p, CONFIG.KONSULAR.ap), hari: parseInt(p.bulan, 10) === CONFIG.HARI.bulan && a.hariTahun !== p.tahun && bolehAP(p, CONFIG.HARI.ap) } };
   }
 
-  return { CONFIG: CONFIG, POS: POS, setRng: function (f) { rngLalai = f || Math.random; }, getD: getD, aktif: aktif, cari: cari, tawaran: tawaran, mula: mula,
+  return { CONFIG: CONFIG, POS: POS, setRng: function (f) { rngLalai = f || Math.random; }, getD: getD, aktif: aktif, cari: cari, gelaran: gelaran, pejabat: pejabat, kehormat: kehormat, tawaran: tawaran, mula: mula,
     tindak: tindak, krisis: krisis, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan };
 });

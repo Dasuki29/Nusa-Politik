@@ -22,16 +22,16 @@
     if (!tanpaPenuh) { h += '<div class="sl-pil"><b>🏠 Bersara sepenuhnya</b><small>Rumusan kerjaya dan gelaran. Permainan tamat dan tidak boleh diteruskan.</small></div>'; }
     h += '<div class="sl-pil' + (pl.tyt.boleh ? ' is-on' : '') + '"><b>🏰 Yang di-Pertua Negeri</b>' +
       (pl.tyt.kosong ? '<small>Kekosongan terdekat: ' + esc(pl.tyt.kosong.nama) + ', Januari ' + pl.tyt.kosong.kosong + ' · peluang tawaran ± ' + Math.round(pl.tyt.peluang * 100) + '%</small>' : '') +
-      senarai(pl.tyt.item) + '<small>Sementara menunggu: semua jawatan dilepaskan dan anda boleh melangkau bulan hingga Januari. Jika tiada tawaran, pilih semula Duta atau bersara.</small></div>';
-    h += '<div class="sl-pil' + (pl.duta.boleh ? ' is-on' : '') + '"><b>🌏 Duta Malaysia ke luar negara</b><small>Lantikan politik oleh Perdana Menteri (penggal 3 tahun, elaun ' + rm(D.CONFIG.ELAUN) + ' sebulan). Keahlian parti digantung.</small>' + senarai(pl.duta.item) + '</div>';
+      senarai(pl.tyt.item) + '<small>Sementara menunggu: semua jawatan dilepaskan dan anda boleh melangkau bulan hingga Januari. Jika tiada tawaran, pilih semula Duta / Pesuruhjaya Tinggi atau bersara.</small></div>';
+    h += '<div class="sl-pil' + (pl.duta.boleh ? ' is-on' : '') + '"><b>🌏 Duta / Pesuruhjaya Tinggi Malaysia ke luar negara</b><small>Lantikan politik oleh Perdana Menteri (penggal 3 tahun, elaun ' + rm(D.CONFIG.ELAUN) + ' sebulan). Keahlian parti digantung.</small>' + senarai(pl.duta.item) + '</div>';
     return h;
   }
   /** Modal pilih pos Duta. */
   async function pilihPos(pl) {
     var M = UI().modal; if (!M) { return null; }
     var isi = '<p class="note">Wisma Putra menawarkan ' + pl.duta.pos.length + ' pos (bergantung pada Reputasi).</p>' + pl.duta.pos.map(function (x) {
-      return '<div class="sl-pil"><b>' + x.bendera + ' ' + esc(x.bandar) + ' (' + esc(x.negara) + ')</b><small>' + esc(x.isu) + ' · ' + esc(x.tahap) + '</small></div>'; }).join('');
-    return M({ tajuk: '🌏 Pilih Pos Duta', isi: isi, butang: [{ label: 'Batal', nilai: null }].concat(pl.duta.pos.map(function (x) { return { label: x.bendera + ' ' + x.bandar, nilai: x.kod, kelas: 'btn--gold' }; })) });
+      return '<div class="sl-pil"><b>' + x.bendera + ' ' + esc(x.bandar) + ' (' + esc(x.negara) + ')</b><small>' + esc(D.gelaran ? D.gelaran(x) : 'Duta Malaysia') + ' · ' + esc(x.isu) + ' · ' + esc(x.tahap) + '</small></div>'; }).join('') + '<small class="note">Negara Komanwel (Singapura, United Kingdom, Australia): gelaran Pesuruhjaya Tinggi dan pejabat Suruhanjaya Tinggi.</small>';
+    return M({ tajuk: '🌏 Pilih Pos Perwakilan', isi: isi, butang: [{ label: 'Batal', nilai: null }].concat(pl.duta.pos.map(function (x) { return { label: x.bendera + ' ' + x.bandar, nilai: x.kod, kelas: 'btn--gold' }; })) });
   }
   /** Aliran butang Bersara (dipanggil oleh js/app.js). */
   async function bersara() {
@@ -87,14 +87,14 @@
   /** Tab 🌏 Kedutaan. */
   function panel(p) {
     try {
-      var k = D.keadaan(p); if (!k.aktif) { return '<div class="banner"><strong>Kedutaan</strong>Tab ini terbuka apabila anda menjadi Duta Malaysia.</div>'; }
+      var k = D.keadaan(p); if (!k.aktif) { return '<div class="banner"><strong>Kedutaan</strong>Tab ini terbuka apabila anda menjadi Duta Malaysia atau Pesuruhjaya Tinggi Malaysia.</div>'; }
       var a = k.a, pos = k.pos, C = D.CONFIG, h = '<section class="card sl-kedutaan">';
-      h += '<div class="tyt-ban sl-ban"><b>' + pos.bendera + ' Tuan Yang Terutama Duta Malaysia ke ' + esc(pos.negara) + '</b><small>' + esc(pos.bandar) + ' · Penggal ' + a.penggal + ' · ' + a.tahunMula + '– · bulan ' + k.bulanKe + ' daripada ' + C.PENGGAL + '</small></div>';
+      h += '<div class="tyt-ban sl-ban"><b>' + pos.bendera + ' ' + esc(k.kehormat || 'Tuan Yang Terutama') + ' ' + esc(k.gelaran || 'Duta Malaysia') + ' ke ' + esc(pos.negara) + '</b><small>' + esc(pos.bandar) + ' · Penggal ' + a.penggal + ' · ' + a.tahunMula + '– · bulan ' + k.bulanKe + ' daripada ' + C.PENGGAL + '</small></div>';
       h += '<div class="jm-meter__t"><span>Elaun bulanan</span><b>' + rm(C.ELAUN) + '</b></div>' + meter('Hubungan Dua Hala', a.hubungan) + meter('Kepercayaan Wisma Putra', a.kepercayaan) + meter('Kebajikan Rakyat Malaysia', a.kebajikan);
       h += '<small class="note">Setiap meter susut 1 sebulan. Tamat penggal: Hubungan dan Kepercayaan ' + C.LANJUT + ' ke atas = penggal kedua ditawarkan (sekali sahaja).</small>';
       if (a.lanjut) { h += '<div class="tyt-ev sl-ev"><b>📜 Tawaran penggal kedua</b><small>Terima untuk berkhidmat tiga tahun lagi, atau tamatkan perkhidmatan.</small><div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' + btn('lanjut:ya', 'Terima penggal kedua', true, 'btn--primary') + btn('lanjut:tidak', 'Tamatkan', true) + '</div></div>'; }
       if (a.krisis) { h += '<div class="tyt-ev sl-ev"><b>⚠️ Krisis konsular</b><small>' + a.krisis.bil + ' rakyat Malaysia ditahan di ' + esc(pos.negara) + '. Rundingan senyap: Hubungan +4, Kebajikan −3. Kenyataan media: Kebajikan +6, Hubungan −6. Dibiarkan hingga bulan depan: Kebajikan −8, Kepercayaan −4.</small><div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' + btn('krisis:senyap', 'Rundingan senyap', true, 'btn--primary') + btn('krisis:media', 'Kenyataan media', true) + '</div></div>'; }
-      h += '<h3 style="margin:10px 0 4px">📋 Tugas Kedutaan</h3><p class="note">Isu utama: ' + esc(pos.isu) + '.</p>';
+      h += '<h3 style="margin:10px 0 4px">📋 Tugas ' + esc(k.pejabat || 'Kedutaan') + '</h3><p class="note">Isu utama: ' + esc(pos.isu) + '.</p>';
       h += act('🤝 Kunjungan hormat', C.KUNJUNGAN.ap + ' AP · bulanan · Hubungan +' + C.KUNJUNGAN.hubungan, btn('t:kunjungan', 'Kunjungi', k.boleh.kunjungan));
       h += act('📈 Misi perdagangan', C.DAGANG.ap + ' AP, ' + rm(C.DAGANG.myr) + ' · bulanan · Hubungan +' + C.DAGANG.hubungan + ', Kepercayaan +' + C.DAGANG.kepercayaan, btn('t:dagang', 'Anjurkan', k.boleh.dagang));
       h += act('🛂 Bantuan konsular', C.KONSULAR.ap + ' AP · bulanan · Kebajikan +' + C.KONSULAR.kebajikan, btn('t:konsular', 'Bantu', k.boleh.konsular));

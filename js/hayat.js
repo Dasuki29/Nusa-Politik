@@ -121,11 +121,11 @@
 
   var TAJUK_SEBAB = { meninggal: 'Tamat Hayat', bersara_kesihatan: 'Bersara Paksa (Kesihatan)', had_umur: 'Mencapai Usia 100 Tahun', bersara_sukarela: 'Bersara Secara Sukarela', kesihatan_merosot: 'Kesihatan Merosot (Tekanan Kerja)', tyt: 'Tamat Perkhidmatan Yang di-Pertua Negeri', duta: 'Tamat Perkhidmatan Duta Malaysia' };
 
-  function mesejSebab(sebab, umur) {
+  function mesejSebab(sebab, umur, p0) {
     if (sebab === 'meninggal') { return 'Anda telah meninggal dunia pada usia ' + umur + ' tahun. Al-Fatihah. Perjalanan politik anda berakhir di sini.'; }
     if (sebab === 'kesihatan_merosot') { return 'Tekanan kerja bertahun-tahun meruntuhkan kesihatan anda. Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun.'; }
     if (sebab === 'tyt') { return 'Anda menamatkan perkhidmatan sebagai Yang di-Pertua Negeri pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam dengan penuh kehormatan.'; }   // v13.52
-    if (sebab === 'duta') { return 'Anda menamatkan perkhidmatan sebagai Duta Malaysia pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam.'; }   // v14.6
+    if (sebab === 'duta') { var ds = p0 && p0.duta && p0.duta.sejarah, dk = ds && ds.length ? ds[ds.length - 1].pos : null, DT = root.MyPolitikDuta || null; return 'Anda menamatkan perkhidmatan sebagai ' + (DT && DT.gelaran && dk ? DT.gelaran(dk) : 'Duta Malaysia') + ' pada usia ' + umur + ' tahun dan bersara sepenuhnya daripada kehidupan awam.'; }   // v14.6
     if (sebab === 'bersara_sukarela') { return 'Anda memutuskan untuk bersara daripada politik pada usia ' + umur + ' tahun. Terima kasih atas khidmat anda kepada parti.'; }
     if (sebab === 'bersara_kesihatan') { return 'Atas nasihat doktor, anda bersara sepenuhnya daripada politik pada usia ' + umur + ' tahun kerana masalah kesihatan.'; }
     return 'Anda mencapai usia ' + umur + ' tahun, had umur permainan ini. Perjalanan politik anda ditutup dengan penuh kehormatan.';
@@ -167,7 +167,7 @@
       bilMenang: pr.menang, bilKabinet: pr.jawatanKerajaan.length + (pr.kabinetSemasa && pr.jawatanKerajaan.indexOf(pr.kabinetSemasa) < 0 ? 1 : 0) });
     return {
       kesetiaanAkarUmbi: akarUmbi, statusDisiplin: statusDisiplin, gelarList: gelarList,
-      sebab: sebab, tajuk: TAJUK_SEBAB[sebab] || 'Penamat Kerjaya', mesej: mesejSebab(sebab, umur),
+      sebab: sebab, tajuk: TAJUK_SEBAB[sebab] || 'Penamat Kerjaya', mesej: mesejSebab(sebab, umur, p),
       umur: umur, tahun: p.tahun, bulan: p.bulan, tahunMula: CONFIG.TAHUN_MULA,
       tahunBerkhidmat: Math.max(0, p.tahun - CONFIG.TAHUN_MULA),
       umurMula: p.demografik ? p.demografik.umur : null,

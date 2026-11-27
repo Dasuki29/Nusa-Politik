@@ -37,7 +37,7 @@
     try {
       var k = T.keadaan(p); if (!k.aktif) { return '<div class="banner"><strong>Istana</strong>Tab ini terbuka apabila anda menjadi Yang di-Pertua Negeri.</div>'; }
       var a = k.a, n = k.negeri, C = T.CONFIG, h = '<section class="card tyt-istana">';
-      h += '<div class="tyt-ban"><b>🏰 Tuan Yang Terutama Yang di-Pertua Negeri ' + esc(n.nama) + '</b><small>Penggal ' + a.penggal + ' · ' + a.tahunMula + '– · ' + esc(n.ketua) + ': ' + esc(a.ketua) + ' (NPC)</small></div>';
+      h += '<div class="tyt-ban"><b>🏰 ' + esc(T.kehormat ? T.kehormat(p) : 'Tuan Yang Terutama') + ' Yang di-Pertua Negeri ' + esc(n.nama) + '</b><small>Penggal ' + a.penggal + ' · ' + a.tahunMula + '– · ' + esc(n.ketua) + ': ' + esc(a.ketua) + ' (NPC)</small></div>';
       h += '<div class="jm-meter__t"><span>Elaun bulanan</span><b>' + rm(C.ELAUN) + '</b></div>' + meter('Kewibawaan Istana', a.kewibawaan) + meter('Hubungan dengan ' + n.ketua, a.hubungan);
       h += '<small class="note">Kewibawaan susut 1 sebulan. Tamat penggal: Kewibawaan ' + C.LANJUT + ' ke atas = penggal kedua ditawarkan (sekali sahaja).</small>';
       if (a.lanjut) { h += '<div class="tyt-ev"><b>📜 Tawaran penggal kedua</b><small>Terima untuk berkhidmat empat tahun lagi, atau bersara sekarang.</small><div class="pbg-3" style="justify-content:flex-start;margin-top:6px">' + btn('lanjut:ya', 'Terima penggal kedua', true, 'btn--primary') + btn('lanjut:tidak', 'Bersara', true) + '</div></div>'; }

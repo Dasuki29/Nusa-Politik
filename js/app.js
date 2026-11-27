@@ -1522,6 +1522,8 @@
     if (dt && !state.dutaLalu) { state.tab = 'kedutaan'; } state.dutaLalu = dt;
     if (!dt && state.tab === 'kedutaan') { state.tab = 'tindakan'; }
     $('tab-kedutaan').hidden = !dt; $('nav-kedutaan').hidden = !dt;
+    if (dt && W.MyPolitikDuta.pejabat) { var pj = W.MyPolitikDuta.pejabat(p), tk = $('tab-kedutaan'), nk = $('nav-kedutaan');   // v14.17: Suruhanjaya Tinggi bagi negara Komanwel
+      if (tk && tk.getAttribute('data-label') !== pj) { tk.setAttribute('data-label', pj); tk.textContent = '🌏 ' + pj; if (nk && nk.lastChild) { nk.lastChild.textContent = pj; } } }
     var dl = document.querySelector('.dashboard-layout'); if (dl) { dl.classList.toggle('is-peta', state.tab === 'peta'); }   // v14.9: tab Peta lebar penuh (kad sisi disembunyikan)
     TABS.forEach(function (t) {
       var b = $('tab-' + t), a = t === state.tab;

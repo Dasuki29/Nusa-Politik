@@ -3619,6 +3619,24 @@ ujian('v14.6 Pilihan Selepas Politik (baris 47): TYT laluan tokoh, penantian, li
   S.clearPlayer();
 });
 
+ujian('v14.17: Pesuruhjaya Tinggi bagi negara Komanwel, Tuan/Puan Yang Terutama ikut jantina, kiraan bulan penggal kedua bermula semula', () => {
+  const D = g.MyPolitikDuta, T = g.MyPolitikTYT;
+  sama(D.gelaran('london'), 'Pesuruhjaya Tinggi Malaysia'); sama(D.gelaran('singapura'), 'Pesuruhjaya Tinggi Malaysia'); sama(D.gelaran('canberra'), 'Pesuruhjaya Tinggi Malaysia');
+  sama(D.gelaran('tokyo'), 'Duta Malaysia'); sama(D.pejabat('london'), 'Suruhanjaya Tinggi'); sama(D.pejabat('jakarta'), 'Kedutaan');
+  sama(D.kehormat({ demografik: { jantina: 'Perempuan' } }), 'Puan Yang Terutama'); sama(D.kehormat({ demografik: { jantina: 'P' } }), 'Puan Yang Terutama');
+  sama(D.kehormat({ demografik: { jantina: 'Lelaki' } }), 'Tuan Yang Terutama'); sama(T.kehormat({ jantina: 'Perempuan' }), 'Puan Yang Terutama');
+  P.daftar({ umur: 55 }); P.tetap({ tahun: 2030, bulan: 6, ap: 10, myr: 20000 });
+  const mula = 2027 * 12 + 6, kini = 2030 * 12 + 6;
+  P.tetap({ duta: { aktif: { pos: 'london', penggal: 1, mula: mula, tamat: kini, tahunMula: 2027, hubungan: 80, kepercayaan: 80, kebajikan: 60, kunjungan: 0, dagang: 0, konsular: 0, hariTahun: 0, krisis: null, lawatan: null, lanjut: false }, sejarah: [] } });
+  let ev = D.prosesBulan({ rng: () => 0.99 }).peristiwa; betul(ev.some((x) => /tab Suruhanjaya Tinggi/.test(x.mesej)), JSON.stringify(ev));
+  sama(D.keadaan(S.loadPlayer()).bulanKe, D.CONFIG.PENGGAL, 'menunggu jawapan');
+  betul(D.terimaLanjut(true).ok); let k = D.keadaan(S.loadPlayer()); sama(k.a.penggal, 2); sama(k.bulanKe, 1, 'penggal kedua bermula bulan 1'); sama(k.gelaran, 'Pesuruhjaya Tinggi Malaysia');
+  P.tetap({ bulan: 10 }); sama(D.keadaan(S.loadPlayer()).bulanKe, 5);
+  // simpanan lama: penggal 2 dengan 'mula' penggal pertama
+  const a = D.getD(S.loadPlayer()).aktif; P.tetap({ duta: { aktif: Object.assign({}, a, { mula: mula }), sejarah: [] } }); sama(D.keadaan(S.loadPlayer()).bulanKe, 5, 'simpanan lama');
+  S.clearPlayer();
+});
+
 ujian('v14.6 baris 51: senarai lobi Parlimen IP tinggi masih memaparkan Timbalan Menteri', () => {
   const KB = g.MyPolitikKabinet; P.daftar({ umur: 40 }); P.tetap({ ip: 5000, myr: 100000, kabinet: Object.assign({}, KB.getKabinet(S.loadPlayer()), { lobi: { sumber: 'PARLIMEN' } }) });
   const s = KB.senaraiPortfolio(S.loadPlayer()); sama(s.length, KB.CONFIG.HAD_PILIHAN); betul(s.filter((x) => x.tahap === 'TIMBALAN_MENTERI').length >= 2, JSON.stringify(s.map((x) => x.nama)));

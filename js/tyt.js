@@ -32,6 +32,8 @@
   function HY() { return modul('MyPolitikHayat', 'hayat.js'); }
   function D() { return modul('MyPolitikData', 'data.js'); }
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+  /** v14.17: gelaran kehormat ikut jantina pemain (Tuan / Puan Yang Terutama). */
+  function kehormat(p) { var j = String((p && ((p.demografik && p.demografik.jantina) || p.jantina)) || ''); return /^p/i.test(j) ? 'Puan Yang Terutama' : 'Tuan Yang Terutama'; }
   function idx(p) { return (parseInt(p.tahun, 10) || 0) * 12 + (parseInt(p.bulan, 10) || 1); }
   function salin(o) { return o === undefined || o === null ? o : JSON.parse(JSON.stringify(o)); }
   var rngLalai = Math.random;
@@ -100,7 +102,7 @@
     var kb = K && K.getKabinet ? salin(K.getKabinet(Sv.loadPlayer())) : null;
     if (kb) { kb.sejarah = (kb.sejarah || []).concat([{ tahun: p.tahun, bulan: p.bulan, nama: 'Yang di-Pertua Negeri ' + NEGERI[w.negeri].nama, hasil: 'dilantik' }]).slice(-10); patch.kabinet = kb; }
     var h = simpan(t, {}, { patch: patch, log: { tindakan: 'tyt_lantik', nama: 'Dilantik Yang di-Pertua Negeri ' + NEGERI[w.negeri].nama, peringkat: 'ahli' } });
-    return h.ok ? { ok: true, mesej: 'Anda mengangkat sumpah sebagai Tuan Yang Terutama Yang di-Pertua Negeri ' + NEGERI[w.negeri].nama + '. Semua jawatan parti dan kerusi dilepaskan' + (kos.length ? '; PRK diadakan bulan depan' : '') + '. Tab Istana dibuka.' } : { ok: false, ralat: h.ralat };
+    return h.ok ? { ok: true, mesej: 'Anda mengangkat sumpah sebagai ' + kehormat(p) + ' Yang di-Pertua Negeri ' + NEGERI[w.negeri].nama + '. Semua jawatan parti dan kerusi dilepaskan' + (kos.length ? '; PRK diadakan bulan depan' : '') + '. Tab Istana dibuka.' } : { ok: false, ralat: h.ralat };
   }
   function tolak() {
     var Sv = S(), p = Sv.loadPlayer(), t = getT(p), w = t.tawaran; if (!w) { return { ok: false, ralat: 'Tiada tawaran.' }; }
@@ -173,7 +175,7 @@
     var c = mesti(); if (c.ralat) { return { ok: false, ralat: c.ralat }; }
     var a = c.t.aktif; if (!a.lanjut) { return { ok: false, ralat: 'Tiada tawaran penggal kedua.' }; }
     if (!ya) { return tamatPenggal(c.p, c.t, 'Anda memilih bersara selepas penggal pertama.'); }
-    a.penggal = 2; a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false;
+    a.penggal = 2; a.mula = idx(c.p); a.tamat = idx(c.p) + CONFIG.PENGGAL; a.lanjut = false;
     var h = simpan(c.t, {}, { log: { tindakan: 'tyt_lanjut', nama: 'Penggal kedua Yang di-Pertua Negeri', peringkat: 'ahli' } });
     return h.ok ? { ok: true, mesej: 'Penggal anda dilanjutkan empat tahun lagi.' } : { ok: false, ralat: h.ralat };
   }
@@ -221,6 +223,6 @@
     var b = bekas(p); return { aktif: false, tawaran: t.tawaran ? { negeri: NEGERI[t.tawaran.negeri], kod: t.tawaran.negeri, peluang: peluang(p) } : null, laluan: Object.keys(b).map(function (k) { return syarat(p, k); }), peluang: peluang(p), sejarah: t.sejarah };
   }
 
-  return { CONFIG: CONFIG, NEGERI: NEGERI, setRng: function (f) { rngLalai = f || Math.random; }, getT: getT, aktif: aktif, syarat: syarat, peluang: peluang, bekas: bekas, kosongSeterusnya: kosongSeterusnya,
+  return { kehormat: kehormat, CONFIG: CONFIG, NEGERI: NEGERI, setRng: function (f) { rngLalai = f || Math.random; }, getT: getT, aktif: aktif, syarat: syarat, peluang: peluang, bekas: bekas, kosongSeterusnya: kosongSeterusnya,
     terima: terima, tolak: tolak, menghadap: menghadap, majlis: majlis, majlisRaja: majlisRaja, kurnia: kurnia, calonKurnia: calonKurnia, bubar: bubar, terimaLanjut: terimaLanjut, prosesBulan: prosesBulan, keadaan: keadaan };
 });

@@ -1,5 +1,12 @@
 # Catatan Perubahan
 
+## v14.17 — Pesuruhjaya Tinggi (Komanwel), Tuan/Puan Yang Terutama, kiraan penggal kedua
+
+- **Pesuruhjaya Tinggi:** pos di negara Komanwel (Singapura, London, Canberra) kini bergelar *Pesuruhjaya Tinggi Malaysia* dan pejabatnya *Suruhanjaya Tinggi* (tab, mesej, log, elaun, legasi). Pos lain kekal *Duta Malaysia* / *Kedutaan*. Modal pilih pos memaparkan gelaran bagi setiap pos.
+- **Tuan / Puan Yang Terutama:** gelaran kehormat ikut jantina pemain bagi Duta, Pesuruhjaya Tinggi dan Yang di-Pertua Negeri.
+- **Pepijat:** selepas menerima penggal kedua, kiraan "bulan X daripada 36" kini bermula semula dari bulan 1 (simpanan lama turut dibetulkan secara automatik). Penggal kedua TYT juga menetapkan semula tarikh mula.
+- Kunci EN baharu (High Commissioner, High Commission, His/Her Excellency). Ujian unit baharu.
+
 ## v14.16: Avatar rasmi TYT dan Duta
 - Apabila dilantik Yang di-Pertua Negeri atau Duta Malaysia (keahlian parti digantung), avatar bertukar kepada pakaian rasmi tanpa warna atau logo parti; kekal pada skrin persaraan selepas tamat perkhidmatan.
 - TYT: jaket istiadat putih krim, kolar dan epaulet emas, selempang biru berjalur merah putih, rantai kebesaran, bintang, songkok bersulam emas (parti bergaya Melayu), latar kelabu potret.
