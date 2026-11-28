@@ -1,5 +1,9 @@
 # Catatan Perubahan
 
+## v14.31 — Terjemahan: kad lantikan negeri
+
+- EN: tajuk dan notifikasi lantikan negeri sayap kini "State Pemuda Chief" (begitu juga Puteri, Wanita, Putera), bukan "State Pemuda Wing Chief".
+
 ## v14.30 — 🏛️ Lantikan negeri dalam satu senarai (mockup dipersetujui)
 
 - **Tiada lagi pop-up berantai:** Presiden dan Ketua Sayap Pusat melantik Pengerusi Badan Perhubungan / Ketua Sayap Negeri bagi semua negeri dalam satu senarai pada kad Badan Perhubungan (tab Pemilihan). Calon terbaik dipilih lebih awal untuk setiap negeri; tukar mana-mana, kemudian ✅ Sahkan sekali. Notifikasi ringkas menggantikan pop-up.
